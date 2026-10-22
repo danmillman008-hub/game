@@ -23,7 +23,7 @@ extern unsigned g_frame; extern FILE *g_cap; extern unsigned g_hits;
 static int16_t fb[720*576]; static unsigned W=320,H=224; static int PITCH=0;
 
 #define MAXEV 512
-static struct { int frame; unsigned id; int down; } ev[MAXEV]; static int nev=0;
+static struct { int frame; unsigned id; int down; int port; } ev[MAXEV]; static int nev=0;
 
 static bool env(unsigned c, void *d){
   switch(c){
@@ -40,8 +40,9 @@ static void aud(int16_t l,int16_t r){(void)l;(void)r;}
 static size_t audb(const int16_t*d,size_t f){(void)d;return f;}
 static void ipoll(void){}
 static int16_t istate(unsigned port,unsigned dev,unsigned idx,unsigned id){
-  (void)dev;(void)idx; if(port) return 0;
-  for(int i=0;i<nev;i++) if(ev[i].id==id&&ev[i].down) return 1;
+  (void)dev;(void)idx;
+  if(port>1) return 0;
+  for(int i=0;i<nev;i++) if(ev[i].id==id&&ev[i].down&&ev[i].port==(int)port) return 1;
   return 0;
 }
 static unsigned btn_id(const char*s){
@@ -56,7 +57,7 @@ static unsigned btn_id(const char*s){
   return 0;
 }
 static void dump_ppm(const char*path){
-  FILE*o=fopen(path,"wb"); fprintf(o,"P6\n%u %u\n255\n",W,H);
+  FILE*o=fopen(path,"wb"); if(!o) return; fprintf(o,"P6\n%u %u\n255\n",W,H);
   for(unsigned y=0;y<H;y++)for(unsigned x=0;x<W;x++){
     uint16_t c=((uint16_t*)fb)[y*(PITCH/2)+x];
     unsigned char px[3]={(unsigned char)(((c>>11)&0x1f)*255/31),(unsigned char)(((c>>5)&0x3f)*255/63),(unsigned char)((c&0x1f)*255/31)};
@@ -70,15 +71,17 @@ int main(int argc,char**argv){
   if(argc>4){ FILE*e=fopen(argv[4],"r"); char line[128];
     while(e&&fgets(line,sizeof line,e)&&nev<MAXEV-8){
       int fr,en=-1; char b[64]; b[0]=0;
+      if(line[0]=='#') continue;
       int k=sscanf(line,"%d %63s %d",&fr,b,&en);
       if(k<2) continue;
-      ev[nev].frame=fr; ev[nev].id=btn_id(b); ev[nev].down=1;
+      /* a leading '2' selects the second controller, e.g. "2START" */
+      int eport=0; char *nm=b;
+      if(b[0]=='2'&&b[1]){ eport=1; nm=b+1; }
+      ev[nev].frame=fr; ev[nev].id=btn_id(nm); ev[nev].down=1; ev[nev].port=eport;
       ev_end[nev]=(k>=3)?en:fr+3;
       nev++;
     }
-    if(e)fclose(e);
-    int n=nev;
-    for(int i=0;i<n;i++){ ev[nev].frame=ev_end[i]+1; ev[nev].id=ev[i].id; ev[nev].down=0; ev_end[nev]=ev_end[i]; nev++; } }
+    if(e)fclose(e); }
 
   /* save-state options: --state-in loads a machine snapshot as frame 0, so a run
      always starts from identical initial conditions; --state-out/--state-at
@@ -126,7 +129,10 @@ int main(int argc,char**argv){
 
   for(int fr=0;fr<frames;fr++){
     g_frame=(unsigned)fr;
-    for(int i=0;i<nev;i++) ev[i].down=(fr>=ev[i].frame);
+    /* A press is held only within its own window. The old code recomputed
+       `down` for *release* markers as well, which re-armed every button
+       permanently after its release frame. */
+    for(int i=0;i<nev;i++) ev[i].down=(fr>=ev[i].frame && fr<=ev_end[i]);
     retro_run();
     if(flog && (long)fr>=dump_from){
       unsigned char hdr[4]={(unsigned char)(fr>>24),(unsigned char)(fr>>16),(unsigned char)(fr>>8),(unsigned char)fr};

@@ -1,6 +1,11 @@
-# Boot the ROM from power-on to 1-player Stage 1 as Axel.
-# Format: <frame> <BUTTON> <last frame held>, absolute frames from power-on.
-# Established by experiment (RESEARCH_LOG RL-74); every line is load-bearing.
+# Boot the ROM from power-on to real, controllable 1-player Stage 1 (Axel).
+# Format: <frame> <BUTTON> <last frame held>; absolute frames from power-on.
+# A leading '2' on the button name targets controller 2 (e.g. 2START).
+#
+# Verified end state (RESEARCH_LOG RL-75): stage sprites animate, the timer counts
+# down, score increases when an enemy is defeated, and holding RIGHT moves the
+# player and scrolls the camera. Anything shorter that "looks like gameplay" in a
+# still frame is the attract demo or a paused screen.
 5400 START 5404
 6000 A 6004
 8800 A 8804
@@ -19,5 +24,7 @@
 10100 A 10104
 10200 A 10204
 10300 A 10304
+10600 RIGHT 11300
 13100 A 13104
 13400 START 13404
+13700 START 13704
