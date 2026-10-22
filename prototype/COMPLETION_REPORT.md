@@ -78,13 +78,13 @@ Ran 52 tests in 2.2 s
 OK
 52 passed, 0 failed, 0 errors, 0 skipped
 
-$ /tmp/re_venv/bin/python tools/verify_stage2.py
+$ python3 tools/verify_stage2.py          # Stage-2 env: pip install unicorn capstone
 Ran 37 tests in 6.919s
 OK
 tests: 37 passed, 0 failed, 0 errors, 0 skipped
 differential comparisons vs original ROM code: 7740
 
-$ /tmp/re_venv/bin/python tools/verify_sor_forensics.py
+$ python3 tools/verify_sor_forensics.py
 Verified 11 ROMs -> /home/user/game/evidence/verification_results.json
 Z80 Driver Kosinski cross-check (Py == M68000 Unicorn): OK (07cabd01…fd2)
 ```
@@ -173,8 +173,8 @@ cd <repository>
 python3 -m venv .venv && .venv/bin/pip install pygame
 
 # 1. the original verification, unchanged
-/tmp/re_venv/bin/python tools/verify_stage2.py            # 37 passed, 7,740 comparisons
-/tmp/re_venv/bin/python tools/verify_sor_forensics.py     # 11 ROMs
+python3 tools/verify_stage2.py            # 37 passed, 7,740 comparisons
+python3 tools/verify_sor_forensics.py     # 11 ROMs
 
 # 2. the prototype's integration suite (regenerates TEST_REPORT.md)
 SDL_VIDEODRIVER=dummy .venv/bin/python -m prototype.tools.run_tests

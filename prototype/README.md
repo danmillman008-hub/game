@@ -92,8 +92,9 @@ is visible while playing.
 # prototype integration suite (52 tests, writes prototype/TEST_REPORT.md)
 SDL_VIDEODRIVER=dummy .venv/bin/python -m prototype.tools.run_tests
 
-# the original Stage-2 verification, unchanged (needs the reverse-engineering venv)
-/tmp/re_venv/bin/python tools/verify_stage2.py
+# the original Stage-2 verification, unchanged
+# (needs the Stage-2 environment: pip install unicorn capstone — see REPRODUCE.md)
+python3 tools/verify_stage2.py
 
 # deterministic scripted encounter: record, replay, compare
 SDL_VIDEODRIVER=dummy .venv/bin/python -m prototype.tools.record_encounter
