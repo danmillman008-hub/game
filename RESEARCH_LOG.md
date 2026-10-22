@@ -364,3 +364,37 @@ punch, jump, victory in 722 frames at 56 HP, restart. Caveat recorded honestly: 
 real browser in this environment, so the page is verified functionally and its drawing calls
 are exercised, not eyeballed; the pixel canvas is the same 384×240 and scales by integers, so
 no resampling loss is introduced.
+
+**RL-72** *Graphics decompressor cracked, and proved byte-exact against the real game.* The
+routine at `$008192` was re-read from the ROM and reimplemented in `tools/sor_gfx_format.py`
+(pure Python, no emulator). Format: header word → `tiles = header & $1FFF`, output is
+`tiles × 32` bytes; a Huffman-style prefix table built exactly like `$8280` (record `A` starts a
+value group, `B` gives length/count, `$FF` terminates, entries are written into
+`1 << (8 - length)` slots); then a bit stream of (value, count) nibble runs, with an escape for
+8-bit prefixes `>= $FC` that carries 3 bits of count and 4 bits of value. Header bit 15 selects
+a second variant: the output handler at `$825E`/`$8274` **XOR-chains each 32-bit long with the
+previous one**, starting from zero.
+
+Verification is not a judgement call. `tools/md_capture/` builds a headless Genesis Plus GX
+with two observation-only hooks (VDP data-port sink + instruction hook), runs the unmodified
+ROM, and records every call to `$008192` with its exact output. Over a 1600-frame scripted run
+the game performs 11 decompressions covering 10 distinct sources; **all 11 reproduce
+byte-for-byte** (`tools/validate_gfx.py` → `evidence/gfx_decoder_validation.json`). The harness
+was rebuilt from a clean download to confirm those numbers do not depend on a stale build.
+
+Pixel format settled independently of that: Mega Drive 4bpp tiles are 32 bytes, 4 bytes per
+row, two pixels per byte, high nibble leftmost. The earlier "planar" reading produced a mean
+neighbour difference of 3.18 on real data versus 1.15 for the packed reading, and the packed
+reading renders the SEGA logotype from `$0722A2` recognisably. `tools/gfx_render.py` keeps both
+so the comparison is reproducible.
+
+Asset discovery: the master graphics table is at `$00A666` — 8-byte records
+`{long src, word vram, word flag}`, 56 entries (`tools/gfx_assets.py`). 43 decode; 13 fail with
+unassigned prefixes at output byte 0, which means those sources are **not** in this format and
+are left as an open question rather than forced. The genuinely loaded graphics match the table
+(`$01CEC0 → $7800` and `$01CEC0 → $57E0` both appear, matching the two captures of that source).
+
+Correction to earlier notes: banks are not Kosinski, and the 31-entry table at `$8672` that
+`tools/gfx_banks.py` parses is *a* VRAM layout table but not the list the game actually feeds to
+`$008192` during play. `$A666` is. Both are kept; the difference is recorded here rather than
+silently overwritten.
