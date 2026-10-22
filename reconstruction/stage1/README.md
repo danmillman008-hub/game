@@ -123,6 +123,20 @@ complete.
 Files: `evidence/original_f14599.png`, `evidence/recon_idle.png`,
 `evidence/diff_idle.png` (magenta = differing pixels).
 
+### Scenario renders (deterministic input programs)
+
+| scenario | program | result |
+|---|---|---|
+| `scenario_idle.png` | `idle:90` | player idle at the stage opening, two foes approaching |
+| `scenario_move_right.png` | `right:150` | player advanced to x=375, camera scrolled, foes engaged |
+| `scenario_jump.png` | `k:30` | player airborne, no foes yet (before the first wave) |
+
+Reproduce any of them with:
+
+```sh
+node reconstruction/stage1/test/render.mjs /tmp/out.png 0 "right:150"
+```
+
 ## What this is not
 
 Not a claim of pixel-perfect or complete reproduction. Stage 1 is playable with
