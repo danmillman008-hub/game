@@ -8,6 +8,11 @@
 
 extern uint8_t vram[0x10000];
 extern uint16_t cram[0x80];
+extern uint16_t sat[0x400];
+extern unsigned md_vdp_reg(int i);
+extern unsigned md_vdp_status(void);
+extern unsigned md_vsram(int i);
+extern uint8_t work_ram[0x10000];
 extern uint8_t *md_capture_ptr;
 extern int md_capture_active;
 
@@ -61,10 +66,19 @@ static void dump_ppm(const char*path){
 int main(int argc,char**argv){
   if(argc<4){fprintf(stderr,"usage: %s rom frames outdir [events]\n",argv[0]);return 2;}
   int frames=atoi(argv[2]); const char *dir=argv[3];
-  if(argc>4){ FILE*e=fopen(argv[4],"r"); char b[64]; int fr;
-    while(e&&fscanf(e,"%d %63s",&fr,b)==2&&nev<MAXEV-8){ ev[nev].frame=fr; ev[nev].id=btn_id(b); ev[nev].down=1; nev++; }
+  static int ev_end[MAXEV];
+  if(argc>4){ FILE*e=fopen(argv[4],"r"); char line[128];
+    while(e&&fgets(line,sizeof line,e)&&nev<MAXEV-8){
+      int fr,en=-1; char b[64]; b[0]=0;
+      int k=sscanf(line,"%d %63s %d",&fr,b,&en);
+      if(k<2) continue;
+      ev[nev].frame=fr; ev[nev].id=btn_id(b); ev[nev].down=1;
+      ev_end[nev]=(k>=3)?en:fr+3;
+      nev++;
+    }
     if(e)fclose(e);
-    int n=nev; for(int i=0;i<n;i++){ ev[nev].frame=ev[i].frame+4; ev[nev].id=ev[i].id; ev[nev].down=0; nev++; } }
+    int n=nev;
+    for(int i=0;i<n;i++){ ev[nev].frame=ev_end[i]+1; ev[nev].id=ev[i].id; ev[nev].down=0; ev_end[nev]=ev_end[i]; nev++; } }
 
   retro_set_environment(env); retro_set_video_refresh(vid);
   retro_set_audio_sample(aud); retro_set_audio_sample_batch(audb);
@@ -79,19 +93,47 @@ int main(int argc,char**argv){
   snprintf(p,sizeof p,"%s/decomp.bin",dir); g_cap=fopen(p,"wb");
   set_cpu_hook((void(*)(int,int,unsigned,unsigned))capture_hook);
 
+  /* per-frame state log: frame, 80 SAT entries, regs, VSRAM, and a 64 KB RAM image */
+  snprintf(p,sizeof p,"%s/frames.bin",dir); FILE *flog=fopen(p,"wb");
+  snprintf(p,sizeof p,"%s/ram.bin",dir); FILE *rlog=fopen(p,"wb");
+  snprintf(p,sizeof p,"%s/vram.bin",dir); FILE *vlog=fopen(p,"wb");
+
   for(int fr=0;fr<frames;fr++){
     g_frame=(unsigned)fr;
-    for(int i=0;i<nev;i++) ev[i].down=(fr>=ev[i].frame && fr<ev[i].frame+4);
+    for(int i=0;i<nev;i++) ev[i].down=(fr>=ev[i].frame);
     retro_run();
-    if((fr%100)==99){
+    if(flog){
+      unsigned char hdr[4]={(unsigned char)(fr>>24),(unsigned char)(fr>>16),(unsigned char)(fr>>8),(unsigned char)fr};
+      fwrite(hdr,1,4,flog);
+      fwrite(sat,1,640,flog);
+      unsigned char mr[26]; for(int i=0;i<24;i++) mr[i]=(unsigned char)md_vdp_reg(i);
+      unsigned st=md_vdp_status(); mr[24]=(unsigned char)(st>>8); mr[25]=(unsigned char)st;
+      fwrite(mr,1,26,flog);
+      unsigned char vs[80]; for(int i=0;i<40;i++){ unsigned v=md_vsram(i); vs[i*2]=(unsigned char)(v>>8); vs[i*2+1]=(unsigned char)v; }
+      fwrite(vs,1,80,flog);
+      fwrite(cram,1,128,flog);
+    }
+    if(rlog) fwrite(work_ram,1,0x10000,rlog);
+    if(vlog) fwrite(vram,1,0x10000,vlog);
+    if((fr%50)==49){
       snprintf(p,sizeof p,"%s/f%04d.ppm",dir,fr); dump_ppm(p);
       snprintf(p,sizeof p,"%s/f%04d.vram",dir,fr); FILE*o=fopen(p,"wb"); fwrite(vram,1,0x10000,o); fclose(o);
       snprintf(p,sizeof p,"%s/f%04d.cram",dir,fr); o=fopen(p,"wb"); fwrite(cram,2,0x80,o); fclose(o);
+      snprintf(p,sizeof p,"%s/f%04d.vdp",dir,fr); o=fopen(p,"wb");
+      { unsigned char r[24]; for(int i=0;i<24;i++) r[i]=(unsigned char)md_vdp_reg(i);
+        unsigned st=md_vdp_status(); unsigned char sb[2]={(unsigned char)(st>>8),(unsigned char)st};
+        fwrite(r,1,24,o); fwrite(sb,1,2,o);
+        { unsigned char vs[128]; for(int i=0;i<64;i++){ unsigned v=md_vsram(i); vs[i*2]=(unsigned char)(v>>8); vs[i*2+1]=(unsigned char)v; }
+          fwrite(vs,1,128,o); } }
+      fclose(o);
     }
   }
   snprintf(p,sizeof p,"%s/final.ppm",dir); dump_ppm(p);
   snprintf(p,sizeof p,"%s/final.vram",dir); FILE*o=fopen(p,"wb"); fwrite(vram,1,0x10000,o); fclose(o);
   snprintf(p,sizeof p,"%s/final.cram",dir); o=fopen(p,"wb"); fwrite(cram,2,0x80,o); fclose(o);
+  if(vlog) fclose(vlog);
+  if(flog) fclose(flog);
+  if(rlog) fclose(rlog);
   if(g_cap){fclose(g_cap);g_cap=0;}
   printf("decompression captures: %u\n", g_hits);
   return 0;

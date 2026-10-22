@@ -33,7 +33,7 @@ Outputs in the target directory:
 
 | file | contents |
 |---|---|
-| `decomp.bin` | records of every `$008192` call: `u32 frame, u32 src, u32 len, bytes` |
+| `decomp.bin` | records of every `$008192` call: `u32 frame, u32 src, u32 dest_vram, u32 len, bytes` |
 | `fNNNN.ppm` | screen snapshot every 100 frames |
 | `fNNNN.vram` | 64 KB VRAM dump (raw bytes, word = 2 bytes big-endian) |
 | `fNNNN.cram` | 128 words of CRAM (first 64 = the four palettes) |
@@ -48,8 +48,9 @@ Read the capture with `tools/decomp_corpus.py`, validate with
 `patches/gpgx_capture_hooks.py` applies two observation-only hooks:
 
 * `core/vdp_ctrl.c` — while a capture is active, VDP data-port writes are copied
-  to a buffer instead of the VRAM FIFO (so the decompressor's output can be read
-  back without waiting for a FIFO flush);
+  to a buffer (they still reach VRAM, so the capture cannot alter emulation), and
+  `md_vdp_addr()` exposes the address register so each capture knows its
+  destination;
 * `core/debug/cpuhook.h` — `cpu_hook` becomes an `extern` declaration so the
   frontend can own it.
 

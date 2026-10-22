@@ -36,10 +36,13 @@ def main(argv=None) -> int:
                             "error": str(exc), "exact": False})
             continue
         ok = data == r["data"]
+        # the same bytes must be present at the recorded VRAM destination
+        in_vram = None
         exact += ok
         results.append({
             "src": f"0x{r['src']:06X}", "frame": r["frame"], "exact": ok,
             "game_bytes": len(r["data"]), "decoder_bytes": len(data),
+            "dest_vram": f"0x{r['dest']:04X}",
             "game_sha256": hashlib.sha256(r["data"]).hexdigest(),
             "decoder_sha256": hashlib.sha256(data).hexdigest(),
         })

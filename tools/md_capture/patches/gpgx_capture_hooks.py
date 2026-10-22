@@ -2,8 +2,10 @@
 
 The patches only add observation hooks; they do not change emulated behaviour.
 
-  1. core/vdp_ctrl.c  - divert VDP data-port writes into a buffer while a capture
+  1. core/vdp_ctrl.c  - copy VDP data-port writes into a buffer while a capture
                         is active (used to record the decompressor's output).
+                        The writes still reach VRAM, so a capture never changes
+                        what the emulated machine sees.
   2. core/debug/cpuhook.h - make the `cpu_hook` pointer an extern declaration so
                         it can be defined once by decomp_hook.c.
 
@@ -14,7 +16,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-HOOK = '''  if (md_capture_active) { *md_capture_ptr++ = (data >> 8) & 0xFF; *md_capture_ptr++ = data & 0xFF; md_capture_len += 2; return; }
+HOOK = '''  if (md_capture_active) { *md_capture_ptr++ = (data >> 8) & 0xFF; *md_capture_ptr++ = data & 0xFF; md_capture_len += 2; }
 
 '''
 
@@ -43,6 +45,11 @@ def patch_vdp(root: Path) -> bool:
         else:
             print(f"vdp_ctrl.c: pattern for {fn} not found")
     if changed:
+        src += ("\n/* read-only accessors for the capture harness */\n"
+                "unsigned md_vdp_addr(void) { return addr; }\n"
+                "unsigned md_vdp_reg(int i) { return reg[i]; }\n"
+                "unsigned md_vdp_status(void) { return status; }\n"
+                "unsigned md_vsram(int i) { return *(unsigned short *)&vsram[i * 2]; }\n")
         marker = "static void vdp_68k_data_w_m4(unsigned int data);"
         src = src.replace(marker, GLOBALS + "\n" + marker, 1)
         path.write_text(src)
