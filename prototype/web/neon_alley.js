@@ -1,0 +1,1323 @@
+/*
+ * Neon Alley — browser build of the simulation.
+ *
+ * ---------------------------------------------------------------------------
+ * WHAT THIS FILE IS
+ *
+ * A mechanical JavaScript **port** of the Python prototype in `prototype/neon_alley/`
+ * plus the verified engine slice in `components/sor_engine/`. Every function below
+ * names the Python function it mirrors, so the two can be diffed by eye.
+ *
+ * The Python game calls the real Stage-2 components directly. A browser cannot run
+ * Python without shipping a 10 MB runtime, so this file re-implements the *same*
+ * arithmetic in the little-endian 32-bit form the M68000 uses. That claim is not
+ * taken on trust:
+ *
+ *     prototype/tools/web_conformance.py
+ *
+ * replays recorded and synthetic input through both engines and compares every
+ * actor's position, velocity, health, stun, frames and game state, frame by frame.
+ * The comparison is exact (no tolerance) and is part of the test suite.
+ *
+ * Rule for this file: it must stay a transliteration. If the Python changes, this
+ * changes the same way — otherwise the conformance test fails, which is the point.
+ *
+ * ---------------------------------------------------------------------------
+ * PORT MAP
+ *   s32/hi16/s16/u32            components/sor_engine/fixed.py
+ *   neutralGravity/directionalGravity/softGravity
+ *   clampTerminal/airControl/integrate/isFrozen
+ *                               components/sor_engine/kinematics.py
+ *   buildPlayerBoxes/aabbOverlap components/sor_engine/boxes.py
+ *   project                     components/sor_engine/projection.py
+ *   Fighter/Player/Enemy        prototype/neon_alley/entities.py
+ *   Game                        prototype/neon_alley/game.py
+ *   Renderer                    prototype/neon_alley/render.py
+ * ---------------------------------------------------------------------------
+ */
+(function (root, factory) {
+  const api = factory();
+  if (typeof module === "object" && module.exports) module.exports = api;
+  else root.NeonAlley = api;
+})(typeof globalThis !== "undefined" ? globalThis : this, function () {
+  "use strict";
+
+  /* ======================================================================
+   * fixed point — components/sor_engine/fixed.py
+   * ==================================================================== */
+  const ONE = 0x10000;
+
+  function s32(v) {
+    // Python: wrap to signed 32-bit like add.l/sub.l. `|0` does exactly that.
+    return v | 0;
+  }
+
+  function hi16(v) {
+    // Python: word = (v >> 16) & 0xFFFF; signed interpretation of that word.
+    const word = (v >> 16) & 0xffff;
+    return word & 0x8000 ? word - 0x10000 : word;
+  }
+
+  function s16(v) {
+    const word = v & 0xffff;
+    return word & 0x8000 ? word - 0x10000 : word;
+  }
+
+  /* ======================================================================
+   * config — prototype/neon_alley/config.py  ([ROM] / [INTEG] / [PROTO])
+   * ==================================================================== */
+  const CFG = {
+    VIRTUAL_W: 384,
+    VIRTUAL_H: 240,
+    FPS: 60,
+
+    ARENA_X_MIN: 48, ARENA_X_MAX: 1360,
+    ARENA_Z_MIN: 20, ARENA_Z_MAX: 170,   // [INTEG]
+    WORLD_W: 1408,
+    CAM_ANCHOR_X: 128,                   // [INTEG]
+    CAM_X_MIN: 0, CAM_X_MAX: 1152,
+    CHAR_SCALE: 0.62,
+
+    JUMP_VY: -0x78000,                   // [ROM] measured launch
+    PLAYER_SPRITE_W: 7, PLAYER_SPRITE_H: 7,
+    ENEMY_SPRITE_W: 2, ENEMY_SPRITE_H: 6,
+
+    PLAYER_HP: 80,                       // [PROTO]
+    PLAYER_WALK_VX: 0x24000,
+    PLAYER_DEPTH_VZ: 0x18000,
+    PLAYER_ACCEL: 0x0c000,
+    PLAYER_HURT_IFRAMES: 26,
+
+    ATTACKS: {                           // [PROTO]
+      punch: { startup: 3, active: 3, recovery: 7, damage: 7, reach: 34, depth: 22,
+               height: [-58, 6], knockback: 0x18000, hitstun: 11, hitstop: 3,
+               lunge: 0x08000, cooldown: 5 },
+      kick: { startup: 8, active: 5, recovery: 16, damage: 13, reach: 46, depth: 26,
+              height: [-70, 10], knockback: 0x30000, hitstun: 18, hitstop: 5,
+              lunge: 0x04000, cooldown: 9 },
+    },
+    ENEMY_ATTACK: { startup: 16, active: 4, recovery: 22, damage: 8, reach: 38,
+                    depth: 24, height: [-58, 6], knockback: 0x20000, hitstun: 14,
+                    hitstop: 3, lunge: 0x0c000, cooldown: 0, armour: true },
+
+    ENEMY_HP: 30, ENEMY_HP_WAVE2: 42,
+    ENEMY_WALK_VX: 0x1a000,
+    ENEMY_DEPTH_VZ: 0x14000,
+    ENEMY_ACCEL: 0x08000,
+    ENEMY_ENGAGE_X: 30,
+    ENEMY_ENGAGE_Z: 6,
+    ENEMY_ATTACK_COOLDOWN: [36, 64],
+    ENEMY_LANE_OFFSET: [-10, 0, 10],
+    ENEMY_KNOCKBACK_DECAY: 0x5000,
+
+    WAVES: [
+      [{ kind: "thug", hp: 30, color: "amber", x: 980, z: 60 },
+       { kind: "thug", hp: 30, color: "violet", x: 1120, z: 110 }],
+      [{ kind: "brute", hp: 42, color: "lime", x: 1050, z: 85 }],
+    ],
+    WAVE_DELAY_FRAMES: 70,
+    VICTORY_HOLD: 45,
+    DEATH_ANIM_FRAMES: 46,
+  };
+
+  const BTN_LEFT = 0x04, BTN_RIGHT = 0x08;
+
+  /* ======================================================================
+   * ROM tables — components/data/body_boxes.json (embedded verbatim)
+   * ==================================================================== */
+  const Z_TABLE = [[-8, 16], [-8, 16], [-8, 16], [-10, 20], [-12, 22], [-2, 4], [0, 96],
+                   [-8, 48], [-10, 34], [-24, 48], [-48, 36], [-20, 40], [-20, 64]];
+  const BODY_BOX_TABLE = [
+    [0, 0, 0, 0, 0], [0, 13, 0, -51, 51], [-3, 10, 0, -50, 50], [-3, 10, 0, -50, 50],
+    [-13, 13, 0, -51, 51], [-7, 10, 0, -50, 50], [-7, 10, 0, -50, 50], [-3, 14, 0, -42, 42],
+    [-11, 14, 0, -42, 42], [6, 11, 0, -50, 18], [-17, 11, 0, -50, 18], [6, 10, 0, -52, 14],
+    [-16, 10, 0, -52, 14], [9, 11, 0, -50, 50], [-20, 11, 0, -50, 50], [20, 12, 0, -44, 44],
+    [-32, 12, 0, -44, 44], [10, 8, 0, -48, 48], [-18, 8, 0, -48, 48], [12, 7, 0, -50, 50],
+    [-19, 7, 0, -50, 50], [-11, 11, 0, -50, 50], [11, 11, 0, -50, 50], [-7, 10, 0, -52, 52],
+    [-3, 10, 0, -52, 52], [10, 8, 0, -50, 50], [-18, 8, 0, -50, 50], [21, 11, 0, -44, 44],
+    [-32, 11, 0, -44, 44], [10, 10, 0, -48, 48], [-20, 10, 0, -48, 48], [0, 10, 0, -52, 52],
+  ];
+
+  /* ======================================================================
+   * kinematics — components/sor_engine/kinematics.py
+   * ==================================================================== */
+  const GRAVITY_NEUTRAL = 0x0000e800;
+  const GRAVITY_DESCENT_DIRECTIONAL = 0x00008800;
+  const GRAVITY_SOFT = 0x00003800;
+  const VY_TERMINAL_PLAYER = 0x000c0000;
+  const AIR_ACCEL = 0x00006000;
+  const AIR_VX_LIMIT = 0x00038000;
+  const FREEZE_FLAG_BIT = 0x80;
+
+  const kin = {
+    neutralGravity(a) { a.vy = s32(a.vy + GRAVITY_NEUTRAL); return a; },
+    softGravity(a) { a.vy = s32(a.vy + GRAVITY_SOFT); return a; },
+    directionalGravity(a) {
+      if (a.vy < 0) return kin.neutralGravity(a);
+      a.vy = s32(a.vy + GRAVITY_DESCENT_DIRECTIONAL);
+      return a;
+    },
+    clampTerminal(a) {
+      if (a.vy >= VY_TERMINAL_PLAYER) a.vy = VY_TERMINAL_PLAYER;
+      return a;
+    },
+    airControl(a) {
+      let delta;
+      if (a.buttons & BTN_RIGHT) {
+        a.state &= ~0x01;
+        a.anim_offset &= ~0x0002;
+        delta = AIR_ACCEL;
+      } else if (a.buttons & BTN_LEFT) {
+        a.state |= 0x01;
+        a.anim_offset |= 0x0002;
+        delta = -AIR_ACCEL;
+      } else {
+        return false;
+      }
+      a.vx = s32(a.vx + delta);
+      if (a.vx < -AIR_VX_LIMIT) a.vx = -AIR_VX_LIMIT;
+      else if (a.vx > AIR_VX_LIMIT) a.vx = AIR_VX_LIMIT;
+      return true;
+    },
+    isFrozen(a) {
+      // $00442C: (anim_offset & $FC) == $14 with bit7 of +$59, high byte clear.
+      return (((a.anim_offset & 0xff00) | (a.anim_offset & 0x00fc)) === 0x14) &&
+             !!(a.flags_59 & FREEZE_FLAG_BIT);
+    },
+    integrate(a) {
+      if (kin.isFrozen(a)) return false;
+      a.x = s32(a.x + a.vx);
+      a.z = s32(a.z + a.vz);
+      a.y = s32(a.y + a.vy);
+      return true;
+    },
+    gravity(a, mode) {
+      if (mode === "neutral") return kin.neutralGravity(a);
+      if (mode === "soft") return kin.softGravity(a);
+      return kin.directionalGravity(a);
+    },
+  };
+
+  /* ======================================================================
+   * boxes — components/sor_engine/boxes.py
+   * ==================================================================== */
+  function Box(x1, x2, z1, z2, y1, y2) {
+    this.x1 = x1; this.x2 = x2; this.z1 = z1; this.z2 = z2; this.y1 = y1; this.y2 = y2;
+  }
+  Box.filled = function (word) {
+    const w = s16(word);
+    return new Box(w, w, w, w, w, w);
+  };
+  Box.prototype.asTuple = function () {
+    return [this.x1, this.x2, this.z1, this.z2, this.y1, this.y2];
+  };
+
+  function tableBuild(a, index) {
+    const rec = BODY_BOX_TABLE[index];
+    const b0 = rec[0], b1 = rec[1], b2 = rec[2], b3 = rec[3], b4 = rec[4];
+    const x1 = s16(hi16(a.x) + b0);
+    const y1 = s16(hi16(a.y) + b3);
+    const zc = Z_TABLE[b2][0], ze = Z_TABLE[b2][1];
+    const z1 = s16(hi16(a.z) + zc);
+    return new Box(x1, s16(x1 + b1), z1, s16(z1 + ze), y1, s16(y1 + b4));
+  }
+
+  function buildPlayerBoxes(a, atP1Base) {
+    const nullWord = atP1Base ? 0x0000 : 0x0010;
+    const primary = a.sprite_w ? tableBuild(a, a.sprite_w) : Box.filled(nullWord);
+    let secondary;
+    if (a.flags_4b & 0x02) secondary = Box.filled(nullWord);
+    else if (a.sprite_h) secondary = tableBuild(a, a.sprite_h);
+    else secondary = Box.filled(0x0000);
+    return [primary, secondary];
+  }
+
+  function aabbOverlap(a, b) {
+    return (a.z1 <= b.z2 && a.z2 >= b.z1 &&
+            a.x1 <= b.x2 && a.x2 >= b.x1 &&
+            a.y1 <= b.y2 && a.y2 >= b.y1);
+  }
+
+  /* ======================================================================
+   * projection — components/sor_engine/projection.py
+   * ==================================================================== */
+  const SCREEN_BIAS = 0x80;
+  const CULL_LEFT_WIDE = 0xff80;
+  const CULL_LEFT_NARROW = 0xfc80;
+  const CULL_RIGHT = 0x500;
+  const CULL_TOP = 0x10;
+  const CULL_BOTTOM = 0x200;
+
+  function project(a, camX, camY, policeActive) {
+    let sx = s16(hi16(a.x) + SCREEN_BIAS);
+    let sy = s16((hi16(a.z) >> 1) + hi16(a.y) + SCREEN_BIAS);
+    if (!(a.flags_01 & 0x02)) {
+      sx = s16(sx - camX);
+      sy = s16(sy - camY);
+    }
+    let margin;
+    if (a.type_id === 0x05) {
+      margin = CULL_LEFT_WIDE;
+    } else if ((a.flags_01 & 0x08) || policeActive) {
+      return [sx, sy, false];
+    } else {
+      margin = CULL_LEFT_NARROW;
+    }
+    const culled = (sx >= CULL_RIGHT || sx < s16(margin) ||
+                    (sy & 0xffff) >= CULL_BOTTOM || (sy & 0xffff) < CULL_TOP);
+    return [sx, sy, culled];
+  }
+
+  /* ======================================================================
+   * entities — prototype/neon_alley/entities.py
+   * ==================================================================== */
+  let ID_COUNTER = 0;
+  function resetIds() { ID_COUNTER = 0; }
+
+  function Actor(typeId, spriteW, spriteH, x, z, y) {
+    this.type_id = typeId === undefined ? 1 : typeId;
+    this.flags_01 = 0;
+    this.sprite_w = spriteW || 0;
+    this.sprite_h = spriteH || 0;
+    this.anim_offset = 0;
+    this.x = s32(x || 0);
+    this.z = s32(z || 0);
+    this.y = s32(y || 0);
+    this.vx = 0; this.vz = 0; this.vy = 0;
+    this.screen_x = 0; this.screen_y = 0;
+    this.state = 0;
+    this.flags_4b = 0;
+    this.buttons = 0;
+    this.flags_59 = 0;
+  }
+
+  function Attack(name, defn) {
+    this.name = name;
+    this.defn = defn;
+    this.frame = 0;
+    this.hit_ids = new Set();
+  }
+  Attack.prototype.phase = function () {
+    const d = this.defn;
+    if (this.frame < d.startup) return "startup";
+    if (this.frame < d.startup + d.active) return "active";
+    if (this.frame < d.startup + d.active + d.recovery) return "recovery";
+    return "done";
+  };
+  Attack.prototype.advance = function () { this.frame += 1; };
+
+  function Fighter(kind, palette, x, z, hp, spriteW, spriteH) {
+    this.id = ++ID_COUNTER;
+    this.kind = kind;
+    this.palette = palette;
+    this.body = new Actor(1, spriteW, spriteH, x * ONE, z * ONE, 0);
+    this.hp = hp;
+    this.max_hp = hp;
+    this.facing = 1;
+    this.grounded = true;
+    this.attack = null;
+    this.hitstun = 0;
+    this.iframes = 0;
+    this.hitstop = 0;
+    this.dead = false;
+    this.death_timer = 0;
+    this.knockback_vx = 0;
+    this.anim_frames = 0;
+    this.flash = 0;
+    this.attack_cooldown = 0;
+  }
+
+  Object.defineProperties(Fighter.prototype, {
+    wx: { get() { return hi16(this.body.x); } },
+    wz: { get() { return hi16(this.body.z); } },
+    wy: { get() { return hi16(this.body.y); } },
+  });
+
+  Fighter.prototype.boxes = function () { return buildPlayerBoxes(this.body, false); };
+  Fighter.prototype.bodyBox = function () { return this.boxes()[0]; };
+
+  Fighter.prototype.startAttack = function (name, facing) {
+    const table = CFG.ATTACKS[name] || CFG.ENEMY_ATTACK;
+    this.attack = new Attack(name, Object.assign({}, table));
+    this.body.vx = 0;
+    this.body.vz = 0;
+    this.knockback_vx = 0;
+    if (facing) this.facing = facing;
+    return this.attack;
+  };
+
+  Fighter.prototype.canAttack = function () {
+    return this.attack === null && this.attack_cooldown === 0 &&
+           this.hitstun === 0 && !this.dead;
+  };
+
+  Fighter.prototype.attackBox = function () {
+    if (!this.attack) return null;
+    const d = this.attack.defn;
+    const reach = d.reach, depth = d.depth;
+    const y1 = d.height[0], y2 = d.height[1];
+    const x = this.wx;
+    const x1 = this.facing > 0 ? x + 2 : x - reach - 2;
+    const halfDepth = Math.floor(depth / 2);
+    return new Box(x1, x1 + reach, this.wz - halfDepth, this.wz + halfDepth,
+                   this.wy + y1, this.wy + y2);
+  };
+
+  Fighter.prototype.takeHit = function (damage, sourceX, defn) {
+    if (this.dead || this.iframes > 0) return 0;
+    const dmg = Math.min(damage, this.hp);
+    this.hp -= dmg;
+    this.flash = 6;
+    const direction = this.wx >= sourceX ? 1 : -1;
+
+    const armoured = !!(this.attack && this.attack.defn.armour &&
+                        (this.attack.phase() === "startup" || this.attack.phase() === "active") &&
+                        this.hp > 0);
+    if (armoured) {
+      this.iframes = Math.floor((defn.iframes || 0) / 2);
+      return dmg;
+    }
+
+    this.hitstun = defn.hitstun === undefined ? 12 : defn.hitstun;
+    this.hitstop = defn.hitstop || 0;
+    this.iframes = defn.iframes || 0;
+    this.knockback_vx = (defn.knockback || 0) * direction;
+    this.attack = null;
+    if (this.hp <= 0) {
+      this.dead = true;
+      this.hp = 0;
+      this.death_timer = 0;
+      this.body.vy = -0x20000;
+      this.grounded = false;
+    }
+    return dmg;
+  };
+
+  Fighter.prototype.tickTimers = function () {
+    if (this.iframes > 0) this.iframes -= 1;
+    if (this.attack_cooldown > 0) this.attack_cooldown -= 1;
+    if (this.flash > 0) this.flash -= 1;
+    this.anim_frames += 1;
+  };
+
+  Fighter.prototype.applyKnockback = function () {
+    if (this.hitstun <= 0) return;
+    this.hitstun -= 1;
+    if (this.knockback_vx) {
+      this.body.vx = this.knockback_vx;
+      const step = CFG.ENEMY_KNOCKBACK_DECAY;
+      if (this.knockback_vx > 0) this.knockback_vx = Math.max(0, this.knockback_vx - step);
+      else this.knockback_vx = Math.min(0, this.knockback_vx + step);
+    }
+  };
+
+  function Player(x, z, hp) {
+    Fighter.call(this, "player", "player", x, z, hp, CFG.PLAYER_SPRITE_W, CFG.PLAYER_SPRITE_H);
+    this.air_mode = "neutral";
+  }
+  Player.prototype = Object.create(Fighter.prototype);
+  Player.prototype.constructor = Player;
+
+  function Enemy(kind, palette, x, z, hp, laneOffset, cooldown) {
+    Fighter.call(this, kind, palette, x, z, hp, CFG.ENEMY_SPRITE_W, CFG.ENEMY_SPRITE_H);
+    this.lane_offset = laneOffset;
+    this.cooldown = cooldown;
+    this.spawn_delay = 18;
+    this.ai = "approach";
+  }
+  Enemy.prototype = Object.create(Fighter.prototype);
+  Enemy.prototype.constructor = Enemy;
+
+  /* ======================================================================
+   * game — prototype/neon_alley/game.py
+   * ==================================================================== */
+  function Command(opts) {
+    opts = opts || {};
+    this.move_x = opts.move_x || 0;
+    this.move_z = opts.move_z || 0;
+    this.jump = !!opts.jump;
+    this.punch = !!opts.punch;
+    this.kick = !!opts.kick;
+  }
+
+  function approach(value, target, step) {
+    if (value < target) return Math.min(target, value + step);
+    if (value > target) return Math.max(target, value - step);
+    return value;
+  }
+
+  function clamp(v, lo, hi) {
+    return v < lo ? lo : (v > hi ? hi : v);
+  }
+
+  const TITLE = "title", PLAY = "play", VICTORY = "victory", DEFEAT = "defeat";
+
+  function Game() {
+    this.reset();
+  }
+
+  Game.prototype.reset = function () {
+    resetIds();
+    this.state = TITLE;
+    this.frame = 0;
+    this.player = new Player(300, 84, CFG.PLAYER_HP);
+    this.enemies = [];
+    this.wave_index = -1;
+    this.wave_timer = 0;
+    this.kills = 0;
+    this.total_enemies = CFG.WAVES.reduce((n, w) => n + w.length, 0);
+    this.attack_token_owner = null;
+    this.cam_x = this._cameraTarget();
+    this.shake = 0;
+    this.hitstop = 0;
+    this.effects = [];
+    this.outcome_timer = 0;
+  };
+
+  Game.prototype.start = function () {
+    this.state = PLAY;
+    this._spawnWave(0);
+  };
+
+  Game.prototype._spawnWave = function (index) {
+    this.wave_index = index;
+    const wave = CFG.WAVES[index];
+    for (let i = 0; i < wave.length; i++) {
+      const spec = wave[i];
+      this.enemies.push(new Enemy(spec.kind, spec.color, spec.x, spec.z, spec.hp,
+        CFG.ENEMY_LANE_OFFSET[i % CFG.ENEMY_LANE_OFFSET.length],
+        CFG.ENEMY_ATTACK_COOLDOWN[0] + i * 11));
+    }
+  };
+
+  Game.prototype._cameraTarget = function () {
+    return clamp(this.player.wx - CFG.CAM_ANCHOR_X, CFG.CAM_X_MIN, CFG.CAM_X_MAX);
+  };
+
+  Game.prototype.update = function (cmd) {
+    cmd = cmd || new Command();
+    if (this.state !== PLAY) { this.frame += 1; return; }
+    this.frame += 1;
+
+    if (this.hitstop > 0) {
+      this.hitstop -= 1;
+      this._updateEffects();
+      return;
+    }
+
+    this._updatePlayer(cmd);
+    for (let i = 0; i < this.enemies.length; i++) this._updateEnemy(this.enemies[i]);
+    this._resolveBodyCollisions();
+    this._cleanupDead();
+    this._updateWaves();
+    this._updateEffects();
+    this._updateCamera();
+
+    if (this.shake > 0) this.shake -= 1;
+    this.player.tickTimers();
+    for (let i = 0; i < this.enemies.length; i++) this.enemies[i].tickTimers();
+
+    if (this.player.dead) {
+      this.outcome_timer += 1;
+      if (this.outcome_timer > CFG.DEATH_ANIM_FRAMES) this.state = DEFEAT;
+    } else if (this.wave_index === CFG.WAVES.length - 1 && this.enemies.length === 0) {
+      this.outcome_timer += 1;
+      if (this.outcome_timer > CFG.VICTORY_HOLD) this.state = VICTORY;
+    }
+  };
+
+  Game.prototype._updatePlayer = function (cmd) {
+    const p = this.player;
+    if (p.dead) { this._deathPhysics(p); return; }
+    if (p.hitstun > 0) {
+      p.applyKnockback();
+      kin.integrate(p.body);
+      this._clampActor(p);
+      return;
+    }
+    if (p.attack !== null) {
+      this._advanceAttack(p, true);
+      kin.integrate(p.body);
+      this._clampActor(p);
+      return;
+    }
+
+    if (p.grounded) {
+      const targetVx = cmd.move_x * CFG.PLAYER_WALK_VX;
+      p.body.vx = approach(p.body.vx, targetVx, CFG.PLAYER_ACCEL);
+      p.body.vz = cmd.move_z * CFG.PLAYER_DEPTH_VZ;
+      if (cmd.move_x) p.facing = cmd.move_x;
+      if (cmd.jump) {
+        p.body.vy = CFG.JUMP_VY;
+        p.grounded = false;
+        p.air_mode = cmd.move_x ? "directional" : "neutral";
+      }
+    } else {
+      p.body.buttons = cmd.move_x > 0 ? BTN_RIGHT : (cmd.move_x < 0 ? BTN_LEFT : 0);
+      kin.gravity(p.body, p.air_mode);
+      kin.airControl(p.body);
+      kin.clampTerminal(p.body);
+      p.facing = (p.body.state & 0x01) ? -1 : 1;
+    }
+
+    if (p.grounded && (cmd.punch || cmd.kick) && p.canAttack()) {
+      p.startAttack(cmd.kick ? "kick" : "punch");
+    }
+
+    if (kin.integrate(p.body) && !p.grounded && p.body.vy > 0 && p.body.y >= 0) {
+      p.body.y = 0;
+      p.body.vy = 0;
+      p.grounded = true;
+      this._spawnEffect("dust", p.wx, p.wz, 0);
+    }
+    this._clampActor(p);
+  };
+
+  Game.prototype._deathPhysics = function (f) {
+    if (!f.grounded) {
+      kin.gravity(f.body, "directional");
+      kin.clampTerminal(f.body);
+    }
+    if (kin.integrate(f.body) && !f.grounded && f.body.y >= 0) {
+      f.body.y = 0;
+      f.body.vy = 0;
+      f.grounded = true;
+    }
+    f.death_timer += 1;
+    this._clampActor(f);
+  };
+
+  Game.prototype._updateEnemy = function (e) {
+    if (e.dead) { this._deathPhysics(e); return; }
+    if (e.spawn_delay > 0) { e.spawn_delay -= 1; return; }
+    if (e.hitstun > 0) {
+      e.applyKnockback();
+      kin.integrate(e.body);
+      this._clampActor(e);
+      return;
+    }
+    if (e.attack !== null) {
+      this._advanceAttack(e, false);
+      kin.integrate(e.body);
+      this._clampActor(e);
+      return;
+    }
+
+    const p = this.player;
+    const dx = p.wx - e.wx;
+    const dz = (p.wz + e.lane_offset) - e.wz;
+
+    const sign = dx !== 0 ? (dx > 0 ? 1 : -1) : 1;
+    const target_x = Math.trunc(p.wx - sign * CFG.ENEMY_ENGAGE_X);
+    const target_z = clamp(p.wz + e.lane_offset, CFG.ARENA_Z_MIN, CFG.ARENA_Z_MAX);
+
+    let desiredVx = 0;
+    if (Math.abs(dx) > CFG.ENEMY_ENGAGE_X - 4) {
+      desiredVx = target_x > e.wx ? CFG.ENEMY_WALK_VX : -CFG.ENEMY_WALK_VX;
+    }
+    e.body.vx = approach(e.body.vx, desiredVx, CFG.ENEMY_ACCEL);
+
+    let desiredVz = 0;
+    if (Math.abs(dz) > 3) {
+      desiredVz = target_z > e.wz ? CFG.ENEMY_DEPTH_VZ : -CFG.ENEMY_DEPTH_VZ;
+    }
+    e.body.vz = approach(e.body.vz, desiredVz, CFG.ENEMY_ACCEL);
+
+    if (dx) e.facing = dx > 0 ? 1 : -1;
+    if (e.cooldown > 0) e.cooldown -= 1;
+
+    const inRange = Math.abs(dx) <= CFG.ENEMY_ENGAGE_X + 6 && Math.abs(dz) <= CFG.ENEMY_ENGAGE_Z + 4;
+    if (inRange && e.cooldown === 0 && this.attack_token_owner === null && !p.dead) {
+      e.startAttack("enemy", dx >= 0 ? 1 : -1);
+      e.ai = "attack";
+      this.attack_token_owner = e.id;
+    }
+
+    kin.integrate(e.body);
+    this._clampActor(e);
+  };
+
+  Game.prototype._advanceAttack = function (f, isPlayer) {
+    const atk = f.attack;
+    const phase = atk.phase();
+
+    if (phase === "startup" || phase === "active") {
+      f.body.vx = (atk.defn.lunge || 0) * f.facing;
+    } else if (phase === "recovery") {
+      f.body.vx = 0;
+    }
+
+    if (phase === "active") {
+      const box = f.attackBox();
+      if (isPlayer) {
+        for (let i = 0; i < this.enemies.length; i++) {
+          const enemy = this.enemies[i];
+          if (enemy.dead || atk.hit_ids.has(enemy.id)) continue;
+          if (aabbOverlap(box, enemy.bodyBox())) {
+            atk.hit_ids.add(enemy.id);
+            const dealt = enemy.takeHit(atk.defn.damage, f.wx, atk.defn);
+            if (dealt) this._onHit(f, enemy, dealt, atk.name);
+          }
+        }
+      } else {
+        const p = this.player;
+        if (!atk.hit_ids.has(p.id)) {
+          const defn = Object.assign({}, atk.defn, { iframes: CFG.PLAYER_HURT_IFRAMES });
+          if (aabbOverlap(box, p.bodyBox())) {
+            atk.hit_ids.add(p.id);
+            const dealt = p.takeHit(defn.damage, f.wx, defn);
+            if (dealt) this._onHit(f, p, dealt, "enemy");
+          }
+        }
+      }
+    }
+
+    atk.advance();
+    if (atk.phase() === "done") {
+      f.attack = null;
+      f.attack_cooldown = atk.defn.cooldown || 0;
+      if (!isPlayer) {
+        f.ai = "approach";
+        f.cooldown = CFG.ENEMY_ATTACK_COOLDOWN[1];
+        if (this.attack_token_owner === f.id) this.attack_token_owner = null;
+      }
+    }
+  };
+
+  Game.prototype._onHit = function (attacker, victim, damage, kind) {
+    const stop = attacker.attack ? (attacker.attack.defn.hitstop || 0) : 0;
+    this.hitstop = Math.max(this.hitstop, stop);
+    this.shake = Math.max(this.shake, kind === "kick" ? 6 : 4);
+    const x = victim.wx, z = victim.wz, y = victim.wy - 28;
+    const col = kind === "enemy" ? "red" : "cyan";
+    this._spawnEffect("spark", x, z, y, col);
+    this._spawnEffect("ring", x, z, y, col);
+    this._spawnEffect("popup", x, z, y, "cyan", damage);  // Python: value=damage, colour default
+    if (victim.dead && victim !== this.player) {
+      this.kills += 1;
+      this._spawnEffect("ko", x, z, y, "amber");
+      if (this.attack_token_owner === victim.id) this.attack_token_owner = null;
+    }
+  };
+
+  Game.prototype._clampActor = function (f) {
+    const lo = f.body.x & 0xffff;
+    f.body.x = s32((clamp(f.wx, CFG.ARENA_X_MIN, CFG.ARENA_X_MAX) << 16) | lo);
+    const loz = f.body.z & 0xffff;
+    f.body.z = s32((clamp(f.wz, CFG.ARENA_Z_MIN, CFG.ARENA_Z_MAX) << 16) | loz);
+    if (f.grounded) { f.body.y = 0; f.body.vy = 0; }
+  };
+
+  Game.prototype._resolveBodyCollisions = function () {
+    const actors = [this.player].concat(this.enemies);
+    for (let i = 0; i < actors.length; i++) {
+      for (let j = i + 1; j < actors.length; j++) {
+        const a = actors[i], b = actors[j];
+        if (a.dead || b.dead) continue;
+        const ba = a.bodyBox(), bb = b.bodyBox();
+        if (!aabbOverlap(ba, bb)) continue;
+        const ox = Math.min(ba.x2, bb.x2) - Math.max(ba.x1, bb.x1);
+        const oz = Math.min(ba.z2, bb.z2) - Math.max(ba.z1, bb.z1);
+        if (ox <= 0 || oz <= 0) continue;
+        let wa, wb;
+        if (a === this.player) { wa = 0.25; wb = 0.75; }
+        else if (b === this.player) { wa = 0.75; wb = 0.25; }
+        else { wa = 0.5; wb = 0.5; }
+        if (ox <= oz) {
+          const ax = Math.trunc(ox * wa) * ONE;
+          const bx = Math.trunc(ox * wb) * ONE;
+          if (a.wx < b.wx) { a.body.x = s32(a.body.x - ax); b.body.x = s32(b.body.x + bx); }
+          else { a.body.x = s32(a.body.x + ax); b.body.x = s32(b.body.x - bx); }
+        } else {
+          const az = Math.trunc(oz * wa) * ONE;
+          const bz = Math.trunc(oz * wb) * ONE;
+          if (a.wz < b.wz) { a.body.z = s32(a.body.z - az); b.body.z = s32(b.body.z + bz); }
+          else { a.body.z = s32(a.body.z + az); b.body.z = s32(b.body.z - bz); }
+        }
+        this._clampActor(a);
+        this._clampActor(b);
+      }
+    }
+  };
+
+  Game.prototype._cleanupDead = function () {
+    const keep = [];
+    for (let i = 0; i < this.enemies.length; i++) {
+      const e = this.enemies[i];
+      if (e.dead && e.death_timer > CFG.DEATH_ANIM_FRAMES) continue;
+      keep.push(e);
+    }
+    this.enemies = keep;
+  };
+
+  Game.prototype._updateWaves = function () {
+    if (this.player.dead) return;
+    if (this.enemies.length) return;
+    if (this.wave_index < 0) return;
+    if (this.wave_index + 1 < CFG.WAVES.length) {
+      this.wave_timer += 1;
+      if (this.wave_timer >= CFG.WAVE_DELAY_FRAMES) {
+        this.wave_timer = 0;
+        this._spawnWave(this.wave_index + 1);
+      }
+    } else {
+      this.wave_timer += 1;
+    }
+  };
+
+  Game.prototype._updateCamera = function () {
+    const target = this._cameraTarget();
+    this.cam_x += clamp(target - this.cam_x, -12, 12);
+  };
+
+  const EFFECT_TTL = { spark: 12, ring: 14, popup: 38, dust: 16, ko: 26 };
+
+  Game.prototype._spawnEffect = function (kind, x, z, y, color, value) {
+    this.effects.push({ kind: kind, x: x, z: z, y: y, t: 0, ttl: EFFECT_TTL[kind],
+                        color: color === undefined ? "cyan" : color, value: value || 0 });
+  };
+
+  Game.prototype._updateEffects = function () {
+    const live = [];
+    for (let i = 0; i < this.effects.length; i++) {
+      const e = this.effects[i];
+      e.t += 1;
+      if (e.t < e.ttl) live.push(e);
+    }
+    this.effects = live;
+  };
+
+  Game.prototype.snapshot = function () {
+    return {
+      state: this.state,
+      frame: this.frame,
+      wave: this.wave_index,
+      kills: this.kills,
+      player: {
+        hp: this.player.hp, x: this.player.wx, z: this.player.wz,
+        y: this.player.wy, grounded: this.player.grounded,
+        facing: this.player.facing, dead: this.player.dead,
+      },
+      enemies: this.enemies.map(function (e) {
+        return { id: e.id, hp: e.hp, x: e.wx, z: e.wz, dead: e.dead };
+      }),
+    };
+  };
+
+  /* ---- full state, used by the conformance harness (mirrors the Python dump) -- */
+  function dumpFighter(f) {
+    return {
+      id: f.id, hp: f.hp, x: f.wx, y: f.wy, z: f.wz,
+      vx: f.body.vx, vy: f.body.vy, vz: f.body.vz,
+      grounded: f.grounded, facing: f.facing, hitstun: f.hitstun,
+      iframes: f.iframes, dead: f.dead, death_timer: f.death_timer,
+      attack: f.attack ? f.attack.name + ":" + f.attack.frame : null,
+      cooldown: f.attack_cooldown,
+    };
+  }
+
+  Game.prototype.dump = function () {
+    return {
+      frame: this.frame, state: this.state, kills: this.kills,
+      wave: this.wave_index, cam_x: this.cam_x, hitstop: this.hitstop,
+      shake: this.shake, outcome_timer: this.outcome_timer,
+      effects: this.effects.length,
+      player: dumpFighter(this.player),
+      enemies: this.enemies.map(dumpFighter),
+    };
+  };
+
+  /* ======================================================================
+   * Renderer — prototype/neon_alley/render.py (canvas 2D)
+   * ==================================================================== */
+  const COL = {
+    bgTop: [10, 8, 22], bgBottom: [36, 18, 58],
+    neonPink: "#ff2d95", neonCyan: "#22e6ff", neonAmber: "#ffb020",
+    neonLime: "#9dff4a", neonViolet: "#ba6cff", white: "#f0f6ff",
+    floor: "#1c182c", floorLine: "#3c345c",
+  };
+
+  const PALETTE = {
+    player: { main: "#e8f4ff", accent: COL.neonCyan, glow: COL.neonCyan, skin: "#ffd6ba", dark: "#26344e" },
+    amber: { main: "#ffbe60", accent: "#ff7828", glow: COL.neonAmber, skin: "#d6a078", dark: "#482818" },
+    violet: { main: "#c496ff", accent: "#8c50ff", glow: COL.neonViolet, skin: "#ce aac8".replace(" ", ""), dark: "#301e48" },
+    lime: { main: "#beff8c", accent: "#5adc5a", glow: COL.neonLime, skin: "#c8dcaa", dark: "#1e3c24" },
+  };
+
+  function lerpCol(a, b, t) {
+    return "rgb(" + Math.round(a[0] + (b[0] - a[0]) * t) + "," +
+           Math.round(a[1] + (b[1] - a[1]) * t) + "," +
+           Math.round(a[2] + (b[2] - a[2]) * t) + ")";
+  }
+
+  function Renderer() {
+    this.W = CFG.VIRTUAL_W;
+    this.H = CFG.VIRTUAL_H;
+    this.canvas = document.createElement("canvas");
+    this.canvas.width = this.W;
+    this.canvas.height = this.H;
+    this.ctx = this.canvas.getContext("2d");
+    this.ctx.imageSmoothingEnabled = false;
+    this.fonts = {
+      big: "bold 34px ui-monospace, Menlo, monospace",
+      mid: "bold 15px ui-monospace, Menlo, monospace",
+      small: "11px ui-monospace, Menlo, monospace",
+      tiny: "9px ui-monospace, Menlo, monospace",
+    };
+    this.bg = this._buildBackground();
+    this.far = this._buildFar();
+  }
+
+  Renderer.prototype._buildBackground = function () {
+    const c = document.createElement("canvas");
+    c.width = this.W; c.height = this.H;
+    const g = c.getContext("2d");
+    for (let y = 0; y < 120; y++) {
+      g.fillStyle = lerpCol(COL.bgTop, COL.bgBottom, y / 120);
+      g.fillRect(0, y, this.W, 1);
+    }
+    g.fillStyle = "#161324"; g.fillRect(0, 120, this.W, 14);
+    g.fillStyle = COL.floor; g.fillRect(0, 134, this.W, this.H - 134);
+
+    // depth lanes: sy = (Z >> 1) + $80, the same expression project() uses
+    for (let z = CFG.ARENA_Z_MIN; z <= CFG.ARENA_Z_MAX; z += 24) {
+      const sy = (z >> 1) + 0x80;
+      const alpha = 30 + Math.round(30 * (1 - z / CFG.ARENA_Z_MAX));
+      g.fillStyle = "rgba(110,210,255," + (alpha / 255).toFixed(3) + ")";
+      g.fillRect(0, sy, this.W, 1);
+    }
+    g.strokeStyle = "#211d32"; g.lineWidth = 1;
+    for (let x = -160; x < this.W + 160; x += 48) {
+      g.beginPath(); g.moveTo(x + 0.5, 134); g.lineTo(x - 46 + 0.5, this.H); g.stroke();
+    }
+    const puddles = [[30, 196, 62], [236, 214, 84], [146, 166, 46]];
+    for (const p of puddles) {
+      g.fillStyle = "rgba(70,120,160,0.14)";
+      g.beginPath(); g.ellipse(p[0] + p[2] / 2, p[1] + 4, p[2] / 2, 4, 0, 0, Math.PI * 2); g.fill();
+      g.strokeStyle = "rgba(60,150,190,0.55)";
+      g.beginPath(); g.moveTo(p[0] + 8, p[1] + 4); g.lineTo(p[0] + p[2] - 10, p[1] + 4); g.stroke();
+    }
+    g.strokeStyle = "#3a3458"; g.lineWidth = 2;
+    g.beginPath(); g.moveTo(0, 134); g.lineTo(this.W, 134); g.stroke();
+    return c;
+  };
+
+  Renderer.prototype._buildFar = function () {
+    const W = 512, H = 134;
+    const c = document.createElement("canvas");
+    c.width = W; c.height = H;
+    const g = c.getContext("2d");
+    const grad = g.createLinearGradient(0, 84, 0, 134);
+    grad.addColorStop(0, "rgba(58,34,92,0)");
+    grad.addColorStop(1, "rgba(58,34,92,0.6)");
+    g.fillStyle = grad; g.fillRect(0, 84, W, 50);
+
+    let x = 0, i = 0;
+    while (x < W) {
+      const w = 20 + (i * 37) % 28;
+      const h = 26 + (i * 53) % 52;
+      const top = 122 - h;
+      g.fillStyle = "#1e1938"; g.fillRect(x, top, w, h + 12);
+      g.strokeStyle = "#56468a"; g.lineWidth = 1;
+      g.beginPath(); g.moveTo(x + 0.5, top + 0.5); g.lineTo(x + w, top + 0.5); g.stroke();
+      for (let wy = top + 6; wy < 120; wy += 7) {
+        for (let wx = x + 4; wx < x + w - 4; wx += 6) {
+          if ((wx * 7 + wy * 13 + i) % 6 === 0) {
+            g.fillStyle = "#46508a"; g.fillRect(wx, wy, 2, 3);
+          }
+        }
+      }
+      x += w + 8; i += 1;
+    }
+
+    const buildings = [[0, 106, 46, "#141026"], [118, 94, 62, "#0f0c1e"],
+                       [224, 118, 40, "#171230"], [354, 148, 70, "#0e0b1c"]];
+    for (const b of buildings) {
+      const [bx, bw, bh, col] = b;
+      const top = 122 - bh;
+      g.fillStyle = col; g.fillRect(bx, top, bw, bh + 12);
+      g.strokeStyle = "#6852a0"; g.lineWidth = 2;
+      g.beginPath(); g.moveTo(bx, top + 1); g.lineTo(bx + bw, top + 1); g.stroke();
+      for (let wy = top + 7; wy < 116; wy += 8) {
+        for (let wx = bx + 5; wx < bx + bw - 5; wx += 7) {
+          const lit = (wx * 5 + wy * 11) % 9;
+          if (lit < 3) {
+            g.fillStyle = lit === 0 ? "#f0ba60" : "#689cdc";
+            g.fillRect(wx, wy, 2, 3);
+          }
+        }
+      }
+    }
+    this._sign(g, "OPEN", 18, 88, COL.neonPink);
+    this._sign(g, "24H", 186, 74, COL.neonCyan);
+    this._sign(g, "BAR", 374, 92, COL.neonAmber);
+    return c;
+  };
+
+  Renderer.prototype._sign = function (g, text, x, y, colour) {
+    g.save();
+    g.font = "bold 15px ui-monospace, Menlo, monospace";
+    g.shadowColor = colour;
+    g.shadowBlur = 8;
+    g.fillStyle = colour;
+    g.fillText(text, x, y + 12);
+    g.restore();
+  };
+
+  Renderer.prototype._groundSy = function (actor, camX) {
+    // the verified projection again, with Y = 0 (shadow stays on the plane)
+    const tmp = new Actor(actor.type_id, 0, 0, actor.x, actor.z, 0);
+    return project(tmp, camX, 0, false)[1];
+  };
+
+  Renderer.prototype._screen = function (actor, camX) {
+    return project(actor, camX, 0, false);
+  };
+
+  Renderer.prototype._pose = function (f) {
+    if (f.dead) return "down";
+    if (f.attack) {
+      const ph = f.attack.phase();
+      if (ph === "startup") return "wind";
+      if (ph === "active") return f.attack.name === "kick" ? "strike_kick" : "strike_punch";
+      return "recover";
+    }
+    if (f.hitstun > 0) return "hurt";
+    if (!f.grounded) return "jump";
+    if (Math.abs(f.body.vx) > 0x3000) return "walk";
+    return "idle";
+  };
+
+  Renderer.prototype.draw = function (game, t) {
+    const g = this.ctx;
+    g.setTransform(1, 0, 0, 1, 0, 0);
+    g.clearRect(0, 0, this.W, this.H);
+    const cam = game.cam_x;
+    g.drawImage(this.bg, 0, 0);
+    const off = -Math.trunc(cam * 0.45) % this.far.width;
+    g.drawImage(this.far, off - this.far.width, 0);
+    g.drawImage(this.far, off, 0);
+
+    if (game.state === TITLE) {
+      this._drawTitle(g, game, t);
+      this._overlays(g);
+      return this.canvas;
+    }
+
+    this._drawShadows(g, game, cam);
+    this._drawActors(g, game, cam, t);
+    this._drawEffects(g, game, cam);
+    this._drawHud(g, game);
+    this._overlays(g);
+
+    if (game.state === VICTORY) this._drawEnd(g, "AREA CLEARED", COL.neonCyan, game, t);
+    else if (game.state === DEFEAT) this._drawEnd(g, "YOU ARE DOWN", COL.neonPink, game, t);
+    return this.canvas;
+  };
+
+  Renderer.prototype._overlays = function (g) {
+    g.fillStyle = "rgba(0,0,0,0.09)";
+    for (let y = 0; y < this.H; y += 3) g.fillRect(0, y, this.W, 1);
+    const vig = g.createRadialGradient(this.W / 2, this.H / 2, this.H * 0.35,
+                                       this.W / 2, this.H / 2, this.H * 0.95);
+    vig.addColorStop(0, "rgba(0,0,0,0)");
+    vig.addColorStop(1, "rgba(0,0,0,0.55)");
+    g.fillStyle = vig; g.fillRect(0, 0, this.W, this.H);
+  };
+
+  Renderer.prototype._center = function (g, text, font, colour, y, glow) {
+    g.save();
+    g.font = font;
+    g.textAlign = "center";
+    if (glow) { g.shadowColor = glow; g.shadowBlur = 12; }
+    g.fillStyle = colour;
+    g.fillText(text, this.W / 2, y);
+    g.restore();
+  };
+
+  Renderer.prototype._drawTitle = function (g, game, t) {
+    g.fillStyle = "rgba(6,4,14,0.78)";
+    g.fillRect(0, 0, this.W, this.H);
+    const pulse = 0.5 + 0.5 * Math.sin(t * 2.4);
+    this._center(g, "NEON ALLEY", this.fonts.big,
+                 pulse > 0.5 ? COL.neonCyan : "#bff8ff", 60, COL.neonPink);
+    this._center(g, "a two-lane brawl under the signs", this.fonts.small, "#aabbd2", 78);
+    const lines = [
+      ["A / D", "move"], ["W / S", "step through depth"],
+      ["SPACE", "jump  (air control while holding A/D)"],
+      ["J", "punch"], ["K", "kick"], ["R", "restart anytime"],
+    ];
+    let y = 100;
+    for (const [key, label] of lines) {
+      g.save();
+      g.font = this.fonts.small;
+      g.textAlign = "right"; g.fillStyle = COL.white; g.fillText(key, this.W / 2 - 8, y);
+      g.textAlign = "left"; g.fillStyle = "#9fb0cc"; g.fillText(label, this.W / 2 + 8, y);
+      g.restore();
+      y += 15;
+    }
+    if ((t * 2) % 2 < 1.3) {
+      this._center(g, "PRESS ENTER", this.fonts.mid, COL.neonAmber, 208, COL.neonAmber);
+    }
+  };
+
+  Renderer.prototype._drawEnd = function (g, text, colour, game, t) {
+    g.fillStyle = "rgba(4,3,10,0.72)";
+    g.fillRect(0, 0, this.W, this.H);
+    this._center(g, text, this.fonts.big, colour, 96, colour);
+    this._center(g, "knockouts " + game.kills + "/" + game.total_enemies,
+                 this.fonts.small, COL.white, 122);
+    if ((t * 2) % 2 < 1.3) {
+      this._center(g, "PRESS R TO RUN IT AGAIN", this.fonts.mid, COL.neonAmber, 156, COL.neonAmber);
+    }
+  };
+
+  Renderer.prototype._drawShadows = function (g, game, cam) {
+    const all = [game.player].concat(game.enemies);
+    for (const f of all) {
+      if (f.dead && f.death_timer > 30) continue;
+      const sc = this._screen(f.body, cam);
+      if (sc[2]) continue;
+      const sy = this._groundSy(f.body, cam);
+      const height = Math.max(0, -f.wy);
+      const fade = Math.max(0, 1 - height / 190);
+      const w = Math.max(4, Math.trunc(26 - 8 * (1 - fade)));
+      const h = Math.max(3, Math.trunc(8 * fade));
+      g.save();
+      g.fillStyle = "rgba(0,0,0," + (0.47 * fade).toFixed(3) + ")";
+      g.beginPath();
+      g.ellipse(sc[0], sy - h / 2, w / 2, h / 2, 0, 0, Math.PI * 2);
+      g.fill();
+      g.restore();
+      if (f.kind === "player") {
+        g.fillStyle = COL.neonCyan;
+        g.beginPath();
+        g.moveTo(sc[0] - 3, sy + 4); g.lineTo(sc[0] + 3, sy + 4); g.lineTo(sc[0], sy + 1);
+        g.closePath(); g.fill();
+      }
+    }
+  };
+
+  Renderer.prototype._drawActors = function (g, game, cam, t) {
+    const list = [];
+    const all = [game.player].concat(game.enemies);
+    for (const f of all) {
+      const sc = this._screen(f.body, cam);
+      if (sc[2]) continue;
+      list.push({ z: f.wz, y: f.wy, id: f.id, f: f, sx: sc[0], sy: sc[1] });
+    }
+    list.sort((a, b) => (a.z - b.z) || (a.y - b.y) || (a.id - b.id));
+    for (const item of list) this._drawFighter(g, item.f, item.sx, item.sy);
+  };
+
+  Renderer.prototype._limb = function (g, p1, p2, width, colour, rim) {
+    g.strokeStyle = rim; g.lineWidth = width + 2; g.lineCap = "round";
+    g.beginPath(); g.moveTo(p1[0], p1[1]); g.lineTo(p2[0], p2[1]); g.stroke();
+    g.strokeStyle = colour; g.lineWidth = width;
+    g.beginPath(); g.moveTo(p1[0], p1[1]); g.lineTo(p2[0], p2[1]); g.stroke();
+    g.fillStyle = colour;
+    for (const p of [p1, p2]) {
+      g.beginPath(); g.arc(p[0], p[1], width / 2, 0, Math.PI * 2); g.fill();
+    }
+  };
+
+  Renderer.prototype._drawFighter = function (g, f, sx, sy) {
+    const pal = PALETTE[f.palette] || PALETTE.amber;
+    const pose = this._pose(f);
+    const phase = (f.anim_frames * 0.20) % (Math.PI * 2);
+    const facing = f.facing;
+    const flash = f.flash > 0 && (f.flash % 4 < 2);
+    const bodyCol = flash ? "#ffffff" : pal.main;
+    const accent = pal.accent, glow = pal.glow, skin = pal.skin, dark = pal.dark;
+    const outline = "#08060e";
+
+    if (pose === "down") {
+      g.strokeStyle = outline; g.lineWidth = 8;
+      g.beginPath(); g.moveTo(sx - 15, sy - 4); g.lineTo(sx + 15, sy - 4); g.stroke();
+      g.strokeStyle = dark; g.lineWidth = 6;
+      g.beginPath(); g.moveTo(sx - 15, sy - 4); g.lineTo(sx + 15, sy - 4); g.stroke();
+      g.fillStyle = skin;
+      g.beginPath(); g.arc(sx + 15 * facing, sy - 5, 4, 0, Math.PI * 2); g.fill();
+      g.strokeStyle = accent; g.lineWidth = 1;
+      g.beginPath(); g.moveTo(sx - 14, sy - 7); g.lineTo(sx + 12, sy - 7); g.stroke();
+      return;
+    }
+
+    const bob = pose === "idle" ? Math.trunc(Math.sin(phase * 0.6) * 1) : 0;
+    const leanTable = { walk: 1, hurt: -3, wind: -2, strike_punch: 3, strike_kick: 2 };
+    const lean = (leanTable[pose] || 0) * facing;
+
+    let hipY = sy - 18 + bob;
+    let headY = sy - 33 + bob;
+    let shoulderY = hipY - 11;
+    if (pose === "jump") { hipY = sy - 22; headY = sy - 37; shoulderY = sy - 33; }
+    if (pose === "hurt") headY += 2;
+
+    let legs;
+    if (pose === "jump") {
+      legs = [[sx - 2, hipY, sx - 6, hipY + 8], [sx + 2, hipY, sx + 5, hipY + 7]];
+    } else if (pose === "walk") {
+      const sw = Math.sin(phase) * 5;
+      legs = [[sx - 2, hipY, sx - 2 - sw, sy], [sx + 2, hipY, sx + 2 + sw, sy]];
+    } else if (pose === "strike_kick") {
+      legs = [[sx - 2, hipY, sx - 4, sy], [sx + 1, hipY, sx + 15 * facing, hipY + 5]];
+    } else if (pose === "hurt") {
+      legs = [[sx - 2, hipY, sx - 4, sy], [sx + 2, hipY, sx + 4, sy]];
+    } else {
+      legs = [[sx - 2, hipY, sx - 3, sy], [sx + 2, hipY, sx + 3, sy]];
+    }
+    for (const l of legs) this._limb(g, [l[0] + lean, l[1]], [l[2], l[3]], 3, dark, outline);
+
+    const tw = 6;
+    const pts = [[sx - tw + lean, hipY + 1], [sx + tw + lean, hipY + 1],
+                 [sx + tw - 1 + lean, shoulderY - 1], [sx - tw + 1 + lean, shoulderY - 1]];
+    g.fillStyle = outline;
+    g.beginPath();
+    g.moveTo(pts[0][0] + (pts[0][0] > sx ? 1 : -1), pts[0][1]);
+    for (let i = 1; i < pts.length; i++) g.lineTo(pts[i][0], pts[i][1]);
+    g.closePath(); g.fill();
+    g.fillStyle = bodyCol;
+    g.beginPath(); g.moveTo(pts[0][0], pts[0][1]);
+    for (let i = 1; i < pts.length; i++) g.lineTo(pts[i][0], pts[i][1]);
+    g.closePath(); g.fill();
+    g.strokeStyle = accent; g.lineWidth = 1; g.stroke();
+    g.beginPath(); g.moveTo(sx - tw + 1 + lean, hipY); g.lineTo(sx + tw - 1 + lean, hipY); g.stroke();
+
+    g.fillStyle = outline;
+    g.beginPath(); g.arc(sx + lean, headY, 6, 0, Math.PI * 2); g.fill();
+    g.fillStyle = skin;
+    g.beginPath(); g.arc(sx + lean, headY, 5, 0, Math.PI * 2); g.fill();
+    g.strokeStyle = accent; g.lineWidth = 1;
+    g.beginPath(); g.arc(sx + lean, headY, 5, 0, Math.PI * 2); g.stroke();
+    g.strokeStyle = glow; g.lineWidth = 1.5;
+    g.beginPath();
+    g.moveTo(sx + lean + 1 * facing, headY - 1);
+    g.lineTo(sx + lean + 4 * facing, headY - 1);
+    g.stroke();
+
+    let arms;
+    if (pose === "strike_punch") {
+      arms = [[sx - 2, shoulderY, sx - 6 * facing, shoulderY + 7],
+              [sx + 2, shoulderY, sx + 15 * facing, shoulderY + 1]];
+    } else if (pose === "wind") {
+      arms = [[sx - 2, shoulderY, sx - 7, shoulderY + 6],
+              [sx + 1, shoulderY, sx - 3 * facing, shoulderY + 3]];
+    } else if (pose === "strike_kick") {
+      arms = [[sx - 1, shoulderY, sx - 9, shoulderY - 2],
+              [sx + 1, shoulderY, sx + 5, shoulderY + 6]];
+    } else if (pose === "hurt") {
+      arms = [[sx - 1, shoulderY, sx - 8, shoulderY - 4],
+              [sx + 1, shoulderY, sx + 8, shoulderY - 5]];
+    } else if (pose === "jump") {
+      arms = [[sx - 1, shoulderY, sx - 9, shoulderY - 3],
+              [sx + 1, shoulderY, sx + 8, shoulderY - 2]];
+    } else {
+      const swing = pose === "walk" ? Math.sin(phase) * 3 : 0;
+      arms = [[sx - 1, shoulderY, sx - 5 - swing, shoulderY + 9],
+              [sx + 1, shoulderY, sx + 5 + swing, shoulderY + 9]];
+    }
+    for (const a of arms) this._limb(g, [a[0] + lean, a[1]], [a[2], a[3]], 2, skin, outline);
+
+    if (pose === "wind") {
+      g.strokeStyle = COL.neonAmber; g.lineWidth = 1.5;
+      g.beginPath(); g.arc(sx + 10 * facing, shoulderY + 2, 2.5, 0, Math.PI * 2); g.stroke();
+    }
+    if (f.attack && f.attack.phase() === "active") {
+      const tip = f.attack.name === "kick" ? 16 : 14;
+      const ty = hipY + (f.attack.name === "kick" ? 4 : 1);
+      g.strokeStyle = COL.white; g.lineWidth = 1.5;
+      g.beginPath(); g.arc(sx + tip * facing, ty, 3, 0, Math.PI * 2); g.stroke();
+    }
+  };
+
+  Renderer.prototype._drawEffects = function (g, game, cam) {
+    for (const e of game.effects) {
+      const actor = new Actor(1, 0, 0, e.x * ONE, e.z * ONE, e.y * ONE);
+      const sc = project(actor, cam, 0, false);
+      const sx = sc[0], sy = sc[1];
+      if (sc[2]) continue;
+      const k = e.t / e.ttl;
+      const col = e.color === "red" ? "#ff6060" : (e.color === "amber" ? COL.neonAmber : COL.neonCyan);
+
+      if (e.kind === "spark") {
+        for (let i = 0; i < 7; i++) {
+          const ang = i * (Math.PI * 2 / 7) + 0.4;
+          const r0 = 2 + 9 * k, r1 = r0 + 6 * (1 - k);
+          g.strokeStyle = COL.white; g.lineWidth = 1.6;
+          g.beginPath();
+          g.moveTo(sx + Math.cos(ang) * r0, sy + Math.sin(ang) * r0);
+          g.lineTo(sx + Math.cos(ang) * r1, sy + Math.sin(ang) * r1);
+          g.stroke();
+        }
+      } else if (e.kind === "ring") {
+        g.strokeStyle = col;
+        g.lineWidth = Math.max(1, 3 - Math.trunc(2 * k));
+        g.beginPath(); g.arc(sx, sy, 3 + 17 * k, 0, Math.PI * 2); g.stroke();
+      } else if (e.kind === "popup") {
+        g.save();
+        g.globalAlpha = Math.max(0, 1 - k);
+        g.font = "bold 11px ui-monospace, Menlo, monospace";
+        g.fillStyle = COL.white;
+        g.textAlign = "center";
+        g.fillText(String(e.value), sx, sy - 12 - 14 * k);
+        g.restore();
+      } else if (e.kind === "dust") {
+        g.fillStyle = "#787896";
+        for (const dx of [-4, 0, 4]) {
+          g.beginPath();
+          g.arc(sx + dx, sy - 3 * k, Math.trunc(3 * (1 - k)) + 1, 0, Math.PI * 2);
+          g.fill();
+        }
+      } else if (e.kind === "ko") {
+        g.strokeStyle = COL.neonAmber;
+        g.lineWidth = Math.max(1, 4 - Math.trunc(3 * k));
+        g.beginPath(); g.arc(sx, sy, 5 + 30 * k, 0, Math.PI * 2); g.stroke();
+      }
+    }
+  };
+
+  Renderer.prototype._drawHud = function (g, game) {
+    const bx = 10, by = 17, bw = 150, bh = 8;
+    g.fillStyle = "#0c0c16";
+    g.fillRect(bx - 3, by - 3, bw + 6, bh + 6);
+    const frac = game.player.hp / game.player.max_hp;
+    g.fillStyle = "#1e283c"; g.fillRect(bx, by, bw, bh);
+    g.fillStyle = frac > 0.35 ? COL.neonCyan : "#ff5a5a";
+    g.fillRect(bx, by, Math.round(bw * frac), bh);
+    g.strokeStyle = "#b4dcff"; g.lineWidth = 1;
+    g.strokeRect(bx + 0.5, by + 0.5, bw - 1, bh - 1);
+    g.save();
+    g.font = this.fonts.tiny; g.fillStyle = COL.white;
+    g.fillText("KAI", bx, by - 4);
+    g.textAlign = "right";
+    g.font = this.fonts.small; g.fillStyle = COL.neonAmber;
+    g.fillText("WAVE " + Math.min(game.wave_index + 1, CFG.WAVES.length) + "/" + CFG.WAVES.length,
+               this.W - 10, 13);
+    g.font = this.fonts.tiny; g.fillStyle = "#aabedc";
+    const alive = game.enemies.filter(function (e) { return !e.dead; }).length;
+    g.fillText("enemies " + alive + "   ko " + game.kills + "/" + game.total_enemies,
+               this.W - 10, 25);
+    g.textAlign = "center"; g.fillStyle = "#7884a4";
+    g.fillText("A/D move   W/S depth   SPACE jump   J punch   K kick   R restart",
+               this.W / 2, this.H - 6);
+    g.restore();
+  };
+
+  /* ======================================================================
+   * exports
+   * ==================================================================== */
+  const api = {
+    // constants
+    CFG: CFG, ONE: ONE,
+    // engine
+    s32: s32, hi16: hi16, s16: s16, kin: kin, project: project,
+    buildPlayerBoxes: buildPlayerBoxes, aabbOverlap: aabbOverlap, Box: Box,
+    Z_TABLE: Z_TABLE, BODY_BOX_TABLE: BODY_BOX_TABLE,
+    // game
+    Game: Game, Command: Command, Actor: Actor, Fighter: Fighter,
+    Player: Player, Enemy: Enemy, Attack: Attack,
+    TITLE: TITLE, PLAY: PLAY, VICTORY: VICTORY, DEFEAT: DEFEAT,
+    Renderer: Renderer, PALETTE: PALETTE, COL: COL,
+  };
+  return api;
+});

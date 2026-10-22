@@ -7,7 +7,7 @@ recovered in Stage 2. Source, tests, tools, recorded data and screenshots are in
 
 | measurement | result |
 | --- | --- |
-| Prototype integration tests | **52 passed, 0 failed, 0 errors, 0 skipped** |
+| Prototype integration tests | **60 passed, 0 failed, 0 errors, 0 skipped** |
 | Original Stage-2 verification, re-run unchanged | **37 passed, 0 failed**, 7,740 ROM differential comparisons |
 | ROM forensics, re-run unchanged | 11 ROMs verified, Kosinski cross-check OK |
 | Deterministic recorded encounter | **VICTORY** at frame 875, 3/3 knockouts, 56/80 health, first damage at frame 208 |
@@ -15,7 +15,8 @@ recovered in Stage 2. Source, tests, tools, recorded data and screenshots are in
 | Recorded-input replay | replay matches recording exactly (`True`) |
 | Verified-component calls on the drawn path (875 frames) | `integrate` 1,775 · `build_boxes` 2,298 · `aabb` 1,165 · `gravity` 28 · `clamp` 28 · `air_control` 16 · `project` 6,984 |
 | Throughput (simulation + draw + 3× upscale, headless) | ≈ 400 FPS; draw alone ≈ 1,960 FPS (target 60) |
-| Game code | 1,542 lines across 7 modules; 859 lines of tests (incl. package init); 1 dependency (pygame 2.6.1) |
+| Game code | 1,542 lines across 7 modules; 859 lines of tests; 1 dependency (pygame 2.6.1) |
+| Browser build | 1 file, 56 KiB, no dependencies; JS port verified frame-exact against the Python reference |
 
 ---
 
@@ -53,8 +54,8 @@ The brief's criteria, restated, each with the evidence that decides it.
 | 9 | Ground shadows that stay grounded during a jump, impact effects, procedural art | **PASS** | `test_shadow_stays_on_the_ground_during_a_jump` (shadow `sy` identical airborne, body `sy` lower/above); spark/ring/dust/KO/popup effects; screenshot `03_jump.png` shows the body airborne over a grounded shadow |
 | 10 | 60 FPS target and responsive scaling | **PASS** | fixed 1/60 s step with an accumulator, `clock.tick(60)`; ≈400 FPS sim+draw; `test_window_scales_without_changing_the_canvas` at 640×400, 1280×720, 1920×1080 |
 | 11 | **Demonstrable reuse**: fixed-point, gravity/vertical velocity, air control, velocity limits, integration + freeze predicate, ROM body boxes, AABB collision, projection and culling all called by the real paths; attack hitboxes distinct from body boxes | **PASS** | `ARCHITECTURE.md` §1 call-site table; `test_import_identity` (`assertIs`), `test_patching_integrate_breaks_the_game`, `test_patching_projection_breaks_rendering`, `test_update_path_calls_every_component`, `test_frozen_actor_is_not_integrated_and_does_not_land`, `test_body_box_values_are_rom_table_outputs`, `test_attack_box_differs_from_body_boxes`; `tools/measure_components.py` |
-| 12 | Testing: original verification re-run, full existing suite, integration tests for every listed scenario, headless smoke test, deterministic scripted encounter with a reported result, nothing weakened | **PASS** | §3 and §6; `TEST_REPORT.md`; `data/scripted_run.json` |
-| 13 | Deliverables: runnable source, original assets, README with exact install/launch commands, controls guide, architecture doc naming every reused component + call path, prototype-rules list, test report with real output, screenshots, completion report with limitations | **PASS** | `README.md`, `ARCHITECTURE.md`, `RULES.md`, `TEST_REPORT.md`, `COMPLETION_REPORT.md` (this file), `screenshots/` (8 images), `data/` |
+| 12 | Testing: original verification re-run, full existing suite, integration tests for every listed scenario, headless smoke test, deterministic scripted encounter with a reported result, nothing weakened | **PASS** | §3, §4b and §6; `TEST_REPORT.md` (60 tests); `data/scripted_run.json` |
+| 13 | Deliverables: runnable source, original assets, README with exact install/launch commands, controls guide, architecture doc naming every reused component + call path, prototype-rules list, test report with real output, screenshots, completion report with limitations | **PASS** | `README.md`, `ARCHITECTURE.md`, `RULES.md`, `TEST_REPORT.md`, `COMPLETION_REPORT.md` (this file), `screenshots/` (8 images), `data/`, plus the browser build `release/index.html` |
 
 No criterion is FAIL. No criterion is BLOCKED: every one of them is exercised by a command
 that ran in this workspace and whose output is quoted below or stored in `TEST_REPORT.md`.
@@ -139,6 +140,29 @@ never called on the drawn path: none
   over a recorded run, a passive player loses at frame 1,025 while the demo pilot finishes with
   56/80 health.
 
+## 4b. Browser build (added on request)
+
+The Python game is the reference implementation. A second artefact, `prototype/release/index.html`
+(56 KiB, one file, no assets, no network), runs the same game in a browser so it can be opened
+with a double click and played without installing anything.
+
+| check | result |
+| --- | --- |
+| Conformance, recorded encounter | **MATCH**, 875/875 frames, `victory@875 hp=56 kills=3` |
+| Conformance, passive run | **MATCH**, 1,025/1,025 frames, `defeat@1025` |
+| Conformance, synthetic run | **MATCH**, 1,840/1,840 frames |
+| Negative control | one changed gravity constant is detected at frame 300 |
+| Portable data | embedded ROM tables equal `components/data/body_boxes.json` (32 records) |
+| Box anchors | `(100,60) → (97,111,52,68,-42,0)`, `(200,60) → (197,207,52,68,-50,0)` |
+| Built page, headless DOM run | boots → ENTER → walk 300→432 → punch → jump → `victory` in 722 frames at 56 HP → R restart |
+| Self-contained | no `<script src>`, no `<link href>`, no `http(s)://`, no `fetch` |
+
+What this does and does not mean: the browser build is a **port**, not the Python components
+running in the browser. It is held to the Python reference by an exact, frame-by-frame
+conformance test, which is the strongest available evidence short of shipping a 10 MB Python
+runtime. The Python build remains the one that calls `components/sor_engine` directly, and
+criterion 11 is still judged on that build.
+
 ## 5. Limitations
 
 1. **One arena, one player, three enemies.** Deliberately small: the brief asked for a compact
@@ -215,6 +239,9 @@ prototype/neon_alley/{__init__,__main__,config,adapter,entities,game,render,auto
 prototype/tests/{__init__,support,test_components,test_movement,test_combat,test_flow,
                  test_render,test_scripted_encounter,test_smoke}.py
 prototype/tools/{__init__,run_tests,record_encounter,measure_components,capture_screens}.py
+prototype/web/{neon_alley.js,shell.html,conformance.js,render_smoke.js,page_smoke.js,tables.js,anchors.js}
+prototype/release/{index.html,neon_alley_play.html,neon_alley.html,neon_alley-prototype.zip,SHA256SUMS.txt}
+prototype/media/*.gif
 prototype/data/scripted_run.json
 prototype/screenshots/*.png
 prototype/{README,ARCHITECTURE,RULES,COMPLETION_REPORT,TEST_REPORT}.md

@@ -351,3 +351,16 @@ by this game; it is reported as unused rather than routed through artificially.
 **RL-70** *Regression guard.* After all prototype work: `tools/verify_stage2.py` → 37 passed,
 7,740 comparisons, ROM `dd44f120…95c0`; `tools/verify_sor_forensics.py` → 11 ROMs. Baseline
 unchanged, so the prototype did not disturb the evidence layer.
+
+**RL-71** *The browser build is a port, and it is proved to be one.* Requested after Stage 3:
+an HTML file that opens and plays. Python cannot run in a browser without shipping a runtime
+and a server, so `prototype/web/neon_alley.js` re-implements the engine arithmetic and the game
+1:1. Rather than ask for trust, `prototype/tools/web_conformance.py` replays recorded (875
+frames), passive (1,025) and synthetic (1,840) input through both engines and diffs every field
+of every frame with **no tolerance** — all three match exactly. A deliberate one-constant defect
+(`$E800 → $E900`) is caught at frame 300, so the harness is known to bite. The shipped page is
+additionally executed in a stub DOM (`prototype/web/page_smoke.js`): ENTER, walk 300→432,
+punch, jump, victory in 722 frames at 56 HP, restart. Caveat recorded honestly: there is no
+real browser in this environment, so the page is verified functionally and its drawing calls
+are exercised, not eyeballed; the pixel canvas is the same 384×240 and scales by integers, so
+no resampling loss is introduced.

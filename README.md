@@ -26,9 +26,13 @@ the original game.
 | **`prototype/COMPLETION_REPORT.md`** | acceptance criteria 1–13, numbers, limitations |
 
 ```bash
+# play in a browser: open this file, nothing to install
+prototype/release/index.html
+
+# or run the Python build
 python3 -m venv .venv && .venv/bin/pip install pygame
 .venv/bin/python -m prototype.neon_alley          # play
-.venv/bin/python -m prototype.tools.run_tests     # 52 tests
+.venv/bin/python -m prototype.tools.run_tests     # 60 tests
 ```
 
 ---

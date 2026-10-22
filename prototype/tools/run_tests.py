@@ -29,6 +29,7 @@ MODULES = [
     "prototype.tests.test_render",
     "prototype.tests.test_scripted_encounter",
     "prototype.tests.test_smoke",
+    "prototype.tests.test_web_port",
 ]
 
 

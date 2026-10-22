@@ -51,7 +51,7 @@ Read prototype/README.md first. Nothing here is a remake or a port of any
 existing game; see prototype/COMPLETION_REPORT.md, section 1.
 """
 ZIP_DIRS = ["prototype/neon_alley", "prototype/tests", "prototype/tools",
-            "prototype/data", "prototype/screenshots",
+            "prototype/data", "prototype/screenshots", "prototype/web",
             "components/sor_engine", "components/data"]
 
 CONTROLS = [
@@ -209,8 +209,12 @@ def build_html() -> Path:
         <li>No network needed after the install. All art is generated in code.</li>
       </ol>
       <div class="downloads">
-        <a href="neon_alley-prototype.zip" download>Download the prototype (ZIP)</a>
+        <a href="index.html">Play it in the browser</a>
+        <a class="alt" href="neon_alley-prototype.zip" download>Download the prototype (ZIP)</a>
       </div>
+      <p class="note">The browser build is the same game ported to JavaScript and verified
+      against the Python reference frame by frame (see
+      <code>prototype/tools/web_conformance.py</code>).</p>
     </div>
   </div>
 
@@ -253,12 +257,7 @@ def build_html() -> Path:
     out.write_text(doc, encoding="utf-8")
     print(f"wrote {out.relative_to(ROOT)} ({out.stat().st_size / 1024:.0f} KiB)")
 
-    # static-host entry point (kept tiny: it just forwards to the real page)
-    (RELEASE / "index.html").write_text(
-        '<!doctype html><meta charset="utf-8">'
-        '<title>Neon Alley</title>'
-        '<meta http-equiv="refresh" content="0; url=neon_alley.html">'
-        '<a href="neon_alley.html">Neon Alley — playable prototype</a>\n')
+    # NOTE: release/index.html is the *playable* page, written by tools/make_web.py.
     return out
 
 
@@ -286,6 +285,7 @@ def build_zip() -> Path:
 
 
 def checksums(paths) -> Path:
+    paths = [p for p in paths if p.exists()]
     out = RELEASE / "SHA256SUMS.txt"
     lines = []
     for p in paths:
@@ -300,7 +300,8 @@ def main() -> int:
     RELEASE.mkdir(parents=True, exist_ok=True)
     page = build_html()
     archive = build_zip()
-    checksums([page, archive])
+    checksums([page, archive,
+               RELEASE / "index.html", RELEASE / "neon_alley_play.html"])
     return 0
 
 

@@ -108,7 +108,42 @@ SDL_VIDEODRIVER=dummy .venv/bin/python -m prototype.tools.capture_screens
 
 Results are in [`TEST_REPORT.md`](TEST_REPORT.md) (machine-generated, real command output).
 
-## 6. Downloadable package and browser preview
+## 6. Play in a browser (no install at all)
+
+`prototype/release/index.html` is the whole game in one 56 KiB HTML file: open it with a
+double click (or drop it on any static host) and play. No server, no network, no assets, no
+install — the canvas, the art and the engine are all inside the file.
+
+Controls are the same; on a phone the page shows on-screen buttons.
+
+How it works, and why it is not a second implementation:
+
+| piece | what it is |
+| --- | --- |
+| `prototype/web/neon_alley.js` | a mechanical **port** of the Python game and of the verified components; every function names its Python counterpart |
+| `prototype/web/shell.html` | page, styles, keyboard/touch input, fixed 60 Hz loop, integer upscale |
+| `prototype/tools/make_web.py` | inlines both into one file and refuses to build if anything external sneaks in |
+| `prototype/tools/web_conformance.py` | replays recorded + passive + synthetic input through **both** engines and compares every field of every frame, with zero tolerance |
+| `prototype/web/page_smoke.js` | runs the built HTML itself in a stub DOM: ENTER, walk, punch, jump, finish, restart |
+
+Conformance result (matches exactly):
+
+```
+recorded 875-frame encounter     MATCH  frames=  875  -> victory@875 hp=56 kills=3
+passive run (no input)           MATCH  frames= 1025  -> defeat@1025 hp=0 kills=0
+synthetic 2,000-frame run        MATCH  frames= 1840  -> victory@1840 hp=16 kills=3
+```
+
+The comparison has been checked against a deliberate defect: changing one gravity constant
+(`$E800` → `$E900`) in the JS makes the harness report the first divergence at frame 300.
+
+Rebuild the page after changing the game:
+
+```bash
+python -m prototype.tools.make_web
+```
+
+## 7. Downloadable package and browser preview
 
 Two prebuilt artefacts are committed in `prototype/release/`:
 
@@ -127,7 +162,7 @@ SDL_VIDEODRIVER=dummy .venv/bin/python -m prototype.tools.make_release
 The zip was verified by extracting it into an empty directory: the game launches, all 52 tests
 pass and the component counters match the in-repo run.
 
-## 7. Where to read next
+## 8. Where to read next
 
 | file | contents |
 | --- | --- |
@@ -137,7 +172,7 @@ pass and the component counters match the in-repo run.
 | [`TEST_REPORT.md`](TEST_REPORT.md) | the generated test report |
 | `neon_alley/config.py` | constants tagged `[ROM]`, `[INTEG]`, `[PROTO]` |
 
-## 8. Source map
+## 9. Source map
 
 ```
 prototype/
@@ -153,11 +188,12 @@ prototype/
   tools/          run_tests, record_encounter, measure_components, capture_screens
   data/           recorded 875-frame input script
   media/          recorded demo GIFs
+  web/            browser build: JS port of the engine + page shell + harnesses
   release/        downloadable zip + self-contained HTML preview (+ rebuild tool)
   screenshots/    visual evidence
 ```
 
-## 9. Troubleshooting
+## 10. Troubleshooting
 
 - **`ModuleNotFoundError: No module named 'pygame'`** — you are using the system Python.
   Use `.venv/bin/python` exactly as shown above.

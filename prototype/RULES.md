@@ -116,7 +116,22 @@ Purely cosmetic, `[PROTO]`: procedural skyline with parallax, neon signs, lane m
 at the *same* `sy = (Z >> 1) + $80` the projection uses, scanlines, vignette, spark/ring/dust/
 KO particles, floating damage numbers, HUD, title and end cards.
 
-## 4. What this prototype does **not** claim
+## 4. The browser build carries the same three categories
+
+`prototype/web/neon_alley.js` is a port, so it is labelled `[PORT]` as a whole rather than
+being re-tagged rule by rule:
+
+- Every `[ROM]` rule above is reproduced in the port from the same constants, and
+  `prototype/tools/web_conformance.py` proves the result is frame-identical to the Python
+  reference for the recorded run (875 frames), a passive run (1,025 frames) and a synthetic
+  run (1,840 frames). No tolerance.
+- Every `[INTEG]` and `[PROTO]` rule is ported unchanged.
+- The port adds nothing to the rule set. If it ever needed to, it would be a fourth category
+  and would have to be documented here.
+
+Neither the port nor the page is evidence about the original game.
+
+## 5. What this prototype does **not** claim
 
 - It is not the original game, a remake, or a port — see `COMPLETION_REPORT.md` §1.
 - Prototype AI, health, waves, attack frame data and hit reactions are new. Only the physics,

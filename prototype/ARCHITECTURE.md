@@ -119,7 +119,29 @@ bit (`test_two_runs_are_bit_identical`, `test_replay_is_deterministic`). Renderi
 mutates game state (`test_recorded_encounter_result` compares an unrendered and a rendered run
 in `tools/measure_components.py`: identical outcomes).
 
-## 6. Entity ownership
+## 6. The browser build — a verified port, not a second implementation
+
+`prototype/web/neon_alley.js` exists so the game can be played by opening one HTML file.
+A browser cannot execute the Python components, so the JS file re-implements the same
+arithmetic (32-bit wrapping adds, `>> 16` whole-pixel reads, 16-bit box arithmetic).
+
+That port is held to account mechanically:
+
+| guarantee | how it is checked |
+| --- | --- |
+| same simulation | `prototype/tools/web_conformance.py` replays recorded, passive and synthetic input through the Python `Game` **and** the JS `Game`, then diffs every field of every frame — position, velocity, health, stun, attack frame, timers, camera, wave, kills, state — with exact equality |
+| same ROM data | `prototype/web/tables.js` exports the embedded tables; `test_rom_table_is_embedded_verbatim` compares them to `components/data/body_boxes.json` |
+| same box arithmetic | `prototype/web/anchors.js` re-checks the two Stage-2 anchors: `(100,60) → (97,111,52,68,-42,0)`, `(200,60) → (197,207,52,68,-50,0)` |
+| the page really runs | `prototype/web/page_smoke.js` executes the built HTML in a stub DOM and plays it: ENTER, walk, punch, jump, a full run, restart |
+
+Current status: the three conformance runs match for their full length (875 / 1,025 / 1,840
+frames). A deliberate defect (gravity `$E800` → `$E900`) is detected at frame 300, so the
+comparison is known to have teeth.
+
+Faithfulness rule for the port: it is a transliteration. Any change to the Python game must be
+mirrored in the JS, or the conformance test fails — which is exactly the intent.
+
+## 7. Entity ownership
 
 ```
 Fighter
