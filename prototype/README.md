@@ -108,7 +108,26 @@ SDL_VIDEODRIVER=dummy .venv/bin/python -m prototype.tools.capture_screens
 
 Results are in [`TEST_REPORT.md`](TEST_REPORT.md) (machine-generated, real command output).
 
-## 6. Where to read next
+## 6. Downloadable package and browser preview
+
+Two prebuilt artefacts are committed in `prototype/release/`:
+
+| file | what it is |
+| --- | --- |
+| `release/neon_alley-prototype.zip` | standalone package: game + verified `components/` + tests + docs + screenshots. Unzip anywhere and run `python3 -m venv .venv && .venv/bin/pip install pygame && .venv/bin/python -m prototype.neon_alley` |
+| `release/neon_alley.html` | single self-contained page (no network): recorded demo GIFs, controls, screenshots, measurements |
+
+Rebuild both (and the GIFs) with:
+
+```bash
+SDL_VIDEODRIVER=dummy .venv/bin/python -m prototype.tools.make_gif
+SDL_VIDEODRIVER=dummy .venv/bin/python -m prototype.tools.make_release
+```
+
+The zip was verified by extracting it into an empty directory: the game launches, all 52 tests
+pass and the component counters match the in-repo run.
+
+## 7. Where to read next
 
 | file | contents |
 | --- | --- |
@@ -118,7 +137,7 @@ Results are in [`TEST_REPORT.md`](TEST_REPORT.md) (machine-generated, real comma
 | [`TEST_REPORT.md`](TEST_REPORT.md) | the generated test report |
 | `neon_alley/config.py` | constants tagged `[ROM]`, `[INTEG]`, `[PROTO]` |
 
-## 7. Source map
+## 8. Source map
 
 ```
 prototype/
@@ -133,10 +152,12 @@ prototype/
   tests/          52 integration tests (unittest)
   tools/          run_tests, record_encounter, measure_components, capture_screens
   data/           recorded 875-frame input script
+  media/          recorded demo GIFs
+  release/        downloadable zip + self-contained HTML preview (+ rebuild tool)
   screenshots/    visual evidence
 ```
 
-## 8. Troubleshooting
+## 9. Troubleshooting
 
 - **`ModuleNotFoundError: No module named 'pygame'`** — you are using the system Python.
   Use `.venv/bin/python` exactly as shown above.
