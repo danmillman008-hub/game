@@ -64,7 +64,7 @@ static void dump_ppm(const char*path){
   fclose(o);
 }
 int main(int argc,char**argv){
-  if(argc<4){fprintf(stderr,"usage: %s rom frames outdir [events]\n",argv[0]);return 2;}
+  if(argc<4){fprintf(stderr,"usage: %s rom frames outdir [events] [--state-in F] [--state-out F --state-at N]\n",argv[0]);return 2;}
   int frames=atoi(argv[2]); const char *dir=argv[3];
   static int ev_end[MAXEV];
   if(argc>4){ FILE*e=fopen(argv[4],"r"); char line[128];
@@ -80,6 +80,21 @@ int main(int argc,char**argv){
     int n=nev;
     for(int i=0;i<n;i++){ ev[nev].frame=ev_end[i]+1; ev[nev].id=ev[i].id; ev[nev].down=0; ev_end[nev]=ev_end[i]; nev++; } }
 
+  /* save-state options: --state-in loads a machine snapshot as frame 0, so a run
+     always starts from identical initial conditions; --state-out/--state-at
+     writes one after the given frame. */
+  const char *state_in=NULL, *state_out=NULL; int state_at=-1;
+  /* Dumping 128 KB of RAM+VRAM every frame is only affordable for short runs.
+     --dump-from N skips the per-frame state logs before frame N, so a long
+     boot-and-navigate run can record just the gameplay window. */
+  long dump_from=0;
+  for(int i=4;i<argc;i++){
+    if(!strcmp(argv[i],"--state-in") && i+1<argc) state_in=argv[++i];
+    else if(!strcmp(argv[i],"--state-out") && i+1<argc) state_out=argv[++i];
+    else if(!strcmp(argv[i],"--state-at") && i+1<argc) state_at=atoi(argv[++i]);
+    else if(!strcmp(argv[i],"--dump-from") && i+1<argc) dump_from=atol(argv[++i]);
+  }
+
   retro_set_environment(env); retro_set_video_refresh(vid);
   retro_set_audio_sample(aud); retro_set_audio_sample_batch(audb);
   retro_set_input_poll(ipoll); retro_set_input_state(istate);
@@ -90,6 +105,17 @@ int main(int argc,char**argv){
   if(!retro_load_game(&gi)){fprintf(stderr,"load failed\n");return 4;}
 
   char p[512];
+  if(state_in){
+    FILE *sf=fopen(state_in,"rb");
+    if(!sf){fprintf(stderr,"cannot open state %s\n",state_in);return 5;}
+    fseek(sf,0,SEEK_END); long ssz=ftell(sf); fseek(sf,0,SEEK_SET);
+    void *sbuf=malloc(ssz);
+    if(fread(sbuf,1,ssz,sf)!=(size_t)ssz){fprintf(stderr,"short state read\n");return 6;}
+    fclose(sf);
+    if(!retro_unserialize(sbuf,(size_t)ssz)){fprintf(stderr,"unserialize failed\n");return 7;}
+    free(sbuf);
+    fprintf(stderr,"loaded state %s (%ld bytes), frame counter reset to 0\n",state_in,ssz);
+  }
   snprintf(p,sizeof p,"%s/decomp.bin",dir); g_cap=fopen(p,"wb");
   set_cpu_hook((void(*)(int,int,unsigned,unsigned))capture_hook);
 
@@ -102,7 +128,7 @@ int main(int argc,char**argv){
     g_frame=(unsigned)fr;
     for(int i=0;i<nev;i++) ev[i].down=(fr>=ev[i].frame);
     retro_run();
-    if(flog){
+    if(flog && (long)fr>=dump_from){
       unsigned char hdr[4]={(unsigned char)(fr>>24),(unsigned char)(fr>>16),(unsigned char)(fr>>8),(unsigned char)fr};
       fwrite(hdr,1,4,flog);
       fwrite(sat,1,640,flog);
@@ -113,8 +139,8 @@ int main(int argc,char**argv){
       fwrite(vs,1,80,flog);
       fwrite(cram,1,128,flog);
     }
-    if(rlog) fwrite(work_ram,1,0x10000,rlog);
-    if(vlog) fwrite(vram,1,0x10000,vlog);
+    if(rlog && (long)fr>=dump_from) fwrite(work_ram,1,0x10000,rlog);
+    if(vlog && (long)fr>=dump_from) fwrite(vram,1,0x10000,vlog);
     if((fr%50)==49){
       snprintf(p,sizeof p,"%s/f%04d.ppm",dir,fr); dump_ppm(p);
       snprintf(p,sizeof p,"%s/f%04d.vram",dir,fr); FILE*o=fopen(p,"wb"); fwrite(vram,1,0x10000,o); fclose(o);
@@ -126,6 +152,14 @@ int main(int argc,char**argv){
         { unsigned char vs[128]; for(int i=0;i<64;i++){ unsigned v=md_vsram(i); vs[i*2]=(unsigned char)(v>>8); vs[i*2+1]=(unsigned char)v; }
           fwrite(vs,1,128,o); } }
       fclose(o);
+    }
+    if(state_out && fr==state_at){
+      size_t n=retro_serialize_size(); void *sb=malloc(n);
+      if(sb && retro_serialize(sb,n)){
+        FILE *sf=fopen(state_out,"wb"); if(sf){fwrite(sb,1,n,sf);fclose(sf);}
+        fprintf(stderr,"wrote state %s (%zu bytes) at frame %d\n",state_out,n,fr);
+      }
+      free(sb);
     }
   }
   snprintf(p,sizeof p,"%s/final.ppm",dir); dump_ppm(p);

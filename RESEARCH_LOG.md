@@ -434,3 +434,67 @@ never part of that proof.)
 
 **What this does not claim.** I have not traced which loader the 13 Kosinski streams take at
 runtime, nor what `field2` means. Both are recorded as open in `GRAPHICS_EXTRACTION.md`.
+
+## RL-74 — attract mode was masquerading as gameplay; the real 1P path is now reproducible  [EMU][TEST]
+
+**A prior claim in this log was wrong and is withdrawn.** Captures described as "Stage 1
+gameplay" (walking player, engaging enemies) were the **attract-mode demo**. The demo plays the
+real game with the CPU in control, so it looks exactly like gameplay in a screenshot. The
+give-away is the blinking `PRESS START BUTTON` overlay; with input held, the demo ignores it, so
+every "the player walks" observation was actually the demo walking.
+
+### What the boot sequence really is `[EMU]`
+
+Measured over a 6000-frame no-input run (frame numbers from power-on):
+
+| frames | screen |
+|---|---|
+| 49–249 | SEGA logo |
+| 249–3150 | intro city + long text crawl |
+| 3150–3250 | "STREETS OF RAGE" title card fades |
+| 3300–4210 | Stage-1 dialogue pages (Axel portrait, text) |
+| 4350–4700 | logo builds, white flash |
+| 4799–5100 | main menu: `1 PLAYER / 2 PLAYER / OPTIONS` |
+| 5100+ | attract demo (loops, `PRESS START BUTTON`) |
+
+**Input map, established by experiment `[EMU]`:**
+
+* During the **demo**, `START` returns to the main menu.
+* On the **main menu**, `A` confirms the selection. `START` does nothing here.
+* On **character select**, `A` marks the chosen fighter, `START` begins the stage. `A` alone does
+  not start it, and `START` alone with no prior `A` does nothing either.
+* `UP`/`DOWN` move the menu cursor (verified: cursor moved `1 PLAYER` → `2 PLAYERS`).
+
+**Canonical boot script:** `tools/scenarios/boot1p.txt` — 19 presses, reaching controllable
+1-player Stage 1 as Axel at ~f14200. It is load-bearing as written; each line was added because
+a shorter sequence failed, so do not "simplify" it without re-verifying.
+
+### Harness changes `[TEST]`
+
+* `--dump-from N` — skips the per-frame RAM/VRAM logs before frame N. A full 128 KB/frame log
+  costs ~1.3 GB per 10 000-frame run, which filled the disk; boot runs now record only the
+  window that matters. **Frame indices in `ram.bin`/`vram.bin` are relative to `--dump-from`.**
+* `--state-in` / `--state-out` / `--state-at` — machine snapshots. `retro_unserialize` calls
+  `state_load()`, which calls `system_reset()`/`io_reset()`, and **after restoring a state the
+  emulated pad stops responding** (measured: RAM is bit-identical with and without a held
+  button). Snapshots are therefore used only for graphics/VRAM analysis, never for input
+  scenarios. Scenarios replay from power-on instead, which is proven deterministic: two runs of
+  the same command produce bit-identical `frames.bin`, `ram.bin` and `vram.bin`.
+* `tools/sat_log.py` — the sprite-table decoder was wrong in two ways (byte order, and field
+  positions read from the hardware docs rather than from this emulator). Rewritten from Genesis
+  Plus GX's own parser (`core/vdp_render.c: parse_satb_m5_im2`): the 640-byte dump is GX's
+  host-order SAT cache, four words per entry, with `y` in w0, `link` in w1 bits 0-6, size in w1
+  bits 8-11, attributes in w2 and `x` in w3. Earlier "the SAT link fields read 0" was an
+  artefact of sampling frames where the table was genuinely empty (intro/title), plus this bug.
+
+### Environment note `[TEST]`
+
+`.venv` does not survive a workspace snapshot, so `tools/setup_env.sh` now recreates it; it is the
+documented first step.
+
+### Player state located `[EMU]`
+
+Holding `RIGHT` from f15200 in an otherwise identical run changes **103 words** by f15400, all
+clustered in `$FFB800-$FFB9FF`, and the sprites move. That region is the per-entity state block;
+the exact field layout (position fixed-point scale, velocity, facing, animation) is still being
+mapped and is **not** yet claimed.
