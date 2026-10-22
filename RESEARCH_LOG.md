@@ -312,3 +312,42 @@ the next experiment.
 | Writing `$FF0C` as `0x00FF0C` | that is ROM, not RAM | `0x00FFFF0C` |
 | `Actor(vy=0x80000000)` | Python int, not signed 32-bit | wrap in `__post_init__` |
 | Trusting `DOSSIER §10.1` box formulas | extents were read as offsets | execute `$004140` and compare |
+
+## Stage 3 — a playable prototype on top of the slice
+
+**RL-65** *Scope decision, recorded before the work.* The user authorised a *small* playable
+prototype that demonstrably reuses `components/sor_engine`. The prohibition on reproducing or
+porting the original game is unchanged. Therefore *Neon Alley* (`prototype/`) is a new game:
+original characters, arena, art, enemy AI, attack frame data and health. Its only link to the
+original is that its movement, collision and drawing go through the verified modules.
+
+**RL-66** *Evidence separation, stated up front.* Three categories are kept apart and labelled
+in `prototype/RULES.md`: `[ROM]` (differential-verified behaviour, consumed from `components/`),
+`[INTEG]` (how this game wires those pieces), `[PROTO]` (new rules). No prototype rule was
+added to `BEHAVIORAL_SPECIFICATIONS/`, and no evidence file was edited. The Stage-2 open
+question `U-CBT-01` (hit-reaction rules) is precisely why every hitstun/knockback/armour
+number here is `[PROTO]`.
+
+**RL-67** *The cull window forced the canvas, not the other way round.* The first render used a
+960×540 canvas and the player was invisible: `$00AF46` culls at `sx ≥ $500` (320) and
+`sy ≥ $200`, so the verified routine was doing exactly what it was validated to do. The fix
+was to render a 384×240 virtual canvas and scale it up, and to re-derive the camera anchor so
+the playable band lands inside `sx ≈ 176…336`. Editing `projection.py` would have been a
+re-baseline of verified behaviour — rejected.
+
+**RL-68** *Measured stun-lock, fixed as a prototype rule.* The first autopilot run reached
+VICTORY at frame 791 with 80/80 health: every player hit cancelled the enemy's startup, so the
+encounter was decided by attack speed alone. Giving the enemy swing armour through its own
+startup/active frames (damage still lands) produced lost health on the recorded run and a real
+DEFEAT path with no input (frame 1,025). This is a gameplay decision, not a claim about the
+original's hit reactions.
+
+**RL-69** *Reuse proved by patching, not by assertion.* `prototype/tests/test_components.py`
+monkey-patches `kinematics.integrate` and `projection.project` and fails if the game keeps
+working regardless. A frozen actor (real `$00442C` freeze state) is shown to stop integrating
+and to not be read as landing. `soft_gravity` is implemented and verified but genuinely unused
+by this game; it is reported as unused rather than routed through artificially.
+
+**RL-70** *Regression guard.* After all prototype work: `tools/verify_stage2.py` → 37 passed,
+7,740 comparisons, ROM `dd44f120…95c0`; `tools/verify_sor_forensics.py` → 11 ROMs. Baseline
+unchanged, so the prototype did not disturb the evidence layer.

@@ -2,10 +2,34 @@
 
 This repository contains an **evidence-backed engineering audit** of *Streets of Rage / Bare Knuckle* (Sega Mega Drive, 1991) built from the ROM images in `Streets-of-Rage_Genesis_EN.zip`.
 
-**This is not a remake, port, clone, or game engine.** No gameplay was re-implemented and
-no playable build exists. The code here extracts, decodes, measures and validates evidence
-from the original binary, plus one bounded *reconstruction slice* used to prove that
-verified rules can be carried into a new implementation and checked against the original.
+**This is not a remake, port, clone, or game engine.** No original gameplay is
+re-implemented and no reconstruction of the original game exists. The code here extracts,
+decodes, measures and validates evidence from the original binary, plus one bounded
+*reconstruction slice* used to prove that verified rules can be carried into a new
+implementation and checked against the original.
+
+**Stage 3 adds a small, original game** — *Neon Alley*, a three-enemy beat-'em-up prototype
+that runs on that verified slice (see `prototype/`). It is a new game that reuses recovered
+rules; it is not, and does not contain, a remake. Nothing in `prototype/` is evidence about
+the original game.
+
+---
+
+## Stage 3 — a playable prototype on the verified components
+
+| Start here | Why |
+|---|---|
+| **`prototype/README.md`** | install, launch, controls, troubleshooting |
+| **`prototype/ARCHITECTURE.md`** | every reused component and its exact call path |
+| **`prototype/RULES.md`** | recovered vs integration vs prototype-specific rules |
+| **`prototype/TEST_REPORT.md`** | generated test report (52 tests) |
+| **`prototype/COMPLETION_REPORT.md`** | acceptance criteria 1–13, numbers, limitations |
+
+```bash
+python3 -m venv .venv && .venv/bin/pip install pygame
+.venv/bin/python -m prototype.neon_alley          # play
+.venv/bin/python -m prototype.tools.run_tests     # 52 tests
+```
 
 ---
 
