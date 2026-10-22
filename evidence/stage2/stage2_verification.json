@@ -1,0 +1,245 @@
+{
+  "stage": 2,
+  "rom": {
+    "file": "Streets of Rage (JUE) (REV 00) [!].bin",
+    "sha256": "dd44f120446654bb91c448762f3e0cd0d9b034f35d0e3266a4dc34402ada95c0",
+    "size": 524288
+  },
+  "components_under_test": [
+    "sor_engine.kinematics",
+    "sor_engine.boxes",
+    "sor_engine.projection",
+    "sor_engine.fixed"
+  ],
+  "tables": {
+    "z_pairs": 13,
+    "box_records": 32,
+    "z_pairs_sha256": "9e9941cbc2acc99bd753dbfee80ef3c67012546a099eb93d4c70530042166124",
+    "box_records_sha256": "14e6405cdbded38dc715f5dc63f7d09803978ff884262914ba97446060c23e76"
+  },
+  "tests": {
+    "total": 37,
+    "passed": 37,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "records": [
+      {
+        "test": "tests.test_component_spec.AABB.test_depth_and_height_must_overlap",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_component_spec.AABB.test_inclusive_edges",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_component_spec.AirControl.test_clamp_is_symmetric",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_component_spec.AirControl.test_left_accelerates_and_faces_left",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_component_spec.AirControl.test_no_input_leaves_velocity_untouched",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_component_spec.AirControl.test_right_accelerates_and_faces_right",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_component_spec.AirControl.test_right_wins_when_both_held",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_component_spec.Boxes.test_degenerate_boxes",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_component_spec.Boxes.test_extents_are_cumulative",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_component_spec.Boxes.test_invulnerable_overrides_secondary",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_component_spec.Boxes.test_secondary_box_uses_sprite_height",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_component_spec.Boxes.test_table_provenance",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_component_spec.FixedPoint.test_hi16_matches_move_w",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_component_spec.FixedPoint.test_s32_wrap",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_component_spec.Gravity.test_directional_uses_sign_before_add",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_component_spec.Gravity.test_neutral_constant",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_component_spec.Gravity.test_soft_gravity",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_component_spec.Gravity.test_terminal_clamp_is_one_sided",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_component_spec.Integration.test_adds_three_axes",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_component_spec.Integration.test_freeze_predicate_needs_exact_word",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_component_spec.Projection.test_camera_subtraction_and_fixed_actors",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_component_spec.Projection.test_narrow_left_margin",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_component_spec.Projection.test_projection_formula",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_component_spec.Projection.test_type5_always_culls_with_wide_margin",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_recovered_behaviour.RecoveredBehaviour.test_cheat_p2_uses_different_globals",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_recovered_behaviour.RecoveredBehaviour.test_cheat_rejects_unknown_code",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_recovered_behaviour.RecoveredBehaviour.test_cheat_table",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_recovered_behaviour.RecoveredBehaviour.test_component_matches_rom_for_sixty_frames",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_recovered_behaviour.RecoveredBehaviour.test_jump_airtime_and_apex",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_differential_rom.DifferentialROM.test_D1_gravity",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_differential_rom.DifferentialROM.test_D2_terminal_clamp",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_differential_rom.DifferentialROM.test_D3_air_control",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_differential_rom.DifferentialROM.test_D4_integration",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_differential_rom.DifferentialROM.test_D5_body_boxes",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_differential_rom.DifferentialROM.test_D6_aabb",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_differential_rom.DifferentialROM.test_D7_projection",
+        "status": "PASS"
+      },
+      {
+        "test": "tests.test_differential_rom.DifferentialROM.test_D8_frame_composition",
+        "status": "PASS"
+      }
+    ]
+  },
+  "differential_comparisons": {
+    "D1_gravity": 900,
+    "D2_clamp": 208,
+    "D3_air_control": 400,
+    "D4_integration": 409,
+    "D5_body_boxes": 4160,
+    "D6_aabb": 507,
+    "D7_projection": 1016,
+    "D8_frame": 140
+  },
+  "differential_total": 7740,
+  "measured_jump_profiles": {
+    "-7.5/neutral": {
+      "airtime_ticks": 15,
+      "apex_px": -27.375
+    },
+    "-7.5/directional": {
+      "airtime_ticks": 17,
+      "apex_px": -27.375
+    },
+    "-8.5/neutral": {
+      "airtime_ticks": 17,
+      "apex_px": -35.71875
+    },
+    "-8.5/directional": {
+      "airtime_ticks": 20,
+      "apex_px": -35.71875
+    },
+    "-9.5/neutral": {
+      "airtime_ticks": 19,
+      "apex_px": -45.15625
+    },
+    "-9.5/directional": {
+      "airtime_ticks": 22,
+      "apex_px": -45.15625
+    }
+  },
+  "measured_cheat_table": {
+    "MOM": {
+      "ff35": 5,
+      "lives_bcd": 144
+    },
+    "SUN": {
+      "ff35": 4,
+      "lives_bcd": 73
+    },
+    "UDI": {
+      "ff35": 3,
+      "lives_bcd": 9
+    },
+    "BO ": {
+      "ff35": 2,
+      "lives_bcd": 7
+    },
+    "ORE": {
+      "ff35": 1,
+      "lives_bcd": 1
+    },
+    "   ": {
+      "ff35": 0,
+      "lives_bcd": 0
+    },
+    "AXL": {
+      "ff35": 238,
+      "lives_bcd": 238
+    }
+  },
+  "reproduce": "python3 tools/verify_stage2.py"
+}

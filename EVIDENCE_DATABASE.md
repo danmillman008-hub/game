@@ -966,3 +966,305 @@ Experiments `EXP-01`…`EXP-05` are implemented in `tools/verify_sor_forensics.p
 * **Confidence:** CONFIRMED (values), UNKNOWN (reachability)
 * **Alternative Explanations:** the stubs could be intentional "no-op actor" slots used by scripts
 * **Open Questions:** `U-STATE-01`, `U-DISP-01`
+
+---
+
+# Stage 2 — Evidence records
+
+Schema unchanged (13 fields). Every record below was produced in Stage 2 by reading the
+ROM **and** executing the relevant routine on an MC68000 core, unless marked static.
+Experiments are reproducible with `python3 tools/verify_stage2.py`.
+
+### EV-S2-AUD-01 — Stage-1 tool implements three of the five claimed experiments
+* **Subsystem:** Provenance / audit
+* **Claim:** `tools/verify_sor_forensics.py` contains EXP-01/02/03 only; the name-entry cheat (EXP-04) and jump-trajectory (EXP-05) experiments are absent, and only EXP-01 carries an assertion.
+* **Evidence:** full read of the 348-line tool; `evidence/verification_results.json` contains exactly three experiment keys.
+* **Evidence Type:** static (source inspection) + negative search
+* **Location:** `tools/verify_sor_forensics.py:228–315`, `evidence/verification_results.json`
+* **Relevant Function:** `run_unicorn_experiments`
+* **Relevant Address/Offset:** —
+* **Experiment:** counted experiment keys in the JSON; searched the source for `005920` and `EXP-05`
+* **Result:** 3 experiments present; 0 matches for the cheat routine; no jump measurement code
+* **Confidence:** CONFIRMED
+* **Alternative Explanations:** the experiments may have been run ad hoc and never committed
+* **Open Questions:** none (documentation corrected; missing experiments re-implemented in Stage 2)
+
+### EV-S2-KIN-01 — Three gravity variants and their exact constants
+* **Subsystem:** Physics
+* **Claim:** `$00389A` adds `0xE800`; `$0038A6` adds `0x3800`; `$0038AE` tests the sign of `vy` **before** adding and uses `0xE800` when negative, `0x8800` otherwise.
+* **Evidence:** disassembly `$00389A–$0038BE`; 900 differential executions.
+* **Evidence Type:** static + runtime (MC68000)
+* **Location:** ROM `0x389A`, `0x38A6`, `0x38AE`
+* **Relevant Function:** `$00389A`, `$0038A6`, `$0038AE`
+* **Relevant Address/Offset:** `+$24` (vy)
+* **Experiment:** D1 — 300 random `vy ∈ [−0x40000, 0x140000]` per variant, exact 32-bit compare
+* **Result:** 900/900 identical
+* **Confidence:** CONFIRMED
+* **Alternative Explanations:** none consistent with both the bytes and the executions
+* **Open Questions:** which state selects which variant is only partly enumerated (HIGH for jump states)
+
+### EV-S2-KIN-02 — Terminal velocity is one-sided
+* **Subsystem:** Physics
+* **Claim:** `$003886` clamps only `vy >= 0xC0000` to `0xC0000`; there is no downward clamp.
+* **Evidence:** `cmpi.l #$c0000,$24(a0) / blt / move.l #$c0000,$24(a0)`; 208 executions including `0xBFFFF`, `0xC0000`, `0xC0001`, `0x80000000`.
+* **Evidence Type:** static + runtime
+* **Location:** ROM `0x3886`
+* **Relevant Function:** `$003886`
+* **Relevant Address/Offset:** `+$24`
+* **Experiment:** D2
+* **Result:** 208/208 identical, including the signed-comparison case `0x80000000`
+* **Confidence:** CONFIRMED
+* **Alternative Explanations:** none
+* **Open Questions:** none
+
+### EV-S2-KIN-03 — Air control semantics and side effects
+* **Subsystem:** Physics / input coupling
+* **Claim:** bit3 of `+$54` adds `+0x6000` and clears state bit0 and `+$09` bit1; bit2 adds `−0x6000` and sets both; right is tested first; the `±0x38000` clamp runs only on a taken branch.
+* **Evidence:** `$0038C0–$003912`; 400 executions comparing `vx`, `+$30` and `+$08`.
+* **Evidence Type:** static + runtime
+* **Location:** ROM `0x38C0`
+* **Relevant Function:** `$0038C0`
+* **Relevant Address/Offset:** `+$54`, `+$1C`, `+$30`, `+$08`
+* **Experiment:** D3 — all 16 low-nibble combinations × random velocities/flags
+* **Result:** 400/400 identical on all three outputs
+* **Confidence:** CONFIRMED
+* **Alternative Explanations:** none
+* **Open Questions:** role of `+$09` bit1 in the animation system (PROBABLE: animation flag)
+
+### EV-S2-KIN-04 — Integration and its freeze predicate
+* **Subsystem:** Physics
+* **Claim:** integration adds `vx/vz/vy` to `+$10/+$14/+$18`; it is suppressed when `((+$08 & 0xFF00) | (+$08 & 0x00FC)) == 0x0014` and `+$59` bit7 is set.
+* **Evidence:** `$00442C–$004460`; 409 executions.
+* **Evidence Type:** static + runtime
+* **Location:** ROM `0x442C`
+* **Relevant Function:** `$00442C`
+* **Relevant Address/Offset:** `+$08`, `+$59`
+* **Experiment:** D4 — 9 hand-picked state/flag pairs plus 400 random
+* **Result:** 409/409 identical; `+$08 = 0x0114` does **not** freeze (high byte must be zero)
+* **Confidence:** CONFIRMED
+* **Alternative Explanations:** none
+* **Open Questions:** which states actually use animation block `$14`
+
+### EV-S2-KIN-05 — Measured jump trajectories (corrects DOSSIER §8.3)
+* **Subsystem:** Physics / player
+* **Claim:** With gravity applied before integration, launch speeds −7.5/−8.5/−9.5 px/tick give airtimes 15/17/19 ticks (neutral) and 17/20/22 (directional), with apexes −27.375/−35.719/−45.156 px.
+* **Evidence:** per-frame execution of `$00389A`/`$0038AE` + `$003886` + `$00442C`; traces in `evidence/stage2/stage2_verification.json`.
+* **Evidence Type:** runtime
+* **Location:** ROM chain `0x389A`/`0x38AE` → `0x3886` → `0x442C`
+* **Relevant Function:** state handler `$001FDC` calls gravity before `$001CA6` integration
+* **Relevant Address/Offset:** `+$24`, `+$18`
+* **Experiment:** D10 — six launch/mode combinations, 60 ticks each
+* **Result:** Stage-1's 18/20/22, 20/23/25 and 34.875/44.219/54.656 px are not reproducible; they equal the integrate-then-gravity ordering
+* **Confidence:** CONFIRMED
+* **Alternative Explanations:** Stage-1 may have modelled a different (non-ROM) integration order; no ROM path produces its numbers
+* **Open Questions:** per-character launch speeds come from animation data and are not recovered here
+
+### EV-S2-BOX-01 — `$004140` builds two body boxes
+* **Subsystem:** Collision / actor record
+* **Claim:** one call writes a 12-byte AABB at `+$64` from index `+$02` and a second at `+$70` from index `+$03`.
+* **Evidence:** `a1` is loaded once at `$004140` and advanced by the `$01040A` fill and by the `$4192` builder; measured with 4,160 executions.
+* **Evidence Type:** static + runtime
+* **Location:** ROM `0x4140`
+* **Relevant Function:** `$004140`
+* **Relevant Address/Offset:** `+$64`, `+$70`, `+$02`, `+$03`
+* **Experiment:** D5 — every index 0…31 for both fields × 65 positions × 2 address classes
+* **Result:** 4,160/4,160 identical
+* **Confidence:** CONFIRMED
+* **Alternative Explanations:** none
+* **Open Questions:** semantic role of the second box (PROBABLE: height-keyed variant used by `$450C`)
+
+### EV-S2-BOX-02 — Box table records are corner+extent, cumulatively applied
+* **Subsystem:** Collision
+* **Claim:** `x2 = x1 + b1`, `z2 = z1 + z_extent`, `y2 = y1 + b4`; the Stage-1 dossier's absolute-offset reading is wrong.
+* **Evidence:** `$0041A6–$0041E6` (`add.w d2,d0` on the already-written value); measured index 2 → `(997,1007,…)`, index 4 → `(987,1000,…)`.
+* **Evidence Type:** static + runtime
+* **Location:** ROM `0x41A6`, `0x41C6`, `0x41DE`; tables `0x1AB8E`, `0x1ABA8`
+* **Relevant Function:** `$004192`
+* **Relevant Address/Offset:** —
+* **Experiment:** D5
+* **Result:** exact for all 32 records
+* **Confidence:** CONFIRMED
+* **Alternative Explanations:** none (Stage-1's formula predicts 1010 for index 2; the ROM returns 1007)
+* **Open Questions:** none
+
+### EV-S2-BOX-03 — Null-box rules and the sign-extended `$B800` special case
+* **Subsystem:** Collision
+* **Claim:** index 0 in the first pass yields six `$0010` words, or six zero words when `a0 == $FFFFB800`; the second pass yields zeros unless `+$4B` bit1 is set, in which case it follows the first rule.
+* **Evidence:** measured across both address classes and all index combinations; `cmpa.w` semantics confirmed by execution.
+* **Evidence Type:** runtime
+* **Location:** ROM `0x4158`, `0x4170`, `0x418C`
+* **Relevant Function:** `$004140`
+* **Relevant Address/Offset:** `+$02`, `+$03`, `+$4B`
+* **Experiment:** D5 (degenerate sub-cases)
+* **Result:** exact
+* **Confidence:** CONFIRMED
+* **Alternative Explanations:** none
+* **Open Questions:** why the P1 record alone takes the zero form
+
+### EV-S2-BOX-04 — AABB predicate: order Z, X, Y; bounds inclusive
+* **Subsystem:** Collision
+* **Claim:** the box test compares Z first, then X, then Y, and counts touching edges as overlap.
+* **Evidence:** `$004514–$00454E`; 507 executions including touching/gap-by-one cases.
+* **Evidence Type:** static + runtime
+* **Location:** ROM `0x450C`
+* **Relevant Function:** `$00450C`
+* **Relevant Address/Offset:** `+$64` (a), `+$70` (b)
+* **Experiment:** D6
+* **Result:** 507/507 identical; Stage-1's "X, Z, Y" ordering is not what the code does
+* **Confidence:** CONFIRMED
+* **Alternative Explanations:** none (order is observable through the early-exit path, though not through the boolean result)
+* **Open Questions:** none
+
+### EV-S2-PRJ-01 — Projection formula
+* **Subsystem:** Rendering / coordinates
+* **Claim:** `sx = X_hi + $80 − cam_x`, `sy = (Z_hi >> 1) + Y_hi + $80 − cam_y`.
+* **Evidence:** `$00AF60–$00AF72`; 1,016 executions.
+* **Evidence Type:** static + runtime
+* **Location:** ROM `0xAF60`
+* **Relevant Function:** `$00AF46`
+* **Relevant Address/Offset:** `+$10`, `+$14`, `+$18`, `+$28`, `+$2C`, `$FFE002`, `$FFE00E`
+* **Experiment:** D7
+* **Result:** exact
+* **Confidence:** CONFIRMED
+* **Alternative Explanations:** none
+* **Open Questions:** none
+
+### EV-S2-PRJ-02 — Screen-fixed actors skip the camera subtraction
+* **Subsystem:** Rendering
+* **Claim:** when bit1 of `+$01` is set, camera offsets are not subtracted; culling still applies.
+* **Evidence:** `btst.b #$1,$1(a0) / bne $AF86`; executed with and without the bit.
+* **Evidence Type:** static + runtime
+* **Location:** ROM `0xAF76`
+* **Relevant Function:** `$00AF46`
+* **Relevant Address/Offset:** `+$01` bit1
+* **Experiment:** D7 (both modes)
+* **Result:** exact
+* **Confidence:** CONFIRMED
+* **Alternative Explanations:** none
+* **Open Questions:** which actors set the bit at runtime
+
+### EV-S2-PRJ-03 — Cull window and its two skip conditions
+* **Subsystem:** Rendering
+* **Claim:** drawn iff `−896 ≤ sx < 1280` and `16 ≤ (u16)sy < 512`; skipped entirely by `+$01` bit3 or `$FA1A ≠ 0`; type `$05` is always culled with margin `−128`.
+* **Evidence:** `$00AF86–$00AFBE`; executed across both margins and the police latch.
+* **Evidence Type:** static + runtime
+* **Location:** ROM `0xAF86`, `0xAFA4`
+* **Relevant Function:** `$00AF46`
+* **Relevant Address/Offset:** `+$00`, `+$01`, `$FFFA1A`
+* **Experiment:** D7
+* **Result:** 1,016/1,016 identical
+* **Confidence:** CONFIRMED
+* **Alternative Explanations:** none
+* **Open Questions:** why type `$05` bypasses the skip branches
+
+### EV-S2-FRM-01 — Per-frame composition order
+* **Subsystem:** Main loop / physics
+* **Claim:** gravity (state handler) → air control → `$003886` clamp → `$00442C` integrate → `$004140` boxes → `$00AF46` projection.
+* **Evidence:** `$001C44` skeleton + `$001FDC`/`$002006` state handlers + `$00AE4C` sprite pass.
+* **Evidence Type:** static
+* **Location:** ROM `0x1C44`, `0x1FDC`, `0x2006`, `0xAE4C`
+* **Relevant Function:** player frame + sprite pass
+* **Relevant Address/Offset:** —
+* **Experiment:** D8 (composition compared frame by frame)
+* **Result:** 140/140 frame-steps identical
+* **Confidence:** CONFIRMED
+* **Alternative Explanations:** none
+* **Open Questions:** none
+
+### EV-S2-FRM-02 — Composed frames equal the ROM chain field by field
+* **Subsystem:** Physics / collision / rendering
+* **Claim:** the reconstruction reproduces positions, velocities, both boxes, screen coordinates, state byte and animation offset for 40–50 consecutive frames in four scenarios.
+* **Evidence:** `D8`; `reconstruction/scenarios/*.json`.
+* **Evidence Type:** runtime (differential)
+* **Location:** —
+* **Relevant Function:** `reconstruction/slice_runner.py`
+* **Relevant Address/Offset:** —
+* **Experiment:** D8 — neutral jump, directional jump with air control, launched descent, frozen hold
+* **Result:** 140/140 identical, 0 divergences
+* **Confidence:** CONFIRMED (conditional on the per-frame plan)
+* **Alternative Explanations:** none for the compared fields
+* **Open Questions:** plans stand in for the state machine; real-state coverage is not proven
+
+### EV-S2-INP-01 — `+$54` is held input; `+$55` is the pressed edge
+* **Subsystem:** Input
+* **Claim:** `$00ADE8` copies the word at `$FC04` to `+$54`; `$00813C` stores held at `$FC04` and newly-pressed at `$FC05`, so `+$54` = held and `+$55` = pressed.
+* **Evidence:** `$00ADE8`, `$00817E–$008182`; air-control executions consume the held byte.
+* **Evidence Type:** static + runtime
+* **Location:** ROM `0xADE8`, `0x813C`
+* **Relevant Function:** input poll + actor dispatch
+* **Relevant Address/Offset:** `+$54`, `+$55`
+* **Experiment:** D3 (held semantics), D8 (buttons applied per frame)
+* **Result:** exact
+* **Confidence:** CONFIRMED
+* **Alternative Explanations:** none
+* **Open Questions:** none
+
+### EV-S2-INP-02 — `$FC06` is the three/six-button discriminator (resolves U-INP-01)
+* **Subsystem:** Input
+* **Claim:** `$00813C` writes 0 to `$FC06`, compares the two controller reads, and writes 1 when they differ — i.e. a six-button pad is present.
+* **Evidence:** `$008184–$00818C` (`move.b #$0,(a0)` then `cmp.b d3,d4` / `move.b #$1,(a0)`).
+* **Evidence Type:** static
+* **Location:** ROM `0x8184`, `0x8188`
+* **Relevant Function:** `$00813C`
+* **Relevant Address/Offset:** `$FC06`
+* **Experiment:** none (static); not yet executed with a synthetic pad
+* **Result:** flag semantics identified
+* **Confidence:** HIGH
+* **Alternative Explanations:** it could flag a read failure rather than a 6-button pad; the compare is between the two reads of the same port, which supports the pad reading
+* **Open Questions:** which byte carries the extra buttons (U-INP-03)
+
+### EV-S2-HID-01 — Name-entry cheat table reproduced on the ROM (EXP-04)
+* **Subsystem:** Hidden
+* **Claim:** `$005920` maps `MOM/SUN/UDI/BO /ORE/blank` to stock 5/4/3/2/1/0 and BCD lives `$90/$49/$09/$07/$01/$00`, using `$FF0C`/`$FF20` for P1 and `$FF14`/`$FF23` for P2.
+* **Evidence:** executed routine, 7 codes × 2 players; values in `evidence/stage2/stage2_verification.json`.
+* **Evidence Type:** runtime
+* **Location:** ROM `0x5920`
+* **Relevant Function:** `$005920`
+* **Relevant Address/Offset:** `$FF0C`, `$FF14`, `$FF20`, `$FF23`, `$FF35`
+* **Experiment:** D9
+* **Result:** all six table entries match `DOSSIER §23.2`; `AXL` leaves the sentinels untouched
+* **Confidence:** CONFIRMED
+* **Alternative Explanations:** none
+* **Open Questions:** reachability unchanged (EV-DEAD-02: unreachable)
+
+### EV-S2-ACT-01 — Actor fields `+$64` and `+$70` are context-aliased
+* **Subsystem:** Entity record
+* **Claim:** `+$64..+$6F` and `+$70..+$7B` hold six-word AABBs on the player path but approach targets / a count-prefixed record list for other classes.
+* **Evidence:** `$004140` writes the boxes every player frame; `$009644` writes approach targets at `+$64`; `$00AD04` reads `+$70` as a count followed by 6-byte records.
+* **Evidence Type:** static
+* **Location:** ROM `0x4140`, `0x9644`, `0xAD04`
+* **Relevant Function:** box builder / enemy approach / attack reader
+* **Relevant Address/Offset:** `+$64`, `+$70`
+* **Experiment:** none (static); confirmed indirectly by D5 and D6 behaving exactly
+* **Result:** the flat per-offset table in `DOSSIER §7.1` cannot be applied across classes
+* **Confidence:** HIGH
+* **Alternative Explanations:** one of the writers could be dead code; both are reached from live loops
+* **Open Questions:** U-ATT-01 (record semantics), and which classes use which meaning
+
+### EV-S2-VAL-01 — Slice-wide differential result
+* **Subsystem:** Validation
+* **Claim:** 7,740 exact comparisons across 8 test groups found zero mismatches.
+* **Evidence:** `tests/test_differential_rom.py`; `evidence/stage2/stage2_verification.json`.
+* **Evidence Type:** runtime (differential)
+* **Location:** —
+* **Relevant Function:** D1–D8
+* **Relevant Address/Offset:** —
+* **Experiment:** `python3 tools/verify_stage2.py`
+* **Result:** 37 tests passed, 0 failed, 0 skipped; 7,740 comparisons
+* **Confidence:** CONFIRMED
+* **Alternative Explanations:** shared-mode failures (e.g. a bad oracle) are possible in principle; two such defects were found and fixed during development (EV-S2-VAL-02)
+* **Open Questions:** scale to frame-wide systems untested
+
+### EV-S2-VAL-02 — Two oracle defects that would have produced false confirmation
+* **Subsystem:** Validation infrastructure
+* **Claim:** (a) `cmpa.w #$b800` compares against `$FFFFB800`, not `$00FFB800`; (b) two separately mapped Unicorn RAM regions are not aliases, so short-absolute and long-absolute accesses read different memory.
+* **Evidence:** reproduced both, then fixed and re-ran the full suite.
+* **Evidence Type:** runtime (negative experiment)
+* **Location:** `tools/rom_probe.py`, `tests/rom_oracle.py`
+* **Relevant Function:** harness
+* **Relevant Address/Offset:** `$FFFFB800`, `$FFFF0000`/`$00FF0000`
+* **Experiment:** probe both variants and compare with known-correct outputs
+* **Result:** each defect changed results silently; after `mem_map_ptr` aliasing and sign-extended addresses, all outputs agree with hand-computed values
+* **Confidence:** CONFIRMED
+* **Alternative Explanations:** none
+* **Open Questions:** none — recorded so future harnesses check both

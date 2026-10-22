@@ -40,6 +40,32 @@ No function name, field name, constant or formula in this document is invented. 
 
 ---
 
+## 0.5 Stage-2 errata (read before quoting this dossier)
+
+Stage 2 re-derived every claim in this dossier that touches movement, body geometry and
+projection, and **executed the original routines** to check them. Six statements below were
+wrong and are corrected in place; each correction is marked `[S2-CORRECTION]` and points to
+an evidence record. Nothing was deleted — the original wording is retained so the change is
+auditable.
+
+| # | Location | Original claim | Corrected | Evidence |
+|---|---|---|---|---|
+| C-1 | §10.1 | box extents are absolute offsets (`x2 = X + b1`) | extents are **cumulative** (`x2 = x1 + b1`) | `EV-S2-BOX-02` |
+| C-2 | §10.1 | one body box at `+$64` | **two** boxes: `+$64` (index `+$02`) and `+$70` (index `+$03`) | `EV-S2-BOX-01` |
+| C-3 | §10.2 | AABB compares X, Z, Y | compares **Z, X, Y**, all bounds inclusive | `EV-S2-BOX-04` |
+| C-4 | §7.1 | `+$54` = pressed-buttons snapshot | `+$54` = **held** byte, `+$55` = pressed edge | `EV-S2-INP-01` |
+| C-5 | §8.3 | jump table 18/20/22 · 20/23/25 ticks, apex 34.875/44.219/54.656 px | 15/17/19 · 17/20/22 ticks, apex −27.375/−35.719/−45.156 px | `EV-S2-KIN-05` |
+| C-6 | §7.1 | one meaning per record offset | `+$64`/`+$70` are **context-aliased** across actor classes | `EV-S2-ACT-01` |
+
+Additions that are not corrections: `+$38 00` soft gravity (`EV-S2-KIN-01`), the
+screen-fixed-actor exception and cull window in projection (`EV-S2-PRJ-02/03`), and the
+three/six-button flag `$FC06` (`EV-S2-INP-02`, resolves `U-INP-01`).
+
+See `AUDIT_REPORT.md` for the full audit, including the fact that the Stage-1 tool
+implemented three of the five experiments its README claimed.
+
+---
+
 ## 1. Executive summary
 
 Streets of Rage (1991) is a 512 KiB cartridge whose *entire* logic — game states, actors, AI, physics, collision, rendering list generation, camera, level scripts and the 68k half of the audio system — lives in roughly the first 106 KiB of the ROM (`$000200`–`$01A1xx`). Everything from about `$01A1xx` to `$06Fxxx` is Kosinski-compressed graphics, and `$06F000`–`$07FFFF` is uncompressed/compressed level + audio payload including the Z80 sound driver and its data. This was established by an entropy/structure sweep (`§3.3`) and confirmed by decompressor runs.
@@ -616,7 +642,7 @@ Every dynamic thing in the game is one of these. Established by (a) the `$80` st
 | `+$50` | .b | **character/moveset ID** (0 Axel, 1 Blaze, 2 Adam) for players; entity sub-variant for others | F | `$001EAA` (`lsl.w #2; movea.l $1F20(pc,d0.w),a1` → 3 pointers `$049AE0/$053EFE/$05E90A`), `$00209E` |
 | `+$51` | .b | "advance animation / new action" request | F | `$0039EE`, `$01A0D6` |
 | `+$52`/`+$53` | .b | palette / sprite override copied for types 1 and 7 | F | `$00B128` |
-| `+$54` | .w | pressed-buttons snapshot (from `$FC04`/`$FC08`) | F | `$0038C0`, `$00ADF4` |
+| `+$54` | .b | **held** pad state, active-high (word write at `$00ADE8` puts **pressed edge in `+$55`**) | F | `$0038C0` (bit3 = held right), `$003914` (bit4 of `+$55` = pressed B) |
 | `+$55` | .b | input/latch bits + "on ground" bits | H | `$003D12`, `$004010` |
 | `+$56` | .b | weapon damage / grab counter | F | `$00354E`, `$003570` |
 | `+$58` | .b | movement flags: bit2 = airborne, bit4 = "hit ground", bit5 = "hold cancel" | H | `$003628`, `$00204A` |
@@ -641,6 +667,12 @@ Every dynamic thing in the game is one of these. Established by (a) the `$80` st
 | `+$7C` | .b | **hit-state code**: 0 none, 1 "reeling", 2 "hit while holding", 3 "grabbed by player" | F | `$004566`–`$00459C`, `$00A98C` |
 | `+$7D` | .b | **hit-reaction animation/behaviour index** (1..9) | F | `$004586`, `$0045C6`, `$002C5C` |
 | `+$7E` | .w | pointer to the last attacker | F | `$0045CA`, `$00AA2A` |
+
+> `[S2-CORRECTION]` **Offsets `+$64..+$6F` and `+$70..+$7B` are context-aliased.** On the
+> player path `$004140` writes six-word AABBs into both (see §10.1), while enemy code
+> writes approach targets at `+$64` (`$009644`) and `$00AD04` reads `+$70` as a count
+> followed by 6-byte records. The per-offset table above is therefore a *union* listing,
+> not a single layout valid for all actor classes. `EV-S2-ACT-01`.
 
 **Explicit unknowns in the record:** `+$35`, `+$36`, `+$43`, `+$44`, `+$5F`, `+$61`, `+$6A`–`+$6D`, `+$7A`, `+$7F` are not read by any code path that could be attributed with confidence → `§28` items `U-ACT-01`.
 
@@ -809,11 +841,19 @@ Selected/decoded values (full 128-entry dump is produced by `tools/verify_sor_fo
 * Jump impulse is **not** in the player record; it is set by the state handler. `$0020C8` writes `#$FFF90000` (i.e. −7.0 px/tick) into `+$24` for the directional-jump case, and `$002112` writes `#$FFF9C000` (−6.25) for the air-recovery case. The *actual* per-character launch velocities come from the animation-block data consumed at `$003614` (`move.b (a1,d1) → swap → asr.l #4` → velocity from a byte in the animation table). So character jump height is a **data** property, not a constant in code. (F for the mechanism, P for the per-character numbers.)
 * Verified by executing ROM gravity (`EXP-05`) with the three characteristic launch velocities seen in the animation data:
 
-| Launch v_y | Neutral jump (`$00389A` +g=`$E800`) | Directional (`$0038AE` g=`$E800` then `$8800`) |
+| Launch v_y | Neutral jump (`$00389A`, g=`$E800`) | Directional (`$0038AE`, g=`$E800` then `$8800`) |
 |---|---|---|
-| −7.5 px/t | 18 ticks (0.600 s), peak 34.875 px | 20 ticks (0.667 s), peak 34.875 px |
-| −8.5 px/t | 20 ticks (0.667 s), peak 44.219 px | 23 ticks (0.767 s), peak 44.219 px |
-| −9.5 px/t | 22 ticks (0.733 s), peak 54.656 px | 25 ticks (0.833 s), peak 54.656 px |
+| −7.5 px/t | **15** ticks (0.250 s), apex **−27.375 px** | **17** ticks (0.283 s), apex **−27.375 px** |
+| −8.5 px/t | **17** ticks (0.283 s), apex **−35.719 px** | **20** ticks (0.333 s), apex **−35.719 px** |
+| −9.5 px/t | **19** ticks (0.317 s), apex **−45.156 px** | **22** ticks (0.367 s), apex **−45.156 px** |
+
+> `[S2-CORRECTION]` The Stage-1 table read 18/20/22 and 20/23/25 ticks with apexes
+> 34.875/44.219/54.656 px. Those values correspond to an **integrate-then-gravity**
+> ordering (`v²/2g + v/2`). The ROM applies gravity *inside the state handler*
+> (`$001FDC`) **before** `$00442C` integration, which removes one gravity step of height
+> and half a step of rise. Measured by executing the ROM chain; see `EV-S2-KIN-05`,
+> `DIFFERENTIAL_VALIDATION.md` §4.4. The qualitative claim below — same apex, longer
+> airtime when directional — is confirmed.
 
   The peak is identical between columns because peak depends only on `v²/2g`; the *airtime* differs because `$0038AE` uses the smaller acceleration `$8800` while ascending with `v_y≥0` — i.e. **the game deliberately gives the player longer hang time when jumping forward/backward, with no change in jump height.** That is a genuine, measured design property, not an inference.
 
@@ -851,7 +891,7 @@ else:
     +$14 += +$20          ; Z += vz
     +$18 += +$24          ; Y += vy
 ```
-`(+$08 & $FC) == $14` is a *state-dependent freeze*: while this animation block is selected and bit7 of `+$59` is set, position does not integrate at all. This is how "held/grabbed" actors stay pinned without a separate code path.
+`(+$08 & $FC) == $14` is a *state-dependent freeze*: while this animation block is selected and bit7 of `+$59` is set, position does not integrate at all. **`[S2-CORRECTION]`** the instructions are `move.w $8(a0),d0 / andi.b #$FC,d0 / cmpi.w #$14,d0`: the mask covers the **low byte only** while the compare is 16-bit, so the high byte of `+$08` must also be zero — `+$08 = $0114` does **not** freeze, `+$08 = $0017` **does** (`EV-S2-KIN-04`). This is how "held/grabbed" actors stay pinned without a separate code path.
 
 ### 9.3 Gravity constants (FACT — all are literal `move.l #…` immediates)
 | Value | 16.16 decimal | px/tick² | Applied by | Condition |
@@ -873,7 +913,7 @@ Gravity is applied **before** integration in the frame (gravity helpers are call
   `move.b (a1,d1),d2 ; ext.w ; swap ; asr.l #4` → `d2 = byte << 16 >> 4 = byte * 4096` = byte/16 in 16.16.
   Facing is applied by negating the 32-bit value (`$003644`).
 * The same construction one byte later supplies the **depth velocity** into `+$20` (`$003652`–`$00365E`). So walk speed *and* depth speed are per-frame data, not constants — i.e. each animation frame can move the actor differently. This is the mechanism behind "walking diagonally is slower".
-* Air control (`$0038C0`): acceleration `±$6000` (**±0.375**) per tick while airborne, clamped to `±$38000` (**±3.5** px/tick) by the two comparisons against `$FFFC8000`.
+* Air control (`$0038C0`): acceleration `±$6000` (**±0.375**) per tick while airborne, clamped to `±$38000` (**±3.5** px/tick) by the two comparisons against `$FFFC8000`. **`[S2-CORRECTION]`** bit3 (right) is tested **before** bit2 (left), so both-held moves right; the branch also writes the facing bit `+$30` bit0 and `+$09` bit1; and the clamp runs **only** on the taken branch, so with no direction held an out-of-range `vx` is left untouched (`EV-S2-KIN-03`, 400 executed cases).
 * Knockback (`$0099D2`): deceleration `$5400` (**0.328**) per tick toward zero, applied only when the actor is in the launched state and its direction opposes motion.
 * Push-out (`$009F96`, `$00A00E`): if the *proposed* X (or Z) leaves the legal band, the previous value is restored and bit0 of a local flag is set (`$009FDC`, `$00A002`). This is the "wall" test; there is no separate wall list — the legal band is a per-round constant pair:
   `X ≥ −(?)` / `X ≤ $2F00000` (752.0) and `X ≤ $15100000` (337.0) in the round-7 branch `$009FCA`, plus Z ≤ `$20000` (2.0) in `$00A018` → `§14`.
@@ -891,16 +931,31 @@ The `cmpi.l #$C0000,$24(a0)` in `$003886` and the band checks in `$009F96` are t
 Builder: `$004140`–`$0041E8`. Called from the player path only (`$001CC6`), i.e. players rebuild theirs every frame; other actors build theirs inside their handlers.
 
 ```
-a5 = $01ABA8     ; 5-byte records: [x1_off, x2_off, z_index, y1_off, y2_off]
-a6 = $01AB8E     ; 2-byte records: [z1_off, z2_off]
-d1 = +$02 (sprite tile width) ; d1 = d1*5                      ; 5 bytes per record
-d0 = X_int + sbyte(a5[d1+0]) → (+$64).w                        ; x1
-     X_int + sbyte(a5[d1+1]) → (+$66).w                        ; x2
-d2 = byte(a5[d1+2]) * 2 ; d0 = Z_int + sbyte(a6[d2+0]) → (+$68).w   ; z1
-                                 (+$6A).w                      ; z2
-d0 = Y_int + sbyte(a5[d1+3]) → (+$6C).w                        ; y1
-     Y_int + sbyte(a5[d1+4]) → (+$6E).w                        ; y2
+a5 = $01ABA8     ; 32 x 5-byte records: [x_corner, x_extent, z_index, y_corner, y_extent]
+a6 = $01AB8E     ; 13 x 2-byte records: [z_corner, z_extent]
+
+; pass 1: a1 = a0+$64, index = +$02 (sprite tile width)
+; pass 2: a1 = a0+$70, index = +$03 (sprite tile height)   <-- a1 is NOT reset
+d1 = index*5
+x1 = s16(X_int + sbyte(a5[d1+0]))          → (+$64).w   ; corner
+y1 = s16(Y_int + sbyte(a5[d1+3]))          → (+$6C).w   ; corner
+z1 = s16(Z_int + sbyte(a6[2*idx+0]))       → (+$68).w   ; corner
+x2 = s16(x1 + sbyte(a5[d1+1]))             → (+$66).w   ; += EXTENT
+z2 = s16(z1 + sbyte(a6[2*idx+1]))          → (+$6A).w   ; += EXTENT
+y2 = s16(y1 + sbyte(a5[d1+4]))             → (+$6E).w   ; += EXTENT
 ```
+
+> `[S2-CORRECTION]` The Stage-1 pseudo-code added each table byte to the *position*,
+> which treats the second byte as an absolute offset. `$0041AC`, `$0041C6` and `$0041E2`
+> add to `d0` **after it already holds the corner**, so bytes 1, `z_extent` and 4 are
+> sizes. Example: index 2 = `(-3, 10, 0, -50, 50)` at X=1000, Z=500, Y=−20 gives
+> `(997, 1007, 492, 508, -70, -20)`, not `x2 = 1010` / `y2 = +30`.
+>
+> `[S2-CORRECTION]` This routine builds **two** boxes per call, not one: the second pass
+> writes `+$70..+$7B` using index `+$03`. Degenerate rules (all measured): index 0 in
+> pass 1 → six `$0010` words, or six zero words when `a0 == $FFFFB800`; index 0 in
+> pass 2 → six zero words unless `+$4B` bit1 is set, in which case it follows pass 1's
+> rule. See `EV-S2-BOX-01/02/03`, `WS-02`.
 So the attacker-independent *shape* of every actor comes from two ROM tables indexed by its sprite width and its depth index. **All offsets are signed 8-bit pixels** — the box can never exceed ±127 px in any direction, and boxes are axis-aligned in (X,Z,Y).
 
 **System B — "attack box list", word count at `+$70` followed by 6-byte records.**
@@ -913,7 +968,7 @@ $00AB88  d1 = actor.Z ; d5a = sbyte(a3)+ ; d1 += d5a ; if d1 > word(a2)     → 
 **Therefore: hit detection is 3-axis interval overlap between one actor's attack-record set and the other actor's body box, with Z tested at half weight** (`$00AB5A`–`$00AB74` doubles the Z offset before the test). No radius, no circles, no per-pixel masks — the entire combat geometry of the game is signed bytes plus interval tests.
 
 ### 10.2 Priority, ordering and filtering (FACT)
-* Body-vs-body (`$00450C`, used for player↔player and player↔enemy separation) performs six comparisons — `x1≤x2'`, `x2≥x1'`, `z1≤z2'`, `z2≥z1'`, `y1≤y2'`, `y2≥y1'` — and returns "no overlap" on the first failure. It is a plain AABB test, evaluated in that fixed order (X, Z, Y).
+* Body-vs-body (`$00450C`, used for player↔player separation) performs six comparisons — `z1≤z2'`, `z2≥z1'`, `x1≤x2'`, `x2≥x1'`, `y1≤y2'`, `y2≥y1'` — and returns "no overlap" on the first failure. It is a plain AABB test. **`[S2-CORRECTION]`** the fixed order is **Z, X, Y** (not X, Z, Y), and every bound is **inclusive**, so boxes that merely touch count as overlapping (`$004514–$00454E`; `EV-S2-BOX-04`; 507 executed cases in `D6`). The predicate compares A's `+$64` box against B's `+$70` box.
 * Grab eligibility (`$004F72` + table `$004FC4`): byte per state (`+$30>>1`), `hi nibble = grab class`, `lo nibble = "can be grabbed"`. Incompatible class → victim gets `+$01` bit7 (depth-priority flip) rather than being grabbed.
 * Invulnerability: `+$4B` bit1 with timer `+$4F` (`$004F4C`, `$004F62`). This is the *only* damage immunity mechanism; there is no per-attack invulnerability list.
 * Multi-hit prevention: `+$4B` bit6 ("hit already counted") is set by `$0043E6`/`$00504E` and cleared when the attack animation block changes. This — not a per-frame hit list — is how a single attack cannot hit the same target twice.

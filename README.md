@@ -2,7 +2,47 @@
 
 This repository contains an **evidence-backed engineering audit** of *Streets of Rage / Bare Knuckle* (Sega Mega Drive, 1991) built from the ROM images in `Streets-of-Rage_Genesis_EN.zip`.
 
-**This is not a remake, port, clone, or engine.** No gameplay was re-implemented. The only code here exists to extract, decode, measure, and validate evidence from the original binary.
+**This is not a remake, port, clone, or game engine.** No gameplay was re-implemented and
+no playable build exists. The code here extracts, decodes, measures and validates evidence
+from the original binary, plus one bounded *reconstruction slice* used to prove that
+verified rules can be carried into a new implementation and checked against the original.
+
+---
+
+## Stage 2 — from dossier to executable knowledge
+
+Stage 1 produced the 32-section dossier. Stage 2 went back to the binary, re-verified it,
+and turned the movement/collision layer into specified, reusable, **tested** code.
+
+| Start here | Why |
+|---|---|
+| **`COMPLETION_REPORT.md`** | what was done, acceptance criteria PASS/FAIL, scope statement |
+| **`AUDIT_REPORT.md`** | what the Stage-1 claims really rested on, and six corrections |
+| **`BEHAVIORAL_SPECIFICATIONS/`** | 4 implementation-independent specs (WS-01…WS-04) |
+| **`components/`** | reusable modules + ROM-hashed data (`sor_engine`) |
+| **`DIFFERENTIAL_VALIDATION.md`** | 7,740 exact comparisons vs the original, and the 11 defects found |
+| **`KNOWLEDGE_CATALOG.md`** | knowledge → evidence → component → test index |
+| **`UPDATED_COVERAGE_MATRIX.md`** | four independent coverage dimensions |
+| **`REPRODUCE.md`** | environment, commands, pitfalls |
+
+```bash
+pip install unicorn capstone
+python3 tools/verify_stage2.py     # 37 tests, 7,740 differential comparisons
+```
+
+**Headline Stage-2 results**
+* The reconstruction reproduces the original **bit-exactly** for gravity, terminal clamp,
+  air control, integration + freeze, both body boxes, the AABB predicate and projection:
+  7,740 comparisons, **0 mismatches, 0 tolerances**.
+* Two body-box formulas in the Stage-1 dossier were **wrong** (extents, not offsets), a
+  second box at `+$70` was missing, and the AABB comparison order was mis-stated.
+* The Stage-1 jump table is **not reproducible**: the real airtimes are 15/17/19 ticks
+  (neutral) and 17/20/22 (directional) with apexes −27.375/−35.719/−45.156 px. Stage 1 had
+  used an integrate-then-gravity ordering; the ROM applies gravity first.
+* The Stage-1 tool implemented **three** of the five experiments its documentation
+  claimed. The two missing ones (cheat, jump) are now real, ROM-executed tests.
+* Scope is explicit: **one actor class, one code path**. The rest of the game is not
+  reconstructed.
 
 ---
 
@@ -29,12 +69,17 @@ python3 tools/verify_sor_forensics.py
 
 Requires the archive at the repository root. The tool never writes extracted ROMs to disk.
 
-## What the tool proves
+## What the Stage-1 tool proves
 1. All 11 images are exactly 524,288 bytes; checksums recomputed with the game's own algorithm; each derivative classified.
 2. The independent Python Kosinski decoder and the **ROM's own decompressor** produce byte-identical output for the Z80 sound driver (asserted inside the tool).
-3. The PRNG formula matches the ROM's routine for 16 consecutive calls, including full 32-bit state.
-4. REV 00 and REV 01 behave differently on the boss damage path under identical preconditions — the actual reason REV 01 exists.
-5. The dormant name-entry cheat returns exactly the values encoded in its own table.
+3. REV 00 and REV 01 behave differently on the boss damage path under identical preconditions — the actual reason REV 01 exists.
+
+**Correction (Stage 2):** this tool implements **three** MC68000 experiments (the three
+above), not the five previously claimed here. The PRNG sequence (EXP-02) and the
+REV00/REV01 trace (EXP-03) are recorded without assertions, and the name-entry cheat
+(EXP-04) and jump trajectories (EXP-05) had no code. The cheat and jump measurements are
+now implemented and asserted in `tests/test_recovered_behaviour.py` (`D9`, `D10`); the
+jump numbers in the Stage-1 dossier were found to be wrong. See `AUDIT_REPORT.md` §2.
 
 ## Headline findings
 * **22 master states**, one **128-byte actor record**, **156-entry** type dispatch table, **128-entry** player state table.

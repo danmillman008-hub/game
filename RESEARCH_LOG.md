@@ -201,3 +201,114 @@ Every entry is reproducible; commands are given where they matter.
 | Read `$017F26`/`$017F2A` as words | produced impossible HP (28672) | read the byte loads in `$017EDC` |
 | Treat `$000512` word writes to `+$30` as state values | `+$30` is a byte; the word also clears `+$31` | byte state + separate flag byte |
 | Expect a Z80 sequencer | Z80 image has no stream decoder on its executed path | 68k sequencer + Z80 register proxy |
+
+---
+
+# Stage 2 — From dossier to executable knowledge
+
+**RL-49** *Audit of the Stage-1 tool.* Read `tools/verify_sor_forensics.py` line by line
+instead of trusting its exit code. It implements **three** Unicorn experiments
+(EXP-01, 02, 03), not five: the name-entry cheat and jump-trajectory experiments
+described in `README.md`, `COVERAGE_MATRIX.md` and `RESEARCH_LOG` **RL-46** have no code
+behind them. EXP-02 and EXP-03 also record results without asserting anything; only the
+Kosinski hash is asserted. → Correction recorded in `AUDIT_REPORT.md §2`; the missing
+experiments were re-implemented against the ROM rather than deleted from the record.
+This entry deliberately does **not** rewrite RL-46; it records that RL-46 overstated the
+tool.
+
+**RL-50** *Slice selection.* Candidates: movement/coordinates, body collision, attack
+resolution, damage, AI. Chose movement + body collision because the routines are
+self-contained, the record fields were already located, and the outputs are integers
+(no rendering/audio dependencies). Attack resolution was rejected for now: `$00AB24`
+reads six-byte threshold records at `+$72` whose fields are not understood; implementing
+them would require guessing.
+
+**RL-51** *Toolchain re-established.* `/tmp` does not survive between sessions here, so
+the venv and scratch ROMs had to be rebuilt; moved all scratch work to the gitignored
+`work/` directory inside the repository. Reinstalled capstone 5.0.7 / unicorn 2.1.4.
+
+**RL-52** *Read the skeleton instead of the summary.* Disassembled `$001C44`. It matches
+`DOSSIER §8.1` byte-for-byte (calls are `jsr d16(pc)`, not absolute). This confirmed the
+Stage-1 skeleton and, more importantly, fixed the **frame order** used later: gravity
+happens inside the state dispatch, clamp at `$001CA2`, integration at `$001CA6`, box
+rebuild at `$001CC6`.
+
+**RL-53** *An xref tool that lied.* First call-graph scan found **zero** references to
+every physics routine because it only matched absolute `jsr`. The engine uses
+`jsr d16(pc)` (`4EBA`). After adding PC-relative forms, the callers appeared:
+`$00389A` ← `$001FDC`, `$002128`, `$002174`, `$002A10`, `$002ADC`, `$002B10`, `$002B38`;
+`$0038AE` ← `$002006`, `$0020E4`, `$00219C`, `$0024BE`, `$002AA0`; `$0038A6` ← `$002A6E`
+only. → Lesson: a negative xref result is only as good as the encodings you searched.
+
+**RL-54** *A gravity constant the dossier never listed.* `$0038A6` adds `$3800`
+(+0.21875 px/tick²) and is reached from exactly one site (`$002A6E`). Added to the spec
+as the "soft" variant. → Shows the value of re-reading code rather than re-reading notes.
+
+**RL-55** *The box builder does not match the dossier.* Read `$004140` and saw that
+`$41AC`/`$41E2`/`$41C6` add the second table byte to the value already in `d0`, i.e.
+`x2 = x1 + extent`, not `X + offset`. Executed the routine to settle it: index 2 at
+X=1000 gives `x2 = 1007`, not `1010`. Also discovered a **second** box being written at
+`+$70` because `a1` is never reset between the two passes. → `AUDIT_REPORT.md` C-1, C-2.
+
+**RL-56** *Two of my own bugs, caught by the tests.* (a) I masked `0x0200` for `+$09`
+bit1 — wrong by 8 bits, since `+$09` is the low byte of the `+$08` word. (b) I keyed the
+freeze predicate on `+$30` (state) although the ROM reads `+$08` (animation offset);
+after fixing that, `+$08 = 0x0114` still froze because `andi.b #$FC` masks only the low
+byte and `cmpi.w` compares 16 bits. → Both became regression tests (D3, D4).
+
+**RL-57** *The oracle was wrong twice.* (a) `cmpa.w #$b800` sign-extends to
+`$FFFFB800`; probing with `a0 = $00FFB800` silently takes the other branch, making the
+P1 special case look like a general case. (b) Mapping `0x00FF0000` and `0xFFFF0000` as
+two Unicorn regions creates two *distinct* memories; the 68000 accesses the same byte
+through both, so all short-absolute reads returned zeros. Fixed with `mem_map_ptr` onto
+one host buffer. → Recorded in `REPRODUCE.md §6`; without this the differential suite
+would have "confirmed" nonsense.
+
+**RL-58** *Writing to ROM by accident.* The cheat probe wrote the name bytes to
+`0x00FF0C`, which is ROM offset 65,292, not RAM `$FF0C`. The correct 32-bit form of the
+sign-extended short absolute is `0x00FFFF0C`. The routine then returned sentinels and the
+test failed loudly — a benign outcome of a dangerous mistake (Unicorn maps ROM writable).
+→ `REPRODUCE.md §6.3`, `DIFFERENTIAL_VALIDATION.md` §4.2 #9.
+
+**RL-59** *Discovered `$FC06` (resolves U-INP-01).* `$00813C` writes 0 then 1 depending on
+whether the two controller reads differ: the three-/six-button discriminator.
+**HIGH** confidence, static only.
+
+**RL-60** *The jump table in the dossier is wrong.* Ran the ROM chain per frame for three
+launch speeds × two gravity variants. Real airtimes are 15/17, 17/20, 19/22 ticks with
+apex −27.375/−35.719/−45.156 px; the dossier printed 18/20/22, 20/23/25 and
+34.875/44.219/54.656 px. The dossier's numbers are exactly the `integrate → gravity`
+ordering (`v²/2g + v/2`); the ROM does `gravity → integrate`. The *qualitative* claim
+(same apex, longer airtime when directional) survives. → `AUDIT_REPORT.md` C-7,
+`DIFFERENTIAL_VALIDATION.md` §4.4.
+
+**RL-61** *Cheat table reproduced.* Executed `$005920` with all six codes plus a control,
+for both players. Every value matches `DOSSIER §23.2`, including the `$B800`-dependent
+choice of `$FF20` vs `$FF23`. The Stage-1 table was right; the Stage-1 *tool* simply
+never ran it.
+
+**RL-62** *Revision check before claiming anything.* Diffed every byte range used by the
+slice between REV 00 and REV 01: 8/8 ranges identical. The 2,092 differing bytes are the
+master header plus `$0143FB–$014DAF` (the known boss-handler patch). → The slice is
+revision-independent, and that is now a measured statement rather than an assumption.
+
+**RL-63** *Spec tests failed for the right reason.* Four projection expectations were
+wrong because I forgot the `+$80` bias when choosing "outside the margin" positions
+(X=−200 maps to −72, inside −896). Fixed the *tests*, not the implementation — the
+distinction matters and is recorded in `DIFFERENTIAL_VALIDATION.md §4.3`.
+
+**RL-64** *Why the slice is not the game.* Wrote `COMPLETION_REPORT.md §5` to state the
+scope explicitly: one actor class, one code path, no state machine, no combat. The
+method is proven for self-contained routines; whether it scales to frame-wide systems is
+the next experiment.
+
+## Additional dead ends (Stage 2)
+
+| Attempt | Why it failed | Replacement |
+|---|---|---|
+| Absolute-only xref scan | engine calls are `jsr d16(pc)`; found 0 callers | match `4EBA`/`4EFA`/`61xx`/`lea d16(pc)` |
+| Two independent Unicorn RAM mappings | not aliases; short-absolute reads saw zeros | `mem_map_ptr` on one buffer |
+| `a0 = 0x00FFB800` for the P1 box test | `cmpa.w` compares against `$FFFFB800` | use the sign-extended address |
+| Writing `$FF0C` as `0x00FF0C` | that is ROM, not RAM | `0x00FFFF0C` |
+| `Actor(vy=0x80000000)` | Python int, not signed 32-bit | wrap in `__post_init__` |
+| Trusting `DOSSIER §10.1` box formulas | extents were read as offsets | execute `$004140` and compare |

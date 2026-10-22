@@ -1,3 +1,9 @@
+> **Superseded for Stage-2 purposes.** This file records Stage-1 *investigation* coverage.
+> The four-dimensional coverage matrix (evidence / specification / implementation /
+> validation) is `UPDATED_COVERAGE_MATRIX.md`. One claim below is corrected there:
+> the Stage-1 tool implements three of the five experiments listed under "Coverage by
+> method", not five (`AUDIT_REPORT.md` §2).
+
 # Coverage Matrix
 ### Streets of Rage / Bare Knuckle (Mega Drive, 1991) — investigation coverage
 
