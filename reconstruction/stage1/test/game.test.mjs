@@ -193,6 +193,40 @@ for (let i = 0; i < 600 && !hurtDone; i++) {
 }
 check('an enemy can damage the player', hurtDone, `hp ${php} -> ${G.player.hp}`);
 
+// --- regression: knockback must not push an actor off the stage
+fresh();
+G.step(45);
+const kb = G.enemies[0];
+kb.x = G.player.x - 14;
+kb.z = G.player.z;
+kb.facing = 1;
+G.player.facing = -1;
+let pushedOut = false;
+for (let i = 0; i < 900; i++) {
+  G.step(1);
+  if (G.player.x < 8 - 0.001 || G.player.x > 900 + 0.001) pushedOut = true;
+  if (G.player.z < -0.001 || G.player.z > 100.001) pushedOut = true;
+}
+check('knockback keeps actors inside the stage', !pushedOut, `x=${G.player.x} z=${G.player.z}`);
+
+// --- regression: runs are reproducible even with enemies active
+function longRun() {
+  fresh();
+  G.press('ArrowRight');
+  G.step(60);
+  G.release('ArrowRight');
+  G.step(20);
+  G.press('j');
+  G.step(40);
+  G.release('j');
+  G.step(200);
+  return JSON.stringify([G.player.x, G.player.z, G.player.hp, G.score,
+    G.enemies.map((e) => [Math.round(e.x), Math.round(e.z), e.hp])]);
+}
+const r1 = longRun();
+const r2 = longRun();
+check('a long run with enemies is reproducible', r1 === r2, `${r1} vs ${r2}`);
+
 console.log(results.join('\n'));
 console.log(`\n${pass} passed, ${fail} failed`);
 if (fail) process.exitCode = 1;

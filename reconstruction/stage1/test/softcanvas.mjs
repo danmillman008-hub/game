@@ -19,8 +19,14 @@ export class SoftImage {
   set src(p) {
     this._src = p;
     try {
-      const path = p.startsWith('file://') ? new URL(p) : p;
-      const buf = readFileSync(path);
+      // supports filesystem paths, file:// URLs and base64 data URIs (bundles)
+      let buf;
+      if (p.startsWith('data:')) {
+        buf = Buffer.from(p.slice(p.indexOf(',') + 1), 'base64');
+      } else {
+        const path = p.startsWith('file://') ? new URL(p) : p;
+        buf = readFileSync(path);
+      }
       const img = decodePng(buf);
       this.width = img.width;
       this.height = img.height;

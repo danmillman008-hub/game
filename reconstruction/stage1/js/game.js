@@ -48,6 +48,19 @@ const input = {
   get jump() { return held('k'); },
 };
 
+// ---------------------------------------------------------------- determinism
+// The original is deterministic for a given input sequence, so this must be too.
+// Every "random" decision (enemy attack timing) draws from a seeded generator,
+// reset with the game, which makes a run reproducible frame for frame.
+let rngState = 0x2f6e2b1;
+function rng() {
+  // xorshift32
+  rngState ^= rngState << 13; rngState >>>= 0;
+  rngState ^= rngState >>> 17;
+  rngState ^= rngState << 5; rngState >>>= 0;
+  return rngState / 0x100000000;
+}
+
 // ---------------------------------------------------------------- actors
 let player, enemies, camera, effects, timerFrames, score, spawnQueue, state;
 
@@ -69,6 +82,7 @@ function reset() {
   timerFrames = 40 * 60;      // 40 game-units, one per second
   score = 0;
   state = 'play';
+  rngState = 0x2f6e2b1;      // same starting point every run
   // Waves: the original sends thugs in from the right in pairs; two waves plus a
   // third guard near the stage mid-point, matching the pacing observed in capture.
   spawnQueue = [
@@ -107,6 +121,13 @@ function startAttack(a) {
   a.hasHit = false;
 }
 
+// Keep an actor inside the stage. Every state that changes x must go through
+// this: knockback used to bypass the clamp and push actors off the stage.
+function clampActor(a) {
+  a.x = Math.max(STAGE.xMin, Math.min(STAGE.xMax, a.x));
+  a.z = Math.max(STAGE.zMin, Math.min(STAGE.zMax, a.z));
+}
+
 function updateActor(a, dt) {
   const f = dt;   // one update per frame
 
@@ -121,6 +142,7 @@ function updateActor(a, dt) {
       if (a.kind === 'player') { a.hp = 48; a.state = 'idle'; a.invuln = 40; }
       else { a.dead = true; }
     }
+    clampActor(a);
     return;
   }
 
@@ -128,6 +150,7 @@ function updateActor(a, dt) {
     a.x += a.vx * f;
     a.vx *= 0.82;
     if (a.hitstun <= 0) a.state = 'idle';
+    clampActor(a);
     return;
   }
 
@@ -176,8 +199,7 @@ function updateActor(a, dt) {
   }
 
   // ---- bounds
-  a.x = Math.max(STAGE.xMin, Math.min(STAGE.xMax, a.x));
-  a.z = Math.max(STAGE.zMin, Math.min(STAGE.zMax, a.z));
+  clampActor(a);
 
   // ---- animation
   a.animTimer += f;
@@ -221,7 +243,7 @@ function updateEnemy(e, dt) {
     e.state = 'walk';
   } else {
     e.facing = Math.sign(dx) || 1;
-    if (Math.random() < 0.02) startAttack(e);
+    if (rng() < 0.02) startAttack(e);
   }
 }
 

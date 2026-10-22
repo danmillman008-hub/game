@@ -7,16 +7,30 @@ are displayed by the game.
 
 ## Run it
 
-The game is static files; it needs no build step and no network.
+**One file, no prerequisites.** Open `reconstruction/stage1/stage1.html` in any
+modern browser — double-click it, drag it in, or serve it. Everything (markup,
+styles, game code, and all art) is embedded, so it works offline from `file://`
+with no server and no build step.
 
 ```sh
-cd reconstruction/stage1
-python3 -m http.server 8000
-# open http://localhost:8000/
+# simplest
+xdg-open reconstruction/stage1/stage1.html     # or just double-click it
+
+# or serve it, if you prefer
+cd reconstruction/stage1 && python3 -m http.server 8000   # http://localhost:8000/
 ```
 
-(Any static file server works. Opening `index.html` directly from `file://` will
-not load the ES modules or the PNGs.)
+To rebuild the single file after changing the sources:
+
+```sh
+python3 tools/bundle_stage1.py
+```
+
+The unbundled sources (`index.html`, `js/`, `assets/`) remain the editable form;
+`stage1.html` is generated from them and is verified equivalent by
+`test/bundle.test.mjs`. That test also asserts the bundle has no external
+references at all: no `<script src>`, no `<link href>`, no module imports, no
+`import.meta`, no path into `assets/` or `js/`, and no network URL.
 
 | key | action |
 |---|---|
@@ -30,6 +44,9 @@ not load the ES modules or the PNGs.)
 ```sh
 # behavioural tests, against the shipped module's own update path
 node reconstruction/stage1/test/game.test.mjs
+
+# the single-file bundle: no external references, boots, renders identically
+node reconstruction/stage1/test/bundle.test.mjs
 
 # render a frame headlessly (software canvas, no browser needed)
 node reconstruction/stage1/test/render.mjs /tmp/out.png 90 "idle:60,right:120,j:20"

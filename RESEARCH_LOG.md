@@ -568,3 +568,34 @@ Measured, original frame 14599 vs. render: 71,680 pixels compared, 48,055 differ
 (67.04%); 2,771/8,320 HUD pixels differ (33.3%). The HUD was brought from 74.78% to
 67.04% total by using the frame's measured HUD colours and layout. No scaling or
 shifting is applied to improve the number.
+
+## RL-78 — single-file bundle, and two determinism bugs it exposed  [TEST]
+
+`tools/bundle_stage1.py` emits `reconstruction/stage1/stage1.html`: markup, styles,
+game code and all five PNGs inlined, one classic script, zero external references. It
+opens from `file://` with no server, which the module form could not (module fetching
+is blocked there).
+
+Bundling forced an equivalence check, and that check found two real defects:
+
+1. **`Math.random()` in the enemy AI.** Runs were not reproducible: the same input
+   sequence produced different outcomes because an enemy's decision to attack depended
+   on an unseeded RNG. Since the original is deterministic given inputs, this
+   contradicted a stated requirement rather than being cosmetic. Replaced with a
+   seeded xorshift32 reseeded by `reset()`. A run with enemies active is now
+   bit-identical across repeats, and there is a regression test for it.
+2. **Knockback could push actors off the stage.** The clamp ran on the normal
+   movement path only; the `hurt` and `down` branches return early and moved `x` by
+   velocity unclamped, reaching `x = 907.7` against a limit of 900. Clamping is now
+   centralised in one `clampActor()` called from every state. Regression test added.
+
+Verification:
+
+* `test/bundle.test.mjs` — 22 checks: no external script/link/img, no module imports,
+  no `import.meta`, no `assets/` or `js/` path, no network URL, exactly one script tag,
+  all five data URIs decode as valid PNGs (plate 320×224), the bundle executes without
+  throwing, all assets load inside it, and **the bundled build renders byte-identical
+  pixels to the module build for the same 150-frame input program**.
+* `test/game.test.mjs` — 25 checks, all passing, including the two new regressions.
+
+Bundle: 49,544 bytes, 1 inline script, 5 embedded PNGs, 0 external references.
