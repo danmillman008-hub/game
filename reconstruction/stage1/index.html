@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Stage 1 — reconstruction</title>
+<style>
+  html, body {
+    margin: 0; padding: 0; background: #101014; color: #cfd3dc;
+    font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  #wrap { display: flex; gap: 16px; padding: 16px; align-items: flex-start; flex-wrap: wrap; }
+  #screen {
+    image-rendering: pixelated; image-rendering: crisp-edges;
+    width: 960px; height: 672px; max-width: 96vw; max-height: 67vw;
+    background: #000; display: block;
+    border: 1px solid #2a2f3a;
+  }
+  #panel { min-width: 260px; max-width: 420px; }
+  h1 { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: #8fa0bb; margin: 0 0 8px; }
+  dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; margin: 0 0 14px; }
+  dt { color: #6c7688; }
+  dd { margin: 0; color: #d7dbe4; }
+  .k { color: #e8c07d; }
+  .note { color: #6c7688; border-top: 1px solid #23283a; padding-top: 10px; margin-top: 10px; }
+  code { color: #9fd3a2; }
+  #hint { color: #c98b5a; }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="screen" width="320" height="224"></canvas>
+  <div id="panel">
+    <h1>Stage 1 reconstruction</h1>
+    <dl>
+      <dt>Move</dt><dd>arrows / WASD</dd>
+      <dt>Attack</dt><dd class="k">J</dd>
+      <dt>Jump</dt><dd class="k">K</dd>
+      <dt>Restart</dt><dd>R</dd>
+    </dl>
+    <dl>
+      <dt>Time</dt><dd id="hud-timer">40</dd>
+      <dt>Score</dt><dd id="hud-score">0</dd>
+      <dt>Health</dt><dd id="hud-health">48</dd>
+      <dt>Foes</dt><dd id="hud-foes">0</dd>
+    </dl>
+    <div class="note">
+      <p><span id="hint">Click the canvas, then use the keys.</span></p>
+      <p>Environment and characters are the original game's own pixels,
+         recovered from frames it produced at the camera position of Stage 1.
+         Movement, depth, collision and combat are a reconstruction, not the
+         original code path.</p>
+      <p>See <code>reconstruction/stage1/README.md</code> for what is proven,
+         measured and approximate.</p>
+    </div>
+  </div>
+</div>
+<script type="module" src="js/game.js"></script>
+</body>
+</html>

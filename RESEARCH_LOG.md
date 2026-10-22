@@ -498,3 +498,73 @@ Holding `RIGHT` from f15200 in an otherwise identical run changes **103 words** 
 clustered in `$FFB800-$FFB9FF`, and the sprites move. That region is the per-entity state block;
 the exact field layout (position fixed-point scale, velocity, facing, animation) is still being
 mapped and is **not** yet claimed.
+
+## RL-75 — real controllable Stage 1; the input latching bug  [EMU][TEST]
+
+**Root cause of every earlier menu and "paused gameplay" confusion:** the input loop
+recomputed each button's *down* state as `frame >= press_frame`, including for the
+synthetic release markers it appended. Every button therefore stayed latched on after
+its release frame. Menus appeared unresponsive because several buttons were held at
+once for the rest of the run. Inputs are now down only inside `[press, release]`.
+
+With that fixed, `tools/scenarios/boot1p.txt` reaches Stage 1 as Axel, verified by four
+independent observations rather than by a screenshot looking right:
+
+1. stage sprites animate frame to frame,
+2. the HUD timer counts down,
+3. the score rises when an enemy is knocked down,
+4. holding RIGHT moves the player and scrolls the camera, and two runs that differ only
+   in that input diverge in the sprite table.
+
+The 13400 `START` opens the pause screen and the 13700 `START` closes it; playable
+Stage 1 is from about frame 13700. Also added: 2P input (`2START`), `--dump-from`
+to bound the per-frame state logs, and a guard so an unwritable output path cannot
+segfault the harness.
+
+## RL-76 — Stage-1 art had to come from rendered frames, not VRAM  [EMU][TEST][OPEN]
+
+Attempted, in order, and each ruled out by measurement:
+
+* **Palette format.** A captured frame's colours are reproducible from CRAM once the
+  emulator's three 5:6:5 lookup variants (normal / doubled / brightened) are modelled:
+  100% of pixels, 28 distinct colours.
+* **Tile data.** Decoding 4bpp planar tiles from the dumped VRAM gives legible shapes
+  and text, so the tile format and byte order are right.
+* **Nametable.** Plane B's nametable is present (`$E000`, sequential tile numbers such
+  as `$41CD`, `$41CE`, …) and a 32×32 plane fits reg16 = `$01`. Rendering it with the
+  measured palette gives a coherent picture of shopfronts and an awning.
+* **Alignment.** It does not match the captured frame at any 2-D offset: best cell
+  agreement is 92/1120 (8.2%) and best pixel agreement 3.8%.
+* **Sprites from VRAM.** Rebuilding a sprite from its SAT entry's tile run matches
+  **0%** of that character's non-transparent pixels in the frame, under either byte
+  order. So the failure is not confined to the background path.
+* **Are these tiles in the ROM asset set?** Shape-matching every 8×8 cell of a real
+  frame against all 6,613 tiles decoded from table `$00A666` matches 3.8% — the Stage-1
+  cells are not in that set, so the stage tiles come through a load path not yet
+  traced.
+
+Conclusion: the fault is in the datapath from dumped VRAM to picture, not in tile
+decoding, and it is **unresolved**. Since the deliverable is a playable Stage 1 and not
+a VDP emulator, the environment and actors are instead recovered from frames the
+original produced: `tools/build_plate2.py` (per-cell mode, counting only cells no
+sprite covers) and `tools/extract_actors.py` (SAT footprint ∩ ≠ plate, minus stray
+blobs). Every pixel of art therefore comes from the original game's own output.
+
+## RL-77 — the browser reconstruction  [TEST]
+
+`reconstruction/stage1/` is a Canvas game that renders its own scene and runs its own
+loop; the ROM is not used at runtime. Environment, actors and HUD layout come from the
+recovered art; movement, depth, jump, the three-phase attack, hit detection, damage,
+knockdown, enemy approach-and-strike, waves, camera and timer are implemented in
+JavaScript and labelled as reconstruction, not as ROM behaviour.
+
+Verification without a browser: `test/softcanvas.mjs` is a rasterizing canvas (PNG
+decode/encode, fillRect, scaled/flipped drawImage, transforms), so the shipped render
+path runs under Node and produces real images. `test/game.test.mjs` drives the shipped
+update path (23 tests, all passing) and `test/compare.py` diffs a render against an
+original frame at native size.
+
+Measured, original frame 14599 vs. render: 71,680 pixels compared, 48,055 differing
+(67.04%); 2,771/8,320 HUD pixels differ (33.3%). The HUD was brought from 74.78% to
+67.04% total by using the frame's measured HUD colours and layout. No scaling or
+shifting is applied to improve the number.
