@@ -398,3 +398,39 @@ Correction to earlier notes: banks are not Kosinski, and the 31-entry table at `
 `tools/gfx_banks.py` parses is *a* VRAM layout table but not the list the game actually feeds to
 `$008192` during play. `$A666` is. Both are kept; the difference is recorded here rather than
 silently overwritten.
+
+## RL-73 — the 13 "unresolved" graphics records were Kosinski all along  [ROM][TEST]
+
+**Correction of a prior claim.** Earlier entries described 13 records of table `$00A666` as
+"unsolved, different format". That label is withdrawn. They are compressed with a *second*
+decompressor that the game also contains, and all 13 decode cleanly.
+
+**Evidence chain.**
+
+1. The 13 failing records all declare absurd tile counts (`header & $1FFF` = 3,343–7,951 tiles =
+   107–254 KB) into a 64 KB VRAM — so the bytes are not in `$008192`'s format. Signature hints:
+   `F8` as a prefix in 10 of 13, i.e. exactly the opcode class that Kosinski uses.
+2. `tools/verify_sor_forensics.py:kosinski_decompress_py` decodes every one of them, and each
+   result is a whole number of 32-byte tiles and fits from `field2` to below `$10000`.
+3. The ROM's second decompressor is at **`$0085A2`**, and its disassembly matches canonical
+   Kosinski exactly: bit refill (`lsr.w d5` / `roxl.w`), `1` → literal `move.b (a0)+,(a1)+`,
+   `01` → 8-bit offset match, `00` → wider match with 3-bit length, `d3`/`d2`→length, a `0` length
+   byte ends the stream, a `1` length byte restarts it.
+4. It is called from the loader at **`$00B748`**, which indexes a table at **`$00B768`** of
+   `{long source, long destination}` pairs and `jsr $0085A2`.
+5. **Those destinations are in the `$FF0000` range** — the Kosinski path stages data in *RAM*,
+   not VRAM. That is consistent with these streams not appearing in VRAM captures.
+
+**Result.** `tools/gfx_assets.py` now models both tables and both decoders:
+56/56 records of `$00A666` decode (43 bitstream-`$8192`, 13 Kosinski), 6,613 tiles total,
+plus the 14 `$00B768` RAM-loader records. `tests/test_gfx_tables.py` (6 tests) locks it in.
+
+**A second correction, from measurement.** `$00A666`'s third word is *not* the VRAM destination.
+I compared it against the destination the game actually wrote for all 12 observable sources:
+**0/12 matched**. It is now exported as `field2` with its meaning marked unresolved instead of
+being silently treated as a target address. (Earlier work that "found all 11 captures at their
+recorded destination" used the *captured* destination, which remains valid; the table word was
+never part of that proof.)
+
+**What this does not claim.** I have not traced which loader the 13 Kosinski streams take at
+runtime, nor what `field2` means. Both are recorded as open in `GRAPHICS_EXTRACTION.md`.

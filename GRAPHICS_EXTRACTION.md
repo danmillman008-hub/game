@@ -1,65 +1,93 @@
 # Graphics extraction — status
 
-All claims below are labelled `[ROM]` (read from the cartridge), `[EMU]` (observed by running the
-unmodified ROM in an emulator and recording what it did), `[DEMO]` (our code proves the same
-bytes), or `[OPEN]` (not established).
+Every claim is labelled: `[ROM]` read from the cartridge, `[EMU]` observed by running the
+unmodified ROM in an emulator, `[TEST]` reproduced by our own code, `[OPEN]` not established.
 
-## Decoder — solved `[ROM]` `[DEMO]`
+## The ROM has two decompressors `[ROM]`
+
+| routine | scheme | used by | destination |
+|---|---|---|---|
+| `$008192` (alt entry `$0081A4`) | custom bitstream | loader at `$008642` | VRAM |
+| `$0085A2` | **Kosinski** | loader at `$00B748` | RAM (`$FF0000`-range) |
+
+`$0085A2` matches the classic Kosinski algorithm instruction for instruction: bit-stream
+refill, `1` = literal byte, `01` = 8-bit-offset match, `00` = wider match with a 3-bit length,
+length byte `0` = end and `1` = restart the bit stream.
+
+## Decoder `$008192` `[ROM]` `[TEST]`
 
 | item | value |
 |---|---|
-| routine | `$008192` (variant entry `$0081A4`) |
-| header | `tiles = header & $1FFF`; bit 15 selects the XOR-chain output handler |
+| header word | `tiles = header & $1FFF` |
+| header bit 15 | selects the XOR-chain output handler (`$825E`/`$8274`) |
 | output | `tiles × 32` bytes, 4bpp packed (2 px/byte, high nibble left) |
 | table | built by `$8280` into `$FFFFF600`, 256 word slots |
-| symbols | (value, count) nibble runs; escape for prefixes `>= $FC` = 6 ones + 3-bit count + 4-bit value |
+| symbols | (value, count) nibble runs; prefix `>= $FC` escapes to 6 ones + 3-bit count + 4-bit value |
 | implementation | `tools/sor_gfx_format.py` |
 
-## Verification `[EMU]`
+## Verification `[EMU]` `[TEST]`
 
 The decoder is checked against the ROM's own code, not against how the output looks:
 
 ```sh
-tools/md_capture/build.sh                      # headless Genesis Plus GX + hooks
-tools/md_capture/build/mdcap rom.bin 1600 /tmp/cap events.txt
-python3 tools/validate_gfx.py /tmp/cap/decomp.bin
+tools/md_capture/build.sh                        # headless Genesis Plus GX + observation hooks
+tools/md_capture/build/mdcap rom.bin 1950 /tmp/cap events.txt
+python3 tools/validate_gfx.py /tmp/cap/decomp.bin        # decoder vs the game's own output
+python3 tools/validate_vram_path.py /tmp/cap             # decoder output vs VRAM contents
 ```
 
-Result: **11 captured decompressions, 10 distinct sources, 11 byte-exact reproductions**
-(`evidence/gfx_decoder_validation.json`). Two of the streams carry header bit 15 and only match
-once the XOR chaining is applied.
+* `validate_gfx.py` — **11/11 captured decompressions byte-exact** (10 distinct sources).
+* `validate_vram_path.py` — **11/11 decode to the exact bytes found in VRAM at the address the
+  game was writing to when it called `$008192`**, in a VRAM image captured after the call.
 
-## Assets `[ROM]`
+That second check is the one that closes the loop: it proves the bytes we produce are the bytes
+the console stored. Two of the streams only match once the XOR chaining is applied.
 
-* master table `$00A666`: 56 records `{long src, word vram, word flag}`, parsed by
-  `tools/gfx_assets.py`.
-* 43/56 decode → 5,153 tiles. Raw data in `reconstruction/gfx/assets/*.bin`, provenance in
-  `reconstruction/gfx/assets/index.json` (source address, VRAM destination, header, tile count,
-  SHA-256).
-* contact sheets with the game's own palettes: `reconstruction/gfx/gallery/`
-  (`tools/gfx_gallery.py <cram dump>`).
-* the second table at `$8672` (31 entries, `tools/gfx_banks.py` → `reconstruction/gfx/banks.json`)
-  also decodes completely — 36/36 entries, 9,423 tiles — but it is not the one the game feeds to
-  the decompressor during play.
+## Asset tables `[ROM]`
+
+### `$00A666` — 56 records `[ROM]` `[TEST]`
+
+Records are 8 bytes: `{long source, word field2, word flags}`.
+
+* **56/56 decode** → 6,613 tiles (211,616 bytes).
+  * 43 use the `$008192` bitstream.
+  * 13 use Kosinski; all 13 yield whole 32-byte tiles and fit inside VRAM.
+* **`field2` is not the VRAM destination.** Every source we could observe at runtime (12 of them)
+  decompressed somewhere else: 0/12 matched. `field2` is exported verbatim and its meaning is
+  listed as unresolved rather than guessed.
+
+### `$00B768` — 14 records `[ROM]`
+
+`{long source, long RAM destination}`, loaded by `$00B748` via `jsr $0085A2` (Kosinski).
+Destinations are in the `$FF0000` range, so this path stages tiles in RAM rather than VRAM.
+
+## What is proven end-to-end
+
+```
+ROM stream --[$008192 / $0085A2]--> decoded bytes --[DMA]--> VRAM  [EMU][TEST]
+```
+
+The first arrow is byte-exact for 11 live captures; the second is confirmed for the same 11.
 
 ## Open `[OPEN]`
 
-* 13 of the 56 `$00A666` entries do not decode with this format (they fail on the first symbol).
-  Candidate causes: a different scheme, a table index we have not found, or non-graphics data.
-  Not resolved, not guessed.
-* No confirmed mapping yet from a decompressed asset to a VRAM address *as observed during play*:
-  searching the captured VRAM dumps for decoded output found no match, while the decompression
-  captures themselves are exact. So the pipeline ROM → decoder → bytes is proven, and the
-  pipeline bytes → screen is not. This is the next thing to close.
-* Sprite composition (which tiles form a frame, anchor points, animation timing) is still
-  identified-only; the sprite-list builder around `$00AF46` has not been traced.
-* Palettes: CRAM is captured (`fNNNN.cram`), so palette *rows* can be read from the running game,
-  but the per-actor/per-stage palette assignment is not yet mapped.
+* Meaning of `field2` in `$00A666`.
+* Which loader the 13 Kosinski entries in `$00A666` go through at runtime — they are *also* in
+  the `$B768` RAM table, so the `$A666` record may describe a different use of the same stream.
+  Not yet traced.
+* Sprite composition: which tiles form a frame, anchors, per-frame offsets, animation timing.
+  The sprite-list builder near `$00AF46` has not been traced.
+* Palette assignment per actor/stage. CRAM is captured per frame, so palette *rows* are readable
+  from the running game, but the assignment logic is not mapped.
+* `tools/vdp_render.py` reproduces one captured frame **pixel-exactly (0/71,680 differ)** but not
+  gameplay frames, which use scroll/window effects that an end-of-frame state snapshot cannot
+  reproduce. Until that is fixed, the emulator's own frames are the rendering reference.
 
 ## Reproduce
 
 ```sh
-python3 tools/gfx_assets.py                 # decode the master table
-python3 tools/validate_gfx.py <decomp.bin>  # prove the decoder against the running ROM
-SDL_VIDEODRIVER=dummy .venv/bin/python tools/gfx_gallery.py <cram dump>
+python3 tools/gfx_assets.py                    # decode both tables
+python3 tools/validate_gfx.py <decomp.bin>     # decoder vs the running ROM
+python3 tools/validate_vram_path.py <capture>  # decoder output vs VRAM
+SDL_VIDEODRIVER=dummy .venv/bin/python tools/gfx_gallery.py <frame>.cram
 ```
