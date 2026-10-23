@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streets of Rage Demo - HTML Version</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: #0a0a0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #ff0050, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            color: #6a6a7a;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+        
+        canvas {
+            border: 4px solid #ff0050;
+            box-shadow: 0 0 30px rgba(255, 0, 80, 0.3);
+            background: #0d0d15;
+        }
+        
+        .controls {
+            margin-top: 20px;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        .controls kbd {
+            background: #1a1a24;
+            border: 1px solid #333;
+            padding: 4px 8px;
+            margin: 2px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        
+        .status {
+            margin-top: 15px;
+            color: #4a4a5a;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Streets of Rage</h1>
+        <div class="subtitle">Small Demo Section - HTML5 Canvas Version</div>
+        
+        <canvas id="gameCanvas" width="400" height="300"></canvas>
+        
+        <div class="controls">
+            <span> کنترل‌ها: </span>
+            <kbd>← →</kbd> حرکت
+            <kbd>SPACE</kdb> حمله
+            <kbd>R</kbd>_restart
+            <kbd>Q</kbd> quitter
+        </div>
+        
+        <div class="status" id="status">ضربه روی'espace' برای شروع حمله</div>
+    </div>
+
+    <script>
+        // Game configuration
+        const SCREEN_WIDTH = 400;
+        const SCREEN_HEIGHT = 300;
+        const GROUND_Y = 200;
+        const PLAYER_SPEED = 4;
+        const PLAYER_ATTACK_RANGE = 40;
+        
+        // Game state
+        let canvas, ctx;
+        let running = true;
+        let gameOver = false;
+        
+        // Player object
+        const player = {
+            width: 30,
+            height: 50,
+            x: 50,
+            y: GROUND_Y - 50,
+            velocityX: 0,
+            velocityY: 0,
+            onGround: true,
+            frame: 0,
+            attacking: false,
+            attackTimer: 0,
+            direction: 1
+        };
+        
+        // Enemy objects
+        let enemies = [];
+        
+        // Initialize
+        function init() {
+            canvas = document.getElementById('gameCanvas');
+            ctx = canvas.getContext('2d');
+            
+            // Create enemies
+            enemies = [
+                { x: 250, y: GROUND_Y - 50, velocityX: -2, attacking: false },
+                { x: 320, y: GROUND_Y - 50, velocityX: 2, attacking: false }
+            ];
+            
+            // Event listeners
+            window.addEventListener('keydown', handleKeyDown);
+            window.addEventListener('keyup', handleKeyUp);
+            
+            // Start game loop
+            gameOver = false;
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // Handle keydown
+        function handleKeyDown(e) {
+            if (e.key === 'ArrowLeft' || e.key === 'a') {
+                player.velocityX = -PLAYER_SPEED;
+                player.direction = -1;
+            }
+            if (e.key === 'ArrowRight' || e.key === 'd') {
+                player.velocityX = PLAYER_SPEED;
+                player.direction = 1;
+            }
+            if (e.key === ' ' && !player.attacking) {
+                player.attacking = true;
+                player.attackTimer = 10; // attack duration frames
+            }
+            if (e.key === 'r' && gameOver) {
+                restartGame();
+            }
+            if (e.key === 'q' && gameOver) {
+                running = false;
+            }
+        }
+        
+        // Handle keyup
+        function handleKeyUp(e) {
+            if (e.key === 'ArrowLeft' || e.key === 'a') {
+                if (!isKeyPressed('ArrowRight') && !isKeyPressed('d')) {
+                    player.velocityX = 0;
+                }
+            }
+            if (e.key === 'ArrowRight' || e.key === 'd') {
+                if (!isKeyPressed('ArrowLeft') && !isKeyPressed('a')) {
+                    player.velocityX = 0;
+                }
+            }
+        }
+        
+        // Check if key is pressed
+        function isKeyPressed(key) {
+            // Simple check - we'll just track state
+            return false;
+        }
+        
+        // Better key tracking
+        let pressedKeys = {};
+        
+        window.addEventListener('keydown', e => {
+            pressedKeys[e.key] = true;
+            if (e.key === 'ArrowLeft' || e.key === 'a') {
+                player.velocityX = -PLAYER_SPEED;
+                player.direction = -1;
+            }
+            if (e.key === 'ArrowRight' || e.key === 'd') {
+                player.velocityX = PLAYER_SPEED;
+                player.direction = 1;
+            }
+            if (e.key === ' ' && !player.attacking && !gameOver) {
+                player.attacking = true;
+                player.attackTimer = 10;
+            }
+        });
+        
+        window.addEventListener('keyup', e => {
+            delete pressedKeys[e.key];
+            if ((e.key === 'ArrowLeft' || e.key === 'a') && 
+                !(e.key === 'ArrowRight' || e.key === 'd') &&
+                !(pressedKeys['ArrowLeft'] || pressedKeys['a'])) {
+                player.velocityX = 0;
+            }
+            if ((e.key === 'ArrowRight' || e.key === 'd') && 
+                !(e.key === 'ArrowLeft' || e.key === 'a') &&
+                !(pressedKeys['ArrowRight'] || pressedKeys['d'])) {
+                player.velocityX = 0;
+            }
+        });
+        
+        // Game loop
+        function gameLoop() {
+            if (!running) return;
+            
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // Update game state
+        function update() {
+            if (gameOver) return;
+            
+            // Update player position
+            player.x += player.velocityX;
+            
+            // Keep player on screen
+            if (player.x < 0) player.x = 0;
+            if (player.x > SCREEN_WIDTH - player.width) {
+                player.x = SCREEN_WIDTH - player.width;
+            }
+            
+            // Simple gravity
+            if (!player.onGround) {
+                player.velocityY += 0.5;
+                player.y += player.velocityY;
+                if (player.y >= GROUND_Y - player.height) {
+                    player.y = GROUND_Y - player.height;
+                    player.onGround = true;
+                    player.velocityY = 0;
+                }
+            }
+            
+            // Animation frame
+            player.frame = (player.frame + 1) % 8;
+            
+            // Update attack
+            if (player.attacking) {
+                player.attackTimer--;
+                if (player.attackTimer <= 0) {
+                    player.attacking = false;
+                }
+            }
+            
+            // Update enemies
+            for (let i = 0; i < enemies.length; i++) {
+                let enemy = enemies[i];
+                enemy.x += enemy.velocityX;
+                
+                // Bounce at edges
+                if (enemy.x <= 0 || enemy.x >= SCREEN_WIDTH - enemy.width) {
+                    enemy.velocityX = -enemy.velocityX;
+                }
+                
+                // Simple attack animation
+                if (Math.random() < 0.005 && !enemy.attacking) {
+                    enemy.attacking = true;
+                }
+                
+                // Check attack collision with player
+                if (enemy.attacking) {
+                    let attackStart = enemy.x;
+                    let attackEnd = enemy.x + (enemy.direction > 0 ? PLAYER_ATTACK_RANGE : -PLAYER_ATTACK_RANGE);
+                    
+                    if (player.x < attackEnd && player.x + player.width > attackStart &&
+                        player.y < enemy.y + enemy.height - 10 && 
+                        player.y + player.height > enemy.y - 10) {
+                        gameOver = true;
+                    }
+                }
+                
+                // Check player attack collision with enemy
+                if (player.attacking && !enemy.attacking) {
+                    let attackLeft = player.x + (player.direction > 0 ? 0 : PLAYER_ATTACK_RANGE);
+                    let attackRight = player.x + (player.direction > 0 ? PLAYER_ATTACK_RANGE : 0);
+                    
+                    if (enemy.x < attackRight && enemy.x + enemy.width > attackLeft &&
+                        enemy.y < player.y + player.height - 5 &&
+                        enemy.y + enemy.height > player.y + 5) {
+                        // Enemy hit! Replace with new one
+                        enemies[i] = {
+                            x: Math.random() > 0.5 ? 50 : SCREEN_WIDTH - 80,
+                            y: GROUND_Y - 50,
+                            velocityX: Math.random() > 0.5 ? 2 : -2,
+                            attacking: false
+                        };
+                    }
+                }
+            }
+            
+            // Check enemy-enemy collision or simple removal
+            if (enemies.length === 0) {
+                enemies = [
+                    { x: 250, y: GROUND_Y - 50, velocityX: -2, attacking: false },
+                    { x: 320, y: GROUND_Y - 50, velocityX: 2, attacking: false }
+                ];
+            }
+            
+            // Check player-enemy collision (non-attacking)
+            if (!player.attacking) {
+                for (let enemy of enemies) {
+                    if (player.x < enemy.x + enemy.width &&
+                        player.x + player.width > enemy.x &&
+                        player.y < enemy.y + enemy.height &&
+                        player.y + player.height > enemy.y) {
+                        gameOver = true;
+                    }
+                }
+            }
+        }
+        
+        // Draw everything
+        function draw() {
+            // Clear canvas
+            ctx.fillStyle = '#0a0a0f';
+            ctx.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+            
+            // Draw ground
+            ctx.fillStyle = '#8b4513';
+            ctx.fillRect(0, GROUND_Y, SCREEN_WIDTH, SCREEN_HEIGHT - GROUND_Y);
+            
+            // Draw ground pattern
+            ctx.fillStyle = '#5a3a20';
+            for (let i = 0; i < SCREEN_WIDTH; i += 40) {
+                ctx.fillRect(i, GROUND_Y + 10, 20, 5);
+            }
+            
+            // Draw enemies
+            for (let enemy of enemies) {
+                // Enemy body
+                ctx.fillStyle = '#2ecc71';
+                ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+                
+                // Enemy head
+                ctx.fillStyle = '#2ecc71';
+                ctx.beginPath();
+                ctx.arc(enemy.x + enemy.width / 2, enemy.y - 10, 12, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Enemy eyes
+                ctx.fillStyle = 'white';
+                ctx.beginPath();
+                ctx.arc(enemy.x + enemy.width / 2 - 4, enemy.y - 12, 3, 0, Math.PI * 2);
+                ctx.arc(enemy.x + enemy.width / 2 + 4, enemy.y - 12, 3, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Attack indicator if attacking
+                if (enemy.attacking) {
+                    ctx.fillStyle = '#e74c3c';
+                    ctx.fillRect(enemy.x - 10, enemy.y + 10, 35, 8);
+                }
+            }
+            
+            // Draw player
+            // Player body
+            ctx.fillStyle = player.direction > 0 ? '#3498db' : '#2980b9';
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+            
+            // Player head
+            ctx.fillStyle = player.direction > 0 ? '#3498db' : '#2980b9';
+            ctx.beginPath();
+            ctx.arc(player.x + player.width / 2, player.y - 10, 12, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Player eyes
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(player.x + player.width / 2 - 4, player.y - 12, 3, 0, Math.PI * 2);
+            ctx.arc(player.x + player.width / 2 + 4, player.y - 12, 3, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Attack hitbox during attack
+            if (player.attacking) {
+                ctx.fillStyle = '#e74c3c';
+                ctx.fillRect(
+                    player.x + (player.direction > 0 ? player.width : -PLAYER_ATTACK_RANGE),
+                    player.y + 10,
+                    player.direction > 0 ? PLAYER_ATTACK_RANGE : -PLAYER_ATTACK_RANGE,
+                    8
+                );
+            }
+            
+            // UI
+            ctx.fillStyle = '#e0e0e0';
+            ctx.font = '16px Segoe UI';
+            ctx.fillText('Streets of Rage Demo', 10, 20);
+            
+            if (player.attacking) {
+                ctx.fillStyle = '#ff0050';
+                ctx.font = '12px Segoe UI';
+                ctx.fillText('ATACK!', player.x + player.width + 10, player.y + 20);
+            }
+        }
+        
+        // Restart game
+        function restartGame() {
+            player.x = 50;
+            player.y = GROUND_Y - 50;
+            player.velocityX = 0;
+            player.onGround = true;
+            player.attacking = false;
+            player.direction = 1;
+            enemies = [
+                { x: 250, y: GROUND_Y - 50, velocityX: -2, attacking: false },
+                { x: 320, y: GROUND_Y - 50, velocityX: 2, attacking: false }
+            ];
+            gameOver = false;
+            updateStatus('بازی بازنشانی شد - رویSPACE حمله کنید');
+        }
+        
+        // Update status message
+        function updateStatus(msg) {
+            document.getElementById('status').textContent = msg;
+        }
+        
+        // Start when page loads
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
