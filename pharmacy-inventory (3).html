@@ -55,6 +55,18 @@ nav .cnt{position:absolute;top:2px;margin-inline-start:-4px;background:var(--red
 .res div{padding:7px 10px;border-bottom:1px solid var(--line);cursor:pointer;direction:ltr;text-align:left;font-size:13px}
 .res div:hover{background:var(--bg)}
 .hide{display:none!important}
+/* --- بررسی آنلاین (تیتک) --- */
+.olcard{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-top:9px;font-size:13.5px}
+.olcard.ok{border-color:var(--grn);background:var(--grnbg)}
+.olcard.err{border-color:var(--red);background:var(--redbg)}
+.olcard.wrn{border-color:var(--amb);background:var(--ambbg)}
+.olrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.spin{width:15px;height:15px;border:2px solid var(--line);border-top-color:var(--pri);border-radius:50%;animation:spin .8s linear infinite;flex:0 0 auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.badge{display:inline-block;background:var(--pri);color:#fff;border-radius:99px;font-size:11.5px;padding:1px 9px}
+.olmeta{color:var(--mut);font-size:12.5px;margin-top:4px;line-height:1.9}
+.olmeta b{color:var(--tx);font-weight:600}
+.oldiag{font-family:ui-monospace,monospace;direction:ltr;text-align:left;font-size:11.5px;white-space:pre-wrap;max-height:180px;overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px;margin-top:6px}
 .exprow{display:grid;grid-template-columns:92px 1fr 1fr 1fr;gap:6px}.exprow>*{min-width:0}
 .row>div{min-width:min(100%,140px)}
 details summary{cursor:pointer;color:var(--pri);margin-top:8px}
@@ -89,6 +101,23 @@ details summary{cursor:pointer;color:var(--pri);margin-top:8px}
     </div>
     <p class="mut">⚠ اطلاعات فقط روی همین دستگاه و مرورگر ذخیره می‌شود. برای جلوگیری از گم شدن، گاهی پشتیبان بگیرید.</p>
   </div>
+  <div class="card">
+    <h2>بررسی آنلاین (سامانه تیتک)</h2>
+    <p class="mut">وقتی کد اسکن‌شده در دیتابیس محلی نباشد، برنامه به‌صورت خودکار و بی‌صدا اطلاعات همان دارو را از سامانه تیتک می‌گیرد و فرم را پر می‌کند. نتیجه در همین دستگاه ذخیره می‌شود تا دفعهٔ بعد آفلاین هم کار کند.</p>
+    <label><input type="checkbox" id="s_ol" checked> بررسی آنلاین خودکار فعال باشد</label>
+    <label>آدرس پروکسی محلی (اختیاری — فقط اگر مرورگر اجازهٔ اتصال مستقیم را نداد)</label>
+    <input id="s_proxy" dir="ltr" style="text-align:left" placeholder="http://127.0.0.1:8765/ttac?url={url}">
+    <div class="btns">
+      <button id="oltest">🔌 تست اتصال به تیتک</button>
+      <button id="olclear">🗑 پاک‌کردن حافظهٔ بررسی آنلاین</button>
+    </div>
+    <div id="olstat" class="hint hide"></div>
+    <details><summary>راهنمای پروکسی محلی (اگر تست اتصال «blocked» داد)</summary>
+      <p class="mut">اسکریپت <b dir="ltr">ttac-proxy.py</b> را روی همان کامپیوتر داروخانه اجرا کنید (<b dir="ltr">python ttac-proxy.py</b>) و در کادر بالا بنویسید:
+      <b dir="ltr">http://127.0.0.1:8765/ttac?url={url}</b> — سپس «تست اتصال» را بزنید.</p>
+    </details>
+  </div>
+
 </section>
 
 <!-- ========== اسکن و ثبت ========== -->
@@ -111,6 +140,7 @@ details summary{cursor:pointer;color:var(--pri);margin-top:8px}
     <h2>۳) ثبت شمارش / عملیات</h2>
     <div class="drug"><b id="d_title"></b><span class="mut" id="d_sub"></span></div>
     <div class="chips" id="lotchips"></div>
+    <div id="olpanel" class="olcard hide"></div>
     <details id="dd"><summary>ویرایش مشخصات دارو</summary>
       <label>نام دارو</label><input id="f_name" dir="ltr" style="text-align:left">
       <div class="row">
@@ -270,7 +300,7 @@ async function kvGet(k){try{const db=await idb();return await new Promise((res,r
 async function kvSet(k,v){try{const db=await idb();await new Promise((res,rej)=>{const t=db.transaction('kv','readwrite');t.objectStore('kv').put(v,k);t.oncomplete=res;t.onerror=()=>rej(t.error)})}catch(e){if(idbOK){idbOK=false;toast('⚠ ذخیره‌سازی مرورگر در دسترس نیست؛ پشتیبان بگیرید')}}}
 
 let DB={byK:new Map(),byIrc:new Map(),list:[],meta:null};
-let S={lots:[],hist:[],custom:{},carton:{},users:[],settings:{warn:90,cal:'j'}};
+let S={lots:[],hist:[],custom:{},carton:{},users:[],olcache:{},settings:{warn:90,cal:'j',ol:{on:true,auto:true,proxy:'',timeout:9000}}};
 const persist=()=>kvSet('state',S);
 
 /* ================= خواندن اکسل (بدون کتابخانه) ================= */
@@ -384,11 +414,17 @@ function gs1Exp(s){ // YYMMDD → ISO (روز 00 = پایان ماه)
   if(!/^\d{6}$/.test(s||''))return null;const y=2000+ +s.slice(0,2),m=+s.slice(2,4);let d=+s.slice(4,6);
   if(m<1||m>12)return null;const L=gLen(y,m);if(d===0||d>L)d=L;return isoF(y,m,d)}
 function lookupKey(k){return S.custom[k]||DB.byK.get(k)||null}
+function customByDigits(s){const x=en(s).replace(/\D/g,'');if(x.length<8)return null;
+  for(const k in S.custom){const d=S.custom[k];if(!d)continue;
+    if((d.irc&&d.irc===x)||(d.k&&d.k===x)||(d.uid&&d.uid===x))return d}
+  return null}
 function lookupText(text){
   const p=parseGS1(text);let d=null,k='';
   if(p.gtin){k=g14(p.gtin);d=lookupKey(k)}
   if(!d){const digits=en(text).replace(/\D/g,'');
-    if(/^\d{16}$/.test(digits)&&DB.byIrc.has(digits))d=DB.byIrc.get(digits);
+    const cd=digits.length>=8?customByDigits(digits):null;
+    if(cd){d=cd;k=cd.k||k}
+    else if(/^\d{16}$/.test(digits)&&DB.byIrc.has(digits))d=DB.byIrc.get(digits);
     else if(/^\d{8,14}$/.test(digits)){k=g14(digits);d=lookupKey(k)}
     else{const m16=en(text).match(/\d{16}/g)||[];for(const x of m16){if(DB.byIrc.has(x)){d=DB.byIrc.get(x);break}}
       if(!d){const m14=en(text).match(/\d{14}/g)||[];for(const x of m14){if(lookupKey(x)){d=lookupKey(x);k=x;break}}}}}
@@ -432,6 +468,7 @@ function hint(){
   $('f_hint').innerHTML=h}
 function selectDrug(d,sc){
   sc=sc||{};cur=d;const k=drugKey(d);
+  olHide();
   $('entry').classList.remove('hide');
   $('d_title').textContent=d.name||'(بدون نام)';$('d_sub').textContent=[d.co,d.pack?d.pack+' عدد در بسته':'',d.k?'GTIN '+d.k:''].filter(Boolean).join(' | ');
   $('f_name').value=d.name;$('f_co').value=d.co;$('f_pack').value=d.pack||'';$('f_gtin').value=d.k||'';$('f_irc').value=d.irc||'';
@@ -477,21 +514,303 @@ function saveEntry(){
   $('f_per').value=S.carton[k]||'';
   lotChips();hint();renderAll();
   if(camRunning||autoCam){startCam()}}
-function resetEntry(){cur=null;$('entry').classList.add('hide');$('q').value='';$('qres').classList.add('hide');window.scrollTo({top:0,behavior:'smooth'})}
+function resetEntry(){cur=null;$('entry').classList.add('hide');$('q').value='';$('qres').classList.add('hide');olHide();window.scrollTo({top:0,behavior:'smooth'})}
 
 /* ================= جستجو و اسکن ================= */
 function handleCode(text){
   const r=lookupText(text);
   if(r.d){selectDrug(r.d,{batch:r.p.batch,exp:r.exp});if(r.p.serial)lastScan.serial=r.p.serial;toast('✔ دارو شناسایی شد');return true}
-  if(r.k||r.p.gtin){const k=r.k||g14(r.p.gtin);selectDrug({k,irc:'',name:'',co:'',pack:0},{batch:r.p.batch,exp:r.exp});toast('دارو در دیتابیس نبود؛ مشخصات را دستی وارد کنید');return false}
+  const terms=olTerms(text);
+  if(r.k||r.p.gtin||terms.length){
+    const k=r.k||g14(r.p.gtin)||'';
+    const t16=terms.find(x=>x.length===16)||'';
+    selectDrug({k,irc:t16,name:'',co:'',pack:0},{batch:r.p.batch,exp:r.exp});
+    const cfg=olc();
+    if(cfg.on&&cfg.auto){toast('در دیتابیس نبود؛ بررسی آنلاین…');olScan(terms.slice())}
+    else{olShow('<div class="mut">این کد در دیتابیس محلی نیست.</div><div class="btns"><button class="sm" id="olgo">🔎 بررسی آنلاین در تیتک</button></div>');
+      const b=$('olgo');if(b)b.onclick=()=>olScan(terms.slice())}
+    return false}
   toast('کد شناسایی نشد؛ نام را جستجو کنید یا دستی وارد کنید');return false}
 function doSearch(){
   const q=$('q').value.trim();if(!q)return;
   const digits=en(q).replace(/\D/g,'');
   if(digits.length>=8||q.includes('(')||q.includes('\x1d')){const r=lookupText(q);if(r.d||r.k||r.p.gtin){handleCode(q);return}}
   const res=searchName(q);const box=$('qres');box.classList.remove('hide');
-  box.innerHTML=res.length?res.map((d,i)=>'<div data-i="'+i+'">'+esc(d.name)+' — '+esc(d.co)+(d.pack?' ['+d.pack+']':'')+'</div>').join(''):'<div style="direction:rtl;text-align:right;cursor:default">موردی پیدا نشد. «داروی دستی» را بزنید.</div>';
+  box.innerHTML=res.length?res.map((d,i)=>'<div data-i="'+i+'">'+esc(d.name)+' — '+esc(d.co)+(d.pack?' ['+d.pack+']':'')+'</div>').join(''):'<div style="direction:rtl;text-align:right;cursor:default">در دیتابیس محلی پیدا نشد.</div>';
+  box.innerHTML+='<div class="olrow" style="direction:rtl;padding:7px 10px;cursor:default"><button class="sm" id="olnm" data-olname="'+esc(q)+'">🔎 بررسی آنلاین در تیتک</button><span class="mut">اگر این دارو در دیتابیس نیست</span></div>';
   box._r=res}
+
+/* ================= بررسی آنلاین (سامانهٔ تیتک) =================
+   وقتی کد یا نام دارو در دیتابیس محلی نباشد، اطلاعات فرآورده از سامانهٔ رسمی گرفته می‌شود.
+   مسیر ۱: صفحهٔ جستجوی NFi تیتک (HTML، بدون کلید)
+   مسیر ۲: API اپ موبایل تیتک (JSON)
+   اگر مرورگر به‌دلیل CORS اجازهٔ خواندن پاسخ را نداد، از پروکسی محلی (تنظیمات) استفاده می‌شود. */
+const OL_SSP='dbd69ca2-7096-4e19-ad26-74a3a33f3516';
+const OL_IRC=u=>'https://irc.ttac.ir/nfi/Search?Term='+encodeURIComponent(u)+'&PageNumber=1&PageSize=10';
+const OL_API=u=>'https://newapi.ttac.ir/irfdamobile/v1/getnfisearch?Term='+encodeURIComponent(u)+'&PageNumber=1&PageSize=10&IP=';
+const OL_API_H={'x-ssp-api-key':OL_SSP,'Accept':'*/*'};
+const OL_LBL={
+  name:['نام :','نام:','نام'],generic:['نام عمومی :','نام عمومی:','نام عمومی'],form:['شکل دارویی :','شکل دارویی:','شکل دارویی'],
+  use:['نحوه مصرف :','نحوه مصرف:','نحوه مصرف'],brandOwner:['صاحب برند :','صاحب برند:','صاحب برند'],licOwner:['صاحب پروانه :','صاحب پروانه:','صاحب پروانه'],
+  producer:['تولید کننده :','تولیدکننده :','تولید کننده:','تولید کننده','تولیدکننده'],licExp:['تاریخ اعتبار پروانه :','تاریخ اعتبار پروانه:','تاریخ اعتبار پروانه'],
+  pricePack:['قیمت مصرف کننده هر بسته'],priceUnit:['قیمت واحد'],gtin:['GTIN','Gtin'],irc:['IRC'],
+  packCount:['تعداد در بسته'],ingr:['ترکیبات']};
+const olnorm=s=>String(s==null?'':s).replace(/\u200c/g,' ').replace(/\s+/g,' ').trim();
+const olDig=s=>en(s).replace(/\D/g,'');
+const olGtin=s=>{const d=olDig(s);return d.length>=8&&d.length<=14?g14(d):''};
+function olc(){S.settings=Object.assign({warn:90,cal:'j'},S.settings);S.settings.ol=Object.assign({on:true,auto:true,proxy:'',timeout:9000},S.settings.ol||{});return S.settings.ol}
+function olHide(){const p=$('olpanel');if(p){p.classList.add('hide');p.innerHTML=''}}
+function olShow(html,cls){const p=$('olpanel');if(!p)return;p.className='olcard'+(cls?' '+cls:'');p.classList.remove('hide');p.innerHTML=html}
+const olSpinHtml=m=>'<div class="olrow"><span class="spin"></span><span>'+m+'</span></div>';
+const olMoney=n=>n?fa(Math.round(n).toLocaleString('en')):'';
+function copyTxt(t){try{navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(x){}a.remove()}}
+
+/* --- حافظهٔ نتایج (برای استفادهٔ آفلاین) --- */
+function olCacheGet(k){S.olcache=S.olcache||{};const c=S.olcache[k];return c&&Array.isArray(c.list)&&c.list.length?c:null}
+function olCacheSet(k,list){S.olcache=S.olcache||{};S.olcache[k]={ts:Date.now(),list};
+  const ks=Object.keys(S.olcache);if(ks.length>2500){ks.sort((a,b)=>((S.olcache[a]||{}).ts||0)-((S.olcache[b]||{}).ts||0));ks.slice(0,500).forEach(x=>delete S.olcache[x])}
+  persist()}
+
+/* --- درخواست شبکه (با تایم‌اوت و پشتیبانی پروکسی) --- */
+function olProxyUrl(t){const p=olc().proxy.trim();if(!p)return'';return p.includes('{url}')?p.replace('{url}',encodeURIComponent(t)):p+(p.includes('?')?'&':'?')+'url='+encodeURIComponent(t)}
+async function olGet(target,headers,ms,via){
+  const url=via?olProxyUrl(target):target;if(!url)throw{why:'no-proxy'};
+  const ctl=new AbortController();const timer=setTimeout(()=>ctl.abort(),ms||9000);
+  try{
+    const r=await fetch(url,{method:'GET',mode:'cors',credentials:'omit',cache:'no-store',redirect:'follow',
+      headers:Object.assign({'Accept':'text/html,application/json,*/*'},headers||{}),signal:ctl.signal});
+    const txt=await r.text();
+    return{status:r.status,ok:r.ok,txt};
+  }catch(e){throw{why:(e&&e.name==='AbortError')?'timeout':'blocked',msg:(e&&e.message)||String(e)}}
+  finally{clearTimeout(timer)}
+}
+
+/* --- استخراج از صفحهٔ HTML تیتک --- */
+function olField(doc,labels){
+  const L=labels.map(olnorm).sort((a,b)=>b.length-a.length);
+  const els=doc.querySelectorAll('label,span,b,strong,dt,td,th,div,p');
+  const pick=(el,ln)=>{
+    const t=olnorm(el.textContent);if(!t)return null;
+    if(t!==ln){
+      if(t.indexOf(ln)!==0)return null;
+      if(!/^[\s:：]/.test(t.slice(ln.length)))return null;
+    }
+    const rest=t.slice(ln.length).replace(/^[\s:：]+/,'');
+    if(rest)return rest;
+    let s=el.nextElementSibling,g=0;
+    while(s&&g++<4){const sv=olnorm(s.textContent);if(sv)return sv;s=s.nextElementSibling}
+    const par=el.parentElement;
+    if(par)for(const c of par.children){if(c===el)continue;const cv=olnorm(c.textContent);if(cv)return cv}
+    return'';
+  };
+  // ۱) برچسب‌های ساده (label/b/span/td بدون فرزند)
+  for(const el of els){
+    if(el.children.length)continue;
+    const t=olnorm(el.textContent);if(!t||t.length>140)continue;
+    for(const ln of L){const v=pick(el,ln);if(v)return v}
+  }
+  // ۲) بلوک‌هایی که برچسب و مقدار کنار هم هستند
+  const allL=[].concat.apply([],Object.keys(OL_LBL).map(k=>OL_LBL[k])).map(olnorm).sort((a,b)=>b.length-a.length);
+  for(const el of els){
+    if(el.children.length>2)continue;
+    const t=olnorm(el.textContent);if(!t||t.length>140)continue;
+    for(const ln of L){
+      if(t===ln)continue;
+      let v=pick(el,ln);
+      if(!v)continue;
+      for(const o of allL){const i=v.indexOf(o);if(i>0){v=v.slice(0,i).trim();break}}
+      if(v)return v;
+    }
+  }
+  return'';
+}
+function olParseIrc(html){
+  let doc;try{doc=new DOMParser().parseFromString(html,'text/html')}catch(e){return{rec:{},links:[]}}
+  const rec={};for(const k in OL_LBL)rec[k]=olField(doc,OL_LBL[k]);
+  const links=[];
+  for(const a of doc.querySelectorAll('a[href]')){
+    const h=a.getAttribute('href')||'';if(!h||/^(javascript:|#|mailto:)/i.test(h))continue;
+    if(!/\/nfi\//i.test(h)||/(search|home|login|logout|register|about)/i.test(h)||!/\d/.test(h))continue;
+    let u=h;try{u=new URL(h,'https://irc.ttac.ir').href}catch(e){continue}
+    if(u.indexOf('irc.ttac.ir')<0)continue;
+    if(links.indexOf(u)<0)links.push(u);
+  }
+  return{rec,links:links.slice(0,5)};
+}
+function olFromRec(rec,term){
+  const name=olnorm(rec.name),irc=olDig(rec.irc),pack=parseInt(olDig(rec.packCount),10)||0;
+  const k=olGtin(rec.gtin)||(/^\d{8,14}$/.test(term)?g14(term):'');
+  if(!name&&!irc&&!k)return null;
+  const co=olnorm(rec.licOwner)||olnorm(rec.producer)||'';
+  const d={k,irc,name,co,pack,gen:olnorm(rec.generic),form:olnorm(rec.form),use:olnorm(rec.use),
+    price:parseInt(olDig(rec.pricePack),10)||0,priceUnit:parseInt(olDig(rec.priceUnit),10)||0,
+    licOwner:olnorm(rec.licOwner),brandOwner:olnorm(rec.brandOwner),producer:olnorm(rec.producer),
+    licExp:olnorm(rec.licExp),ingr:olnorm(rec.ingr),src:'ttac',ts:Date.now()};
+  d.s=(name+' '+co+' '+d.k+' '+irc).toLowerCase();
+  return d;
+}
+
+/* --- استخراج از JSON اپ موبایل تیتک --- */
+function olFromApi(txt,term){
+  let j;try{j=JSON.parse(txt)}catch(e){return[]}
+  const arr=j&&j.data&&j.data.drugLicenses;if(!Array.isArray(arr))return[];
+  const out=[];
+  for(const x of arr){
+    if(!x||typeof x!=='object')continue;
+    const pk=String(x.unitOfUsePackaging||'').split(/\s+in\s+/i)[0];
+    const name=olnorm(x.faBrandName||x.indexFaName||x.enBrandName||'');
+    const irc=olDig(x.irc),k=olGtin(x.gtin)||(/^\d{8,14}$/.test(term)?g14(term):'');
+    if(!name&&!irc&&!k)continue;
+    const co=olnorm(x.licenseOwnerCompanyName||x.producerCompanyName||'');
+    const d={k,irc,name,co,pack:parseInt(olDig(pk),10)||0,
+      gen:olnorm(x.drugGenericFaName||x.drugGenericName||''),strength:olnorm(x.strength||''),
+      form:olnorm(x.dosageFormFa||''),en:olnorm(x.enBrandName||''),index:olnorm(x.indexFaName),
+      price:Number(x.packageConsumerPrice)||0,licOwner:olnorm(x.licenseOwnerCompanyName),
+      producer:olnorm(x.producerCompanyName),licExp:olnorm(x.persianExpirationDate),src:'ttac',ts:Date.now()};
+    d.s=(name+' '+co+' '+k+' '+irc).toLowerCase();
+    out.push(d);
+  }
+  return out;
+}
+
+/* --- استعلام --- */
+async function olQuery(term,opts){
+  opts=opts||{};const cfg=olc();const errs=[];
+  if(!opts.noCache){const c=olCacheGet(term);if(c)return{list:c.list,route:'حافظهٔ محلی',errs}}
+  const vias=cfg.proxy.trim()?[false,true]:[false];
+  for(const via of vias){
+    try{
+      const r1=await olGet(OL_IRC(term),null,cfg.timeout,via);
+      const p=olParseIrc(r1.txt);let list=[];
+      const d0=olFromRec(p.rec,term);
+      if(d0&&((d0.irc||d0.k)||!p.links.length))list.push(d0);
+      if(p.links.length){
+        const n=opts.multi?3:1;
+        for(const u of p.links.slice(0,n)){
+          if(list.length>=n)break;
+          try{
+            const r2=await olGet(u,null,cfg.timeout,via);
+            const d2=olFromRec(olParseIrc(r2.txt).rec,term);
+            if(d2&&!list.some(x=>(x.irc&&x.irc===d2.irc)||(x.name&&x.name===d2.name)))list.push(d2);
+          }catch(e){}
+        }
+      }
+      if(list.length){olCacheSet(term,list);return{list,route:'irc.ttac.ir'+(via?' (پروکسی)':''),errs}}
+      errs.push('irc.ttac.ir: HTTP '+r1.status+' — داده‌ای استخراج نشد');
+    }catch(e){errs.push('irc.ttac.ir: '+(e.why||'خطا')+(e.msg?' — '+e.msg:''))}
+    try{
+      const r2=await olGet(OL_API(term),OL_API_H,cfg.timeout,via);
+      const list=olFromApi(r2.txt,term);
+      if(list.length){olCacheSet(term,list);return{list,route:'newapi.ttac.ir'+(via?' (پروکسی)':''),errs}}
+      errs.push('newapi.ttac.ir: HTTP '+r2.status+' — نتیجه‌ای نبود');
+    }catch(e){errs.push('newapi.ttac.ir: '+(e.why||'خطا')+(e.msg?' — '+e.msg:''))}
+  }
+  return{list:[],route:'',errs};
+}
+function olTerms(text){
+  const out=[];const add=v=>{v=String(v||'');if(v&&out.indexOf(v)<0)out.push(v)};
+  let p={};try{p=parseGS1(text)||{}}catch(e){}
+  if(p.gtin)add(g14(p.gtin));
+  for(const run of (en(text).match(/\d{8,24}/g)||[])){
+    if(run.length===14||run.length===16||run.length===20)add(run);
+    else if(run.length===13)add(g14(run));
+  }
+  return out.slice(0,3);
+}
+
+/* --- نمایش و اعمال نتیجه --- */
+function olMetaHtml(d){
+  const b=[];
+  if(d.en&&d.en!==d.name)b.push('لاتین: <b dir="ltr">'+esc(d.en)+'</b>');
+  if(d.co)b.push('شرکت: <b>'+esc(d.co)+'</b>');
+  if(d.gen)b.push('ژنریک: <b>'+esc(d.gen)+'</b>');
+  if(d.strength)b.push('دوز: <b>'+esc(d.strength)+'</b>');
+  if(d.form)b.push('شکل: <b>'+esc(d.form)+'</b>');
+  if(d.pack)b.push('بسته: <b>'+fa(d.pack)+' عددی</b>');
+  if(d.k)b.push('GTIN: <b dir="ltr">'+fa(d.k)+'</b>');
+  if(d.irc)b.push('IRC: <b dir="ltr">'+fa(d.irc)+'</b>');
+  if(d.price)b.push('قیمت مصرف‌کننده: <b>'+olMoney(d.price)+'</b>');
+  if(d.licExp)b.push('اعتبار پروانه: <b>'+esc(d.licExp)+'</b>');
+  if(d.licOwner&&d.licOwner!==d.co)b.push('صاحب پروانه: <b>'+esc(d.licOwner)+'</b>');
+  return b.length?'<div class="olmeta">'+b.join(' · ')+'</div>':'';
+}
+function olApply(d,term){
+  if(!d)return;
+  if(term&&/^\d{20}$/.test(String(term)))d.uid=String(term);
+  if(!cur||!cur.name)cur=Object.assign({},cur||{},d);
+  if(d.gen&&cur&&!cur.gen)cur.gen=d.gen;
+  if(!$('f_name').value.trim())$('f_name').value=d.name||'';
+  if(!$('f_co').value.trim())$('f_co').value=d.co||'';
+  if(!num($('f_pack').value))$('f_pack').value=d.pack||'';
+  if(!$('f_gtin').value.trim()&&d.k)$('f_gtin').value=d.k;
+  if(!$('f_irc').value.trim()&&d.irc)$('f_irc').value=d.irc;
+  // ذخیره در دیتابیس محلی تا دفعهٔ بعد (حتی آفلاین) شناسایی شود
+  const kk=drugKey(d);
+  if(kk&&(d.k||d.name))S.custom[kk]=Object.assign({},d,{s:(d.name+' '+d.co+' '+d.k+' '+d.irc).toLowerCase()});
+  persist();
+  $('d_title').textContent=$('f_name').value||d.name||$('d_title').textContent;
+  $('d_sub').textContent=[$('f_co').value,$('f_pack').value?fa($('f_pack').value)+' عدد در بسته':'',$('f_gtin').value?'GTIN '+fa($('f_gtin').value):''].filter(Boolean).join(' | ');
+  lotChips();hint();
+}
+function olFail(errs,terms){
+  const blocked=errs.some(e=>/blocked|Failed to fetch|NetworkError|Load failed/i.test(e));
+  olShow('<div><b>⚠ بررسی آنلاین نتیجه نداد.</b> مشخصات را دستی وارد کنید.</div>'+
+    (blocked?'<div class="mut" style="margin-top:4px">مرورگر اجازهٔ خواندن پاسخ تیتک را نداد (CORS). برنامه را از یک آدرس/دامنهٔ ثابت باز کنید یا در تنظیمات «پروکسی محلی» را فعال کنید.</div>':'')+
+    '<div class="btns"><button class="sm" id="olretry">🔄 تلاش مجدد</button><button class="sm" id="olcopy">📋 کپی گزارش</button><a class="sm" href="https://ttac.ir/Inquiry" target="_blank" rel="noopener" style="text-decoration:none;border:1px solid var(--line);border-radius:9px;padding:4px 10px;font-size:13px;color:var(--tx)">صفحهٔ استعلام اصالت تیتک ↗</a></div>'+
+    '<details><summary>جزئیات فنی</summary><div class="oldiag">'+esc(errs.join('\n')||'—')+'</div></details>','wrn');
+  const rb=$('olretry');if(rb)rb.onclick=()=>olScan(terms||[]);
+  const cb=$('olcopy');if(cb)cb.onclick=()=>{copyTxt(errs.join('\n')||'—');toast('گزارش کپی شد')};
+}
+async function olScan(terms){
+  terms=terms||[];const cfg=olc();
+  if(!cfg.on){olShow('<div class="mut">بررسی آنلاین در تنظیمات خاموش است.</div>');return}
+  if(!terms.length){olShow('<div class="mut">کد قابل استعلام پیدا نشد؛ مشخصات را دستی وارد کنید.</div>');return}
+  olShow(olSpinHtml('بررسی آنلاین در تیتک… <span class="mut">('+terms.map(fa).join(' · ')+')</span>'));
+  const errs=[];
+  for(const t of terms){
+    let r;try{r=await olQuery(t,{})}catch(e){errs.push('شبکه: '+(e.message||e));continue}
+    if(r.errs&&r.errs.length)errs.push.apply(errs,r.errs);
+    if(r.list&&r.list.length){
+      const d=r.list[0];olApply(d,t);
+      olShow('<div class="olrow"><span class="badge">✔ از تیتک</span><b>'+esc(d.name||'(بدون نام)')+'</b></div>'+olMetaHtml(d)+
+        '<div class="olmeta">منبع: '+esc(r.route)+' — فرم پر شد و برای دفعات بعد در همین دستگاه ذخیره شد.</div>','ok');
+      toast('✔ مشخصات از تیتک دریافت شد');
+      return;
+    }
+  }
+  olFail(errs,terms.slice());
+}
+async function olNameSearch(q){
+  const box=$('qres');box.classList.remove('hide');box._r=[];
+  if(!olc().on){box.innerHTML='<div style="direction:rtl;text-align:right;cursor:default">بررسی آنلاین خاموش است.</div>';return}
+  box.innerHTML='<div class="olrow" style="direction:rtl;text-align:right;cursor:default"><span class="spin"></span><span>جست‌وجوی آنلاین در تیتک…</span></div>';
+  const errs=[];let list=[];
+  try{const r=await olQuery(q,{multi:true,noCache:true});list=r.list||[];if(r.errs&&r.errs.length)errs.push.apply(errs,r.errs)}
+  catch(e){errs.push(e.message||String(e))}
+  if(!list.length){
+    box.innerHTML='<div style="direction:rtl;text-align:right;cursor:default">در تیتک هم چیزی پیدا نشد.<details><summary>جزئیات فنی</summary><div class="oldiag">'+esc(errs.join('\n')||'—')+'</div></details></div>';
+    return;
+  }
+  box._r=list;
+  box.innerHTML=list.map((d,i)=>'<div data-i="'+i+'">'+esc(d.name)+(d.co?' — '+esc(d.co):'')+(d.pack?' ['+d.pack+']':'')+' <span class="badge">تیتک</span></div>').join('');
+}
+async function olTest(){
+  const el=$('olstat');el.classList.remove('hide');el.innerHTML='⏳ در حال تست اتصال…';
+  const cfg=olc(),term='7310432273664919',lines=[];
+  const vias=cfg.proxy.trim()?[false,true]:[false];
+  for(const via of vias){
+    for(const job of [['irc',OL_IRC(term),null],['api',OL_API(term),OL_API_H]]){
+      const tag=job[0]+(via?' + پروکسی':' (مستقیم)');
+      try{
+        const r=await olGet(job[1],job[2],cfg.timeout,via);
+        const n=job[0]==='api'?olFromApi(r.txt,term).length:(olFromRec(olParseIrc(r.txt).rec,term)?1:0);
+        lines.push(tag+': HTTP '+r.status+(n?' — داده دریافت شد ✔':' — پاسخ آمد ولی داده‌ای استخراج نشد ('+r.txt.length+' بایت)'));
+      }catch(e){lines.push(tag+': ⛔ '+(e.why||'خطا')+(e.msg?' — '+e.msg:''))}
+    }
+  }
+  el.innerHTML='<b>نتیجهٔ تست اتصال:</b><div class="oldiag">'+esc(lines.join('\n'))+'</div>'+
+    '<div class="mut" style="margin-top:6px">اگر مسیرها «⛔ blocked» دادند یعنی مرورگر CORS را می‌بندد و پروکسی محلی لازم است. اگر HTTP 403/429 دیدید، سامانه موقتاً محدود کرده؛ کمی بعد دوباره تست کنید.</div>';
+}
 let stream=null,camRunning=false,autoCam=false,loopT=null,detector=null,zx=null,zxTried=false,busy=false;
 const camErr=m=>{const e=$('camerr');e.innerHTML=m;e.classList.toggle('hide',!m)};
 function loadH5(){return new Promise((res,rej)=>{if(window.Html5Qrcode)return res();const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js';s.onload=res;s.onerror=()=>rej(new Error('x'));document.head.appendChild(s)})}
@@ -623,7 +942,16 @@ $('camon').onclick=startCam;$('camoff').onclick=()=>stopCam();
 $('photo').onclick=()=>$('photofile').click();$('photofile').onchange=e=>{if(e.target.files[0])scanPhoto(e.target.files[0]);e.target.value=''};
 $('manual').onclick=()=>{selectDrug({k:'',irc:'',name:'',co:'',pack:0},{});$('f_name').focus()};
 $('qgo').onclick=doSearch;$('q').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();doSearch()}};
-$('qres').onclick=e=>{const t=e.target.closest('[data-i]');if(t){selectDrug($('qres')._r[+t.dataset.i]);$('qres').classList.add('hide')}};
+$('qres').onclick=e=>{
+  const ob=e.target.closest('[data-olname]');
+  if(ob){olNameSearch(ob.dataset.olname);return}
+  const t=e.target.closest('[data-i]');
+  if(!t)return;
+  const box=$('qres'),d=box._r&&box._r[+t.dataset.i];
+  if(!d)return;
+  selectDrug(d);
+  if(d.src==='ttac')olApply(d);
+  box.classList.add('hide')};
 $('modeseg').onclick=e=>{const b=e.target.closest('button');if(b)setMode(b.dataset.m)};
 $('lotchips').onclick=e=>{const b=e.target.closest('[data-lot]');if(b)applyLot(b.dataset.lot)};
 ['f_op','f_batch','f_ey','f_em','f_ed','f_packs','f_cartons','f_per','f_extra','f_fullpacks','f_units','f_pack'].forEach(i=>$(i).addEventListener('input',hint));
@@ -637,6 +965,10 @@ document.body.addEventListener('click',e=>{const b=e.target.closest('[data-act="
   const d=lookupKey(l.dk)||{k:l.gtin,irc:l.irc,name:l.name,co:l.co,pack:l.pack};selectDrug(d,{batch:l.batch,exp:l.exp})});
 $('s_warn').onchange=()=>{S.settings.warn=Math.max(1,num($('s_warn').value)||90);$('s_warn').value=fa(S.settings.warn);persist();renderAll()};
 $('s_cal').onchange=()=>{S.settings.cal=$('s_cal').value;persist();renderAll()};
+$('s_ol').onchange=()=>{olc().on=$('s_ol').checked;persist()};
+$('s_proxy').onchange=()=>{olc().proxy=$('s_proxy').value.trim();persist();toast('ذخیره شد')};
+$('oltest').onclick=olTest;
+$('olclear').onclick=()=>{if(!confirm('حافظهٔ بررسی آنلاین پاک شود؟ (رکوردهای ثبت‌شدهٔ موجودی دست نمی‌خورند)'))return;S.olcache={};persist();toast('حافظهٔ بررسی آنلاین پاک شد')};
 $('user').onchange=()=>{try{localStorage.setItem('pi_user',$('user').value)}catch(e){}};
 $('bk').onclick=()=>download(new Blob([JSON.stringify(S)],{type:'application/json'}),'pharmacy-backup-'+todayIso()+'.json');
 $('rs').onclick=()=>$('rsfile').click();
@@ -644,14 +976,16 @@ $('rsfile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const 
 $('wipe').onclick=async()=>{if(confirm('همه موجودی‌ها و تاریخچه حذف شود؟ (دیتابیس داروها باقی می‌ماند)')&&confirm('مطمئنید؟ این کار برگشت‌پذیر نیست.')){S.lots=[];S.hist=[];await persist();renderAll();toast('حذف شد')}};
 
 /* ================= شروع ================= */
-function init2(){$('s_warn').value=fa(S.settings.warn);$('s_cal').value=S.settings.cal;usersList();renderAll();dbStat()}
+function init2(){$('s_warn').value=fa(S.settings.warn);$('s_cal').value=S.settings.cal;
+  const oc=olc();$('s_ol').checked=!!oc.on;$('s_proxy').value=oc.proxy||'';
+  usersList();renderAll();dbStat()}
 (async()=>{
   try{$('user').value=localStorage.getItem('pi_user')||''}catch(e){}
   const st=await kvGet('state');if(st)S=Object.assign(S,st);S.settings=Object.assign({warn:90,cal:'j'},S.settings);
   const db=await kvGet('db');if(db&&db.list){indexDb(db.list);DB.meta=db.meta}
   init2();if(DB.list.length)showTab('scan');
 })();
-window.__t={handleCode,parseGS1,lookupText,isoToJ,jToIso,S:()=>S,DB:()=>DB};
+window.__t={handleCode,parseGS1,lookupText,isoToJ,jToIso,S:()=>S,DB:()=>DB,olQuery,olTerms,olTest,olApply};
 </script>
 </body>
 </html>
