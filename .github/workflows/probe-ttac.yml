@@ -52,15 +52,22 @@ jobs:
             head -c 700 /tmp/bo || true; echo
           done
 
-      - name: Publish result into the repo
+      - name: Publish result as PR comment
         if: always()
         run: |
-          set -x
-          cp /tmp/probe.txt ttac-probe-result.txt 2>/dev/null || echo "no output captured" > ttac-probe-result.txt
-          git config user.name "probe-bot"
-          git config user.email "probe-bot@users.noreply.github.com"
-          git add ttac-probe-result.txt
-          git commit -m "probe result [skip ci]" || exit 0
-          git push origin HEAD:${{ github.ref_name }}
-
-# trigger probe run
+          python3 - <<'EOF'
+          import json,os,urllib.request
+          try:
+              body=open('/tmp/probe.txt',encoding='utf-8',errors='replace').read()
+          except Exception as e:
+              body='no output: %s'%e
+          body=body[-60000:]
+          body='### probe-ttac result\n```\n'+body+'\n```'
+          req=urllib.request.Request(
+              'https://api.github.com/repos/%s/issues/1/comments'%os.environ['GITHUB_REPOSITORY'],
+              data=json.dumps({'body':body}).encode(),
+              headers={'Authorization':'token '+os.environ['GITHUB_TOKEN'],
+                       'Accept':'application/vnd.github+json',
+                       'Content-Type':'application/json'})
+          print(urllib.request.urlopen(req).status)
+          EOF
