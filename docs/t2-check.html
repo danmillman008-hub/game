@@ -68,7 +68,7 @@ th{color:var(--mut);font-weight:600}
 const $=id=>document.getElementById(id);
 const APP='https://irfdamobile.ttac.ir/api/';
 const META={vc:'60031',av:'6.9.1',sdk:'30'};
-const ST={0:['NO_RESULT_AVAILABLE','اطلاعاتی پیدا نشد','NOT_FOUND'],
+const ST={0:['NO_RESULT_AVAILABLE','دادهٔ کاتالوگ دارد ولی حکم اصالت نداد','INCONCLUSIVE'],
           1:['GENUINE','اصل / تأییدشده','VERIFIED'],
           2:['RECHECKED','استعلام چندباره (چند شخص/سامانه)','RECHECK_REQUIRED'],
           3:['COUNTERFEIT','مشکوک / تقلبی','FAKE'],
@@ -89,7 +89,7 @@ function log(s){LOG.push(s)}
  $('sttbl').innerHTML=h})();
 
 const dig=s=>String(s||'').replace(/\D/g,'');
-function kindOf(c){c=dig(c);if(/^\d{20}$/.test(c))return {k:'uid',fa:'UID (۲۰ رقمی)'};
+function kindOf(c){c=dig(c);if(c.length>=21)return {k:'gs1',fa:'بارکد کامل برچسب (GS1)'};if(/^\d{20}$/.test(c))return {k:'uid',fa:'UID (۲۰ رقمی)'};
  if(/^\d{16}$/.test(c))return {k:'auth16',fa:'کد اصالت (۱۶ رقمی)'};
  if(c.length>=8&&c.length<=14)return {k:'gtin',fa:'بارکد/GTIN ('+c.length+' رقمی)'};
  return {k:'other',fa:'نامشخص ('+c.length+' رقم)'}}

@@ -907,6 +907,11 @@ async function olQuery(term,opts){
 function olTerms(text){
   const out=[];const add=v=>{v=String(v||'');if(v&&out.indexOf(v)<0)out.push(v)};
   let p={};try{p=parseGS1(text)||{}}catch(e){}
+  /* مهم (از تست واقعی): CheckBarcode تمام رشتهٔ اسکن‌شدهٔ برچسب (GS1) را می‌خواهد، نه فقط GTIN.
+     با GTIN تنها، سرور ErrorCode 1301 («ساختار بارکد ارسالی نامعتبر است») می‌دهد. */
+  const allDig=en(text).replace(/\D/g,'');
+  if(allDig.length>=20)add(allDig);
+  if(p.serial&&/^\d{20}$/.test(p.serial))add(p.serial);
   if(p.gtin)add(g14(p.gtin));
   for(const run of (en(text).match(/\d{8,24}/g)||[])){
     if(run.length===14||run.length===16||run.length===20)add(run);
@@ -918,13 +923,14 @@ function olTerms(text){
 /* --- نوع کد: GTIN / IRC / UID / کد اصالت ۱۶ رقمی / GS1 --- */
 function olKind(t){
   t=String(t||'').replace(/\D/g,'');
+  if(t.length>=21)return'gs1';
   if(/^\d{20}$/.test(t))return'uid';
   if(/^\d{16}$/.test(t))return'auth16';
   if(/^\d{14}$/.test(t))return'gtin';
   if(/^\d{13}$/.test(t)||/^\d{12}$/.test(t)||/^\d{8,14}$/.test(t))return'gtin';
   return'code';
 }
-const OL_KIND_FA={uid:'شناسهٔ رهگیری UID',auth16:'کد اصالت',gtin:'GTIN',code:'کد'};
+const OL_KIND_FA={uid:'شناسهٔ رهگیری UID',auth16:'کد اصالت',gtin:'GTIN',gs1:'بارکد برچسب (GS1)',code:'کد'};
 
 /* ============ اندپوینت واقعی اپ موبایل تیتک — استخراج‌شده از خود APK (مهندسی معکوس) ============
    منبع: ttac-4.3.6.apk — package ir.ttac.irfdamobile (v6.9.1 / versionCode 60031)
@@ -944,7 +950,7 @@ const OL_KIND_FA={uid:'شناسهٔ رهگیری UID',auth16:'کد اصالت',g
 const OL_APP_DEFAULT='https://irfdamobile.ttac.ir/api/';
 const OL_APP_META={vc:'60031',av:'6.9.1',sdk:'30'};
 const OL_ST={
-  '0':{t:'اطلاعاتی پیدا نشد',c:'wrn'},
+  '0':{t:'اطلاعات کاتالوگ (بدون حکم اصالت)',c:'wrn'},
   '1':{t:'اصل ✔',c:'ok'},
   '2':{t:'استعلام چندباره (چند شخص/سامانه)',c:'wrn'},
   '3':{t:'تقلبی ⛔',c:'err'},
@@ -994,10 +1000,11 @@ async function olAppGet(url,cfg){
     const ms=rt.n==='مستقیم'?Math.max(cfg.timeout||9000,12000):Math.min(cfg.timeout||9000,10000);
     try{
       const r=await olGet(rt.f(url),{'Accept':'application/json, text/plain, */*'},ms);
-      if(r.status>=400){errs.push(rt.n+': HTTP '+r.status);continue}
       const body=String(r.txt==null?'':r.txt).trim();
+      /* سرور تیتک خطاهایش را با HTTP 500 و بدنهٔ JSON می‌فرستد (ErrorCode/Message)؛
+         پس بدنهٔ JSON را حتی روی 4xx/5xx هم قبول می‌کنیم و کد خطا را بالاتر تفسیر می‌کنیم. */
       if(body.charAt(0)!=='{'&&body.charAt(0)!=='['){
-        errs.push(rt.n+': پاسخ JSON نبود — '+body.replace(/\s+/g,' ').slice(0,70));continue}
+        errs.push(rt.n+': HTTP '+r.status+' — پاسخ JSON نبود — '+body.replace(/\s+/g,' ').slice(0,70));continue}
       return{txt:body,status:r.status,route:rt.n,url:url};
     }catch(e){errs.push(rt.n+': '+((e&&e.why)||'خطا')+(e&&e.msg?' — '+e.msg:''))}
   }
@@ -1016,7 +1023,10 @@ function olFromApp(res,term){
     k:olGtin(gtin)||(/^\d{8,14}$/.test(String(term||''))?g14(term):''),
     irc:irc,name:name,co:co,pack:0,
     en:g(res.englishname),price:price,
-    uid:g(res.uid),batch:g(res.batchcode),expRaw:g(res.expiration),prod:g(res.manufacturing),
+    uid:(g(res.uidstring)||String(res.uid==null?'':res.uid).replace(/\.0+$/,'')),
+    batch:g(res.batchcode),expRaw:g(res.expiration),prod:g(res.manufacturing),
+    barcode:g(res.barcode),licCat:res.licensecategory==null?null:res.licensecategory,
+    inquiryId:res.inquiryhistoryid==null?null:res.inquiryhistoryid,
     importer:g(res.importer),distributer:g(res.distributer),
     status:res.statuscode==null||res.statuscode===''?null:Number(res.statuscode),
     statusMsg:g(res.statusmessage)||g(res.errormessage),
@@ -1056,30 +1066,56 @@ async function olAppEnrich(d,cfg){
   return d;
 }
 /* استعلام اصلی: کد اسکن‌شده → API اپ تیتک */
+/* یک تلاش: کد → اندپوینت مناسب. خطاها هم به‌صورت داده برمی‌گردند (سرور 500 + JSON می‌دهد). */
+async function olAppAttempt(kind,code,cfg){
+  const url=olAppUrl(kind,code);
+  const r=await olAppGet(url,cfg);
+  let j=null;try{j=JSON.parse(r.txt)}catch(e){}
+  if(!j)return{ok:false,kind,url,route:r.route,status:r.status,errCode:null,errMsg:'پاسخ JSON نبود',raw:String(r.txt).slice(0,200)};
+  const top=olKv(j);
+  const res=olApiResult(j);
+  const errCode=top.errorcode==null?null:Number(top.errorcode);
+  const errMsg=olnorm(top.message||'');
+  if(!res)return{ok:false,kind,url,route:r.route,status:r.status,errCode,errMsg:errMsg||'بدون Result',raw:r.txt.slice(0,300)};
+  const status=(res.statuscode==null||res.statuscode==='')?null:Number(res.statuscode);
+  const d=olFromApp(res,code);
+  const msg=olnorm(res.statusmessage||res.errormessage||'')||errMsg;
+  return{ok:!!(d&&d.name),d,status,errCode:(res.errorcode==null?errCode:Number(res.errorcode)),errMsg:msg,route:r.route,url,raw:r.txt};
+}
 async function olAppScan(terms){
   const cfg=olc();
-  const out={d:null,code:null,msg:'',route:'',term:'',errs:[],nf:''};
+  const out={d:null,code:null,msg:'',route:'',term:'',errs:[],nf:'',tries:[]};
   for(const t of terms){
     const kind=olKind(t);
-    const url=olAppUrl(kind,t);
-    let r=null;
-    try{r=await olAppGet(url,cfg)}
+    let a=null;
+    try{a=await olAppAttempt(kind,t,cfg)}
     catch(e){out.errs.push('اپ تیتک ('+OL_KIND_FA[kind]+'): '+((e&&e.why)||'خطا'));continue}
-    out.route=r.route;out.term=t;
-    let j=null;try{j=JSON.parse(r.txt)}catch(e){}
-    if(!j){out.errs.push('اپ تیتک ('+OL_KIND_FA[kind]+'): پاسخ JSON نبود — '+String(r.txt||'').slice(0,90));continue}
-    const res=olApiResult(j);
-    if(!res){out.errs.push('اپ تیتک ('+OL_KIND_FA[kind]+'): ساختار پاسخ ناشناخته بود');continue}
-    const code=res.statuscode==null||res.statuscode===''?(res.errorcode==null?null:Number(res.errorcode)):Number(res.statuscode);
-    const msg=olnorm(res.statusmessage||res.errormessage||'');
-    const d=olFromApp(res,t);
-    if(d&&d.name){
-      d.stat=code;d.statMsg=msg||((OL_ST[String(code)]||{}).t||'');
-      await olAppEnrich(d,cfg);
-      out.d=d;out.code=code;out.msg=msg;return out;
+    out.tries.push(a);
+    /* اگر سرور گفت «ساختار بارکد نامعتبر» و کد یک GTIN ساده بود، با پیشوند GS1 (01) دوباره تلاش کن */
+    if(a&&!a.ok&&a.errCode===1301&&kind==='gtin'){
+      const g2=g14(t);
+      if(g2){try{a=await olAppAttempt('gs1','01'+g2,cfg);out.tries.push(a)}catch(e){}}
     }
-    if(code===0||code===null)out.nf='تیتک: '+(msg||(OL_ST[String(code)]||{}).t||'اطلاعاتی پیدا نشد')+(code?(' (کد '+fa(code)+')'):'');
-    else out.errs.push('اپ تیتک ('+OL_KIND_FA[kind]+'): کد '+fa(code)+(msg?' — '+msg:''));
+    if(a&&a.ok&&a.d){
+      const d=a.d;
+      d.stat=a.status;d.statMsg=a.errMsg||'';
+      /* اگر CheckBarcode فقط کاتالوگ داد (StatusCode 0) و UID هم برگشت، حکم اصالت را از CheckUid بگیر */
+      if(a.status===0&&/^\d{20}$/.test(String(d.uid||''))){
+        try{
+          const b=await olAppAttempt('uid',d.uid,cfg);
+          out.tries.push(b);
+          if(b&&b.ok&&b.status!=null&&b.status!==0){d.stat=b.status;d.statMsg=b.errMsg||d.statMsg}
+        }catch(e){}
+      }
+      await olAppEnrich(d,cfg);
+      out.d=d;out.code=d.stat;out.msg=d.statMsg;out.route=a.route;out.term=t;
+      return out;
+    }
+    if(a){
+      if(a.errCode!=null&&a.errCode!==0)out.errs.push('اپ تیتک ('+OL_KIND_FA[kind]+'): کد '+fa(a.errCode)+(a.errMsg?' — '+a.errMsg:''));
+      else if(a.status===0)out.nf='تیتک: '+(a.errMsg||'اطلاعاتی پیدا نشد');
+      else out.errs.push('اپ تیتک ('+OL_KIND_FA[kind]+'): '+((OL_ST[String(a.status)]||{}).t||('کد وضعیت '+(a.status==null?'?':fa(a.status)))));
+    }
   }
   return out;
 }
@@ -1208,6 +1244,7 @@ function olMetaHtml(d){
   if(d.strength)b.push('دوز: <b>'+esc(d.strength)+'</b>');
   if(d.form)b.push('شکل: <b>'+esc(d.form)+'</b>');
   if(d.pack)b.push('بسته: <b>'+fa(d.pack)+' عددی</b>');
+  if(d.uid)b.push('UID: <b dir="ltr">'+fa(d.uid)+'</b>');
   if(d.k)b.push('GTIN: <b dir="ltr">'+fa(d.k)+'</b>');
   if(d.irc)b.push('IRC: <b dir="ltr">'+fa(d.irc)+'</b>');
   if(d.price)b.push('قیمت مصرف‌کننده: <b>'+olMoney(d.price)+'</b>');
@@ -1236,9 +1273,11 @@ function olApply(d,term){
 function olFail(errs,terms,note){
   const blocked=errs.some(e=>/blocked|Failed to fetch|NetworkError|Load failed/i.test(e));
   const tmo=errs.some(e=>/timeout|ETIMEDOUT|i-o timeout|i\/o timeout/i.test(e));
+  const bad1301=errs.some(e=>/1301/.test(e));
   olShow('<div><b>⚠ بررسی آنلاین نتیجه نداد.</b> مشخصات را دستی وارد کنید.</div>'+
     (note?'<div class="olmeta" style="margin-top:4px"><b>'+esc(note)+'</b></div>':"")+
-    (tmo?'<div class="mut" style="margin-top:4px">سرور تیتک پاسخ نداد. توجه: دامنهٔ <b dir="ltr">irfdamobile.ttac.ir</b> فقط از <b>داخل ایران</b> در دسترس است (IP داخلی <b dir="ltr">10.19.62.200</b>)؛ اگر فیلترشکن/VPN روشن است خاموشش کنید و دوباره اسکن کنید.</div>':'')+
+    (bad1301?'<div class="mut" style="margin-top:4px">این کد فقط یک <b>GTIN</b> است. سامانه برای استعلام، <b>کل رشتهٔ روی برچسب اصالت</b> (DataMatrix) یا <b>کد UID ۲۰ رقمی</b> را می‌خواهد — همان‌هایی که با دوربین اسکن می‌شوند.</div>':'')+
+    (tmo?'<div class="mut" style="margin-top:4px">سرور تیتک پاسخ نداد. دامنه از بیشتر شبکه‌ها (از جمله اروپا) جواب می‌دهد، ولی بعضی IPها (مثلاً IP مراکز داده یا بعضی VPNها) بسته‌اند؛ اتصال را عوض کن و «🔄 تلاش مجدد» را بزن.</div>':'')+
     (blocked?'<div class="mut" style="margin-top:4px">مرورگر اجازهٔ خواندن پاسخ تیتک را نداد (CORS). برنامه را از یک آدرس/دامنهٔ ثابت باز کنید یا در تنظیمات «پروکسی محلی» را فعال کنید.</div>':'')+
     '<div class="btns"><button class="sm" id="olretry">🔄 تلاش مجدد</button><button class="sm" id="olcopy">📋 کپی گزارش</button><button class="sm" id="olraw">💾 ذخیرهٔ پاسخ خام</button><a class="sm" href="https://ttac.ir/Inquiry" target="_blank" rel="noopener" style="text-decoration:none;border:1px solid var(--line);border-radius:9px;padding:4px 10px;font-size:13px;color:var(--tx)">صفحهٔ استعلام اصالت تیتک ↗</a></div>'+
     '<details><summary>جزئیات فنی</summary><div class="oldiag">'+esc(errs.join('\n')||'—')+'</div></details>','wrn');
