@@ -1,11 +1,12 @@
 package ir.darookhaneh.stock.feature.inventory.domain.usecase
 
-import ir.darookhaneh.stock.core.model.food.FoodItem
+import ir.darookhaneh.stock.feature.inventory.domain.model.SearchHistory
 import ir.darookhaneh.stock.feature.inventory.domain.repository.SearchRepository
 import ir.darookhaneh.stock.feature.inventory.domain.usecase.food.UpdateSearchHistoryUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import io.mockk.slot
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -23,17 +24,22 @@ class UpdateSearchHistoryUseCaseTest {
     }
 
     @Test
-    fun `invoke should call searchRepository and add to history`() = runTest {
-        val query = "Milk"
-        val mockItems = listOf(FoodItem(name = "Fresh Milk"))
+    fun `invoke should store the query as one history entry`() = runTest {
+        val captured = slot<SearchHistory>()
+        coEvery { searchRepository.addHistoryResult(capture(captured)) } returns Unit
 
-        coEvery { searchRepository.getFoodItemListByQuery(any()) } returns mockItems
+        updateSearchHistoryUseCase("Milk")
+
+        coVerify(exactly = 1) { searchRepository.addHistoryResult(any()) }
+        assertEquals("Milk", captured.captured.name)
+    }
+
+    @Test
+    fun `invoke should not read the food list while writing history`() = runTest {
         coEvery { searchRepository.addHistoryResult(any()) } returns Unit
 
-        val result = updateSearchHistoryUseCase(query)
+        updateSearchHistoryUseCase("Bread")
 
-        assertEquals(mockItems, result)
-        coVerify(exactly = 1) { searchRepository.getFoodItemListByQuery(any()) }
-        coVerify(exactly = 1) { searchRepository.addHistoryResult(any()) }
+        coVerify(exactly = 0) { searchRepository.getFoodItemListByQuery(any()) }
     }
 }
