@@ -4,7 +4,7 @@ import android.graphics.BitmapFactory
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.android.gms.tasks.Tasks
-import com.google.mlkit.vision.barcode.Barcode
+import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
