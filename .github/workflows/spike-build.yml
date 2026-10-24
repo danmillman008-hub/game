@@ -203,48 +203,37 @@ jobs:
     needs: [baseline, release, tests]
     if: always()
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
     steps:
-      - uses: actions/download-artifact@v4
+      - name: Download artifacts (merged)
+        uses: actions/download-artifact@v4
         with:
           path: artifacts
+          merge-multiple: true
         continue-on-error: true
-      - name: Publish report as issue
+
+      - name: Build report body
         env:
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RUN_ID: ${{ github.run_id }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          python3 - <<'PY'
-          import json, os, glob
+          {
+            echo "Run: $RUN_URL"
+            echo
+            for f in artifacts/*.md; do
+              echo "----- $(basename "$f")"
+              cat "$f"
+              echo
+            done
+          } > report-full.md
+          head -c 60000 report-full.md > report.md || cp report-full.md report.md
+          wc -c report.md
 
-          def tail(path, n):
-              try:
-                  return open(path, 'rb').read()[-n:].decode('utf-8', 'replace')
-              except Exception as e:
-                  return f"(missing {path}: {e})"
-
-          parts = []
-          for name in ("baseline", "release", "tests"):
-              parts.append(f"## {name}")
-              for f in sorted(glob.glob(f"artifacts/{name}/*.md")):
-                  parts.append(tail(f, 20000))
-              for f in sorted(glob.glob(f"artifacts/{name}/*.log")):
-                  parts.append(f"### tail {os.path.basename(f)}\n```\n{tail(f, 6000)}\n```")
-          body = (f"Run: {os.environ['RUN_URL']}\n\n" + "\n\n".join(parts))[:60000]
-          payload = json.dumps({
-              "title": f"spike-build report (run {os.environ['RUN_ID']})",
-              "body": body,
-          }).encode()
-          req = urllib.request.Request(
-              f"https://api.github.com/repos/{os.environ['GITHUB_REPOSITORY']}/issues",
-              data=payload,
-              headers={
-                  "Authorization": f"Bearer {os.environ['TOKEN']}",
-                  "Accept": "application/vnd.github+json",
-                  "Content-Type": "application/json",
-              },
-              method="POST",
-          )
-          with urllib.request.urlopen(req) as r:
-              print("issue:", json.loads(r.read())["html_url"])
-          PY
+      - name: Create issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          gh issue create --repo "$GITHUB_REPOSITORY" \
+            --title "spike-build report (run $RUN_ID)" \
+            --body-file report.md
