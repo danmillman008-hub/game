@@ -42,13 +42,29 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Install SDK platform 36
+        # رانرهای ubuntu-24.04 خودشان Android SDK دارند؛ اکشن جانبی لازم نیست.
         run: |
-          yes | sdkmanager --licenses > /dev/null 2>&1 || true
-          sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0" > /dev/null
+          SDK="${ANDROID_SDK_ROOT:-$ANDROID_HOME}"
+          if [ -z "$SDK" ] || [ ! -d "$SDK" ]; then
+            echo "::error::Android SDK پیدا نشد (ANDROID_HOME خالی است)"
+            exit 1
+          fi
+          echo "sdk at $SDK"
+          ls "$SDK" | head
+          SDKM="$(command -v sdkmanager || true)"
+          if [ -z "$SDKM" ]; then
+            SDKM="$(ls -d "$SDK"/cmdline-tools/*/bin/sdkmanager 2>/dev/null | head -1)"
+          fi
+          if [ -z "$SDKM" ]; then
+            echo "::error::sdkmanager پیدا نشد"
+            exit 1
+          fi
+          echo "sdkmanager: $SDKM"
+          yes | "$SDKM" --licenses > /dev/null 2>&1 || true
+          "$SDKM" "platform-tools" "platforms;android-36" "build-tools;36.0.0" 2>&1 | tail -5
+          echo "ANDROID_HOME=$SDK" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$SDK" >> "$GITHUB_ENV"
           echo "sdk ready"
 
       - name: Set up Gradle (with cache)
