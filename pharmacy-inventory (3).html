@@ -1235,8 +1235,10 @@ function olApply(d,term){
 }
 function olFail(errs,terms,note){
   const blocked=errs.some(e=>/blocked|Failed to fetch|NetworkError|Load failed/i.test(e));
+  const tmo=errs.some(e=>/timeout|ETIMEDOUT|i-o timeout|i\/o timeout/i.test(e));
   olShow('<div><b>⚠ بررسی آنلاین نتیجه نداد.</b> مشخصات را دستی وارد کنید.</div>'+
     (note?'<div class="olmeta" style="margin-top:4px"><b>'+esc(note)+'</b></div>':"")+
+    (tmo?'<div class="mut" style="margin-top:4px">سرور تیتک پاسخ نداد. توجه: دامنهٔ <b dir="ltr">irfdamobile.ttac.ir</b> فقط از <b>داخل ایران</b> در دسترس است (IP داخلی <b dir="ltr">10.19.62.200</b>)؛ اگر فیلترشکن/VPN روشن است خاموشش کنید و دوباره اسکن کنید.</div>':'')+
     (blocked?'<div class="mut" style="margin-top:4px">مرورگر اجازهٔ خواندن پاسخ تیتک را نداد (CORS). برنامه را از یک آدرس/دامنهٔ ثابت باز کنید یا در تنظیمات «پروکسی محلی» را فعال کنید.</div>':'')+
     '<div class="btns"><button class="sm" id="olretry">🔄 تلاش مجدد</button><button class="sm" id="olcopy">📋 کپی گزارش</button><button class="sm" id="olraw">💾 ذخیرهٔ پاسخ خام</button><a class="sm" href="https://ttac.ir/Inquiry" target="_blank" rel="noopener" style="text-decoration:none;border:1px solid var(--line);border-radius:9px;padding:4px 10px;font-size:13px;color:var(--tx)">صفحهٔ استعلام اصالت تیتک ↗</a></div>'+
     '<details><summary>جزئیات فنی</summary><div class="oldiag">'+esc(errs.join('\n')||'—')+'</div></details>','wrn');
