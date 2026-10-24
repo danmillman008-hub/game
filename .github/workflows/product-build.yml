@@ -17,6 +17,7 @@ on:
 
 permissions:
   contents: read
+  issues: write
 
 concurrency:
   group: product-build-${{ github.ref }}
@@ -77,12 +78,16 @@ jobs:
       - name: Assemble debug APK
         id: assemble
         working-directory: android
-        run: ./gradlew :app:assembleDebug --stacktrace --no-daemon
+        run: |
+          set -o pipefail
+          ./gradlew :app:assembleDebug --stacktrace --no-daemon 2>&1 | tee -a /tmp/build.log
 
       - name: Unit tests (all modules)
         id: unit
         working-directory: android
-        run: ./gradlew testDebugUnitTest --stacktrace --no-daemon
+        run: |
+          set -o pipefail
+          ./gradlew testDebugUnitTest --stacktrace --no-daemon 2>&1 | tee -a /tmp/build.log
 
       - name: Collect reports
         if: always()
@@ -109,6 +114,33 @@ jobs:
           else
             echo "| — | — | بدون گزارش |" >> "$GITHUB_STEP_SUMMARY"
           fi
+
+      - name: Report build errors to issue
+        # لاگ ران در دسترس نیست؛ خلاصهٔ خطاها مستقیم در Issue منتشر می‌شود.
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          {
+            echo "Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo "Commit: \`$GITHUB_SHA\`"
+            echo
+            echo '### خطاهای کامپایل/بیلد'
+            echo '```'
+            grep -nE "^(e:|w: .*error)|error:|FAILURE:|What went wrong|Caused by:|> Task .* FAILED|Unresolved reference|Execution failed" /tmp/build.log \
+              | head -60 || echo "الگوی خطا پیدا نشد"
+            echo '```'
+            echo
+            echo '### ۶۰ خط آخر'
+            echo '```'
+            tail -60 /tmp/build.log || true
+            echo '```'
+          } > /tmp/report.md
+          head -c 60000 /tmp/report.md > /tmp/report-cut.md || cp /tmp/report.md /tmp/report-cut.md
+          gh issue create --repo "$GITHUB_REPOSITORY" \
+            --title "product-build failure (run $RUN_ID)" \
+            --body-file /tmp/report-cut.md || echo "issue create failed"
 
       - name: Upload debug APK
         if: always() && steps.assemble.outcome == 'success'
