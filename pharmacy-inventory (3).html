@@ -116,6 +116,18 @@ details summary{cursor:pointer;color:var(--pri);margin-top:8px}
       <button id="olclear">🗑 پاک‌کردن حافظهٔ بررسی آنلاین</button>
     </div>
     <div id="olstat" class="hint hide"></div>
+    <hr style="border:0;border-top:1px solid var(--line);margin:12px 0">
+    <h2 style="font-size:14.5px">دریافت کاتالوگ از سایت تیتک</h2>
+    <p class="mut">سایت تیتک فقط با <b>نام دارو</b> جستجو می‌کند (با شمارهٔ کد چیزی پیدا نمی‌کند؛ تست شد). پس برنامه با جست‌وجوی حرف‌به‌حرف، فهرست داروها را می‌گیرد و «کد ← نام» را در همین دستگاه ذخیره می‌کند؛ بعد از آن، اسکن هر کد موجود در فهرست، آفلاین شناسایی می‌شود. حدود ۱ تا ۳ دقیقه طول می‌کشد و هر بار ادامهٔ دفعهٔ قبل را می‌گیرد.</p>
+    <div class="btns">
+      <button id="olharv">⬇ دریافت / ادامهٔ کاتالوگ</button>
+      <button id="olharvstop" class="d hide">⏹ توقف</button>
+    </div>
+    <div id="olharvstat" class="hint hide"></div>
+    <div class="btns">
+      <button id="olexplore">🧭 کاوش‌گر اندپوینت (پیشرفته)</button>
+    </div>
+    <div id="olexplorestat" class="hint hide"></div>
     <details><summary>راهنمای پروکسی محلی (اگر تست اتصال «blocked» داد)</summary>
       <p class="mut">اسکریپت <b dir="ltr">ttac-proxy.py</b> را روی همان کامپیوتر داروخانه اجرا کنید (<b dir="ltr">python ttac-proxy.py</b>) و در کادر بالا بنویسید:
       <b dir="ltr">http://127.0.0.1:8765/ttac?url={url}</b> — سپس «تست اتصال» را بزنید.</p>
@@ -552,7 +564,7 @@ function doSearch(){
 const OL_SSP='dbd69ca2-7096-4e19-ad26-74a3a33f3516';
 /* دو دامنهٔ رسمی کاتالوگ (هر دو فقط از داخل ایران) */
 const OL_HOSTS=['https://irc.fda.gov.ir','https://irc.ttac.ir'];
-const OL_SEARCH=(host,u,size)=>host+'/NFI/Search?Term='+encodeURIComponent(u)+'&PageNumber=1&PageSize='+(size||10);
+const OL_SEARCH=(host,u,size,page)=>host+'/NFI/Search?Term='+encodeURIComponent(u)+'&PageNumber='+(page||1)+'&PageSize='+(size||10);
 const OL_IRC=u=>OL_SEARCH(OL_HOSTS[0],u);
 let olLastRaw=[];
 const OL_API=u=>'https://newapi.ttac.ir/irfdamobile/v1/getnfisearch?Term='+encodeURIComponent(u)+'&PageNumber=1&PageSize=10&IP=';
@@ -975,6 +987,92 @@ async function olTest(){
     download(new Blob([body],{type:'text/plain;charset=utf-8'}),'ttac-test-'+Date.now()+'.txt');
   };
 }
+/* ============ دریافت کاتالوگ از سایت تیتک (کد ← نام) ============ */
+const HARV_SEEDS=['آ','ا','ب','پ','ت','ث','ج','چ','ح','خ','د','ذ','ر','ز','ژ','س','ش','ص','ض','ط','ظ','ع','غ','ف','ق','ک','گ','ل','م','ن','و','ه','ی',
+  'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
+  '0','1','2','3','4','5','6','7','8','9'];
+let harvCancel=false,harvRunning=false;
+function harvStat(html){const el=$('olharvstat');el.classList.remove('hide');el.innerHTML=html}
+function harvSave(d){
+  if(!d||!d.name)return false;
+  const kk=drugKey(d);if(!kk)return false;
+  if(S.custom[kk])return false;
+  if(Object.keys(S.custom).length>=20000)return false;
+  S.custom[kk]=Object.assign({},d,{s:(d.name+' '+d.co+' '+d.k+' '+d.irc).toLowerCase(),harv:1});
+  return true}
+async function nfiHarvest(){
+  if(harvRunning)return;
+  harvRunning=true;harvCancel=false;
+  $('olharv').disabled=true;$('olharvstop').classList.remove('hide');
+  const cfg=olc();
+  S.harv=S.harv||{si:0,page:1,total:0};
+  const BUDGET=120;                       // هر بار حدود ۱ دقیقه؛ دفعهٔ بعد ادامه می‌دهد
+  let req=0,added=0,fails=0,addedPages=0;
+  const t0=Date.now();
+  try{
+    while(req<BUDGET&&!harvCancel&&S.harv.si<HARV_SEEDS.length){
+      const seed=HARV_SEEDS[S.harv.si];
+      let r;
+      try{r=await olGet(OL_SEARCH(OL_HOSTS[0],seed,100,S.harv.page),null,Math.min(cfg.timeout,12000))}
+      catch(e){fails++;S.harv.page++;if(S.harv.page>40){S.harv.si++;S.harv.page=1}req++;await new Promise(x=>setTimeout(x,400));continue}
+      req++;
+      const p=olParseSearch(r.txt,OL_HOSTS[0]);
+      let n=0;
+      for(const row of p.rows){const d=olFromRec(row.rec,'');if(harvSave(d)){n++;added++;S.harv.total=(S.harv.total||0)+1}}
+      if(n)addedPages++;
+      if(!p.rows.length||p.rows.length<100){S.harv.si++;S.harv.page=1}
+      else{S.harv.page++;if(S.harv.page>40){S.harv.si++;S.harv.page=1}}
+      harvStat('<div class="olrow"><span class="spin"></span><span>حرف <b>'+esc(seed)+'</b> — صفحهٔ '+fa(S.harv.page>1?S.harv.page-1:1)+
+        ' — پیشرفت: '+fa(S.harv.si)+' از '+fa(HARV_SEEDS.length)+
+        ' — این بار: <b>'+fa(added)+'</b> دارو — کل فهرست: <b>'+fa(Object.keys(S.custom).length)+'</b></span></div>');
+      persist();
+      await new Promise(x=>setTimeout(x,320));
+    }
+  }finally{
+    harvRunning=false;$('olharv').disabled=false;$('olharvstop').classList.add('hide');
+    persist();
+    const secs=Math.round((Date.now()-t0)/1000);
+    const fin=S.harv.si>=HARV_SEEDS.length;
+    harvStat('<b>'+(fin?'✔ دریافت کامل شد':(harvCancel?'⏹ متوقف شد':'⏸ این بخش تمام شد'))+'</b> — '+fa(added)+' دارو در این نوبت، '+
+      fa(Object.keys(S.custom).length)+' دارو در فهرست محلی؛ '+fa(req)+' درخواست در '+fa(secs)+' ثانیه.'+
+      (fails?' <span class="mut">('+fa(fails)+' خطای شبکه — دوباره بزنید)</span>':'')+
+      '<br><span class="mut">'+(fin?'همهٔ حروف تمام شد.':'برای ادامه، دوباره «دریافت / ادامهٔ کاتالوگ» را بزنید.')+' کدهایی که الان در فهرست هستند، هنگام اسکن آفلاین شناسایی می‌شوند.</span>');
+  }
+}
+/* ============ کاوش‌گر اندپوینت استعلام اصالت ============ */
+async function olExplore(){
+  const el=$('olexplorestat');el.classList.remove('hide');el.innerHTML='⏳ در حال کاوش… (چند ثانیه)';
+  const cfg=olc();const lines=[];
+  const SAMPLE=['15978065910231737028','7310432273664919','06260152410148'];
+  const cand=[
+    ['NFI /Search?Term=',      v=>OL_SEARCH(OL_HOSTS[0],v,10,1)],
+    ['NFI /SearchByIRC',       v=>OL_HOSTS[0]+'/NFI/SearchByIRC?irc='+v],
+    ['NFI /SearchByGTIN',      v=>OL_HOSTS[0]+'/NFI/SearchByGTIN?gtin='+v],
+    ['NFI /SearchByBarcode',   v=>OL_HOSTS[0]+'/NFI/SearchByBarcode?barcode='+v],
+    ['NFI /SearchByUID',       v=>OL_HOSTS[0]+'/NFI/SearchByUID?uid='+v],
+    ['NFI /Search?SearchType=IRC', v=>OL_HOSTS[0]+'/NFI/Search?Term='+v+'&SearchType=IRC&PageNumber=1&PageSize=10'],
+    ['ttac /UidEsalatForm',    v=>'https://ttac.ir/UidEsalatForm?Uid='+v],
+    ['ttac /Inquiry?uid=',     v=>'https://ttac.ir/Inquiry?uid='+v],
+  ];
+  const v=SAMPLE[0];
+  for(const [name,mk] of cand){
+    const u=mk(v);
+    try{
+      const r=await olGet(u,null,Math.min(cfg.timeout,7000));
+      const p=olParseSearch(r.txt,OL_HOSTS[0]);
+      const det=olParseDetail(r.txt);
+      const d=olFromRec(Object.assign({},det,p.rec),v);
+      let note='';
+      if(p.rows.length)note='ردیف نتیجه: '+p.rows.length+(d&&d.name?' — «'+d.name+'»':'');
+      else if(d&&(d.name||d.irc))note='داده: '+(d.name||'')+' '+(d.irc||'');
+      else if(/یافت نشد/.test(r.txt))note='«یافت نشد»';
+      else note='بدون داده';
+      lines.push((p.rows.length||(d&&(d.name||d.irc))?'✔ ':'· ')+name+': HTTP '+r.status+' — '+r.txt.length+' بایت — '+note);
+    }catch(e){lines.push('· '+name+': ⛔ '+(e.why||'خطا'))}
+  }
+  el.innerHTML='<b>نتیجهٔ کاوش:</b><div class="oldiag">'+esc(lines.join('\n'))+'</div>'+
+    '<div class="mut" style="margin-top:6px">خط‌های ✔ یعنی آن مسیر جواب می‌دهد؛ همان را برایم بفرستید تا قطعی‌اش کنم.</div>';
+}
 let stream=null,camRunning=false,autoCam=false,loopT=null,detector=null,zx=null,zxTried=false,busy=false;
 const camErr=m=>{const e=$('camerr');e.innerHTML=m;e.classList.toggle('hide',!m)};
 function loadH5(){return new Promise((res,rej)=>{if(window.Html5Qrcode)return res();const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js';s.onload=res;s.onerror=()=>rej(new Error('x'));document.head.appendChild(s)})}
@@ -1134,6 +1232,8 @@ $('s_relay').onchange=()=>{olc().relay=$('s_relay').checked;persist()};
 $('s_authurl').onchange=()=>{olc().authUrl=$('s_authurl').value.trim();persist();toast('ذخیره شد')};
 $('s_proxy').onchange=()=>{olc().proxy=$('s_proxy').value.trim();persist();toast('ذخیره شد')};
 $('oltest').onclick=olTest;
+$('olharv').onclick=nfiHarvest;$('olharvstop').onclick=()=>{harvCancel=true;toast('توقف…')};
+$('olexplore').onclick=olExplore;
 $('olclear').onclick=()=>{if(!confirm('حافظهٔ بررسی آنلاین پاک شود؟ (رکوردهای ثبت‌شدهٔ موجودی دست نمی‌خورند)'))return;S.olcache={};persist();toast('حافظهٔ بررسی آنلاین پاک شد')};
 $('user').onchange=()=>{try{localStorage.setItem('pi_user',$('user').value)}catch(e){}};
 $('bk').onclick=()=>download(new Blob([JSON.stringify(S)],{type:'application/json'}),'pharmacy-backup-'+todayIso()+'.json');
