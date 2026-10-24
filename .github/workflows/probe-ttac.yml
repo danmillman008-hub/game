@@ -8,6 +8,8 @@ on:
 
 permissions:
   contents: write
+  issues: write
+  pull-requests: write
 
 jobs:
   probe:
@@ -52,22 +54,19 @@ jobs:
             head -c 700 /tmp/bo || true; echo
           done
 
-      - name: Publish result as PR comment
+      - name: Publish result as annotations
         if: always()
         run: |
           python3 - <<'EOF'
-          import json,os,urllib.request
+          import os
           try:
               body=open('/tmp/probe.txt',encoding='utf-8',errors='replace').read()
           except Exception as e:
               body='no output: %s'%e
-          body=body[-60000:]
-          body='### probe-ttac result\n```\n'+body+'\n```'
-          req=urllib.request.Request(
-              'https://api.github.com/repos/%s/issues/1/comments'%os.environ['GITHUB_REPOSITORY'],
-              data=json.dumps({'body':body}).encode(),
-              headers={'Authorization':'token '+os.environ['GITHUB_TOKEN'],
-                       'Accept':'application/vnd.github+json',
-                       'Content-Type':'application/json'})
-          print(urllib.request.urlopen(req).status)
+          body=body.replace('%','%25').replace(chr(13),'').replace(chr(10),'%0A')
+          CH=9000
+          n=0
+          for i in range(0,min(len(body),9*CH),CH):
+              print('::notice title=probe-%d::%s'%(i//CH,body[i:i+CH]));n+=1
+          print('::notice title=probe-len::%d bytes in %d chunks'%(len(body),n))
           EOF
