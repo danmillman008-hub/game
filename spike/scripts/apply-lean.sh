@@ -4,6 +4,7 @@
 # Usage: apply-lean.sh <algidy-checkout>
 set -euo pipefail
 ROOT="${1:?usage: apply-lean.sh <algidy-checkout>}"
+ROOT="$(cd "$ROOT" && pwd)"   # absolute, so later `cd` cannot break the python step
 cd "$ROOT"
 
 # 1) فونت‌هایی که دیگر ارجاعی ندارند (Type.kt فقط Vazirmatn را صدا می‌زند)
