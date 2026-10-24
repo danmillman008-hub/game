@@ -14,17 +14,12 @@ jobs:
     steps:
       - name: curl variants
         run: |
-          SHA=47746f859449a171c2d8dfa4d4948fe6f49b84f3
-          for U in \
-            "https://raw.githubusercontent.com/danmillman008-hub/game/arena/dd2b6beb-game/docs/index.html" \
-            "https://cdn.jsdelivr.net/gh/danmillman008-hub/game@$SHA/docs/index.html" \
-            "https://cdn.jsdelivr.net/gh/danmillman008-hub/game@arena/dd2b6beb-game/docs/index.html" \
-            "https://raw.githack.com/danmillman008-hub/game/$SHA/docs/index.html" \
-            "https://htmlpreview.github.io/?https://raw.githubusercontent.com/danmillman008-hub/game/arena/dd2b6beb-game/docs/index.html" ; do
+          SHA=4b465f5bb73e8f0e1841ec9021e2752c88d7757a
+          for P in index.html t1-network.html t2-check.html t3-params.html t4-rate.html t5-batch.html ; do
+            U="https://raw.githack.com/danmillman008-hub/game/$SHA/docs/$P"
             echo "=== $U"
             curl -sS -m 25 -o /tmp/o -D /tmp/h -w 'code=%{http_code} size=%{size_download}\n' "$U" || echo "curl failed $?"
-            grep -i -E '^(HTTP/|content-type:|access-control-allow-origin:)' /tmp/h || true
-            head -c 90 /tmp/o | tr '\n' ' '; echo
+            grep -i -E '^(HTTP/|content-type:)' /tmp/h || true
           done > /tmp/links.txt 2>&1
           python3 - <<'PY'
           body=open('/tmp/links.txt',encoding='utf-8',errors='replace').read()
