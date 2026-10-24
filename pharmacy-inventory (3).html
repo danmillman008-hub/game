@@ -135,8 +135,17 @@ details summary{cursor:pointer;color:var(--pri);margin-top:8px}
     <div id="olharvstat" class="hint hide"></div>
     <div class="btns">
       <button id="olexplore">🧭 کاوش‌گر اندپوینت (پیشرفته)</button>
+      <button id="olclean">🧹 حذف رکوردهای بی‌نام</button>
     </div>
     <div id="olexplorestat" class="hint hide"></div>
+    <hr style="border:0;border-top:1px solid var(--line);margin:12px 0">
+    <h2 style="font-size:14.5px">تست منابع برای UID</h2>
+    <p class="mut">یک شناسهٔ رهگیری ۲۰ رقمی واقعی (از روی جعبه) بگذارید و بزنید؛ برنامه همهٔ منابع را یکی‌یکی امتحان می‌کند و می‌گوید کدام جواب می‌دهد.</p>
+    <div class="row" style="flex-wrap:nowrap">
+      <input id="oluid" dir="ltr" style="text-align:left;flex:1;min-width:0" placeholder="15978065910231737028">
+      <button id="oluidtest" style="flex:0 0 auto">🔬 تست منابع</button>
+    </div>
+    <div id="oluidstat" class="hint hide"></div>
     <details><summary>راهنمای پروکسی محلی (اگر تست اتصال «blocked» داد)</summary>
       <p class="mut">اسکریپت <b dir="ltr">ttac-proxy.py</b> را روی همان کامپیوتر داروخانه اجرا کنید (<b dir="ltr">python ttac-proxy.py</b>) و در کادر بالا بنویسید:
       <b dir="ltr">http://127.0.0.1:8765/ttac?url={url}</b> — سپس «تست اتصال» را بزنید.</p>
@@ -721,8 +730,8 @@ function olParseDetail(html){
 function olParseIrc(html,host){const p=olParseSearch(html,host);return{rec:Object.assign({},olParseDetail(html),p.rec),links:p.links,rows:p.rows}}
 function olFromRec(rec,term){
   const name=olnorm(rec.name),irc=olDig(rec.irc),pack=parseInt(olDig(rec.packCount),10)||0;
-  const k=olGtin(rec.gtin)||(/^\d{8,14}$/.test(term)?g14(term):'');
-  if(!name&&!irc&&!k)return null;
+  if(!name)return null;                      // بدون نام هیچ ارزشی ندارد؛ رکورد «بدون نام» نمی‌سازیم
+  const k=olGtin(rec.gtin)||(/^\d{8,14}$/.test(String(term||''))?g14(term):'');
   const co=olnorm(rec.licOwner)||olnorm(rec.producer)||'';
   const d={k,irc,name,co,pack,en:olnorm(rec.en),gen:olnorm(rec.generic),form:olnorm(rec.form),use:olnorm(rec.use),
     price:parseInt(olDig(rec.pricePack),10)||0,priceUnit:parseInt(olDig(rec.priceUnit),10)||0,
@@ -741,8 +750,8 @@ function olFromApi(txt,term){
     if(!x||typeof x!=='object')continue;
     const pk=String(x.unitOfUsePackaging||'').split(/\s+in\s+/i)[0];
     const name=olnorm(x.faBrandName||x.indexFaName||x.enBrandName||'');
+    if(!name)continue;
     const irc=olDig(x.irc),k=olGtin(x.gtin)||(/^\d{8,14}$/.test(term)?g14(term):'');
-    if(!name&&!irc&&!k)continue;
     const co=olnorm(x.licenseOwnerCompanyName||x.producerCompanyName||'');
     const d={k,irc,name,co,pack:parseInt(olDig(pk),10)||0,
       gen:olnorm(x.drugGenericFaName||x.drugGenericName||''),strength:olnorm(x.strength||''),
@@ -1039,7 +1048,9 @@ async function olScan(terms){
     let r;try{r=await olQuery(t,{})}catch(e){errs.push('شبکه: '+(e.message||e));continue}
     if(r.errs&&r.errs.length)errs.push.apply(errs,r.errs);
     if(r.list&&r.list.length){
-      const d=r.list[0];olApply(d,t);
+      const d=r.list.filter(x=>x&&olnorm(x.name))[0];
+      if(!d){errs.push('فقط کد برگشت و نامی برای این کد پیدا نشد؛ ثبت نشد.');continue}
+      olApply(d,t);
       olShow('<div class="olrow"><span class="badge">✔ از تیتک</span><b>'+esc(d.name||'(بدون نام)')+'</b></div>'+olMetaHtml(d)+
         '<div class="olmeta">نوع کد: '+esc(OL_KIND_FA[olKind(t)])+' — منبع: '+esc(r.route)+' — فرم پر شد و برای دفعات بعد در همین دستگاه ذخیره شد.</div>','ok');
       toast('✔ مشخصات از تیتک دریافت شد');
@@ -1175,6 +1186,70 @@ async function nfiHarvest(){
       '<br><span class="mut">'+(fin?'همهٔ حروف تمام شد.':'برای ادامه، دوباره «دریافت / ادامهٔ کاتالوگ» را بزنید.')+' کدهایی که الان در فهرست هستند، هنگام اسکن آفلاین شناسایی می‌شوند.</span>');
   }
 }
+/* ============ تست منابع برای UID (کدام منبع جواب می‌دهد؟) ============ */
+function olCleanRecords(){
+  let n=0;
+  for(const k in S.custom){
+    const d=S.custom[k];
+    if(!d||!olnorm(d.name)){delete S.custom[k];n++}
+  }
+  persist();
+  if(typeof indexDb==='function')indexDb(DB.list);
+  toast(n?fa(n)+' رکورد بی‌نام حذف شد':'رکورد بی‌نامی نبود');
+  return n;
+}
+async function olUidTest(uid){
+  uid=olDig(uid);
+  const el=$('oluidstat');el.classList.remove('hide');
+  const cfg=olc();const lines=[];
+  if(uid.length<12){el.innerHTML='<b>⚠ کد معتبر نیست.</b> یک شناسهٔ رهگیری ۲۰ رقمی وارد کنید (یا کد ۱۶ رقمی اصالت).';return}
+  el.innerHTML='<div class="olrow"><span class="spin"></span><span>در حال تست منابع برای '+fa(uid)+'…</span></div>';
+  const get=async(name,url,headers)=>{
+    try{
+      const r=await olGet(url,headers||null,Math.min(cfg.timeout,8000));
+      const p=olParseSearch(r.txt,OL_HOSTS[0]);
+      const det=olParseDetail(r.txt);
+      const d=olFromRec(Object.assign({},det,p.rec),'');
+      const v=olVerdict(r.txt);
+      let note='بدون داده';
+      if(d&&d.name)note='✔ نام: «'+d.name+'»'+(d.irc?' — IRC '+d.irc:'')+(d.k?' — GTIN '+d.k:'');
+      else if(v)note='✔ نتیجه: '+v.msg;
+      else if(/یافت نشد/.test(r.txt))note='«یافت نشد»';
+      else if(p.rows.length)note=p.rows.length+' ردیف بدون نام';
+      lines.push((d&&d.name||v?'✔ ':'· ')+name+': HTTP '+r.status+' — '+r.txt.length+' بایت — '+note);
+    }catch(e){lines.push('· '+name+': ⛔ '+(e.why||'خطا'))}
+  };
+  // ۱) سرویس رسمی
+  if((cfg.sspKey||'').trim()){
+    try{
+      const r=await olSspCheck(uid,{});
+      if(r&&r.d)lines.push('✔ سرویس رسمی checksinglebarcodeuid: «'+r.d.name+'» — وضعیت: '+(r.d.statusMsg||r.d.status)+' — بچ '+r.d.batch+' — انقضا '+r.d.expRaw);
+      else lines.push('· سرویس رسمی checksinglebarcodeuid: '+((r&&r.err)||'بدون داده'));
+    }catch(e){lines.push('· سرویس رسمی checksinglebarcodeuid: '+(e.why==='no-key'?'کلید API تنظیم نشده':(e.message||'خطا')))}
+  }else lines.push('· سرویس رسمی checksinglebarcodeuid: کلید API تنظیم نشده');
+  // ۲) منابع عمومی/کاتالوگ
+  const cand=[
+    ['ttac.ir/Inquiry?uid=',      u=>'https://ttac.ir/Inquiry?uid='+u],
+    ['ttac.ir/Inquiry?UID=',      u=>'https://ttac.ir/Inquiry?UID='+u],
+    ['ttac.ir/UidEsalatForm?Uid=',u=>'https://ttac.ir/UidEsalatForm?Uid='+u],
+    ['irc.fda /NFI/Search',       u=>OL_SEARCH(OL_HOSTS[0],u,10,1)],
+    ['irc.ttac /NFI/Search',      u=>OL_SEARCH(OL_HOSTS[1],u,10,1)],
+    ['irc.fda /NFI/SearchByIRC',  u=>OL_HOSTS[0]+'/NFI/SearchByIRC?irc='+u],
+    ['newapi getnfisearch',       u=>OL_API(u)],
+  ];
+  for(const [name,mk] of cand)await get(name,mk(uid),name.indexOf('newapi')===0?OL_API_H:null);
+  // ۳) API اپ موبایل با متد POST (اگر اندپوینت کاتالوگ/UID باشد)
+  try{
+    const url='https://newapi.ttac.ir/irfdamobile/v1/getnfisearchbyuid?uid='+uid;
+    const r=await olGet(url,OL_API_H,Math.min(cfg.timeout,6000));
+    const list=olFromApi(r.txt,'');
+    lines.push('· newapi byuid (حدسی): HTTP '+r.status+(list.length?' — ✔ '+list.length+' نتیجه':' — بدون داده'));
+  }catch(e){lines.push('· newapi byuid (حدسی): ⛔ '+(e.why||'خطا'))}
+  el.innerHTML='<b>نتیجهٔ تست منابع برای '+fa(uid)+':</b><div class="oldiag">'+esc(lines.join('\n'))+'</div>'+
+    '<div class="mut" style="margin-top:6px">خط‌های ✔ یعنی آن منبع برای UID جواب می‌دهد؛ همین لیست را برایم بفرستید تا فقط همان مسیر را قطعی کنم.</div>';
+  return lines;
+}
+
 /* ============ کاوش‌گر اندپوینت استعلام اصالت ============ */
 async function olExplore(){
   const el=$('olexplorestat');el.classList.remove('hide');el.innerHTML='⏳ در حال کاوش… (چند ثانیه)';
@@ -1379,6 +1454,9 @@ $('s_proxy').onchange=()=>{olc().proxy=$('s_proxy').value.trim();persist();toast
 $('oltest').onclick=olTest;
 $('olharv').onclick=nfiHarvest;$('olharvstop').onclick=()=>{harvCancel=true;toast('توقف…')};
 $('olexplore').onclick=olExplore;
+$('olclean').onclick=()=>{if(confirm('رکوردهای ذخیره‌شده‌ای که نام ندارند حذف شوند؟'))olCleanRecords()};
+$('oluidtest').onclick=()=>olUidTest($('oluid').value||$('q').value||'');
+$('oluid').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();olUidTest($('oluid').value)}});
 $('olclear').onclick=()=>{if(!confirm('حافظهٔ بررسی آنلاین پاک شود؟ (رکوردهای ثبت‌شدهٔ موجودی دست نمی‌خورند)'))return;S.olcache={};persist();toast('حافظهٔ بررسی آنلاین پاک شد')};
 $('user').onchange=()=>{try{localStorage.setItem('pi_user',$('user').value)}catch(e){}};
 $('bk').onclick=()=>download(new Blob([JSON.stringify(S)],{type:'application/json'}),'pharmacy-backup-'+todayIso()+'.json');
