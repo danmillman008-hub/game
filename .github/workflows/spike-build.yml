@@ -1,7 +1,8 @@
 name: spike-build
 
 # اعتبارسنجی «۴۸ ساعت»: بیلد واقعی Algidy (پایه و اصلاح‌شده) روی رانر گیت‌هاب.
-# اینجا سندباکس به Maven/Android SDK دسترسی ندارد، پس بیلد اینجا انجام می‌شود.
+# سندباکس به Maven/Android SDK دسترسی ندارد، پس بیلد اینجا انجام می‌شود.
+# نتیجه به‌صورت Issue منتشر می‌شود تا از بیرون قابل خواندن باشد.
 
 on:
   workflow_dispatch:
@@ -10,6 +11,10 @@ on:
       - "spike/**"
       - ".github/workflows/spike-build.yml"
 
+permissions:
+  contents: read
+  issues: write
+
 env:
   ALGIDY_REPO: https://github.com/NhuHuy-79/Algidy.git
   ALGIDY_REF: v2.0.0
@@ -17,16 +22,16 @@ env:
 jobs:
   # ---------------------------------------------------------------- baseline
   baseline:
-    name: baseline (Algidy بدون تغییر)
+    name: baseline
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
 
-      - name: Clone Algidy @ ${{ env.ALGIDY_REF }}
+      - name: Clone Algidy
         run: git clone --depth 1 --branch "$ALGIDY_REF" "$ALGIDY_REPO" upstream
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "17"
@@ -44,22 +49,28 @@ jobs:
           fi
 
       - name: Build (assembleDebug)
+        working-directory: upstream
         run: |
-          chmod +x upstream/gradlew
-          cd upstream
+          chmod +x gradlew
           set +e
-          ./gradlew :app:assembleDebug --stacktrace --no-daemon 2>&1 | tee ../baseline-build.log
-          echo "GRADLE_EXIT=${PIPESTATUS[0]}" | tee ../baseline-exit.txt
+          ./gradlew :app:assembleDebug --stacktrace --no-daemon 2>&1 | tee "$GITHUB_WORKSPACE/baseline-build.log"
+          code=${PIPESTATUS[0]}
+          echo "GRADLE_EXIT=$code" > "$GITHUB_WORKSPACE/baseline-exit.txt"
+          echo "build exit=$code"
 
-      - name: Size report
+      - name: Report baseline
+        if: always()
         run: |
           {
-            echo "## Baseline"
-            echo '```'
-            cat baseline-exit.txt 2>/dev/null || echo "no exit file"
+            echo "### baseline"
+            cat baseline-exit.txt 2>/dev/null || true
             find upstream/app/build/outputs -name "*.apk" -exec ls -l {} \; 2>/dev/null || echo "APK: none"
+            echo
             echo '```'
-          } | tee baseline-report.md
+            tail -c 12000 baseline-build.log 2>/dev/null || echo "no log"
+            echo '```'
+          } > baseline-report.md
+          cat baseline-exit.txt baseline-report.md | head -40 || true
 
       - name: Upload baseline artifacts
         if: always()
@@ -74,13 +85,13 @@ jobs:
 
   # ----------------------------------------------------------------- patched
   patched:
-    name: patched (ML Kit باندل‌شده + وزیرمتن + فارسی/RTL)
+    name: patched
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
 
-      - name: Clone Algidy @ ${{ env.ALGIDY_REF }}
+      - name: Clone Algidy
         run: git clone --depth 1 --branch "$ALGIDY_REF" "$ALGIDY_REPO" upstream
 
       - name: Apply spike patch set
@@ -88,13 +99,12 @@ jobs:
           mkdir -p upstream/core/designsystem/src/main/res/font
           cp spike/assets/vazirmatn.ttf upstream/core/designsystem/src/main/res/font/vazirmatn.ttf
           cd upstream
-          git init -q . 2>/dev/null || true
           git apply --verbose ../spike/patches/*.patch
-          echo "--- patch applied ---"
-          grep -n "mlkit-barcode-scanning" gradle/libs.versions.toml
+          echo "--- checks ---"
+          grep -n "com.google.mlkit:barcode-scanning" gradle/libs.versions.toml
           grep -n "PERSIAN" core/model/src/main/java/com/nhuhuy/algidy/core/model/setting/AppLanguage.kt
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "17"
@@ -109,40 +119,49 @@ jobs:
           fi
 
       - name: Build (assembleDebug)
-        id: build
+        working-directory: upstream
         run: |
           chmod +x gradlew
           set +e
-          ./gradlew :app:assembleDebug --stacktrace 2>&1 | tee ../patched-build.log
+          ./gradlew :app:assembleDebug --stacktrace 2>&1 | tee "$GITHUB_WORKSPACE/patched-build.log"
           code=${PIPESTATUS[0]}
-          echo "GRADLE_EXIT=$code" | tee ../patched-exit.txt
-          echo "exit=$code" >> "$GITHUB_OUTPUT"
+          echo "GRADLE_EXIT=$code" > "$GITHUB_WORKSPACE/patched-exit.txt"
+          echo "build exit=$code"
 
       - name: Unit tests
+        working-directory: upstream
         run: |
           set +e
-          ./gradlew testDebugUnitTest --continue 2>&1 | tee ../patched-tests.log
-          echo "TESTS_EXIT=${PIPESTATUS[0]}" | tee ../patched-tests-exit.txt
+          ./gradlew testDebugUnitTest --continue 2>&1 | tee "$GITHUB_WORKSPACE/patched-tests.log"
+          code=${PIPESTATUS[0]}
+          echo "TESTS_EXIT=$code" > "$GITHUB_WORKSPACE/patched-tests-exit.txt"
+          echo "tests exit=$code"
 
-      - name: Size + contents report
+      - name: Report patched
+        if: always()
         run: |
           {
-            echo "## Patched"
-            echo '```'
-            cat ../patched-exit.txt 2>/dev/null || true
-            cat ../patched-tests-exit.txt 2>/dev/null || true
-            find app/build/outputs -name "*.apk" -exec ls -l {} \; 2>/dev/null || echo "APK: none"
-            echo '```'
-            echo "### Fonts/resources inside APK"
-            echo '```'
-            apk=$(find app/build/outputs -name "*.apk" | head -1)
+            echo "### patched"
+            cat patched-exit.txt patched-tests-exit.txt 2>/dev/null || true
+            find upstream/app/build/outputs -name "*.apk" -exec ls -l {} \; 2>/dev/null || echo "APK: none"
+            apk=$(find upstream/app/build/outputs -name "*.apk" | head -1)
             if [ -n "$apk" ]; then
+              echo
+              echo "APK_BYTES=$(stat -c%s "$apk")"
+              echo "APK_SHA256=$(sha256sum "$apk" | cut -d' ' -f1)"
+              echo "--- fonts in APK ---"
               unzip -l "$apk" | grep -E "res/font|\.ttf" || true
-              echo "--- top 15 largest entries ---"
-              unzip -l "$apk" | sort -k1 -n -r | head -15
+              echo "--- 12 largest entries ---"
+              unzip -l "$apk" | sort -k1 -n -r | head -12
             fi
+            echo
             echo '```'
-          } | tee ../patched-report.md
+            tail -c 12000 patched-build.log 2>/dev/null || echo "no build log"
+            echo '--- tests ---'
+            tail -c 4000 patched-tests.log 2>/dev/null || echo "no test log"
+            echo '```'
+          } > patched-report.md
+          cat patched-exit.txt 2>/dev/null || true
 
       - name: Upload patched artifacts
         if: always()
@@ -154,4 +173,66 @@ jobs:
             patched-build.log
             patched-tests.log
             patched-report.md
-            app/build/outputs/apk/**/*.apk
+            upstream/app/build/outputs/apk/**/*.apk
+
+  # ------------------------------------------------------------------ report
+  report:
+    name: publish-report
+    needs: [baseline, patched]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+        continue-on-error: true
+
+      - name: Publish report as issue
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request, glob
+
+          def tail(path, n=6000):
+              try:
+                  data = open(path, 'rb').read()
+                  return data[-n:].decode('utf-8', 'replace')
+              except Exception as e:
+                  return f"(missing: {path}: {e})"
+
+          parts = []
+          for name in ("baseline", "patched"):
+              parts.append(f"## {name}")
+              base = f"artifacts/{name}"
+              for f in sorted(glob.glob(base + "/*.md")):
+                  parts.append(tail(f, 20000))
+              for f in ("baseline-build.log", "patched-build.log", "patched-tests.log"):
+                  p = os.path.join(base, f)
+                  if os.path.exists(p):
+                      parts.append(f"### tail {f}\n```\n{tail(p, 8000)}\n```")
+          body = f"Run: {os.environ['RUN_URL']}\n\n" + "\n\n".join(parts)
+          body = body[:60000]
+
+          payload = json.dumps({
+              "title": f"spike-build report (run {os.environ['RUN_ID']})",
+              "body": body,
+          }).encode()
+          req = urllib.request.Request(
+              f"https://api.github.com/repos/{os.environ['GITHUB_REPOSITORY']}/issues",
+              data=payload,
+              headers={
+                  "Authorization": f"Bearer {os.environ['TOKEN']}",
+                  "Accept": "application/vnd.github+json",
+                  "Content-Type": "application/json",
+              },
+              method="POST",
+          )
+          with urllib.request.urlopen(req) as r:
+              print("issue created:", json.loads(r.read())["html_url"])
+          PY
