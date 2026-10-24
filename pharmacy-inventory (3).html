@@ -104,11 +104,14 @@ details summary{cursor:pointer;color:var(--pri);margin-top:8px}
   <div class="card">
     <h2>بررسی آنلاین (سامانه تیتک)</h2>
     <p class="mut">وقتی کد اسکن‌شده در دیتابیس محلی نباشد، برنامه به‌صورت خودکار و بی‌صدا اطلاعات همان دارو را از سامانه تیتک می‌گیرد و فرم را پر می‌کند. نتیجه در همین دستگاه ذخیره می‌شود تا دفعهٔ بعد آفلاین هم کار کند.</p>
+    <p class="mut">✅ مسیر اصلی، همان API خودِ اپلیکیشن موبایل تیتک است که با مهندسی معکوس فایل <b dir="ltr">ttac-4.3.6.apk</b> پیدا شد (<b dir="ltr">WrapperV2/CheckBarcode</b>، <b dir="ltr">WrapperV2/CheckSixteenCode</b>، <b dir="ltr">WrapperV2/CheckUid</b>). <b>هیچ کلید API و هیچ نصب اضافه‌ای لازم نیست.</b></p>
     <label><input type="checkbox" id="s_ol" checked> بررسی آنلاین خودکار فعال باشد</label>
     <label><input type="checkbox" id="s_relay" checked> اگر اتصال مستقیم بسته بود، از مسیرهای جایگزین عمومی هم تلاش شود <span class="mut">(فقط کد بارکد ارسال می‌شود؛ نیازی به نصب چیزی نیست)</span></label>
     <label>آدرس پروکسی محلی (اختیاری — فقط اگر مرورگر اجازهٔ اتصال مستقیم را نداد)</label>
     <input id="s_proxy" dir="ltr" style="text-align:left" placeholder="http://127.0.0.1:8765/ttac?url={url}">
-    <label>کلید API رسمی تیتک <b dir="ltr">X-SSP-Api-Key</b> (اگر دارید)</label>
+    <label>آدرس API اپ تیتک (پیش‌فرض درست است؛ فقط اگر روزی عوض شد)</label>
+    <input id="s_appbase" dir="ltr" style="text-align:left" placeholder="https://irfdamobile.ttac.ir/api/">
+    <label>کلید API رسمی تیتک <b dir="ltr">X-SSP-Api-Key</b> (اختیاری — برای استعلام UID در سرویس بیمه؛ لازم نیست)</label>
     <input id="s_sspkey" dir="ltr" style="text-align:left" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
     <label>آدرس سرویس رسمی (پیش‌فرض: محیط تست تیتک)</label>
     <input id="s_sspbase" dir="ltr" style="text-align:left" placeholder="https://api.ttac.ir/insurances/test/v74/">
@@ -596,7 +599,7 @@ const OL_LBL={
 const olnorm=s=>String(s==null?'':s).replace(/\u200c/g,' ').replace(/\s+/g,' ').trim();
 const olDig=s=>en(s).replace(/\D/g,'');
 const olGtin=s=>{const d=olDig(s);return d.length>=8&&d.length<=14?g14(d):''};
-function olc(){S.settings=Object.assign({warn:90,cal:'j'},S.settings);S.settings.ol=Object.assign({on:true,auto:true,proxy:'',timeout:9000,relay:false},S.settings.ol||{});return S.settings.ol}
+function olc(){S.settings=Object.assign({warn:90,cal:'j'},S.settings);S.settings.ol=Object.assign({on:true,auto:true,proxy:'',timeout:9000,relay:true,appBase:''},S.settings.ol||{});return S.settings.ol}
 function olHide(){const p=$('olpanel');if(p){p.classList.add('hide');p.innerHTML=''}}
 function olShow(html,cls){const p=$('olpanel');if(!p)return;p.className='olcard'+(cls?' '+cls:'');p.classList.remove('hide');p.innerHTML=html}
 const olSpinHtml=m=>'<div class="olrow"><span class="spin"></span><span>'+m+'</span></div>';
@@ -618,6 +621,7 @@ function olRoutes(cfg){
   else if(cfg.relay!==false){
     r.push({n:'مسیر عمومی ۱',f:u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u)});
     r.push({n:'مسیر عمومی ۲',f:u=>'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(u)});
+    r.push({n:'مسیر عمومی ۳',f:u=>'https://corsproxy.io/?url='+encodeURIComponent(u)});
   }
   return r}
 async function olGet(url,headers,ms){
@@ -922,6 +926,228 @@ function olKind(t){
 }
 const OL_KIND_FA={uid:'شناسهٔ رهگیری UID',auth16:'کد اصالت',gtin:'GTIN',code:'کد'};
 
+/* ============ اندپوینت واقعی اپ موبایل تیتک — استخراج‌شده از خود APK (مهندسی معکوس) ============
+   منبع: ttac-4.3.6.apk — package ir.ttac.irfdamobile (v6.9.1 / versionCode 60031)
+   ː res/values/strings.xml →  wrapperV2URL = https://irfdamobile.ttac.ir/api/WrapperV2/
+   ː کلاس Lu6/t  →  GET  WrapperV2/CheckSixteenCode?sixteenCode=…   (کد اصالت ۱۶ رقمی)
+                          WrapperV2/CheckUid?uidCode=…               (شناسهٔ رهگیری UID ۲۰ رقمی)
+                          WrapperV2/CheckBarcode?barcode=…           (بارکد / GTIN)
+        پارامترهای همراه: &latitude= &longitude= &device=2 &deviceIdentifier= &Platform=1 &PlatformVersion= &VersionCode= &AppVersion=
+        پاسخ: ProductCatalogWebModel → Result:{ PersianName, EnglishName, Irc, GTIN, UID, BatchCode, Expiration,
+                Manufacturing, Price, Manufacturer, Importer, Distributer, StatusCode, StatusMessage, ErrorCode, ErrorMessage }
+   ː کلاس Lu6/d  →  GET https://irfdamobile.ttac.ir/api/Wrapper/NfiDetailIrc?irc=…  → DrugDetailInfo{Result:{DrugLicense:{…}}}
+   ː کلاس Lu6/e  →  GET https://irfdamobile.ttac.ir/api/wrapper/NfiSearch?term=…&pageNumber=1&pageSize=10
+   ː کلید API لازم نیست. (هدر X-SSP-Api-Key فقط در سرویس‌های newapi.ttac.ir استفاده می‌شود.)
+   ː StatusCode بر اساس enum Code16Status در همان APK:
+        0 اطلاعاتی پیدا نشد · 1 اصلی · 2 استعلام چندباره · 3 تقلبی · 4 تاریخ گذشته · 5 ریکال · 6 استعلام دوباره · 7 آزاد نشده
+*/
+const OL_APP_DEFAULT='https://irfdamobile.ttac.ir/api/';
+const OL_APP_META={vc:'60031',av:'6.9.1',sdk:'30'};
+const OL_ST={
+  '0':{t:'اطلاعاتی پیدا نشد',c:'wrn'},
+  '1':{t:'اصل ✔',c:'ok'},
+  '2':{t:'استعلام چندباره (چند شخص/سامانه)',c:'wrn'},
+  '3':{t:'تقلبی ⛔',c:'err'},
+  '4':{t:'تاریخ گذشته',c:'err'},
+  '5':{t:'ریکال (فراخوان)',c:'err'},
+  '6':{t:'استعلام دوباره (یک شخص/سامانه)',c:'wrn'},
+  '7':{t:'آزاد نشده',c:'wrn'}
+};
+function olAppBase(){
+  let b=(olc().appBase||'').trim()||OL_APP_DEFAULT;
+  if(!/^https?:/i.test(b))b='https://'+b;
+  if(!/\/$/.test(b))b+='/';
+  return b;
+}
+function olDevId(){
+  if(!S.devid){S.devid='a'+Math.random().toString(36).slice(2,10)+Date.now().toString(36);persist()}
+  return S.devid;
+}
+function olAppUrl(kind,code){
+  const c=encodeURIComponent(olDig(code));
+  const path=kind==='uid'?('CheckUid?uidCode='+c)
+    :(kind==='auth16'?('CheckSixteenCode?sixteenCode='+c)
+    :('CheckBarcode?barcode='+c));
+  return olAppBase()+'WrapperV2/'+path+
+    '&latitude=0.0&longitude=0.0&device=2&deviceIdentifier='+encodeURIComponent(olDevId())+
+    '&Platform=1&PlatformVersion='+OL_APP_META.sdk+'&VersionCode='+OL_APP_META.vc+'&AppVersion='+encodeURIComponent(OL_APP_META.av);
+}
+const OL_NFI_IRC=irc=>olAppBase()+'Wrapper/NfiDetailIrc?irc='+encodeURIComponent(olDig(irc));
+const OL_NFI_NAME=(t,p1,p2)=>olAppBase()+'wrapper/NfiSearch?term='+encodeURIComponent(t)+'&pageNumber='+(p1||1)+'&pageSize='+(p2||10);
+function olKv(o){const m={};if(!o||typeof o!=='object'||Array.isArray(o))return m;for(const k in o)m[String(k).toLowerCase()]=o[k];return m}
+/* پاسخ‌ها با Gson خوانده می‌شوند (نام فیلدها PascalCase)؛ این‌جا بی‌توجه به بزرگی/کوچکی حروف خوانده می‌شود */
+function olApiResult(j){
+  const kv=olKv(j);
+  let r=kv.result;
+  if(Array.isArray(r))r=r[0];
+  if(!r||typeof r!=='object'){
+    if(kv.persianname!==undefined||kv.gtin!==undefined||kv.irc!==undefined)r=j;
+  }
+  if(!r||typeof r!=='object'||Array.isArray(r))return null;
+  return olKv(r);
+}
+/* شبکه: مستقیم و سپس مسیرهای جایگزین (همان olRoutes) — با پیام خطای شفاف */
+async function olAppGet(url,cfg){
+  cfg=cfg||olc();
+  const errs=[];
+  for(const rt of olRoutes(cfg)){
+    const ms=rt.n==='مستقیم'?Math.max(cfg.timeout||9000,12000):Math.min(cfg.timeout||9000,10000);
+    try{
+      const r=await olGet(rt.f(url),{'Accept':'application/json, text/plain, */*'},ms);
+      if(r.status>=400){errs.push(rt.n+': HTTP '+r.status);continue}
+      return{txt:r.txt,status:r.status,route:rt.n,url:url};
+    }catch(e){errs.push(rt.n+': '+((e&&e.why)||'خطا')+(e&&e.msg?' — '+e.msg:''))}
+  }
+  throw{why:errs.join(' | ')||'blocked'};
+}
+/* یک نتیجهٔ استعلام (Result) را به رکورد داخلی برنامه تبدیل می‌کند */
+function olFromApp(res,term){
+  if(!res)return null;
+  const g=s=>olnorm(s==null?'':s);
+  const name=g(res.persianname)||g(res.englishname);
+  if(!name)return null;
+  const gtin=olDig(res.gtin||''),irc=olDig(res.irc||'');
+  const price=Number(String(res.price==null?'':res.price).replace(/[^\d.]/g,''))||0;
+  const co=g(res.manufacturer)||g(res.importer)||g(res.distributer)||'';
+  const d={
+    k:olGtin(gtin)||(/^\d{8,14}$/.test(String(term||''))?g14(term):''),
+    irc:irc,name:name,co:co,pack:0,
+    en:g(res.englishname),price:price,
+    uid:g(res.uid),batch:g(res.batchcode),expRaw:g(res.expiration),prod:g(res.manufacturing),
+    importer:g(res.importer),distributer:g(res.distributer),
+    status:res.statuscode==null||res.statuscode===''?null:Number(res.statuscode),
+    statusMsg:g(res.statusmessage)||g(res.errormessage),
+    src:'ttac',ts:Date.now()
+  };
+  d.s=(d.name+' '+d.co+' '+d.k+' '+d.irc).toLowerCase();
+  return d;
+}
+/* تکمیل رکورد با کاتالوگ: تعداد در بسته، صاحب پروانه، قیمت، اعتبار پروانه */
+async function olAppEnrich(d,cfg){
+  if(!d||!d.irc)return d;
+  try{
+    const r=await olAppGet(OL_NFI_IRC(d.irc),cfg);
+    let j=null;try{j=JSON.parse(r.txt)}catch(e){return d}
+    const kv=olKv(j);
+    let root=kv.result&&typeof kv.result==='object'?kv.result:j;
+    const R=olKv(root);
+    let lic=R.druglicense||R.DrugLicense;
+    if(!lic||typeof lic!=='object')return d;
+    const L=olKv(lic);
+    const packTxt=olnorm(L.unitofusepackaging||'');
+    const pk=parseInt(String(packTxt).split(/\s+in\s+/i)[0].replace(/[^\d]/g,''),10);
+    if(pk)d.pack=pk;
+    d.co=d.co||olnorm(L.licenseownercompanyname||L.producercompanyname||L.brandownercompanyname||'');
+    d.licOwner=olnorm(L.licenseownercompanyname||'');
+    d.producer=olnorm(L.producercompanyname||'');
+    d.brandOwner=olnorm(L.brandownercompanyname||'');
+    d.price=Number(L.packageconsumerprice)||d.price;
+    d.licExp=olnorm(L.persianexpirationdate||'');
+    d.gen=olnorm(L.druggenericfaname||L.druggenericname||'');
+    d.form=olnorm(L.indexfaname||'');
+    d.en=d.en||olnorm(L.enbrandname||'');
+    if(olnorm(L.gtin))d.k=olGtin(olnorm(L.gtin))||d.k;
+    if(olnorm(L.irc))d.irc=olDig(L.irc)||d.irc;
+    d.s=(d.name+' '+d.co+' '+d.k+' '+d.irc).toLowerCase();
+  }catch(e){}
+  return d;
+}
+/* استعلام اصلی: کد اسکن‌شده → API اپ تیتک */
+async function olAppScan(terms){
+  const cfg=olc();
+  const out={d:null,code:null,msg:'',route:'',term:'',errs:[],nf:''};
+  for(const t of terms){
+    const kind=olKind(t);
+    const url=olAppUrl(kind,t);
+    let r=null;
+    try{r=await olAppGet(url,cfg)}
+    catch(e){out.errs.push('اپ تیتک ('+OL_KIND_FA[kind]+'): '+((e&&e.why)||'خطا'));continue}
+    out.route=r.route;out.term=t;
+    let j=null;try{j=JSON.parse(r.txt)}catch(e){}
+    if(!j){out.errs.push('اپ تیتک ('+OL_KIND_FA[kind]+'): پاسخ JSON نبود — '+String(r.txt||'').slice(0,90));continue}
+    const res=olApiResult(j);
+    if(!res){out.errs.push('اپ تیتک ('+OL_KIND_FA[kind]+'): ساختار پاسخ ناشناخته بود');continue}
+    const code=res.statuscode==null||res.statuscode===''?(res.errorcode==null?null:Number(res.errorcode)):Number(res.statuscode);
+    const msg=olnorm(res.statusmessage||res.errormessage||'');
+    const d=olFromApp(res,t);
+    if(d&&d.name){
+      d.stat=code;d.statMsg=msg||((OL_ST[String(code)]||{}).t||'');
+      await olAppEnrich(d,cfg);
+      out.d=d;out.code=code;out.msg=msg;return out;
+    }
+    if(code===0||code===null)out.nf='تیتک: '+(msg||(OL_ST[String(code)]||{}).t||'اطلاعاتی پیدا نشد')+(code?(' (کد '+fa(code)+')'):'');
+    else out.errs.push('اپ تیتک ('+OL_KIND_FA[kind]+'): کد '+fa(code)+(msg?' — '+msg:''));
+  }
+  return out;
+}
+/* جست‌وجوی نامی در کاتالوگ اپ (NfiSearch) — عمیق و بی‌توجه به ساختار دقیق پاسخ */
+function olWalkLicenses(o,out,depth){
+  if(!o||typeof o!=='object'||(depth||0)>6)return out;
+  if(Array.isArray(o)){for(const x of o)olWalkLicenses(x,out,(depth||0)+1);return out}
+  const kv=olKv(o);
+  const hasCode=kv.gtin!==undefined||kv.irc!==undefined;
+  const hasName=kv.fabrandname!==undefined||kv.enbrandname!==undefined||kv.indexfaname!==undefined;
+  if(hasCode&&hasName)out.push(kv);
+  for(const k in kv){const v=kv[k];if(v&&typeof v==='object')olWalkLicenses(v,out,(depth||0)+1)}
+  return out;
+}
+function olFromLicense(L){
+  const name=olnorm(L.fabrandname||L.indexfaname||L.enbrandname||'');
+  if(!name)return null;
+  const pk=String(L.unitofusepackaging||'').split(/\s+in\s+/i)[0].replace(/[^\d]/g,'');
+  const d={
+    k:olGtin(olnorm(L.gtin||'')),irc:olDig(L.irc||''),name:name,
+    co:olnorm(L.licenseownercompanyname||L.producercompanyname||L.brandownercompanyname||''),
+    pack:parseInt(pk,10)||0,
+    en:olnorm(L.enbrandname||''),gen:olnorm(L.druggenericfaname||L.druggenericname||''),
+    form:olnorm(L.indexfaname||''),price:Number(L.packageconsumerprice)||0,
+    licOwner:olnorm(L.licenseownercompanyname||''),producer:olnorm(L.producercompanyname||''),
+    brandOwner:olnorm(L.brandownercompanyname||''),licExp:olnorm(L.persianexpirationdate||''),
+    src:'ttac',ts:Date.now()
+  };
+  d.s=(d.name+' '+d.co+' '+d.k+' '+d.irc).toLowerCase();
+  return d;
+}
+async function olAppNameSearch(q){
+  const cfg=olc();
+  const r=await olAppGet(OL_NFI_NAME(q,1,15),cfg);
+  let j=null;try{j=JSON.parse(r.txt)}catch(e){return[]}
+  const out=[];
+  for(const L of olWalkLicenses(j,[],0)){
+    const d=olFromLicense(L);
+    if(!d)continue;
+    if(out.some(x=>(x.irc&&x.irc===d.irc)||(x.name&&x.name===d.name)))continue;
+    out.push(d);
+    if(out.length>=12)break;
+  }
+  return out;
+}
+function olCountLicenses(txt){
+  let j=null;try{j=JSON.parse(txt)}catch(e){return 0}
+  return olWalkLicenses(j,[],0).length;
+}
+/* اعمال نتیجهٔ API روی فرم (بی‌صدا؛ بدون پاپ‌آپ و بدون تب جدید) */
+function olApplyApp(d,term,code,msg,route){
+  if(!d)return;
+  olApply(d,term);
+  if(d.batch&&!$('f_batch').value.trim())$('f_batch').value=d.batch;
+  if(d.expRaw){
+    const iso=sspExpIso(d.expRaw);
+    if(iso){const cur=readExp();if(!cur||cur==='bad'){setExp(iso);$('expsrc').textContent='(از سامانهٔ تیتک)'}}
+  }
+  hint();
+  const st=code==null?null:(OL_ST[String(code)]||null);
+  olShow('<div class="olrow"><span class="badge">✔ سامانهٔ تیتک</span><b>'+esc(d.name)+'</b>'+
+    (st?' <span class="badge">'+esc(st.t)+'</span>':'')+'</div>'+
+    (msg?'<div class="olmeta">وضعیت: '+esc(msg)+'</div>':'')+
+    olMetaHtml(d)+
+    ((d.batch||d.expRaw)?'<div class="olmeta">بچ: <b dir="ltr">'+esc(d.batch||'—')+'</b> · انقضا: <b dir="ltr">'+esc(d.expRaw||'—')+'</b> <span class="mut">(خودکار در فرم گذاشته شد)</span></div>':'')+
+    '<div class="olmeta">نوع کد: '+esc(OL_KIND_FA[olKind(term)])+(route?' — مسیر: '+esc(route):'')+' — فرم پر شد و برای دفعات بعد در همین دستگاه ذخیره شد.</div>',
+    (st&&st.c)||'ok');
+  toast('✔ مشخصات از سامانهٔ تیتک دریافت شد');
+}
+
+
 /* --- استعلام اصالت UID / کد ۱۶ رقمی در سامانهٔ تیتک (پشت صحنه) ---
    صفحهٔ ttac.ir/Inquiry یک اپلیکیشن Blazor است که با جاوااسکریپت سمت خودش کار می‌کند؛
    از این رو در حالت عادی دادهٔ خام نمی‌دهد. برای همین چند آدرس احتمالی با پارامتر کد
@@ -1004,9 +1230,10 @@ function olApply(d,term){
   $('d_sub').textContent=[$('f_co').value,$('f_pack').value?fa($('f_pack').value)+' عدد در بسته':'',$('f_gtin').value?'GTIN '+fa($('f_gtin').value):''].filter(Boolean).join(' | ');
   lotChips();hint();
 }
-function olFail(errs,terms){
+function olFail(errs,terms,note){
   const blocked=errs.some(e=>/blocked|Failed to fetch|NetworkError|Load failed/i.test(e));
   olShow('<div><b>⚠ بررسی آنلاین نتیجه نداد.</b> مشخصات را دستی وارد کنید.</div>'+
+    (note?'<div class="olmeta" style="margin-top:4px"><b>'+esc(note)+'</b></div>':"")+
     (blocked?'<div class="mut" style="margin-top:4px">مرورگر اجازهٔ خواندن پاسخ تیتک را نداد (CORS). برنامه را از یک آدرس/دامنهٔ ثابت باز کنید یا در تنظیمات «پروکسی محلی» را فعال کنید.</div>':'')+
     '<div class="btns"><button class="sm" id="olretry">🔄 تلاش مجدد</button><button class="sm" id="olcopy">📋 کپی گزارش</button><button class="sm" id="olraw">💾 ذخیرهٔ پاسخ خام</button><a class="sm" href="https://ttac.ir/Inquiry" target="_blank" rel="noopener" style="text-decoration:none;border:1px solid var(--line);border-radius:9px;padding:4px 10px;font-size:13px;color:var(--tx)">صفحهٔ استعلام اصالت تیتک ↗</a></div>'+
     '<details><summary>جزئیات فنی</summary><div class="oldiag">'+esc(errs.join('\n')||'—')+'</div></details>','wrn');
@@ -1024,7 +1251,15 @@ async function olScan(terms){
   if(!terms.length){olShow('<div class="mut">کد قابل استعلام پیدا نشد؛ مشخصات را دستی وارد کنید.</div>');return}
   const kinds=terms.map(t=>OL_KIND_FA[olKind(t)]+' '+fa(t));
   olShow(olSpinHtml('بررسی آنلاین در تیتک… <span class="mut">'+esc(kinds.join(' · '))+'</span>'));
-  const errs=[];
+  const errs=[];let appNf='';
+  /* ۰) API اپ موبایل تیتک (بدون کلید) — اندپوینتی که از خود APK استخراج شد */
+  try{
+    olShow(olSpinHtml('استعلام از سامانهٔ تیتک… <span class="mut">'+esc(kinds.join(' · '))+'</span>'));
+    const A=await olAppScan(terms);
+    if(A&&A.d){olApplyApp(A.d,A.term,A.code,A.msg,A.route);return}
+    if(A&&A.nf){appNf=A.nf;errs.push(A.nf)}
+    if(A&&A.errs&&A.errs.length)errs.push.apply(errs,A.errs);
+  }catch(e){errs.push('اپ تیتک: '+((e&&e.why)||(e&&e.message)||'خطا'))}
   /* ۱) سرویس رسمی checksinglebarcodeuid (اگر کلید API تنظیم شده باشد) */
   if((cfg.sspKey||'').trim()){
     const t0=terms.find(t=>olKind(t)==='uid')||terms.find(t=>olKind(t)==='auth16')||terms[0];
@@ -1075,14 +1310,15 @@ async function olScan(terms){
     errs.push.apply(errs,a.errs||[]);
     if(a.tried)errs.push('— استعلام اصالت: '+a.tried+' مسیر امتحان شد و پاسخی قابل خواندن نبود.');
   }
-  olFail(errs,terms.slice());
+  olFail(errs,terms.slice(),appNf);
 }
 async function olNameSearch(q){
   const box=$('qres');box.classList.remove('hide');box._r=[];
   if(!olc().on){box.innerHTML='<div style="direction:rtl;text-align:right;cursor:default">بررسی آنلاین خاموش است.</div>';return}
   box.innerHTML='<div class="olrow" style="direction:rtl;text-align:right;cursor:default"><span class="spin"></span><span>جست‌وجوی آنلاین در تیتک…</span></div>';
   const errs=[];let list=[];
-  try{const r=await olQuery(q,{multi:true,noCache:true});list=r.list||[];if(r.errs&&r.errs.length)errs.push.apply(errs,r.errs)}
+  try{list=await olAppNameSearch(q)}catch(e){errs.push('اپ تیتک: '+((e&&e.why)||(e&&e.message)||'خطا'))}
+  if(!list.length)try{const r=await olQuery(q,{multi:true,noCache:true});list=r.list||[];if(r.errs&&r.errs.length)errs.push.apply(errs,r.errs)}
   catch(e){errs.push(e.message||String(e))}
   if(!list.length){
     box.innerHTML='<div style="direction:rtl;text-align:right;cursor:default">در تیتک هم چیزی پیدا نشد.<details><summary>جزئیات فنی</summary><div class="oldiag">'+esc(errs.join('\n')||'—')+'</div></details></div>';
@@ -1095,6 +1331,21 @@ async function olTest(){
   const el=$('olstat');el.classList.remove('hide');el.innerHTML='⏳ در حال تست اتصال…';
   const cfg=olc(),term='7310432273664919',lines=[];
   olLastRaw=[];
+  /* اپ موبایل تیتک (بدون کلید) — همان اندپوینتی که از APK استخراج شد */
+  try{
+    const ru=await olAppGet(OL_NFI_NAME('استامینوفن',1,3),cfg);
+    lines.push('اپ تیتک · NfiSearch: HTTP '+ru.status+' — '+ru.txt.length+' بایت — '+olCountLicenses(ru.txt)+' فرآورده خوانده شد'+(olCountLicenses(ru.txt)?' ✔':''));
+  }catch(e){lines.push('اپ تیتک · NfiSearch: ⛔ '+((e&&e.why)||'خطا'))}
+  try{
+    const code=olDig($('oluid').value||'')||'6260152410148';
+    const kd=olKind(code);
+    const ru=await olAppGet(olAppUrl(kd,code),cfg);
+    let j=null;try{j=JSON.parse(ru.txt)}catch(e){}
+    const res=j?olApiResult(j):null;
+    lines.push('اپ تیتک · '+(kd==='auth16'?'CheckSixteenCode':kd==='uid'?'CheckUid':'CheckBarcode')+' ('+fa(code)+'): HTTP '+ru.status+
+      ' — کد وضعیت: '+(res&&res.statuscode!=null?fa(res.statuscode):'—')+
+      ' — '+(res?esc(olnorm(res.statusmessage||'')||'بدون پیام'):'پاسخ JSON نبود'));
+  }catch(e){lines.push('اپ تیتک · استعلام کد: ⛔ '+((e&&e.why)||'خطا'))}
   for(const host of OL_HOSTS){
     const hn=host.replace('https://','');
     try{
@@ -1219,6 +1470,20 @@ async function olUidTest(uid){
       lines.push((d&&d.name||v?'✔ ':'· ')+name+': HTTP '+r.status+' — '+r.txt.length+' بایت — '+note);
     }catch(e){lines.push('· '+name+': ⛔ '+(e.why||'خطا'))}
   };
+  // ۰) API اپ موبایل تیتک (بدون کلید)
+  for(const kk of ['uid','auth16','gtin']){
+    const nm=kk==='uid'?'CheckUid':kk==='auth16'?'CheckSixteenCode':'CheckBarcode';
+    try{
+      const r=await olAppGet(olAppUrl(kk,uid),cfg);
+      let j=null;try{j=JSON.parse(r.txt)}catch(e){}
+      const res=j?olApiResult(j):null;
+      const d=res?olFromApp(res,uid):null;
+      const st=res&&res.statuscode!=null?(OL_ST[String(res.statuscode)]||{t:res.statuscode}).t:'—';
+      lines.push((d?'✔ ':'· ')+'اپ تیتک · '+nm+': HTTP '+r.status+' — '+
+        (d?('«'+d.name+'»'+(d.irc?' — IRC '+d.irc:'')+(d.k?' — GTIN '+d.k:'')+' — وضعیت: '+st)
+           :('بدون داده'+(res&&olnorm(res.statusmessage)?' — '+olnorm(res.statusmessage):''))));
+    }catch(e){lines.push('· اپ تیتک · '+nm+': ⛔ '+((e&&e.why)||'خطا'))}
+  }
   // ۱) سرویس رسمی
   if((cfg.sspKey||'').trim()){
     try{
@@ -1451,6 +1716,7 @@ $('s_authurl').onchange=()=>{olc().authUrl=$('s_authurl').value.trim();persist()
   const c=olc();c.sspKey=$('s_sspkey').value.trim();c.sspBase=$('s_sspbase').value.trim();
   c.sspUser=$('s_sspuser').value.trim();c.sspPass=$('s_ssppass').value;persist();toast('ذخیره شد')}});
 $('s_proxy').onchange=()=>{olc().proxy=$('s_proxy').value.trim();persist();toast('ذخیره شد')};
+$('s_appbase').onchange=()=>{olc().appBase=$('s_appbase').value.trim();persist();toast('ذخیره شد')};
 $('oltest').onclick=olTest;
 $('olharv').onclick=nfiHarvest;$('olharvstop').onclick=()=>{harvCancel=true;toast('توقف…')};
 $('olexplore').onclick=olExplore;
@@ -1468,6 +1734,7 @@ $('wipe').onclick=async()=>{if(confirm('همه موجودی‌ها و تاریخ
 function init2(){$('s_warn').value=fa(S.settings.warn);$('s_cal').value=S.settings.cal;
   const oc=olc();$('s_ol').checked=!!oc.on;$('s_relay').checked=oc.relay===true;$('s_proxy').value=oc.proxy||'';
   $('s_authurl').value=oc.authUrl||'';$('s_sspkey').value=oc.sspKey||'';$('s_sspbase').value=oc.sspBase||'';
+  $('s_appbase').value=oc.appBase||'';
   $('s_sspuser').value=oc.sspUser||'';$('s_ssppass').value=oc.sspPass||'';
   usersList();renderAll();dbStat()}
 (async()=>{
@@ -1476,7 +1743,8 @@ function init2(){$('s_warn').value=fa(S.settings.warn);$('s_cal').value=S.settin
   const db=await kvGet('db');if(db&&db.list){indexDb(db.list);DB.meta=db.meta}
   init2();if(DB.list.length)showTab('scan');
 })();
-window.__t={handleCode,parseGS1,lookupText,isoToJ,jToIso,S:()=>S,DB:()=>DB,olQuery,olTerms,olTest,olApply};
+window.__t={handleCode,parseGS1,lookupText,isoToJ,jToIso,S:()=>S,DB:()=>DB,olQuery,olTerms,olTest,olApply,
+  olAppUrl,olAppScan,olAppNameSearch,olAppGet,olCountLicenses,olApiResult};
 </script>
 </body>
 </html>
