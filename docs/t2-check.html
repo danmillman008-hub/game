@@ -48,6 +48,16 @@ th{color:var(--mut);font-weight:600}
 <div id="out"></div>
 
 <div class="card">
+  <b>جست‌وجوی نامی (NfiSearch) — آیا کاتالوگ کامل جواب می‌دهد؟</b>
+  <div class="mut">این همان مسیری است که وقتی کد در دیتابیس نیست و کاربر نام دارو را می‌داند استفاده می‌شود.</div>
+  <div class="row" style="margin-top:8px">
+    <input id="q" placeholder="مثلاً استامینوفن" style="flex:1;min-width:180px">
+    <button id="qgo" style="flex:0 0 auto">🔎 جست‌وجو</button>
+  </div>
+  <div id="qout" style="margin-top:8px"></div>
+</div>
+
+<div class="card">
   <b>معنی کدهای وضعیت تیتک (از enum خودِ اپ)</b>
   <table id="sttbl"></table>
   <div class="mut" style="margin-top:6px">اگر پاسخی با کد وضعیتی غیر از این‌ها دیدی، یعنی enum عوض شده — همان را در گزارش می‌بینم.</div>
@@ -218,6 +228,39 @@ async function runAll(){
 
 function report(){return '### تست ۲ — استعلام کد\n'+env()+'\n\n'+LOG.join('\n')+'\n'}
 $('code').addEventListener('input',()=>{const c=$('code').value.trim();$('kind').textContent='نوع کد: '+(c?kindOf(c).fa:'—')});
+
+/* جست‌وجوی نامی: NfiSearch */
+function walkLicences(o,out,depth){
+  if(!o||typeof o!=='object'||(depth||0)>6)return out;
+  if(Array.isArray(o)){for(const x of o)walkLicences(x,out,(depth||0)+1);return out}
+  const m=kv(o);
+  const hasCode=m.gtin!==undefined||m.irc!==undefined;
+  const hasName=m.fabrandname!==undefined||m.enbrandname!==undefined||m.indexfaname!==undefined;
+  if(hasCode&&hasName)out.push(m);
+  for(const k in m){const v=m[k];if(v&&typeof v==='object')walkLicences(v,out,(depth||0)+1)}
+  return out;
+}
+$('qgo').onclick=async()=>{
+  const q=$('q').value.trim();if(!q)return;
+  const url=nfiName(q,1,10);
+  $('qout').innerHTML='<div class="mut">در حال جست‌وجو…</div>';
+  LOG.length=0;log('=== جست‌وجوی نامی');log(env());log('URL: '+url);
+  const r=await call(url);
+  if(!r.ok){$('qout').innerHTML='<div class="res bad">⛔ '+esc(r.err)+' در '+r.ms+'ms</div>';log('   ⛔ '+r.err);return}
+  let j=null;try{j=JSON.parse(r.txt)}catch(e){}
+  const items=j?walkLicences(j,[],0):[];
+  log('   HTTP '+r.status+' در '+r.ms+'ms — '+r.txt.length+' بایت — '+items.length+' فرآورده');
+  for(const it of items.slice(0,5))log('   · '+(it.fabrandname||it.enbrandname||'')+' | IRC '+(it.irc||'')+' | GTIN '+(it.gtin||'')+' | بسته '+(it.unitofusepackaging||'')+' | '+(it.licenseownercompanyname||''));
+  let h='<div class="res '+(items.length?'ok':'warn')+'">HTTP '+r.status+' · '+r.ms+'ms · <b>'+items.length+'</b> فرآورده خوانده شد'+(j?'':' (JSON نبود)')+'</div>';
+  if(items.length){
+    h+='<table><tr><th>نام</th><th>IRC</th><th>GTIN</th><th>تعداد در بسته</th><th>صاحب پروانه</th></tr>';
+    for(const it of items.slice(0,12))h+='<tr><td>'+esc(it.fabrandname||it.enbrandname||'')+'</td><td dir="ltr">'+esc(it.irc||'')+'</td><td dir="ltr">'+esc(it.gtin||'')+'</td><td dir="ltr">'+esc(it.unitofusepackaging||'')+'</td><td>'+esc(it.licenseownercompanyname||'')+'</td></tr>';
+    h+='</table>';
+  }else if(!j){
+    h+='<pre>'+esc(r.txt.slice(0,700))+'</pre>';
+  }
+  $('qout').innerHTML=h;
+};
 $('go').onclick=()=>runOne().catch(e=>{$('stat').textContent='خطا: '+e.message;$('go').disabled=false});
 $('all').onclick=()=>runAll().catch(e=>{$('stat').textContent='خطا: '+e.message;$('go').disabled=false;$('all').disabled=false});
 $('cp').onclick=()=>navigator.clipboard.writeText(report()).then(()=>$('stat').textContent='کپی شد.').catch(()=>$('stat').textContent='کپی نشد؛ دانلود کن.');
