@@ -98,9 +98,15 @@ jobs:
           SDK="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
           export PATH="$SDK/platform-tools:$SDK/emulator:$SDK/cmdline-tools/latest/bin:$PATH"
 
+          # روی رانرهای گیت‌هاب /dev/kvm هست ولی گروه kvm دسترسی ندارد → با sudo بازش می‌کنیم
+          if [ ! -r /dev/kvm ]; then
+            sudo chmod 666 /dev/kvm 2>/dev/null || sudo usermod -aG kvm "$USER" 2>/dev/null || true
+          fi
+          echo "KVM_AFTER_FIX=$([ -r /dev/kvm ] && [ -w /dev/kvm ] && echo YES || echo NO)" >> "$EVID/status.txt"
+
           if [ ! -r /dev/kvm ]; then
             echo "NO_KVM: emulator cannot run with hardware acceleration on this runner"
-            say "❌ بدون /dev/kvm — امولاتور x86 روی این رانر اجرا نمی‌شود." "NO_KVM"
+            say "❌ بدون دسترسی به /dev/kvm — امولاتور x86 روی این رانر اجرا نمی‌شود." "NO_KVM"
             echo "VERDICT=NO_KVM" >> "$EVID/status.txt"
             exit 0
           fi
