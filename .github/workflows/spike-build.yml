@@ -171,6 +171,7 @@ jobs:
       - name: Run unit tests
         working-directory: upstream
         run: |
+          chmod +x gradlew
           set +e
           ./gradlew testDebugUnitTest --continue 2>&1 | tee "$GITHUB_WORKSPACE/tests.log"
           echo "TESTS_EXIT=${PIPESTATUS[0]}" > "$GITHUB_WORKSPACE/tests-exit.txt"
@@ -197,10 +198,76 @@ jobs:
             tests.log
             tests-report.md
 
+  # --------------------------------------------------------- lean release size
+  lean:
+    name: lean-size
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - run: git clone --depth 1 --branch "$ALGIDY_REF" "$ALGIDY_REPO" upstream
+      - name: Apply patches + lean profile
+        run: |
+          mkdir -p upstream/core/designsystem/src/main/res/font
+          cp spike/assets/vazirmatn.ttf upstream/core/designsystem/src/main/res/font/vazirmatn.ttf
+          cd upstream && git apply --verbose ../spike/patches/*.patch
+          cd ..
+          bash spike/scripts/apply-lean.sh upstream
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Ensure Android SDK 36
+        run: |
+          SDK="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          if [ -x "$SDK/cmdline-tools/latest/bin/sdkmanager" ]; then
+            yes | "$SDK/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0" >/dev/null 2>&1 || true
+          fi
+      - name: Assemble lean release
+        working-directory: upstream
+        run: |
+          chmod +x gradlew
+          set +e
+          ./gradlew :app:assembleRelease 2>&1 | tee "$GITHUB_WORKSPACE/lean-build.log"
+          echo "GRADLE_EXIT=${PIPESTATUS[0]}" > "$GITHUB_WORKSPACE/lean-exit.txt"
+      - name: Report lean sizes
+        if: always()
+        run: |
+          {
+            echo "### lean (بدون OCR تاریخ‌خوان، بدون فونت‌های بلااستفاده)"
+            cat lean-exit.txt 2>/dev/null || true
+            echo
+            echo "| APK | bytes | MB |"
+            echo "|---|---|---|"
+            find upstream/app/build/outputs/apk/release -name "*.apk" 2>/dev/null | sort | while read -r f; do
+              b=$(stat -c%s "$f"); printf "| %s | %s | %.1f |\n" "$(basename "$f")" "$b" "$(awk "BEGIN{print $b/1048576}")"
+            done
+            apk=$(find upstream/app/build/outputs/apk/release -name "*arm64-v8a*.apk" | head -1)
+            if [ -n "$apk" ]; then
+              echo
+              echo "APK_SHA256=$(sha256sum "$apk" | cut -d' ' -f1)"
+              echo '```'
+              unzip -l "$apk" | sort -k1 -n -r | head -12
+              echo '```'
+            fi
+            echo '```'; tail -c 4000 lean-build.log 2>/dev/null || true; echo '```'
+          } > lean-report.md
+          head -20 lean-report.md
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lean
+          if-no-files-found: warn
+          path: |
+            lean-build.log
+            lean-report.md
+            upstream/app/build/outputs/apk/release/**/*.apk
+
   # ------------------------------------------------------------------ report
   report:
     name: publish-report
-    needs: [baseline, release, tests]
+    needs: [baseline, release, lean, tests]
     if: always()
     runs-on: ubuntu-latest
     permissions:
