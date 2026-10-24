@@ -1,0 +1,36 @@
+name: probe-links
+
+on:
+  push:
+    paths:
+      - '.github/workflows/probe-links.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - name: curl variants
+        run: |
+          SHA=47746f859449a171c2d8dfa4d4948fe6f49b84f3
+          for U in \
+            "https://raw.githubusercontent.com/danmillman008-hub/game/arena/dd2b6beb-game/docs/index.html" \
+            "https://cdn.jsdelivr.net/gh/danmillman008-hub/game@$SHA/docs/index.html" \
+            "https://cdn.jsdelivr.net/gh/danmillman008-hub/game@arena/dd2b6beb-game/docs/index.html" \
+            "https://raw.githack.com/danmillman008-hub/game/$SHA/docs/index.html" \
+            "https://htmlpreview.github.io/?https://raw.githubusercontent.com/danmillman008-hub/game/arena/dd2b6beb-game/docs/index.html" ; do
+            echo "=== $U"
+            curl -sS -m 25 -o /tmp/o -D /tmp/h -w 'code=%{http_code} size=%{size_download}\n' "$U" || echo "curl failed $?"
+            grep -i -E '^(HTTP/|content-type:|access-control-allow-origin:)' /tmp/h || true
+            head -c 90 /tmp/o | tr '\n' ' '; echo
+          done > /tmp/links.txt 2>&1
+          python3 - <<'PY'
+          body=open('/tmp/links.txt',encoding='utf-8',errors='replace').read()
+          body=body.replace('%','%25').replace(chr(13),'').replace(chr(10),'%0A')
+          CH=9000
+          for i in range(0,min(len(body),9*CH),CH):
+              print('::notice title=links-%d::%s'%(i//CH,body[i:i+CH]))
+          print('::notice title=links-len::%d'%len(body))
+          PY
