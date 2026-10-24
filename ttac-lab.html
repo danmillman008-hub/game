@@ -59,6 +59,13 @@ td.url{white-space:normal;word-break:break-all;max-width:420px;direction:ltr;tex
   <div id="status" class="mut" style="margin-top:8px"></div>
 </div>
 
+<div class="card">
+  <b>اندپوینت‌های استخراج‌شده از APK</b>
+  <div class="mut">خروجی <b dir="ltr">apk-endpoints.py</b> را اینجا بچسبانید (هر خط یک آدرس). هر جا کد لازم است از <b dir="ltr">{code}</b> استفاده کنید؛ اگر نبود، خودکار به انتهای آدرس اضافه می‌شود.</div>
+  <textarea id="epList" dir="ltr" style="width:100%;min-height:90px;margin-top:6px;background:#0f1719;color:#e6eef0;border:1px solid var(--line);border-radius:8px;padding:8px;font:12px ui-monospace,monospace"></textarea>
+  <div><button class="p" id="b5">۳) تست این اندپوینت‌ها</button></div>
+</div>
+
 <div class="card" id="cardFind" style="display:none">
   <b>اندپوینت‌های کشف‌شده از JS سایت</b>
   <div class="mut">این‌ها رشته‌هایی هستند که در باندل‌های جاوااسکریپت خود تیتک پیدا شده‌اند.</div>
@@ -285,6 +292,37 @@ function report(){
   raw.forEach(r=>L.push('','===== '+r.method+' '+r.url+'  ['+r.status+'] '+r.n+'B '+r.ms+'ms',''+(r.txt||'')));
   return L.join('\n');
 }
+async function runCustom(){
+  const code=$('code').value.trim(),key=$('key').value.trim();
+  const lines=$('epList').value.split(/\n+/).map(x=>x.trim()).filter(Boolean);
+  if(!code||!lines.length)return;
+  $('b5').disabled=true;
+  $('status').innerHTML='<span class="spin"></span> تست '+lines.length+' اندپوینت دستی…';
+  const H={'x-ssp-api-key':key||'','X-API-Key':key||'',Origin:'https://mobile.ttac.ir',Referer:'https://mobile.ttac.ir/'};
+  for(const raw of lines){
+    const name='[دستی] '+raw.slice(0,52);
+    let u=raw;
+    if(u.includes('{code}'))u=u.replace(/\{code\}/g,encodeURIComponent(code));
+    else if(/[?&][A-Za-z]+=$/.test(u)||/[?&]$/.test(u))u+=encodeURIComponent(code);
+    try{
+      let r=await req(u,{headers:H});
+      const bad=r.status>=400||!/✔/.test(verdictOf(Object.assign(r,{ins:inspect(r.txt)}))||{});
+      if(bad){
+        try{
+          const j=await req(u,{method:'POST',headers:Object.assign({'Content-Type':'application/json'},H),
+            body:JSON.stringify({Term:code,term:code,uid:code,Uid:code,BarcodeUid:code,code:code,PrescriptionId:0,Amount:0,GenericCode:''})});
+          if(j.ok)r=j;
+        }catch(e){}
+      }
+      addRow(name,u,r);
+    }catch(e){addRow(name,u,null,e)}
+    await new Promise(x=>setTimeout(x,120));
+  }
+  const good=rows.filter(r=>/✔/.test(r.find||'')).length;
+  $('status').textContent='✔ تست دستی تمام شد — '+(good?good+' منبع جواب داد':'هیچ‌کدام داده نداد');
+  $('b5').disabled=false;
+}
+$('b5').onclick=runCustom;
 $('b1').onclick=discover;
 $('b2').onclick=runMatrix;
 $('b3').onclick=async()=>{
