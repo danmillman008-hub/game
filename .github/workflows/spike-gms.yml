@@ -1,0 +1,213 @@
+name: spike-gms
+
+# اثبات زمان‌اجرا: اسکنر باندل‌شده ML Kit روی امولاتور AOSP (بدون Google APIs) و بدون اینترنت.
+# هر مرحله در Issue گزارش می‌شود تا از بیرون قابل خواندن باشد (لاگ رانر از سندباکس ما در دسترس نیست).
+
+on:
+  push:
+    paths:
+      - ".github/workflows/spike-gms.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+env:
+  ALGIDY_REPO: https://github.com/NhuHuy-79/Algidy.git
+  ALGIDY_REF: v2.0.0
+
+jobs:
+  gms-free:
+    name: gms-free-emulator
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create evidence issue
+        id: issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          url=$(gh issue create --repo "$GITHUB_REPOSITORY" \
+            --title "GMS-free evidence (run $RUN_ID)" \
+            --body "در حال اجرا… [لاگ ران](https://github.com/$GITHUB_REPOSITORY/actions/runs/$RUN_ID)")
+          echo "number=${url##*/}" >> "$GITHUB_OUTPUT"
+          echo "created $url"
+
+      - name: Environment probe (KVM)
+        id: probe
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE: ${{ steps.issue.outputs.number }}
+        run: |
+          set +e
+          {
+            echo "== kvm =="
+            ls -l /dev/kvm 2>&1
+            echo "kvm-ok: $( [ -r /dev/kvm ] && [ -w /dev/kvm ] && echo YES || echo NO )"
+            echo "== cpu =="
+            grep -m1 "model name" /proc/cpuinfo
+            grep -cE "vmx|svm" /proc/cpuinfo
+            echo "== android sdk =="
+            echo "ANDROID_HOME=${ANDROID_HOME:-unset} ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT:-unset}"
+            ls "${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}/system-images" 2>/dev/null
+            ls /usr/local/lib/android/sdk/ 2>/dev/null
+            echo "kvm-flag=$([ -r /dev/kvm ] && echo YES || echo NO)"
+          } | tee /tmp/probe.txt
+          echo "kvm=$([ -r /dev/kvm ] && echo YES || echo NO)" >> "$GITHUB_OUTPUT"
+          gh issue comment "$ISSUE" --repo "$GITHUB_REPOSITORY" \
+            --body "$(printf 'بازرسی محیط:\n```\n%s\n```' "$(cat /tmp/probe.txt)")" || true
+
+      - name: Clone Algidy + patches + lean + instrumented tests
+        run: |
+          git clone --depth 1 --branch "$ALGIDY_REF" "$ALGIDY_REPO" upstream
+          mkdir -p upstream/core/designsystem/src/main/res/font
+          cp spike/assets/vazirmatn.ttf upstream/core/designsystem/src/main/res/font/vazirmatn.ttf
+          ( cd upstream && git apply --verbose ../spike/patches/*.patch )
+          bash spike/scripts/apply-lean.sh upstream
+          bash spike/scripts/apply-androidtest.sh spike upstream
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Boot AOSP emulator and run everything
+        working-directory: upstream
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE: ${{ steps.issue.outputs.number }}
+          KVM: ${{ steps.probe.outputs.kvm }}
+        run: |
+          set +e
+          mkdir -p "$GITHUB_WORKSPACE/evidence"
+          EVID="$GITHUB_WORKSPACE/evidence"
+          CMDLOG="$EVID/emulator-run.log"
+          exec > >(tee -a "$CMDLOG") 2>&1
+
+          say() {  # say <title> <file-or-text-file>
+            gh issue comment "$ISSUE" --repo "$GITHUB_REPOSITORY" \
+              --body "$(printf '%s\n```\n%s\n```' "$1" "$(tail -c 5000 "$2" 2>/dev/null || echo "$2")")" || true
+          }
+
+          SDK="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          export PATH="$SDK/platform-tools:$SDK/emulator:$SDK/cmdline-tools/latest/bin:$PATH"
+
+          if [ ! -r /dev/kvm ]; then
+            echo "NO_KVM: emulator cannot run with hardware acceleration on this runner"
+            say "❌ بدون /dev/kvm — امولاتور x86 روی این رانر اجرا نمی‌شود." "NO_KVM"
+            echo "VERDICT=NO_KVM" >> "$EVID/status.txt"
+            exit 0
+          fi
+
+          chmod +x gradlew
+          ./gradlew :feature:scanner:assembleDebugAndroidTest --stacktrace > "$EVID/compile.log" 2>&1
+          echo "COMPILE_EXIT=$?" >> "$EVID/status.txt"
+          say "کامپایل تست‌های ابزارداری:" "$EVID/compile.log"
+
+          yes | sdkmanager --licenses > /dev/null 2>&1 || true
+          sdkmanager "platform-tools" "emulator" "system-images;android-33;default;x86_64" > "$EVID/sdkmanager.log" 2>&1
+          echo "SDKMANAGER_EXIT=$?" >> "$EVID/status.txt"
+
+          echo "no" | avdmanager create avd -n gmsfree \
+            -k "system-images;android-33;default;x86_64" -d "pixel_5" --force > "$EVID/avd.log" 2>&1
+          echo "AVD_EXIT=$?" >> "$EVID/status.txt"
+          say "ساخت AVD:" "$EVID/avd.log"
+
+          nohup emulator -avd gmsfree -no-window -no-audio -no-boot-anim \
+            -gpu swiftshader_indirect -camera-back virtualscene -camera-front none \
+            -no-snapshot -no-metrics -wipe-data > "$EVID/emulator.log" 2>&1 &
+          echo "EMULATOR_PID=$!" >> "$EVID/status.txt"
+
+          timeout 120 adb wait-for-device || echo "WAIT_FOR_DEVICE_TIMEOUT" >> "$EVID/status.txt"
+          booted=0
+          for i in $(seq 1 40); do
+            b=$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d "\r")
+            if [ "$b" = "1" ]; then booted=1; echo "BOOTED_AFTER=$((i*15))s" >> "$EVID/status.txt"; break; fi
+            sleep 15
+          done
+          if [ "$booted" != "1" ]; then
+            echo "VERDICT=BOOT_FAILED" >> "$EVID/status.txt"
+            say "❌ امولاتور بوت نشد — لاگ امولاتور:" "$EVID/emulator.log"
+            exit 1
+          fi
+          say "✅ امولاتور بوت شد:" "$EVID/status.txt"
+
+          adb shell input keyevent 82 || true
+          adb shell settings put global airplane_mode_on 1 || true
+          adb shell am broadcast -a android.intent.action.AIRPLANE_MODE > /dev/null 2>&1 || true
+          adb shell svc wifi disable || true
+          adb shell svc data disable || true
+          sleep 3
+          {
+            echo "=== build ==="
+            adb shell getprop ro.build.version.release
+            adb shell getprop ro.product.name
+            echo "=== network must be dead ==="
+            adb shell ping -c 1 -W 3 8.8.8.8 2>&1 || echo "PING_FAILED_AS_EXPECTED"
+            echo "=== google packages on device? ==="
+            adb shell pm list packages 2>/dev/null | grep -i google || echo "NO_GOOGLE_PACKAGES_ON_DEVICE"
+            echo "=== cameras ==="
+            adb shell dumpsys media.camera 2>/dev/null | grep -iE "Number of camera|camera id" | head -5
+          } | tee "$EVID/environment.txt"
+          say "محیط دستگاه (بدون GMS، بدون شبکه):" "$EVID/environment.txt"
+
+          ./gradlew :feature:scanner:connectedDebugAndroidTest --stacktrace > "$EVID/instrumented.log" 2>&1
+          echo "INSTRUMENTED_EXIT=$?" >> "$EVID/status.txt"
+          say "نتیجهٔ تست‌های ابزارداری:" "$EVID/instrumented.log"
+
+          ./gradlew :app:assembleDebug >> "$EVID/instrumented.log" 2>&1
+          apk=$(find app/build/outputs/apk/debug -name "*x86_64*debug.apk" | head -1)
+          if [ -n "$apk" ]; then
+            adb install -r -t "$apk" > "$EVID/install.txt" 2>&1
+            adb shell am start -n com.nhuhuy.algidy/.MainActivity >> "$EVID/install.txt" 2>&1
+            sleep 25
+            {
+              echo "=== top activity ==="
+              adb shell dumpsys activity activities 2>/dev/null | grep -E "mResumedActivity|topResumedActivity" | head -3
+              echo "=== process ==="
+              adb shell pidof com.nhuhuy.algidy || echo "APP_PROCESS_NOT_RUNNING"
+              echo "=== crash buffer ==="
+              adb logcat -d -b crash 2>/dev/null | tail -40
+              echo "=== mlkit log lines ==="
+              adb logcat -d 2>/dev/null | grep -iE "mlkit|barhopper|barcode" | tail -20
+            } | tee "$EVID/app-smoke.txt"
+            adb exec-out screencap -p > "$EVID/screen-launch.png" 2>/dev/null || true
+            say "دود اپ (نصب و اجرا):" "$EVID/app-smoke.txt"
+          fi
+
+      - name: Final publish
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE: ${{ steps.issue.outputs.number }}
+        run: |
+          {
+            echo "## خلاصه"
+            echo '```'
+            cat evidence/status.txt 2>/dev/null || echo "(no status file — job likely died before writing)"
+            echo '```'
+            echo "### junit"
+            echo '```'
+            find upstream -path "*androidTest-results*" -name "*.xml" 2>/dev/null | head -5 | while read -r x; do
+              echo "--- $x"; head -c 3000 "$x"; echo; done
+            echo '```'
+            echo "### device summary"
+            echo '```'
+            cat evidence/environment.txt 2>/dev/null
+            echo '```'
+          } > /tmp/final.md
+          head -c 60000 /tmp/final.md > /tmp/final-cut.md
+          gh issue comment "$ISSUE" --repo "$GITHUB_REPOSITORY" --body-file /tmp/final-cut.md || true
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gms-free
+          if-no-files-found: warn
+          path: evidence/**
