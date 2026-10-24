@@ -349,8 +349,8 @@ jobs:
           disable-animations: true
           emulator-options: -no-window -no-audio -no-boot-anim -camera-back virtualscene -camera-front none -gpu swiftshader_indirect
           script: |
-            mkdir -p "$GITHUB_WORKSPACE/evidence"
-            cd "$GITHUB_WORKSPACE/upstream"
+            EVID="$PWD/evidence"
+            mkdir -p "$EVID"
 
             # ---------- شبکه را کامل قطع کن ----------
             adb shell settings put global airplane_mode_on 1 || true
@@ -358,29 +358,39 @@ jobs:
             adb shell svc wifi disable || true
             adb shell svc data disable || true
             sleep 3
-            { echo "=== network must be dead ===";               adb shell ping -c 1 -W 3 8.8.8.8 2>&1 || echo "PING_FAILED_AS_EXPECTED";               echo "=== GMS on device? ===";               adb shell pm list packages 2>/dev/null | grep -i "google" || echo "NO_GOOGLE_PACKAGES_ON_DEVICE";             } | tee "$GITHUB_WORKSPACE/evidence/network-and-gms.txt"
+            {
+              echo "=== network must be dead ==="
+              adb shell ping -c 1 -W 3 8.8.8.8 2>&1 || echo "PING_FAILED_AS_EXPECTED"
+              echo "=== GMS on device? ==="
+              adb shell pm list packages 2>/dev/null | grep -i "google" || echo "NO_GOOGLE_PACKAGES_ON_DEVICE"
+            } | tee "$EVID/network-and-gms.txt"
+
+            cd upstream || { echo "NO_UPSTREAM_DIR"; ls -la; exit 1; }
 
             # ---------- تست باندل + دوربین ----------
             set +e
-            ./gradlew :feature:scanner:connectedDebugAndroidTest --stacktrace > "$GITHUB_WORKSPACE/evidence/instrumented.log" 2>&1
-            echo "INSTRUMENTED_EXIT=$?" | tee -a "$GITHUB_WORKSPACE/evidence/network-and-gms.txt"
+            chmod +x gradlew
+            ./gradlew :feature:scanner:connectedDebugAndroidTest --stacktrace > "$EVID/instrumented.log" 2>&1
+            echo "INSTRUMENTED_EXIT=$?" | tee -a "$EVID/network-and-gms.txt"
 
             # ---------- دود اپ واقعی ----------
-            ./gradlew :app:assembleDebug >> "$GITHUB_WORKSPACE/evidence/instrumented.log" 2>&1
+            ./gradlew :app:assembleDebug >> "$EVID/instrumented.log" 2>&1
             apk=$(find app/build/outputs/apk/debug -name "*x86_64*debug.apk" | head -1)
-            echo "apk=$apk"
-            adb install -r -t "$apk" > "$GITHUB_WORKSPACE/evidence/install.txt" 2>&1
-            adb shell am start -n com.nhuhuy.algidy/.MainActivity >> "$GITHUB_WORKSPACE/evidence/install.txt" 2>&1
-            sleep 20
-            {
-              echo "=== top activity ==="
-              adb shell dumpsys activity activities 2>/dev/null | grep -E "mResumedActivity|topResumedActivity" | head -3
-              echo "=== is process alive? ==="
-              adb shell pidof com.nhuhuy.algidy || echo "APP_PROCESS_NOT_RUNNING"
-              echo "=== fatal crashes in logcat ==="
-              adb logcat -d -b crash 2>/dev/null | tail -40
-            } | tee "$GITHUB_WORKSPACE/evidence/app-smoke.txt"
-            adb exec-out screencap -p > "$GITHUB_WORKSPACE/evidence/screen-launch.png" 2>/dev/null || true
+            echo "apk=$apk" | tee -a "$EVID/network-and-gms.txt"
+            if [ -n "$apk" ]; then
+              adb install -r -t "$apk" > "$EVID/install.txt" 2>&1
+              adb shell am start -n com.nhuhuy.algidy/.MainActivity >> "$EVID/install.txt" 2>&1
+              sleep 20
+              {
+                echo "=== top activity ==="
+                adb shell dumpsys activity activities 2>/dev/null | grep -E "mResumedActivity|topResumedActivity" | head -3
+                echo "=== is process alive? ==="
+                adb shell pidof com.nhuhuy.algidy || echo "APP_PROCESS_NOT_RUNNING"
+                echo "=== crash buffer ==="
+                adb logcat -d -b crash 2>/dev/null | tail -40
+              } | tee "$EVID/app-smoke.txt"
+              adb exec-out screencap -p > "$EVID/screen-launch.png" 2>/dev/null || true
+            fi
 
       - name: Summarize evidence
         if: always()
