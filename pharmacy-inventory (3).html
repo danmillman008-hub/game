@@ -105,6 +105,7 @@ details summary{cursor:pointer;color:var(--pri);margin-top:8px}
     <h2>بررسی آنلاین (سامانه تیتک)</h2>
     <p class="mut">وقتی کد اسکن‌شده در دیتابیس محلی نباشد، برنامه به‌صورت خودکار و بی‌صدا اطلاعات همان دارو را از سامانه تیتک می‌گیرد و فرم را پر می‌کند. نتیجه در همین دستگاه ذخیره می‌شود تا دفعهٔ بعد آفلاین هم کار کند.</p>
     <label><input type="checkbox" id="s_ol" checked> بررسی آنلاین خودکار فعال باشد</label>
+    <label><input type="checkbox" id="s_relay" checked> اگر اتصال مستقیم بسته بود، از مسیرهای جایگزین عمومی هم تلاش شود <span class="mut">(فقط کد بارکد ارسال می‌شود؛ نیازی به نصب چیزی نیست)</span></label>
     <label>آدرس پروکسی محلی (اختیاری — فقط اگر مرورگر اجازهٔ اتصال مستقیم را نداد)</label>
     <input id="s_proxy" dir="ltr" style="text-align:left" placeholder="http://127.0.0.1:8765/ttac?url={url}">
     <div class="btns">
@@ -572,9 +573,18 @@ function olCacheSet(k,list){S.olcache=S.olcache||{};S.olcache[k]={ts:Date.now(),
   persist()}
 
 /* --- درخواست شبکه (با تایم‌اوت و پشتیبانی پروکسی) --- */
-function olProxyUrl(t){const p=olc().proxy.trim();if(!p)return'';return p.includes('{url}')?p.replace('{url}',encodeURIComponent(t)):p+(p.includes('?')?'&':'?')+'url='+encodeURIComponent(t)}
-async function olGet(target,headers,ms,via){
-  const url=via?olProxyUrl(target):target;if(!url)throw{why:'no-proxy'};
+function olProxyUrlOf(p,t){return p.includes('{url}')?p.replace('{url}',encodeURIComponent(t)):p+(p.includes('?')?'&':'?')+'url='+encodeURIComponent(t)}
+/* مسیرهای تلاش: مستقیم ← پروکسی محلی (اگر تنظیم شده) ← مسیرهای عمومی (اختیاری، بدون نصب) */
+function olRoutes(cfg){
+  const p=(cfg.proxy||'').trim(),r=[{n:'مستقیم',f:u=>u}];
+  if(p)r.push({n:'پروکسی محلی',f:u=>olProxyUrlOf(p,u)});
+  else if(cfg.relay!==false){
+    r.push({n:'مسیر عمومی ۱',f:u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u)});
+    r.push({n:'مسیر عمومی ۲',f:u=>'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(u)});
+  }
+  return r}
+async function olGet(url,headers,ms){
+  if(!url)throw{why:'no-url'};
   const ctl=new AbortController();const timer=setTimeout(()=>ctl.abort(),ms||9000);
   try{
     const r=await fetch(url,{method:'GET',mode:'cors',credentials:'omit',cache:'no-store',redirect:'follow',
@@ -677,10 +687,11 @@ function olFromApi(txt,term){
 async function olQuery(term,opts){
   opts=opts||{};const cfg=olc();const errs=[];
   if(!opts.noCache){const c=olCacheGet(term);if(c)return{list:c.list,route:'حافظهٔ محلی',errs}}
-  const vias=cfg.proxy.trim()?[false,true]:[false];
-  for(const via of vias){
+  for(const rt of olRoutes(cfg)){
+    const ms=rt.n==='مستقیم'?cfg.timeout:Math.min(cfg.timeout,7000);
+    const tag=rt.n==='مستقیم'?'':' ('+rt.n+')';
     try{
-      const r1=await olGet(OL_IRC(term),null,cfg.timeout,via);
+      const r1=await olGet(rt.f(OL_IRC(term)),null,ms);
       const p=olParseIrc(r1.txt);let list=[];
       const d0=olFromRec(p.rec,term);
       if(d0&&((d0.irc||d0.k)||!p.links.length))list.push(d0);
@@ -689,21 +700,21 @@ async function olQuery(term,opts){
         for(const u of p.links.slice(0,n)){
           if(list.length>=n)break;
           try{
-            const r2=await olGet(u,null,cfg.timeout,via);
+            const r2=await olGet(rt.f(u),null,ms);
             const d2=olFromRec(olParseIrc(r2.txt).rec,term);
             if(d2&&!list.some(x=>(x.irc&&x.irc===d2.irc)||(x.name&&x.name===d2.name)))list.push(d2);
           }catch(e){}
         }
       }
-      if(list.length){olCacheSet(term,list);return{list,route:'irc.ttac.ir'+(via?' (پروکسی)':''),errs}}
-      errs.push('irc.ttac.ir: HTTP '+r1.status+' — داده‌ای استخراج نشد');
-    }catch(e){errs.push('irc.ttac.ir: '+(e.why||'خطا')+(e.msg?' — '+e.msg:''))}
+      if(list.length){olCacheSet(term,list);return{list,route:'irc.ttac.ir'+tag,errs}}
+      errs.push('irc.ttac.ir'+tag+': HTTP '+r1.status+' — داده‌ای استخراج نشد');
+    }catch(e){errs.push('irc.ttac.ir'+tag+': '+(e.why||'خطا')+(e.msg?' — '+e.msg:''))}
     try{
-      const r2=await olGet(OL_API(term),OL_API_H,cfg.timeout,via);
+      const r2=await olGet(rt.f(OL_API(term)),OL_API_H,ms);
       const list=olFromApi(r2.txt,term);
-      if(list.length){olCacheSet(term,list);return{list,route:'newapi.ttac.ir'+(via?' (پروکسی)':''),errs}}
-      errs.push('newapi.ttac.ir: HTTP '+r2.status+' — نتیجه‌ای نبود');
-    }catch(e){errs.push('newapi.ttac.ir: '+(e.why||'خطا')+(e.msg?' — '+e.msg:''))}
+      if(list.length){olCacheSet(term,list);return{list,route:'newapi.ttac.ir'+tag,errs}}
+      errs.push('newapi.ttac.ir'+tag+': HTTP '+r2.status+' — نتیجه‌ای نبود');
+    }catch(e){errs.push('newapi.ttac.ir'+tag+': '+(e.why||'خطا')+(e.msg?' — '+e.msg:''))}
   }
   return{list:[],route:'',errs};
 }
@@ -797,19 +808,19 @@ async function olNameSearch(q){
 async function olTest(){
   const el=$('olstat');el.classList.remove('hide');el.innerHTML='⏳ در حال تست اتصال…';
   const cfg=olc(),term='7310432273664919',lines=[];
-  const vias=cfg.proxy.trim()?[false,true]:[false];
-  for(const via of vias){
+  for(const rt of olRoutes(cfg)){
     for(const job of [['irc',OL_IRC(term),null],['api',OL_API(term),OL_API_H]]){
-      const tag=job[0]+(via?' + پروکسی':' (مستقیم)');
+      const tag=rt.n==='مستقیم'?'مستقیم':'مسیر جایگزین';
+      const lab=job[0]+' — '+tag;
       try{
-        const r=await olGet(job[1],job[2],cfg.timeout,via);
+        const r=await olGet(rt.f(job[1]),job[2],Math.min(cfg.timeout,8000));
         const n=job[0]==='api'?olFromApi(r.txt,term).length:(olFromRec(olParseIrc(r.txt).rec,term)?1:0);
-        lines.push(tag+': HTTP '+r.status+(n?' — داده دریافت شد ✔':' — پاسخ آمد ولی داده‌ای استخراج نشد ('+r.txt.length+' بایت)'));
-      }catch(e){lines.push(tag+': ⛔ '+(e.why||'خطا')+(e.msg?' — '+e.msg:''))}
+        lines.push(lab+': HTTP '+r.status+(n?' — داده دریافت شد ✔':' — پاسخ آمد ولی داده‌ای استخراج نشد ('+r.txt.length+' بایت)'));
+      }catch(e){lines.push(lab+': ⛔ '+(e.why||'خطا')+(e.msg?' — '+e.msg:''))}
     }
   }
   el.innerHTML='<b>نتیجهٔ تست اتصال:</b><div class="oldiag">'+esc(lines.join('\n'))+'</div>'+
-    '<div class="mut" style="margin-top:6px">اگر مسیرها «⛔ blocked» دادند یعنی مرورگر CORS را می‌بندد و پروکسی محلی لازم است. اگر HTTP 403/429 دیدید، سامانه موقتاً محدود کرده؛ کمی بعد دوباره تست کنید.</div>';
+    '<div class="mut" style="margin-top:6px">اگر همهٔ مسیرها «⛔ blocked» دادند یعنی مرورگر CORS را می‌بندد؛ در این حالت پروکسی محلی (فایل ttac-proxy.py) لازم است. اگر HTTP 403/429 دیدید، سامانه موقتاً محدود کرده؛ کمی بعد دوباره تست کنید.</div>';
 }
 let stream=null,camRunning=false,autoCam=false,loopT=null,detector=null,zx=null,zxTried=false,busy=false;
 const camErr=m=>{const e=$('camerr');e.innerHTML=m;e.classList.toggle('hide',!m)};
@@ -966,6 +977,7 @@ document.body.addEventListener('click',e=>{const b=e.target.closest('[data-act="
 $('s_warn').onchange=()=>{S.settings.warn=Math.max(1,num($('s_warn').value)||90);$('s_warn').value=fa(S.settings.warn);persist();renderAll()};
 $('s_cal').onchange=()=>{S.settings.cal=$('s_cal').value;persist();renderAll()};
 $('s_ol').onchange=()=>{olc().on=$('s_ol').checked;persist()};
+$('s_relay').onchange=()=>{olc().relay=$('s_relay').checked;persist()};
 $('s_proxy').onchange=()=>{olc().proxy=$('s_proxy').value.trim();persist();toast('ذخیره شد')};
 $('oltest').onclick=olTest;
 $('olclear').onclick=()=>{if(!confirm('حافظهٔ بررسی آنلاین پاک شود؟ (رکوردهای ثبت‌شدهٔ موجودی دست نمی‌خورند)'))return;S.olcache={};persist();toast('حافظهٔ بررسی آنلاین پاک شد')};
@@ -977,7 +989,7 @@ $('wipe').onclick=async()=>{if(confirm('همه موجودی‌ها و تاریخ
 
 /* ================= شروع ================= */
 function init2(){$('s_warn').value=fa(S.settings.warn);$('s_cal').value=S.settings.cal;
-  const oc=olc();$('s_ol').checked=!!oc.on;$('s_proxy').value=oc.proxy||'';
+  const oc=olc();$('s_ol').checked=!!oc.on;$('s_relay').checked=oc.relay!==false;$('s_proxy').value=oc.proxy||'';
   usersList();renderAll();dbStat()}
 (async()=>{
   try{$('user').value=localStorage.getItem('pi_user')||''}catch(e){}
