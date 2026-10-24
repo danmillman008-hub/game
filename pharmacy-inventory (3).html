@@ -995,7 +995,10 @@ async function olAppGet(url,cfg){
     try{
       const r=await olGet(rt.f(url),{'Accept':'application/json, text/plain, */*'},ms);
       if(r.status>=400){errs.push(rt.n+': HTTP '+r.status);continue}
-      return{txt:r.txt,status:r.status,route:rt.n,url:url};
+      const body=String(r.txt==null?'':r.txt).trim();
+      if(body.charAt(0)!=='{'&&body.charAt(0)!=='['){
+        errs.push(rt.n+': پاسخ JSON نبود — '+body.replace(/\s+/g,' ').slice(0,70));continue}
+      return{txt:body,status:r.status,route:rt.n,url:url};
     }catch(e){errs.push(rt.n+': '+((e&&e.why)||'خطا')+(e&&e.msg?' — '+e.msg:''))}
   }
   throw{why:errs.join(' | ')||'blocked'};
