@@ -15,11 +15,8 @@ val databaseModule = module {
             AppDatabase::class.java,
             "stock-database"
         )
-            .addMigrations(
-                AppDatabase.MIGRATION_12_13,
-                AppDatabase.MIGRATION_13_14,
-                AppDatabase.MIGRATION_14_15
-            )
+            // محصول منتشرنشده: اسکیمای قدیمی دور ریخته می‌شود، نه مهاجرت داده می‌شود.
+            .fallbackToDestructiveMigration(dropAllTables = true)
             .build()
     } bind AppDatabase::class
     single { get<AppDatabase>().foodDao() }
