@@ -6,17 +6,22 @@ on:
     paths:
       - '.github/workflows/probe-ttac.yml'
 
+permissions:
+  contents: write
+
 jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
       - name: DNS + connectivity
         run: |
+          exec > >(tee -a /tmp/probe.txt) 2>&1
           set -x
           getent hosts irfdamobile.ttac.ir || true
           curl -sS -m 25 -o /dev/null -w 'connect=%{time_connect} total=%{time_total} code=%{http_code}\n' https://irfdamobile.ttac.ir/ || echo "root failed"
       - name: CheckBarcode (GET, like the app)
         run: |
+          exec > >(tee -a /tmp/probe.txt) 2>&1
           URL='https://irfdamobile.ttac.ir/api/WrapperV2/CheckBarcode?barcode=6260152410148&latitude=0.0&longitude=0.0&device=2&deviceIdentifier=gha-probe&Platform=1&PlatformVersion=30&VersionCode=60031&AppVersion=6.9.1'
           echo "=== GET $URL"
           curl -sS -m 30 -D /tmp/h1 -o /tmp/b1 -H 'Accept: application/json' -H 'User-Agent: ""' "$URL" || echo "curl failed: $?"
@@ -24,6 +29,7 @@ jobs:
           echo '--- body (first 1200 bytes)'; head -c 1200 /tmp/b1 || true; echo
       - name: NfiSearch (GET)
         run: |
+          exec > >(tee -a /tmp/probe.txt) 2>&1
           URL='https://irfdamobile.ttac.ir/api/wrapper/NfiSearch?term=%D8%A7%D8%B3%D8%AA%D8%A7%D9%85%DB%8C%D9%86%D9%88%D9%81%D9%86&pageNumber=1&pageSize=3'
           echo "=== GET $URL"
           curl -sS -m 30 -D /tmp/h2 -o /tmp/b2 "$URL" || echo "curl failed: $?"
@@ -31,6 +37,7 @@ jobs:
           echo '--- body (first 800 bytes)'; head -c 800 /tmp/b2 || true; echo
       - name: CORS preflight simulation
         run: |
+          exec > >(tee -a /tmp/probe.txt) 2>&1
           URL='https://irfdamobile.ttac.ir/api/WrapperV2/CheckBarcode?barcode=6260152410148'
           echo "=== OPTIONS with Origin"
           curl -sS -m 20 -X OPTIONS -D - -o /dev/null -H 'Origin: https://example.com' -H 'Access-Control-Request-Method: GET' "$URL" || echo "curl failed: $?"
@@ -38,8 +45,20 @@ jobs:
           curl -sS -m 20 -D - -o /dev/null -H 'Origin: https://example.com' "$URL" || echo "curl failed: $?"
       - name: CheckSixteenCode / CheckUid shape
         run: |
+          exec > >(tee -a /tmp/probe.txt) 2>&1
           for P in "CheckSixteenCode?sixteenCode=1234567890123456" "CheckUid?uidCode=15978065910231737028"; do
             echo "=== $P"
             curl -sS -m 25 -D - -o /tmp/bo "https://irfdamobile.ttac.ir/api/WrapperV2/$P&device=2&Platform=1&PlatformVersion=30&VersionCode=60031&AppVersion=6.9.1" || echo "curl failed: $?"
             head -c 700 /tmp/bo || true; echo
           done
+
+      - name: Publish result into the repo
+        if: always()
+        run: |
+          set -x
+          cp /tmp/probe.txt ttac-probe-result.txt 2>/dev/null || echo "no output captured" > ttac-probe-result.txt
+          git config user.name "probe-bot"
+          git config user.email "probe-bot@users.noreply.github.com"
+          git add ttac-probe-result.txt
+          git commit -m "probe result [skip ci]" || exit 0
+          git push origin HEAD:${{ github.ref_name }}
