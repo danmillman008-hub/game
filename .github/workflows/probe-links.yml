@@ -12,20 +12,19 @@ jobs:
   links:
     runs-on: ubuntu-latest
     steps:
-      - name: curl final links
+      - name: curl main app + docs
         run: |
-          for P in index.html t1-network.html t2-check.html t3-params.html t4-rate.html t5-batch.html ; do
-            U="https://raw.githack.com/danmillman008-hub/game/45155a22ecce182c7ac348d0920ce223b2e8f2b7/docs/$P"
-            echo "=== $P"
-            curl -sS -m 25 -o /tmp/o -D /tmp/h -w 'code=%{http_code} size=%{size_download} ' "$U" || echo "curl failed $?"
+          SHA=8184b2836f28f27fe56b6460509956216dd200a6
+          for U in \
+            "https://raw.githack.com/danmillman008-hub/game/$SHA/pharmacy-inventory%20(3).html" \
+            "https://raw.githack.com/danmillman008-hub/game/$SHA/pharmacy-inventory (3).html" \
+            "https://raw.githack.com/danmillman008-hub/game/$SHA/docs/t2-check.html" ; do
+            echo "=== $U"
+            curl -sS -m 25 -o /tmp/o -D /tmp/h -w 'code=%{http_code} size=%{size_download}\n' "$U" || echo "curl failed $?"
             grep -i -E '^(content-type:)' /tmp/h | tr -d '\r' || true
-            grep -c 'id="go"' /tmp/o | tr '\n' ' '; echo "buttons"
-          done > /tmp/links.txt 2>&1
+            grep -c 'CheckBarcode?barcode' /tmp/o | tr '\n' ' '; echo "hits"
+          done > /tmp/l.txt 2>&1
           python3 - <<'PY'
-          body=open('/tmp/links.txt',encoding='utf-8',errors='replace').read()
-          body=body.replace('%','%25').replace(chr(13),'').replace(chr(10),'%0A')
-          CH=9000
-          for i in range(0,min(len(body),9*CH),CH):
-              print('::notice title=final-%d::%s'%(i//CH,body[i:i+CH]))
-          print('::notice title=final-len::%d'%len(body))
+          b=open('/tmp/l.txt',encoding='utf-8',errors='replace').read().replace('%','%25').replace(chr(13),'').replace(chr(10),'%0A')
+          print('::notice title=main::%s'%b[:9000])
           PY
