@@ -108,6 +108,15 @@ details summary{cursor:pointer;color:var(--pri);margin-top:8px}
     <label><input type="checkbox" id="s_relay" checked> اگر اتصال مستقیم بسته بود، از مسیرهای جایگزین عمومی هم تلاش شود <span class="mut">(فقط کد بارکد ارسال می‌شود؛ نیازی به نصب چیزی نیست)</span></label>
     <label>آدرس پروکسی محلی (اختیاری — فقط اگر مرورگر اجازهٔ اتصال مستقیم را نداد)</label>
     <input id="s_proxy" dir="ltr" style="text-align:left" placeholder="http://127.0.0.1:8765/ttac?url={url}">
+    <label>کلید API رسمی تیتک <b dir="ltr">X-SSP-Api-Key</b> (اگر دارید)</label>
+    <input id="s_sspkey" dir="ltr" style="text-align:left" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
+    <label>آدرس سرویس رسمی (پیش‌فرض: محیط تست تیتک)</label>
+    <input id="s_sspbase" dir="ltr" style="text-align:left" placeholder="https://api.ttac.ir/insurances/test/v74/">
+    <div class="row">
+      <div><label>نام کاربری سرویس (اختیاری)</label><input id="s_sspuser" dir="ltr" style="text-align:left"></div>
+      <div><label>رمز سرویس (اختیاری)</label><input id="s_ssppass" type="password" dir="ltr" style="text-align:left"></div>
+    </div>
+    <p class="mut">این همان سرویس رسمی <b dir="ltr">checksinglebarcodeuid</b> است که سازمان غذا و دارو برای داروخانه‌ها/بیمه‌ها ارائه می‌دهد: با یک درخواست، نام فارسی و لاتین، IRC، شمارهٔ بچ، تاریخ انقضا، قیمت و وضعیت اصالت همان UID را برمی‌گرداند. کلید را از پشتیبانی تیتک یا شرکت نرم‌افزاری داروخانه بگیرید. بدون کلید، برنامه از مسیر «کاتالوگ + استعلام» استفاده می‌کند.</p>
     <label>آدرس استعلام اصالت (پیشرفته — فقط اگر خودتان از DevTools پیدا کردید)</label>
     <input id="s_authurl" dir="ltr" style="text-align:left" placeholder="https://ttac.ir/Inquiry?uid={uid}">
     <p class="mut">صفحهٔ «استعلام اصالت» تیتک از نوع Blazor است و کد را با جاوااسکریپت خودش می‌فرستد؛ بنابراین برنامه به‌طور پیش‌فرض چند آدرس احتمالی را امتحان می‌کند. اگر روزی در تب Network مرورگر آدرس واقعی را دیدید، آن را اینجا بگذارید (به‌جای کد از <b dir="ltr">{uid}</b> استفاده کنید).</p>
@@ -746,6 +755,99 @@ function olFromApi(txt,term){
   return out;
 }
 
+/* --- سرویس رسمی تیتک: checksinglebarcodeuid ---
+   POST {base}checksinglebarcodeuid   هدر: X-SSP-Api-Key
+   بدنه: {PrescriptionId, BarcodeUid, Amount, GenericCode [, Username, Password]}
+   پاسخ: {ErrorCode, ErrorMessage, ItemsInfo:[{PersianName,EnglishName,Irc,BatchCode,Expiration,Price,Status,StatusMessage,UnitConsumed,GenericCode,ProductType,...}]}
+   (الگو و فیلدها از پروژهٔ متن‌باز HealthESBProject گرفته شده است) */
+const OL_SSP_DEFAULT='https://api.ttac.ir/insurances/test/v74/';
+function olSspBase(){
+  let b=(olc().sspBase||'').trim()||OL_SSP_DEFAULT;
+  if(!/^https?:/i.test(b))b='https://'+b;
+  if(!/\/$/.test(b))b+='/';
+  return b;
+}
+function olFromSsp(j,uid){
+  const items=(j&&(j.ItemsInfo||j.itemsInfo))||null;
+  if(!Array.isArray(items)||!items.length)return null;
+  const it=items[0]||{};
+  const name=olnorm(it.PersianName||it.persianName||'');
+  const en=olnorm(it.EnglishName||it.englishName||'');
+  const irc=olDig(it.Irc||it.irc||'');
+  const k=olGtin(it.Gtin||it.gtin||'')||'';
+  const d={k,irc,name,en,co:'',pack:0,
+    price:Number(it.Price||it.price)||0,
+    gen:olnorm(it.GenericCode||it.genericCode||''),
+    form:olnorm(it.ProductType||it.productType||''),
+    batch:olnorm(it.BatchCode||it.batchCode||''),
+    expRaw:olnorm(it.Expiration||it.expiration||''),
+    uid:olnorm(it.Uid||it.uid||it.BarcodeUid||it.barcodeUid||'')||String(uid||''),
+    prod:olnorm(it.Manufacturing||it.manufacturing||''),
+    status:it.Status!=null?it.Status:(it.status!=null?it.status:null),
+    statusMsg:olnorm(it.StatusMessage||it.statusMessage||''),
+    used:it.UnitConsumed==null?null:!!it.UnitConsumed,
+    src:'ttac',ts:Date.now()};
+  if(!d.name&&!d.irc)return null;
+  d.s=(d.name+' '+d.co+' '+d.k+' '+d.irc).toLowerCase();
+  return d;
+}
+async function olSspCheck(uid,opts){
+  const cfg=olc();const key=(cfg.sspKey||'').trim();
+  if(!key)throw{why:'no-key'};
+  const body={PrescriptionId:Number(opts&&opts.prescriptionId)||0,BarcodeUid:String(uid),Amount:Number(opts&&opts.amount)||0,GenericCode:String((opts&&opts.genericCode)||'')};
+  if((cfg.sspUser||'').trim())body.Username=cfg.sspUser.trim();
+  if((cfg.sspPass||'').trim())body.Password=cfg.sspPass;
+  const bases=[olSspBase()];
+  if(/^https:/i.test(bases[0]))bases.push('http://'+bases[0].slice(8));
+  const errs=[];
+  for(const b of bases){
+    const url=b+'checksinglebarcodeuid';
+    const ctl=new AbortController();const timer=setTimeout(()=>ctl.abort(),Math.max(cfg.timeout||9000,10000));
+    try{
+      const r=await fetch(url,{method:'POST',mode:'cors',credentials:'omit',cache:'no-store',redirect:'follow',
+        headers:{'Content-Type':'application/json','Accept':'application/json','X-SSP-Api-Key':key},
+        body:JSON.stringify(body),signal:ctl.signal});
+      const txt=await r.text();
+      olLastRaw.push({url:url+' [POST]',status:r.status,n:txt.length,txt:String(txt).slice(0,200000)});
+      if(olLastRaw.length>15)olLastRaw.shift();
+      let j=null;try{j=JSON.parse(txt)}catch(e){}
+      if(j){
+        const code=j.ErrorCode!=null?j.ErrorCode:(j.errorCode!=null?j.errorCode:null);
+        const msg=olnorm(j.ErrorMessage||j.errorMessage||'');
+        const d=olFromSsp(j,uid);
+        if(d)return{d,j,code,msg,url,b};
+        if(code!==null&&code!==0)return{err:'سرویس رسمی: کد '+code+(msg?' — '+msg:''),j,url};
+        return{err:'سرویس رسمی: پاسخ بدون داده (کد '+(code==null?'?':code)+')',j,url};
+      }
+      if(!r.ok)errs.push(b+': HTTP '+r.status+' — '+(txt||'').slice(0,120));
+      else errs.push(b+': پاسخ JSON نبود ('+txt.length+' بایت)');
+    }catch(e){
+      errs.push(b+': '+((e&&e.name==='AbortError')?'timeout':(key?'blocked/CORS':'blocked'))+(e&&e.message?' — '+e.message:''));
+    }finally{clearTimeout(timer)}
+  }
+  return{err:errs.join(' | ')};
+}
+function sspExpIso(s){
+  if(!s)return null;
+  s=String(s).trim();
+  let m=s.match(/^(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})/);            // 2027-05-12
+  if(m)return isoF(+m[1],+m[2],+m[3]);
+  m=s.match(/^(\d{2})[-\/](\d{1,2})[-\/](\d{1,2})$/);               // 27-05-12
+  if(m)return isoF(2000+ +m[1],+m[2],+m[3]);
+  m=en(s).match(/^(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})$/);           // 1406/05/12 (شمسی)
+  if(m){const y=+m[1];if(y>1200&&y<1500)return jToIso(y,+m[2],+m[3]);const g=jToIso(y,+m[2],+m[3]);return g}
+  m=en(s).match(/^(\d{4})(\d{2})(\d{2})$/);
+  if(m)return isoF(+m[1],+m[2],+m[3]);
+  return null;
+}
+function olApplySsp(d){
+  olApply(d,d.uid||'');
+  if(d.batch&&!$('f_batch').value.trim()){$('f_batch').value=d.batch}
+  const iso=d.expRaw?sspExpIso(d.expRaw):null;
+  if(iso){const cur=readExp();if(!cur||cur==='bad'){setExp(iso);$('expsrc').textContent='(از سامانهٔ تیتک)'}}
+  hint();
+}
+
 /* --- استعلام --- */
 async function olQuery(term,opts){
   opts=opts||{};const cfg=olc();const errs=[];
@@ -828,6 +930,13 @@ function olVerdict(html){
 }
 async function olAuthProbe(v){
   const cfg=olc();const out={tried:0,hit:null,errs:[]};
+  if((cfg.sspKey||'').trim()){
+    try{
+      const r=await olSspCheck(v,{});
+      if(r&&r.d)return{tried:1,hit:{d:r.d,verdict:r.d.statusMsg?{ok:true,msg:r.d.statusMsg}:null,url:r.url,route:'سرویس رسمی تیتک',bytes:0},errs:[]};
+      if(r&&r.err)out.errs.push(r.err);
+    }catch(e){out.errs.push('سرویس رسمی: '+(e.why||e.message||'خطا'))}
+  }
   const tpls=[];
   if((cfg.authUrl||'').trim())tpls.push(cfg.authUrl.trim());
   if(cfg.authProbe!==false)tpls.push.apply(tpls,OL_AUTH_DEFAULT);
@@ -907,6 +1016,25 @@ async function olScan(terms){
   const kinds=terms.map(t=>OL_KIND_FA[olKind(t)]+' '+fa(t));
   olShow(olSpinHtml('بررسی آنلاین در تیتک… <span class="mut">'+esc(kinds.join(' · '))+'</span>'));
   const errs=[];
+  /* ۱) سرویس رسمی checksinglebarcodeuid (اگر کلید API تنظیم شده باشد) */
+  if((cfg.sspKey||'').trim()){
+    const t0=terms.find(t=>olKind(t)==='uid')||terms.find(t=>olKind(t)==='auth16')||terms[0];
+    olShow(olSpinHtml('استعلام از سرویس رسمی تیتک… <span class="mut">'+esc(OL_KIND_FA[olKind(t0)])+' '+fa(t0)+'</span>'));
+    let r=null;
+    try{r=await olSspCheck(t0,{})}catch(e){errs.push('سرویس رسمی: '+(e.why||e.message||'خطا'))}
+    if(r&&r.d){
+      olApplySsp(r.d);
+      const st=r.d.statusMsg||(r.d.status!=null?'کد وضعیت '+fa(r.d.status):'');
+      const used=r.d.used===true?'<div class="olmeta">⚠ این کد قبلاً مصرف/فروخته شده است.</div>':(r.d.used===false?'<div class="olmeta">✔ این کد هنوز مصرف نشده است.</div>':'');
+      olShow('<div class="olrow"><span class="badge">✔ سرویس رسمی تیتک</span><b>'+esc(r.d.name||'(بدون نام)')+'</b></div>'+
+        (st?'<div class="olmeta">وضعیت اصالت: '+esc(st)+'</div>':'')+used+olMetaHtml(r.d)+
+        (r.d.batch||r.d.expRaw?'<div class="olmeta">بچ: <b dir="ltr">'+esc(r.d.batch||'—')+'</b> · انقضا: <b dir="ltr">'+esc(r.d.expRaw||'—')+'</b> <span class="mut">(اگر خالی بود، خودکار در فرم گذاشته شد)</span></div>':'')+
+        '<div class="olmeta">نوع کد: '+esc(OL_KIND_FA[olKind(t0)])+' — منبع: '+esc(r.url||'api.ttac.ir')+'</div>','ok');
+      toast('✔ از سرویس رسمی تیتک دریافت شد');
+      return;
+    }
+    if(r&&r.err)errs.push(r.err);
+  }
   for(const t of terms){
     let r;try{r=await olQuery(t,{})}catch(e){errs.push('شبکه: '+(e.message||e));continue}
     if(r.errs&&r.errs.length)errs.push.apply(errs,r.errs);
@@ -979,6 +1107,14 @@ async function olTest(){
     const r=await olGet(OL_API(term),OL_API_H,Math.min(cfg.timeout,7000));
     lines.push('API موبایل: HTTP '+r.status+' — '+olFromApi(r.txt,term).length+' نتیجه');
   }catch(e){lines.push('API موبایل: ⛔ '+(e.why||'خطا')+' (طبیعی است؛ معمولاً CORS می‌بندد)')}
+  if((cfg.sspKey||'').trim()){
+    try{
+      const r=await olSspCheck('15978065910231737028',{});
+      lines.push('سرویس رسمی tیتک: '+(r&&r.d?'داده دریافت شد ✔ ('+(r.d.name||'')+')':(r&&r.err)||'بدون داده'));
+    }catch(e){lines.push('سرویس رسمی تیتک: ⛔ '+(e.why||e.message||'خطا'))}
+  }else{
+    lines.push('سرویس رسمی تیتک: کلید API تنظیم نشده (اختیاری)');
+  }
   el.innerHTML='<b>نتیجهٔ تست اتصال:</b><div class="oldiag">'+esc(lines.join('\n'))+'</div>'+
     '<div class="btns"><button class="sm" id="olrawsave">💾 ذخیرهٔ پاسخ خام (برای بررسی)</button></div>'+
     '<div class="mut" style="margin-top:6px">اگر «ردیف نتیجه: ۰» بود یعنی سایت باز شد ولی برای این کد چیزی پیدا نکرد؛ اگر «ساختار صفحه ناشناخته» دیدید، فایل پاسخ خام را بفرستید.</div>';
@@ -1055,6 +1191,12 @@ async function olExplore(){
     ['ttac /Inquiry?uid=',     v=>'https://ttac.ir/Inquiry?uid='+v],
   ];
   const v=SAMPLE[0];
+  const cfgKey=(cfg.sspKey||'').trim();
+  try{
+    const r=await olSspCheck(v,{});
+    if(r&&r.d)lines.push('✔ سرویس رسمی checksinglebarcodeuid: داده دریافت شد — «'+(r.d.name||'')+'» (IRC '+fa(r.d.irc||'—')+')');
+    else lines.push('· سرویس رسمی checksinglebarcodeuid: '+(r&&r.err?r.err:'بدون داده')+(cfgKey?'':' — کلید API تنظیم نشده'));
+  }catch(e){lines.push('· سرویس رسمی checksinglebarcodeuid: '+(e.why==='no-key'?'کلید API تنظیم نشده':(e.message||'خطا')))}
   for(const [name,mk] of cand){
     const u=mk(v);
     try{
@@ -1230,6 +1372,9 @@ $('s_cal').onchange=()=>{S.settings.cal=$('s_cal').value;persist();renderAll()};
 $('s_ol').onchange=()=>{olc().on=$('s_ol').checked;persist()};
 $('s_relay').onchange=()=>{olc().relay=$('s_relay').checked;persist()};
 $('s_authurl').onchange=()=>{olc().authUrl=$('s_authurl').value.trim();persist();toast('ذخیره شد')};
+['s_sspkey','s_sspbase','s_sspuser','s_ssppass'].forEach(id=>{$(id).onchange=()=>{
+  const c=olc();c.sspKey=$('s_sspkey').value.trim();c.sspBase=$('s_sspbase').value.trim();
+  c.sspUser=$('s_sspuser').value.trim();c.sspPass=$('s_ssppass').value;persist();toast('ذخیره شد')}});
 $('s_proxy').onchange=()=>{olc().proxy=$('s_proxy').value.trim();persist();toast('ذخیره شد')};
 $('oltest').onclick=olTest;
 $('olharv').onclick=nfiHarvest;$('olharvstop').onclick=()=>{harvCancel=true;toast('توقف…')};
@@ -1244,7 +1389,8 @@ $('wipe').onclick=async()=>{if(confirm('همه موجودی‌ها و تاریخ
 /* ================= شروع ================= */
 function init2(){$('s_warn').value=fa(S.settings.warn);$('s_cal').value=S.settings.cal;
   const oc=olc();$('s_ol').checked=!!oc.on;$('s_relay').checked=oc.relay===true;$('s_proxy').value=oc.proxy||'';
-  $('s_authurl').value=oc.authUrl||'';
+  $('s_authurl').value=oc.authUrl||'';$('s_sspkey').value=oc.sspKey||'';$('s_sspbase').value=oc.sspBase||'';
+  $('s_sspuser').value=oc.sspUser||'';$('s_ssppass').value=oc.sspPass||'';
   usersList();renderAll();dbStat()}
 (async()=>{
   try{$('user').value=localStorage.getItem('pi_user')||''}catch(e){}
