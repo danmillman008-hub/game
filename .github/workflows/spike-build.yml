@@ -302,6 +302,133 @@ jobs:
             upstream/app/build/outputs/apk/release/**/*.apk
             upstream/app/build/outputs/apk/debug/**/*.apk
 
+  # --------------------------------------------------- GMS-free runtime proof
+  gms-free:
+    name: gms-free-emulator
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Clone Algidy
+        run: git clone --depth 1 --branch "$ALGIDY_REF" "$ALGIDY_REPO" upstream
+
+      - name: Apply spike patches + lean profile + instrumented tests
+        run: |
+          mkdir -p upstream/core/designsystem/src/main/res/font
+          cp spike/assets/vazirmatn.ttf upstream/core/designsystem/src/main/res/font/vazirmatn.ttf
+          cd upstream && git apply --verbose ../spike/patches/*.patch
+          cd ..
+          bash spike/scripts/apply-lean.sh upstream
+          bash spike/scripts/apply-androidtest.sh spike upstream
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Ensure Android SDK 36
+        run: |
+          SDK="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          if [ -x "$SDK/cmdline-tools/latest/bin/sdkmanager" ]; then
+            yes | "$SDK/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0" >/dev/null 2>&1 || true
+          fi
+
+      - name: Instrumented tests on AOSP image (NO Google APIs)
+        id: emu
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: default
+          arch: x86_64
+          profile: pixel_5
+          disable-animations: true
+          emulator-options: -no-window -no-audio -no-boot-anim -camera-back virtualscene -camera-front none -gpu swiftshader_indirect
+          script: |
+            mkdir -p "$GITHUB_WORKSPACE/evidence"
+            cd "$GITHUB_WORKSPACE/upstream"
+
+            # ---------- شبکه را کامل قطع کن ----------
+            adb shell settings put global airplane_mode_on 1 || true
+            adb shell am broadcast -a android.intent.action.AIRPLANE_MODE >/dev/null 2>&1 || true
+            adb shell svc wifi disable || true
+            adb shell svc data disable || true
+            sleep 3
+            { echo "=== network must be dead ===";               adb shell ping -c 1 -W 3 8.8.8.8 2>&1 || echo "PING_FAILED_AS_EXPECTED";               echo "=== GMS on device? ===";               adb shell pm list packages 2>/dev/null | grep -i "google" || echo "NO_GOOGLE_PACKAGES_ON_DEVICE";             } | tee "$GITHUB_WORKSPACE/evidence/network-and-gms.txt"
+
+            # ---------- تست باندل + دوربین ----------
+            set +e
+            ./gradlew :feature:scanner:connectedDebugAndroidTest --stacktrace > "$GITHUB_WORKSPACE/evidence/instrumented.log" 2>&1
+            echo "INSTRUMENTED_EXIT=$?" | tee -a "$GITHUB_WORKSPACE/evidence/network-and-gms.txt"
+
+            # ---------- دود اپ واقعی ----------
+            ./gradlew :app:assembleDebug >> "$GITHUB_WORKSPACE/evidence/instrumented.log" 2>&1
+            apk=$(find app/build/outputs/apk/debug -name "*x86_64*debug.apk" | head -1)
+            echo "apk=$apk"
+            adb install -r -t "$apk" > "$GITHUB_WORKSPACE/evidence/install.txt" 2>&1
+            adb shell am start -n com.nhuhuy.algidy/.MainActivity >> "$GITHUB_WORKSPACE/evidence/install.txt" 2>&1
+            sleep 20
+            {
+              echo "=== top activity ==="
+              adb shell dumpsys activity activities 2>/dev/null | grep -E "mResumedActivity|topResumedActivity" | head -3
+              echo "=== is process alive? ==="
+              adb shell pidof com.nhuhuy.algidy || echo "APP_PROCESS_NOT_RUNNING"
+              echo "=== fatal crashes in logcat ==="
+              adb logcat -d -b crash 2>/dev/null | tail -40
+            } | tee "$GITHUB_WORKSPACE/evidence/app-smoke.txt"
+            adb exec-out screencap -p > "$GITHUB_WORKSPACE/evidence/screen-launch.png" 2>/dev/null || true
+
+      - name: Summarize evidence
+        if: always()
+        run: |
+          mkdir -p artifacts
+          cp -r evidence/* artifacts/ 2>/dev/null || true
+          find upstream -path "*androidTest-results*" -name "*.xml" 2>/dev/null | head -20 > /tmp/xmls.txt
+          {
+            echo "run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo
+            cat evidence/network-and-gms.txt 2>/dev/null || echo "(no network log)"
+            echo
+            echo '```'
+            for f in $(cat /tmp/xmls.txt); do
+              echo "--- $f"
+              head -c 4000 "$f"
+              echo
+            done
+            echo '```'
+            echo
+            cat evidence/app-smoke.txt 2>/dev/null || echo "(no app smoke log)"
+            echo
+            echo '```'
+            tail -c 8000 evidence/instrumented.log 2>/dev/null || echo "(no instrumented log)"
+            echo '```'
+          } > gms-report.md
+          head -60 gms-report.md
+
+      - name: Publish GMS-free verdict
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          head -c 60000 gms-report.md > gms-body.md
+          gh issue create --repo "$GITHUB_REPOSITORY" \
+            --title "GMS-free runtime verdict (run $RUN_ID)" \
+            --body-file gms-body.md
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gms-free
+          if-no-files-found: warn
+          path: |
+            gms-report.md
+            evidence/**
+
   # ------------------------------------------------------------------ report
   report:
     name: publish-report
