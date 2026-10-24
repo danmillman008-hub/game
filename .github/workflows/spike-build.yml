@@ -181,21 +181,11 @@ jobs:
             echo "### unit tests (پس از قرنطینهٔ ۴ فایل تست کهنه)"
             cat tests-exit.txt 2>/dev/null || true
             echo
-            echo "| module | tests | failures | skipped |"
-            echo "|---|---|---|---|"
-            find upstream -path "*test-results/testDebugUnitTest/*.xml" 2>/dev/null | while read -r f; do
-              python3 - "$f" <<'PY'
-import sys, xml.etree.ElementTree as ET
-try:
-    r = ET.parse(sys.argv[1]).getroot()
-except Exception:
-    raise SystemExit
-m = sys.argv[1].split('/upstream/')[-1].split('/build/')[0]
-print(f"| {m} | {r.get('tests')} | {r.get('failures')} | {r.get('skipped')} |")
-PY
-            done | sort | uniq
+            python3 spike/scripts/summarize_tests.py upstream
             echo
-            echo '```'; tail -c 5000 tests.log 2>/dev/null || true; echo '```'
+            echo '```'
+            tail -c 5000 tests.log 2>/dev/null || true
+            echo '```'
           } > tests-report.md
           head -30 tests-report.md
       - uses: actions/upload-artifact@v4
