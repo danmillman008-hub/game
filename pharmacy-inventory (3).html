@@ -108,6 +108,9 @@ details summary{cursor:pointer;color:var(--pri);margin-top:8px}
     <label><input type="checkbox" id="s_relay" checked> اگر اتصال مستقیم بسته بود، از مسیرهای جایگزین عمومی هم تلاش شود <span class="mut">(فقط کد بارکد ارسال می‌شود؛ نیازی به نصب چیزی نیست)</span></label>
     <label>آدرس پروکسی محلی (اختیاری — فقط اگر مرورگر اجازهٔ اتصال مستقیم را نداد)</label>
     <input id="s_proxy" dir="ltr" style="text-align:left" placeholder="http://127.0.0.1:8765/ttac?url={url}">
+    <label>آدرس استعلام اصالت (پیشرفته — فقط اگر خودتان از DevTools پیدا کردید)</label>
+    <input id="s_authurl" dir="ltr" style="text-align:left" placeholder="https://ttac.ir/Inquiry?uid={uid}">
+    <p class="mut">صفحهٔ «استعلام اصالت» تیتک از نوع Blazor است و کد را با جاوااسکریپت خودش می‌فرستد؛ بنابراین برنامه به‌طور پیش‌فرض چند آدرس احتمالی را امتحان می‌کند. اگر روزی در تب Network مرورگر آدرس واقعی را دیدید، آن را اینجا بگذارید (به‌جای کد از <b dir="ltr">{uid}</b> استفاده کنید).</p>
     <div class="btns">
       <button id="oltest">🔌 تست اتصال به تیتک</button>
       <button id="olclear">🗑 پاک‌کردن حافظهٔ بررسی آنلاین</button>
@@ -729,6 +732,58 @@ function olTerms(text){
   return out.slice(0,3);
 }
 
+/* --- نوع کد: GTIN / IRC / UID / کد اصالت ۱۶ رقمی / GS1 --- */
+function olKind(t){
+  t=String(t||'').replace(/\D/g,'');
+  if(/^\d{20}$/.test(t))return'uid';
+  if(/^\d{16}$/.test(t))return'auth16';
+  if(/^\d{14}$/.test(t))return'gtin';
+  if(/^\d{13}$/.test(t)||/^\d{12}$/.test(t)||/^\d{8,14}$/.test(t))return'gtin';
+  return'code';
+}
+const OL_KIND_FA={uid:'شناسهٔ رهگیری UID',auth16:'کد اصالت',gtin:'GTIN',code:'کد'};
+
+/* --- استعلام اصالت UID / کد ۱۶ رقمی در سامانهٔ تیتک (پشت صحنه) ---
+   صفحهٔ ttac.ir/Inquiry یک اپلیکیشن Blazor است که با جاوااسکریپت سمت خودش کار می‌کند؛
+   از این رو در حالت عادی دادهٔ خام نمی‌دهد. برای همین چند آدرس احتمالی با پارامتر کد
+   امتحان می‌شود و اگر کاربر «آدرس استعلام» را در تنظیمات وارد کرده باشد، همان اول.
+   هر پاسخی که برگردد و قابل استخراج باشد استفاده می‌شود؛ در غیر این صورت بی‌صدا رد می‌شود. */
+const OL_AUTH_DEFAULT=['https://ttac.ir/Inquiry?uid={v}','https://ttac.ir/Inquiry?UID={v}',
+  'https://ttac.ir/UidEsalatForm?uid={v}','https://ttac.ir/Inquiry?authCode={v}'];
+const OL_YES=/(تایید|تأیید|معتبر|اصیل|صحیح|دارای برچسب اصالت)/;
+const OL_NO=/(یافت نشد|نامعتبر|نامعتبر|جعل|ناموجود|invalid|not\s*found)/i;
+function olVerdict(html){
+  const txt=olnorm(String(html||'').replace(/<[^>]+>/g,' ')).slice(0,6000);
+  if(OL_NO.test(txt))return{ok:false,msg:'سامانه برای این کد نتیجهٔ معتبر برنگرداند.'};
+  if(OL_YES.test(txt)){const m=txt.match(OL_YES);return{ok:true,msg:'سامانه اصالت این کد را تأیید کرد ('+m[0]+').'}}
+  return null;
+}
+async function olAuthProbe(v){
+  const cfg=olc();const out={tried:0,hit:null,errs:[]};
+  const tpls=[];
+  if((cfg.authUrl||'').trim())tpls.push(cfg.authUrl.trim());
+  if(cfg.authProbe!==false)tpls.push.apply(tpls,OL_AUTH_DEFAULT);
+  for(const tpl of tpls){
+    const u=tpl.replace(/\{uid\}|\{v\}/g,encodeURIComponent(v));
+    for(const rt of olRoutes(cfg)){
+      out.tried++;
+      try{
+        const r=await olGet(rt.f(u),null,Math.min(cfg.timeout,7000));
+        if(!r.ok&&r.status>=400){out.errs.push(rt.n+': HTTP '+r.status+' — '+u.slice(0,60));continue}
+        const rec=olParseIrc(r.txt).rec;
+        const d=olFromRec(rec,v);
+        const verdict=olVerdict(r.txt);
+        if(d||verdict){
+          out.hit={d:d||null,verdict,url:u,route:rt.n,bytes:r.txt.length};
+          return out;
+        }
+        out.errs.push(rt.n+': پاسخ آمد ولی داده‌ای نبود ('+r.txt.length+' بایت) — '+u.slice(0,60));
+      }catch(e){out.errs.push(rt.n+': '+(e.why||'خطا')+' — '+u.slice(0,50))}
+    }
+  }
+  return out;
+}
+
 /* --- نمایش و اعمال نتیجه --- */
 function olMetaHtml(d){
   const b=[];
@@ -776,7 +831,8 @@ async function olScan(terms){
   terms=terms||[];const cfg=olc();
   if(!cfg.on){olShow('<div class="mut">بررسی آنلاین در تنظیمات خاموش است.</div>');return}
   if(!terms.length){olShow('<div class="mut">کد قابل استعلام پیدا نشد؛ مشخصات را دستی وارد کنید.</div>');return}
-  olShow(olSpinHtml('بررسی آنلاین در تیتک… <span class="mut">('+terms.map(fa).join(' · ')+')</span>'));
+  const kinds=terms.map(t=>OL_KIND_FA[olKind(t)]+' '+fa(t));
+  olShow(olSpinHtml('بررسی آنلاین در تیتک… <span class="mut">'+esc(kinds.join(' · '))+'</span>'));
   const errs=[];
   for(const t of terms){
     let r;try{r=await olQuery(t,{})}catch(e){errs.push('شبکه: '+(e.message||e));continue}
@@ -784,10 +840,28 @@ async function olScan(terms){
     if(r.list&&r.list.length){
       const d=r.list[0];olApply(d,t);
       olShow('<div class="olrow"><span class="badge">✔ از تیتک</span><b>'+esc(d.name||'(بدون نام)')+'</b></div>'+olMetaHtml(d)+
-        '<div class="olmeta">منبع: '+esc(r.route)+' — فرم پر شد و برای دفعات بعد در همین دستگاه ذخیره شد.</div>','ok');
+        '<div class="olmeta">نوع کد: '+esc(OL_KIND_FA[olKind(t)])+' — منبع: '+esc(r.route)+' — فرم پر شد و برای دفعات بعد در همین دستگاه ذخیره شد.</div>','ok');
       toast('✔ مشخصات از تیتک دریافت شد');
       return;
     }
+  }
+  // مرحلهٔ دوم: استعلام اصالت (UID / کد ۱۶ رقمی)
+  const authTerm=terms.find(t=>olKind(t)==='uid')||terms.find(t=>olKind(t)==='auth16');
+  if(authTerm){
+    olShow(olSpinHtml('کاتالوگ نتیجه نداد؛ استعلام اصالت در حال انجام است… <span class="mut">'+fa(authTerm)+'</span>'));
+    let a;try{a=await olAuthProbe(authTerm)}catch(e){a={errs:['استعلام: '+(e.message||e)],tried:0,hit:null}}
+    if(a.hit){
+      const d=a.hit.d;
+      if(d)olApply(d,authTerm);
+      const v=a.hit.verdict;
+      olShow('<div class="olrow"><span class="badge">✔ استعلام اصالت</span><b>'+(d&&d.name?esc(d.name):'کد در سامانه ثبت است')+'</b></div>'+
+        (v?'<div class="olmeta">'+esc(v.msg)+'</div>':'')+(d?olMetaHtml(d):'')+
+        '<div class="olmeta">نوع کد: '+esc(OL_KIND_FA[olKind(authTerm)])+' — منبع: '+esc(a.hit.route)+'</div>','ok');
+      toast('✔ استعلام اصالت انجام شد');
+      return;
+    }
+    errs.push.apply(errs,a.errs||[]);
+    if(a.tried)errs.push('— استعلام اصالت: '+a.tried+' مسیر امتحان شد و پاسخی قابل خواندن نبود.');
   }
   olFail(errs,terms.slice());
 }
@@ -819,6 +893,10 @@ async function olTest(){
       }catch(e){lines.push(lab+': ⛔ '+(e.why||'خطا')+(e.msg?' — '+e.msg:''))}
     }
   }
+  try{
+    const a=await olAuthProbe('15978065910231737028');
+    lines.push('استعلام اصالت (نمونه): '+(a.hit?'✔ پاسخ قابل خواندن ('+a.hit.route+')':'— پاسخی قابل خواندن نبود ('+a.tried+' مسیر)'));
+  }catch(e){lines.push('استعلام اصالت (نمونه): ⛔ '+(e.message||e))}
   el.innerHTML='<b>نتیجهٔ تست اتصال:</b><div class="oldiag">'+esc(lines.join('\n'))+'</div>'+
     '<div class="mut" style="margin-top:6px">اگر همهٔ مسیرها «⛔ blocked» دادند یعنی مرورگر CORS را می‌بندد؛ در این حالت پروکسی محلی (فایل ttac-proxy.py) لازم است. اگر HTTP 403/429 دیدید، سامانه موقتاً محدود کرده؛ کمی بعد دوباره تست کنید.</div>';
 }
@@ -978,6 +1056,7 @@ $('s_warn').onchange=()=>{S.settings.warn=Math.max(1,num($('s_warn').value)||90)
 $('s_cal').onchange=()=>{S.settings.cal=$('s_cal').value;persist();renderAll()};
 $('s_ol').onchange=()=>{olc().on=$('s_ol').checked;persist()};
 $('s_relay').onchange=()=>{olc().relay=$('s_relay').checked;persist()};
+$('s_authurl').onchange=()=>{olc().authUrl=$('s_authurl').value.trim();persist();toast('ذخیره شد')};
 $('s_proxy').onchange=()=>{olc().proxy=$('s_proxy').value.trim();persist();toast('ذخیره شد')};
 $('oltest').onclick=olTest;
 $('olclear').onclick=()=>{if(!confirm('حافظهٔ بررسی آنلاین پاک شود؟ (رکوردهای ثبت‌شدهٔ موجودی دست نمی‌خورند)'))return;S.olcache={};persist();toast('حافظهٔ بررسی آنلاین پاک شد')};
@@ -990,6 +1069,7 @@ $('wipe').onclick=async()=>{if(confirm('همه موجودی‌ها و تاریخ
 /* ================= شروع ================= */
 function init2(){$('s_warn').value=fa(S.settings.warn);$('s_cal').value=S.settings.cal;
   const oc=olc();$('s_ol').checked=!!oc.on;$('s_relay').checked=oc.relay!==false;$('s_proxy').value=oc.proxy||'';
+  $('s_authurl').value=oc.authUrl||'';
   usersList();renderAll();dbStat()}
 (async()=>{
   try{$('user').value=localStorage.getItem('pi_user')||''}catch(e){}
