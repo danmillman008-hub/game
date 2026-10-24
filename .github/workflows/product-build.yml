@@ -80,14 +80,14 @@ jobs:
         working-directory: android
         run: |
           set -o pipefail
-          ./gradlew :app:assembleDebug --stacktrace --no-daemon 2>&1 | tee -a /tmp/build.log
+          ./gradlew :app:assembleDebug --stacktrace --no-daemon --continue 2>&1 | tee -a /tmp/build.log
 
       - name: Unit tests (all modules)
         id: unit
         working-directory: android
         run: |
           set -o pipefail
-          ./gradlew testDebugUnitTest --stacktrace --no-daemon 2>&1 | tee -a /tmp/build.log
+          ./gradlew testDebugUnitTest --stacktrace --no-daemon --continue 2>&1 | tee -a /tmp/build.log
 
       - name: Collect reports
         if: always()
@@ -129,7 +129,7 @@ jobs:
             echo '### خطاهای کامپایل/بیلد'
             echo '```'
             grep -nE "^(e:|w: .*error)|error:|FAILURE:|What went wrong|Caused by:|> Task .* FAILED|Unresolved reference|Execution failed" /tmp/build.log \
-              | head -60 || echo "الگوی خطا پیدا نشد"
+              | head -200 || echo "الگوی خطا پیدا نشد"
             echo '```'
             echo
             echo '### ۶۰ خط آخر'
