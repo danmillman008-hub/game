@@ -1,30 +1,21 @@
 name: probe-links
-
 on:
   push:
     paths:
       - '.github/workflows/probe-links.yml'
-
 permissions:
   contents: read
-
 jobs:
   links:
     runs-on: ubuntu-latest
     steps:
-      - name: curl main app + docs
-        run: |
-          SHA=8184b2836f28f27fe56b6460509956216dd200a6
-          for U in \
-            "https://raw.githack.com/danmillman008-hub/game/$SHA/pharmacy-inventory%20(3).html" \
-            "https://raw.githack.com/danmillman008-hub/game/$SHA/pharmacy-inventory (3).html" \
-            "https://raw.githack.com/danmillman008-hub/game/$SHA/docs/t2-check.html" ; do
-            echo "=== $U"
-            curl -sS -m 25 -o /tmp/o -D /tmp/h -w 'code=%{http_code} size=%{size_download}\n' "$U" || echo "curl failed $?"
-            grep -i -E '^(content-type:)' /tmp/h | tr -d '\r' || true
-            grep -c 'CheckBarcode?barcode' /tmp/o | tr '\n' ' '; echo "hits"
+      - run: |
+          for P in REPORT-short-fa.txt PROMPT-android-build.md ; do
+            U="https://raw.githubusercontent.com/danmillman008-hub/game/7a68eed16b40bb7750debe6eeaedc484ea6b7a3d/docs/$P"
+            echo "=== $P"
+            curl -sS -m 25 -o /tmp/o -D /tmp/h -w 'code=%{http_code} size=%{size_download} ' "$U"
+            grep -i '^content-type' /tmp/h | tr -d '\r'
           done > /tmp/l.txt 2>&1
-          python3 - <<'PY'
+          python3 -c "
           b=open('/tmp/l.txt',encoding='utf-8',errors='replace').read().replace('%','%25').replace(chr(13),'').replace(chr(10),'%0A')
-          print('::notice title=main::%s'%b[:9000])
-          PY
+          print('::notice title=links::%s'%b[:8000])"
