@@ -1,0 +1,657 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>انبارگردانی داروخانه</title>
+<style>
+:root{--bg:#f3f6f7;--card:#fff;--tx:#14262b;--mut:#5d7178;--pri:#0f766e;--pri2:#0b5a54;--line:#d9e2e5;--red:#b42318;--redbg:#fde8e6;--amb:#9a6700;--ambbg:#fff3cd;--grn:#146c43;--grnbg:#dcf3e6;--inp:#fff}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1719;--card:#182226;--tx:#e6eef0;--mut:#9bb0b6;--pri:#2dd4bf;--pri2:#5eead4;--line:#2a3a40;--red:#ff8a80;--redbg:#3b1b19;--amb:#f5c542;--ambbg:#3a2f10;--grn:#6ee7a8;--grnbg:#123424;--inp:#0f1719}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.6 Vazirmatn,Tahoma,"Segoe UI",system-ui,sans-serif;padding-bottom:78px}
+header{position:sticky;top:0;z-index:5;background:var(--pri);color:#fff;padding:10px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+header h1{font-size:17px;margin:0;flex:1;min-width:140px}
+header input{width:150px;padding:6px 10px;border-radius:8px;border:0;background:rgba(255,255,255,.95);color:#111}
+.chip{font-size:12px;background:rgba(255,255,255,.2);padding:3px 10px;border-radius:99px}
+main{max-width:980px;margin:0 auto;padding:12px 14px}
+section{display:none}section.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.card h2{font-size:16px;margin:0 0 10px}
+.row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1;min-width:120px}
+label{display:block;font-size:12.5px;color:var(--mut);margin:8px 0 3px}
+input,select,textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:var(--inp);color:var(--tx);font:inherit}
+input[type=checkbox]{width:auto}
+.num{direction:ltr;text-align:right}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--tx);padding:9px 14px;border-radius:9px}
+button.p{background:var(--pri);color:#fff;border-color:var(--pri);font-weight:600}
+button.d{color:var(--red)}button:disabled{opacity:.5}
+button.sm{padding:4px 10px;font-size:13px}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.mut{color:var(--mut);font-size:13px}
+.tbl{overflow:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:13.5px;background:var(--card)}
+th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{background:var(--bg);position:sticky;top:0;color:var(--mut);font-weight:600}
+td.w{white-space:normal;min-width:200px}
+.b{display:inline-block;padding:1px 9px;border-radius:99px;font-size:12px}
+.b.exp{background:var(--redbg);color:var(--red)}.b.near{background:var(--ambbg);color:var(--amb)}.b.ok{background:var(--grnbg);color:var(--grn)}.b.none{background:var(--bg);color:var(--mut)}
+nav{position:fixed;bottom:0;inset-inline:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:6}
+nav button{flex:1;border:0;border-radius:0;background:none;padding:10px 2px;font-size:12.5px;color:var(--mut);position:relative}
+nav button.on{color:var(--pri);font-weight:700;box-shadow:inset 0 3px 0 var(--pri)}
+nav .cnt{position:absolute;top:2px;margin-inline-start:-4px;background:var(--red);color:#fff;border-radius:99px;font-size:10px;padding:0 5px}
+.seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{flex:1;border:0;border-radius:0;font-size:13.5px;padding:8px 4px}
+.seg button.on{background:var(--pri);color:#fff}
+.drug{border-inline-start:4px solid var(--pri);padding-inline-start:10px}
+.drug b{font-size:15px;direction:ltr;display:block;text-align:left;word-break:break-word}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.chips button{font-size:12.5px;padding:3px 10px;border-radius:99px}
+.hint{background:var(--bg);border-radius:9px;padding:8px 10px;margin-top:10px;font-size:13.5px}
+#reader{width:100%;max-width:420px;margin:8px auto 0;border-radius:12px;overflow:hidden}
+#cam{width:100%;max-height:300px;background:#000;border-radius:12px;display:none}
+#toast{position:fixed;bottom:92px;left:50%;transform:translateX(-50%);background:#14262b;color:#fff;padding:9px 16px;border-radius:99px;opacity:0;transition:.25s;pointer-events:none;z-index:9;max-width:90vw;text-align:center}
+#toast.on{opacity:1}
+.res{max-height:260px;overflow:auto;border:1px solid var(--line);border-radius:9px;margin-top:8px}
+.res div{padding:7px 10px;border-bottom:1px solid var(--line);cursor:pointer;direction:ltr;text-align:left;font-size:13px}
+.res div:hover{background:var(--bg)}
+.hide{display:none!important}
+.exprow{display:grid;grid-template-columns:92px 1fr 1fr 1fr;gap:6px}.exprow>*{min-width:0}
+.row>div{min-width:min(100%,140px)}
+details summary{cursor:pointer;color:var(--pri);margin-top:8px}
+</style>
+</head>
+<body>
+<header>
+  <h1>💊 انبارگردانی داروخانه</h1>
+  <input id="user" list="users" placeholder="نام شمارنده" aria-label="نام شمارنده"><datalist id="users"></datalist>
+  <span class="chip" id="dbchip">دیتابیس: بارگذاری نشده</span>
+</header>
+<main>
+
+<!-- ========== دیتابیس ========== -->
+<section id="t-db" class="on">
+  <div class="card">
+    <h2>۱) بارگذاری دیتابیس داروها</h2>
+    <p class="mut">فایل اکسل (xlsx) دیتابیس را انتخاب کنید. شیتی که ستون‌های <b dir="ltr">IRC</b> و <b dir="ltr">GTIN</b> دارد (مثل «کدینگ نسخه پیچی») خودکار پیدا می‌شود. دیتابیس در همین مرورگر ذخیره می‌شود و دفعه بعد نیازی به بارگذاری نیست. فایل CSV هم پذیرفته می‌شود.</p>
+    <input type="file" id="dbfile" accept=".xlsx,.csv">
+    <div id="dbstat" class="hint">دیتابیس هنوز بارگذاری نشده است.</div>
+  </div>
+  <div class="card">
+    <h2>تنظیمات</h2>
+    <div class="row">
+      <div><label>هشدار انقضا: چند روز مانده به انقضا</label><input id="s_warn" class="num" inputmode="numeric"></div>
+      <div><label>نمایش تاریخ</label><select id="s_cal"><option value="j">شمسی</option><option value="g">میلادی</option><option value="both">هر دو</option></select></div>
+    </div>
+    <div class="btns">
+      <button id="bk">⬇ پشتیبان‌گیری (JSON)</button>
+      <button id="rs">⬆ بازیابی پشتیبان</button><input type="file" id="rsfile" accept=".json" class="hide">
+      <button id="wipe" class="d">حذف همه ثبت‌ها</button>
+    </div>
+    <p class="mut">⚠ اطلاعات فقط روی همین دستگاه و مرورگر ذخیره می‌شود. برای جلوگیری از گم شدن، گاهی پشتیبان بگیرید.</p>
+  </div>
+</section>
+
+<!-- ========== اسکن و ثبت ========== -->
+<section id="t-scan">
+  <div class="card">
+    <h2>۲) اسکن یا جستجوی دارو</h2>
+    <video id="cam" playsinline muted></video><div id="reader"></div><div id="camerr" class="hint hide"></div>
+    <div class="btns">
+      <button class="p" id="camon">📷 شروع اسکن</button>
+      <button id="camoff" class="hide">⏹ توقف</button>
+      <button id="photo">🖼 اسکن از عکس</button><input type="file" id="photofile" accept="image/*" capture="environment" class="hide">
+      <button id="manual">✍ داروی دستی</button>
+    </div>
+    <label>کد (GTIN / IRC / متن کیوآر) یا بخشی از نام دارو</label>
+    <div class="row" style="flex-wrap:nowrap"><input id="q" placeholder="مثلاً 06260152410148 یا ACA" style="flex:1;min-width:0"><button id="qgo" style="flex:0 0 auto">جستجو</button></div>
+    <div id="qres" class="res hide"></div>
+  </div>
+
+  <div class="card hide" id="entry">
+    <h2>۳) ثبت شمارش / عملیات</h2>
+    <div class="drug"><b id="d_title"></b><span class="mut" id="d_sub"></span></div>
+    <div class="chips" id="lotchips"></div>
+    <details id="dd"><summary>ویرایش مشخصات دارو</summary>
+      <label>نام دارو</label><input id="f_name" dir="ltr" style="text-align:left">
+      <div class="row">
+        <div><label>شرکت سازنده</label><input id="f_co"></div>
+        <div><label>تعداد در هر بسته (قرص/آمپول…)</label><input id="f_pack" class="num" inputmode="numeric"></div>
+      </div>
+      <div class="row">
+        <div><label>GTIN</label><input id="f_gtin" class="num" inputmode="numeric"></div>
+        <div><label>IRC</label><input id="f_irc" class="num" inputmode="numeric"></div>
+      </div>
+    </details>
+
+    <label>نوع عملیات</label>
+    <select id="f_op">
+      <option value="count">شمارش (موجودی = مقدار شمارش‌شده)</option>
+      <option value="in">ورود (افزودن به موجودی)</option>
+      <option value="out">خروج / فروش</option>
+      <option value="waste">ضایعات</option>
+      <option value="return">مرجوعی</option>
+    </select>
+
+    <div class="row" style="display:block">
+      <div><label>شماره بچ (Batch/Lot)</label><input id="f_batch" dir="ltr" style="text-align:left" autocapitalize="characters"></div>
+      <div><label>تاریخ انقضا <span class="mut" id="expsrc"></span></label>
+        <div class="exprow">
+          <select id="f_cal"><option value="j">شمسی</option><option value="g">میلادی</option></select>
+          <input id="f_ey" class="num" inputmode="numeric" placeholder="سال">
+          <input id="f_em" class="num" inputmode="numeric" placeholder="ماه">
+          <input id="f_ed" class="num" inputmode="numeric" placeholder="روز">
+        </div>
+      </div>
+    </div>
+
+    <label>روش شمارش</label>
+    <div class="seg" id="modeseg">
+      <button data-m="single" class="on">تکی</button><button data-m="carton">کارتن × تعداد</button><button data-m="open">باز / نیمه‌مصرف</button>
+    </div>
+    <div id="m_single"><label>تعداد بسته</label><input id="f_packs" class="num" inputmode="numeric" placeholder="0"></div>
+    <div id="m_carton" class="hide">
+      <div class="row">
+        <div><label>تعداد کارتن</label><input id="f_cartons" class="num" inputmode="numeric" placeholder="0"></div>
+        <div><label>تعداد بسته در هر کارتن</label><input id="f_per" class="num" inputmode="numeric" placeholder="مثلاً 20"></div>
+        <div><label>بسته‌های خارج از کارتن</label><input id="f_extra" class="num" inputmode="numeric" placeholder="0"></div>
+      </div>
+    </div>
+    <div id="m_open" class="hide">
+      <div class="row">
+        <div><label>بسته‌های سالم</label><input id="f_fullpacks" class="num" inputmode="numeric" placeholder="0"></div>
+        <div><label>واحدهای باقی‌مانده در بسته‌های باز (قرص، آمپول، mL…)</label><input id="f_units" class="num" inputmode="numeric" placeholder="0"></div>
+      </div>
+    </div>
+    <label>توضیح (اختیاری)</label><input id="f_note">
+    <div class="hint" id="f_hint"></div>
+    <div class="btns">
+      <button class="p" id="save">✔ ثبت</button>
+      <button id="next">دارو / اسکن بعدی</button>
+    </div>
+  </div>
+</section>
+
+<!-- ========== موجودی ========== -->
+<section id="t-stock">
+  <div class="card">
+    <h2>موجودی (بر اساس بچ و تاریخ انقضا)</h2>
+    <div class="row" style="align-items:end">
+      <div style="flex:2"><label>جستجو</label><input id="st_q" placeholder="نام دارو یا شرکت"></div>
+      <div><label><input type="checkbox" id="st_pos" checked> فقط دارای موجودی</label></div>
+      <div style="flex:0 0 auto"><button id="exp1">⬇ خروجی اکسل</button></div>
+    </div>
+    <div id="st_sum" class="mut" style="margin:8px 0"></div>
+    <div class="tbl"><table id="st_tbl"></table></div>
+  </div>
+</section>
+
+<!-- ========== تاریخچه ========== -->
+<section id="t-hist">
+  <div class="card">
+    <h2>تاریخچه ثبت‌ها و محاسبات</h2>
+    <div class="row" style="align-items:end">
+      <div style="flex:2"><label>جستجو (دارو، بچ، شمارنده)</label><input id="h_q"></div>
+      <div><label>نوع عملیات</label><select id="h_op"><option value="">همه</option><option value="count">شمارش</option><option value="in">ورود</option><option value="out">خروج</option><option value="waste">ضایعات</option><option value="return">مرجوعی</option></select></div>
+      <div style="flex:0 0 auto"><button id="exp2">⬇ خروجی اکسل</button></div>
+    </div>
+    <div class="tbl" style="margin-top:10px"><table id="h_tbl"></table></div>
+  </div>
+</section>
+
+<!-- ========== هشدار ========== -->
+<section id="t-alert">
+  <div class="card">
+    <h2>هشدار انقضا</h2>
+    <div id="al_sum" class="mut" style="margin-bottom:8px"></div>
+    <div class="tbl"><table id="al_tbl"></table></div>
+  </div>
+</section>
+</main>
+
+<nav>
+  <button data-t="db" class="on">دیتابیس</button>
+  <button data-t="scan">اسکن و ثبت</button>
+  <button data-t="stock">موجودی</button>
+  <button data-t="hist">تاریخچه</button>
+  <button data-t="alert">هشدار<span class="cnt hide" id="alcnt"></span></button>
+</nav>
+<div id="toast"></div>
+
+<script>
+'use strict';
+/* ================= ابزارها ================= */
+const $=id=>document.getElementById(id);
+const FA='۰۱۲۳۴۵۶۷۸۹';
+const fa=s=>String(s).replace(/\d/g,d=>FA[+d]);
+const en=s=>String(s==null?'':s).replace(/[۰-۹]/g,d=>FA.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num=v=>{const n=parseInt(en(v).replace(/[^\d-]/g,''),10);return isNaN(n)?0:n};
+const pad=(n,l=2)=>String(n).padStart(l,'0');
+let tt;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2600)}
+const OPS={count:'شمارش',in:'ورود',out:'خروج/فروش',waste:'ضایعات',return:'مرجوعی'};
+
+/* ================= تقویم شمسی ================= */
+const div=(a,b)=>~~(a/b), mod=(a,b)=>a-~~(a/b)*b;
+const BRK=[-61,9,38,199,426,686,756,818,1111,1181,1210,1635,2060,2097,2192,2262,2324,2394,2456,3178];
+function jalCal(jy){let gy=jy+621,leapJ=-14,jp=BRK[0],jm,jump=0,leap,leapG,march,n,i;
+  for(i=1;i<BRK.length;i++){jm=BRK[i];jump=jm-jp;if(jy<jm)break;leapJ+=div(jump,33)*8+div(mod(jump,33),4);jp=jm}
+  n=jy-jp;leapJ+=div(n,33)*8+div(mod(n,33)+3,4);if(mod(jump,33)===4&&jump-n===4)leapJ++;
+  leapG=div(gy,4)-div((div(gy,100)+1)*3,4)-150;march=20+leapJ-leapG;
+  if(jump-n<6)n=n-jump+div(jump+4,33)*33;leap=mod(mod(n+1,33)-1,4);if(leap===-1)leap=4;
+  return{leap,gy,march}}
+const g2d=(gy,gm,gd)=>{let d=div((gy+div(gm-8,6)+100100)*1461,4)+div(153*mod(gm+9,12)+2,5)+gd-34840408;return d-div(div(gy+100100+div(gm-8,6),100)*3,4)+752};
+function d2g(jdn){let j=4*jdn+139361631;j+=div(div(4*jdn+183187720,146097)*3,4)*4-3908;const i=div(mod(j,1461),4)*5+308;const gd=div(mod(i,153),5)+1,gm=mod(div(i,153),12)+1,gy=div(j,1461)-100100+div(8-gm,6);return{gy,gm,gd}}
+const j2d=(jy,jm,jd)=>{const r=jalCal(jy);return g2d(r.gy,3,r.march)+(jm-1)*31-div(jm,7)*(jm-7)+jd-1};
+function d2j(jdn){const gy=d2g(jdn).gy;let jy=gy-621;const r=jalCal(jy),j1=g2d(gy,3,r.march);let k=jdn-j1,jm,jd;
+  if(k>=0){if(k<=185){return{jy,jm:1+div(k,31),jd:mod(k,31)+1}}k-=186}else{jy--;k+=179;if(r.leap===1)k++}
+  jm=7+div(k,30);jd=mod(k,30)+1;return{jy,jm,jd}}
+const isoF=(y,m,d)=>y+'-'+pad(m)+'-'+pad(d);
+const isoP=s=>{const[a,b,c]=s.split('-').map(Number);return{y:a,m:b,d:c}};
+const jToIso=(y,m,d)=>{const g=d2g(j2d(y,m,d));return isoF(g.gy,g.gm,g.gd)};
+const isoToJ=s=>{const p=isoP(s);return d2j(g2d(p.y,p.m,p.d))};
+const jLen=(y,m)=>m<=6?31:m<=11?30:(j2d(y+1,1,1)-j2d(y,12,1));
+const gLen=(y,m)=>new Date(y,m,0).getDate();
+function todayIso(){const n=new Date();return isoF(n.getFullYear(),n.getMonth()+1,n.getDate())}
+function fmtJ(iso){const j=isoToJ(iso);return fa(j.jy+'/'+pad(j.jm)+'/'+pad(j.jd))}
+function fmtDate(iso){if(!iso)return'—';const c=S.settings.cal;return c==='g'?iso:c==='both'?fmtJ(iso)+' <span class="mut" dir="ltr">('+iso+')</span>':fmtJ(iso)}
+function fmtTs(ts){const d=new Date(ts);return fmtJ(isoF(d.getFullYear(),d.getMonth()+1,d.getDate()))+' '+fa(pad(d.getHours())+':'+pad(d.getMinutes()))}
+function expInfo(iso){
+  if(!iso)return{cls:'none',txt:'بدون تاریخ',days:null};
+  const p=isoP(iso),t=isoP(todayIso());
+  const days=Math.round((Date.UTC(p.y,p.m-1,p.d)-Date.UTC(t.y,t.m-1,t.d))/864e5);
+  if(days<0)return{cls:'exp',txt:'منقضی ('+fa(-days)+' روز پیش)',days};
+  if(days<=S.settings.warn)return{cls:'near',txt:fa(days)+' روز مانده',days};
+  return{cls:'ok',txt:fa(days)+' روز مانده',days}}
+
+/* ================= ذخیره‌سازی ================= */
+let idbP=null,idbOK=true;
+function idb(){if(!idbP)idbP=new Promise((res,rej)=>{try{const r=indexedDB.open('pharmacy-inv',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}});return idbP}
+async function kvGet(k){try{const db=await idb();return await new Promise((res,rej)=>{const q=db.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)})}catch(e){idbOK=false;return undefined}}
+async function kvSet(k,v){try{const db=await idb();await new Promise((res,rej)=>{const t=db.transaction('kv','readwrite');t.objectStore('kv').put(v,k);t.oncomplete=res;t.onerror=()=>rej(t.error)})}catch(e){if(idbOK){idbOK=false;toast('⚠ ذخیره‌سازی مرورگر در دسترس نیست؛ پشتیبان بگیرید')}}}
+
+let DB={byK:new Map(),byIrc:new Map(),list:[],meta:null};
+let S={lots:[],hist:[],custom:{},carton:{},users:[],settings:{warn:90,cal:'j'}};
+const persist=()=>kvSet('state',S);
+
+/* ================= خواندن اکسل (بدون کتابخانه) ================= */
+const u16=(b,o)=>b[o]|b[o+1]<<8, u32=(b,o)=>(b[o]|b[o+1]<<8|b[o+2]<<16|b[o+3]<<24)>>>0;
+function zipEntries(b){
+  let e=-1;for(let i=b.length-22;i>=Math.max(0,b.length-70000);i--){if(u32(b,i)===0x06054b50){e=i;break}}
+  if(e<0)throw new Error('فایل xlsx معتبر نیست');
+  const n=u16(b,e+10);let p=u32(b,e+16);const out={};const td=new TextDecoder();
+  for(let i=0;i<n;i++){
+    if(u32(b,p)!==0x02014b50)break;
+    const method=u16(b,p+10),csz=u32(b,p+20),nl=u16(b,p+28),el=u16(b,p+30),cl=u16(b,p+32),off=u32(b,p+42);
+    const name=td.decode(b.subarray(p+46,p+46+nl));out[name]={method,csz,off};p+=46+nl+el+cl}
+  return out}
+async function zipRead(b,ent){
+  if(!ent)return null;const o=ent.off;const nl=u16(b,o+26),el=u16(b,o+28);
+  const data=b.subarray(o+30+nl+el,o+30+nl+el+ent.csz);
+  if(ent.method===0)return new TextDecoder().decode(data);
+  const ds=new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+  return new TextDecoder().decode(await new Response(ds).arrayBuffer())}
+const xmlDec=s=>s.replace(/&(#x?[0-9a-f]+|lt|gt|amp|quot|apos);/gi,(m,c)=>{c=c.toLowerCase();if(c==='lt')return'<';if(c==='gt')return'>';if(c==='amp')return'&';if(c==='quot')return'"';if(c==='apos')return"'";return String.fromCodePoint(c[1]==='x'?parseInt(c.slice(2),16):parseInt(c.slice(1),10))});
+function colIdx(r){let n=0;for(const ch of r.replace(/\d+/g,''))n=n*26+ch.charCodeAt(0)-64;return n-1}
+function readSS(xml){const out=[];if(!xml)return out;const re=/<si\b[^>]*>([\s\S]*?)<\/si>/g;let m;
+  while((m=re.exec(xml))){let t='';const r2=/<t\b[^>]*>([\s\S]*?)<\/t>/g;let k;while((k=r2.exec(m[1])))t+=k[1];out.push(xmlDec(t))}return out}
+function sheetRows(xml,ss,max){
+  const rows=[];const rr=/<row\b[^>]*>([\s\S]*?)<\/row>/g;let m;
+  while((m=rr.exec(xml))){const row=[];const cr=/<c\b([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g;let c;
+    while((c=cr.exec(m[1]))){const at=c[1],body=c[2]||'';const ref=/\br="([A-Z]+\d+)"/.exec(at);const t=/\bt="(\w+)"/.exec(at);let v='';
+      if(t&&t[1]==='inlineStr'){const q=/<t\b[^>]*>([\s\S]*?)<\/t>/.exec(body);v=q?xmlDec(q[1]):''}
+      else{const q=/<v>([\s\S]*?)<\/v>/.exec(body);if(q){v=q[1];if(t&&t[1]==='s')v=ss[+v]||'';else v=xmlDec(v)}}
+      const ci=ref?colIdx(ref[1]):row.length;row[ci]=v}
+    rows.push(row);if(max&&rows.length>=max)break}
+  return rows}
+async function readXlsxDb(buf){
+  const b=new Uint8Array(buf),ents=zipEntries(b);
+  const wb=await zipRead(b,ents['xl/workbook.xml']),rel=await zipRead(b,ents['xl/_rels/workbook.xml.rels']);
+  const ss=readSS(await zipRead(b,ents['xl/sharedStrings.xml']));
+  const rels={};let m;const rre=/<Relationship\b[^>]*>/g;while((m=rre.exec(rel))){const id=/\bId="([^"]+)"/.exec(m[0]),tg=/\bTarget="([^"]+)"/.exec(m[0]);if(id&&tg)rels[id[1]]=tg[1].replace(/^\/?(xl\/)?/,'')}
+  const sheets=[];const sre=/<sheet\b[^>]*>/g;while((m=sre.exec(wb))){const nm=/\bname="([^"]*)"/.exec(m[0]),id=/\br:id="([^"]+)"/.exec(m[0]);if(nm&&id)sheets.push({name:xmlDec(nm[1]),path:'xl/'+rels[id[1]]})}
+  sheets.sort((a,b)=>(/پیچی/.test(b.name)?1:0)-(/پیچی/.test(a.name)?1:0));
+  for(const s of sheets){
+    const xml=await zipRead(b,ents[s.path]);if(!xml)continue;
+    const head=sheetRows(xml,ss,1)[0]||[];const H=head.map(x=>String(x||'').trim().toUpperCase());
+    if(H.includes('IRC')&&H.includes('GTIN')){return{name:s.name,rows:sheetRows(xml,ss)}}}
+  throw new Error('شیتی با ستون‌های IRC و GTIN پیدا نشد')}
+function readCsv(text){const rows=[];let row=[],f='',q=false;text=text.replace(/^﻿/,'');
+  for(let i=0;i<text.length;i++){const c=text[i];
+    if(q){if(c==='"'){if(text[i+1]==='"'){f+='"';i++}else q=false}else f+=c}
+    else if(c==='"')q=true;else if(c===','||c===';'||c==='\t'){row.push(f);f=''}
+    else if(c==='\n'){row.push(f);rows.push(row);row=[];f=''}else if(c!=='\r')f+=c}
+  if(f||row.length){row.push(f);rows.push(row)}return rows}
+const g14=s=>{s=en(s).replace(/\D/g,'');return s?s.padStart(14,'0').slice(-14):''};
+function buildDb(rows){
+  const H=(rows[0]||[]).map(x=>String(x||'').trim().toUpperCase());const ix=n=>H.indexOf(n);
+  const iI=ix('IRC'),iG=ix('GTIN'),iN=ix('FULLBRANDNAME'),iC=ix('LICENSEOWNERCOMPANYNAME'),iP=ix('PACKAGECOUNT'),iGen=ix('GENERICCODE');
+  if(iI<0||iG<0)throw new Error('ستون IRC یا GTIN وجود ندارد');
+  const list=[];
+  for(let r=1;r<rows.length;r++){const x=rows[r];if(!x)continue;const k=g14(x[iG]);const irc=en(x[iI]||'').replace(/\D/g,'');if(!k&&!irc)continue;
+    list.push({k,irc,name:String(x[iN]||'').trim(),co:String(x[iC]||'').trim(),pack:num(x[iP]),gen:String(x[iGen]||'')})}
+  return list}
+function indexDb(list){DB.list=list;DB.byK=new Map();DB.byIrc=new Map();
+  for(const d of list){d.s=(d.name+' '+d.co+' '+d.k+' '+d.irc).toLowerCase();if(d.k&&!DB.byK.has(d.k))DB.byK.set(d.k,d);if(d.irc&&!DB.byIrc.has(d.irc))DB.byIrc.set(d.irc,d)}}
+function dbStat(){const el=$('dbstat'),c=$('dbchip');
+  if(!DB.list.length){el.textContent='دیتابیس هنوز بارگذاری نشده است.';c.textContent='دیتابیس: بارگذاری نشده';return}
+  el.innerHTML='✔ دیتابیس آماده است: <b>'+fa(DB.list.length.toLocaleString('en'))+'</b> قلم دارو'+(DB.meta?'<br><span class="mut">فایل: '+esc(DB.meta.file)+' — شیت: '+esc(DB.meta.sheet)+' — '+fmtTs(DB.meta.ts)+'</span>':'');
+  c.textContent='دیتابیس: '+fa(DB.list.length.toLocaleString('en'))+' دارو'}
+async function importDb(file){
+  const el=$('dbstat');el.textContent='⏳ در حال خواندن فایل… (ممکن است چند ثانیه طول بکشد)';
+  try{
+    await new Promise(r=>setTimeout(r,30));let rows,sheet='CSV';
+    if(/\.csv$/i.test(file.name))rows=readCsv(await file.text());
+    else{const r=await readXlsxDb(await file.arrayBuffer());rows=r.rows;sheet=r.name}
+    const list=buildDb(rows);if(!list.length)throw new Error('هیچ ردیفی خوانده نشد');
+    indexDb(list);DB.meta={file:file.name,sheet,ts:Date.now()};
+    await kvSet('db',{list:list.map(({s,...d})=>d),meta:DB.meta});
+    dbStat();toast('دیتابیس بارگذاری شد');
+  }catch(e){el.textContent='❌ خطا: '+e.message}}
+
+/* ================= پارس GS1 و جستجو ================= */
+function parseGS1(t){
+  t=String(t||'').replace(/^\][A-Za-z]\d/,'').trim();const o={};
+  const set=(ai,v)=>{v=v.replace(/\x1d/g,'');if(ai==='01')o.gtin=v;else if(ai==='17')o.exp=v;else if(ai==='10')o.batch=v;else if(ai==='21')o.serial=v};
+  if(t.includes('(')){const re=/\((\d{2,4})\)([^(]*)/g;let m;while((m=re.exec(t)))set(m[1],m[2]);return o}
+  const fixed={'00':18,'01':14,'02':14,'11':6,'12':6,'13':6,'15':6,'16':6,'17':6,'20':2};
+  const sols=[];
+  (function go(i,acc){
+    if(sols.length>400)return;
+    if(i>=t.length){sols.push(acc);return}
+    if(t[i]==='\x1d'){go(i+1,acc);return}
+    const ai=t.substr(i,2);
+    if(fixed[ai]){const v=t.substr(i+2,fixed[ai]);if(v.length<fixed[ai])return;go(i+2+fixed[ai],acc.concat([[ai,v]]));return}
+    if(ai==='10'||ai==='21'){
+      let j=t.indexOf('\x1d',i+2);
+      if(j>=0){go(j,acc.concat([[ai,t.substring(i+2,j)]]));return}
+      for(let e=Math.min(t.length,i+22);e>i+2;e--)go(e,acc.concat([[ai,t.substring(i+2,e)]]));
+      return}
+  })(0,[]);
+  const okExp=v=>{if(!/^\d{6}$/.test(v))return false;const y=+v.slice(0,2),m=+v.slice(2,4),d=+v.slice(4,6);return y>=20&&y<=50&&m>=1&&m<=12&&d<=31};
+  let best=null,bs=-1;
+  for(const a of sols){let sc=0;const seen={};let dup=false;
+    for(const[ai,v]of a){if(seen[ai])dup=true;seen[ai]=v}
+    if(dup||!seen['01'])continue;
+    if(seen['17']&&okExp(seen['17']))sc+=100;
+    if(seen['21']&&seen['21'].length===20)sc+=10;
+    if(seen['10']&&seen['10'].length>=3&&seen['10'].length<=12)sc+=5;
+    sc-=a.length*0.01;
+    if(sc>bs){bs=sc;best=a}}
+  if(!best&&sols.length)best=sols[0];
+  if(best)for(const[ai,v]of best)set(ai,v);
+  return o}
+function gs1Exp(s){ // YYMMDD → ISO (روز 00 = پایان ماه)
+  if(!/^\d{6}$/.test(s||''))return null;const y=2000+ +s.slice(0,2),m=+s.slice(2,4);let d=+s.slice(4,6);
+  if(m<1||m>12)return null;const L=gLen(y,m);if(d===0||d>L)d=L;return isoF(y,m,d)}
+function lookupKey(k){return S.custom[k]||DB.byK.get(k)||null}
+function lookupText(text){
+  const p=parseGS1(text);let d=null,k='';
+  if(p.gtin){k=g14(p.gtin);d=lookupKey(k)}
+  if(!d){const digits=en(text).replace(/\D/g,'');
+    if(/^\d{16}$/.test(digits)&&DB.byIrc.has(digits))d=DB.byIrc.get(digits);
+    else if(/^\d{8,14}$/.test(digits)){k=g14(digits);d=lookupKey(k)}
+    else{const m16=en(text).match(/\d{16}/g)||[];for(const x of m16){if(DB.byIrc.has(x)){d=DB.byIrc.get(x);break}}
+      if(!d){const m14=en(text).match(/\d{14}/g)||[];for(const x of m14){if(lookupKey(x)){d=lookupKey(x);k=x;break}}}}}
+  return{d,k,p,exp:gs1Exp(p.exp)}}
+function searchName(q){const t=en(q).toLowerCase().split(/\s+/).filter(Boolean);if(!t.length)return[];
+  const out=[];for(const d of Object.values(S.custom).concat(DB.list)){if(t.every(x=>d.s?d.s.includes(x):(d.name+' '+d.co+' '+d.k).toLowerCase().includes(x))){out.push(d);if(out.length>=40)break}}return out}
+
+/* ================= موجودی ================= */
+let cur=null,curMode='single',lastScan={};
+const drugKey=d=>d.k||('m:'+d.name.trim().toLowerCase()+'|'+d.co.trim());
+const lotKey=(k,b,e)=>k+'|'+(b||'')+'|'+(e||'');
+const totalPacks=l=>l.packs+(l.pack>0?l.units/l.pack:0);
+function qtyTxt(p,u){return fa(p)+' بسته'+(u?' + '+fa(u)+' واحد':'')}
+function norm(l){if(l.pack>0){if(l.units>=l.pack){l.packs+=Math.floor(l.units/l.pack);l.units%=l.pack}
+  while(l.units<0&&l.packs>0){l.packs--;l.units+=l.pack}}}
+function curLot(){const k=cur&&drugKey(cur);return S.lots.find(l=>l.key===lotKey(k,$('f_batch').value.trim().toUpperCase(),readExp()))}
+function readQty(){const m=curMode;
+  if(m==='single')return{packs:num($('f_packs').value),units:0,det:''};
+  if(m==='carton'){const c=num($('f_cartons').value),p=num($('f_per').value),x=num($('f_extra').value);return{packs:c*p+x,units:0,det:fa(c)+' کارتن × '+fa(p)+(x?' + '+fa(x)+' بسته':''),c,per:p}}
+  const f=num($('f_fullpacks').value),u=num($('f_units').value);return{packs:f,units:u,det:'باز/نیمه‌مصرف'}}
+function readExp(){
+  const cal=$('f_cal').value;let y=num($('f_ey').value),m=num($('f_em').value),d=num($('f_ed').value);
+  if(!y&&!m&&!d)return null;if(!y||!m)return'bad';if(y<100)y+=cal==='j'?1400:2000;if(m<1||m>12)return'bad';
+  if(cal==='j'&&(y<1300||y>1500))return'bad';if(cal==='g'&&(y<2000||y>2100))return'bad';
+  const L=cal==='j'?jLen(y,m):gLen(y,m);if(!d)d=L;if(d<1||d>L)return'bad';
+  return cal==='j'?jToIso(y,m,d):isoF(y,m,d)}
+function setExp(iso){const cal=$('f_cal').value;
+  if(!iso){$('f_ey').value=$('f_em').value=$('f_ed').value='';return}
+  if(cal==='j'){const j=isoToJ(iso);$('f_ey').value=j.jy;$('f_em').value=j.jm;$('f_ed').value=j.jd}
+  else{const p=isoP(iso);$('f_ey').value=p.y;$('f_em').value=p.m;$('f_ed').value=p.d}}
+function setMode(m){curMode=m;document.querySelectorAll('#modeseg button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));
+  $('m_single').classList.toggle('hide',m!=='single');$('m_carton').classList.toggle('hide',m!=='carton');$('m_open').classList.toggle('hide',m!=='open');hint()}
+function hint(){
+  if(!cur)return;const op=$('f_op').value,q=readQty(),e=readExp();const pack=num($('f_pack').value);
+  const lot=e==='bad'?null:curLot();let h='';
+  h+='مقدار واردشده: <b>'+qtyTxt(q.packs,q.units)+'</b>';
+  if(q.units&&pack)h+=' ≈ '+fa((q.packs+q.units/pack).toFixed(2).replace(/\.?0+$/,''))+' بسته';
+  if(lot){const b=op==='count'?{p:q.packs,u:q.units}:op==='in'?{p:lot.packs+q.packs,u:lot.units+q.units}:{p:lot.packs-q.packs,u:lot.units-q.units};
+    h+='<br>موجودی فعلی این بچ: <b>'+qtyTxt(lot.packs,lot.units)+'</b> ← پس از ثبت: <b>'+qtyTxt(b.p,b.u)+'</b>'}
+  else h+='<br><span class="mut">این بچ/تاریخ انقضا قبلاً ثبت نشده؛ ردیف جدید ساخته می‌شود.</span>';
+  $('f_hint').innerHTML=h}
+function selectDrug(d,sc){
+  sc=sc||{};cur=d;const k=drugKey(d);
+  $('entry').classList.remove('hide');
+  $('d_title').textContent=d.name||'(بدون نام)';$('d_sub').textContent=[d.co,d.pack?d.pack+' عدد در بسته':'',d.k?'GTIN '+d.k:''].filter(Boolean).join(' | ');
+  $('f_name').value=d.name;$('f_co').value=d.co;$('f_pack').value=d.pack||'';$('f_gtin').value=d.k||'';$('f_irc').value=d.irc||'';
+  $('f_gtin').readOnly=!!DB.byK.get(d.k);$('f_per').value=S.carton[k]||'';
+  $('f_batch').value=sc.batch||'';setExp(sc.exp||null);$('expsrc').textContent=sc.exp?'(از کد خوانده شد)':'(دستی وارد کنید)';
+  ['f_packs','f_cartons','f_extra','f_fullpacks','f_units'].forEach(i=>$(i).value='');
+  $('dd').open=!d.name;
+  lotChips();hint();$('entry').scrollIntoView({behavior:'smooth',block:'start'})}
+function lotChips(){const k=drugKey(cur),ls=S.lots.filter(l=>l.key.startsWith(k+'|'));
+  $('lotchips').innerHTML=ls.length?'<span class="mut">بچ‌های ثبت‌شده:</span>'+ls.map(l=>'<button data-lot="'+esc(l.key)+'">'+esc(l.batch||'بدون بچ')+' · '+(l.exp?fmtJ(l.exp):'—')+' · '+qtyTxt(l.packs,l.units)+'</button>').join(''):''}
+function applyLot(key){const l=S.lots.find(x=>x.key===key);if(!l)return;$('f_batch').value=l.batch;setExp(l.exp);hint()}
+
+function saveEntry(){
+  if(!cur)return;
+  const name=$('f_name').value.trim();if(!name){toast('نام دارو لازم است');$('dd').open=true;return}
+  const d={k:g14($('f_gtin').value)||cur.k||'',irc:en($('f_irc').value).replace(/\D/g,''),name,co:$('f_co').value.trim(),pack:num($('f_pack').value),gen:cur.gen||''};
+  d.s=(d.name+' '+d.co+' '+d.k+' '+d.irc).toLowerCase();
+  const k=drugKey(d),op=$('f_op').value,exp=readExp();
+  if(exp==='bad'){toast('تاریخ انقضا معتبر نیست');return}
+  const q=readQty();if(op!=='count'&&!q.packs&&!q.units){toast('تعداد را وارد کنید');return}
+  if(!exp&&!confirm('تاریخ انقضا وارد نشده. بدون تاریخ ثبت شود؟'))return;
+  const batch=$('f_batch').value.trim().toUpperCase(),key=lotKey(k,batch,exp);
+  let lot=S.lots.find(l=>l.key===key);const isNew=!lot;
+  if(isNew)lot={key,dk:k,gtin:d.k,irc:d.irc,name:d.name,co:d.co,pack:d.pack,batch,exp:exp||'',packs:0,units:0};
+  lot.name=d.name;lot.co=d.co;lot.pack=d.pack;lot.irc=d.irc;
+  const bp=lot.packs,bu=lot.units;
+  if(op==='count'){lot.packs=q.packs;lot.units=q.units}
+  else if(op==='in'){lot.packs+=q.packs;lot.units+=q.units}
+  else{lot.packs-=q.packs;lot.units-=q.units;norm(lot);
+    if(lot.packs<0||lot.units<0||(lot.packs===0&&lot.units<0)){if(!confirm('مقدار خروج از موجودی ثبت‌شده بیشتر است. موجودی صفر شود؟')){return}lot.packs=Math.max(0,lot.packs);lot.units=Math.max(0,lot.units)}}
+  norm(lot);
+  if(isNew)S.lots.push(lot);
+  // دارو را برای دفعات بعد ذخیره کن (اگر دستی یا ویرایش‌شده)
+  const o=DB.byK.get(d.k);if(!o||o.name!==d.name||o.co!==d.co||o.pack!==d.pack||!d.k)S.custom[k]=d;
+  if(q.per)S.carton[k]=q.per;
+  const user=$('user').value.trim();if(user&&!S.users.includes(user))S.users.push(user);
+  const dlt=(lot.packs-bp)+(lot.pack>0?(lot.units-bu)/lot.pack:0);
+  S.hist.unshift({id:Date.now()+''+Math.random().toString(36).slice(2,5),ts:Date.now(),user,op,key:k,gtin:d.k,irc:d.irc,name:d.name,co:d.co,batch,exp:exp||'',mode:curMode,det:q.det,in:{p:q.packs,u:q.units},bf:{p:bp,u:bu},af:{p:lot.packs,u:lot.units},pack:lot.pack,dlt:Math.round(dlt*100)/100,note:$('f_note').value.trim()});
+  cur=d;persist();usersList();
+  toast('✔ ثبت شد: '+OPS[op]+' — '+qtyTxt(lot.packs,lot.units));
+  $('f_batch').value='';setExp(null);$('expsrc').textContent='(دستی وارد کنید)';
+  ['f_packs','f_cartons','f_extra','f_fullpacks','f_units','f_note'].forEach(i=>$(i).value='');
+  $('f_per').value=S.carton[k]||'';
+  lotChips();hint();renderAll();
+  if(camRunning||autoCam){startCam()}}
+function resetEntry(){cur=null;$('entry').classList.add('hide');$('q').value='';$('qres').classList.add('hide');window.scrollTo({top:0,behavior:'smooth'})}
+
+/* ================= جستجو و اسکن ================= */
+function handleCode(text){
+  const r=lookupText(text);
+  if(r.d){selectDrug(r.d,{batch:r.p.batch,exp:r.exp});if(r.p.serial)lastScan.serial=r.p.serial;toast('✔ دارو شناسایی شد');return true}
+  if(r.k||r.p.gtin){const k=r.k||g14(r.p.gtin);selectDrug({k,irc:'',name:'',co:'',pack:0},{batch:r.p.batch,exp:r.exp});toast('دارو در دیتابیس نبود؛ مشخصات را دستی وارد کنید');return false}
+  toast('کد شناسایی نشد؛ نام را جستجو کنید یا دستی وارد کنید');return false}
+function doSearch(){
+  const q=$('q').value.trim();if(!q)return;
+  const digits=en(q).replace(/\D/g,'');
+  if(digits.length>=8||q.includes('(')||q.includes('\x1d')){const r=lookupText(q);if(r.d||r.k||r.p.gtin){handleCode(q);return}}
+  const res=searchName(q);const box=$('qres');box.classList.remove('hide');
+  box.innerHTML=res.length?res.map((d,i)=>'<div data-i="'+i+'">'+esc(d.name)+' — '+esc(d.co)+(d.pack?' ['+d.pack+']':'')+'</div>').join(''):'<div style="direction:rtl;text-align:right;cursor:default">موردی پیدا نشد. «داروی دستی» را بزنید.</div>';
+  box._r=res}
+let stream=null,camRunning=false,autoCam=false,loopT=null,detector=null,zx=null,zxTried=false,busy=false;
+const camErr=m=>{const e=$('camerr');e.innerHTML=m;e.classList.toggle('hide',!m)};
+function loadH5(){return new Promise((res,rej)=>{if(window.Html5Qrcode)return res();const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js';s.onload=res;s.onerror=()=>rej(new Error('x'));document.head.appendChild(s)})}
+async function nativeDetector(){if(!('BarcodeDetector' in window))return null;try{const sup=await BarcodeDetector.getSupportedFormats();const want=['qr_code','data_matrix'].filter(f=>sup.includes(f));return want.length?new BarcodeDetector({formats:want}):null}catch(e){return null}}
+async function loadZX(){ // موتور قوی zxing-cpp (WASM) از اینترنت
+  if(zx)return zx;if(zxTried)return null;zxTried=true;
+  const urls=[];for(const v of['2.2.1','2.1.0','1.1.2'])urls.push('https://cdn.jsdelivr.net/npm/zxing-wasm@'+v+'/dist/es/reader/index.js','https://cdn.jsdelivr.net/npm/zxing-wasm@'+v+'/reader/+esm','https://unpkg.com/zxing-wasm@'+v+'/dist/es/reader/index.js');
+  for(const u of urls){try{const m=await import(u);const f=m.readBarcodes||m.readBarcodesFromImageData;if(f){zx=f;return zx}}catch(e){}}
+  return null}
+function toCanvas(src,maxD,rot){const w0=src.videoWidth||src.width,h0=src.videoHeight||src.height;const k=Math.min(1,maxD/Math.max(w0,h0));
+  let w=Math.round(w0*k),h=Math.round(h0*k);const c=document.createElement('canvas');const x=c.getContext('2d',{willReadFrequently:true});
+  if(rot){c.width=h;c.height=w;x.translate(h/2,w/2);x.rotate(rot*Math.PI/2);x.drawImage(src,-w/2,-h/2,w,h)}else{c.width=w;c.height=h;x.drawImage(src,0,0,w,h)}
+  return c}
+async function decodeSrc(src,deep){ // برمی‌گرداند متن کد یا null
+  const sizes=deep?[1600,2600,1000]:[1280];
+  for(const sz of sizes){
+    for(const rot of(deep?[0,1]:[0])){
+      const c=toCanvas(src,sz,rot);
+      if(detector){try{const r=await detector.detect(c);if(r.length)return r[0].rawValue}catch(e){}}
+      const f=await loadZX();
+      if(f){try{const id=c.getContext('2d').getImageData(0,0,c.width,c.height);
+        const r=await f(id,{formats:['DataMatrix','QRCode'],tryHarder:true,tryRotate:true,tryInvert:true,tryDownscale:true,maxNumberOfSymbols:1});
+        const ok=(r||[]).find(x=>x.text);if(ok)return ok.text}catch(e){}}
+    }}
+  return null}
+async function startCam(){
+  if(camRunning)return;autoCam=true;camErr('');
+  try{
+    if(!window.isSecureContext||!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error('SEC');
+    detector=detector||await nativeDetector();
+    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false});
+    try{const tr=stream.getVideoTracks()[0];const cp=tr.getCapabilities?tr.getCapabilities():{};if(cp.focusMode&&cp.focusMode.includes('continuous'))await tr.applyConstraints({advanced:[{focusMode:'continuous'}]})}catch(e){}
+    const v=$('cam');v.srcObject=stream;v.style.display='block';await v.play();
+    $('camon').classList.add('hide');$('camoff').classList.remove('hide');camRunning=true;
+    camErr('در حال جستجوی کد… بسته را ۱۵ تا ۲۵ سانتی‌متر دورتر نگه دارید تا واضح شود. '+(detector?'':'(موتور اسکن در حال بارگذاری از اینترنت است)'));
+    const tick=async()=>{if(!camRunning)return;
+      if(!busy&&v.videoWidth){busy=true;try{const t=await decodeSrc(v,false);if(t&&camRunning){navigator.vibrate&&navigator.vibrate(60);busy=false;await stopCam(true);camErr('');handleCode(t);return}}catch(e){}busy=false}
+      loopT=setTimeout(tick,250)};tick();
+    if(!detector){loadZX().then(f=>{if(!f&&camRunning)camErr('❌ موتور اسکن بارگذاری نشد (اینترنت لازم است). از «اسکن از عکس» یا تایپ کد استفاده کنید.')})}
+  }catch(e){camRunning=false;autoCam=false;if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}
+    $('camon').classList.remove('hide');$('camoff').classList.add('hide');
+    const n=e&&e.name,m=e&&e.message;
+    camErr(m==='SEC'||!window.isSecureContext?'❌ مرورگر روی این آدرس (فایل محلی یا http) اجازه دوربین نمی‌دهد. فایل را روی یک آدرس <b>https</b> باز کنید، یا از «اسکن از عکس» استفاده کنید (دکمه عکس از دوربین خود گوشی استفاده می‌کند).':
+      n==='NotAllowedError'?'❌ اجازه دوربین داده نشد. در تنظیمات مرورگر (قفل کنار آدرس) دوربین را مجاز کنید.':
+      n==='NotFoundError'?'❌ دوربینی پیدا نشد.':'❌ خطای دوربین: '+esc(n||'')+' '+esc(m||''))}}
+async function stopCam(keepAuto){camRunning=false;if(!keepAuto)autoCam=false;clearTimeout(loopT);
+  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}$('cam').style.display='none';
+  $('camon').classList.remove('hide');$('camoff').classList.add('hide')}
+async function scanPhoto(file){
+  camErr('⏳ در حال تحلیل عکس…');
+  try{
+    detector=detector||await nativeDetector();
+    const bm=await createImageBitmap(file);
+    let t=await decodeSrc(bm,true);
+    if(!t){try{await loadH5();const h=new Html5Qrcode('reader',{verbose:false});try{t=await h.scanFile(file,false)}finally{try{h.clear()}catch(e){}}}catch(e){}}
+    if(t){camErr('');handleCode(t)}
+    else camErr('❌ کدی در عکس پیدا نشد. نکات: عکس را نزدیک‌تر و فقط از خود کد (مربع بارکد) بگیرید، نور کافی باشد و عکس تار نباشد. '+(zx||detector?'':'همچنین موتور اسکن بارگذاری نشد؛ اینترنت لازم است. '))
+  }catch(e){camErr('❌ خطا در پردازش عکس: '+esc(e.message||''))}}
+
+/* ================= نمایش جدول‌ها ================= */
+function renderStock(){
+  const q=en($('st_q').value).toLowerCase().split(/\s+/).filter(Boolean),pos=$('st_pos').checked;
+  let ls=S.lots.filter(l=>(!pos||l.packs>0||l.units>0)&&q.every(t=>(l.name+' '+l.co+' '+l.batch+' '+l.gtin).toLowerCase().includes(t)));
+  ls.sort((a,b)=>a.name.localeCompare(b.name)||(a.exp||'9').localeCompare(b.exp||'9'));
+  const drugs=new Set(ls.map(l=>l.dk)).size,tp=ls.reduce((s,l)=>s+l.packs,0);
+  $('st_sum').textContent=fa(drugs)+' قلم دارو، '+fa(ls.length)+' ردیف بچ، جمع بسته‌های کامل: '+fa(tp);
+  let h='<tr><th>دارو</th><th>شرکت</th><th>بچ</th><th>انقضا</th><th>وضعیت</th><th>بسته</th><th>واحد باز</th><th></th></tr>',last='';
+  for(const l of ls){const e=expInfo(l.exp);const nm=l.dk===last?'<span class="mut">″</span>':'<b dir="ltr">'+esc(l.name)+'</b>';last=l.dk;
+    h+='<tr><td class="w">'+nm+'</td><td>'+esc(l.co)+'</td><td dir="ltr">'+esc(l.batch||'—')+'</td><td>'+fmtDate(l.exp)+'</td><td><span class="b '+e.cls+'">'+e.txt+'</span></td><td>'+fa(l.packs)+'</td><td>'+fa(l.units)+(l.pack?' <span class="mut">/'+fa(l.pack)+'</span>':'')+'</td><td><button class="sm" data-act="rec" data-key="'+esc(l.key)+'">ثبت</button></td></tr>'}
+  $('st_tbl').innerHTML=ls.length?h:'<tr><td class="mut">موردی ثبت نشده است.</td></tr>'}
+function histDetail(x){const m={single:'تکی',carton:'کارتن',open:'باز'}[x.mode]||'';return m+(x.det&&x.mode!=='open'?' ('+x.det+')':'')}
+function renderHist(){
+  const q=en($('h_q').value).toLowerCase().split(/\s+/).filter(Boolean),op=$('h_op').value;
+  const ls=S.hist.filter(x=>(!op||x.op===op)&&q.every(t=>(x.name+' '+x.batch+' '+x.user+' '+x.co+' '+x.gtin).toLowerCase().includes(t))).slice(0,500);
+  let h='<tr><th>زمان</th><th>شمارنده</th><th>عملیات</th><th>دارو</th><th>بچ</th><th>انقضا</th><th>روش / ورودی</th><th>قبل</th><th>بعد</th><th>تغییر</th><th>توضیح</th></tr>';
+  for(const x of ls){const d=x.dlt;h+='<tr><td>'+fmtTs(x.ts)+'</td><td>'+esc(x.user||'—')+'</td><td>'+OPS[x.op]+'</td><td class="w" dir="ltr">'+esc(x.name)+'</td><td dir="ltr">'+esc(x.batch||'—')+'</td><td>'+fmtDate(x.exp)+'</td><td>'+histDetail(x)+' → '+qtyTxt(x.in.p,x.in.u)+'</td><td>'+qtyTxt(x.bf.p,x.bf.u)+'</td><td>'+qtyTxt(x.af.p,x.af.u)+'</td><td dir="ltr" style="color:var(--'+(d<0?'red':d>0?'grn':'mut')+')">'+(d>0?'+':'')+fa(d)+'</td><td class="w">'+esc(x.note)+'</td></tr>'}
+  $('h_tbl').innerHTML=ls.length?h:'<tr><td class="mut">تاریخچه‌ای وجود ندارد.</td></tr>'}
+function renderAlert(){
+  const ls=S.lots.filter(l=>(l.packs>0||l.units>0)&&l.exp).map(l=>({l,e:expInfo(l.exp)})).filter(x=>x.e.cls==='exp'||x.e.cls==='near').sort((a,b)=>a.e.days-b.e.days);
+  const ex=ls.filter(x=>x.e.cls==='exp').length;
+  $('al_sum').textContent=fa(ex)+' ردیف منقضی‌شده و '+fa(ls.length-ex)+' ردیف نزدیک به انقضا (تا '+fa(S.settings.warn)+' روز)';
+  let h='<tr><th>وضعیت</th><th>دارو</th><th>شرکت</th><th>بچ</th><th>انقضا</th><th>موجودی</th><th></th></tr>';
+  for(const{l,e}of ls)h+='<tr><td><span class="b '+e.cls+'">'+e.txt+'</span></td><td class="w" dir="ltr"><b>'+esc(l.name)+'</b></td><td>'+esc(l.co)+'</td><td dir="ltr">'+esc(l.batch||'—')+'</td><td>'+fmtDate(l.exp)+'</td><td>'+qtyTxt(l.packs,l.units)+'</td><td><button class="sm" data-act="rec" data-key="'+esc(l.key)+'">ثبت</button></td></tr>';
+  $('al_tbl').innerHTML=ls.length?h:'<tr><td class="mut">دارویی منقضی یا نزدیک به انقضا نیست ✔</td></tr>';
+  const c=$('alcnt');c.textContent=fa(ls.length);c.classList.toggle('hide',!ls.length)}
+function usersList(){$('users').innerHTML=S.users.map(u=>'<option value="'+esc(u)+'">').join('')}
+function renderAll(){renderStock();renderHist();renderAlert()}
+
+/* ================= خروجی اکسل (xlsx واقعی، بدون کتابخانه) ================= */
+const CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return b=>{let c=0xFFFFFFFF;for(let i=0;i<b.length;i++)c=t[(c^b[i])&255]^(c>>>8);return(c^0xFFFFFFFF)>>>0}})();
+function zipStore(files){const te=new TextEncoder(),parts=[],cd=[];let off=0;
+  const w16=v=>[v&255,v>>8&255],w32=v=>[v&255,v>>8&255,v>>16&255,v>>24&255];
+  for(const[name,str]of files){const nb=te.encode(name),db=te.encode(str),crc=CRC(db);
+    const lh=new Uint8Array([0x50,0x4b,3,4,20,0,0,8,0,0,0,0,0x21,0,...w32(crc),...w32(db.length),...w32(db.length),...w16(nb.length),0,0]);
+    parts.push(lh,nb,db);
+    cd.push(new Uint8Array([0x50,0x4b,1,2,20,0,20,0,0,8,0,0,0,0,0x21,0,...w32(crc),...w32(db.length),...w32(db.length),...w16(nb.length),0,0,0,0,0,0,0,0,0,0,0,0,...w32(off)]),nb);
+    off+=lh.length+nb.length+db.length}
+  const cdLen=cd.reduce((s,x)=>s+x.length,0);
+  const eo=new Uint8Array([0x50,0x4b,5,6,0,0,0,0,...w16(files.length),...w16(files.length),...w32(cdLen),...w32(off),0,0]);
+  return new Blob([...parts,...cd,eo],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})}
+const colL=i=>{let s='';i++;while(i>0){const m=(i-1)%26;s=String.fromCharCode(65+m)+s;i=Math.floor((i-1)/26)}return s};
+const xe=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])).replace(/[\x00-\x08\x0b\x0c\x0e-\x1f]/g,'');
+function sheetXml(rows){let x='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView rightToLeft="1" workbookViewId="0"/></sheetViews><cols><col min="1" max="12" width="22" customWidth="1"/></cols><sheetData>';
+  rows.forEach((r,i)=>{x+='<row r="'+(i+1)+'">';r.forEach((v,j)=>{const ref=colL(j)+(i+1);x+=typeof v==='number'?'<c r="'+ref+'"><v>'+v+'</v></c>':'<c r="'+ref+'" t="inlineStr"><is><t xml:space="preserve">'+xe(v)+'</t></is></c>'});x+='</row>'});
+  return x+'</sheetData></worksheet>'}
+function exportXlsx(){
+  const e=expInfo;const stock=[['نام دارو','شرکت سازنده','GTIN','IRC','شماره بچ','انقضا (شمسی)','انقضا (میلادی)','وضعیت انقضا','بسته','واحد باز','تعداد در بسته','جمع (معادل بسته)']];
+  S.lots.slice().sort((a,b)=>a.name.localeCompare(b.name)).forEach(l=>stock.push([l.name,l.co,l.gtin,l.irc,l.batch,l.exp?fmtJ(l.exp):'',l.exp,e(l.exp).txt,l.packs,l.units,l.pack,Math.round(totalPacks(l)*100)/100]));
+  const hist=[['زمان (شمسی)','شمارنده','عملیات','نام دارو','شرکت','GTIN','بچ','انقضا (شمسی)','انقضا (میلادی)','روش','جزئیات ورودی','بسته ورودی','واحد ورودی','بسته قبل','واحد قبل','بسته بعد','واحد بعد','تغییر (معادل بسته)','توضیح']];
+  S.hist.slice().reverse().forEach(x=>hist.push([fmtTs(x.ts),x.user,OPS[x.op],x.name,x.co,x.gtin,x.batch,x.exp?fmtJ(x.exp):'',x.exp,{single:'تکی',carton:'کارتن',open:'باز/نیمه‌مصرف'}[x.mode]||'',x.det,x.in.p,x.in.u,x.bf.p,x.bf.u,x.af.p,x.af.u,x.dlt,x.note]));
+  const T='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+  const blob=zipStore([
+    ['[Content_Types].xml',T+'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>'],
+    ['_rels/.rels',T+'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'],
+    ['xl/workbook.xml',T+'<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="موجودی" sheetId="1" r:id="rId1"/><sheet name="تاریخچه" sheetId="2" r:id="rId2"/></sheets></workbook>'],
+    ['xl/_rels/workbook.xml.rels',T+'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/></Relationships>'],
+    ['xl/worksheets/sheet1.xml',sheetXml(stock)],['xl/worksheets/sheet2.xml',sheetXml(hist)]]);
+  download(blob,'pharmacy-inventory-'+en(fmtJ(todayIso())).replace(/\//g,'-')+'.xlsx')}
+function download(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+
+/* ================= رویدادها ================= */
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));
+  document.querySelectorAll('main>section').forEach(s=>s.classList.toggle('on',s.id==='t-'+b.dataset.t));
+  if(b.dataset.t!=='scan'&&camRunning)stopCam();renderAll();window.scrollTo(0,0)});
+const showTab=t=>document.querySelector('nav button[data-t="'+t+'"]').click();
+$('dbfile').onchange=e=>e.target.files[0]&&importDb(e.target.files[0]);
+$('camon').onclick=startCam;$('camoff').onclick=()=>stopCam();
+$('photo').onclick=()=>$('photofile').click();$('photofile').onchange=e=>{if(e.target.files[0])scanPhoto(e.target.files[0]);e.target.value=''};
+$('manual').onclick=()=>{selectDrug({k:'',irc:'',name:'',co:'',pack:0},{});$('f_name').focus()};
+$('qgo').onclick=doSearch;$('q').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();doSearch()}};
+$('qres').onclick=e=>{const t=e.target.closest('[data-i]');if(t){selectDrug($('qres')._r[+t.dataset.i]);$('qres').classList.add('hide')}};
+$('modeseg').onclick=e=>{const b=e.target.closest('button');if(b)setMode(b.dataset.m)};
+$('lotchips').onclick=e=>{const b=e.target.closest('[data-lot]');if(b)applyLot(b.dataset.lot)};
+['f_op','f_batch','f_ey','f_em','f_ed','f_packs','f_cartons','f_per','f_extra','f_fullpacks','f_units','f_pack'].forEach(i=>$(i).addEventListener('input',hint));
+$('f_cal').onchange=e=>{const old=e.target.value==='j'?'g':'j';const keep=$('f_cal').value;
+  $('f_cal').value=old;const iso=readExp();$('f_cal').value=keep;if(iso&&iso!=='bad')setExp(iso);hint()};
+$('save').onclick=saveEntry;$('next').onclick=()=>{resetEntry();if(autoCam)startCam()};
+$('st_q').oninput=$('st_pos').onchange=renderStock;$('h_q').oninput=$('h_op').onchange=renderHist;
+$('exp1').onclick=$('exp2').onclick=exportXlsx;
+document.body.addEventListener('click',e=>{const b=e.target.closest('[data-act="rec"]');if(!b)return;
+  const l=S.lots.find(x=>x.key===b.dataset.key);if(!l)return;showTab('scan');
+  const d=lookupKey(l.dk)||{k:l.gtin,irc:l.irc,name:l.name,co:l.co,pack:l.pack};selectDrug(d,{batch:l.batch,exp:l.exp})});
+$('s_warn').onchange=()=>{S.settings.warn=Math.max(1,num($('s_warn').value)||90);$('s_warn').value=fa(S.settings.warn);persist();renderAll()};
+$('s_cal').onchange=()=>{S.settings.cal=$('s_cal').value;persist();renderAll()};
+$('user').onchange=()=>{try{localStorage.setItem('pi_user',$('user').value)}catch(e){}};
+$('bk').onclick=()=>download(new Blob([JSON.stringify(S)],{type:'application/json'}),'pharmacy-backup-'+todayIso()+'.json');
+$('rs').onclick=()=>$('rsfile').click();
+$('rsfile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const o=JSON.parse(await f.text());if(!Array.isArray(o.lots)||!Array.isArray(o.hist))throw 0;if(!confirm('اطلاعات فعلی با پشتیبان جایگزین شود؟'))return;S=Object.assign({lots:[],hist:[],custom:{},carton:{},users:[],settings:{warn:90,cal:'j'}},o);await persist();init2();toast('بازیابی شد')}catch(x){toast('فایل پشتیبان معتبر نیست')}e.target.value=''};
+$('wipe').onclick=async()=>{if(confirm('همه موجودی‌ها و تاریخچه حذف شود؟ (دیتابیس داروها باقی می‌ماند)')&&confirm('مطمئنید؟ این کار برگشت‌پذیر نیست.')){S.lots=[];S.hist=[];await persist();renderAll();toast('حذف شد')}};
+
+/* ================= شروع ================= */
+function init2(){$('s_warn').value=fa(S.settings.warn);$('s_cal').value=S.settings.cal;usersList();renderAll();dbStat()}
+(async()=>{
+  try{$('user').value=localStorage.getItem('pi_user')||''}catch(e){}
+  const st=await kvGet('state');if(st)S=Object.assign(S,st);S.settings=Object.assign({warn:90,cal:'j'},S.settings);
+  const db=await kvGet('db');if(db&&db.list){indexDb(db.list);DB.meta=db.meta}
+  init2();if(DB.list.length)showTab('scan');
+})();
+window.__t={handleCode,parseGS1,lookupText,isoToJ,jToIso,S:()=>S,DB:()=>DB};
+</script>
+</body>
+</html>
