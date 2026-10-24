@@ -114,16 +114,27 @@ jobs:
           chmod +x gradlew
           ./gradlew :feature:scanner:assembleDebugAndroidTest --stacktrace > "$EVID/compile.log" 2>&1
           echo "COMPILE_EXIT=$?" >> "$EVID/status.txt"
-          say "کامپایل تست‌های ابزارداری:" "$EVID/compile.log"
+          grep -E "^e: |^w: .*error|error:|FAILURE:|What went wrong" -A2 "$EVID/compile.log" | head -60 > "$EVID/compile-errors.txt" || true
+          say "کامپایل تست‌های ابزارداری:" "$EVID/compile-errors.txt"
 
           yes | sdkmanager --licenses > /dev/null 2>&1 || true
           sdkmanager "platform-tools" "emulator" "system-images;android-33;default;x86_64" > "$EVID/sdkmanager.log" 2>&1
           echo "SDKMANAGER_EXIT=$?" >> "$EVID/status.txt"
 
+          # مسیر AVD را صریح تعیین می‌کنیم تا avdmanager و emulator یک جا را ببینند
+          export ANDROID_USER_HOME="$HOME/.android"
+          export ANDROID_AVD_HOME="$ANDROID_USER_HOME/avd"
+          mkdir -p "$ANDROID_AVD_HOME"
+          echo "ANDROID_AVD_HOME=$ANDROID_AVD_HOME" >> "$EVID/status.txt"
+
           echo "no" | avdmanager create avd -n gmsfree \
             -k "system-images;android-33;default;x86_64" -d "pixel_5" --force > "$EVID/avd.log" 2>&1
           echo "AVD_EXIT=$?" >> "$EVID/status.txt"
-          say "ساخت AVD:" "$EVID/avd.log"
+          { echo "=== avd dir ==="; ls -la "$ANDROID_AVD_HOME" 2>&1
+            echo "=== emulator -list-avds ==="; emulator -list-avds 2>&1
+            echo "=== avd.log ==="; tail -20 "$EVID/avd.log"
+          } | tee "$EVID/avd-check.txt"
+          say "ساخت AVD:" "$EVID/avd-check.txt"
 
           nohup emulator -avd gmsfree -no-window -no-audio -no-boot-anim \
             -gpu swiftshader_indirect -camera-back virtualscene -camera-front none \
