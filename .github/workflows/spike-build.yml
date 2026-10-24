@@ -254,16 +254,18 @@ jobs:
           apk=$(find upstream/app/build/outputs/apk/debug -name "*arm64-v8a*.apk" | head -1)
           {
             echo "### APK resources (fa / RTL)"
-            echo "apk=$apk aapt2=$AAPT"
+            echo "apk=$apk"
+            echo "aapt2=$AAPT"
             if [ -n "$apk" ] && [ -n "$AAPT" ]; then
+              echo "fa-config-count=$("$AAPT" dump resources "$apk" 2>/dev/null | grep -c 'config (fa)')"
               echo '```'
-              "$AAPT" dump resources "$apk" 2>/dev/null | grep -E "^\s+config .*\bfa\b|values-fa|config fa" | head -10 || echo "no fa config lines"
-              echo "--- app label per locale ---"
-              "$AAPT" dump --values resources "$apk" 2>/dev/null | grep -A3 "app_name" | head -20 || true
+              "$AAPT" dump resources "$apk" 2>/dev/null | grep 'config (fa)' | head -4 || true
+              "$AAPT" dump resources "$apk" 2>/dev/null | grep -A6 'string/inventory_title' | head -10 || true
               echo '```'
             fi
           } > "$GITHUB_WORKSPACE/apk-res-report.md"
           cat "$GITHUB_WORKSPACE/apk-res-report.md"
+
       - name: Report lean sizes
         if: always()
         run: |
