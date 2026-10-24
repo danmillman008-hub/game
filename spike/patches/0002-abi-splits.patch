@@ -1,0 +1,33 @@
+From 3b36085e8c8bbc166f72cc6537a5c42c4d69381e Mon Sep 17 00:00:00 2001
+From: spike <spike@local>
+Date: Sat, 24 Oct 2026 19:01:46 +0000
+Subject: [PATCH] spike: ABI splits for size measurement
+
+---
+ app/build.gradle.kts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+index 47e8710..e9cd4cf 100644
+--- a/app/build.gradle.kts
++++ b/app/build.gradle.kts
+@@ -18,6 +18,16 @@ android {
+         buildConfig = true
+     }
+ 
++    // Spike: per-ABI APKs so we can measure a realistic shipping size.
++    splits {
++        abi {
++            isEnable = true
++            reset()
++            include("armeabi-v7a", "arm64-v8a", "x86_64")
++            isUniversalApk = true
++        }
++    }
++
+ 
+     /*
+     applicationVariants.all {
+-- 
+2.39.5
+

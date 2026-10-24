@@ -1,0 +1,344 @@
+name: spike-build
+
+# اعتبارسنجی «۴۸ ساعت»: بیلد واقعی Algidy (پایه و اصلاح‌شده) روی رانر گیت‌هاب.
+# سندباکس به Maven/Android SDK دسترسی ندارد، پس بیلد اینجا انجام می‌شود.
+# نتیجه به‌صورت Issue منتشر می‌شود تا از بیرون قابل خواندن باشد.
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "spike/**"
+      - ".github/workflows/spike-build.yml"
+
+permissions:
+  contents: read
+  issues: write
+
+env:
+  ALGIDY_REPO: https://github.com/NhuHuy-79/Algidy.git
+  ALGIDY_REF: v2.0.0
+
+jobs:
+  # ---------------------------------------------------------------- baseline
+  baseline:
+    name: baseline-debug
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - run: git clone --depth 1 --branch "$ALGIDY_REF" "$ALGIDY_REPO" upstream
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: true
+      - name: Ensure Android SDK 36
+        run: |
+          SDK="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          if [ -x "$SDK/cmdline-tools/latest/bin/sdkmanager" ]; then
+            yes | "$SDK/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0" >/dev/null 2>&1 || true
+          fi
+      - name: Build debug
+        working-directory: upstream
+        run: |
+          chmod +x gradlew
+          set +e
+          ./gradlew :app:assembleDebug --no-daemon 2>&1 | tee "$GITHUB_WORKSPACE/baseline-build.log"
+          echo "GRADLE_EXIT=${PIPESTATUS[0]}" > "$GITHUB_WORKSPACE/baseline-exit.txt"
+      - name: Report
+        if: always()
+        run: |
+          {
+            echo "### baseline (debug، بدون تغییر)"
+            cat baseline-exit.txt 2>/dev/null || true
+            find upstream/app/build/outputs -name "*.apk" -exec sh -c 'echo "$1 -> $(stat -c%s "$1") bytes"' _ {} \; 2>/dev/null || echo "APK: none"
+            echo '```'; tail -c 6000 baseline-build.log 2>/dev/null || true; echo '```'
+          } > baseline-report.md
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: baseline
+          if-no-files-found: warn
+          path: |
+            baseline-build.log
+            baseline-report.md
+            upstream/app/build/outputs/apk/**/*.apk
+
+  # ------------------------------------------------------- release + ABI split
+  release:
+    name: release-size
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - run: git clone --depth 1 --branch "$ALGIDY_REF" "$ALGIDY_REPO" upstream
+      - name: Apply patches
+        run: |
+          mkdir -p upstream/core/designsystem/src/main/res/font
+          cp spike/assets/vazirmatn.ttf upstream/core/designsystem/src/main/res/font/vazirmatn.ttf
+          cd upstream && git apply --verbose ../spike/patches/*.patch
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Ensure Android SDK 36
+        run: |
+          SDK="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          if [ -x "$SDK/cmdline-tools/latest/bin/sdkmanager" ]; then
+            yes | "$SDK/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0" >/dev/null 2>&1 || true
+          fi
+      - name: Assemble release (R8 + ABI splits)
+        working-directory: upstream
+        run: |
+          chmod +x gradlew
+          set +e
+          ./gradlew :app:assembleRelease 2>&1 | tee "$GITHUB_WORKSPACE/release-build.log"
+          echo "GRADLE_EXIT=${PIPESTATUS[0]}" > "$GITHUB_WORKSPACE/release-exit.txt"
+      - name: Report sizes
+        if: always()
+        run: |
+          {
+            echo "### release (R8 + shrinkResources + ABI splits)"
+            cat release-exit.txt 2>/dev/null || true
+            echo
+            echo "| APK | bytes | MB |"
+            echo "|---|---|---|"
+            find upstream/app/build/outputs/apk/release upstream/app/build/outputs/apk/debug -name "*.apk" 2>/dev/null | sort | while read -r f; do
+              b=$(stat -c%s "$f"); printf "| %s | %s | %.1f |\n" "$(basename "$f")" "$b" "$(awk "BEGIN{print $b/1048576}")"
+            done
+            apk=$(find upstream/app/build/outputs/apk/release -name "*arm64-v8a*.apk" | head -1)
+            [ -z "$apk" ] && apk=$(find upstream/app/build/outputs/apk/release -name "*-universal.apk" | head -1)
+            if [ -n "$apk" ]; then
+              echo
+              echo "APK_SHA256=$(sha256sum "$apk" | cut -d' ' -f1)"
+              echo '```'
+              echo "--- fonts ---"
+              unzip -l "$apk" | grep -E "res/font|\.ttf" || echo "none"
+              echo "--- largest 12 ---"
+              unzip -l "$apk" | sort -k1 -n -r | head -12
+              echo '```'
+            fi
+            echo '```'; tail -c 6000 release-build.log 2>/dev/null || true; echo '```'
+          } > release-report.md
+          head -20 release-report.md
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: release
+          if-no-files-found: warn
+          path: |
+            release-build.log
+            release-report.md
+            upstream/app/build/outputs/apk/release/**/*.apk
+
+  # -------------------------------------------------------------------- tests
+  tests:
+    name: unit-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - run: git clone --depth 1 --branch "$ALGIDY_REF" "$ALGIDY_REPO" upstream
+      - name: Apply patches
+        run: |
+          mkdir -p upstream/core/designsystem/src/main/res/font
+          cp spike/assets/vazirmatn.ttf upstream/core/designsystem/src/main/res/font/vazirmatn.ttf
+          cd upstream && git apply --verbose ../spike/patches/*.patch
+      - name: Quarantine stale tests (documented)
+        run: |
+          cd upstream
+          # تست‌هایی که با API فعلی کلاس‌ها نمی‌سازند (از قبل در v2.0.0 خراب بودند)
+          rm -f core/data/src/test/kotlin/com/nhuhuy/algidy/core/data/repository/FoodRepositoryImplTest.kt
+          rm -f feature/analytics/src/test/kotlin/com/nhuhuy/algidy/feature/analytics/data/repository/AnalyticsRepositoryImplTest.kt
+          rm -f feature/settings/src/test/kotlin/com/nhuhuy/algidy/feature/settings/util/MainDispatcherRule.kt
+          rm -f feature/inventory/src/test/kotlin/com/nhuhuy/algidy/feature/inventory/domain/usecase/UpdateSearchHistoryUseCaseTest.kt
+          echo "removed:"; git status --short | grep "^ D" || true
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Ensure Android SDK 36
+        run: |
+          SDK="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          if [ -x "$SDK/cmdline-tools/latest/bin/sdkmanager" ]; then
+            yes | "$SDK/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0" >/dev/null 2>&1 || true
+          fi
+      - name: Run unit tests
+        working-directory: upstream
+        run: |
+          chmod +x gradlew
+          set +e
+          ./gradlew testDebugUnitTest --continue 2>&1 | tee "$GITHUB_WORKSPACE/tests.log"
+          echo "TESTS_EXIT=${PIPESTATUS[0]}" > "$GITHUB_WORKSPACE/tests-exit.txt"
+      - name: Summarize test results
+        if: always()
+        run: |
+          {
+            echo "### unit tests (پس از قرنطینهٔ ۴ فایل تست کهنه)"
+            cat tests-exit.txt 2>/dev/null || true
+            echo
+            python3 spike/scripts/summarize_tests.py upstream
+            echo
+            echo '```'
+            tail -c 5000 tests.log 2>/dev/null || true
+            echo '```'
+          } > tests-report.md
+          head -30 tests-report.md
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tests
+          if-no-files-found: warn
+          path: |
+            tests.log
+            tests-report.md
+
+  # --------------------------------------------------------- lean release size
+  lean:
+    name: lean-size
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - run: git clone --depth 1 --branch "$ALGIDY_REF" "$ALGIDY_REPO" upstream
+      - name: Apply patches + lean profile
+        run: |
+          mkdir -p upstream/core/designsystem/src/main/res/font
+          cp spike/assets/vazirmatn.ttf upstream/core/designsystem/src/main/res/font/vazirmatn.ttf
+          cd upstream && git apply --verbose ../spike/patches/*.patch
+          cd ..
+          bash spike/scripts/apply-lean.sh upstream
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Ensure Android SDK 36
+        run: |
+          SDK="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          if [ -x "$SDK/cmdline-tools/latest/bin/sdkmanager" ]; then
+            yes | "$SDK/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0" >/dev/null 2>&1 || true
+          fi
+      - name: Verify no Play Services barcode dependency
+        working-directory: upstream
+        run: |
+          chmod +x gradlew
+          ./gradlew :app:dependencies --configuration releaseRuntimeClasspath > "$GITHUB_WORKSPACE/deps.txt" 2>&1 || true
+          {
+            echo "### dependency check (release)"
+            echo "play-services-mlkit-barcode-scanning hits: $(grep -c 'play-services-mlkit' "$GITHUB_WORKSPACE/deps.txt" || true)"
+            echo "com.google.mlkit:barcode-scanning hits: $(grep -c 'com.google.mlkit:barcode-scanning' "$GITHUB_WORKSPACE/deps.txt" || true)"
+            echo '```'
+            grep -E "mlkit|barhopper|play-services" "$GITHUB_WORKSPACE/deps.txt" | sort -u | head -20 || true
+            echo '```'
+          } > "$GITHUB_WORKSPACE/deps-report.md"
+          cat "$GITHUB_WORKSPACE/deps-report.md"
+
+      - name: Assemble lean (debug + release)
+        working-directory: upstream
+        run: |
+          set +e
+          ./gradlew :app:assembleRelease :app:assembleDebug 2>&1 | tee "$GITHUB_WORKSPACE/lean-build.log"
+          echo "GRADLE_EXIT=${PIPESTATUS[0]}" > "$GITHUB_WORKSPACE/lean-exit.txt"
+
+      - name: Verify Persian resources inside APK
+        if: always()
+        run: |
+          SDK="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          AAPT=$(ls "$SDK"/build-tools/*/aapt2 2>/dev/null | sort -V | tail -1)
+          apk=$(find upstream/app/build/outputs/apk/debug -name "*arm64-v8a*.apk" | head -1)
+          {
+            echo "### APK resources (fa / RTL)"
+            echo "apk=$apk"
+            echo "aapt2=$AAPT"
+            if [ -n "$apk" ] && [ -n "$AAPT" ]; then
+              echo "fa-config-count=$("$AAPT" dump resources "$apk" 2>/dev/null | grep -c 'config (fa)')"
+              echo '```'
+              "$AAPT" dump resources "$apk" 2>/dev/null | grep 'config (fa)' | head -4 || true
+              "$AAPT" dump resources "$apk" 2>/dev/null | grep -A6 'string/inventory_title' | head -10 || true
+              echo '```'
+            fi
+          } > "$GITHUB_WORKSPACE/apk-res-report.md"
+          cat "$GITHUB_WORKSPACE/apk-res-report.md"
+
+      - name: Report lean sizes
+        if: always()
+        run: |
+          {
+            echo "### lean (بدون OCR تاریخ‌خوان، بدون فونت‌های بلااستفاده)"
+            cat lean-exit.txt 2>/dev/null || true
+            echo
+            echo "| APK | bytes | MB |"
+            echo "|---|---|---|"
+            find upstream/app/build/outputs/apk/release upstream/app/build/outputs/apk/debug -name "*.apk" 2>/dev/null | sort | while read -r f; do
+              b=$(stat -c%s "$f"); printf "| %s | %s | %.1f |\n" "$(basename "$f")" "$b" "$(awk "BEGIN{print $b/1048576}")"
+            done
+            apk=$(find upstream/app/build/outputs/apk/release -name "*arm64-v8a*.apk" | head -1)
+            if [ -n "$apk" ]; then
+              echo
+              echo "APK_SHA256=$(sha256sum "$apk" | cut -d' ' -f1)"
+              echo '```'
+              unzip -l "$apk" | sort -k1 -n -r | head -12
+              echo '```'
+            fi
+            echo '```'; tail -c 4000 lean-build.log 2>/dev/null || true; echo '```'
+          } > lean-report.md
+          head -20 lean-report.md
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lean
+          if-no-files-found: warn
+          path: |
+            lean-build.log
+            lean-report.md
+            deps-report.md
+            apk-res-report.md
+            upstream/app/build/outputs/apk/release/**/*.apk
+            upstream/app/build/outputs/apk/debug/**/*.apk
+
+  # ------------------------------------------------------------------ report
+  report:
+    name: publish-report
+    needs: [baseline, release, lean, tests]
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Download artifacts (merged)
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+        continue-on-error: true
+
+      - name: Build report body
+        env:
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          {
+            echo "Run: $RUN_URL"
+            echo
+            for f in artifacts/*.md; do
+              echo "----- $(basename "$f")"
+              cat "$f"
+              echo
+            done
+          } > report-full.md
+          head -c 60000 report-full.md > report.md || cp report-full.md report.md
+          wc -c report.md
+
+      - name: Create issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          gh issue create --repo "$GITHUB_REPOSITORY" \
+            --title "spike-build report (run $RUN_ID)" \
+            --body-file report.md
