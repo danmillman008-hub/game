@@ -12,7 +12,7 @@
 |---|---|---|---|
 | ۱ | بیلد بدون تغییر Algidy | ✅ **سبز** | `assembleDebug` موفق · APK دیباگ **94.4 MB** |
 | ۲ | بیلد با اصلاحات ما | ✅ **سبز** | debug و release هر دو ساخته شدند |
-| ۳ | تعویض ML Kit به نسخهٔ باندل‌شده | 🟡 **کامپایل سبز، اجرا اثبات‌نشده** | مدل و `libbarhopper_v3.so` داخل APK هست |
+| ۳ | تعویض ML Kit به نسخهٔ باندل‌شده | ✅ **اثبات‌شده روی دستگاه بدون GMS** | EAN-13 + QR + Data Matrix دیکود شد · دوربین فریم داد |
 | ۴ | اندازهٔ APK (release، R8) | ✅ **زیر بودجه** | arm64 = **14.7 MB** · a-v7a = 13.1 MB · universal = 29.6 MB |
 | ۵ | فارسی و RTL | ✅ **منابع داخل APK تأیید شد** | `string/inventory_title (fa) "موجودی"` |
 | ۶ | تست‌ها | 🟡 **سبز پس از قرنطینه** | ۱۹ تست، ۰ خطا — ولی ۴ فایل تست در HEAD خراب بود |
@@ -174,3 +174,74 @@ resource string/inventory_title
 | حذف وابستگی GMS ممکن نباشد | 🟡 حذف کامل ممکن نیست؛ باید با تست اجرا سنجیده شود |
 | Room با ۲۰۰k ردیف کند باشد | ⏳ هنوز اندازه‌گیری نشده (فاز ۳) |
 | `core/database` تست نداشته باشد | ❌ **رخ داده** — صفر تست. پذیرفتیم و خودمان می‌نویسیم |
+
+---
+
+# پیوست ۲ — نتیجهٔ تست GMS-free (اجرا شد) ✅
+
+> امولاتور AOSP (`sdk_phone64_x86_64`, Android 13, ایمیج `default` **بدون Google APIs**)
+> روی رانر گیت‌هاب، با KVM. تاریخ: ۲۰۲۶-۱۰-۲۴ · Issue شمارهٔ ۱۹
+
+## شرایط آزمایش (اثبات‌شده، نه فرضی)
+
+```
+=== device ===
+13
+sdk_phone64_x86_64
+=== network must be dead ===
+connect: Network is unreachable          ← اینترنت کامل قطع
+=== google packages on device? ===
+NO_GOOGLE_PACKAGES_ON_DEVICE             ← هیچ بستهٔ گوگلی روی دستگاه نیست
+=== cameras ===
+Number of camera devices: 1
+```
+
+## نتیجهٔ تست‌ها
+
+```
+<testsuites tests="2" failures="0" errors="0" skipped="0">
+  BarcodeBundleTest.bundledScannerDecodesAllThreeFormats   ✅  0.63s
+  CameraSmokeTest.cameraDeliversFrames                     ✅  6.86s
+```
+
+سه فرمت بارکد با مدل **باندل‌شده** دیکود شدند و `rawValue` بررسی شد:
+
+| فایل | فرمت | payload مورد انتظار |
+|---|---|---|
+| `ean13.png` | EAN-13 | `6262620401346` |
+| `qr.png` | QR | `0106262620401344…` (GS1) |
+| `datamatrix.png` | Data Matrix | `082DA 1405/11/11` |
+
+## مهم‌ترین خط لاگ — اثبات اینکه مدل local است، نه دانلودی
+
+```
+DynamiteModule: Considering local module com.google.mlkit.dynamite.barcode:10000
+                and remote module com.google.mlkit.dynamite.barcode:0
+DynamiteModule: Selected local version of com.google.mlkit.dynamite.barcode
+barhopper::deep_learning::OnedDecoderClient is created successfully.
+```
+
+نسخهٔ remote صفر است (چون GMS نیست) و ML Kit **نسخهٔ محلی** را انتخاب کرده
+و موتور `barhopper` بالا آمده. یعنی مسیر «دانلود پویا از Play Services» هرگز طی نشد.
+
+## دود اپ واقعی (نصب و اجرا روی همان امولاتور)
+
+```
+topResumedActivity=ActivityRecord{... com.nhuhuy.algidy/.MainActivity}
+process = 2490                        ← اپ زنده است
+crash buffer = (خالی)                 ← هیچ کرشی ثبت نشد
+[Splash/DI] Koin: (+) index 'BarcodeScanner' …
+```
+
+## حکم
+
+**ML Kit باندل‌شده روی دستگاه بدون Play Services و بدون اینترنت کار می‌کند.**
+این ریسک فنی بسته شد → مجوز عبور به فاز ۳.
+
+## آنچه این تست اثبات **نکرد**
+
+1. **بارکد فیزیکی جلوی دوربین.** دوربین ثابت شد فریم می‌دهد و دیکودر ثابت شد روی تصویر
+   کار می‌کند، ولی «گرفتن یک جعبهٔ واقعی جلوی لنز» تست نشده. (برای این کار باید
+   تصویر بارکد روی virtual scene امولاتور گذاشته شود، یا روی گوشی واقعی تست شود.)
+2. **سرعت اسکن در دنیای واقعی** (نور کم، بارکد خش‌دار، فوکوس).
+3. **جریان ثبت محصول**: `rawValue` به UI و فرم ثبت نرفته، چون هنوز آن جریان را ننوشته‌ایم.
