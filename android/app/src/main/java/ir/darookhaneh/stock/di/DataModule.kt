@@ -1,0 +1,63 @@
+package ir.darookhaneh.stock.di
+
+import ir.darookhaneh.stock.core.data.AppNewFeaturesReader
+import ir.darookhaneh.stock.core.data.repository.CategoryRepositoryImpl
+import ir.darookhaneh.stock.core.data.repository.FoodRepositoryImpl
+import ir.darookhaneh.stock.core.data.repository.LocalMediaStorageImpl
+import ir.darookhaneh.stock.core.data.repository.UpdateRepositoryImpl
+import ir.darookhaneh.stock.core.data.util.AppDispatchers
+import ir.darookhaneh.stock.core.data.util.DefaultAppDispatchers
+import ir.darookhaneh.stock.core.datastore.dataStore
+import ir.darookhaneh.stock.core.datastore.migration.AppearanceMigrator
+import ir.darookhaneh.stock.core.datastore.migration.BaseMigrator
+import ir.darookhaneh.stock.core.datastore.migration.GeneralMigrator
+import ir.darookhaneh.stock.core.datastore.migration.NotificationMigrator
+import ir.darookhaneh.stock.core.datastore.model.AppearanceDataStore
+import ir.darookhaneh.stock.core.datastore.model.AppearancePreferences
+import ir.darookhaneh.stock.core.datastore.model.GeneralDataStore
+import ir.darookhaneh.stock.core.datastore.model.GeneralPreferences
+import ir.darookhaneh.stock.core.datastore.model.NotificationDataStore
+import ir.darookhaneh.stock.core.datastore.model.NotificationPreferences
+import ir.darookhaneh.stock.core.datastore.utils.BaseDataStore
+import ir.darookhaneh.stock.core.domain.repository.CategoryRepository
+import ir.darookhaneh.stock.core.domain.repository.FoodRepository
+import ir.darookhaneh.stock.core.domain.repository.LocalMediaStorage
+import ir.darookhaneh.stock.core.domain.repository.UpdateRepository
+import ir.darookhaneh.stock.feature.scanner.data.MLKitBarcodeScanner
+import ir.darookhaneh.stock.feature.scanner.domain.BarcodeScanner
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
+import org.koin.android.ext.koin.androidApplication
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.module
+
+@OptIn(ExperimentalSerializationApi::class)
+val dataModule = module {
+    singleOf(::AppNewFeaturesReader)
+    singleOf(::FoodRepositoryImpl) { bind<FoodRepository>() }
+    singleOf(::CategoryRepositoryImpl) { bind<CategoryRepository>() }
+    singleOf(::DefaultAppDispatchers) { bind<AppDispatchers>() }
+    single<BarcodeScanner> { MLKitBarcodeScanner(get()) }
+    singleOf(::LocalMediaStorageImpl) { bind<LocalMediaStorage>() }
+    singleOf(::UpdateRepositoryImpl) { bind<UpdateRepository>() }
+
+    //Datastore
+    single { androidApplication().dataStore }
+    single {
+        Json {
+            decodeEnumsCaseInsensitive = true
+            encodeDefaults = true
+            ignoreUnknownKeys = true
+        }
+    }
+
+    singleOf(::NotificationDataStore) { bind<BaseDataStore<NotificationPreferences>>() }
+    singleOf(::AppearanceDataStore) { bind<BaseDataStore<AppearancePreferences>>() }
+    singleOf(::GeneralDataStore) { bind<BaseDataStore<GeneralPreferences>>() }
+
+    //Datastore - Migration
+    singleOf(::NotificationMigrator) { bind<BaseMigrator>() }
+    singleOf(::AppearanceMigrator) { bind<BaseMigrator>() }
+    singleOf(::GeneralMigrator) { bind<BaseMigrator>() }
+}

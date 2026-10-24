@@ -1,0 +1,282 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
+package ir.darookhaneh.stock.feature.inventory.presentation.inventory.component
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.Label
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MediumFlexibleTopAppBar
+import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.MenuItemShapes
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import ir.darookhaneh.stock.core.designsystem.icon.StockIcons
+import ir.darookhaneh.stock.core.designsystem.icon.AppIcon
+import ir.darookhaneh.stock.core.designsystem.tokens.LocalStockShapes
+import ir.darookhaneh.stock.core.designsystem.tokens.LocalStockSpacing
+import ir.darookhaneh.stock.core.presentation.R
+import ir.darookhaneh.stock.feature.inventory.presentation.inventory.viewmodel.InventoryAction
+import ir.darookhaneh.stock.feature.inventory.presentation.inventory.viewmodel.InventoryCombineState
+import ir.darookhaneh.stock.feature.inventory.presentation.inventory.viewmodel.InventorySortMode
+import ir.darookhaneh.stock.feature.inventory.presentation.inventory.viewmodel.InventoryUiState
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun InventoryTopBar(
+    modifier: Modifier = Modifier,
+    title: String,
+    subTitle: String,
+    state: InventoryUiState,
+    combineState: InventoryCombineState,
+    onAction: (InventoryAction) -> Unit,
+) {
+    val stockIcon = StockIcons.Inventory
+
+    MediumFlexibleTopAppBar(
+        modifier = modifier,
+        title = {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.displaySmall.copy(
+                    fontWeight = FontWeight.Black
+                )
+            )
+        },
+        subtitle = {
+            Text(
+                text = subTitle
+            )
+        },
+        actions = {
+            IconButton(
+                onClick = { onAction(InventoryAction.OnSearchClick) }
+            ) {
+                AppIcon(iconProvider = stockIcon.SearchFood)
+            }
+
+
+            FilterSortMenu(
+                isExpiredOnlyActive = state.showExpiredOnly,
+                currentSortMode = state.sortMode,
+                onAction = onAction
+            )
+
+            CategoryActionMenu(
+                isCategoryEnabled = combineState.categoryEnabled,
+                isFoodCategoryEnabled = state.showCategoryEdit,
+                onAction = onAction
+            )
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun CategoryActionMenu(
+    modifier: Modifier = Modifier,
+    isCategoryEnabled: Boolean,
+    isFoodCategoryEnabled: Boolean = false,
+    onAction: (InventoryAction) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val scheme = MaterialTheme.colorScheme
+    Box(
+        modifier = modifier,
+    ) {
+        IconButton(
+            shape = CircleShape,
+            colors = IconButtonDefaults.iconButtonColors(
+                containerColor = if (expanded) scheme.primary else scheme.background,
+                contentColor = if (expanded) scheme.onPrimary else scheme.onBackground
+            ),
+            onClick = { expanded = true }
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Rounded.Label,
+                contentDescription = null
+            )
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            shape = LocalStockShapes.current.medium,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainer)
+        ) {
+            DropdownMenuItem(
+                shape = LocalStockShapes.current.medium,
+                text = { Text(stringResource(R.string.inventory_category_add)) },
+                onClick = {
+                    onAction(InventoryAction.OnAddCategory.Open)
+                    expanded = false
+                }
+            )
+            if (isCategoryEnabled && isFoodCategoryEnabled) {
+                DropdownMenuItem(
+                    shape = LocalStockShapes.current.medium,
+                    text = { Text(stringResource(R.string.inventory_category_edit)) },
+                    onClick = {
+                        onAction(InventoryAction.OnEditCategorySheet.Open)
+                        expanded = false
+                    }
+                )
+                DropdownMenuItem(
+                    shape = LocalStockShapes.current.medium,
+                    text = { Text(stringResource(R.string.inventory_category_delete)) },
+                    onClick = {
+                        onAction(InventoryAction.OnDeleteCategory)
+                        expanded = false
+                    }
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun FilterSortMenu(
+    modifier: Modifier = Modifier,
+    isExpiredOnlyActive: Boolean,
+    currentSortMode: InventorySortMode,
+    onAction: (InventoryAction) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val scheme = MaterialTheme.colorScheme
+    Box(
+        modifier = modifier
+    ) {
+        IconButton(
+            shape = CircleShape,
+            colors = IconButtonDefaults.iconButtonColors(
+                containerColor = if (expanded) scheme.primary else scheme.background,
+                contentColor = if (expanded) scheme.onPrimary else scheme.onBackground
+            ),
+            onClick = { expanded = true }
+        ) {
+            AppIcon(iconProvider = StockIcons.Inventory.FilterFood)
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            shape = LocalStockShapes.current.medium,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.background(scheme.surfaceContainer)
+        ) {
+            // Sort by Expiry
+            DropdownMenuItem(
+                selected = currentSortMode == InventorySortMode.BY_EXPIRY,
+                shapes = MenuItemShapes(
+                    shape = LocalStockShapes.current.medium,
+                    selectedShape = LocalStockShapes.current.medium
+                ),
+                colors = MenuDefaults.selectableItemColors(
+                    selectedTextColor = scheme.onSecondaryContainer,
+                    textColor = scheme.onSurface,
+                    containerColor = Color.Transparent,
+                    selectedContainerColor = scheme.secondaryContainer,
+                    leadingIconColor = scheme.onSurface,
+                    selectedLeadingIconColor = scheme.onSecondaryContainer
+                ),
+                text = { Text(stringResource(R.string.inventory_menu_sort_expiry)) },
+                leadingIcon = {
+                    AppIcon(iconProvider = StockIcons.Inventory.SortByExpiry)
+                },
+                onClick = {
+                    onAction(InventoryAction.OnSortByExpiry)
+                    expanded = false
+                }
+            )
+
+            // Sort by Name
+            DropdownMenuItem(
+                selected = currentSortMode == InventorySortMode.BY_NAME,
+                shapes = MenuItemShapes(
+                    shape = LocalStockShapes.current.medium,
+                    selectedShape = LocalStockShapes.current.medium
+                ),
+                colors = MenuDefaults.selectableItemColors(
+                    selectedTextColor = scheme.onSecondaryContainer,
+                    textColor = scheme.onSurface,
+                    containerColor = Color.Transparent,
+                    selectedContainerColor = scheme.secondaryContainer,
+                    leadingIconColor = scheme.onSurface,
+                    selectedLeadingIconColor = scheme.onSecondaryContainer
+                ),
+                text = { Text(stringResource(R.string.inventory_menu_sort_name)) },
+                leadingIcon = {
+                    AppIcon(iconProvider = StockIcons.Inventory.SortByName)
+                },
+                onClick = {
+                    onAction(InventoryAction.OnSortByName)
+                    expanded = false
+                }
+            )
+
+            // Show Expired Only
+            DropdownMenuItem(
+                selected = isExpiredOnlyActive,
+                shapes = MenuItemShapes(
+                    shape = LocalStockShapes.current.medium,
+                    selectedShape = LocalStockShapes.current.medium
+                ),
+                colors = MenuDefaults.selectableItemColors(
+                    selectedTextColor = scheme.onSecondaryContainer,
+                    textColor = scheme.onSurface,
+                    containerColor = Color.Transparent,
+                    selectedContainerColor = scheme.secondaryContainer,
+                    leadingIconColor = scheme.onSurface,
+                    selectedLeadingIconColor = scheme.onSecondaryContainer
+                ),
+                text = { Text(stringResource(R.string.inventory_menu_expired_only)) },
+                leadingIcon = {
+                    AppIcon(iconProvider = StockIcons.Inventory.ExpiryOnly)
+                },
+                onClick = {
+                    onAction(InventoryAction.OnShowExpiredOnly)
+                    expanded = false
+                }
+            )
+
+
+            HorizontalDivider(
+                thickness = 2.dp,
+                modifier = Modifier.padding(horizontal = LocalStockSpacing.current.small),
+            )
+
+            // Reset
+            DropdownMenuItem(
+                shape = LocalStockShapes.current.medium,
+                text = { Text(stringResource(R.string.inventory_menu_reset)) },
+                leadingIcon = {
+                    AppIcon(iconProvider = StockIcons.Inventory.ResetFilter)
+                },
+                onClick = {
+                    onAction(InventoryAction.OnResetFilters)
+                    expanded = false
+                }
+            )
+        }
+    }
+}

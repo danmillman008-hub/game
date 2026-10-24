@@ -1,0 +1,38 @@
+package ir.darookhaneh.stock.navigation
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import ir.darookhaneh.stock.core.designsystem.tokens.LocalStockSpacing
+
+@Composable
+fun FloatingBottomBarScaffold(
+    modifier: Modifier = Modifier,
+    bottomBar: @Composable () -> Unit,
+    content: @Composable () -> Unit
+) {
+    val localSpacing = LocalStockSpacing.current
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        content()
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .navigationBarsPadding()
+                .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(localSpacing.medium),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            bottomBar()
+        }
+
+    }
+}

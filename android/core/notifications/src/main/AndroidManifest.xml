@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="ir.darookhaneh.stock.core.notifications">
+
+    <application>
+        <receiver
+            android:name=".receiver.NotificationActionReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="ir.darookhaneh.stock.ACTION_CONSUME" />
+                <action android:name="ir.darookhaneh.stock.ACTION_WASTE" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

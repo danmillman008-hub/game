@@ -1,0 +1,110 @@
+package ir.darookhaneh.stock.feature.settings.presentation.component.appearance
+
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import com.materialkolor.ktx.harmonize
+import ir.darookhaneh.stock.capitalize
+import ir.darookhaneh.stock.core.designsystem.component.AppFilterButton
+import ir.darookhaneh.stock.core.model.setting.SeedColor
+import ir.darookhaneh.stock.core.presentation.R
+import ir.darookhaneh.stock.core.presentation.utils.ItemPosition
+import ir.darookhaneh.stock.core.presentation.utils.animatedHorizontalShape
+import ir.darookhaneh.stock.core.presentation.utils.toColor
+import ir.darookhaneh.stock.core.presentation.utils.toItemPosition
+import ir.darookhaneh.stock.core.presentation.utils.toVerticalSegmentedShape
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun ColorPresetPicker(
+    modifier: Modifier = Modifier,
+    itemPosition: ItemPosition,
+    seedColor: SeedColor,
+    enabled: Boolean = true,
+    onSeedColorSelect: (color: SeedColor) -> Unit
+) {
+    val entries = SeedColor.entries
+    ListItem(
+        onClick = {},
+        shapes = ListItemDefaults.shapes(shape = itemPosition.toVerticalSegmentedShape()),
+        modifier = modifier,
+        colors = ListItemDefaults.colors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+            headlineColor = MaterialTheme.colorScheme.onSurface,
+            leadingIconColor = MaterialTheme.colorScheme.onSurface
+        ),
+        supportingContent = {
+            LazyRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                contentPadding = PaddingValues(vertical = 16.dp)
+            ) {
+                itemsIndexed(
+                    items = entries,
+                    key = { _, color: SeedColor -> color.name }
+                ) { index: Int, item: SeedColor ->
+                    val itemPosition = index.toItemPosition(entries.size)
+                    val selected = enabled && item == seedColor
+                    AppFilterButton(
+                        modifier = Modifier.animateContentSize(),
+                        leadingContent = {
+                            Box(
+                                modifier = Modifier
+                                    .size(8.dp)
+                                    .background(
+                                        shape = CircleShape,
+                                        color = item.toColor().harmonize(
+                                            other = MaterialTheme.colorScheme.primary
+                                        )
+                                    ),
+                            )
+                        },
+                        enabled = enabled,
+                        selected = selected,
+                        label = item.name.capitalize(),
+                        onClick = { onSeedColorSelect(item) },
+                        shape = itemPosition.animatedHorizontalShape(selected),
+                        disabledContainerColor = MaterialTheme.colorScheme.surface,
+                        disabledContentColor = MaterialTheme.colorScheme.onSurface,
+                        activeContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                        activeContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                }
+            }
+        }
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.setting_accent_color),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            Text(
+                text = stringResource(R.string.setting_accent_color_warning),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSecondaryContainer
+            )
+        }
+    }
+}
+

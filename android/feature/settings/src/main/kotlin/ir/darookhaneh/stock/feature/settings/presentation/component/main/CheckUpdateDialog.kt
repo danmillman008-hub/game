@@ -1,0 +1,246 @@
+package ir.darookhaneh.stock.feature.settings.presentation.component.main
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.CloudOff
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ContainedLoadingIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import ir.darookhaneh.stock.core.designsystem.icon.StockIcons
+import ir.darookhaneh.stock.core.designsystem.icon.AppIcon
+import ir.darookhaneh.stock.core.presentation.R
+import ir.darookhaneh.stock.core.presentation.UiResult
+import ir.darookhaneh.stock.core.presentation.UiResultContainer
+
+@Composable
+fun CheckUpdateDialog(
+    uiState: UiResult<String?>,
+    currentVersion: String,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = stringResource(R.string.setting_check_update_title),
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Medium
+            )
+        },
+        icon = {
+            AppIcon(
+                iconProvider = StockIcons.Settings.CheckUpdate,
+                tint = MaterialTheme.colorScheme.primary
+            )
+        },
+        text = {
+            UiResultContainer(
+                state = uiState,
+                loading = { CheckUpdateLoading() },
+                success = { version ->
+                    if (version != null) {
+                        CheckUpdateSuccessResult(
+                            newVersion = version,
+                            currentVersion = currentVersion,
+                        )
+                    } else {
+                        CheckUpdateErrorResult()
+                    }
+                },
+                error = {
+                    CheckUpdateErrorResult()
+                },
+                idle = {},
+            )
+        },
+        confirmButton = {
+            when (uiState) {
+                is UiResult.Success -> {
+                    if (uiState.data != null &&
+                        uiState.data != currentVersion
+                    ) {
+                        Button(
+                            onClick = onConfirm,
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                contentColor = MaterialTheme.colorScheme.onPrimary
+                            )
+                        ) {
+                            Text(
+                                text = stringResource(R.string.check_update_dialog_update_confirm_btn)
+                            )
+                        }
+                    } else {
+                        TextButton(
+                            onClick = onDismiss
+                        ) {
+                            Text(
+                                text = stringResource(R.string.action_cancel)
+                            )
+                        }
+                    }
+                }
+
+                else -> Unit
+            }
+        },
+        dismissButton = {
+            when (uiState) {
+                is UiResult.Failure -> {
+                    TextButton(
+                        onClick = onDismiss
+                    ) {
+                        Text(
+                            text = stringResource(R.string.action_cancel)
+                        )
+                    }
+                }
+
+                is UiResult.Success -> {
+                    TextButton(
+                        onClick = onDismiss
+                    ) {
+                        Text(
+                            text = stringResource(R.string.check_update_dialog_update_dismiss_btn)
+                        )
+                    }
+                }
+
+                else -> Unit
+            }
+        },
+    )
+}
+
+@Composable
+private fun CheckUpdateSuccessResult(
+    newVersion: String,
+    currentVersion: String,
+    modifier: Modifier = Modifier,
+) {
+    val isUpdateAvailable = newVersion != currentVersion
+
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.CheckCircle,
+            contentDescription = null,
+            modifier = Modifier.size(40.dp),
+            tint = MaterialTheme.colorScheme.primary,
+        )
+
+        Text(
+            text = stringResource(
+                if (isUpdateAvailable) {
+                    R.string.check_update_dialog_update_available
+                } else {
+                    R.string.check_update_dialog_success_updated
+                }
+            ),
+            style = MaterialTheme.typography.titleMedium,
+        )
+
+        if (isUpdateAvailable) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = currentVersion,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+
+                Text(
+                    text = "→",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+
+                Text(
+                    text = newVersion,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+            }
+        } else {
+            Text(
+                text = currentVersion,
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
+
+@Composable
+private fun CheckUpdateErrorResult(
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.CloudOff,
+            contentDescription = null,
+            modifier = Modifier.size(40.dp),
+            tint = MaterialTheme.colorScheme.error,
+        )
+
+        Text(
+            text = stringResource(
+                R.string.check_update_dialog_error
+            ),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun CheckUpdateLoading(
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        ContainedLoadingIndicator()
+
+        Text(
+            text = stringResource(R.string.check_update_dialog_loading),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}
