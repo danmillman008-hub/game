@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>تست ۵ — چند کد واقعی، یک گزارش</title>
+<style>
+:root{--bg:#0e1518;--card:#162126;--line:#27383f;--tx:#e8f1f4;--mut:#9fb3ba;--pri:#2f9e8f;--grn:#2e7d5b;--red:#a33;--amb:#9a6b12}
+*{box-sizing:border-box}
+body{margin:0;padding:14px;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;background:var(--bg);color:var(--tx);line-height:1.9;font-size:15px}
+.wrap{max-width:900px;margin:0 auto}
+h1{font-size:18px;margin:0 0 4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0}
+.mut{color:var(--mut);font-size:13px}
+textarea{font:14px ui-monospace,monospace;padding:10px;border-radius:9px;border:1px solid var(--line);background:#0b1215;color:var(--tx);width:100%;min-height:110px;direction:ltr;text-align:left}
+button{font:inherit;padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:#1d2c33;color:var(--tx);cursor:pointer}
+button.p{background:var(--pri);border-color:var(--pri);font-weight:700}
+button:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+pre{background:#0b1215;border:1px solid var(--line);border-radius:8px;padding:8px;overflow:auto;max-height:300px;direction:ltr;text-align:left;font:12px ui-monospace,monospace;white-space:pre-wrap}
+table{width:100%;border-collapse:collapse;font-size:13px}
+td,th{border-bottom:1px solid var(--line);padding:5px 6px;text-align:right;vertical-align:top}
+th{color:var(--mut);font-weight:600}
+.ok{color:#7ad0a8}.bad{color:#f09a9a}.warn{color:#e6c26a}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>تست ۵ — چند کد واقعی در یک گزارش</h1>
+<div class="mut">هر خط یک کد (بارکد/GTIN، کد اصالت ۱۶ رقمی، یا UID ۲۰ رقمی). حداکثر ۲۰ کد و بین هر کد ۲٫۵ ثانیه فاصله (برای رعایت سرویس). نتیجه به‌صورت جدول + فایل CSV.</div>
+
+<div class="card">
+  <textarea id="codes" placeholder="6260152410148&#10;1234567890123456&#10;15978065910231737028"></textarea>
+  <div class="row" style="margin-top:8px">
+    <button class="p" id="go">▶ استعلام همه</button>
+    <button id="stop">⏹ توقف</button>
+    <button id="cp">📋 کپی گزارش</button>
+    <button id="dl">💾 دانلود گزارش</button>
+    <button id="csv">⬇ دانلود CSV</button>
+  </div>
+  <div class="mut" id="stat" style="margin-top:6px">آماده.</div>
+</div>
+
+<div class="card"><div id="tbl"><div class="mut">هنوز اجرا نشده.</div></div></div>
+<div class="card"><b>لاگ</b><pre id="log">—</pre></div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const APP='https://irfdamobile.ttac.ir/api/';
+const META={vc:'60031',av:'6.9.1',sdk:'30'};
+const ST={0:'اطلاعاتی پیدا نشد',1:'اصل ✔',2:'استعلام چندباره',3:'تقلبی ⛔',4:'تاریخ گذشته',5:'ریکال',6:'استعلام دوباره',7:'آزاد نشده'};
+const LOG=[];const ROWS=[];let stop=false;
+const pad=n=>String(n).padStart(2,'0');
+const stamp=()=>{const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds())};
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const dig=s=>String(s||'').replace(/\D/g,'');
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function log(s){LOG.push(s);$('log').textContent=LOG.join('\n')}
+function env(){return ['زمان: '+stamp(),'منطقهٔ زمانی: '+(Intl.DateTimeFormat().resolvedOptions().timeZone||'?'),
+ 'مرورگر: '+navigator.userAgent,'آنلاین: '+navigator.onLine].join('\n')}
+const devId=()=>{let d=localStorage.getItem('ttac_dev');if(!d){d='b'+Math.random().toString(36).slice(2,10)+Date.now().toString(36);try{localStorage.setItem('ttac_dev',d)}catch(e){}}return d};
+function kindOf(c){c=dig(c);if(/^\d{20}$/.test(c))return'uid';if(/^\d{16}$/.test(c))return'auth16';return'gtin'}
+function urlFor(kind,code){
+  const c=encodeURIComponent(dig(code));
+  const p=kind==='uid'?('CheckUid?uidCode='+c):(kind==='auth16'?('CheckSixteenCode?sixteenCode='+c):('CheckBarcode?barcode='+c));
+  return APP+'WrapperV2/'+p+'&latitude=0.0&longitude=0.0&device=2&deviceIdentifier='+encodeURIComponent(devId())+
+    '&Platform=1&PlatformVersion='+META.sdk+'&VersionCode='+META.vc+'&AppVersion='+encodeURIComponent(META.av);
+}
+const kv=o=>{const m={};if(o&&typeof o==='object'&&!Array.isArray(o))for(const k in o)m[String(k).toLowerCase()]=o[k];return m};
+function resultOf(j){const k=kv(j);let r=k.result;if(Array.isArray(r))r=r[0];if(r&&typeof r==='object'&&!Array.isArray(r))return kv(r);return null}
+async function call(url){
+  const t=performance.now();const ctl=new AbortController();const tm=setTimeout(()=>ctl.abort(),20000);
+  try{
+    const r=await fetch(url,{mode:'cors',cache:'no-store',credentials:'omit',signal:ctl.signal});
+    const txt=await r.text();
+    return {ok:true,status:r.status,ms:Math.round(performance.now()-t),txt};
+  }catch(e){return {ok:false,err:(e&&e.name==='AbortError')?'timeout':((e&&e.message)||String(e)),ms:Math.round(performance.now()-t)}}
+  finally{clearTimeout(tm)}
+}
+function render(){
+  let h='<table><tr><th>#</th><th>کد</th><th>نوع</th><th>HTTP</th><th>وضعیت</th><th>نام</th><th>IRC</th><th>GTIN</th><th>شرکت</th></tr>';
+  for(const r of ROWS){
+    h+='<tr><td>'+r.i+'</td><td dir="ltr">'+esc(r.code)+'</td><td>'+r.kind+'</td><td dir="ltr">'+(r.ok?r.status:'—')+'</td>'+
+       '<td class="'+(r.cls||'')+'">'+esc(r.status||r.err||'')+'</td><td>'+esc(r.name||'')+'</td>'+
+       '<td dir="ltr">'+esc(r.irc||'')+'</td><td dir="ltr">'+esc(r.gtin||'')+'</td><td>'+esc(r.co||'')+'</td></tr>';
+  }
+  $('tbl').innerHTML=h+'</table>';
+}
+async function run(){
+  stop=false;$('go').disabled=true;
+  LOG.length=0;ROWS.length=0;render();
+  const list=[...new Set($('codes').value.split(/[\s,;]+/).map(dig).filter(x=>x.length>=8))].slice(0,20);
+  if(!list.length){$('stat').textContent='کدی وارد نشده.';$('go').disabled=false;return}
+  log('=== تست ۵ — استعلام گروهی');log(env());log('تعداد کد: '+list.length);log('');
+  let i=0;
+  for(const code of list){
+    if(stop)break;
+    i++;
+    const kind=kindOf(code);
+    const url=urlFor(kind,code);
+    $('stat').textContent='کد '+i+' از '+list.length+' — در حال استعلام…';
+    const r=await call(url);
+    if(!r.ok){
+      log('#'+i+' '+code+' → ⛔ '+r.err+' ('+r.ms+'ms)');
+      ROWS.push({i,code,kind,ok:false,err:r.err,cls:'bad',ms:r.ms});render();
+    }else{
+      let j=null;try{j=JSON.parse(r.txt)}catch(e){}
+      const res=j?resultOf(j):null;
+      const code2=res&&res.statuscode!=null&&res.statuscode!==''?Number(res.statuscode):null;
+      const stxt=code2==null?'—':(ST[code2]||('کد ناشناخته '+code2));
+      const row={i,code,kind,ok:true,status:'HTTP '+r.status+' · '+(code2==null?'—':code2)+' — '+stxt,
+        cls:code2===1?'ok':(code2===0?'warn':(code2>=3?'bad':'warn')),
+        name:(res&&(res.persianname||res.englishname))||'',irc:(res&&res.irc)||'',gtin:(res&&res.gtin)||'',
+        co:(res&&(res.manufacturer||res.importer))||'',ms:r.ms,raw:r.txt.slice(0,1500)};
+      ROWS.push(row);render();
+      log('#'+i+' '+code+' → HTTP '+r.status+' · '+r.ms+'ms · StatusCode '+(code2==null?'—':code2)+' — '+stxt+
+        (row.name?(' — «'+row.name+'»'):'')+(row.irc?(' — IRC '+row.irc):''));
+      if(!j)log('    پاسخ JSON نبود: '+r.txt.slice(0,160));
+    }
+    if(i<list.length)await sleep(2500);
+  }
+  $('stat').textContent=stop?'متوقف شد — گزارش را دانلود کن.':'تمام شد — گزارش را دانلود کن.';
+  log('');log('— جمع‌بندی: '+ROWS.filter(r=>r.cls==='ok').length+' اصل · '+ROWS.filter(r=>r.cls==='warn').length+' بی‌نتیجه/هشدار · '+ROWS.filter(r=>r.cls==='bad').length+' خطا/تقلبی');
+  $('go').disabled=false;
+}
+function report(){
+  return '### تست ۵ — استعلام گروهی\n'+env()+'\n\n'+
+    ROWS.map(r=>'#'+r.i+' '+r.code+' ['+r.kind+'] → '+(r.ok?r.status:'ERR '+r.err)+
+      (r.name?' | نام: '+r.name:'')+(r.irc?' | IRC: '+r.irc:'')+(r.gtin?' | GTIN: '+r.gtin:'')+(r.co?' | شرکت: '+r.co:'')).join('\n')+
+    '\n\n--- پاسخ خام ---\n'+ROWS.map(r=>'#'+r.i+' '+r.code+': '+(r.raw||'—')).join('\n')+'\n\n--- لاگ ---\n'+LOG.join('\n')+'\n';
+}
+function csv(){
+  const rows=[['code','type','http_status','product_name','irc','gtin','company']];
+  for(const r of ROWS)rows.push([r.code,r.kind,(r.ok?(r.status||''):(r.err||'')),r.name||'',r.irc||'',r.gtin||'',r.co||'']);
+  const body='\ufeff'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\r\n');
+  const b=new Blob([body],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');
+  a.href=URL.createObjectURL(b);a.download='ttac-codes-'+Date.now()+'.csv';a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),800);
+}
+$('go').onclick=()=>run().catch(e=>{$('stat').textContent='خطا: '+e.message;$('go').disabled=false});
+$('stop').onclick=()=>{stop=true;$('stat').textContent='در حال توقف…'};
+$('cp').onclick=()=>navigator.clipboard.writeText(report()).then(()=>$('stat').textContent='کپی شد.').catch(()=>$('stat').textContent='کپی نشد؛ دانلود کن.');
+$('dl').onclick=()=>{const b=new Blob([report()],{type:'text/plain;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='ttac-test5-batch.txt';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),800)};
+$('csv').onclick=csv;
+</script>
+</body>
+</html>

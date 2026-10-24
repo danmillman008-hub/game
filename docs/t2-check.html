@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>تست ۲ — استعلام کد از سامانهٔ تیتک</title>
+<style>
+:root{--bg:#0e1518;--card:#162126;--line:#27383f;--tx:#e8f1f4;--mut:#9fb3ba;--pri:#2f9e8f;--grn:#2e7d5b;--red:#a33;--amb:#9a6b12}
+*{box-sizing:border-box}
+body{margin:0;padding:14px;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;background:var(--bg);color:var(--tx);line-height:1.9;font-size:15px}
+.wrap{max-width:860px;margin:0 auto}
+h1{font-size:18px;margin:0 0 4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0}
+.mut{color:var(--mut);font-size:13px}
+input,select{font:inherit;padding:9px 11px;border-radius:9px;border:1px solid var(--line);background:#0b1215;color:var(--tx);width:100%}
+button{font:inherit;padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:#1d2c33;color:var(--tx);cursor:pointer}
+button.p{background:var(--pri);border-color:var(--pri);font-weight:700}
+button:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.row>input{flex:1;min-width:180px}
+pre{background:#0b1215;border:1px solid var(--line);border-radius:8px;padding:8px;overflow:auto;max-height:320px;direction:ltr;text-align:left;font:12px ui-monospace,monospace;white-space:pre-wrap}
+.res{border-right:3px solid var(--line);padding:6px 10px;margin:8px 0;background:#0b1215;border-radius:8px;font-size:13.5px}
+.res.ok{border-color:var(--grn)}.res.bad{border-color:var(--red)}.res.warn{border-color:var(--amb)}
+.k{color:var(--mut)}
+code{background:#0b1215;padding:1px 5px;border-radius:5px;direction:ltr;display:inline-block;font-size:12.5px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+td,th{border-bottom:1px solid var(--line);padding:4px 6px;text-align:right}
+th{color:var(--mut);font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>تست ۲ — استعلام یک کد (بدون لاگین، بدون کلید)</h1>
+<div class="mut">کدی که می‌خواهی تست کنی را بگذار (بارکد GTIN، کد اصالت ۱۶ رقمی، یا UID ۲۰ رقمی). نتیجه با گزارش کامل دانلود کن و بفرست.</div>
+
+<div class="card">
+  <input id="code" dir="ltr" style="text-align:left" placeholder="مثلاً 6260152410148 یا 1234567890123456 یا 15978065910231737028">
+  <div class="mut" id="kind" style="margin-top:4px">نوع کد: —</div>
+  <div class="row" style="margin-top:8px">
+    <button class="p" id="go">🔎 استعلام</button>
+    <button id="all">هر سه حالت را امتحان کن</button>
+    <button id="cp">📋 کپی گزارش</button>
+    <button id="dl">💾 دانلود گزارش</button>
+  </div>
+  <div class="mut" id="stat" style="margin-top:6px">آماده.</div>
+</div>
+
+<div id="out"></div>
+
+<div class="card">
+  <b>معنی کدهای وضعیت تیتک (از enum خودِ اپ)</b>
+  <table id="sttbl"></table>
+  <div class="mut" style="margin-top:6px">اگر پاسخی با کد وضعیتی غیر از این‌ها دیدی، یعنی enum عوض شده — همان را در گزارش می‌بینم.</div>
+</div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const APP='https://irfdamobile.ttac.ir/api/';
+const META={vc:'60031',av:'6.9.1',sdk:'30'};
+const ST={0:['NO_RESULT_AVAILABLE','اطلاعاتی پیدا نشد','NOT_FOUND'],
+          1:['GENUINE','اصل / تأییدشده','VERIFIED'],
+          2:['RECHECKED','استعلام چندباره (چند شخص/سامانه)','RECHECK_REQUIRED'],
+          3:['COUNTERFEIT','مشکوک / تقلبی','FAKE'],
+          4:['EXPIRED','منقضی','EXPIRED'],
+          5:['RECALL','فراخوان‌شده','RECALLED'],
+          6:['DOUBLE_CHECK','استعلام دوباره (یک شخص/سامانه)','RECHECK_REQUIRED'],
+          7:['NOT_RELEASED','آزاد نشده','UNRELEASED']};
+const LOG=[];
+const pad=n=>String(n).padStart(2,'0');
+const stamp=()=>{const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds())};
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+function env(){return ['زمان: '+stamp(),'منطقهٔ زمانی: '+(Intl.DateTimeFormat().resolvedOptions().timeZone||'?'),
+ 'مرورگر: '+navigator.userAgent,'آنلاین: '+navigator.onLine,'صفحه: '+location.href].join('\n')}
+function log(s){LOG.push(s)}
+
+(function(){let h='<tr><th>StatusCode</th><th>نام در اپ</th><th>معنی فارسی</th><th>وضعیت داخلی پیشنهادی</th></tr>';
+ for(const k in ST)h+='<tr><td dir="ltr">'+k+'</td><td dir="ltr">'+ST[k][0]+'</td><td>'+ST[k][1]+'</td><td dir="ltr">'+ST[k][2]+'</td></tr>';
+ $('sttbl').innerHTML=h})();
+
+const dig=s=>String(s||'').replace(/\D/g,'');
+function kindOf(c){c=dig(c);if(/^\d{20}$/.test(c))return {k:'uid',fa:'UID (۲۰ رقمی)'};
+ if(/^\d{16}$/.test(c))return {k:'auth16',fa:'کد اصالت (۱۶ رقمی)'};
+ if(c.length>=8&&c.length<=14)return {k:'gtin',fa:'بارکد/GTIN ('+c.length+' رقمی)'};
+ return {k:'other',fa:'نامشخص ('+c.length+' رقم)'}}
+const devId=()=>{let d=localStorage.getItem('ttac_dev');if(!d){d='t'+Math.random().toString(36).slice(2,10)+Date.now().toString(36);try{localStorage.setItem('ttac_dev',d)}catch(e){}}return d};
+function urlFor(kind,code){
+  const c=encodeURIComponent(dig(code));
+  const p=kind==='uid'?('CheckUid?uidCode='+c):(kind==='auth16'?('CheckSixteenCode?sixteenCode='+c):('CheckBarcode?barcode='+c));
+  return APP+'WrapperV2/'+p+'&latitude=0.0&longitude=0.0&device=2&deviceIdentifier='+encodeURIComponent(devId())+
+    '&Platform=1&PlatformVersion='+META.sdk+'&VersionCode='+META.vc+'&AppVersion='+encodeURIComponent(META.av);
+}
+const nfiIrc=irc=>APP+'Wrapper/NfiDetailIrc?irc='+encodeURIComponent(dig(irc));
+const nfiName=(t,p,s)=>APP+'wrapper/NfiSearch?term='+encodeURIComponent(t)+'&pageNumber='+(p||1)+'&pageSize='+(s||10);
+
+async function call(url,ms){
+  const t=performance.now();const ctl=new AbortController();const tm=setTimeout(()=>ctl.abort(),ms||20000);
+  try{
+    const r=await fetch(url,{mode:'cors',cache:'no-store',credentials:'omit',signal:ctl.signal,headers:{'Accept':'application/json, text/plain, */*'}});
+    const txt=await r.text();
+    return {ok:true,status:r.status,ms:Math.round(performance.now()-t),txt};
+  }catch(e){
+    return {ok:false,err:(e&&e.name==='AbortError')?'timeout':((e&&e.message)||String(e)),ms:Math.round(performance.now()-t)};
+  }finally{clearTimeout(tm)}
+}
+const kv=o=>{const m={};if(o&&typeof o==='object'&&!Array.isArray(o))for(const k in o)m[String(k).toLowerCase()]=o[k];return m};
+function resultOf(j){const k=kv(j);let r=k.result;if(Array.isArray(r))r=r[0];if(r&&typeof r==='object'&&!Array.isArray(r))return kv(r);return null}
+function balance(t){let d=0;for(const ch of t){if(ch==='{')d++;else if(ch==='}')d--}return d}
+
+let results=[];
+function box(cls,html){const d=document.createElement('div');d.className='res '+cls;d.innerHTML=html;return d}
+
+async function one(kind,code,label,parent){
+  const url=urlFor(kind,code);
+  log('');log('— '+label);log('URL: '+url);
+  const r=await call(url);
+  if(!r.ok){
+    log('   ⛔ '+r.err+' در '+r.ms+'ms');
+    parent.appendChild(box('bad','<b>'+esc(label)+'</b> — <span dir="ltr">'+esc(r.err)+'</span> در '+r.ms+'ms'+
+      '<div class="mut" style="direction:rtl;text-align:right">اگر خطای «Failed to fetch» بود یعنی مرورگر اجازهٔ خواندن نداد (CORS) یا سرور دیده نشد. تست ۱ این دو را از هم جدا می‌کند.</div>'));
+    return {label,ok:false,err:r.err,ms:r.ms,url};
+  }
+  log('   HTTP '+r.status+' در '+r.ms+'ms — '+r.txt.length+' بایت');
+  let j=null,jerr='';
+  try{j=JSON.parse(r.txt)}catch(e){jerr=e.message}
+  const res=j?resultOf(j):null;
+  if(j){
+    const code2=res&&res.statuscode!=null&&res.statuscode!==''?Number(res.statuscode):null;
+    const msg=res?(res.statusmessage||res.errormessage||''):'';
+    log('   StatusCode: '+(code2==null?'—':code2)+(code2!=null&&ST[code2]?(' ('+ST[code2][0]+' / '+ST[code2][1]+')'):' ← ناشناخته'));
+    log('   StatusMessage: '+msg);
+    if(res){
+      for(const f of ['persianname','englishname','irc','gtin','uid','batchcode','expiration','manufacturing','price','manufacturer','importer','distributer'])
+        if(res[f]!==undefined&&res[f]!==''&&res[f]!==null)log('   '+f+': '+res[f]);
+    }
+    log('   JSON: '+r.txt.slice(0,900));
+  }else{
+    log('   پاسخ JSON نبود ('+jerr+'): '+r.txt.slice(0,300));
+  }
+  const st=res&&res.statuscode!=null&&res.statuscode!==''?Number(res.statuscode):null;
+  const cls=st==null?'warn':(st===1?'ok':(st>=3?'bad':'warn'));
+  const stxt=st==null?'—':(ST[st]?ST[st][2]+' — '+ST[st][1]:'کد ناشناخته '+st);
+  let h='<b>'+esc(label)+'</b> <span dir="ltr" class="k">HTTP '+r.status+' · '+r.ms+'ms</span><br>';
+  h+='<span class="k">StatusCode:</span> <b dir="ltr">'+(st==null?'—':st)+'</b> — '+esc(stxt);
+  if(res){
+    const nm=res.persianname||res.englishname||'';
+    if(nm)h+='<br><span class="k">نام:</span> <b>'+esc(nm)+'</b>';
+    if(res.irc)h+=' · <span class="k">IRC:</span> <span dir="ltr">'+esc(res.irc)+'</span>';
+    if(res.gtin)h+=' · <span class="k">GTIN:</span> <span dir="ltr">'+esc(res.gtin)+'</span>';
+    if(res.manufacturer||res.importer)h+='<br><span class="k">شرکت:</span> '+esc(res.manufacturer||res.importer);
+    if(res.batchcode)h+=' · <span class="k">بچ:</span> <span dir="ltr">'+esc(res.batchcode)+'</span>';
+    if(res.expiration)h+=' · <span class="k">انقضا:</span> <span dir="ltr">'+esc(res.expiration)+'</span>';
+    if(res.price)h+=' · <span class="k">قیمت:</span> '+esc(res.price);
+    if(res.statusmessage)h+='<br><span class="k">پیام سامانه:</span> '+esc(res.statusmessage);
+  }else if(!j){
+    h+='<br><span class="k">پاسخ:</span><pre>'+esc(r.txt.slice(0,800))+'</pre>';
+  }
+  parent.appendChild(box(cls,h));
+  return {label,ok:true,status:r.status,ms:r.ms,code:st,json:r.txt.slice(0,4000),url};
+}
+
+async function enrich(irc,parent){
+  if(!irc)return;
+  const url=nfiIrc(irc);
+  log('');log('— جزئیات با IRC (NfiDetailIrc)');log('URL: '+url);
+  const r=await call(url);
+  if(!r.ok){log('   ⛔ '+r.err);parent.appendChild(box('bad','<b>جزئیات IRC</b> — <span dir="ltr">'+esc(r.err)+'</span>'));return}
+  log('   HTTP '+r.status+' در '+r.ms+'ms — '+r.txt.length+' بایت');
+  let j=null;try{j=JSON.parse(r.txt)}catch(e){}
+  const k=j?kv(j):{};let root=k.result&&typeof k.result==='object'?kv(k.result):{};
+  const lic=root.druglicense&&typeof root.druglicense==='object'?kv(root.druglicense):null;
+  if(!lic){log('   DrugLicense پیدا نشد. بدنه: '+r.txt.slice(0,400));parent.appendChild(box('warn','<b>جزئیات IRC</b> — HTTP '+r.status+' ولی ساختار DrugLicense پیدا نشد.<pre>'+esc(r.txt.slice(0,500))+'</pre>'));return}
+  log('   FaBrandName: '+(lic.fabrandname||''));
+  log('   UnitOfUsePackaging: '+(lic.unitofusepackaging||'')+'  ← تعداد در بسته');
+  log('   LicenseOwnerCompanyName: '+(lic.licenseownercompanyname||''));
+  log('   PackageConsumerPrice: '+(lic.packageconsumerprice||''));
+  log('   PersianExpirationDate: '+(lic.persianexpirationdate||''));
+  log('   GTIN: '+(lic.gtin||'')+' · IRC: '+(lic.irc||''));
+  parent.appendChild(box('ok','<b>جزئیات کامل با IRC</b> <span dir="ltr" class="k">HTTP '+r.status+' · '+r.ms+'ms</span><br>'+
+    '<span class="k">نام:</span> <b>'+esc(lic.fabrandname||lic.indexfaname||lic.enbrandname||'—')+'</b>'+
+    '<br><span class="k">تعداد در بسته:</span> <b dir="ltr">'+esc(lic.unitofusepacking||lic.unitofusepackaging||'—')+'</b>'+
+    ' · <span class="k">صاحب پروانه:</span> '+esc(lic.licenseownercompanyname||'—')+
+    '<br><span class="k">قیمت مصرف‌کننده:</span> '+esc(lic.packageconsumerprice||'—')+
+    ' · <span class="k">اعتبار پروانه:</span> <span dir="ltr">'+esc(lic.persianexpirationdate||'—')+'</span>'));
+}
+
+async function runOne(){
+  const raw=$('code').value.trim();
+  if(!raw){$('stat').textContent='یک کد وارد کن.';return}
+  const kd=kindOf(raw);
+  LOG.length=0;results=[];
+  $('out').innerHTML='';const p=document.createElement('div');p.className='card';$('out').appendChild(p);
+  log('=== تست ۲ — استعلام کد');log(env());log('کد: '+dig(raw)+' — نوع: '+kd.fa);
+  $('stat').textContent='در حال استعلام…';$('go').disabled=true;
+  const res=await one(kd.k,raw,kd.fa,p);
+  if(res&&res.ok&&res.code!==0){
+    // تلاش برای گرفتن IRC از پاسخ
+    try{const j=JSON.parse(res.json);const r2=resultOf(j);await enrich(r2&&r2.irc,p)}catch(e){}
+  }
+  $('stat').textContent='تمام شد — گزارش را دانلود کن.';
+  $('go').disabled=false;
+}
+async function runAll(){
+  const raw=$('code').value.trim();
+  if(!raw){$('stat').textContent='یک کد وارد کن.';return}
+  LOG.length=0;results=[];
+  $('out').innerHTML='';const p=document.createElement('div');p.className='card';$('out').appendChild(p);
+  log('=== تست ۲ — هر سه حالت برای یک کد');log(env());log('کد: '+dig(raw));
+  $('stat').textContent='در حال تست سه حالت…';$('go').disabled=true;$('all').disabled=true;
+  for(const k of ['gtin','auth16','uid']){
+    const r=await one(k,raw,'حالت '+k,p);
+    if(r&&r.ok&&r.code===1)break;
+    await new Promise(x=>setTimeout(x,1200));
+  }
+  $('stat').textContent='تمام شد — گزارش را دانلود کن.';
+  $('go').disabled=false;$('all').disabled=false;
+}
+
+function report(){return '### تست ۲ — استعلام کد\n'+env()+'\n\n'+LOG.join('\n')+'\n'}
+$('code').addEventListener('input',()=>{const c=$('code').value.trim();$('kind').textContent='نوع کد: '+(c?kindOf(c).fa:'—')});
+$('go').onclick=()=>runOne().catch(e=>{$('stat').textContent='خطا: '+e.message;$('go').disabled=false});
+$('all').onclick=()=>runAll().catch(e=>{$('stat').textContent='خطا: '+e.message;$('go').disabled=false;$('all').disabled=false});
+$('cp').onclick=()=>navigator.clipboard.writeText(report()).then(()=>$('stat').textContent='کپی شد.').catch(()=>$('stat').textContent='کپی نشد؛ دانلود کن.');
+$('dl').onclick=()=>{const b=new Blob([report()],{type:'text/plain;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='ttac-test2-check.txt';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),800)};
+</script>
+</body>
+</html>

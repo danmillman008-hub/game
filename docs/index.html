@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>بستهٔ تست تیتک — راهنما</title>
+<style>
+:root{--bg:#0e1518;--card:#162126;--line:#27383f;--tx:#e8f1f4;--mut:#9fb3ba;--pri:#2f9e8f}
+*{box-sizing:border-box}
+body{margin:0;padding:16px;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;background:var(--bg);color:var(--tx);line-height:2;font-size:15px}
+.wrap{max-width:820px;margin:0 auto}
+h1{font-size:20px;margin:0 0 6px}
+h2{font-size:15px;margin:22px 0 6px;color:#bfe3da}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0}
+a.test{display:block;padding:12px;border:1px solid var(--line);border-radius:10px;margin:8px 0;text-decoration:none;color:var(--tx);background:#0b1215}
+a.test:hover{border-color:var(--pri)}
+a.test b{color:#8fd8c8}
+a.test span{display:block;color:var(--mut);font-size:13px}
+.mut{color:var(--mut);font-size:13.5px}
+code{direction:ltr;display:inline-block;background:#0b1215;padding:1px 6px;border-radius:5px;font-size:12.5px}
+ol{padding-right:20px}li{margin:4px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>بستهٔ تست اندپوینت‌های تیتک</h1>
+<div class="mut">این تست‌ها هیچ لاگین، کلید، نصب یا برنامه‌ای لازم ندارند. فقط باز کن، دکمه را بزن، گزارش را دانلود کن و همان فایل را در چت بفرست.</div>
+
+<div class="card">
+  <b>ترتیب پیشنهادی</b>
+  <ol>
+    <li><b>تست ۱</b> — ببینیم اینترنت تو اصلاً به سرور تیتک می‌رسد یا نه (و مشکل، شبکه است یا اجازهٔ مرورگر).</li>
+    <li><b>تست ۲</b> — یک کد واقعی از روی جعبهٔ دارو (بارکد یا کد اصالت ۱۶ رقمی) را استعلام کن.</li>
+    <li><b>تست ۳</b> — کدام پارامترها اجباری‌اند (نسخهٔ اپ، شناسهٔ دستگاه…).</li>
+    <li><b>تست ۴</b> — سرعت پاسخ و اینکه محدودیت نرخ دارد یا نه.</li>
+    <li><b>تست ۵</b> — چند کد واقعی با هم؛ خروجی CSV هم می‌دهد.</li>
+  </ol>
+</div>
+
+<div class="card">
+  <h2 style="margin-top:0">فایل‌های تست</h2>
+  <a class="test" href="t1-network.html"><b>۱) دسترسی به سرور تیتک</b><span>آیا دامنه دیده می‌شود؟ مشکل CORS است یا شبکه؟</span></a>
+  <a class="test" href="t2-check.html"><b>۲) استعلام یک کد</b><span>بارکد / کد اصالت ۱۶ رقمی / UID ۲۰ رقمی — با تفسیر StatusCode</span></a>
+  <a class="test" href="t3-params.html"><b>۳) پارامترهای اجباری</b><span>آیا بدون VersionCode/AppVersion/deviceIdentifier هم جواب می‌دهد؟</span></a>
+  <a class="test" href="t4-rate.html"><b>۴) سرعت و محدودیت نرخ</b><span>میانگین زمان پاسخ و بررسی ۴۲۹/۴۰۳</span></a>
+  <a class="test" href="t5-batch.html"><b>۵) چند کد واقعی</b><span>گزارش جدولی + CSV</span></a>
+</div>
+
+<div class="card">
+  <b>نکته‌های مهم</b>
+  <ul>
+    <li>دامنهٔ <code>irfdamobile.ttac.ir</code> به IP داخلی <code>10.19.62.200</code> می‌رود؛ <b>فقط با اینترنت ایران</b> (بدون فیلترشکن) جواب می‌دهد.</li>
+    <li>اگر مرورگر پیام CORS داد، یعنی سرور جواب داده ولی اجازهٔ خواندن نداده — تست ۱ این را از «نرسیدن» جدا می‌کند.</li>
+    <li>اگر تست ۱ و ۲ نتیجه داد، بقیهٔ تست‌ها را هم بزن تا ۱۰ سؤال بازِ گزارش کامل جواب بگیرد.</li>
+    <li>لطفاً در تست ۴ و ۵ زیاده‌روی نکن؛ همان تعداد پیش‌فرض کافی است.</li>
+  </ul>
+</div>
+</div>
+</body>
+</html>
