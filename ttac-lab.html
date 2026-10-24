@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>آزمایشگاه تیتک — کشف و تست اندپوینت</title>
+<style>
+:root{--bg:#0f1719;--card:#182226;--tx:#e6eef0;--mut:#9bb0b6;--pri:#2dd4bf;--line:#2a3a40;--ok:#6ee7a8;--bad:#ff8a80;--wrn:#f5c542}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.7 Vazirmatn,Tahoma,system-ui,sans-serif;padding:14px}
+h1{font-size:17px;margin:0 0 4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px}
+label{display:block;font-size:12.5px;color:var(--mut);margin:8px 0 3px}
+input{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#0f1719;color:var(--tx);font:inherit}
+input[dir=ltr]{text-align:left}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);background:#1f2b30;color:var(--tx);padding:8px 12px;border-radius:8px;margin:4px 4px 0 0}
+button.p{background:var(--pri);color:#06231f;border-color:var(--pri);font-weight:700}
+button:disabled{opacity:.45;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end}
+.row>*{flex:1;min-width:130px}
+.mut{color:var(--mut);font-size:12.5px}
+pre{white-space:pre-wrap;word-break:break-all;background:#0b1214;border:1px solid var(--line);border-radius:8px;padding:8px;font:12px/1.6 ui-monospace,monospace;max-height:340px;overflow:auto;margin:6px 0 0}
+.tbl{overflow:auto;border:1px solid var(--line);border-radius:8px;margin-top:8px}
+table{border-collapse:collapse;width:100%;font-size:12px}
+th,td{padding:5px 7px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{background:#131c1f;color:var(--mut);position:sticky;top:0}
+td.url{white-space:normal;word-break:break-all;max-width:420px;direction:ltr;text-align:left;font-family:ui-monospace,monospace;font-size:11px}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.wrn{color:var(--wrn)}
+.spin{display:inline-block;width:13px;height:13px;border:2px solid var(--line);border-top-color:var(--pri);border-radius:50%;animation:s .8s linear infinite;vertical-align:-2px}
+@keyframes s{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<h1>🔬 آزمایشگاه تیتک</h1>
+<p class="mut">این صفحهٔ کوچک، «چشم» من در سیستم شماست: اندپوینت‌های واقعی سامانه را از فایل‌های JS خودش کشف می‌کند و بعد یک کد را روی همهٔ منابع امتحان می‌کند. یک فایل، بدون نصب. نتیجه را کپی کنید و برایم بفرستید.</p>
+
+<div class="card">
+  <div class="row">
+    <div style="flex:2">
+      <label>کد (UID ۲۰ رقمی یا GTIN یا کد ۱۶ رقمی)</label>
+      <input id="code" dir="ltr" value="15978065910231737028">
+    </div>
+    <div>
+      <label>کلید API رسمی (اختیاری)</label>
+      <input id="key" dir="ltr" placeholder="X-SSP-Api-Key">
+    </div>
+  </div>
+  <div class="row">
+    <div><label>پروکسی محلی (اختیاری)</label><input id="proxy" dir="ltr" placeholder="http://127.0.0.1:8765/ttac?url={url}"></div>
+    <div style="flex:0 0 120px"><label>تایم‌اوت (ms)</label><input id="tmo" dir="ltr" value="8000"></div>
+  </div>
+  <div>
+    <button class="p" id="b1">۱) کشف اندپوینت از صفحهٔ Inquiry</button>
+    <button class="p" id="b2">۲) تست همهٔ منابع با این کد</button>
+    <button id="b3">📋 کپی گزارش</button>
+    <button id="b4">💾 دانلود گزارش خام</button>
+  </div>
+  <div id="status" class="mut" style="margin-top:8px"></div>
+</div>
+
+<div class="card" id="cardFind" style="display:none">
+  <b>اندپوینت‌های کشف‌شده از JS سایت</b>
+  <div class="mut">این‌ها رشته‌هایی هستند که در باندل‌های جاوااسکریپت خود تیتک پیدا شده‌اند.</div>
+  <pre id="findOut"></pre>
+</div>
+
+<div class="card">
+  <b>نتیجهٔ تست منابع</b>
+  <div class="tbl"><table id="tbl"><thead><tr><th>#</th><th>منبع</th><th>وضعیت</th><th>بایت</th><th>یافته</th></tr></thead><tbody></tbody></table></div>
+  <pre id="log"></pre>
+</div>
+
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const N=s=>String(s==null?'':s).replace(/\u200c/g,' ').replace(/\s+/g,' ').trim();
+const raw=[];
+let rows=[];
+const tmo=()=>Math.max(2000,+$('tmo').value||8000);
+
+function withProxy(u){
+  const p=$('proxy').value.trim();
+  if(!p)return u;
+  return p.includes('{url}')?p.replace('{url}',encodeURIComponent(u)):p+(p.includes('?')?'&':'?')+'url='+encodeURIComponent(u);
+}
+async function req(u,opt){
+  opt=opt||{};
+  const ctl=new AbortController();const t=setTimeout(()=>ctl.abort(),opt.timeout||tmo());
+  const started=Date.now();
+  try{
+    const r=await fetch(withProxy(u),{
+      method:opt.method||'GET',
+      mode:'cors',credentials:'omit',cache:'no-store',redirect:'follow',
+      headers:Object.assign({'Accept':'*/*'},opt.headers||{}),
+      body:opt.body,signal:ctl.signal});
+    const txt=await r.text();
+    raw.push({url:u,method:opt.method||'GET',status:r.status,n:txt.length,txt:txt.slice(0,120000),ms:Date.now()-started});
+    return {ok:r.ok,status:r.status,txt};
+  }catch(e){
+    const why=(e&&e.name==='AbortError')?'timeout':((e&&e.message)||'خطا');
+    raw.push({url:u,method:opt.method||'GET',status:'ERR',n:0,txt:why,ms:Date.now()-started});
+    throw {why};
+  }finally{clearTimeout(t)}
+}
+
+/* ---------- تحلیل پاسخ ---------- */
+const YES=/(تایید|تأیید|معتبر|اصیل|صحیح|دارای برچسب|اصالت)/;
+const NO=/(یافت نشد|نامعتبر|جعل|ناموجود|invalid|not\s*found)/i;
+function inspect(txt){
+  const out={json:null,name:'',irc:'',gtin:'',verdict:'',notFound:false,rows:0};
+  try{out.json=JSON.parse(txt)}catch(e){}
+  if(out.json){
+    const j=out.json;
+    const it=(j.ItemsInfo&&j.ItemsInfo[0])||(j.data&&j.data.drugLicenses&&j.data.drugLicenses[0])||null;
+    if(it){
+      out.name=N(it.PersianName||it.faBrandName||it.EnglishName||it.enBrandName||it.name||'');
+      out.irc=String(it.Irc||it.irc||'').replace(/\D/g,'');
+      out.gtin=String(it.Gtin||it.gtin||'').replace(/\D/g,'');
+      out.verdict=N(it.StatusMessage||it.statusMessage||'');
+    }
+    if(j.ErrorCode!=null)out.verdict=(out.verdict?out.verdict+' — ':'')+'ErrorCode '+j.ErrorCode+' '+(N(j.ErrorMessage||''));
+  }else{
+    let doc;try{doc=new DOMParser().parseFromString(txt,'text/html')}catch(e){}
+    if(doc){
+      out.rows=doc.querySelectorAll('.RowSearchSty').length;
+      const a=doc.querySelector('.titleSearch-Link-RtlAlter a')||doc.querySelector('.titleSearch-Link-RtlAlter');
+      if(a)out.name=N(a.textContent);
+      const t=N(doc.body?doc.body.textContent:'').slice(0,5000);
+      const m1=t.match(/IRC[^0-9]{0,8}(\d{12,16})/i);if(m1)out.irc=m1[1];
+      const m2=t.match(/GTIN[^0-9]{0,8}(\d{8,14})/i);if(m2)out.gtin=m2[1];
+      if(NO.test(t))out.notFound=true;
+      if(!out.name&&YES.test(t))out.verdict='متن تأیید اصالت در پاسخ';
+    }
+  }
+  return out;
+}
+function verdictOf(r){
+  const i=r.ins;
+  if(i.name)return {cls:'ok',txt:'✔ نام: '+i.name+(i.irc?' / IRC '+i.irc:'')};
+  if(i.verdict)return {cls:'ok',txt:'✔ '+(i.verdict||'')};
+  if(i.rows)return {cls:'wrn',txt:i.rows+' ردیف بدون نام'};
+  if(i.notFound)return {cls:'wrn',txt:'«یافت نشد»'};
+  if(/json/i.test(r.txt.slice(0,1))||r.ins.json)return {cls:'wrn',txt:'JSON بدون دادهٔ مفید'};
+  return {cls:'',txt:'بدون داده'};
+}
+function addRow(name,u,res,err){
+  const tr=document.createElement('tr');
+  let cell={};const idx=rows.length+1;
+  if(err){
+    cell={cls:'bad',txt:'⛔ '+err.why,bytes:'—',find:'—'};
+    rows.push({name,u,status:'ERR',err:err.why,find:''});
+  }else{
+    const ins=inspect(res.txt);res.ins=ins;
+    const v=verdictOf(res);
+    cell={cls:res.ok?'':'wrn',txt:'HTTP '+res.status,bytes:res.txt.length,find:v.txt,_cls:v.cls};
+    rows.push({name,u,status:res.status,bytes:res.txt.length,find:v.txt,ins});
+  }
+  tr.innerHTML='<td>'+idx+'</td><td class="url">'+name+'<br><span class="mut">'+u.replace(/[<>&]/g,'')+'</span></td>'+
+    '<td class="'+cell.cls+'">'+cell.txt+'</td><td>'+(cell.bytes==null?'—':cell.bytes)+'</td>'+
+    '<td class="'+(cell._cls||'')+'">'+(cell.find||'—').replace(/[<>&]/g,'')+'</td>';
+  $('tbl').querySelector('tbody').appendChild(tr);
+  $('log').textContent=rows.map(r=>r.name+' → '+(r.status==='ERR'?'ERR '+r.err:'HTTP '+r.status+' '+r.bytes+'B')+(r.find?' — '+r.find:'')).join('\n');
+  return tr;
+}
+
+/* ---------- ۱) کشف اندپوینت از باندل‌های JS ---------- */
+async function discover(){
+  const btn=$('b1');btn.disabled=true;
+  $('cardFind').style.display='block';
+  const out=$('findOut');out.textContent='';
+  const lines=[];const found={};
+  const note=m=>{lines.push(m);out.textContent=lines.join('\n')};
+  note('⏳ دریافت صفحهٔ ttac.ir/Inquiry …');
+  let html='';
+  try{const r=await req('https://ttac.ir/Inquiry');html=r.txt;note('✔ HTML: HTTP '+r.status+' — '+r.txt.length+' بایت')}
+  catch(e){note('⛔ دریافت صفحه ناموفق: '+e.why);btn.disabled=false;return}
+  note('   تعداد <script>: '+(html.match(/<script/gi)||[]).length+' — تعداد <link>: '+(html.match(/<link/gi)||[]).length);
+  const urls=[];
+  const push=u=>{if(u&&urls.indexOf(u)<0)urls.push(u)};
+  html.replace(/<script[^>]+src=["']([^"']+)["']/gi,(m,u)=>push(u));
+  html.replace(/<link[^>]+href=["']([^"']+\.(?:js|css))["']/gi,(m,u)=>push(u));
+  html.replace(/["']([^"']*_framework\/[^"']+\.js)["']/gi,(m,u)=>push(u));
+  const abs=u=>{try{return new URL(u,'https://ttac.ir/Inquiry').href}catch(e){return ''}};
+  const list=urls.map(abs).filter(Boolean);
+  note('   فایل‌های یافت‌شده: '+list.length);
+  const scan=(txt,src)=>{
+    const add=(s,t)=>{
+      s=N(s).replace(/^["'`]+/,'').replace(/["'`;,]+$/,'');
+      if(!s||s.length<4||s.length>120)return;
+      if(/^\/(js|_framework|Content|content)\//i.test(s))return;      // خودِ فایل‌های استاتیک اندپوینت نیستند
+      if(/\.(js|css|png|jpg|svg|woff2?)(\?|$)/i.test(s))return;
+      (found[s]=found[s]||new Set()).add(t)};
+    (txt.match(/https?:\/\/[a-zA-Z0-9.\-]+(?::\d+)?[^\s"'`<>)\]]{0,90}/g)||[]).forEach(x=>add(x,src));
+    (txt.match(/["'`](\/[A-Za-z0-9_\-./]*[Ii]nquiry[A-Za-z0-9_\-./]*)/g)||[]).forEach(x=>add(x,src));
+    (txt.match(/["'`](\/[A-Za-z0-9_\-./]*(?:uid|Uid|UID|esalat|Esalat|authenticity)[A-Za-z0-9_\-./]*)/g)||[]).forEach(x=>add(x,src));
+    (txt.match(/["'`](\/api\/[A-Za-z0-9_\-./]{2,70})/g)||[]).forEach(x=>add(x,src));
+    (txt.match(/["'`]([A-Za-z0-9_\-/]*(?:check|verify|valid)[A-Za-z0-9_\-/]{2,60})["'`]/gi)||[]).forEach(x=>add(x,src));
+  };
+  scan(html,'inline');
+  let i=0;
+  for(const u of list.slice(0,18)){
+    i++;
+    note('   ⏳ ('+i+'/'+Math.min(list.length,18)+') '+u.replace('https://ttac.ir',''));
+    try{
+      const r=await req(u,{timeout:Math.min(tmo(),9000)});
+      if(/\.js(\?|$)/i.test(u)||r.txt.length>500)scan(r.txt,u);
+    }catch(e){note('   ⛔ '+u.slice(-40)+' — '+e.why)}
+  }
+  const keys=Object.keys(found);
+  note('');
+  note('═══ اندپوینت‌های کشف‌شده: '+keys.length+' ═══');
+  keys.sort((a,b)=>/inquiry|uid|esalat|api/i.test(b)-/inquiry|uid|esalat|api/i.test(a)).forEach(k=>{
+    note('· '+k+'   ⟵ '+[...found[k]].slice(0,2).map(x=>x.replace('https://ttac.ir','').slice(0,40)).join(' , '));
+  });
+  if(!keys.length)note('(چیزی پیدا نشد — احتمالاً باندل‌ها از دامنهٔ دیگری لود می‌شوند)');
+  note('');
+  note('این بخش را کپی کنید و برایم بفرستید.');
+  btn.disabled=false;
+}
+
+/* ---------- ۲) ماتریس تست منابع ---------- */
+function candidates(code,key){
+  const c=encodeURIComponent(code);
+  const J=JSON.stringify;
+  const nfi=s=>'https://irc.fda.gov.ir'+s;
+  const list=[
+    ['[GET] ttac.ir/Inquiry?uid=',            'https://ttac.ir/Inquiry?uid='+c],
+    ['[GET] ttac.ir/Inquiry?UID=',            'https://ttac.ir/Inquiry?UID='+c],
+    ['[GET] ttac.ir/Inquiry?code=',           'https://ttac.ir/Inquiry?code='+c],
+    ['[GET] ttac.ir/Inquiry?authCode=',       'https://ttac.ir/Inquiry?authCode='+c],
+    ['[GET] ttac.ir/UidEsalatForm?Uid=',      'https://ttac.ir/UidEsalatForm?Uid='+c],
+    ['[GET] ttac.ir/UidEsalatForm?uid=',      'https://ttac.ir/UidEsalatForm?uid='+c],
+    ['[GET] ttac.ir/Inquiry/Check?uid=',      'https://ttac.ir/Inquiry/Check?uid='+c],
+    ['[GET] ttac.ir/api/Inquiry?uid=',        'https://ttac.ir/api/Inquiry?uid='+c],
+    ['[GET] ssp.ttac.ir/inquiry?uid=',        'https://ssp.ttac.ir/inquiry?uid='+c],
+    ['[GET] irc.fda NFI/Search',              nfi('/NFI/Search?Term='+c+'&PageNumber=1&PageSize=10')],
+    ['[GET] irc.ttac NFI/Search',             'https://irc.ttac.ir/NFI/Search?Term='+c+'&PageNumber=1&PageSize=10'],
+    ['[GET] irc.fda NFI/SearchByIRC',         nfi('/NFI/SearchByIRC?irc='+c)],
+    ['[GET] irc.fda NFI/SearchByBarcode',     nfi('/NFI/SearchByBarcode?barcode='+c)],
+    ['[GET] irc.fda NFI/SearchByUID',         nfi('/NFI/SearchByUID?uid='+c)],
+    ['[GET] irc.fda NFI/Detail (کد به‌جای id)',nfi('/NFI/Detail/'+encodeURIComponent(code))],
+    ['[GET] newapi getnfisearch',             'https://newapi.ttac.ir/irfdamobile/v1/getnfisearch?Term='+c+'&PageNumber=1&PageSize=10&IP='],
+    ['[GET] newapi ...byuid',                 'https://newapi.ttac.ir/irfdamobile/v1/getnfisearchbyuid?uid='+c],
+    ['[GET] newapi getuidinfo',               'https://newapi.ttac.ir/irfdamobile/v1/getuidinfo?uid='+c],
+    ['[GET] newapi GetDrugByUid',             'https://newapi.ttac.ir/irfdamobile/v1/GetDrugByUid?uid='+c],
+    ['[POST] newapi getnfisearch',            'https://newapi.ttac.ir/irfdamobile/v1/getnfisearch'],
+    ['[POST] api.ttac checksinglebarcodeuid', 'https://api.ttac.ir/insurances/test/v74/checksinglebarcodeuid'],
+  ];
+  const H={'x-ssp-api-key':key||'',Origin:'https://mobile.ttac.ir',Referer:'https://mobile.ttac.ir/'};
+  const BT={PrescriptionId:0,BarcodeUid:String(code),Amount:0,GenericCode:''};
+  return list.map(([name,u])=>{
+    if(name.startsWith('[POST] newapi'))return{name,u,opt:{method:'POST',headers:Object.assign({'Content-Type':'application/json'},H),body:J({Term:String(code),PageNumber:1,PageSize:10})}};
+    if(name.startsWith('[POST] api.ttac'))return{name,u,opt:{method:'POST',headers:{'Content-Type':'application/json','X-SSP-Api-Key':key||''},body:J(BT)}};
+    if(/newapi/.test(u))return{name,u,opt:{headers:H}};
+    return{name,u,opt:{}};
+  });
+}
+async function runMatrix(){
+  const code=$('code').value.trim(),key=$('key').value.trim();
+  if(!code)return;
+  $('tbl').querySelector('tbody').innerHTML='';$('log').textContent='';rows=[];raw.length=0;
+  $('b2').disabled=true;$('status').innerHTML='<span class="spin"></span> در حال تست…';
+  const list=candidates(code,key);
+  for(const c of list){
+    $('status').innerHTML='<span class="spin"></span> '+rows.length+' / '+list.length+' — '+c.name;
+    try{const r=await req(c.u,c.opt);addRow(c.name,c.u,r)}
+    catch(e){addRow(c.name,c.u,null,e)}
+    await new Promise(r=>setTimeout(r,120));
+  }
+  const good=rows.filter(r=>/✔/.test(r.find||'')).length;
+  $('status').innerHTML='✔ تمام شد — '+(good?good+' منبع جواب داد':'هیچ منبعی داده نداد')+' — '+rows.length+' منبع تست شد.';
+  $('b2').disabled=false;
+}
+
+/* ---------- گزارش ---------- */
+function report(){
+  const code=$('code').value.trim();
+  const L=['=== آزمایشگاه تیتک ===','تاریخ: '+new Date().toISOString(),'کد تست: '+code,''];
+  L.push('--- خلاصهٔ منابع ---');
+  rows.forEach((r,i)=>L.push((i+1)+') '+r.name+' → '+(r.status==='ERR'?'ERR '+r.err:'HTTP '+r.status+' '+(r.bytes||0)+'B')+(r.find?' — '+r.find:'')));
+  const f=$('findOut').textContent.trim();
+  if(f){L.push('','--- کشف اندپوینت ---',f)}
+  L.push('','--- پاسخ خام ---');
+  raw.forEach(r=>L.push('','===== '+r.method+' '+r.url+'  ['+r.status+'] '+r.n+'B '+r.ms+'ms',''+(r.txt||'')));
+  return L.join('\n');
+}
+$('b1').onclick=discover;
+$('b2').onclick=runMatrix;
+$('b3').onclick=async()=>{
+  const t=report();
+  try{await navigator.clipboard.writeText(t);$('status').textContent='📋 گزارش در کلیپ‌بورد کپی شد (حجم '+Math.round(t.length/1024)+' کیلوبایت)'}
+  catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove();$('status').textContent='📋 کپی شد'}
+};
+$('b4').onclick=()=>{
+  const b=new Blob([report()],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='ttac-lab-'+Date.now()+'.txt';
+  document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},800);
+};
+</script>
+</body>
+</html>
