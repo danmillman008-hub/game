@@ -13,12 +13,13 @@ import ir.darookhaneh.stock.core.presentation.navigation.Destination
 import ir.darookhaneh.stock.core.presentation.navigation.NavigateEvent
 import ir.darookhaneh.stock.core.presentation.navigation.Navigator
 import ir.darookhaneh.stock.feature.pharmacy.presentation.add.AddDrugRoute
+import ir.darookhaneh.stock.feature.pharmacy.presentation.dashboard.DashboardRoute
 import ir.darookhaneh.stock.feature.pharmacy.presentation.detail.DrugDetailRoute
 import ir.darookhaneh.stock.feature.pharmacy.presentation.home.MedicationHomeRoute
+import ir.darookhaneh.stock.feature.pharmacy.presentation.scan.ScannerRoute
 import ir.darookhaneh.stock.feature.settings.navigation.SettingRoute
 import ir.darookhaneh.stock.transition.AppTransitions
 import ir.darookhaneh.stock.transition.toContentTransform
-import ir.darookhaneh.stock.ui.PlaceholderScreen
 import org.koin.compose.koinInject
 
 @Composable
@@ -54,10 +55,11 @@ fun AppGraph(
         onBack = { if (backStack.isNotEmpty()) backStack.removeLastOrNull() },
         entryProvider = entryProvider {
             entry<Destination.Dashboard> {
-                MedicationHomeRoute(
+                DashboardRoute(
                     onAddDrug = { backStack.add(Destination.AddDrug()) },
                     onScan = { backStack.add(Destination.Scanner) },
                     onOpenDrug = { drugId -> backStack.add(Destination.DrugDetail(drugId)) },
+                    onOpenDrugs = { backStack.add(Destination.Drugs) },
                 )
             }
 
@@ -81,9 +83,10 @@ fun AppGraph(
             }
 
             entry<Destination.Drugs> {
-                PlaceholderScreen(
-                    title = "فهرست داروها",
-                    description = "جست‌وجو و مشاهدهٔ موجودی",
+                MedicationHomeRoute(
+                    onAddDrug = { backStack.add(Destination.AddDrug()) },
+                    onScan = { backStack.add(Destination.Scanner) },
+                    onOpenDrug = { drugId -> backStack.add(Destination.DrugDetail(drugId)) },
                 )
             }
 
@@ -100,9 +103,16 @@ fun AppGraph(
                     AppTransitions.enterFromTop.toContentTransform()
                 }
             ) {
-                PlaceholderScreen(
-                    title = "اسکن و ثبت",
-                    description = "اسکن بارکد، سپس ثبت موجودی",
+                ScannerRoute(
+                    onUnknownCode = { code ->
+                        backStack.removeLastOrNull()
+                        backStack.add(Destination.AddDrug(gtin = code))
+                    },
+                    onDrugFound = { drugId ->
+                        backStack.removeLastOrNull()
+                        backStack.add(Destination.DrugDetail(drugId))
+                    },
+                    onNavigateBack = { backStack.removeLastOrNull() },
                 )
             }
 

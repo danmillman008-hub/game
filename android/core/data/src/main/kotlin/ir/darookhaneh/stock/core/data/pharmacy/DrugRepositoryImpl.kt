@@ -53,6 +53,13 @@ class DrugRepositoryImpl(
     override suspend fun findByIrc(irc: String): Drug? =
         drugDao.findByIrc(irc)?.toDomain()
 
+    override fun observeDrugCount(): Flow<Int> = drugDao.observeDrugCount()
+
+    override fun observeTotalUnits(): Flow<Int> = drugDao.observeTotalUnits()
+
+    override fun observeLowStockDrugCount(threshold: Int): Flow<Int> =
+        drugDao.observeLowStockDrugCount(threshold)
+
     override fun observeSummaries(query: String?): Flow<List<DrugSummary>> {
         val threshold = PharmacyThresholds.DEFAULT_LOW_STOCK_THRESHOLD
         val source = if (query.isNullOrBlank()) {

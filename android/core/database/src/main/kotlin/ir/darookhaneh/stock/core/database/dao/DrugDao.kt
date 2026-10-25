@@ -101,4 +101,17 @@ interface DrugDao {
 
     @Query("SELECT IFNULL(SUM(quantity), 0) FROM batch")
     fun observeTotalUnits(): Flow<Int>
+
+    /** موجودی کم برای «مجموع بچ‌های هر دارو»، نه هر بچ. */
+    @Query(
+        """
+        SELECT COUNT(*) FROM (
+            SELECT drugId, SUM(quantity) AS total
+            FROM batch
+            GROUP BY drugId
+            HAVING total <= :threshold
+        )
+        """
+    )
+    fun observeLowStockDrugCount(threshold: Int): Flow<Int>
 }

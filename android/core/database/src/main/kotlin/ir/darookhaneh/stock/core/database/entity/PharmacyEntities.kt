@@ -107,3 +107,13 @@ data class DrugSummaryRow(
     val batchCount: Int,
     val nearestExpiry: Long?,
 )
+
+/** ردیف هشدار انقضا (بچ + نام دارو). */
+data class BatchAlertRow(
+    val batchId: Long,
+    val drugId: Long,
+    val drugName: String,
+    val batchNumber: String?,
+    val expiryDate: Long?,
+    val quantity: Int,
+)

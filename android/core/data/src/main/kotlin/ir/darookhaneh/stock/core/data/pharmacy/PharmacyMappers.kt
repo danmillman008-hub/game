@@ -1,10 +1,12 @@
 package ir.darookhaneh.stock.core.data.pharmacy
 
+import ir.darookhaneh.stock.core.database.entity.BatchAlertRow
 import ir.darookhaneh.stock.core.database.entity.BatchEntity
 import ir.darookhaneh.stock.core.database.entity.DrugEntity
 import ir.darookhaneh.stock.core.database.entity.DrugSummaryRow
 import ir.darookhaneh.stock.core.database.entity.InventoryEventEntity
 import ir.darookhaneh.stock.core.model.pharmacy.Batch
+import ir.darookhaneh.stock.core.model.pharmacy.BatchAlert
 import ir.darookhaneh.stock.core.model.pharmacy.Drug
 import ir.darookhaneh.stock.core.model.pharmacy.DrugSummary
 import ir.darookhaneh.stock.core.model.pharmacy.InventoryEvent
@@ -33,6 +35,16 @@ fun BatchEntity.toDomain(): Batch = Batch(
     location = location,
     createdAt = createdAt,
     updatedAt = updatedAt,
+)
+
+fun BatchAlertRow.toDomain(now: Long): BatchAlert = BatchAlert(
+    batchId = batchId,
+    drugId = drugId,
+    drugName = drugName,
+    batchNumber = batchNumber,
+    expiryDate = expiryDate,
+    quantity = quantity,
+    daysToExpiry = expiryDate?.let { (it - now) / (24L * 60 * 60 * 1000) },
 )
 
 fun InventoryEventEntity.toDomain(): InventoryEvent = InventoryEvent(

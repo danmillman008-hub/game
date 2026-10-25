@@ -2,6 +2,7 @@ package ir.darookhaneh.stock.di
 
 import ir.darookhaneh.stock.core.domain.pharmacy.usecase.AddBatchUseCase
 import ir.darookhaneh.stock.core.domain.pharmacy.usecase.CreateDrugWithStockUseCase
+import ir.darookhaneh.stock.core.domain.pharmacy.usecase.ObserveDashboardUseCase
 import ir.darookhaneh.stock.core.domain.pharmacy.usecase.ObserveDrugSummariesUseCase
 import ir.darookhaneh.stock.core.domain.pharmacy.usecase.RecordInventoryEventUseCase
 import ir.darookhaneh.stock.core.domain.pharmacy.usecase.ResolveScannedCodeUseCase
@@ -18,4 +19,5 @@ val domainModule = module {
     factoryOf(::RecordInventoryEventUseCase)
     factoryOf(::ResolveScannedCodeUseCase)
     factoryOf(::ObserveDrugSummariesUseCase)
+    factoryOf(::ObserveDashboardUseCase)
 }

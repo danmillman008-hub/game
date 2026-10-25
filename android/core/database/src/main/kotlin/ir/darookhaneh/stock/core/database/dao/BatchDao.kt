@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import ir.darookhaneh.stock.core.database.entity.BatchAlertRow
 import ir.darookhaneh.stock.core.database.entity.BatchEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -70,6 +71,37 @@ interface BatchDao {
     )
     fun observeExpiringSoonCount(now: Long, until: Long): Flow<Int>
 
-    @Query("SELECT COUNT(*) FROM batch WHERE quantity <= :threshold")
-    fun observeLowStockCount(threshold: Int): Flow<Int>
+    @Query(
+        """
+        SELECT b.id AS batchId,
+               b.drugId AS drugId,
+               d.name AS drugName,
+               b.batchNumber AS batchNumber,
+               b.expiryDate AS expiryDate,
+               b.quantity AS quantity
+        FROM batch b
+        JOIN drug d ON d.id = b.drugId
+        WHERE b.expiryDate IS NOT NULL AND b.expiryDate <= :until
+        ORDER BY b.expiryDate ASC
+        LIMIT :limit
+        """
+    )
+    fun observeExpiringBefore(until: Long, limit: Int = 50): Flow<List<BatchAlertRow>>
+
+    @Query(
+        """
+        SELECT b.id AS batchId,
+               b.drugId AS drugId,
+               d.name AS drugName,
+               b.batchNumber AS batchNumber,
+               b.expiryDate AS expiryDate,
+               b.quantity AS quantity
+        FROM batch b
+        JOIN drug d ON d.id = b.drugId
+        WHERE b.expiryDate IS NOT NULL AND b.expiryDate < :now
+        ORDER BY b.expiryDate ASC
+        LIMIT :limit
+        """
+    )
+    fun observeExpiredBefore(now: Long, limit: Int = 50): Flow<List<BatchAlertRow>>
 }

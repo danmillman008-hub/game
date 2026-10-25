@@ -12,6 +12,7 @@ import ir.darookhaneh.stock.core.domain.pharmacy.PharmacyException
 import ir.darookhaneh.stock.core.domain.pharmacy.repository.BatchRepository
 import ir.darookhaneh.stock.core.domain.pharmacy.repository.InventoryRepository
 import ir.darookhaneh.stock.core.model.pharmacy.Batch
+import ir.darookhaneh.stock.core.model.pharmacy.BatchAlert
 import ir.darookhaneh.stock.core.model.pharmacy.InventoryEvent
 import ir.darookhaneh.stock.core.model.pharmacy.InventoryEventType
 import kotlinx.coroutines.flow.Flow
@@ -59,6 +60,15 @@ class BatchRepositoryImpl(
 
     override fun observeByDrug(drugId: Long): Flow<List<Batch>> =
         batchDao.observeByDrug(drugId).map { list -> list.map { it.toDomain() } }
+
+    override fun observeExpiringBefore(until: Long): Flow<List<BatchAlert>> =
+        batchDao.observeExpiringBefore(until).map { rows ->
+            val now = clock()
+            rows.map { it.toDomain(now) }
+        }
+
+    override fun observeExpiredBefore(now: Long): Flow<List<BatchAlert>> =
+        batchDao.observeExpiredBefore(now).map { rows -> rows.map { it.toDomain(now) } }
 }
 
 /**

@@ -1,6 +1,7 @@
 package ir.darookhaneh.stock.core.domain.pharmacy.repository
 
 import ir.darookhaneh.stock.core.model.pharmacy.Batch
+import ir.darookhaneh.stock.core.model.pharmacy.BatchAlert
 import ir.darookhaneh.stock.core.model.pharmacy.Drug
 import ir.darookhaneh.stock.core.model.pharmacy.DrugSummary
 import ir.darookhaneh.stock.core.model.pharmacy.InventoryEvent
@@ -32,6 +33,12 @@ interface DrugRepository {
     suspend fun findByIrc(irc: String): Drug?
 
     fun observeSummaries(query: String? = null): Flow<List<DrugSummary>>
+
+    fun observeDrugCount(): Flow<Int>
+
+    fun observeTotalUnits(): Flow<Int>
+
+    fun observeLowStockDrugCount(threshold: Int): Flow<Int>
 }
 
 interface BatchRepository {
@@ -48,6 +55,11 @@ interface BatchRepository {
     suspend fun getById(batchId: Long): Batch?
 
     fun observeByDrug(drugId: Long): Flow<List<Batch>>
+
+    /** بچ‌هایی که تا [until] منقضی می‌شوند (شامل منقضی‌شده‌ها). */
+    fun observeExpiringBefore(until: Long): Flow<List<BatchAlert>>
+
+    fun observeExpiredBefore(now: Long): Flow<List<BatchAlert>>
 }
 
 /**
