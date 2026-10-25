@@ -1,5 +1,7 @@
 package ir.darookhaneh.stock.core.domain.pharmacy
 
+import ir.darookhaneh.stock.core.model.pharmacy.InventoryEventType
+
 /**
  * قواعد خالص دامنه — بدون Android، بدون Room، بدون شبکه.
  * همهٔ تصمیم‌های «اجازه دارد / ندارد» در همین فایل است تا تست پذیر باشد
