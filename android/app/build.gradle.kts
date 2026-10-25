@@ -96,6 +96,9 @@ dependencies {
     // تست ترکیب صفحه‌ها روی Robolectric (بدون امولاتور)
     testImplementation(libs.androidx.ui.test.junit4)
     testImplementation(libs.androidx.ui.test.manifest)
+    // Room واقعی (in-memory) برای تست مسیر ثبت دارو/موجودی
+    testImplementation(libs.room.runtime)
+    testImplementation(libs.room.ktx)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
