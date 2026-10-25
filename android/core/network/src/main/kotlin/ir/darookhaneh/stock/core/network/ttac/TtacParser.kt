@@ -163,7 +163,8 @@ object TtacParser {
         (this as? JsonPrimitive)?.content
 
     private fun JsonObject.str(key: String): String? =
-        this[key]?.asStringOrNull()?.replace('\u200c', ' ')?.trim()?.takeIf { it.isNotEmpty() }
+        // نیم‌فاصله (U+200C) حذف نمی‌شود: در فارسی درست است و حذفش نام دارو را خراب می‌کند.
+        this[key]?.asStringOrNull()?.trim()?.takeIf { it.isNotEmpty() }
 
     private fun JsonObject.int(key: String): Int? = this[key]?.asIntOrNull()
 

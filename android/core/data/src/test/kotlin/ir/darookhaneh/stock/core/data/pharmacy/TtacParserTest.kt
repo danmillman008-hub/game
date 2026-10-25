@@ -57,7 +57,7 @@ class TtacParserTest {
 
     @Test
     fun `ارقام فارسی و فاصله‌ها نرمال می‌شوند`() {
-        assertEquals("62600000000001", TtacParser.digits("۶۲۶-۰۰۰۰ ۰۰۰۰ ۰۱"))
+        assertEquals("62600000000001", TtacParser.digits("۶۲۶-۰۰۰۰ ۰۰۰۰ ۰۰۰۱"))
         assertEquals(TtacKind.GTIN, TtacParser.kindOf("۶۲۶۰۰۰۰۰۰۰۰۰۰۱"))
     }
 
@@ -88,7 +88,7 @@ class TtacParserTest {
         """.trimIndent()
 
         val result = TtacParser.parseLookup(body, "62600000000002")
-        assertEquals("آموکسی سیلین", result.name)
+        assertEquals("آموکسی‌سیلین", result.name)
         assertEquals("62600000000002", result.gtin)
     }
 

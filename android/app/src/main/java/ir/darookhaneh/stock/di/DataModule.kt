@@ -30,6 +30,7 @@ import ir.darookhaneh.stock.core.model.pharmacy.PharmacyConfig
 import ir.darookhaneh.stock.core.model.pharmacy.SystemTimeProvider
 import ir.darookhaneh.stock.core.model.pharmacy.TimeProvider
 import ir.darookhaneh.stock.core.domain.repository.UpdateRepository
+import ir.darookhaneh.stock.core.model.pharmacy.DrugLookupRemote
 import ir.darookhaneh.stock.core.network.ttac.TtacApi
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -50,7 +51,9 @@ val dataModule = module {
     singleOf(::InventoryRepositoryImpl) { bind<InventoryRepository>() }
 
     // استعلام تیتک: فقط با دکمهٔ کاربر؛ نتیجه در دیتابیس کش می‌شود.
-    single { TtacApi(client = TtacApi.defaultClient()) }
+    // نوع ثبت‌شده باید همان رابطی باشد که repository می‌خواهد؛ Koin بر اساس type
+    // تطبیق می‌دهد و ثبت با نوع TtacApi باعث NoDefinitionFoundException می‌شد.
+    single<DrugLookupRemote> { TtacApi(client = TtacApi.defaultClient()) }
     singleOf(::TtacLookupRepositoryImpl) { bind<DrugLookupRepository>() }
     singleOf(::DefaultAppDispatchers) { bind<AppDispatchers>() }
     singleOf(::LocalMediaStorageImpl) { bind<LocalMediaStorage>() }
