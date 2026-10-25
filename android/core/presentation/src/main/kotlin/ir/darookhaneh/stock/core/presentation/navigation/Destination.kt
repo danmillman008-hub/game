@@ -22,6 +22,15 @@ sealed interface Destination : NavKey {
     @Serializable
     data object Record : Destination
 
+    /**
+     * استعلام کد از سامانهٔ تیتک (مقصد مستقل).
+     *
+     * چرا مقصد جدا: پیش‌تر استعلام یک دکمهٔ کوچک داخل کارت «پیدا نشد» بود و
+     * کارفرما آن را «دکمه/روش مشخص» به حساب نیاورد. اکنون یک صفحهٔ کامل است.
+     */
+    @Serializable
+    data class Lookup(val code: String? = null) : Destination
+
     /** تاریخچهٔ سراسری همهٔ عملیات. */
     @Serializable
     data object History : Destination

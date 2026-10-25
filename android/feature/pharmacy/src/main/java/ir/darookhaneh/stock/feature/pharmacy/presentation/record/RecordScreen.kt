@@ -143,12 +143,6 @@ fun RecordScreen(
                             TextButton(onClick = { onCreatedDrugNeeded(uiState.query) }) {
                                 Text(stringResource(R.string.pharmacy_record_create_new))
                             }
-                            // استعلام آنلاین: فقط با تصمیم کاربر؛ اپ بدون اینترنت کامل کار می‌کند.
-                            if (uiState.lookup == null && JalaliDate.latinDigits(uiState.query).count(Char::isDigit) >= 8) {
-                                TextButton(onClick = { onAction(RecordAction.StartLookup) }) {
-                                    Text(stringResource(R.string.pharmacy_lookup_button))
-                                }
-                            }
                         }
                     }
                 }

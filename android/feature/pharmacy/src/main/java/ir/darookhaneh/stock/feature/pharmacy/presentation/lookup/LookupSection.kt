@@ -10,7 +10,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -61,12 +60,38 @@ fun LookupSection(
     modifier: Modifier = Modifier,
 ) {
     if (state == null) {
-        OutlinedButton(
-            onClick = onStart,
-            enabled = canLookup,
+        // کارت روشن با دکمهٔ بزرگ — نه یک دکمهٔ خاکستری که گم شود.
+        Surface(
+            shape = RoundedCornerShape(14.dp),
+            color = MaterialTheme.colorScheme.surfaceContainerLow,
             modifier = modifier.fillMaxWidth(),
         ) {
-            Text(stringResource(R.string.pharmacy_lookup_button))
+            Column(
+                modifier = Modifier.padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Text(
+                    text = stringResource(R.string.pharmacy_lookup_button),
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                )
+                Text(
+                    text = stringResource(
+                        if (canLookup) R.string.pharmacy_lookup_ready
+                        else R.string.pharmacy_lookup_need_code
+                    ),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Button(
+                    onClick = onStart,
+                    enabled = canLookup,
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                ) {
+                    Text(stringResource(R.string.pharmacy_lookup_start))
+                }
+            }
         }
         return
     }

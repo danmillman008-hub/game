@@ -18,6 +18,7 @@ import ir.darookhaneh.stock.feature.pharmacy.presentation.dashboard.DashboardRou
 import ir.darookhaneh.stock.feature.pharmacy.presentation.detail.DrugDetailRoute
 import ir.darookhaneh.stock.feature.pharmacy.presentation.history.HistoryRoute
 import ir.darookhaneh.stock.feature.pharmacy.presentation.home.MedicationHomeRoute
+import ir.darookhaneh.stock.feature.pharmacy.presentation.lookup.LookupRoute
 import ir.darookhaneh.stock.feature.pharmacy.presentation.record.RecordRoute
 import ir.darookhaneh.stock.feature.pharmacy.presentation.scan.ScannerRoute
 import ir.darookhaneh.stock.feature.settings.navigation.SettingRoute
@@ -71,6 +72,7 @@ fun AppGraph(
                     onScan = { backStack.add(Destination.Scanner) },
                     onOpenDrug = { drugId -> backStack.add(Destination.DrugDetail(drugId)) },
                     onOpenDrugs = { backStack.add(Destination.Drugs) },
+                    onLookup = { backStack.add(Destination.Lookup()) },
                 )
             }
 
@@ -114,6 +116,20 @@ fun AppGraph(
 
             entry<Destination.History> {
                 HistoryRoute()
+            }
+
+            entry<Destination.Lookup> { key ->
+                LookupRoute(
+                    initialCode = key.code,
+                    onOpenDrug = { drugId ->
+                        backStack.removeLastOrNull()
+                        backStack.add(Destination.DrugDetail(drugId))
+                    },
+                    onManualAdd = {
+                        backStack.removeLastOrNull()
+                        backStack.add(Destination.AddDrug())
+                    },
+                )
             }
 
             entry<Destination.DrugDetail> { key ->

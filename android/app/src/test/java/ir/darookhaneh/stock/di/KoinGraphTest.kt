@@ -11,6 +11,7 @@ import ir.darookhaneh.stock.feature.pharmacy.presentation.add.AddDrugViewModel
 import ir.darookhaneh.stock.feature.pharmacy.presentation.dashboard.DashboardViewModel
 import ir.darookhaneh.stock.feature.pharmacy.presentation.history.HistoryViewModel
 import ir.darookhaneh.stock.feature.pharmacy.presentation.home.MedicationHomeViewModel
+import ir.darookhaneh.stock.feature.pharmacy.presentation.lookup.LookupViewModel
 import ir.darookhaneh.stock.feature.pharmacy.presentation.record.RecordViewModel
 import ir.darookhaneh.stock.feature.pharmacy.presentation.scan.ScannerViewModel
 import ir.darookhaneh.stock.feature.settings.di.settingModule
@@ -83,6 +84,7 @@ class KoinGraphTest : KoinTest {
         assertNotNull(get<ScannerViewModel>())
         assertNotNull(get<RecordViewModel>())
         assertNotNull(get<HistoryViewModel>())
+        assertNotNull(get<LookupViewModel>())
     }
 
     @Test

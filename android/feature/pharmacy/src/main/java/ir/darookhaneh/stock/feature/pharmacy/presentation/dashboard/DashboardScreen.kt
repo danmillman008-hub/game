@@ -36,6 +36,7 @@ fun DashboardRoute(
     onScan: () -> Unit,
     onOpenDrug: (Long) -> Unit,
     onOpenDrugs: () -> Unit,
+    onLookup: () -> Unit = {},
 ) {
     val viewModel: DashboardViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -47,6 +48,7 @@ fun DashboardRoute(
         onScan = onScan,
         onOpenDrug = onOpenDrug,
         onOpenDrugs = onOpenDrugs,
+        onLookup = onLookup,
     )
 }
 
@@ -58,6 +60,7 @@ fun DashboardScreen(
     onScan: () -> Unit,
     onOpenDrug: (Long) -> Unit,
     onOpenDrugs: () -> Unit,
+    onLookup: () -> Unit = {},
 ) {
     Scaffold { padding ->
         LazyColumn(
@@ -129,6 +132,19 @@ fun DashboardScreen(
                     OutlinedButton(onClick = onAddDrug, modifier = Modifier.weight(1f)) {
                         Text(stringResource(R.string.pharmacy_add_manual))
                     }
+                }
+            }
+
+            item {
+                // استعلام تیتک: دکمهٔ مستقل و همیشه در دسترس در داشبورد.
+                OutlinedButton(
+                    onClick = onLookup,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    shape = RoundedCornerShape(12.dp),
+                ) {
+                    Text(stringResource(R.string.pharmacy_lookup_open_screen))
                 }
             }
 

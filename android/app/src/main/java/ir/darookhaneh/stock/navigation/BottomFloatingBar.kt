@@ -78,7 +78,7 @@ fun NavKey.toBottomBarItem(): BottomBarItem? {
         Destination.Dashboard, is Destination.DrugDetail -> BottomBarItem.DASHBOARD
         Destination.Drugs -> BottomBarItem.DRUGS
         Destination.History -> BottomBarItem.HISTORY
-        Destination.Record -> BottomBarItem.DRUGS
+        Destination.Record, is Destination.Lookup -> BottomBarItem.DRUGS
         Destination.Scanner -> BottomBarItem.SCAN
         is Destination.Setting -> BottomBarItem.SETTINGS
         else -> null
