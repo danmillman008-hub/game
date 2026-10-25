@@ -100,7 +100,7 @@ object StockIcons {
         val SelectedScan = IconProvider.ImageVectorIcon(Icons.Rounded.QrCodeScanner)
         val UnselectedHistory = IconProvider.ImageVectorIcon(Icons.Outlined.Analytics)
         val SelectedHistory = IconProvider.ImageVectorIcon(Icons.Rounded.Analytics)
-        val UnselectedRecord = IconProvider.ImageVectorIcon(Icons.Outlined.Add)
+        val UnselectedRecord = IconProvider.ImageVectorIcon(Icons.Rounded.Add)
         val SelectedRecord = IconProvider.ImageVectorIcon(Icons.Rounded.Add)
     }
 
