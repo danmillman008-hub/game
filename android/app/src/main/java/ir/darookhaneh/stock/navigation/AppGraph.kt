@@ -13,6 +13,7 @@ import ir.darookhaneh.stock.core.presentation.navigation.Destination
 import ir.darookhaneh.stock.core.presentation.navigation.NavigateEvent
 import ir.darookhaneh.stock.core.presentation.navigation.Navigator
 import ir.darookhaneh.stock.feature.pharmacy.presentation.add.AddDrugRoute
+import ir.darookhaneh.stock.feature.pharmacy.presentation.detail.DrugDetailRoute
 import ir.darookhaneh.stock.feature.pharmacy.presentation.home.MedicationHomeRoute
 import ir.darookhaneh.stock.feature.settings.navigation.SettingRoute
 import ir.darookhaneh.stock.transition.AppTransitions
@@ -87,10 +88,7 @@ fun AppGraph(
             }
 
             entry<Destination.DrugDetail> { key ->
-                PlaceholderScreen(
-                    title = "جزئیات دارو",
-                    description = "شناسه: ${key.drugId}",
-                )
+                DrugDetailRoute(drugId = key.drugId)
             }
 
             entry<Destination.Scanner>(

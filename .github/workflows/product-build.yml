@@ -115,6 +115,44 @@ jobs:
             echo "| — | — | بدون گزارش |" >> "$GITHUB_STEP_SUMMARY"
           fi
 
+      - name: Publish test summary (rolling issue)
+        # لاگ ران قابل خواندن نیست؛ خلاصهٔ تست‌ها در یک Issue ثابت منتشر می‌شود.
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_ID: ${{ github.run_id }}
+          ASSEMBLE: ${{ steps.assemble.outcome }}
+          UNIT: ${{ steps.unit.outcome }}
+        run: |
+          {
+            echo "Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo "Commit: \`${{ github.sha }}\`"
+            echo
+            echo "- assemble: \`$ASSEMBLE\`"
+            echo "- unit tests: \`$UNIT\`"
+            echo
+            echo "| ماژول | تست | موفق | شکست | وضعیت |"
+            echo "|---|---|---|---|---|"
+          } > /tmp/summary.md
+          python3 - >> /tmp/summary.md <<'PY'
+          import glob, xml.etree.ElementTree as ET
+          total = failed = 0
+          for f in sorted(glob.glob('*/build/test-results/testDebugUnitTest/*.xml')):
+              r = ET.parse(f).getroot()
+              n = int(r.get('tests', 0)); fa = int(r.get('failures', 0)); er = int(r.get('errors', 0))
+              total += n; failed += fa + er
+              ok = n - fa - er
+              print(f"| {r.get('name','?')} | {n} | {ok} | {fa+er} | {'✅' if fa+er==0 else '❌'} |")
+          print()
+          print(f"**مجموع: {total} تست، {failed} شکست**")
+          PY
+          NUM=$(gh issue list --state open --limit 50 --json number,title --jq '.[] | select(.title == "product-build status") | .number' | head -1)
+          if [ -z "$NUM" ]; then
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "product-build status" --body-file /tmp/summary.md
+          else
+            gh issue comment "$NUM" --repo "$GITHUB_REPOSITORY" --body-file /tmp/summary.md
+          fi
+
       - name: Report build errors to issue
         # لاگ ران در دسترس نیست؛ خلاصهٔ خطاها مستقیم در Issue منتشر می‌شود.
         if: failure()

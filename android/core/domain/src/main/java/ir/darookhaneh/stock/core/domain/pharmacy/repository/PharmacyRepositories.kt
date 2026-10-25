@@ -25,6 +25,8 @@ interface DrugRepository {
 
     suspend fun getById(drugId: Long): Drug?
 
+    fun observeById(drugId: Long): Flow<Drug?>
+
     suspend fun findByGtin(gtin: String): Drug?
 
     suspend fun findByIrc(irc: String): Drug?

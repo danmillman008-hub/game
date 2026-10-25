@@ -44,6 +44,9 @@ class DrugRepositoryImpl(
     override suspend fun getById(drugId: Long): Drug? =
         drugDao.getById(drugId)?.toDomain()
 
+    override fun observeById(drugId: Long): Flow<Drug?> =
+        drugDao.observeById(drugId).map { it?.toDomain() }
+
     override suspend fun findByGtin(gtin: String): Drug? =
         drugDao.findByGtin(gtin)?.toDomain()
 
