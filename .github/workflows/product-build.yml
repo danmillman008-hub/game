@@ -106,7 +106,7 @@ jobs:
         working-directory: android
         run: |
           set -o pipefail
-          ./gradlew :app:assembleRelease --stacktrace --no-daemon 2>&1 | tee -a /tmp/build.log
+          ./gradlew :app:assembleRelease --stacktrace --no-daemon 2>&1 | tee -a /tmp/build.log /tmp/release.log || echo "RELEASE_ASSEMBLE_FAILED" >> /tmp/release.log
 
       - name: Unit tests (all modules)
         id: unit
@@ -154,7 +154,19 @@ jobs:
             echo
             echo "فایل‌های نتیجهٔ یافت‌شده:"
             find . -path "*test-results*" -name "*.xml" | head -50 || true
+            echo
+            echo "APKهای ساخته‌شده:"
+            find android/app/build/outputs/apk -name "*.apk" 2>/dev/null | sort || true
           } >> /tmp/summary.md
+          if grep -q "RELEASE_ASSEMBLE_FAILED" /tmp/release.log 2>/dev/null; then
+            {
+              echo
+              echo "### خطای ساخت نسخهٔ release"
+              echo '```'
+              grep -nE "error:|FAILURE:|What went wrong|Missing class|Caused by:" /tmp/release.log | head -40 || tail -40 /tmp/release.log
+              echo '```'
+            } >> /tmp/summary.md
+          fi
           NUM=$(gh issue list --state open --limit 50 --json number,title --jq '.[] | select(.title == "product-build status") | .number' | head -1)
           if [ -z "$NUM" ]; then
             gh issue create --repo "$GITHUB_REPOSITORY" --title "product-build status" --body-file /tmp/summary.md
