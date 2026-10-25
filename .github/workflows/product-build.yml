@@ -233,7 +233,9 @@ jobs:
 
       - name: Publish APK to GitHub Releases
         # کاربر باید بتواند APK را مستقیم روی گوشی نصب کند؛ آرتیفکت اکشن‌ها نیاز به لاگین دارد.
-        if: always() && steps.assemble.outcome == 'success'
+        # فقط روی push منتشر می‌شود؛ رویداد pull_request هم بیلد می‌کند و دو انتشار
+        # هم‌زمان روی یک تگ، خطای «asset already exists» می‌دهد (دور قبل همین شد).
+        if: always() && steps.assemble.outcome == 'success' && github.event_name != 'pull_request'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
