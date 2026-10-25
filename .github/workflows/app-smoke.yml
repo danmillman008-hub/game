@@ -1,0 +1,180 @@
+name: app-smoke
+
+# اجرای واقعی اپ روی امولاتور AOSP: نصب، باز کردن، و گزارش کرش.
+# دلیل وجود: «اپ باز نمی‌شود» باید با لاگ واقعی ثابت/رد شود، نه حدس.
+# لاگ ران از سندباکس در دسترس نیست، پس همه‌چیز در Issue منتشر می‌شود.
+
+on:
+  push:
+    branches: ["arena/**"]
+    paths:
+      - "android/**"
+      - ".github/workflows/app-smoke.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: app-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  launch:
+    name: install + launch on emulator
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create evidence issue
+        id: issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          url=$(gh issue create --repo "$GITHUB_REPOSITORY" \
+            --title "app-smoke (run ${{ github.run_id }})" \
+            --body "در حال اجرا… [لاگ ران](https://github.com/$GITHUB_REPOSITORY/actions/runs/${{ github.run_id }})")
+          echo "number=${url##*/}" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Boot AOSP emulator, install, launch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE: ${{ steps.issue.outputs.number }}
+        run: |
+          set +e
+          mkdir -p evidence
+          exec > >(tee -a evidence/run.log) 2>&1
+
+          say() { gh issue comment "$ISSUE" --repo "$GITHUB_REPOSITORY" \
+            --body "$(printf '%s\n```\n%s\n```' "$1" "$(tail -c 5000 "$2" 2>/dev/null || echo "$2")")" || true; }
+
+          SDK="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          export PATH="$SDK/platform-tools:$SDK/emulator:$SDK/cmdline-tools/latest/bin:$PATH"
+
+          if [ ! -r /dev/kvm ]; then sudo chmod 666 /dev/kvm 2>/dev/null || true; fi
+          echo "KVM=$([ -r /dev/kvm ] && [ -w /dev/kvm ] && echo YES || echo NO)" | tee evidence/status.txt
+          if [ ! -r /dev/kvm ]; then
+            say "❌ بدون /dev/kvm" "no-kvm"; exit 0
+          fi
+
+          yes | sdkmanager --licenses > /dev/null 2>&1 || true
+          sdkmanager "platform-tools" "emulator" "system-images;android-33;default;x86_64" > evidence/sdk.log 2>&1
+
+          export ANDROID_USER_HOME="$HOME/.android"
+          export ANDROID_AVD_HOME="$ANDROID_USER_HOME/avd"
+          mkdir -p "$ANDROID_AVD_HOME"
+          echo "no" | avdmanager create avd -n smoke -k "system-images;android-33;default;x86_64" -d "pixel_5" --force > evidence/avd.log 2>&1
+
+          nohup emulator -avd smoke -no-window -no-audio -no-boot-anim \
+            -gpu swiftshader_indirect -no-snapshot -no-metrics -wipe-data > evidence/emulator.log 2>&1 &
+
+          timeout 180 adb wait-for-device
+          for i in $(seq 1 40); do
+            [ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" = "1" ] && { echo "BOOTED_AFTER=$((i*15))s" >> evidence/status.txt; break; }
+            sleep 15
+          done
+          adb shell input keyevent 82 || true
+
+          # بیلد (debug + release با کلید تست)
+          cd android
+          chmod +x gradlew
+          keytool -genkeypair -v -keystore test-release.keystore -alias stock-test \
+            -storepass stocktest123 -keypass stocktest123 \
+            -dname "CN=Stock Internal Test, OU=QA, O=Stock, C=IR" \
+            -keyalg RSA -keysize 2048 -validity 10000 > /dev/null 2>&1 || true
+          {
+            echo 'storeFile=test-release.keystore'
+            echo 'storePassword=stocktest123'
+            echo 'keyAlias=stock-test'
+            echo 'keyPassword=stocktest123'
+          } > keystore.properties
+          ./gradlew :app:assembleDebug :app:assembleRelease --stacktrace > ../evidence/build.log 2>&1
+          echo "BUILD_EXIT=$?" >> ../evidence/status.txt
+          REL=$(find app/build/outputs/apk/release -name "*x86_64*release.apk" | head -1)
+          DBG=$(find app/build/outputs/apk/debug -name "*x86_64*debug.apk" | head -1)
+          REL="$(pwd)/$REL"; DBG="$(pwd)/$DBG"
+          echo "RELEASE_APK=$REL" >> ../evidence/status.txt
+          echo "DEBUG_APK=$DBG" >> ../evidence/status.txt
+          cd ..
+
+          run_variant() {  # run_variant <label> <apk>
+            label="$1"; apk="$2"
+            adb uninstall ir.darookhaneh.stock > /dev/null 2>&1 || true
+            adb install -r "$apk" > "evidence/install-$label.txt" 2>&1
+            echo "INSTALL_${label}=$?" >> evidence/status.txt
+            adb logcat -c || true
+            adb shell am start -W -n ir.darookhaneh.stock/.MainActivity > "evidence/start-$label.txt" 2>&1
+            sleep 20
+            if adb shell pidof ir.darookhaneh.stock > /dev/null 2>&1; then
+              echo "VERDICT_${label}=APP_RUNNING" >> evidence/status.txt
+            else
+              echo "VERDICT_${label}=CRASHED" >> evidence/status.txt
+            fi
+            {
+              echo "===== $label ====="
+              cat "evidence/install-$label.txt"
+              echo "--- am start ---"; cat "evidence/start-$label.txt"
+              echo "--- crash buffer ---"; adb logcat -d -b crash 2>/dev/null | tail -60
+              echo "--- fatal/exception ---"
+              adb logcat -d 2>/dev/null | grep -iE "AndroidRuntime|FATAL|NoDefinition|NoBeanDef|ClassNotFound|IllegalArgument|IllegalState" | tail -40
+              echo "--- top activity ---"
+              adb shell dumpsys activity activities 2>/dev/null | grep -E "topResumedActivity" | head -2
+            } >> evidence/smoke.txt
+            adb exec-out screencap -p > "evidence/screen-$label.png" 2>/dev/null || true
+          }
+
+          : > evidence/smoke.txt
+          run_variant release "$REL"
+
+          # جریان واقعی کاربر: تب داروها → افزودن دستی → نام → ذخیره.
+          # دلیل وجود: «بعد از ثبت اولین دارو کرش می‌کند» باید روی دستگاه واقعی
+          # امتحان شود، نه با حدس. خروجی کامل در Issue می‌آید.
+          adb install -r "$REL" > /dev/null 2>&1 || true
+          python3 tools/ui-flow-test.py > evidence/ui-flow.txt 2>&1
+          UI_FLOW_EXIT=$?
+          echo "UI_FLOW_EXIT=${UI_FLOW_EXIT}" >> evidence/status.txt
+          say "تست جریان واقعی (افزودن اولین دارو، exit=${UI_FLOW_EXIT}):" evidence/ui-flow.txt
+
+          run_variant debug "$DBG"
+
+          {
+            echo "=== am start -W ==="; cat evidence/start.txt
+            echo "=== top activity ==="
+            adb shell dumpsys activity activities 2>/dev/null | grep -E "topResumedActivity|mResumedActivity" | head -3
+            echo "=== process ==="
+            adb shell pidof ir.darookhaneh.stock || echo "APP_PROCESS_NOT_RUNNING"
+            echo "=== crash buffer ==="
+            adb logcat -d -b crash 2>/dev/null | tail -80
+            echo "=== app logcat (FATAL / Exception) ==="
+            adb logcat -d 2>/dev/null | grep -iE "ir.darookhaneh|AndroidRuntime|FATAL|Koin|NoDefinition|Exception" | tail -120
+          } | tee evidence/smoke.txt
+          say "نتیجهٔ اجرا روی دستگاه (release سپس debug):" evidence/smoke.txt
+
+          # اسکرین‌شات release را به Issue بچسبان
+          if [ -s evidence/screen-release.png ]; then
+            curl -s -X POST -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              -H "Content-Type: image/png" \
+              --data-binary @evidence/screen-release.png \
+              "https://uploads.github.com/repos/$GITHUB_REPOSITORY/issues/$ISSUE/assets?name=screen-release.png" \
+              | head -c 300
+          fi
+
+          say "خلاصه:" evidence/status.txt
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: app-smoke
+          path: evidence/**
+          if-no-files-found: warn

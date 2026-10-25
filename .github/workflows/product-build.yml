@@ -1,0 +1,306 @@
+name: product-build
+
+# بیلد و تست پایهٔ اسکلت محصول (android/).
+# هدف: هیچ commitی روی شاخهٔ محصول بدون کامپایل سبز و تست واحد سبز نماند.
+
+on:
+  push:
+    branches: ["arena/**", "main"]
+    paths:
+      - "android/**"
+      - ".github/workflows/product-build.yml"
+  pull_request:
+    paths:
+      - "android/**"
+      - ".github/workflows/product-build.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write   # برای انتشار APK در Releases
+  issues: write
+
+concurrency:
+  group: product-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: assembleDebug + unit tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+
+    env:
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx4g"
+      CI: "true"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install SDK platform 36
+        # رانرهای ubuntu-24.04 خودشان Android SDK دارند؛ اکشن جانبی لازم نیست.
+        run: |
+          SDK="${ANDROID_SDK_ROOT:-$ANDROID_HOME}"
+          if [ -z "$SDK" ] || [ ! -d "$SDK" ]; then
+            echo "::error::Android SDK پیدا نشد (ANDROID_HOME خالی است)"
+            exit 1
+          fi
+          echo "sdk at $SDK"
+          ls "$SDK" | head
+          SDKM="$(command -v sdkmanager || true)"
+          if [ -z "$SDKM" ]; then
+            SDKM="$(ls -d "$SDK"/cmdline-tools/*/bin/sdkmanager 2>/dev/null | head -1)"
+          fi
+          if [ -z "$SDKM" ]; then
+            echo "::error::sdkmanager پیدا نشد"
+            exit 1
+          fi
+          echo "sdkmanager: $SDKM"
+          yes | "$SDKM" --licenses > /dev/null 2>&1 || true
+          "$SDKM" "platform-tools" "platforms;android-36" "build-tools;36.0.0" 2>&1 | tail -5
+          echo "ANDROID_HOME=$SDK" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$SDK" >> "$GITHUB_ENV"
+          echo "sdk ready"
+
+      - name: Set up Gradle (with cache)
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Make gradlew executable
+        working-directory: android
+        run: chmod +x gradlew
+
+      - name: Generate internal test keystore
+        # کلید تست داخلی (نه انتشار عمومی). اگر نبود، APK نسخهٔ release امضا نمی‌شود.
+        run: |
+          cd android
+          keytool -genkeypair -v \
+            -keystore test-release.keystore \
+            -alias stock-test \
+            -storepass stocktest123 -keypass stocktest123 \
+            -dname "CN=Stock Internal Test, OU=QA, O=Stock, C=IR" \
+            -keyalg RSA -keysize 2048 -validity 10000 > /dev/null
+          cat > keystore.properties <<'EOF'
+          storeFile=test-release.keystore
+          storePassword=stocktest123
+          keyAlias=stock-test
+          keyPassword=stocktest123
+          EOF
+          echo "keystore ready"
+
+      - name: Assemble debug APK
+        id: assemble
+        working-directory: android
+        run: |
+          set -o pipefail
+          ./gradlew :app:assembleDebug --stacktrace --no-daemon --continue 2>&1 | tee -a /tmp/build.log
+
+      - name: Assemble release APK (minified, test-signed)
+        id: release
+        continue-on-error: true
+        working-directory: android
+        run: |
+          set -o pipefail
+          ./gradlew :app:assembleRelease --stacktrace --no-daemon 2>&1 | tee -a /tmp/build.log /tmp/release.log || echo "RELEASE_ASSEMBLE_FAILED" >> /tmp/release.log
+
+      - name: Verify bundled ML Kit barcode inside APK
+        # قفل فاز ۱: اسکنر نباید به Play Services یا دانلود پویا وابسته باشد.
+        run: |
+          APK=$(ls android/app/build/outputs/apk/release/*arm64*.apk 2>/dev/null | head -1)
+          [ -n "$APK" ] || APK=$(ls android/app/build/outputs/apk/debug/*arm64*.apk | head -1)
+          echo "checking $APK"
+          unzip -l "$APK" | grep -E "\.so$" | awk '{print $4}'
+          if unzip -l "$APK" | grep -q "libbarhopper_v3.so"; then
+            echo "OK: barhopper (ML Kit bundled) داخل APK است"
+          else
+            echo "::error::libbarhopper_v3.so در APK نیست — اسکنر به Play Services/دانلود پویا وابسته می‌شود"
+            exit 1
+          fi
+          if unzip -l "$APK" | grep -q "com/google/android/gms/vision"; then
+            echo "::warning::کلاس‌های vision گوگل داخل APK است"
+          fi
+
+      - name: Unit tests (all modules)
+        id: unit
+        working-directory: android
+        run: |
+          set -o pipefail
+          ./gradlew testDebugUnitTest --stacktrace --no-daemon --continue 2>&1 | tee -a /tmp/build.log
+
+      - name: Collect reports
+        if: always()
+        working-directory: android
+        run: |
+          {
+            echo "### نتیجهٔ بیلد محصول"
+            echo ""
+            echo "- assemble: \`${{ steps.assemble.outcome }}\`"
+            echo "- unit tests: \`${{ steps.unit.outcome }}\`"
+            echo ""
+            echo "| ماژول | تست | موفق | شکست | وضعیت |"
+            echo "|---|---|---|---|---|"
+          } >> "$GITHUB_STEP_SUMMARY"
+          python3 .github/scripts/test_summary.py "$GITHUB_STEP_SUMMARY" || true
+
+      - name: Publish test summary (rolling issue)
+        # لاگ ران قابل خواندن نیست؛ خلاصهٔ تست‌ها در یک Issue ثابت منتشر می‌شود.
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_ID: ${{ github.run_id }}
+          ASSEMBLE: ${{ steps.assemble.outcome }}
+          UNIT: ${{ steps.unit.outcome }}
+        run: |
+          {
+            echo "Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo "Commit: \`${{ github.sha }}\`"
+            echo
+            echo "- assemble: \`$ASSEMBLE\`"
+            echo "- unit tests: \`$UNIT\`"
+            echo
+            echo "| ماژول | تست | موفق | شکست | وضعیت |"
+            echo "|---|---|---|---|---|"
+          } > /tmp/summary.md
+          (cd android && python3 ../.github/scripts/test_summary.py) >> /tmp/summary.md || true
+          {
+            echo
+            echo "فایل‌های نتیجهٔ یافت‌شده:"
+            find . -path "*test-results*" -name "*.xml" | head -50 || true
+            echo
+            echo "APKهای ساخته‌شده:"
+            find android/app/build/outputs/apk -name "*.apk" 2>/dev/null | sort || true
+            REL=$(ls android/app/build/outputs/apk/release/*arm64*.apk 2>/dev/null | head -1)
+            if [ -n "$REL" ]; then
+              echo
+              echo "محتوای بومی APK نسخهٔ release (arm64):"
+              echo '```'
+              unzip -l "$REL" | grep -E "\.so$|\.dex$" | awk '{print $1, $4}' || true
+              echo '```'
+            fi
+          } >> /tmp/summary.md
+          if grep -q "RELEASE_ASSEMBLE_FAILED" /tmp/release.log 2>/dev/null; then
+            {
+              echo
+              echo "### خطای ساخت نسخهٔ release"
+              echo '```'
+              grep -nE "error:|FAILURE:|What went wrong|Missing class|Caused by:" /tmp/release.log | head -40 || tail -40 /tmp/release.log
+              echo '```'
+            } >> /tmp/summary.md
+          fi
+          NUM=$(gh issue list --state open --limit 50 --json number,title --jq '.[] | select(.title == "product-build status") | .number' | head -1)
+          if [ -z "$NUM" ]; then
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "product-build status" --body-file /tmp/summary.md
+          else
+            gh issue comment "$NUM" --repo "$GITHUB_REPOSITORY" --body-file /tmp/summary.md
+          fi
+
+      - name: Report build errors to issue
+        # لاگ ران در دسترس نیست؛ خلاصهٔ خطاها مستقیم در Issue منتشر می‌شود.
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          {
+            echo "Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo "Commit: \`$GITHUB_SHA\`"
+            echo
+            echo '### خطاهای کامپایل/بیلد'
+            echo '```'
+            grep -nE "^(e:|w: .*error)|error:|FAILURE:|What went wrong|Caused by:|> Task .* FAILED|Unresolved reference|Execution failed" /tmp/build.log \
+              | head -200 || echo "الگوی خطا پیدا نشد"
+            echo '```'
+            echo
+            echo '### تست‌های شکست‌خورده (اگر بودند)'
+            echo '```'
+            grep -h -A4 "<failure" $(find . -path "*/test-results/*" -name "TEST-*.xml" 2>/dev/null | head -40) 2>/dev/null | head -120 || echo "فایل نتیجه‌ای نبود"
+            echo '```'
+            echo
+            echo '### ۶۰ خط آخر'
+            echo '```'
+            tail -60 /tmp/build.log || true
+            echo '```'
+          } > /tmp/report.md
+          head -c 60000 /tmp/report.md > /tmp/report-cut.md || cp /tmp/report.md /tmp/report-cut.md
+          gh issue create --repo "$GITHUB_REPOSITORY" \
+            --title "product-build failure (run $RUN_ID)" \
+            --body-file /tmp/report-cut.md || echo "issue create failed"
+
+      - name: Publish APK to GitHub Releases
+        # کاربر باید بتواند APK را مستقیم روی گوشی نصب کند؛ آرتیفکت اکشن‌ها نیاز به لاگین دارد.
+        # فقط روی push منتشر می‌شود؛ رویداد pull_request هم بیلد می‌کند و دو انتشار
+        # هم‌زمان روی یک تگ، خطای «asset already exists» می‌دهد (دور قبل همین شد).
+        if: always() && steps.assemble.outcome == 'success' && github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          mkdir -p /tmp/rel
+          rm -f /tmp/rel/*.apk
+          i=0
+          {
+            echo "APK محصول «انبار دارو» — اندروید ۱۱ (API 30) و بالاتر."
+            echo
+            echo "**کدام فایل را نصب کنم؟** برای تقریباً همهٔ گوشی‌ها فایل \`release\` و معماری \`arm64\` را بگیرید (کوچک‌ترین و سریع‌ترین)."
+            echo "اگر گوشی قدیمی ۳۲ بیتی دارید \`armv7\`؛ اگر نسخهٔ release روی گوشی مشکل داشت، نسخهٔ \`debug\` را نصب کنید."
+            echo "برای نصب نسخهٔ دیگر، اول نسخهٔ قبلی را حذف کنید (امضای متفاوت)."
+            echo
+            echo "- commit: \`$GITHUB_SHA\`"
+            echo
+            echo "| فایل | حجم |"
+            echo "|---|---|"
+          } > /tmp/release-notes.md
+          echo "--- APK files found:"
+          find android/app/build/outputs/apk -name "*.apk" | sort || true
+          echo "---"
+          for apk in $(find android/app/build/outputs/apk -name "*.apk" | sort); do
+            [ -e "$apk" ] || continue
+            base=$(basename "$apk")
+            case "$base" in
+              *arm64-v8a*) abi="arm64" ;;
+              *armeabi-v7a*) abi="armv7" ;;
+              *x86_64*) abi="x86_64" ;;
+              *) abi="universal" ;;
+            esac
+            case "$apk" in
+              */release/*) name="stock-$abi-release-$GITHUB_SHA.apk" ;;
+              *) name="stock-$abi-debug-$GITHUB_SHA.apk" ;;
+            esac
+            cp "$apk" "/tmp/rel/$name"
+            echo "| \`$name\` | $(du -h "$apk" | cut -f1) |" >> /tmp/release-notes.md
+            i=$((i+1))
+          done
+          echo >> /tmp/release-notes.md
+          echo "نصب: فایل APK را دانلود کنید، «نصب از منابع نامشخص» را برای مرورگر/فایل‌منیجر فعال کنید." >> /tmp/release-notes.md
+          echo "این نسخه با **کلید تست داخلی** امضا شده (نه کلید انتشار) و فقط برای تست است." >> /tmp/release-notes.md
+          echo "نسخهٔ release و debug هر دو روی امولاتور AOSP نصب و اجرا می‌شوند (workflow app-smoke)." >> /tmp/release-notes.md
+          ls -la /tmp/rel
+
+          gh release delete apk-latest --yes --cleanup-tag 2>/dev/null || true
+          gh release create apk-latest /tmp/rel/*.apk \
+            --title "APK آزمایشی (آخرین بیلد سبز)" \
+            --notes-file /tmp/release-notes.md \
+            --prerelease
+
+      - name: Upload debug APK
+        if: always() && steps.assemble.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug-apk
+          path: android/app/build/outputs/apk/debug/*.apk
+          retention-days: 14
+          if-no-files-found: warn
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-reports
+          path: android/**/build/reports/tests/
+          retention-days: 7
+          if-no-files-found: ignore

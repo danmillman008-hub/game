@@ -1,0 +1,449 @@
+From f6209d5eab431e9c2e8fcd6eea8a871e7a145d10 Mon Sep 17 00:00:00 2001
+From: spike <spike@local>
+Date: Sat, 24 Oct 2026 18:46:57 +0000
+Subject: [PATCH] spike: bundled ML Kit, Vazirmatn typography, Persian locale
+ (fa) + RTL
+
+---
+ app/src/main/AndroidManifest.xml              |   4 -
+ .../java/com/nhuhuy/algidy/AppViewModel.kt    |   2 +-
+ .../datastore/model/AppearancePreferences.kt  |   2 +-
+ .../algidy/core/designsystem/theme/Type.kt    |  86 +++++--------
+ .../algidy/core/model/setting/AppLanguage.kt  |   4 +-
+ .../src/main/res/values-fa/string.xml         | 118 ++++++++++++++++++
+ .../src/main/res/values/string.xml            |   1 +
+ feature/scanner/build.gradle.kts              |   5 +-
+ .../feature/settings/utils/StringResExt.kt    |   1 +
+ gradle/libs.versions.toml                     |   8 +-
+ 10 files changed, 161 insertions(+), 70 deletions(-)
+ create mode 100644 core/presentation/src/main/res/values-fa/string.xml
+
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+index df6e87a..e75d407 100644
+--- a/app/src/main/AndroidManifest.xml
++++ b/app/src/main/AndroidManifest.xml
+@@ -49,10 +49,6 @@
+             </intent-filter>
+         </activity>
+ 
+-        <meta-data
+-            android:name="com.google.mlkit.vision.DEPENDENCIES"
+-            android:value="barcode" />
+-
+         <!-- Save app locales -->
+         <service
+             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+diff --git a/app/src/main/java/com/nhuhuy/algidy/AppViewModel.kt b/app/src/main/java/com/nhuhuy/algidy/AppViewModel.kt
+index c08765b..5363a6b 100644
+--- a/app/src/main/java/com/nhuhuy/algidy/AppViewModel.kt
++++ b/app/src/main/java/com/nhuhuy/algidy/AppViewModel.kt
+@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
+ @Immutable
+ data class AppUiState(
+     val font: AppFont = AppFont.DEFAULT,
+-    val language: AppLanguage = AppLanguage.ENGLISH,
++    val language: AppLanguage = AppLanguage.PERSIAN,
+     val themeMode: ThemeMode = ThemeMode.SYSTEM,
+     val isDynamicColors: Boolean = false,
+     val isBiometricLock: Boolean = false,
+diff --git a/core/datastore/src/main/kotlin/com/nhuhuy/algidy/core/datastore/model/AppearancePreferences.kt b/core/datastore/src/main/kotlin/com/nhuhuy/algidy/core/datastore/model/AppearancePreferences.kt
+index 0bb4c49..0d33df9 100644
+--- a/core/datastore/src/main/kotlin/com/nhuhuy/algidy/core/datastore/model/AppearancePreferences.kt
++++ b/core/datastore/src/main/kotlin/com/nhuhuy/algidy/core/datastore/model/AppearancePreferences.kt
+@@ -17,7 +17,7 @@ import kotlinx.serialization.json.Json
+ @Serializable
+ data class AppearancePreferences(
+     val themeMode: ThemeMode = ThemeMode.SYSTEM,
+-    val appLanguage: AppLanguage = AppLanguage.ENGLISH,
++    val appLanguage: AppLanguage = AppLanguage.PERSIAN,
+     val enableDynamicColor: Boolean = false,
+     val enableCategoryGroup: Boolean = false,
+     val seedColor: SeedColor = SeedColor.EMERALD,
+diff --git a/core/designsystem/src/main/java/com/nhuhuy/algidy/core/designsystem/theme/Type.kt b/core/designsystem/src/main/java/com/nhuhuy/algidy/core/designsystem/theme/Type.kt
+index 3e7aea7..682f1e6 100644
+--- a/core/designsystem/src/main/java/com/nhuhuy/algidy/core/designsystem/theme/Type.kt
++++ b/core/designsystem/src/main/java/com/nhuhuy/algidy/core/designsystem/theme/Type.kt
+@@ -9,63 +9,33 @@ import androidx.compose.ui.text.font.FontWeight
+ import com.nhuhuy.algidy.core.designsystem.R
+ 
+ /**
+- * Google Sans Flex
++ * Vazirmatn (variable font, wght axis)
+  *
+- * The font is a variable font, so we can control:
+- *
+- * - Weight (wght)
+- * - Width (wdth)
+- * - Roundness (ROND)
+- *
+- * These axes allow the typography to feel more expressive
+- * without needing multiple font files.
++ * Farsi-first typeface, licensed under SIL OFL 1.1.
++ * A single variable file covers every weight we use, so it costs ~240KB
++ * instead of ~4MB of static files.
+  */
+-
+ @OptIn(ExperimentalTextApi::class)
+-private val GoogleSansFlexFontFamily = FontFamily(
+-
+-    // 400 - Regular
++private val VazirmatnFontFamily = FontFamily(
+     Font(
+-        resId = R.font.google_sans_flex_font,
++        resId = R.font.vazirmatn,
+         weight = FontWeight.Normal,
+-        variationSettings = FontVariation.Settings(
+-            FontVariation.weight(400),
+-            FontVariation.width(100f),
+-            FontVariation.Setting("ROND", 20f),
+-        ),
++        variationSettings = FontVariation.Settings(FontVariation.weight(400)),
+     ),
+-
+-    // 500 - Medium
+     Font(
+-        resId = R.font.google_sans_flex_font,
++        resId = R.font.vazirmatn,
+         weight = FontWeight.Medium,
+-        variationSettings = FontVariation.Settings(
+-            FontVariation.weight(500),
+-            FontVariation.width(102.5f),
+-            FontVariation.Setting("ROND", 35f),
+-        ),
++        variationSettings = FontVariation.Settings(FontVariation.weight(500)),
+     ),
+-
+-    // 600 - SemiBold
+     Font(
+-        resId = R.font.google_sans_flex_font,
++        resId = R.font.vazirmatn,
+         weight = FontWeight.SemiBold,
+-        variationSettings = FontVariation.Settings(
+-            FontVariation.weight(600),
+-            FontVariation.width(105f),
+-            FontVariation.Setting("ROND", 50f),
+-        ),
++        variationSettings = FontVariation.Settings(FontVariation.weight(600)),
+     ),
+-
+-    // 700 - Bold
+     Font(
+-        resId = R.font.google_sans_flex_font,
++        resId = R.font.vazirmatn,
+         weight = FontWeight.Bold,
+-        variationSettings = FontVariation.Settings(
+-            FontVariation.weight(700),
+-            FontVariation.width(105f),
+-            FontVariation.Setting("ROND", 50f),
+-        ),
++        variationSettings = FontVariation.Settings(FontVariation.weight(700)),
+     ),
+ )
+ 
+@@ -80,15 +50,15 @@ fun getTypographyForFont(): Typography {
+         // -----------------------------------------------------------------
+ 
+         displayLarge = defaultTypography.displayLarge.copy(
+-            fontFamily = GoogleSansFlexFontFamily,
++            fontFamily = VazirmatnFontFamily,
+         ),
+ 
+         displayMedium = defaultTypography.displayMedium.copy(
+-            fontFamily = GoogleSansFlexFontFamily,
++            fontFamily = VazirmatnFontFamily,
+         ),
+ 
+         displaySmall = defaultTypography.displaySmall.copy(
+-            fontFamily = GoogleSansFlexFontFamily,
++            fontFamily = VazirmatnFontFamily,
+         ),
+ 
+         // -----------------------------------------------------------------
+@@ -96,15 +66,15 @@ fun getTypographyForFont(): Typography {
+         // -----------------------------------------------------------------
+ 
+         headlineLarge = defaultTypography.headlineLarge.copy(
+-            fontFamily = GoogleSansFlexFontFamily,
++            fontFamily = VazirmatnFontFamily,
+         ),
+ 
+         headlineMedium = defaultTypography.headlineMedium.copy(
+-            fontFamily = GoogleSansFlexFontFamily,
++            fontFamily = VazirmatnFontFamily,
+         ),
+ 
+         headlineSmall = defaultTypography.headlineSmall.copy(
+-            fontFamily = GoogleSansFlexFontFamily,
++            fontFamily = VazirmatnFontFamily,
+         ),
+ 
+         // -----------------------------------------------------------------
+@@ -112,15 +82,15 @@ fun getTypographyForFont(): Typography {
+         // -----------------------------------------------------------------
+ 
+         titleLarge = defaultTypography.titleLarge.copy(
+-            fontFamily = GoogleSansFlexFontFamily,
++            fontFamily = VazirmatnFontFamily,
+         ),
+ 
+         titleMedium = defaultTypography.titleMedium.copy(
+-            fontFamily = GoogleSansFlexFontFamily,
++            fontFamily = VazirmatnFontFamily,
+         ),
+ 
+         titleSmall = defaultTypography.titleSmall.copy(
+-            fontFamily = GoogleSansFlexFontFamily,
++            fontFamily = VazirmatnFontFamily,
+         ),
+ 
+         // -----------------------------------------------------------------
+@@ -128,27 +98,27 @@ fun getTypographyForFont(): Typography {
+         // -----------------------------------------------------------------
+ 
+         bodyLarge = defaultTypography.bodyLarge.copy(
+-            fontFamily = GoogleSansFlexFontFamily,
++            fontFamily = VazirmatnFontFamily,
+         ),
+ 
+         bodyMedium = defaultTypography.bodyMedium.copy(
+-            fontFamily = GoogleSansFlexFontFamily,
++            fontFamily = VazirmatnFontFamily,
+         ),
+ 
+         bodySmall = defaultTypography.bodySmall.copy(
+-            fontFamily = GoogleSansFlexFontFamily,
++            fontFamily = VazirmatnFontFamily,
+         ),
+ 
+         labelLarge = defaultTypography.labelLarge.copy(
+-            fontFamily = GoogleSansFlexFontFamily,
++            fontFamily = VazirmatnFontFamily,
+         ),
+ 
+         labelMedium = defaultTypography.labelMedium.copy(
+-            fontFamily = GoogleSansFlexFontFamily,
++            fontFamily = VazirmatnFontFamily,
+         ),
+ 
+         labelSmall = defaultTypography.labelSmall.copy(
+-            fontFamily = GoogleSansFlexFontFamily,
++            fontFamily = VazirmatnFontFamily,
+         ),
+     )
+ }
+\ No newline at end of file
+diff --git a/core/model/src/main/java/com/nhuhuy/algidy/core/model/setting/AppLanguage.kt b/core/model/src/main/java/com/nhuhuy/algidy/core/model/setting/AppLanguage.kt
+index d6d6b7f..5801bc4 100644
+--- a/core/model/src/main/java/com/nhuhuy/algidy/core/model/setting/AppLanguage.kt
++++ b/core/model/src/main/java/com/nhuhuy/algidy/core/model/setting/AppLanguage.kt
+@@ -3,6 +3,8 @@ package com.nhuhuy.algidy.core.model.setting
+ enum class AppLanguage(val isoCode: String) {
+     ENGLISH("en"),
+ 
++    PERSIAN("fa"),
++
+     /*  SPANISH("es"),
+       FRENCH("fr"),
+       GERMAN("de"),
+@@ -13,7 +15,7 @@ enum class AppLanguage(val isoCode: String) {
+ 
+     companion object {
+         fun fromIsoCode(code: String?): AppLanguage {
+-            return entries.find { it.isoCode == code } ?: ENGLISH
++            return entries.find { it.isoCode == code } ?: PERSIAN
+         }
+     }
+ }
+diff --git a/core/presentation/src/main/res/values-fa/string.xml b/core/presentation/src/main/res/values-fa/string.xml
+new file mode 100644
+index 0000000..cdcd8bf
+--- /dev/null
++++ b/core/presentation/src/main/res/values-fa/string.xml
+@@ -0,0 +1,118 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++
++    <!--App String-->
++    <string name="biometric_auth_failed">احراز هویت بیومتریک ناموفق بود!</string>
++    <!-- Common -->
++    <string name="action_ok">تأیید</string>
++    <string name="action_cancel">انصراف</string>
++    <string name="action_save">ذخیره</string>
++    <string name="action_edit">ویرایش</string>
++    <string name="action_add">افزودن</string>
++    <string name="action_back">بازگشت</string>
++    <string name="action_menu">گزینه‌ها</string>
++
++    <string name="category_all">همه</string>
++    <string name="category_uncategorized">دسته‌بندی نشده</string>
++    <string name="category_vegetables">سبزیجات</string>
++    <string name="category_fruits">میوه‌ها</string>
++    <string name="category_meat">گوشت</string>
++    <string name="category_seafood">غذای دریایی</string>
++    <string name="category_dairy_eggs">لبنیات و تخم‌مرغ</string>
++    <string name="category_others">سایر</string>
++
++    <!-- Storage Locations -->
++    <string name="location_fridge">یخچال</string>
++    <string name="location_freezer">فریزر</string>
++    <string name="location_pantry">انبار</string>
++    <string name="location_other">سایر</string>
++
++    <!-- Units -->
++    <string name="unit_kg">کیلوگرم</string>
++    <string name="unit_gram">گرم</string>
++    <string name="unit_liter">لیتر</string>
++    <string name="unit_piece">عدد</string>
++    <string name="unit_bottle">بطری</string>
++    <string name="unit_other">سایر</string>
++
++    <!-- Freshness -->
++    <string name="freshness_no_expiry">بدون انقضا</string>
++    <string name="freshness_expired">%1$s روز گذشته</string>
++    <string name="freshness_expires_today">امروز</string>
++    <string name="freshness_one_day_left">فردا</string>
++    <string name="freshness_days_left">%1$s روز مانده</string>
++    <string name="freshness_months_left">%1$s ماه مانده</string>
++
++    <!-- Freshness Status Labels -->
++    <string name="freshness_status_expired">منقضی</string>
++    <string name="freshness_status_urgent">فوری</string>
++    <string name="freshness_status_warning">هشدار</string>
++    <string name="freshness_status_fresh">تازه</string>
++
++    <!--Biometric Authenticator-->
++    <string name="biometric_title">قفل بیومتریک</string>
++    <string name="biometric_subtitle">برای ورود از قفل بیومتریک استفاده کنید</string>
++
++    <!-- Errors -->
++    <string name="error_empty_field">این فیلد نمی‌تواند خالی باشد.</string>
++    <string name="error_invalid_number">لطفاً یک عدد معتبر وارد کنید.</string>
++    <string name="error_negative_value">تعداد نمی‌تواند کمتر از صفر باشد.</string>
++    <string name="error_past_date">تاریخ انقضا نمی‌تواند در گذشته باشد.</string>
++    <string name="error_future_date">تاریخ خرید نمی‌تواند در آینده باشد.</string>
++    <string name="error_invalid_date_range">تاریخ انقضا باید بعد از تاریخ خرید باشد.</string>
++    <string name="error_text_too_short">نام باید حداقل ۲ حرف باشد.</string>
++
++    <!-- Inventory Screen -->
++    <string name="inventory_title">موجودی</string>
++    <plurals name="inventory_subtitle">
++        <item quantity="one">%d قلم در انبار</item>
++        <item quantity="other">%d قلم در انبار</item>
++    </plurals>
++
++    <string name="inventory_no_foods">انبار شما خالی است</string>
++    <string name="inventory_empty_title">انبار شما خالی است</string>
++    <string name="inventory_empty_content">همین حالا قلم جدید اضافه کنید!</string>
++    <string name="inventory_scanner_btn">اسکن بارکد</string>
++    <string name="inventory_manually_btn">افزودن دستی</string>
++    <string name="inventory_menu_sort_expiry">مرتب‌سازی بر اساس انقضا</string>
++    <string name="inventory_menu_sort_name">مرتب‌سازی بر اساس نام</string>
++    <string name="inventory_menu_expired_only">فقط منقضی‌شده</string>
++    <string name="inventory_menu_reset">بازنشانی همه</string>
++
++    <string name="camera_permission_title">دسترسی به دوربین لازم است</string>
++    <string name="camera_permission_description">برای اسکن بارکد و ثبت تصویر به دوربین نیاز داریم. حریم خصوصی شما محفوظ است و بدون اقدام شما چیزی ضبط نمی‌شود.</string>
++    <string name="camera_permission_confirm_btn">متوجه شدم</string>
++
++    <string name="inventory_category_edit">ویرایش دسته</string>
++    <string name="inventory_category_edit_btn">ویرایش</string>
++    <string name="inventory_category_delete">حذف دسته</string>
++    <string name="inventory_category_add">افزودن دسته</string>
++    <string name="inventory_category_add_btn">افزودن</string>
++    <string name="category_edit_dialog_title">ویرایش دسته</string>
++    <string name="category_edit_dialog_label">نام دسته</string>
++    <string name="inventory_menu_filter">فیلتر</string>
++
++    <string name="inventory_category">دسته</string>
++    <string name="inventory_location">محل نگهداری</string>
++    <string name="inventory_purchase_date">تاریخ خرید</string>
++    <string name="inventory_expiry_date">تاریخ انقضا</string>
++    <string name="inventory_note">یادداشت شما</string>
++
++    <string name="delete_category_dialog_title">حذف دسته؟</string>
++    <string name="delete_category_dialog_content">این دسته و همهٔ اقلام آن حذف می‌شوند.</string>
++    <string name="delete_category_dialog_confirm">حذف</string>
++
++    <!--Grid Category-->
++    <string name="category_add">همه</string>
++    <string name="category_fridge">یخچال</string>
++    <string name="category_freezer">فریزر</string>
++    <string name="category_pantry">انبار</string>
++    <string name="category_other">سایر</string>
++
++    <!-- Search Screen -->
++    <string name="search_placeholder">جست‌وجوی اقلام</string>
++    <string name="search_history_title">جست‌وجوهای اخیر</string>
++    <string name="search_result_title">نتیجه</string>
++    <string name="search_no_results">چیزی پیدا نشد.</string>
++
++</resources>
+diff --git a/core/presentation/src/main/res/values/string.xml b/core/presentation/src/main/res/values/string.xml
+index 67d68ed..62353f2 100644
+--- a/core/presentation/src/main/res/values/string.xml
++++ b/core/presentation/src/main/res/values/string.xml
+@@ -232,6 +232,7 @@
+     <string name="setting_language_title">Language</string>
+     <string name="setting_language_desc">Choose the language used throughout the app.</string>
+     <string name="setting_lang_english" translatable="false">English</string>
++    <string name="setting_lang_persian" translatable="false">فارسی</string>
+     <string name="setting_lang_vietnamese" translatable="false">Tiếng Việt</string>
+     <string name="setting_lang_spanish" translatable="false">Español</string>
+     <string name="setting_lang_french" translatable="false">Français</string>
+diff --git a/feature/scanner/build.gradle.kts b/feature/scanner/build.gradle.kts
+index 510988d..72a250d 100644
+--- a/feature/scanner/build.gradle.kts
++++ b/feature/scanner/build.gradle.kts
+@@ -15,7 +15,10 @@ dependencies {
+         implementation(libs.androidx.camera.extensions1)
+     */
+     implementation(libs.androidx.camera.compose)
+-    implementation(libs.play.services.mlkit.barcode.scanning)
++    // Bundled ML Kit: works on devices WITHOUT Google Play Services.
++    implementation(libs.mlkit.barcode.scanning)
++    implementation(libs.mlkit.text.recognition)
++    implementation(libs.entity.extraction)
+     /* implementation(libs.guava)*/
+ 
+     implementation(project(":feature:food-entry"))
+diff --git a/feature/settings/src/main/kotlin/com/nhuhuy/algidy/feature/settings/utils/StringResExt.kt b/feature/settings/src/main/kotlin/com/nhuhuy/algidy/feature/settings/utils/StringResExt.kt
+index e076039..1bb0ad6 100644
+--- a/feature/settings/src/main/kotlin/com/nhuhuy/algidy/feature/settings/utils/StringResExt.kt
++++ b/feature/settings/src/main/kotlin/com/nhuhuy/algidy/feature/settings/utils/StringResExt.kt
+@@ -19,6 +19,7 @@ fun AppLanguage.toStringRes(): Int {
+     return when (this) {
+         AppLanguage.ENGLISH -> R.string.setting_lang_english
+         AppLanguage.VIETNAMESE -> R.string.setting_lang_vietnamese
++        AppLanguage.PERSIAN -> R.string.setting_lang_persian
+         /*AppLanguage.SPANISH -> R.string.setting_lang_spanish
+         AppLanguage.FRENCH -> R.string.setting_lang_french
+         AppLanguage.GERMAN -> R.string.setting_lang_german
+diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
+index efa69cb..3f0b502 100644
+--- a/gradle/libs.versions.toml
++++ b/gradle/libs.versions.toml
+@@ -26,8 +26,8 @@ activityCompose = "1.13.0"
+ composeBom = "2026.06.00"
+ materialKolor = "5.0.0-alpha07"
+ navigation3Runtime = "1.2.0-alpha01"
+-playServicesMlkitBarcodeScanning = "18.3.1"
+-playServicesMlkitTextRecognition = "19.0.1"
++mlkitBarcodeScanning = "17.3.0"
++mlkitTextRecognition = "16.0.1"
+ room = "2.7.2"
+ ksp = "2.3.2"
+ material3Android = "1.5.0-alpha16"
+@@ -108,8 +108,8 @@ androidx-material3-android = { group = "androidx.compose.material3", name = "mat
+ androidx-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
+ kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
+ material-kolor = { module = "com.materialkolor:material-kolor", version.ref = "materialKolor" }
+-play-services-mlkit-barcode-scanning = { module = "com.google.android.gms:play-services-mlkit-barcode-scanning", version.ref = "playServicesMlkitBarcodeScanning" }
+-play-services-mlkit-text-recognition = { module = "com.google.android.gms:play-services-mlkit-text-recognition", version.ref = "playServicesMlkitTextRecognition" }
++mlkit-barcode-scanning = { module = "com.google.mlkit:barcode-scanning", version.ref = "mlkitBarcodeScanning" }
++mlkit-text-recognition = { module = "com.google.mlkit:text-recognition", version.ref = "mlkitTextRecognition" }
+ room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+ room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+-- 
+2.39.5
+

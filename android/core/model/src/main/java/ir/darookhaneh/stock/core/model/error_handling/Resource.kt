@@ -1,0 +1,14 @@
+package ir.darookhaneh.stock.core.model.error_handling
+
+sealed interface Resource<out T> {
+    data object Loading : Resource<Nothing>
+    data class Success<T>(val data: T) : Resource<T>
+    data class Failure(val throwable: Throwable) : Resource<Nothing>
+}
+
+fun <T> Resource<T>.getDataOrNull(): T? {
+    return when (this) {
+        is Resource.Success -> data
+        else -> null
+    }
+}

@@ -1,0 +1,194 @@
+# Android Review Release Notes
+
+## v1.8.0 (2026-08-27)
+
+### New Skill — privacy-audit
+
+A seventh review domain: a "three-way comparison" privacy compliance audit for Android loan apps. Where `play-store` audits an app against Google Play policy, `privacy-audit` audits an app against its own published privacy promises — verifying that the **privacy policy**, the **in-app disclosure dialogs**, and the **code implementation** all agree.
+
+**New — `skills/privacy-audit/SKILL.md`**:
+- Mandatory 5-step workflow: code scan → choose policy source → fetch policy → three-way comparison → write report. Reading the privacy policy before the code scan invalidates the audit.
+- Step 1 is discovery-driven, not checklist-driven: trace every field of every API request body, data model, declared permission, and SDK init back to its source, rather than grepping a fixed keyword list.
+- Step 2 always asks the user which policy source to use; a URL found in the code is never used automatically.
+- Step 3 fetches via `WebFetch`, falling back to Playwright MCP, then to user-pasted text or a local file (.txt/.md/.html/.pdf).
+- Step 4 is bidirectional: collected-but-undisclosed is a `BLOCKER`, declared-but-not-collected is a `WARNING`. A generic phrase ("hardware information") does not count as explicit disclosure.
+- Step 5 writes `privacy-audit-report-[YYYY-MM-DD].md` in a mandated section structure, with itemized remediation — merging findings is forbidden.
+- Covers permissions banned for loan apps, READ_SMS keyword filtering, `queries` tag scope, and third-party SDK data sharing.
+
+**New — `skills/privacy-audit/references/google-play-policies.md`**:
+- 17-section digest of the Google Play policies relevant to a privacy audit: User Data, prominent disclosure and consent, privacy policy content and format, account deletion, Personal Loans (including the 10 banned permissions and country-specific licensing), spyware, deceptive behavior, misrepresentation, device and network abuse, SMS/call log, QUERY_ALL_PACKAGES, photo/video, sensitive-information APIs, Financial Features Declaration, Data Safety, foreground services, and the July 2026 update.
+- Every section cites its policy source URL, with a consolidated reference-link index.
+
+**New — `skills/privacy-audit/references/report-template.md`**:
+- Canonical report format: executive summary, eight comparison tables, policy quality check, four conditional focused checks (READ_SMS, installed app list, camera/photos, location), and the prioritized remediation template.
+
+**Registration across both platforms**:
+- `README.md` — "six domains" → seven; skills table, structure tree, usage example, and a full `### privacy-audit` details section.
+- `AGENTS.md` — "six domains" → seven; skills table row and the findings-output line, which now notes the written report alongside the existing findings prefixes.
+- `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json` — descriptions mention privacy compliance auditing; `privacy` added to keywords and tags.
+
+## v1.7.0 (2026-07-31)
+
+### Play Store Skill — Google July 2026 Policy Update
+
+Updates based on the [July 15, 2026 policy announcement](https://support.google.com/googleplay/android-developer/answer/17134731).
+
+**permissions.md — READ_CALL_LOG account verification removed**:
+- Mark "Call-based authentication and authorization in banking or brokerage apps" exception as **REMOVED** (July 15, 2026)
+- Add required alternatives: Digital Credentials API, SMS Retriever API
+- Add "Account verification via phone call" to Invalid Use Cases section
+- Add alternative row in Recommended Alternatives table
+- 30-day compliance window from July 15, 2026
+
+**data-privacy.md — Third-party AI integration compliance**:
+- Add new section 5.4.1: User Data policy now explicitly applies to third-party AI integrations
+- Developers responsible for AI service providers' compliance including "limited use, disclosure and consent"
+- Add code audit grep patterns for AI/LLM SDK detection
+- Add 4-item checklist for AI data handling disclosure
+
+**data-privacy.md — Location precision clarification**:
+- Add July 2026 clarification to Location data category
+- Guidance on declaring precise vs approximate location in Data Safety form
+
+**deployment.md — App registration requirement**:
+- Add new section 15.3: All Play apps must be registered in Play Console
+- 99% of apps auto-registered; check Play Console Home page for status
+- Non-compliance risks global removal from Google Play
+
+**SKILL.md updates**:
+- Add July 15, 2026 (READ_CALL_LOG removal) and August 31, 2026 (Target API level) to deadline table
+- Add report output requirement: audit report written to `play-store-audit-report.md`
+- Add July 15, 2026 policy announcement to References section
+
+## v1.6.0 (2026-07-09)
+
+### Codex CLI Support — Dual-Platform Skills
+
+The six review skills now work with **Codex CLI** in addition to Claude Code. No skill content changed — `skills/` remains the single source of truth for both platforms. The skills were already vendor-neutral (`SKILL.md` + `references/`, no Claude-specific hooks or tooling), so support was additive.
+
+**New — `AGENTS.md` (repo root)**:
+- Agent-facing entry point for Codex CLI and any agent that reads `AGENTS.md`.
+- Table mapping each skill to its `skills/<name>/SKILL.md` path and its load-when trigger, derived from each skill's own frontmatter `description`.
+- Documents the findings prefixes (`[ARCH-*]`, `[COMPOSE-*]`, `[KT-*]`, `[PERF-*]`, `[GP-*]`, severity-based), the `play-store/scripts/audit.sh` helper, and setup for both platforms.
+- States progressive disclosure explicitly: load the matching skill, then read its `references/` only when the review reaches that topic.
+
+**Codex install via plugin marketplace**:
+- `codex plugin marketplace add https://github.com/liuyi0808/android-review`, then `codex plugin add android-review@android-review`, then restart Codex.
+
+**`README.md`**:
+- Reframed from "a Claude Code plugin" to dual-platform (Claude Code + Codex CLI), with `skills/` called out as the shared source of truth.
+- Installation split into Claude Code and Codex CLI sections.
+- Structure tree adds `AGENTS.md`; Requirements now reads "Claude Code CLI **or** Codex CLI".
+
+**Unchanged**: `scripts/release.sh` still syncs only the `.claude-plugin/` version fields — the Codex-side files carry no version string, so the release flow needs no change.
+
+## v1.5.0 (2026-05-18)
+
+### Play Store Skill — Outcome-vs-Implementation Audit Contract
+
+Root cause addressed: prior audits packaged engineering preferences (sender allow-lists, specific APIs, SP-key guards, server-side filters) as if Google Play policy required them, and judged code patterns (`READ_SMS + uploadInfo`) as violations without checking declaration status or actual transmission outcome. v1.5.0 makes both gates structurally mandatory in the Output Format — a finding that fails either gate is invalid and must be rejected by the main agent.
+
+**SKILL.md — Rule 6 added (Five Rules → Six Rules)**:
+- Every finding must answer two structural questions: (a) does this policy have a declaration channel (Permissions Declaration, Data Safety, Financial Declaration), and (b) does the `Required by policy:` field contain verbatim policy text rather than prescribed implementation.
+- New severity `NEEDS_CONFIRMATION` for declaration-gated policies where the developer's declaration status is unknown to the auditor. Reported in a separate section, never tallied with BLOCKER/WARNING/INFO.
+- Output Format extended from 6 fields to 11 mandatory fields — adds `Declaration Channel`, `Declaration Status`, `Required by policy` (verbatim quote), `Suggested implementation` (must be prefixed "non-policy, auditor's suggestion only").
+- Main agent hard constraints: drop findings missing reference/policy URL; downgrade declaration-gated findings with unknown status; move prescriptive implementation language out of `Required by policy`.
+- Two example blocks: Example A (absolute prohibition, no declaration channel — direct BLOCKER) and Example B (declaration-gated policy, status unknown — NEEDS_CONFIRMATION).
+- "Common Rejection Reasons" table re-framed as a quick reference, not a finding template; loan-harassment and SMS spyware rows rewritten to separate outcome from implementation.
+
+**spyware-policy.md §11.4 — single-severity model replaced by two-gate model**:
+- Gate 1 (Permissions Declaration / right to use READ_SMS) and Gate 2 (Spyware Cat.4 / actually-exfiltrated content) are independent. Final verdict = the more severe of the two.
+- "Recommended Practices" split into **Policy Requirements** (BLOCKER if violated) and **Engineering Suggestions** (auditor's preference, NOT severity inputs).
+- Background context (approval rates, industry direction, body-vs-metadata) explicitly demoted to informational — must not raise severity.
+- Detection grep patterns relabeled "Auditor Tooling" — presence is not violation, absence is not compliance.
+- Maintenance note updated to flag any future Google prescription of HOW (sender lists, filtering mechanisms) as a policy-shape change.
+
+**loan-harassment.md 14.3 — checklist alignment**:
+- SMS bullet rewritten to point at the spyware-policy.md two-gate model. Financial SMS use for lending decisions is NOT prohibited per se — only non-financial/personal SMS exfiltration is.
+- `QUERY_ALL_PACKAGES` bullet split: the permission itself is banned for loan apps; targeted `<queries>` blocks are allowed but credit-assessment use cases are flagged as developer-review risk, not direct BLOCKER.
+
+**code-audit.md + scripts/audit.sh — detection severity downgraded**:
+- SMS body upload, incremental SMS harvesting, and SQL LIKE patterns near SMS code are detection patterns only. They locate paths to investigate; they do not establish violation.
+- `audit.sh` SMS-related checks downgraded from `WARNING` to `INFO` with a pointer to the two-gate review in spyware-policy.md §11.4.
+
+**Why this release matters**: An audit skill that cannot distinguish "policy says X" from "auditor prefers X" produces unactionable findings — the developer cannot tell which item Google will actually reject on, and which is just engineering opinion. The Output Format change makes that distinction visible per finding.
+
+## v1.4.0 (2026-04-23)
+
+### Play Store Skill — Loan App Focus Cleanup + Universal Policy Coverage + Execution Contract
+
+Three-part release. Part A removes policy sections that do not apply to personal loan apps. Part B adds the two universal policies that apply to all apps and were previously missing. Part C introduces an Execution Contract that forces full reference coverage and traceable findings.
+
+**Part A — Redundancy cleanup (non-applicable policy sections removed based on scope defined in each official policy)**:
+- Remove `store-listing.md 9.3 Age-Restricted Content` — policy scope is matchmaking/dating/real money gambling
+- Remove `deceptive-behavior.md 10.8 Families Policy & Child Safety Standards` — policy scope is apps targeting children / Social or Dating apps
+- Remove `deceptive-behavior.md 10.9 User-Generated Content` — policy scope is apps hosting UGC
+- Remove `financial-declaration.md 4.4.1 Cryptocurrency / Blockchain` — policy scope is crypto exchanges/wallets/NFTs
+- Remove "No mining cryptocurrency in background" line from `device-abuse.md 12.4` — not relevant to loan apps
+- Simplify `permissions.md 3.7 Exact Alarm` to a one-line prohibition for loan apps
+- Simplify `permissions.md 3.8 Full-Screen Intent` to a one-line prohibition for loan apps
+- Remove Age-Restricted row from `SKILL.md` Key Policy Deadlines table
+
+**Part B — Universal policies added (verbatim from official policy text)**:
+- Add `references/intellectual-property.md` — Core prohibition, trademark, copyright, counterfeit, encouraging infringement, plus financial-app brand-misuse risk table. Sourced from the official [Intellectual Property policy](https://support.google.com/googleplay/android-developer/answer/9888072).
+- Add `references/restricted-content.md` — Child endangerment, sexual content, hate speech, violence, violent extremism, sensitive events, bullying/harassment, dangerous products, marijuana, tobacco/alcohol. Sourced from the official [Developer Program Policy](https://support.google.com/googleplay/android-developer/answer/16810878). Includes loan-app surfaces (strings, notifications, support scripts).
+- Update `SKILL.md` reference table to 14 files, extend Launch Day Checklist Policy section, add 3 rejection rows to Common Rejection Reasons table, add 2 official references.
+
+**Part C — Execution Contract (enforce full reference coverage)**:
+
+Root cause addressed: prior versions allowed the auditor to silently skip reference files, leading to incomplete audits being reported as complete. v1.4.0 makes every reference file load observable and every finding traceable to its source.
+
+- Add `## Execution Contract` at the top of SKILL.md with 5 rules — all 14 references MUST be loaded, parallel execution is the default, every finding must cite its reference, Coverage Report is mandatory, no conclusions from memory.
+- Add `## Parallel Execution Pattern` — 5 subagent groups (A–E) each owning 2–3 reference files, with a subagent prompt template. Main agent merges, deduplicates, sorts, and produces the Coverage Report.
+- Rewrite `## Pre-Submission Audit Process` with a new Output Format that adds two mandatory fields:
+  - `Reference: <file>#<section anchor>`
+  - `Policy Source: <official Google Play URL>`
+  A finding missing either field is invalid and must be rejected by the main agent.
+- Rename `Reference Guide — Load on Demand` → `Reference File Index (all 14 must be loaded for a full audit)`. Add a `Subagent Group` column so each reference maps to its owning subagent.
+- Add `## Reference Coverage Report` section with a 14-row table template. Three status values: `✅`, `⏭ Not Applicable` (with reason), `❌ Skipped` (flags the audit as incomplete).
+
+## v1.3.0 (2026-04-22)
+
+### Play Store Skill — April 15, 2026 Policy Update
+- Add new `3.9 Contacts Permissions` section covering the Contacts Permissions Policy (effective 2026-10-28, Android 17+ / API 37+) — Android Contact Picker mandatory for non-broad access
+- Update `3.4 Location Permissions` with the `onlyForLocationButton` flag (effective ~2026-05-15) and Play Developer Declaration path for persistent precise location
+- Update `3.6 Foreground Service Types` to flag geofencing as removed from approved FGS use cases; direct developers to the Geofence API
+- Note April 15, 2026 clarification on Photo & Video permissions in `3.3`
+- Strengthen `loan-harassment.md 14.1` with the double-violation warning — Contact Picker does NOT make loan-app contact collection permissible
+- Add new grep patterns in `code-audit.md` for direct `ContactsContract` queries, `onlyForLocationButton`, and geofencing-via-FGS
+- Add 3 new deadline rows to `SKILL.md` Section 21 (2026-05-15, 2026-10-27, 2026-10-28)
+- Add 3 new rejection reasons to Section 20 (broad contacts, precise location w/o button, geofencing via FGS)
+- Add 4 official references (April 15 announcement, minimum-scope alternatives, Contact Picker blog, Location Privacy blog)
+
+## v1.2.0 (2026-03-31)
+
+### Play Store Skill — Policy Verification Overhaul
+- Align SMS/Call Log policy with 2025-2026 Google Play requirements
+- Verify and update all policy references against official documentation
+- Correct 12 factual errors found in policy verification audit
+- Address second-round verification findings
+- Deep policy verification — 24 substantive corrections across play-store skill
+
+## v1.1.0 (2026-02-12)
+
+### Improvements
+- Rewrite performance skill for 6.7x faster audit execution
+- Apply progressive disclosure to all skills — reference files loaded on demand
+- Split play-store skill into 12 modular reference files
+- Overhaul play-store skill with 2025-2026 policy updates
+- Patch GAP-04, GAP-05, GAP-08 in play-store skill
+
+### Infrastructure
+- Publish to GitHub as Claude Code plugin
+- Add `scripts/release.sh` for versioned releases
+- Add GitHub Actions workflow for automated releases
+
+## v1.0.0 (2026-02-10)
+
+Initial release with 5 review skills:
+
+- **architecture** — Clean Architecture, MVVM/MVI, Hilt DI, modularization
+- **compose-ui** — Jetpack Compose, Material 3, accessibility, animations
+- **performance** — Startup, recomposition, memory, ANR, battery audit
+- **play-store** — Google Play compliance, financial app declarations, spyware policy
+- **security-audit** — OWASP MASVS v2.0, 8 categories, 51 checklist items

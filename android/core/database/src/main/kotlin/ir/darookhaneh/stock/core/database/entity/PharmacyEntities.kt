@@ -1,0 +1,158 @@
+package ir.darookhaneh.stock.core.database.entity
+
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
+
+/**
+ * قلم دارو.
+ *
+ * قواعد ثابت (docs/PHASE-1-DATA-MODEL.md):
+ * - `gtin` (بارکد تجاری) و `irc` (کد اصالت) هر دو اختیاری‌اند.
+ * - `irc` هرگز UNIQUE نیست و ساخت دارو به اینترنت وابسته نیست.
+ * - موجودی و یکتایی داخلی بر پایه `drugId` و بچ است، نه IRC.
+ */
+@Entity(
+    tableName = "drug",
+    indices = [
+        Index("gtin"),
+        Index("irc"),
+        Index("name"),
+        Index("genericName"),
+    ],
+)
+data class DrugEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val name: String,
+    val genericName: String? = null,
+    val strength: String? = null,
+    val dosageForm: String? = null,
+    val gtin: String? = null,
+    val irc: String? = null,
+    /** تعداد واحد در هر بسته (پلاک/جعبه/کارتن). برای تبدیل «کارتن × تعداد» به واحد. */
+    val packSize: Int? = null,
+    val createdAt: Long,
+    val updatedAt: Long,
+)
+
+/**
+ * بچ فیزیکی یک دارو.
+ *
+ * یکتایی منطقی: (drugId, batchNumber, expiryDate).
+ * `quantity` هرگز منفی نمی‌شود؛ این قاعده در لایه دامنه و در DAO اعمال می‌شود.
+ */
+@Entity(
+    tableName = "batch",
+    foreignKeys = [
+        ForeignKey(
+            entity = DrugEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["drugId"],
+            onDelete = ForeignKey.CASCADE,
+        ),
+    ],
+    indices = [
+        Index("drugId"),
+        Index("expiryDate"),
+        Index(value = ["drugId", "batchNumber", "expiryDate"], unique = true),
+    ],
+)
+data class BatchEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val drugId: Long,
+    val batchNumber: String? = null,
+    val expiryDate: Long? = null,
+    val quantity: Int = 0,
+    val location: String? = null,
+    val createdAt: Long,
+    val updatedAt: Long,
+)
+
+/**
+ * دفتر رخدادهای موجودی؛ تنها منبع حسابرسی تغییرات `quantity`.
+ * `type` یکی از مقادیر [InventoryEventType] است.
+ */
+@Entity(
+    tableName = "inventory_event",
+    foreignKeys = [
+        ForeignKey(
+            entity = BatchEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["batchId"],
+            onDelete = ForeignKey.CASCADE,
+        ),
+    ],
+    indices = [
+        Index("batchId"),
+        Index("createdAt"),
+    ],
+)
+data class InventoryEventEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val batchId: Long,
+    val type: String,
+    val quantityDelta: Int,
+    val note: String? = null,
+    val createdAt: Long,
+)
+/** یک ردیف خلاصه برای فهرست داروها. */
+data class DrugSummaryRow(
+    val id: Long,
+    val name: String,
+    val genericName: String?,
+    val strength: String?,
+    val dosageForm: String?,
+    val gtin: String?,
+    val irc: String?,
+    val packSize: Int?,
+    val totalQuantity: Int,
+    val batchCount: Int,
+    val nearestExpiry: Long?,
+)
+
+/** ردیف هشدار انقضا (بچ + نام دارو). */
+data class BatchAlertRow(
+    val batchId: Long,
+    val drugId: Long,
+    val drugName: String,
+    val batchNumber: String?,
+    val expiryDate: Long?,
+    val quantity: Int,
+)
+
+/** یک ردیف تاریخچهٔ سراسری: رخداد + نام دارو + بچ + انقضا (برای صفحهٔ تاریخچه). */
+data class HistoryRow(
+    val eventId: Long,
+    val batchId: Long,
+    val drugId: Long,
+    val drugName: String,
+    val batchNumber: String?,
+    val expiryDate: Long?,
+    val type: String,
+    val quantityDelta: Int,
+    val note: String?,
+    val createdAt: Long,
+    val batchQuantity: Int,
+    val packSize: Int?,
+)
+
+/**
+ * حافظهٔ محلی نتیجهٔ استعلام تیتک.
+ *
+ * چرا در دیتابیس و نه فقط حافظهٔ موقت: کاربر داروخانه ممکن است در انبار (بدون اینترنت)
+ * همان کد را دوباره اسکن کند؛ با این جدول، همان دارو آفلاین شناسایی می‌شود.
+ */
+@Entity(tableName = "lookup_cache")
+data class LookupCacheEntity(
+    @PrimaryKey val code: String,
+    val name: String,
+    val englishName: String? = null,
+    val gtin: String? = null,
+    val irc: String? = null,
+    val company: String? = null,
+    val price: Long? = null,
+    val statusCode: Int? = null,
+    val statusMessage: String? = null,
+    val fetchedAt: Long,
+)

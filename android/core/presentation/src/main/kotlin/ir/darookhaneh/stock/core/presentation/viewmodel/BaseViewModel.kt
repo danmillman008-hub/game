@@ -1,0 +1,27 @@
+package ir.darookhaneh.stock.core.presentation.viewmodel
+
+import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
+
+
+interface UiEvent
+
+interface UiAction
+
+interface UiState
+
+abstract class BaseViewModel<S : UiState, E : UiEvent, A : UiAction> : ViewModel() {
+    abstract val uiState: StateFlow<S>
+    protected val currentState: S get() = uiState.value
+
+    private val _uiEvent = Channel<E>(Channel.BUFFERED)
+    val uiEvent = _uiEvent.receiveAsFlow()
+
+    abstract fun onAction(action: A)
+
+    protected fun emitEvent(event: E) {
+        _uiEvent.trySend(event)
+    }
+}

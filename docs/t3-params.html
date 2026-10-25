@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>تست ۳ — پارامترهای اجباری و رفتار سرور</title>
+<style>
+:root{--bg:#0e1518;--card:#162126;--line:#27383f;--tx:#e8f1f4;--mut:#9fb3ba;--pri:#2f9e8f;--grn:#2e7d5b;--red:#a33;--amb:#9a6b12}
+*{box-sizing:border-box}
+body{margin:0;padding:14px;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;background:var(--bg);color:var(--tx);line-height:1.9;font-size:15px}
+.wrap{max-width:860px;margin:0 auto}
+h1{font-size:18px;margin:0 0 4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0}
+.mut{color:var(--mut);font-size:13px}
+input{font:inherit;padding:9px 11px;border-radius:9px;border:1px solid var(--line);background:#0b1215;color:var(--tx);width:100%}
+button{font:inherit;padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:#1d2c33;color:var(--tx);cursor:pointer}
+button.p{background:var(--pri);border-color:var(--pri);font-weight:700}
+button:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+pre{background:#0b1215;border:1px solid var(--line);border-radius:8px;padding:8px;overflow:auto;max-height:320px;direction:ltr;text-align:left;font:12px ui-monospace,monospace;white-space:pre-wrap}
+table{width:100%;border-collapse:collapse;font-size:13px}
+td,th{border-bottom:1px solid var(--line);padding:5px 6px;text-align:right;vertical-align:top}
+th{color:var(--mut);font-weight:600}
+.ok{color:#7ad0a8}.bad{color:#f09a9a}.warn{color:#e6c26a}
+code{background:#0b1215;padding:1px 5px;border-radius:5px;direction:ltr;display:inline-block;font-size:12.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>تست ۳ — کدام پارامترها واقعاً لازم‌اند؟</h1>
+<div class="mut">این تست می‌گوید سرور تیتک بدون کدام پارامترها هم جواب می‌دهد (نسخهٔ اپ، شناسهٔ دستگاه، …) و آیا مسیرها به بزرگی/کوچکی حروف حساس‌اند. کد تست پیش‌فرض یک GTIN نمونه است؛ می‌توانی کد خودت را بگذاری.</div>
+
+<div class="card">
+  <input id="code" dir="ltr" style="text-align:left" value="6260152410148" placeholder="GTIN یا کد اصالت">
+  <div class="row" style="margin-top:8px">
+    <button class="p" id="go">▶ اجرای تست</button>
+    <button id="cp">📋 کپی گزارش</button>
+    <button id="dl">💾 دانلود گزارش</button>
+  </div>
+  <div class="mut" id="stat" style="margin-top:6px">آماده — ۸ درخواست کوتاه (حدود ۲۰ ثانیه).</div>
+</div>
+
+<div class="card"><div id="tbl"><div class="mut">هنوز اجرا نشده.</div></div></div>
+<div class="card"><b>لاگ کامل</b><pre id="log">—</pre></div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const B='https://irfdamobile.ttac.ir/api/';
+const LOG=[];const ROWS=[];
+const pad=n=>String(n).padStart(2,'0');
+const stamp=()=>{const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds())};
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const dig=s=>String(s||'').replace(/\D/g,'');
+function env(){return ['زمان: '+stamp(),'منطقهٔ زمانی: '+(Intl.DateTimeFormat().resolvedOptions().timeZone||'?'),
+ 'مرورگر: '+navigator.userAgent,'آنلاین: '+navigator.onLine].join('\n')}
+function log(s){LOG.push(s);$('log').textContent=LOG.join('\n')}
+
+async function call(url,opts,ms){
+  const t=performance.now();const ctl=new AbortController();const tm=setTimeout(()=>ctl.abort(),ms||15000);
+  try{
+    const r=await fetch(url,Object.assign({mode:'cors',cache:'no-store',credentials:'omit',signal:ctl.signal},opts||{}));
+    const txt=await r.text();
+    return {ok:true,status:r.status,ms:Math.round(performance.now()-t),txt,type:r.type};
+  }catch(e){return {ok:false,err:(e&&e.name==='AbortError')?'timeout':((e&&e.message)||String(e)),ms:Math.round(performance.now()-t)}}
+  finally{clearTimeout(tm)}
+}
+function parse(t){try{return JSON.parse(t)}catch(e){return null}}
+function resCode(j){if(!j)return null;const o=j.Result||j.result;const r=Array.isArray(o)?o[0]:o;if(!r||typeof r!=='object')return null;const v=r.StatusCode!=null?r.StatusCode:r.statusCode;return v==null?null:Number(v)}
+
+async function probe(label,url,opts){
+  log('— '+label);log('   '+url);
+  const r=await call(url,opts);
+  let verdict='',cls='';
+  if(!r.ok){verdict='خطای شبکه/CORS: '+r.err;cls='bad';log('   ⛔ '+r.err+' در '+r.ms+'ms')}
+  else{
+    const j=parse(r.txt);
+    const html=/^\s*</.test(r.txt||'');
+    if(j){const c=resCode(j);verdict='JSON ✅'+(c==null?' (بدون StatusCode)':' — StatusCode '+c);cls=c===1?'ok':'warn';log('   HTTP '+r.status+' · '+r.ms+'ms · JSON · StatusCode '+(c==null?'—':c))}
+    else if(html){verdict='HTML (نه JSON) — '+r.txt.slice(0,60);cls='warn';log('   HTTP '+r.status+' · '+r.ms+'ms · HTML')}
+    else{verdict='غیر JSON — '+(r.txt||'').slice(0,60);cls='warn';log('   HTTP '+r.status+' · '+r.ms+'ms · '+(r.txt||'').slice(0,80))}
+  }
+  // هدرها قابل خواندن نیستند؛ ولی نوع پاسخ و کد وضعیت ثبت می‌شود
+  ROWS.push({label,verdict,cls,status:r.ok?r.status:'—',ms:r.ms});
+  render();
+  await new Promise(x=>setTimeout(x,900));
+  return r;
+}
+function render(){
+  let h='<table><tr><th>حالت</th><th>HTTP</th><th>زمان</th><th>نتیجه</th></tr>';
+  for(const r of ROWS)h+='<tr><td>'+esc(r.label)+'</td><td dir="ltr">'+r.status+'</td><td>'+r.ms+'ms</td><td class="'+r.cls+'">'+esc(r.verdict)+'</td></tr>';
+  $('tbl').innerHTML=h+'</table>';
+}
+
+async function run(){
+  $('go').disabled=true;$('stat').textContent='در حال اجرا…';
+  LOG.length=0;ROWS.length=0;
+  log('=== تست ۳ — پارامترها');log(env());log('');
+  const c=dig($('code').value)||'6260152410148';
+  const FULL='&latitude=0.0&longitude=0.0&device=2&deviceIdentifier=probe-'+Date.now()+'&Platform=1&PlatformVersion=30&VersionCode=60031&AppVersion=6.9.1';
+  const base=B+'WrapperV2/CheckBarcode?barcode='+encodeURIComponent(c);
+
+  await probe('کامل (مثل اپ)',base+FULL);
+  await probe('فقط کد',base);
+  await probe('کد + deviceIdentifier',base+'&deviceIdentifier=probe-'+Date.now());
+  await probe('کد + VersionCode/AppVersion',base+'&VersionCode=60031&AppVersion=6.9.1');
+  await probe('کد + Platform/PlatformVersion',base+'&Platform=1&PlatformVersion=30');
+  await probe('مسیر با حروف کوچک (wrapper)',B+'wrapper/CheckBarcode?barcode='+encodeURIComponent(c)+FULL);
+  await probe('CheckUid با کد GTIN (تست نوع اشتباه)',B+'WrapperV2/CheckUid?uidCode='+encodeURIComponent(c)+FULL);
+  // preflight واقعی: یک هدر غیرساده اضافه می‌کنیم تا مرورگر OPTIONS بفرستد
+  await probe('با هدر سفارشی X-Test (تست preflight/CORS)',base+FULL,{headers:{'X-Test':'1','Accept':'application/json'}});
+
+  log('');
+  log('— راهنما: اگر «فقط کد» هم JSON با StatusCode برگرداند یعنی هیچ پارامتری اجباری نیست.');
+  log('— اگر preflight شکست خورد، یعنی سرور هدرهای CORS نمی‌دهد و مرورگر نمی‌تواند پاسخ را بخواند (ولی اپ موبایل مشکلی ندارد).');
+  $('stat').textContent='تمام شد — گزارش را دانلود کن.';
+  $('go').disabled=false;
+}
+function report(){return '### تست ۳ — پارامترها\n'+env()+'\n\n'+ROWS.map(r=>r.label+' | HTTP '+r.status+' | '+r.ms+'ms | '+r.verdict).join('\n')+'\n\n--- لاگ کامل ---\n'+LOG.join('\n')+'\n'}
+$('go').onclick=()=>run().catch(e=>{$('stat').textContent='خطا: '+e.message;$('go').disabled=false});
+$('cp').onclick=()=>navigator.clipboard.writeText(report()).then(()=>$('stat').textContent='کپی شد.').catch(()=>$('stat').textContent='کپی نشد؛ دانلود کن.');
+$('dl').onclick=()=>{const b=new Blob([report()],{type:'text/plain;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='ttac-test3-params.txt';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),800)};
+</script>
+</body>
+</html>

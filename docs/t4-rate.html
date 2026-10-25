@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>تست ۴ — سرعت و محدودیت نرخ</title>
+<style>
+:root{--bg:#0e1518;--card:#162126;--line:#27383f;--tx:#e8f1f4;--mut:#9fb3ba;--pri:#2f9e8f;--grn:#2e7d5b;--red:#a33;--amb:#9a6b12}
+*{box-sizing:border-box}
+body{margin:0;padding:14px;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;background:var(--bg);color:var(--tx);line-height:1.9;font-size:15px}
+.wrap{max-width:860px;margin:0 auto}
+h1{font-size:18px;margin:0 0 4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0}
+.mut{color:var(--mut);font-size:13px}
+input,select{font:inherit;padding:9px 11px;border-radius:9px;border:1px solid var(--line);background:#0b1215;color:var(--tx);width:100%}
+button{font:inherit;padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:#1d2c33;color:var(--tx);cursor:pointer}
+button.p{background:var(--pri);border-color:var(--pri);font-weight:700}
+button:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+pre{background:#0b1215;border:1px solid var(--line);border-radius:8px;padding:8px;overflow:auto;max-height:340px;direction:ltr;text-align:left;font:12px ui-monospace,monospace;white-space:pre-wrap}
+table{width:100%;border-collapse:collapse;font-size:13px}
+td,th{border-bottom:1px solid var(--line);padding:5px 6px;text-align:right}
+th{color:var(--mut);font-weight:600}
+.warnbox{background:#241d0c;border:1px solid #4a3a12;border-radius:10px;padding:10px;font-size:13.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>تست ۴ — سرعت پاسخ و محدودیت نرخ</h1>
+
+<div class="card">
+  <div class="warnbox">
+    ⚠️ <b>محدود درخواست بده.</b> این تست حداکثر <b>۱۳ درخواست</b> می‌زند و بین‌شان فاصله می‌گذارد. هدف فقط این است که ببینیم سرور «۴۲۹ / ۴۰۳» می‌دهد یا نه. اگر خواستی قطع کنی، صفحه را ببند.
+  </div>
+  <input id="code" dir="ltr" style="text-align:left;margin-top:8px" value="6260152410148" placeholder="GTIN نمونه">
+  <div class="row" style="margin-top:8px">
+    <button class="p" id="go">▶ اجرای تست</button>
+    <button id="cp">📋 کپی گزارش</button>
+    <button id="dl">💾 دانلود گزارش</button>
+  </div>
+  <div class="mut" id="stat" style="margin-top:6px">آماده — حدود ۲۵ ثانیه.</div>
+</div>
+
+<div class="card"><div id="tbl"><div class="mut">هنوز اجرا نشده.</div></div></div>
+<div class="card"><b>لاگ</b><pre id="log">—</pre></div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const B='https://irfdamobile.ttac.ir/api/WrapperV2/CheckBarcode?barcode=';
+const LOG=[];const ROWS=[];
+const pad=n=>String(n).padStart(2,'0');
+const stamp=()=>{const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds())};
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const dig=s=>String(s||'').replace(/\D/g,'');
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function log(s){LOG.push(s);$('log').textContent=LOG.join('\n')}
+function env(){return ['زمان: '+stamp(),'منطقهٔ زمانی: '+(Intl.DateTimeFormat().resolvedOptions().timeZone||'?'),
+ 'مرورگر: '+navigator.userAgent,'آنلاین: '+navigator.onLine].join('\n')}
+
+const FULL='&latitude=0.0&longitude=0.0&device=2&deviceIdentifier=rate-'+Date.now()+'&Platform=1&PlatformVersion=30&VersionCode=60031&AppVersion=6.9.1';
+
+async function call(url){
+  const t=performance.now();const ctl=new AbortController();const tm=setTimeout(()=>ctl.abort(),20000);
+  try{
+    const r=await fetch(url,{mode:'cors',cache:'no-store',credentials:'omit',signal:ctl.signal});
+    const txt=await r.text();
+    return {ok:true,status:r.status,ms:Math.round(performance.now()-t),len:txt.length};
+  }catch(e){return {ok:false,err:(e&&e.name==='AbortError')?'timeout':((e&&e.message)||String(e)),ms:Math.round(performance.now()-t)}}
+  finally{clearTimeout(tm)}
+}
+function render(){
+  let h='<table><tr><th>#</th><th>فاصله</th><th>HTTP</th><th>زمان پاسخ</th><th>بایت</th><th>وضعیت</th></tr>';
+  for(const r of ROWS)h+='<tr><td>'+r.i+'</td><td>'+(r.gap==null?'—':r.gap+'ms')+'</td><td dir="ltr">'+(r.ok?r.status:'—')+'</td><td>'+(r.ok?r.ms+'ms':r.err)+'</td><td>'+(r.len||'—')+'</td><td>'+(r.note||'')+'</td></tr>';
+  $('tbl').innerHTML=h+'</table>';
+}
+async function run(){
+  $('go').disabled=true;$('stat').textContent='در حال اجرا…';
+  LOG.length=0;ROWS.length=0;
+  log('=== تست ۴ — سرعت و محدودیت نرخ');log(env());log('');
+  const c=dig($('code').value)||'6260152410148';
+  const url=B+encodeURIComponent(c)+FULL;
+
+  log('— فاز ۱: ۳ درخواست با فاصلهٔ ۲ ثانیه (سرعت پایه)');
+  for(let i=1;i<=3;i++){
+    const r=await call(url);
+    ROWS.push({i,gap:i===1?null:2000,ok:r.ok,status:r.status,ms:r.ms,len:r.len,err:r.err,note:'پایه'});
+    log('   #'+i+': '+(r.ok?('HTTP '+r.status+' · '+r.ms+'ms · '+r.len+' بایت'):('⛔ '+r.err)));
+    render();await sleep(2000);
+  }
+  const base=ROWS.filter(r=>r.ok).map(r=>r.ms);
+  const avg=base.length?Math.round(base.reduce((a,b)=>a+b,0)/base.length):0;
+  log('   میانگین: '+avg+'ms');
+  log('');
+
+  log('— فاز ۲: ۵ درخواست با فاصلهٔ ۳۰۰ms (شبیه اسکن پشت‌سرهم)');
+  let limited=false;
+  for(let i=4;i<=8;i++){
+    const r=await call(url);
+    let note='';
+    if(r.ok&&(r.status===429||r.status===403)){note='⚠ محدودیت نرخ!';limited=true}
+    ROWS.push({i,gap:300,ok:r.ok,status:r.status,ms:r.ms,len:r.len,err:r.err,note});
+    log('   #'+i+': '+(r.ok?('HTTP '+r.status+' · '+r.ms+'ms'+(note?'  '+note:'')):('⛔ '+r.err)));
+    render();await sleep(300);
+  }
+  log('');
+
+  log('— فاز ۳: ۵ درخواست هم‌زمان (بدترین حالت)');
+  const batch=await Promise.all([1,2,3,4,5].map(()=>call(url)));
+  let bad=0;
+  batch.forEach((r,idx)=>{
+    const note=(r.ok&&(r.status===429||r.status===403))?'⚠ محدودیت نرخ!':'';
+    if(!r.ok||r.status>=400)bad++;
+    ROWS.push({i:9+idx,gap:0,ok:r.ok,status:r.status,ms:r.ms,len:r.len,err:r.err,note});
+    log('   هم‌زمان '+(idx+1)+': '+(r.ok?('HTTP '+r.status+' · '+r.ms+'ms'+(note?'  '+note:'')):('⛔ '+r.err)));
+  });
+  render();
+  log('');
+  log('— جمع‌بندی: میانگین پایه '+avg+'ms · درخواست‌های ناموفق/مسدود: '+bad+(limited?' · محدودیت نرخ دیده شد':' · محدودیت نرخ دیده نشد'));
+  log('   (نبودِ ۴۲۹ در ۱۳ درخواست یعنی «در این حجم محدودیتی ندیدیم»، نه اینکه محدودیتی وجود ندارد.)');
+  $('stat').textContent='تمام شد — گزارش را دانلود کن.';
+  $('go').disabled=false;
+}
+function report(){return '### تست ۴ — سرعت و محدودیت نرخ\n'+env()+'\n\n'+ROWS.map(r=>'#'+r.i+' gap='+(r.gap==null?'—':r.gap)+'ms → '+(r.ok?('HTTP '+r.status+' '+r.ms+'ms '+r.len+'B'):('ERR '+r.err))+' '+r.note).join('\n')+'\n\n--- لاگ ---\n'+LOG.join('\n')+'\n'}
+$('go').onclick=()=>run().catch(e=>{$('stat').textContent='خطا: '+e.message;$('go').disabled=false});
+$('cp').onclick=()=>navigator.clipboard.writeText(report()).then(()=>$('stat').textContent='کپی شد.').catch(()=>$('stat').textContent='کپی نشد؛ دانلود کن.');
+$('dl').onclick=()=>{const b=new Blob([report()],{type:'text/plain;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='ttac-test4-rate.txt';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),800)};
+</script>
+</body>
+</html>

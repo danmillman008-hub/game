@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>تست ۱ — دسترسی به سرور تیتک</title>
+<style>
+:root{--bg:#0e1518;--card:#162126;--line:#27383f;--tx:#e8f1f4;--mut:#9fb3ba;--pri:#2f9e8f;--grn:#2e7d5b;--red:#a33;--amb:#9a6b12}
+*{box-sizing:border-box}
+body{margin:0;padding:14px;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;background:var(--bg);color:var(--tx);line-height:1.9;font-size:15px}
+.wrap{max-width:820px;margin:0 auto}
+h1{font-size:18px;margin:0 0 4px}
+h2{font-size:15px;margin:18px 0 6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0}
+.mut{color:var(--mut);font-size:13px}
+button{font:inherit;padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:#1d2c33;color:var(--tx);cursor:pointer}
+button.p{background:var(--pri);border-color:var(--pri);font-weight:700}
+button:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+pre{background:#0b1215;border:1px solid var(--line);border-radius:8px;padding:8px;overflow:auto;max-height:300px;direction:ltr;text-align:left;font:12px ui-monospace,monospace;white-space:pre-wrap}
+.res{border-right:3px solid var(--line);padding:4px 10px;margin:6px 0;font-size:13.5px;direction:ltr;text-align:left}
+.res.ok{border-color:var(--grn)}.res.bad{border-color:var(--red)}.res.warn{border-color:var(--amb)}
+.res .fa{direction:rtl;text-align:right;font-size:13px}
+code{background:#0b1215;padding:1px 5px;border-radius:5px;direction:ltr;display:inline-block;font-size:12.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>تست ۱ — آیا اینترنت شما به سرور تیتک می‌رسد؟</h1>
+<div class="mut">این تست هیچ کدی از شما نمی‌خواهد و هیچ داده‌ای جایی نمی‌فرستد جز به همان آدرس‌های تیتک. نتیجه را با دکمهٔ پایین دانلود کن و در چت بفرست.</div>
+
+<div class="card">
+  <div class="row">
+    <button class="p" id="go">▶ شروع تست</button>
+    <button id="cp">📋 کپی گزارش</button>
+    <button id="dl">💾 دانلود گزارش</button>
+  </div>
+  <div class="mut" id="stat" style="margin-top:6px">آماده.</div>
+</div>
+
+<div id="out" class="card"></div>
+
+<div class="card">
+  <b>این تست چه چیزی را مشخص می‌کند؟</b>
+  <div class="mut">
+    ۱) <b>کنترل</b>: ثابت می‌کند مرورگر شما اصلاً می‌تواند پاسخ یک سایت دیگر را بخواند (CORS).<br>
+    ۲) <b>no-cors</b>: درخواست به تیتک فرستاده می‌شود ولی پاسخ خوانده نمی‌شود؛ اگر این یکی موفق شود یعنی «سرور دیده شد» و مشکل فقط اجازهٔ مرورگر است.<br>
+    ۳) <b>cors</b>: همان درخواست با خواندن پاسخ؛ اگر خطا داد یعنی سرور هدر <code>Access-Control-Allow-Origin</code> نمی‌دهد.<br>
+    ۴) <b>مسیر کمکی</b>: آیا پروکسی عمومی می‌تواند به تیتک برسد یا نه.
+  </div>
+</div>
+</div>
+
+<script>
+const LOG=[];const $=id=>document.getElementById(id);
+const pad=n=>String(n).padStart(2,'0');
+const stamp=()=>{const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds())};
+function env(){return [
+ 'زمان: '+stamp(),
+ 'منطقهٔ زمانی: '+(Intl.DateTimeFormat().resolvedOptions().timeZone||'?')+' (UTC'+(-new Date().getTimezoneOffset()/60)+')',
+ 'مرورگر: '+navigator.userAgent,
+ 'آنلاین: '+navigator.onLine,
+ 'صفحه: '+location.href
+].join('\n')}
+function log(s){LOG.push(s);$('out').innerHTML='<pre>'+esc(LOG.join('\n'))+'</pre>'}
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+
+const APP='https://irfdamobile.ttac.ir';
+const PARAMS='&latitude=0.0&longitude=0.0&device=2&deviceIdentifier=test-'+Date.now()+'&Platform=1&PlatformVersion=30&VersionCode=60031&AppVersion=6.9.1';
+const BARCODE=APP+'/api/WrapperV2/CheckBarcode?barcode=6260152410148'+PARAMS;
+
+async function call(url,opts,ms){
+  const t=performance.now();const ctl=new AbortController();
+  const tm=setTimeout(()=>ctl.abort(),ms||15000);
+  try{
+    const r=await fetch(url,Object.assign({cache:'no-store',credentials:'omit',signal:ctl.signal},opts||{}));
+    return {ok:true,status:r.status,type:r.type,ms:Math.round(performance.now()-t),r};
+  }catch(e){
+    return {ok:false,err:(e&&e.name==='AbortError')?'timeout':((e&&e.message)||String(e)),ms:Math.round(performance.now()-t)};
+  }finally{clearTimeout(tm)}
+}
+
+let findings={};
+async function run(){
+  $('go').disabled=true;$('stat').textContent='در حال تست… (تا ۶۰ ثانیه)';
+  LOG.length=0;
+  log('=== تست شبکه — '+stamp());
+  log(env());
+  log('');
+  $('out').innerHTML='<div class="mut">در حال اجرا…</div>';
+
+  // ۱) کنترل CORS
+  log('— [۱] کنترل: آیا مرورگر می‌تواند پاسخ یک سایت دیگر را بخواند؟');
+  let r=await call('https://api.github.com/zen',{mode:'cors'},12000);
+  if(r.ok){
+    const txt=await r.r.text().catch(()=> '');
+    log('   ✅ api.github.com → HTTP '+r.status+' در '+r.ms+'ms — خواندن پاسخ ممکن است ('+(txt||'').slice(0,40)+')');
+    findings.control=true;
+  }else{
+    log('   ⛔ api.github.com → '+r.err+' در '+r.ms+'ms — یعنی حتی کنترل هم رد شد؛ احتمالاً اینترنت/مرورگر محدود است.');
+    findings.control=false;
+  }
+
+  // ۲) no-cors به ریشه
+  log('');
+  log('— [۲] no-cors به ریشهٔ دامنهٔ تیتک (فقط «رسیدن یا نرسیدن» را می‌گوید)');
+  r=await call(APP+'/',{mode:'no-cors'},15000);
+  if(r.ok){log('   ✅ ریشهٔ دامنه پاسخ داد (نوع پاسخ: '+r.type+') در '+r.ms+'ms — سرور دیده شد.');findings.rootReach=true}
+  else{log('   ⛔ '+r.err+' در '+r.ms+'ms — سرور از این اینترنت دیده نشد.');findings.rootReach=false}
+
+  // ۳) no-cors به اندپوینت
+  log('');
+  log('— [۳] no-cors به CheckBarcode');
+  log('   '+BARCODE);
+  r=await call(BARCODE,{mode:'no-cors'},15000);
+  if(r.ok){log('   ✅ درخواست انجام شد (نوع پاسخ: '+r.type+') در '+r.ms+'ms');findings.epReach=true}
+  else{log('   ⛔ '+r.err+' در '+r.ms+'ms');findings.epReach=false}
+
+  // ۴) cors به اندپوینت
+  log('');
+  log('— [۴] cors به CheckBarcode (خواندن پاسخ)');
+  r=await call(BARCODE,{mode:'cors'},15000);
+  if(r.ok){
+    const txt=await r.r.text().catch(e=>'[خطا در خواندن بدنه: '+e.message+']');
+    log('   ✅ HTTP '+r.status+' در '+r.ms+'ms — پاسخ خوانده شد.');
+    log('   بدنه: '+txt.slice(0,600));
+    findings.corsRead=true;
+  }else{
+    log('   ⛔ '+r.err+' در '+r.ms+'ms');
+    findings.corsRead=false;
+  }
+
+  // ۵) مسیرهای کمکی
+  log('');
+  log('— [۵] مسیرهای کمکی (پروکسی عمومی)');
+  const relays=[
+    ['allorigins','https://api.allorigins.win/raw?url='+encodeURIComponent(BARCODE)],
+    ['codetabs','https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(BARCODE)],
+    ['corsproxy','https://corsproxy.io/?url='+encodeURIComponent(BARCODE)]
+  ];
+  findings.relays={};
+  for(const [n,u] of relays){
+    const rr=await call(u,{mode:'cors'},15000);
+    if(rr.ok){
+      const txt=await rr.r.text().catch(()=> '');
+      log('   · '+n+': HTTP '+rr.status+' در '+rr.ms+'ms — '+(txt.trim().charAt(0)==='{'?'پاسخ JSON گرفت ✅':'پاسخ JSON نبود ('+(txt||'').slice(0,60)+')'));
+      findings.relays[n]=rr.status;
+    }else{log('   · '+n+': ⛔ '+rr.err+' در '+rr.ms+'ms');findings.relays[n]=rr.err}
+  }
+
+  // جمع‌بندی
+  log('');
+  log('— جمع‌بندی:');
+  if(findings.corsRead)log('   ✅ از این اینترنت، استعلام مرورگری کار می‌کند.');
+  else if(findings.epReach)log('   ⚠ سرور دیده می‌شود ولی مرورگر اجازهٔ خواندن پاسخ را نمی‌دهد (CORS). → در گزارش همین را بفرست.');
+  else log('   ⛔ سرور از این اینترنت دیده نشد (فیلترشکن، یا شبکهٔ غیرایرانی، یا مسدودی).');
+  $('stat').textContent='تمام شد — گزارش را دانلود کن.';
+  $('go').disabled=false;
+}
+
+function report(){return '### تست ۱ — دسترسی شبکه\n'+env()+'\n\n'+LOG.join('\n')+'\n'}
+$('go').onclick=()=>run().catch(e=>{$('stat').textContent='خطای غیرمنتظره: '+e.message});
+$('cp').onclick=()=>{navigator.clipboard.writeText(report()).then(()=>$('stat').textContent='کپی شد — در چت بچسبان.').catch(()=>$('stat').textContent='کپی نشد؛ از دکمهٔ دانلود استفاده کن.')};
+$('dl').onclick=()=>{const b=new Blob([report()],{type:'text/plain;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='ttac-test1-network.txt';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),800)};
+</script>
+</body>
+</html>

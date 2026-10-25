@@ -1,0 +1,150 @@
+# Navigation
+
+> Official source: https://developer.android.com/develop/ui/compose/navigation
+
+You are an expert in Jetpack Navigation for Compose. Use type-safe navigation with serializable routes. Keep navigation decoupled from screen composables.
+
+## Setup & Structure
+
+> Source: https://developer.android.com/guide/navigation/design
+
+**DO:**
+- Use single-Activity architecture with one `NavHost`
+- Define routes as serializable data classes or objects:
+```kotlin
+// Route definitions
+@Serializable data object HomeRoute
+@Serializable data object ProfileRoute
+@Serializable data class ArticleDetailRoute(val articleId: String)
+```
+- Set up `NavHost` in the main composable:
+```kotlin
+@Composable
+fun AppNavHost(
+    navController: NavHostController = rememberNavController(),
+) {
+    NavHost(navController = navController, startDestination = HomeRoute) {
+        composable<HomeRoute> {
+            HomeRoute(
+                onArticleClick = { id -> navController.navigate(ArticleDetailRoute(id)) },
+            )
+        }
+        composable<ArticleDetailRoute> {
+            ArticleDetailRoute(
+                onNavigateBack = { navController.popBackStack() },
+            )
+        }
+    }
+}
+```
+
+**DON'T:**
+- Use string-based routes — use type-safe serializable route classes
+- Create multiple Activities for navigation — use single Activity + NavHost
+- Put NavHost inside individual screens
+
+## Decoupled Navigation
+
+> Source: https://developer.android.com/develop/ui/compose/navigation#testing
+
+**DO:**
+- Pass navigation actions as lambda callbacks to screen composables:
+```kotlin
+@Composable
+fun HomeRoute(
+    onArticleClick: (String) -> Unit,  // Navigation via callback
+    onSettingsClick: () -> Unit,
+    viewModel: HomeViewModel = hiltViewModel(),
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    HomeScreen(
+        uiState = uiState,
+        onArticleClick = onArticleClick,
+        onSettingsClick = onSettingsClick,
+    )
+}
+```
+- Keep `NavController` only in the NavHost — never pass it down
+
+**DON'T:**
+- Pass `NavController` to composables:
+```kotlin
+// BAD — tightly coupled
+fun HomeScreen(navController: NavController) {
+    Button(onClick = { navController.navigate("profile") }) { ... }
+}
+```
+- Navigate from inside ViewModel — trigger navigation via UI events/callbacks
+
+## Arguments & Data Passing
+
+> Source: https://developer.android.com/develop/ui/compose/navigation#retrieving-complex-data
+
+**DO:**
+- Pass only simple identifiers (IDs, strings) through navigation routes:
+```kotlin
+@Serializable
+data class ArticleDetailRoute(val articleId: String)
+```
+- Retrieve the full object in the destination ViewModel using the ID:
+```kotlin
+@HiltViewModel
+class ArticleDetailViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val getArticleUseCase: GetArticleUseCase,
+) : ViewModel() {
+    private val articleId: String = savedStateHandle.toRoute<ArticleDetailRoute>().articleId
+
+    init {
+        viewModelScope.launch {
+            _uiState.value = getArticleUseCase(articleId)
+        }
+    }
+}
+```
+
+**DON'T:**
+- Pass complex objects (data classes, lists) through navigation — pass IDs only
+- Serialize large objects into route arguments
+- Use `Bundle` or `Parcelable` for navigation arguments in Compose
+
+## Nested Navigation
+
+**DO:**
+- Use nested `NavGraph` for feature grouping:
+```kotlin
+NavHost(...) {
+    navigation<AuthGraph>(startDestination = LoginRoute) {
+        composable<LoginRoute> { ... }
+        composable<RegisterRoute> { ... }
+    }
+    navigation<MainGraph>(startDestination = HomeRoute) {
+        composable<HomeRoute> { ... }
+        composable<ProfileRoute> { ... }
+    }
+}
+```
+- Define navigation graphs per feature module in multi-module projects
+
+**DON'T:**
+- Put all destinations in a flat NavHost — group related screens
+- Create deep nesting (3+ levels) — keep navigation graphs shallow
+
+## Deep Links
+
+> Source: https://developer.android.com/develop/ui/compose/navigation#deeplinks
+
+**DO:**
+- Define deep links in composable destinations when needed:
+```kotlin
+composable<ArticleDetailRoute>(
+    deepLinks = listOf(
+        navDeepLink<ArticleDetailRoute>(basePath = "https://myapp.com/article"),
+    ),
+) { ... }
+```
+- Handle deep links in `AndroidManifest.xml` with intent filters
+- Test deep links with `adb shell am start -d "url"`
+
+**DON'T:**
+- Hardcode deep link URLs in multiple places — centralize them

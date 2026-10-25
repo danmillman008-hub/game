@@ -1,0 +1,21 @@
+name: probe-links
+on:
+  push:
+    paths:
+      - '.github/workflows/probe-links.yml'
+permissions:
+  contents: read
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          for P in REPORT-short-fa.txt PROMPT-android-build.md ; do
+            U="https://raw.githubusercontent.com/danmillman008-hub/game/7a68eed16b40bb7750debe6eeaedc484ea6b7a3d/docs/$P"
+            echo "=== $P"
+            curl -sS -m 25 -o /tmp/o -D /tmp/h -w 'code=%{http_code} size=%{size_download} ' "$U"
+            grep -i '^content-type' /tmp/h | tr -d '\r'
+          done > /tmp/l.txt 2>&1
+          python3 -c "
+          b=open('/tmp/l.txt',encoding='utf-8',errors='replace').read().replace('%','%25').replace(chr(13),'').replace(chr(10),'%0A')
+          print('::notice title=links::%s'%b[:8000])"

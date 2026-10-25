@@ -1,0 +1,72 @@
+name: probe-ttac
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/probe-ttac.yml'
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: DNS + connectivity
+        run: |
+          exec > >(tee -a /tmp/probe.txt) 2>&1
+          set -x
+          getent hosts irfdamobile.ttac.ir || true
+          curl -sS -m 25 -o /dev/null -w 'connect=%{time_connect} total=%{time_total} code=%{http_code}\n' https://irfdamobile.ttac.ir/ || echo "root failed"
+      - name: CheckBarcode (GET, like the app)
+        run: |
+          exec > >(tee -a /tmp/probe.txt) 2>&1
+          URL='https://irfdamobile.ttac.ir/api/WrapperV2/CheckBarcode?barcode=6260152410148&latitude=0.0&longitude=0.0&device=2&deviceIdentifier=gha-probe&Platform=1&PlatformVersion=30&VersionCode=60031&AppVersion=6.9.1'
+          echo "=== GET $URL"
+          curl -sS -m 30 -D /tmp/h1 -o /tmp/b1 -H 'Accept: application/json' -H 'User-Agent: ""' "$URL" || echo "curl failed: $?"
+          echo '--- headers'; cat /tmp/h1 || true
+          echo '--- body (first 1200 bytes)'; head -c 1200 /tmp/b1 || true; echo
+      - name: NfiSearch (GET)
+        run: |
+          exec > >(tee -a /tmp/probe.txt) 2>&1
+          URL='https://irfdamobile.ttac.ir/api/wrapper/NfiSearch?term=%D8%A7%D8%B3%D8%AA%D8%A7%D9%85%DB%8C%D9%86%D9%88%D9%81%D9%86&pageNumber=1&pageSize=3'
+          echo "=== GET $URL"
+          curl -sS -m 30 -D /tmp/h2 -o /tmp/b2 "$URL" || echo "curl failed: $?"
+          echo '--- headers'; cat /tmp/h2 || true
+          echo '--- body (first 800 bytes)'; head -c 800 /tmp/b2 || true; echo
+      - name: CORS preflight simulation
+        run: |
+          exec > >(tee -a /tmp/probe.txt) 2>&1
+          URL='https://irfdamobile.ttac.ir/api/WrapperV2/CheckBarcode?barcode=6260152410148'
+          echo "=== OPTIONS with Origin"
+          curl -sS -m 20 -X OPTIONS -D - -o /dev/null -H 'Origin: https://example.com' -H 'Access-Control-Request-Method: GET' "$URL" || echo "curl failed: $?"
+          echo "=== GET with Origin (look for access-control-allow-origin)"
+          curl -sS -m 20 -D - -o /dev/null -H 'Origin: https://example.com' "$URL" || echo "curl failed: $?"
+      - name: CheckSixteenCode / CheckUid shape
+        run: |
+          exec > >(tee -a /tmp/probe.txt) 2>&1
+          for P in "CheckSixteenCode?sixteenCode=1234567890123456" "CheckUid?uidCode=15978065910231737028"; do
+            echo "=== $P"
+            curl -sS -m 25 -D - -o /tmp/bo "https://irfdamobile.ttac.ir/api/WrapperV2/$P&device=2&Platform=1&PlatformVersion=30&VersionCode=60031&AppVersion=6.9.1" || echo "curl failed: $?"
+            head -c 700 /tmp/bo || true; echo
+          done
+
+      - name: Publish result as annotations
+        if: always()
+        run: |
+          python3 - <<'EOF'
+          import os
+          try:
+              body=open('/tmp/probe.txt',encoding='utf-8',errors='replace').read()
+          except Exception as e:
+              body='no output: %s'%e
+          body=body.replace('%','%25').replace(chr(13),'').replace(chr(10),'%0A')
+          CH=9000
+          n=0
+          for i in range(0,min(len(body),9*CH),CH):
+              print('::notice title=probe-%d::%s'%(i//CH,body[i:i+CH]));n+=1
+          print('::notice title=probe-len::%d bytes in %d chunks'%(len(body),n))
+          EOF
