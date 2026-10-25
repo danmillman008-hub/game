@@ -18,6 +18,7 @@ import org.junit.Assert.assertNotNull
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.test.KoinTest
@@ -34,10 +35,14 @@ import org.robolectric.annotation.Config
  * واقعی را می‌سازد تا چنین اشکالی پیش از رسیدن به گوشی گرفته شود.
  */
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [34])
+// application = Application (نه StockApp): وگرنه Robolectric اپ واقعی را می‌سازد،
+// Koin و WorkManager را بالا می‌آورد و startKoin تست با «already started» می‌شکند.
+@Config(sdk = [34], application = android.app.Application::class)
 class KoinGraphTest : KoinTest {
 
     private fun startGraph() {
+        // در صورت اجرای چند تست در یک JVM، گراف قبلی باید بسته شود.
+        if (GlobalContext.getOrNull() != null) stopKoin()
         val context = ApplicationProvider.getApplicationContext<Application>()
         startKoin {
             androidContext(context)

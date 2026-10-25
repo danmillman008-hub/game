@@ -30,7 +30,7 @@ import org.robolectric.annotation.Config
  * (لیست پر، هشدار، بچ، رخداد) رندر می‌شود؛ هر استثنای Compose تست را قرمز می‌کند.
  */
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [34])
+@Config(sdk = [34], application = android.app.Application::class)
 class PharmacyScreenSmokeTest {
 
     @get:Rule
