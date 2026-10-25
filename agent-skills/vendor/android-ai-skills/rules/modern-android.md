@@ -1,0 +1,228 @@
+# Modern Android
+
+> Official source: https://developer.android.com/develop
+
+You are an expert in modern Android platform features. Follow current platform requirements for edge-to-edge display, predictive back, Material 3, and lifecycle management.
+
+## Edge-to-Edge Display
+
+> Source: https://developer.android.com/develop/ui/views/layout/edge-to-edge
+
+**DO:**
+- Enable edge-to-edge display (mandatory for apps targeting Android 15+):
+```kotlin
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
+        super.onCreate(savedInstanceState)
+        setContent { ... }
+    }
+}
+```
+- Handle window insets in Compose:
+```kotlin
+Scaffold(
+    modifier = Modifier.fillMaxSize(),
+    contentWindowInsets = WindowInsets(0),
+) { innerPadding ->
+    Content(modifier = Modifier.padding(innerPadding))
+}
+```
+- Use `Modifier.windowInsetsPadding()` for manual inset handling:
+```kotlin
+Modifier
+    .statusBarsPadding()
+    .navigationBarsPadding()
+    .imePadding()
+```
+
+**DON'T:**
+- Use `fitsSystemWindows="true"` in Compose — handle insets with Compose APIs
+- Assume a fixed status bar or navigation bar height
+- Ignore insets — content will render behind system bars
+
+## Predictive Back Gesture
+
+> Source: https://developer.android.com/guide/navigation/custom-back/predictive-back-gesture
+
+**DO:**
+- Opt in to predictive back in the manifest:
+```xml
+<application android:enableOnBackInvokedCallback="true">
+```
+- Use the Navigation component's built-in back handling
+- For custom back behavior, use `BackHandler` in Compose:
+```kotlin
+BackHandler(enabled = showBottomSheet) {
+    showBottomSheet = false
+}
+```
+
+**DON'T:**
+- Override `onBackPressed()` — it's deprecated
+- Use `OnBackPressedDispatcher` directly — use Compose's `BackHandler`
+- Block the back gesture without clear user value
+
+## Splash Screen API
+
+> Source: https://developer.android.com/develop/ui/views/launch/splash-screen
+
+**DO:**
+- Use the Splash Screen API from `androidx.core:core-splashscreen`:
+```kotlin
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
+        super.onCreate(savedInstanceState)
+
+        // Keep splash while loading initial data
+        splashScreen.setKeepOnScreenCondition {
+            viewModel.isLoading.value
+        }
+    }
+}
+```
+- Define splash theme in `res/values/themes.xml`:
+```xml
+<style name="Theme.App.Splash" parent="Theme.SplashScreen">
+    <item name="windowSplashScreenBackground">@color/splash_bg</item>
+    <item name="windowSplashScreenAnimatedIcon">@drawable/splash_icon</item>
+    <item name="postSplashScreenTheme">@style/Theme.App</item>
+</style>
+```
+
+**DON'T:**
+- Create a custom `SplashActivity` — use the Splash Screen API
+- Show a splash screen for longer than necessary
+- Use the splash screen for marketing — it's for perceived startup performance
+
+## Per-App Language Preferences
+
+> Source: https://developer.android.com/guide/topics/resources/app-languages
+
+**DO:**
+- Declare supported locales in `res/xml/locales_config.xml`:
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<locale-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <locale android:name="en" />
+    <locale android:name="ur" />
+    <locale android:name="ar" />
+</locale-config>
+```
+- Reference in manifest:
+```xml
+<application android:localeConfig="@xml/locales_config">
+```
+- Use `AppCompatDelegate.setApplicationLocales()` for in-app language switching
+
+**DON'T:**
+- Implement custom locale switching logic — use the platform API
+- Forget to declare supported locales — Android's per-app language picker needs it
+
+## Background Work (WorkManager)
+
+> Source: https://developer.android.com/topic/libraries/architecture/workmanager
+
+**DO:**
+- Use WorkManager for deferrable, guaranteed background work:
+```kotlin
+class SyncWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted params: WorkerParameters,
+    private val repository: ArticleRepository,
+) : CoroutineWorker(context, params) {
+
+    override suspend fun doWork(): Result {
+        return when (repository.sync().isSuccess) {
+            true -> Result.success()
+            false -> Result.retry()
+        }
+    }
+}
+```
+- Use constraints for conditional execution:
+```kotlin
+val syncRequest = PeriodicWorkRequestBuilder<SyncWorker>(1, TimeUnit.HOURS)
+    .setConstraints(
+        Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .setRequiresBatteryNotLow(true)
+            .build()
+    )
+    .build()
+
+WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+    "sync",
+    ExistingPeriodicWorkPolicy.KEEP,
+    syncRequest,
+)
+```
+- Use Hilt `@HiltWorker` with `@AssistedInject` for dependency injection
+
+**DON'T:**
+- Use `AlarmManager` or `JobScheduler` directly — use WorkManager
+- Use `GlobalScope.launch` for background work — it won't survive process death
+- Schedule work more frequently than needed — respect battery
+
+## Lifecycle Management
+
+> Source: https://developer.android.com/guide/components/activities/activity-lifecycle
+
+**DO:**
+- Handle configuration changes (rotation, dark mode) via ViewModel — state survives
+- Handle process death via `SavedStateHandle` in ViewModel:
+```kotlin
+@HiltViewModel
+class SearchViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
+) : ViewModel() {
+    val searchQuery = savedStateHandle.getStateFlow("query", "")
+
+    fun onQueryChanged(query: String) {
+        savedStateHandle["query"] = query
+    }
+}
+```
+- Use `rememberSaveable` in Compose for UI state that must survive config changes
+- Collect flows with lifecycle awareness:
+```kotlin
+val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+```
+
+**DON'T:**
+- Store critical state only in Compose `remember` — it doesn't survive process death
+- Use `onSaveInstanceState` directly — use `SavedStateHandle` in ViewModel
+- Ignore process death testing — test with "Don't keep activities" developer option
+
+## Coroutines & Structured Concurrency
+
+> Source: https://developer.android.com/kotlin/coroutines
+
+**DO:**
+- Use structured concurrency — all coroutines have a scope:
+```kotlin
+// ViewModel scope — cancelled when ViewModel is cleared
+viewModelScope.launch {
+    val result = withContext(Dispatchers.IO) {
+        repository.fetchData()
+    }
+    _uiState.value = result
+}
+```
+- Inject dispatchers for testability:
+```kotlin
+class MyRepository @Inject constructor(
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+) {
+    suspend fun fetchData() = withContext(ioDispatcher) { /* ... */ }
+}
+```
+- Use `supervisorScope` when child failures shouldn't cancel siblings
+- Use `Flow` for reactive data streams, `suspend` for one-shot operations
+
+**DON'T:**
+- Use `GlobalScope` — ever
+- Use `Dispatchers.IO` / `Dispatchers.Main` directly — inject them
+- Use `runBlocking` in production code (test code is fine)
+- Catch `CancellationException` — let it propagate for proper cancellation

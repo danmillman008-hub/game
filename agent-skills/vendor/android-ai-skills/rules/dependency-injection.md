@@ -1,0 +1,167 @@
+# Dependency Injection (Hilt)
+
+> Official source: https://developer.android.com/training/dependency-injection/hilt-android
+
+You are an expert in Hilt dependency injection for Android. Use Hilt as the standard DI framework. Follow constructor injection by default, use proper scoping, and keep modules clean and focused.
+
+## Setup
+
+**DO:**
+- Annotate the Application class with `@HiltAndroidApp`:
+```kotlin
+@HiltAndroidApp
+class MyApp : Application()
+```
+- Annotate Activities with `@AndroidEntryPoint`:
+```kotlin
+@AndroidEntryPoint
+class MainActivity : ComponentActivity()
+```
+- Annotate ViewModels with `@HiltViewModel`:
+```kotlin
+@HiltViewModel
+class ProfileViewModel @Inject constructor(
+    private val getProfileUseCase: GetProfileUseCase,
+) : ViewModel()
+```
+
+**DON'T:**
+- Forget `@HiltAndroidApp` on Application — Hilt won't work without it
+- Create ViewModel instances with `ViewModelProvider` manually — use `hiltViewModel()` in Compose
+- Use Koin or manual DI in new projects — use Hilt for standardized, compile-time safe DI
+
+## Constructor Injection (Preferred)
+
+> Source: https://developer.android.com/training/dependency-injection/hilt-android#inject-interfaces
+
+**DO:**
+- Use constructor injection as the default approach:
+```kotlin
+class UserRepository @Inject constructor(
+    private val remoteDataSource: UserRemoteDataSource,
+    private val localDataSource: UserLocalDataSource,
+) {
+    // ...
+}
+```
+- All dependencies should be injectable — avoid `object` singletons that hold state
+
+**DON'T:**
+- Use field injection except in Android framework classes (Activity, Fragment, Service)
+- Create instances with `new` / direct constructor calls for injectable classes
+
+## Modules & Bindings
+
+**DO:**
+- Use `@Binds` for binding an interface to its implementation (preferred over `@Provides`):
+```kotlin
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class RepositoryModule {
+    @Binds
+    abstract fun bindUserRepository(impl: UserRepositoryImpl): UserRepository
+}
+```
+- Use `@Provides` for third-party classes and builder patterns:
+```kotlin
+@Module
+@InstallIn(SingletonComponent::class)
+object NetworkModule {
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(): OkHttpClient =
+        OkHttpClient.Builder()
+            .addInterceptor(AuthInterceptor())
+            .build()
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(client: OkHttpClient): Retrofit =
+        Retrofit.Builder()
+            .baseUrl(BuildConfig.BASE_URL)
+            .client(client)
+            .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+            .build()
+}
+```
+- Use `@Qualifier` for multiple bindings of the same type:
+```kotlin
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class IoDispatcher
+
+@Module
+@InstallIn(SingletonComponent::class)
+object DispatcherModule {
+    @Provides
+    @IoDispatcher
+    fun provideIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
+}
+```
+- Organize modules by concern: `NetworkModule`, `DatabaseModule`, `RepositoryModule`
+
+**DON'T:**
+- Put all bindings in a single module — split by concern
+- Use `@Provides` when `@Binds` works — `@Binds` is more efficient (no function body)
+- Hardcode configuration values in modules — inject from BuildConfig or remote config
+
+## Scoping
+
+> Source: https://developer.android.com/training/dependency-injection/hilt-android#component-scopes
+
+**DO:**
+- Use `@Singleton` for app-wide single instances (databases, API clients, repositories)
+- Use `@ViewModelScoped` for dependencies shared within a ViewModel's lifecycle
+- Leave classes unscoped by default — Hilt creates a new instance on each injection
+- Only scope when the object is stateful or expensive to create
+
+**DON'T:**
+- Scope everything as `@Singleton` — this wastes memory and hides lifecycle bugs
+- Use `@ActivityScoped` unless you truly need activity-lifecycle binding
+- Create custom scopes unless you have a clear use case
+
+## Hilt with Compose
+
+**DO:**
+- Use `hiltViewModel()` to obtain ViewModels in Compose:
+```kotlin
+@Composable
+fun ProfileRoute(
+    viewModel: ProfileViewModel = hiltViewModel(),
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    ProfileScreen(uiState = uiState)
+}
+```
+
+**DON'T:**
+- Pass ViewModel as a parameter to stateless Screen composables — pass state and callbacks
+- Create ViewModel instances outside of Compose's `hiltViewModel()`
+
+## Testing with Hilt
+
+> Source: https://developer.android.com/training/dependency-injection/hilt-testing
+
+**DO:**
+- Use `@HiltAndroidTest` for instrumented tests
+- Use `@UninstallModules` to replace production modules with test modules
+- Create fake implementations for testing:
+```kotlin
+class FakeUserRepository : UserRepository {
+    private val users = mutableListOf<User>()
+    override fun getUsers(): Flow<List<User>> = flowOf(users)
+    override suspend fun refreshUsers() { /* no-op */ }
+}
+```
+- For unit tests, simply pass fakes via constructor — no Hilt needed:
+```kotlin
+@Test
+fun `loads profile successfully`() = runTest {
+    val viewModel = ProfileViewModel(FakeGetProfileUseCase())
+    // assert on viewModel.uiState
+}
+```
+
+**DON'T:**
+- Use Mockito/MockK when fakes suffice — fakes are more maintainable
+- Test Hilt wiring itself — test your logic, not the framework

@@ -1,0 +1,233 @@
+# Build System & Tooling
+
+> Official source: https://developer.android.com/build
+
+You are an expert in Android build systems. Use Gradle Kotlin DSL, version catalogs, and convention plugins. Optimize for build speed and maintainability.
+
+## Gradle Kotlin DSL
+
+**DO:**
+- Use `.gradle.kts` (Kotlin DSL) for all build files
+- Use `libs.versions.toml` for centralized dependency management
+
+**DON'T:**
+- Use Groovy `.gradle` files in new projects
+- Hardcode dependency versions in build files
+
+## Version Catalog
+
+> Source: https://developer.android.com/build/migrate-to-catalogs
+
+**DO:**
+- Define all dependencies in `gradle/libs.versions.toml`:
+```toml
+[versions]
+kotlin = "2.1.0"
+compose-bom = "2025.04.00"
+hilt = "2.51.1"
+room = "2.7.1"
+coroutines = "1.10.1"
+ksp = "2.1.0-1.0.29"
+
+[libraries]
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
+compose-ui = { group = "androidx.compose.ui", name = "ui" }
+compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version = "2.9.0" }
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version = "1.2.0" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version = "1.1.4" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.8.0" }
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version = "3.1.0" }
+
+[plugins]
+android-application = { id = "com.android.application", version = "8.9.0" }
+android-library = { id = "com.android.library", version = "8.9.0" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+room = { id = "androidx.room", version.ref = "room" }
+```
+- Reference with `libs.xyz` in build files:
+```kotlin
+dependencies {
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.ui)
+    implementation(libs.compose.material3)
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+}
+```
+
+**DON'T:**
+- Define versions inline in `build.gradle.kts`
+- Use `ext` blocks for version management — use version catalogs
+- Forget Compose BOM — it ensures compatible Compose library versions
+
+## KSP over KAPT
+
+> Source: https://developer.android.com/build/migrate-to-ksp
+
+**DO:**
+- Use KSP for all annotation processors:
+```kotlin
+plugins {
+    id("com.google.devtools.ksp")
+}
+dependencies {
+    ksp(libs.room.compiler)
+    ksp(libs.hilt.compiler)
+}
+```
+- KSP is up to 2x faster than KAPT
+
+**DON'T:**
+- Use KAPT — it's in maintenance mode and significantly slower
+- Keep both KAPT and KSP — migrate fully to KSP
+
+## Modularization
+
+> Source: https://developer.android.com/topic/modularization
+
+**DO:**
+- Structure as multi-module project from the start:
+```
+:app                        — Application entry point, wiring
+:core:data                  — Repositories, data sources
+:core:domain                — Use cases, domain models
+:core:ui                    — Shared composables, theme
+:core:designsystem          — Design tokens, base components
+:core:database              — Room database, DAOs, entities
+:core:network               — Retrofit/Ktor setup, API interfaces
+:core:datastore             — DataStore preferences
+:core:testing               — Shared test utilities, fakes
+:feature:home               — Home screen feature
+:feature:profile            — Profile screen feature
+:feature:settings           — Settings screen feature
+```
+- Each feature module contains its own UI, ViewModel, and navigation
+- Core modules are shared utilities
+- Feature modules depend on core modules but never on other feature modules
+
+**DON'T:**
+- Put everything in `:app` — break apart once you have 2+ features
+- Let feature modules depend on each other directly — communicate via navigation or shared core
+- Create circular module dependencies
+
+## Convention Plugins
+
+> Source: https://developer.android.com/build (Now in Android pattern)
+
+**DO:**
+- Create convention plugins in `build-logic/` for shared build configuration:
+```
+build-logic/
+└── convention/
+    └── src/main/kotlin/
+        ├── AndroidApplicationConventionPlugin.kt
+        ├── AndroidLibraryConventionPlugin.kt
+        ├── AndroidComposeConventionPlugin.kt
+        └── AndroidHiltConventionPlugin.kt
+```
+- Apply convention plugins in feature modules:
+```kotlin
+// feature/home/build.gradle.kts
+plugins {
+    id("myapp.android.feature")
+    id("myapp.android.compose")
+    id("myapp.android.hilt")
+}
+```
+- This eliminates duplicate build configuration across modules
+
+**DON'T:**
+- Copy-paste the same build configuration across 10+ modules
+- Use `allprojects {}` or `subprojects {}` blocks — use convention plugins
+
+## R8 & ProGuard
+
+**DO:**
+- Enable R8 for release builds:
+```kotlin
+buildTypes {
+    release {
+        isMinifyEnabled = true
+        isShrinkResources = true
+        proguardFiles(
+            getDefaultProguardFile("proguard-android-optimize.txt"),
+            "proguard-rules.pro",
+        )
+    }
+}
+```
+- Add keep rules for serialized classes and Hilt components
+- Test release builds regularly — R8 can break reflection-based code
+
+**DON'T:**
+- Ship debug builds to production
+- Disable R8 to "avoid issues" — fix the ProGuard rules instead
+- Benchmark or profile with debug builds — always use release + R8
+
+## Baseline Profiles
+
+> Source: https://developer.android.com/topic/performance/baselineprofiles
+
+**DO:**
+- Generate baseline profiles for production apps:
+```kotlin
+// Add the Baseline Profile Gradle plugin
+plugins {
+    id("androidx.baselineprofile")
+}
+```
+- Baseline profiles improve startup time by 15-30% by pre-compiling hot code paths
+- Include critical user journeys (app startup, main screen load)
+
+**DON'T:**
+- Skip baseline profiles for production apps — free performance improvement
+- Generate profiles from debug builds — use release builds
+
+## Code Quality
+
+> Source: https://developer.android.com/studio/write/lint
+
+**DO:**
+- Run Android Lint as part of CI:
+```kotlin
+android {
+    lint {
+        warningsAsErrors = true
+        abortOnError = true
+    }
+}
+```
+- Use ktlint or detekt for Kotlin code style enforcement
+- Set up a CI pipeline (GitHub Actions) that runs lint + tests on every PR:
+```yaml
+# .github/workflows/ci.yml
+name: CI
+on: [pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - run: ./gradlew lint testDebugUnitTest
+```
+
+**DON'T:**
+- Suppress lint warnings without justification
+- Skip lint in CI — catch issues before merge
+- Use `@Suppress` as a blanket fix — understand the warning first

@@ -1,0 +1,69 @@
+name: skills-check
+
+# کتابخانهٔ مهارت‌های ایجنت (agent-skills/) نباید وارد محصول شود و نباید خراب بماند.
+# این workflow سه چیز را تضمین می‌کند:
+#   ۱. registry.json و پوشه‌های vendor/ با هم می‌خوانند (commit ها پین و ثبت‌شده‌اند)
+#   ۲. INDEX.md با محتوای واقعی هم‌خوان است (اگر کهنه شد، قرمز می‌شود)
+#   ۳. هیچ ارجاعی از android/ به agent-skills نیست ⇒ مهارت‌ها در APK نمی‌روند
+
+on:
+  push:
+    branches: ["arena/**"]
+    paths:
+      - "agent-skills/**"
+      - "AGENTS.md"
+      - ".github/workflows/skills-check.yml"
+  pull_request:
+    paths:
+      - "agent-skills/**"
+      - "AGENTS.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: skills-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: verify skills library
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate registry, licenses and product isolation
+        run: python3 agent-skills/tools/check.py
+
+      - name: INDEX.md must be up to date
+        run: |
+          python3 agent-skills/tools/build_index.py
+          if ! git diff --quiet -- agent-skills/INDEX.md; then
+            echo "::error::INDEX.md کهنه است. محلی اجرا کنید: python3 agent-skills/tools/build_index.py"
+            git diff --stat -- agent-skills/INDEX.md
+            exit 1
+          fi
+          echo "INDEX.md هم‌خوان است."
+
+      - name: Inventory summary
+        run: python3 agent-skills/tools/summary.py >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Assert nothing leaks into the app module
+        run: |
+          set -e
+          chmod +x gradlew 2>/dev/null || true
+          if grep -rn "agent-skills" android/settings.gradle.kts android/settings.gradle 2>/dev/null; then
+            echo "::error::settings.gradle به agent-skills ارجاع می‌دهد"
+            exit 1
+          fi
+          if [ -d android/agent-skills ]; then
+            echo "::error::agent-skills داخل android/ است"
+            exit 1
+          fi
+          echo "جداسازی تأیید شد: مهارت‌ها بیرون از محصول‌اند."

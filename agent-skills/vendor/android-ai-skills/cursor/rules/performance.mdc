@@ -1,0 +1,170 @@
+---
+description: "Performance rules: Compose recomposition, lazy layouts, app startup, memory, benchmarking"
+globs: "**/*.kt"
+alwaysApply: false
+---
+
+You are an expert in Android performance optimization. Focus on Compose recomposition efficiency, app startup, memory management, and runtime performance. Always benchmark with release builds.
+
+## Compose Recomposition
+
+> Source: https://developer.android.com/develop/ui/compose/performance/bestpractices
+
+**DO:**
+- Use immutable and stable types for composable parameters:
+```kotlin
+// Good — immutable, Compose can skip recomposition
+data class UserData(
+    val id: String,
+    val name: String,
+    val avatarUrl: String,
+)
+```
+- Annotate custom classes with `@Stable` or `@Immutable` when needed:
+```kotlin
+@Stable
+class FormState(
+    val isValid: Boolean,
+    val errors: List<String>,
+)
+```
+- Use `key()` in `LazyColumn`/`LazyRow` with stable IDs:
+```kotlin
+LazyColumn {
+    items(items = articles, key = { it.id }) { article ->
+        ArticleItem(article = article)
+    }
+}
+```
+- Use `derivedStateOf` to avoid unnecessary recompositions:
+```kotlin
+val showScrollToTop by remember {
+    derivedStateOf { listState.firstVisibleItemIndex > 5 }
+}
+```
+- Use lambda-based modifiers for frequently changing values:
+```kotlin
+// Good — offset read happens in layout phase, not composition
+Modifier.offset { IntOffset(x = animatedOffset.roundToInt(), y = 0) }
+
+// Bad — triggers recomposition on every frame
+Modifier.offset(x = animatedOffset.dp, y = 0.dp)
+```
+- Defer state reads to the latest possible phase (draw > layout > composition)
+
+**DON'T:**
+- Pass `List`, `Map`, or `Set` directly as composable parameters without wrapping in a stable type
+- Use `var` in data classes passed to composables — use `val` only
+- Create new object/lambda instances in composition without `remember`:
+```kotlin
+// Bad — new lambda on every recomposition
+Button(onClick = { viewModel.doSomething(item.id) })
+
+// Good for hot paths — stable lambda reference
+val onClick = remember(item.id) { { viewModel.doSomething(item.id) } }
+Button(onClick = onClick)
+```
+- Ignore the Layout Inspector's recomposition counter during development
+
+## Lazy Layouts Performance
+
+> Source: https://developer.android.com/develop/ui/compose/lists#performance
+
+**DO:**
+- Always provide `key` for lazy list items (enables item reordering and animations)
+- Use `contentType` for lists with mixed item types:
+```kotlin
+LazyColumn {
+    items(feed, key = { it.id }, contentType = { it.type }) { item ->
+        when (item) {
+            is Header -> HeaderItem(item)
+            is Article -> ArticleItem(item)
+        }
+    }
+}
+```
+- Avoid nesting scrollable layouts in the same direction
+- Use `Modifier.fillParentMaxWidth()` inside lazy items
+
+**DON'T:**
+- Use `LazyColumn` for small, fixed lists — use `Column` instead
+- Nest a `LazyColumn` inside a `Column` with `verticalScroll` — it will crash
+- Create heavy composables inside lazy items — extract and optimize
+
+## App Startup
+
+> Source: https://developer.android.com/topic/performance/vitals/launch-time
+
+**DO:**
+- Use the Splash Screen API (`androidx.core:core-splashscreen`):
+```kotlin
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
+        super.onCreate(savedInstanceState)
+        splashScreen.setKeepOnScreenCondition { isLoading }
+    }
+}
+```
+- Defer non-critical initialization (analytics, crash reporting) with `App Startup` library:
+```kotlin
+class AnalyticsInitializer : Initializer<Analytics> {
+    override fun create(context: Context): Analytics {
+        return Analytics.init(context)
+    }
+    override fun dependencies(): List<Class<out Initializer<*>>> = emptyList()
+}
+```
+- Use Baseline Profiles for startup optimization
+- Minimize work in `Application.onCreate()`
+
+**DON'T:**
+- Create custom splash activities — use the Splash Screen API
+- Initialize everything eagerly in `Application.onCreate()`
+- Block the main thread during startup
+
+## Memory Management
+
+**DO:**
+- Use `viewModelScope` — automatically cancelled when ViewModel is cleared
+- Use `repeatOnLifecycle` or `collectAsStateWithLifecycle()` to stop collection when UI is not visible
+- Cancel unnecessary work when user navigates away
+- Use weak references for long-lived callbacks pointing to UI objects (rare with Compose)
+
+**DON'T:**
+- Use `GlobalScope` — it outlives components and leaks memory
+- Hold references to `Activity` or `Context` in singletons
+- Create unbounded caches without eviction policies
+- Register listeners/callbacks without corresponding cleanup
+
+## Benchmarking
+
+> Source: https://developer.android.com/topic/performance/benchmarking/macrobenchmark-overview
+
+**DO:**
+- Use Macrobenchmark for measuring app startup, scrolling, and animations:
+```kotlin
+@RunWith(AndroidJUnit4::class)
+class StartupBenchmark {
+    @get:Rule
+    val benchmarkRule = MacrobenchmarkRule()
+
+    @Test
+    fun startup() = benchmarkRule.measureRepeated(
+        packageName = "com.example.app",
+        metrics = listOf(StartupTimingMetric()),
+        iterations = 5,
+        startupMode = StartupMode.COLD,
+    ) {
+        pressHome()
+        startActivityAndWait()
+    }
+}
+```
+- Always benchmark with release builds + R8
+- Use Microbenchmark for isolated function performance
+
+**DON'T:**
+- Benchmark with debug builds — results are meaningless
+- Optimize without measuring — profile first, then optimize
+- Rely on subjective "feels fast" — use metrics

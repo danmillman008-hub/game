@@ -1,0 +1,148 @@
+{
+  "$comment": "فهرست منابع مهارت ایجنت پروژهٔ «انبار دارو». تغییر commit فقط با اجرای agent-skills/tools/sync-skills.sh. این فایل توسط agent-skills/tools/check.py اعتبارسنجی می‌شود.",
+  "schemaVersion": 1,
+  "updatedAt": "2026-10-25",
+  "installRoot": "agent-skills/vendor",
+  "sources": [
+    {
+      "id": "android-official-skills",
+      "repo": "android/skills",
+      "role": "core",
+      "title": "مهارت‌های رسمی اندروید",
+      "why": "مرجع پایه برای AGP 9، Compose، R8، edge-to-edge، CameraX/ML Kit، performance و مهاجرت‌ها.",
+      "useWhen": "هر تغییر در build، Compose، اسکنر، انتشار یا مهاجرت",
+      "commit": "4ebabf2b0fd6c04b7150023c8b612f80592a6226",
+      "license": "Apache-2.0",
+      "licenseFile": "LICENSE.txt",
+      "skillCount": 33,
+      "pruned": [],
+      "phase": [
+        "همه فازها"
+      ]
+    },
+    {
+      "id": "chrisbanes-skills",
+      "repo": "chrisbanes/skills",
+      "role": "core",
+      "title": "بازبینی فنی عمیق (state، effect، concurrency، API)",
+      "why": "دقیق‌ترین منبع برای compose-state-and-effects، compose-performance، kotlin-concurrency-and-flow و kotlin-api-design.",
+      "useWhen": "طراحی ViewModel/UiState، Flow، side-effect و بازبینی کد Compose",
+      "commit": "6c30c500c36a1827c8fde75415dd7a31394bc02c",
+      "license": "Apache-2.0",
+      "licenseFile": "LICENSE",
+      "skillCount": 19,
+      "pruned": [
+        "evals (۵ مگابایت fixture ارزیابی، برای ما بی‌مصرف)"
+      ],
+      "phase": [
+        "هر فاز UI/داده",
+        "بازبینی"
+      ]
+    },
+    {
+      "id": "compose-kotlin-agent-skills",
+      "repo": "haidrrrry/compose-kotlin-agent-skills",
+      "role": "core",
+      "title": "مکمل تخصصی Compose + Kotlin",
+      "why": "۲۰ ماژول مرجع و فهرست ضدالگوی‌های رایج کد تولیدی ایجنت‌ها (collectAsState ساده، GlobalScope، state ناپایدار).",
+      "useWhen": "نوشتن یا اصلاح هر صفحهٔ Compose",
+      "commit": "3851303e27882f02a75809dab1deeb7deecdf50c",
+      "license": "MIT",
+      "licenseFile": "LICENSE",
+      "skillCount": 4,
+      "pruned": [
+        "assets (لوگوی ۱٫۲ مگابایتی)",
+        "marketing (متن تبلیغاتی)"
+      ],
+      "phase": [
+        "C اتصال UI به دامنه",
+        "E اسکن",
+        "H UX"
+      ]
+    },
+    {
+      "id": "android-review",
+      "repo": "liuyi0808/android-review",
+      "role": "core",
+      "title": "بازبینی ساختاری با شدت‌بندی",
+      "why": "هفت حوزه audit: architecture، compose-ui، kotlin-quality، performance، security-audit، privacy-audit، play-store. خروجی Critical/High/Medium/Low.",
+      "useWhen": "در پایان هر milestone و قبل از هر انتشار، نه بعد از هر تغییر کوچک",
+      "commit": "26fbdc85360e0445699a6f1e5a11cfe52005cb84",
+      "license": "MIT",
+      "licenseFile": "LICENSE",
+      "skillCount": 7,
+      "pruned": [],
+      "phase": [
+        "پایان هر milestone",
+        "قبل از انتشار"
+      ]
+    },
+    {
+      "id": "android-agent-skills",
+      "repo": "krutikJain/android-agent-skills",
+      "role": "phase",
+      "title": "کتابخانهٔ ۳۴ مهارت پایه",
+      "why": "پوشش Kotlin core، coroutines/flow، Compose foundations/state/performance، Material 3، Room، WorkManager+Notification، accessibility، testing.",
+      "useWhen": "فقط مهارت مرتبط با کار جاری؛ کل مجموعهٔ ۳۴تایی به‌طور همزمان خوانده نمی‌شود",
+      "commit": "c5bf6731b8441019418784484cca1578413e6ad3",
+      "license": "MIT",
+      "licenseFile": "LICENSE",
+      "skillCount": 68,
+      "pruned": [],
+      "phase": [
+        "E اسکن",
+        "F موجودی",
+        "H اعلان‌ها"
+      ]
+    },
+    {
+      "id": "android-testing-skills",
+      "repo": "skydoves/android-testing-skills",
+      "role": "phase",
+      "title": "تست: JVM، Room، Compose UI، ADB، instrumentation",
+      "why": "الگوی دقیق تست Compose + دستورهای ADB برای نصب APK، logcat، اسکرین‌شات و اجرای instrumentation — همان کاری که workflow app-smoke انجام می‌دهد.",
+      "useWhen": "فاز G (تست UI و instrumentation) و هر وقت کار روی app-smoke یا تست گوشی",
+      "commit": "8665ed59643c90eb1056a256a6ddec161aa1cfa1",
+      "license": "Apache-2.0",
+      "licenseFile": "LICENSE",
+      "skillCount": 54,
+      "pruned": [],
+      "phase": [
+        "G تست",
+        "H instrumentation"
+      ]
+    },
+    {
+      "id": "mobile-app-ux-auditor-skill",
+      "repo": "AjnasNB/mobile-app-ux-auditor-skill",
+      "role": "phase",
+      "title": "بازبینی UX جریان کاربر",
+      "why": "مسیر کاربر را نقشه می‌کشد و اصطکاک را با پیشنهاد اجرایی گزارش می‌کند (نه «قشنگ‌ترش کن»).",
+      "useWhen": "بعد از تثبیت جریان ثبت دارو، بعد از اسکن→ثبت، قبل از انتشار آزمایشی",
+      "commit": "514c75823a46f60e724a4be4ce21cac1d6408ea5",
+      "license": "MIT",
+      "licenseFile": "LICENSE",
+      "skillCount": 2,
+      "pruned": [],
+      "phase": [
+        "H بازبینی UX"
+      ]
+    },
+    {
+      "id": "android-ai-skills",
+      "repo": "RanaNadeemAslam/android-ai-skills",
+      "role": "rules",
+      "title": "فایل‌های Rule آمادهٔ کپی (Cursor/Copilot/Codex)",
+      "why": "قواعد production-grade دربارهٔ لایه‌بندی، offline-first و DataStore/KSP. فقط به‌عنوان چک‌لیست خوانده می‌شود؛ کپی نمی‌شود.",
+      "useWhen": "مرجع مقایسه‌ای؛ اگر با PROJECT-RULES.md تناقض داشت، PROJECT-RULES.md مقدم است",
+      "commit": "3d9174c18d52e9c38014a2e87b3b5129e6b8f4ab",
+      "license": "MIT",
+      "licenseFile": "LICENSE",
+      "skillCount": 0,
+      "pruned": [],
+      "phase": [
+        "مرجع"
+      ]
+    }
+  ]
+}
