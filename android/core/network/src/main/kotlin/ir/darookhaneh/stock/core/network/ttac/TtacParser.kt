@@ -109,17 +109,32 @@ object TtacParser {
 
         val top = root.asObjectOrNull()
         val errorCode = top?.get("ErrorCode")?.asIntOrNull() ?: top?.get("errorcode")?.asIntOrNull()
+        val message = top?.get("Message")?.asStringOrNull()
+            ?: top?.get("message")?.asStringOrNull()
 
-        val resultElement = top?.get("Result") ?: top?.get("result") ?: root
-        val result = when {
-            resultElement is JsonArray -> resultElement.firstOrNull()?.asObjectOrNull()?.let(::lowercaseKeys)
-            resultElement is JsonObject -> lowercaseKeys(resultElement)
+        // ساختار استاندارد: { Result: {...}, ErrorCode: 0 }. گاهی Result آرایه است،
+        // گاهی اصلاً نیست و فقط ErrorCode/Message می‌آید (مثلاً 1301 = ساختار نامعتبر).
+        // مهم: وقتی Result نیست، **نباید** کل بدنه به‌جای نتیجه تفسیر شود؛ یکی از
+        // اشکالات واقعی همین بود و خطای سرور به‌اشتباه «پیدا نشد» گزارش می‌شد.
+        val wrapper = top?.let { it["Result"] ?: it["result"] }
+        val result: JsonObject? = when (wrapper) {
+            is JsonArray -> wrapper.firstOrNull()?.asObjectOrNull()?.let(::lowercaseKeys)
+            is JsonObject -> lowercaseKeys(wrapper)
+            null -> {
+                // پاسخ بدون پوشش: فقط اگر واقعاً فیلد نام داشته باشد و خطایی اعلام نشده باشد.
+                val flat = top?.let(::lowercaseKeys)
+                if (flat != null && flat.str("persianname") != null &&
+                    (errorCode == null || errorCode == 0)
+                ) {
+                    flat
+                } else {
+                    null
+                }
+            }
             else -> null
         }
 
         if (result == null) {
-            val message = top?.get("Message")?.asStringOrNull()
-                ?: top?.get("message")?.asStringOrNull()
             throw if (errorCode == null || errorCode == 0) {
                 LookupException(
                     LookupFailure.NOT_FOUND,

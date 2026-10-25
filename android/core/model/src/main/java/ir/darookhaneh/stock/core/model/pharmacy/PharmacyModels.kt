@@ -141,20 +141,39 @@ data class QuantityInput(
     val openUnits: Int = 0,
 ) {
     /**
-     * تبدیل به واحد.
-     * قاعده‌ها (هم‌ارز نسخهٔ HTML):
-     * - SINGLE: packs + openUnits
-     * - CARTON: cartons * per + loosePacks، سپس + openUnits
-     * - OPEN: packs + openUnits
+     * تبدیل ورودی کاربر به **واحد** (همان عددی که در دیتابیس می‌نشیند).
+     *
+     * قاعده‌ها، دقیقاً مثل نسخهٔ HTML:
+     * - ورودی «بسته» است نه «واحد». یک جعبهٔ ۲۰ تایی یعنی ۲۰ واحد.
+     * - SINGLE: `packs` بسته → `packs × packSize`
+     * - CARTON: `cartons × perCarton + loosePacks` بسته → همان × `packSize`
+     * - OPEN: `packs` بستهٔ سالم × `packSize` + واحدهای باز
+     *
+     * چرا این‌طور: پیش‌تر «تعداد» مستقیم واحد حساب می‌شد، پس «۲» برای دو جعبهٔ
+     * ۲۰ تایی می‌شد ۲ واحد — خطای سه‌برابری در موجودی. اکنون با packSize ضرب می‌شود
+     * و اگر packSize نامشخص باشد هر بسته = ۱ واحد (رفتار محافظه‌کارانه).
      */
     fun toUnits(packSize: Int? = null): Int {
-        val per = if (unitsPerCarton > 0) unitsPerCarton else (packSize ?: 1)
-        val base = when (mode) {
+        val perPack = (packSize ?: 0).coerceAtLeast(1)
+        val perCarton = if (unitsPerCarton > 0) unitsPerCarton else 1
+        val packsFromInput = when (mode) {
             CountingMode.SINGLE -> packs
-            CountingMode.CARTON -> cartons * per + loosePacks
+            CountingMode.CARTON -> cartons * perCarton + loosePacks
             CountingMode.OPEN -> packs
         }
-        return (base + openUnits).coerceAtLeast(0)
+        return (packsFromInput * perPack + openUnits).coerceAtLeast(0)
+    }
+
+    /** تعداد بستهٔ محاسبه‌شده از ورودی (برای نمایش معادل بسته). */
+    fun packsOf(packSize: Int? = null): Int {
+        val perPack = (packSize ?: 0).coerceAtLeast(1)
+        val perCarton = if (unitsPerCarton > 0) unitsPerCarton else 1
+        val packsFromInput = when (mode) {
+            CountingMode.SINGLE -> packs
+            CountingMode.CARTON -> cartons * perCarton + loosePacks
+            CountingMode.OPEN -> packs
+        }
+        return packsFromInput + (openUnits / perPack)
     }
 
     /** توضیح خوانا برای ثبت در تاریخچه؛ null یعنی توضیح لازم نیست. */

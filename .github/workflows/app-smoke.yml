@@ -140,9 +140,10 @@ jobs:
           # دلیل وجود: «بعد از ثبت اولین دارو کرش می‌کند» باید روی دستگاه واقعی
           # امتحان شود، نه با حدس. خروجی کامل در Issue می‌آید.
           adb install -r "$REL" > /dev/null 2>&1 || true
-          python3 ../tools/ui-flow-test.py > ../evidence/ui-flow.txt 2>&1
-          echo "UI_FLOW_EXIT=$?" >> ../evidence/status.txt
-          say "تست جریان واقعی (افزودن اولین دارو):" ../evidence/ui-flow.txt
+          python3 tools/ui-flow-test.py > evidence/ui-flow.txt 2>&1
+          UI_FLOW_EXIT=$?
+          echo "UI_FLOW_EXIT=${UI_FLOW_EXIT}" >> evidence/status.txt
+          say "تست جریان واقعی (افزودن اولین دارو، exit=${UI_FLOW_EXIT}):" evidence/ui-flow.txt
 
           run_variant debug "$DBG"
 

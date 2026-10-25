@@ -57,7 +57,12 @@ class TtacParserTest {
 
     @Test
     fun `ارقام فارسی و فاصله‌ها نرمال می‌شوند`() {
-        assertEquals("62600000000001", TtacParser.digits("۶۲۶-۰۰۰۰ ۰۰۰۰ ۰۰۰۱"))
+        // ارقام فارسی با جداکننده → لاتین بدون جداکننده.
+        // رشتهٔ فارسی را از همان عدد لاتین می‌سازیم تا شمارش رقم‌ها دستی و خطاپذیر نباشد.
+        val persian = "62600000000001".map { digit ->
+            if (digit.isDigit()) '۰' + (digit - '0') else ' '
+        }.joinToString("")
+        assertEquals("62600000000001", TtacParser.digits(persian))
         assertEquals(TtacKind.GTIN, TtacParser.kindOf("۶۲۶۰۰۰۰۰۰۰۰۰۰۱"))
     }
 
@@ -73,7 +78,8 @@ class TtacParserTest {
 
         assertEquals("استامینوفن ۵۰۰ میلی‌گرم", result.name)
         assertEquals("ACETAMINOPHEN 500MG", result.englishName)
-        assertEquals("62600000000001", result.gtin)
+        // GTIN از خود پاسخ سرور خوانده می‌شود (با صفر پیشرو)، نه از کد پرسیده‌شده.
+        assertEquals("06260000000001", result.gtin)
         assertEquals("1234567890123456", result.irc)
         assertEquals("شرکت داروسازی نمونه", result.company)
         assertEquals(12500L, result.price)

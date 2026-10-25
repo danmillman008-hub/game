@@ -20,33 +20,41 @@ class QuantityAndJalaliTest {
     // ---------- روش شمارش ----------
 
     @Test
-    fun `تکی فقط تعداد بسته را می‌شمارد`() {
+    fun `ورودی تکی تعداد بسته است و در تعداد هر بسته ضرب می‌شود`() {
+        // ۷ جعبهٔ ۲۰ تایی = ۱۴۰ واحد (هم‌ارز نسخهٔ HTML؛ پیش‌تر ۷ واحد حساب می‌شد)
         val input = QuantityInput(mode = CountingMode.SINGLE, packs = 7)
-        assertEquals(7, input.toUnits(packSize = 20))
+        assertEquals(140, input.toUnits(packSize = 20))
     }
 
     @Test
-    fun `کارتن ضرب در تعداد در کارتن به‌علاوهٔ بستهٔ خارج`() {
-        // ۳ کارتن × ۲۴ + ۵ بسته = ۷۷
+    fun `بدون packSize هر بسته یک واحد حساب می‌شود`() {
+        val input = QuantityInput(mode = CountingMode.SINGLE, packs = 7)
+        assertEquals(7, input.toUnits(packSize = null))
+    }
+
+    @Test
+    fun `کارتن ضرب در تعداد بسته در کارتن به‌علاوهٔ بستهٔ خارج`() {
+        // ۳ کارتن × ۲۴ بسته + ۵ بسته = ۷۷ بسته = ۱۵۴۰ واحد (هر بسته ۲۰ عدد)
         val input = QuantityInput(
             mode = CountingMode.CARTON,
             cartons = 3,
             unitsPerCarton = 24,
             loosePacks = 5,
         )
-        assertEquals(77, input.toUnits(packSize = 20))
+        assertEquals(1540, input.toUnits(packSize = 20))
     }
 
     @Test
-    fun `اگر تعداد در کارتن وارد نشود از packSize دارو استفاده می‌شود`() {
+    fun `اگر تعداد بسته در کارتن وارد نشود هر کارتن یک بسته حساب می‌شود`() {
         val input = QuantityInput(mode = CountingMode.CARTON, cartons = 2)
         assertEquals(40, input.toUnits(packSize = 20))
     }
 
     @Test
-    fun `باز و نیمه‌مصرف بسته‌ها به‌علاوهٔ واحدهای باز`() {
+    fun `باز و نیمه‌مصرف بسته‌های سالم به‌علاوهٔ واحدهای باز`() {
+        // ۴ بستهٔ سالم × ۲۰ + ۱۲ واحد باز = ۹۲
         val input = QuantityInput(mode = CountingMode.OPEN, packs = 4, openUnits = 12)
-        assertEquals(16, input.toUnits(packSize = 20))
+        assertEquals(92, input.toUnits(packSize = 20))
     }
 
     @Test
