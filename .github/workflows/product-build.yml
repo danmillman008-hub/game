@@ -216,6 +216,11 @@ jobs:
               | head -200 || echo "الگوی خطا پیدا نشد"
             echo '```'
             echo
+            echo '### تست‌های شکست‌خورده (اگر بودند)'
+            echo '```'
+            grep -h -A4 "<failure" $(find . -path "*/test-results/*" -name "TEST-*.xml" 2>/dev/null | head -40) 2>/dev/null | head -120 || echo "فایل نتیجه‌ای نبود"
+            echo '```'
+            echo
             echo '### ۶۰ خط آخر'
             echo '```'
             tail -60 /tmp/build.log || true

@@ -49,11 +49,12 @@ data class JalaliDate(val year: Int, val month: Int, val day: Int) {
             return 0
         }
 
-        /** سال کبیسهٔ شمسی (الگوریتم ۳۳ ساله). */
-        fun isLeapYear(year: Int): Boolean {
-            val mod = ((year + 2346) % 2820 + 2820) % 2820
-            return ((mod + 38) * 682) % 2816 < 682
-        }
+        /**
+         * سال کبیسهٔ شمسی: در چرخهٔ ۳۳ ساله، سالی کبیسه است که `(year + 12) % 33 % 4 == 1`.
+         * این قاعده برای بازهٔ ۱۳۴۳ تا ۱۴۷۲ دقیق است (بازهٔ کاربردی این محصول) و
+         * با تست‌های ۱۳۹۹/۱۴۰۲/۱۴۰۳/۱۴۰۸ تأیید شده است.
+         */
+        fun isLeapYear(year: Int): Boolean = ((year + 12) % 33) % 4 == 1
 
         fun of(year: Int, month: Int, day: Int): JalaliDate? =
             JalaliDate(year, month, day).takeIf { it.isValid }
@@ -108,11 +109,10 @@ data class JalaliDate(val year: Int, val month: Int, val day: Int) {
             }.joinToString("")
 
         private fun gregorianToJalali(gy: Int, gm: Int, gd: Int): JalaliDate {
-            val leap = if ((gy % 4 == 0 && gy % 100 != 0) || gy % 400 == 0) 1 else 0
             val monthDays = intArrayOf(0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334)
-            var days = 355666 + (365 * gy) + ((gy + 3 + (if (gm > 2) 1 else 0)) / 4) -
-                ((gy + 99) / 100) + ((gy + 399) / 400) + gd +
-                monthDays[gm - 1] + (if (gm > 2) leap else 0)
+            val gy2 = if (gm > 2) gy + 1 else gy
+            var days = 355666 + (365 * gy) + ((gy2 + 3) / 4) - ((gy2 + 99) / 100) +
+                ((gy2 + 399) / 400) + gd + monthDays[gm - 1]
 
             var jy = -1595 + (33 * (days / 12053))
             days %= 12053
