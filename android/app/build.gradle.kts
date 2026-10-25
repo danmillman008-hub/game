@@ -18,6 +18,16 @@ android {
         buildConfig = true
     }
 
+    // سه ABI جدا + یک universal؛ برای تست روی گوشی، نسخهٔ arm64-v8a کافی است و حجم کمتری دارد.
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("arm64-v8a", "armeabi-v7a", "x86_64")
+            isUniversalApk = true
+        }
+    }
+
 
     /*
     applicationVariants.all {

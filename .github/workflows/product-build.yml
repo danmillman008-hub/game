@@ -170,28 +170,43 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -e
-          APK=$(ls android/app/build/outputs/apk/debug/*.apk | head -1)
-          SIZE=$(du -h "$APK" | cut -f1)
-          SHA=$(sha256sum "$APK" | cut -d' ' -f1)
-          NAME="stock-debug-${GITHUB_SHA::7}.apk"
-          cp "$APK" "/tmp/$NAME"
+          mkdir -p /tmp/rel
+          rm -f /tmp/rel/*.apk
+          i=0
           {
-            echo "APK دیباگ محصول «انبار دارو» — قابل نصب روی گوشی اندروید ۱۱ (API 30) و بالاتر."
+            echo "APK دیباگ محصول «انبار دارو» — اندروید ۱۱ (API 30) و بالاتر."
             echo
-            echo "- حجم: $SIZE"
+            echo "**کدام فایل را نصب کنم؟** برای تقریباً همهٔ گوشی‌های امروزی فایل \`arm64-v8a\` را بگیرید."
+            echo "اگر گوشی قدیمی (۳۲ بیتی) دارید، \`armeabi-v7a\`؛ فایل \`universal\` همهٔ معماری‌ها را دارد و بزرگ‌تر است."
+            echo
             echo "- commit: \`$GITHUB_SHA\`"
-            echo "- sha256: \`$SHA\`"
             echo
-            echo "نصب: فایل APK را دانلود کنید، «نصب از منابع نامشخص» را برای مرورگر/فایل‌منیجر فعال کنید و نصب کنید."
-            echo "این نسخه با کلید دیباگ امضا شده است و فقط برای تست داخلی است."
+            echo "| فایل | حجم |"
+            echo "|---|---|"
           } > /tmp/release-notes.md
+          for apk in android/app/build/outputs/apk/debug/*.apk; do
+            [ -e "$apk" ] || continue
+            base=$(basename "$apk")
+            case "$base" in
+              *arm64-v8a*) name="stock-arm64-$GITHUB_SHA.apk" ;;
+              *armeabi-v7a*) name="stock-armv7-$GITHUB_SHA.apk" ;;
+              *x86_64*) name="stock-x86_64-$GITHUB_SHA.apk" ;;
+              *) name="stock-universal-$GITHUB_SHA.apk" ;;
+            esac
+            cp "$apk" "/tmp/rel/$name"
+            echo "| \`$name\` | $(du -h "$apk" | cut -f1) |" >> /tmp/release-notes.md
+            i=$((i+1))
+          done
+          echo >> /tmp/release-notes.md
+          echo "نصب: فایل APK را دانلود کنید، «نصب از منابع نامشخص» را برای مرورگر/فایل‌منیجر فعال کنید." >> /tmp/release-notes.md
+          echo "این نسخه با کلید دیباگ امضا شده و فقط برای تست داخلی است." >> /tmp/release-notes.md
+          ls -la /tmp/rel
 
-          # انتشار پایدار «apk-latest» + یک نسخهٔ آرشیوی برای هر commit
           gh release delete apk-latest --yes --cleanup-tag 2>/dev/null || true
-          gh release create apk-latest "/tmp/$NAME" \
+          gh release create apk-latest /tmp/rel/*.apk \
             --title "APK آزمایشی (آخرین بیلد سبز)" \
             --notes-file /tmp/release-notes.md \
-            --prerelease || { gh release upload apk-latest "/tmp/$NAME" --clobber; gh release edit apk-latest --notes-file /tmp/release-notes.md; }
+            --prerelease
 
       - name: Upload debug APK
         if: always() && steps.assemble.outcome == 'success'
