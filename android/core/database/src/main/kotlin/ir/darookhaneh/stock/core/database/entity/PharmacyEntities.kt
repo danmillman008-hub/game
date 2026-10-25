@@ -30,6 +30,8 @@ data class DrugEntity(
     val dosageForm: String? = null,
     val gtin: String? = null,
     val irc: String? = null,
+    /** تعداد واحد در هر بسته (پلاک/جعبه/کارتن). برای تبدیل «کارتن × تعداد» به واحد. */
+    val packSize: Int? = null,
     val createdAt: Long,
     val updatedAt: Long,
 )
@@ -103,6 +105,7 @@ data class DrugSummaryRow(
     val dosageForm: String?,
     val gtin: String?,
     val irc: String?,
+    val packSize: Int?,
     val totalQuantity: Int,
     val batchCount: Int,
     val nearestExpiry: Long?,
@@ -116,4 +119,20 @@ data class BatchAlertRow(
     val batchNumber: String?,
     val expiryDate: Long?,
     val quantity: Int,
+)
+
+/** یک ردیف تاریخچهٔ سراسری: رخداد + نام دارو + بچ + انقضا (برای صفحهٔ تاریخچه). */
+data class HistoryRow(
+    val eventId: Long,
+    val batchId: Long,
+    val drugId: Long,
+    val drugName: String,
+    val batchNumber: String?,
+    val expiryDate: Long?,
+    val type: String,
+    val quantityDelta: Int,
+    val note: String?,
+    val createdAt: Long,
+    val batchQuantity: Int,
+    val packSize: Int?,
 )

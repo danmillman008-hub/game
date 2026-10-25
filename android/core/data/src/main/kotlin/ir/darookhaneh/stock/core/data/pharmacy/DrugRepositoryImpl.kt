@@ -27,6 +27,7 @@ class DrugRepositoryImpl(
         dosageForm: String?,
         gtin: String?,
         irc: String?,
+        packSize: Int?,
     ): Long {
         val now = timeProvider.now()
         return drugDao.insert(
@@ -37,6 +38,7 @@ class DrugRepositoryImpl(
                 dosageForm = dosageForm,
                 gtin = gtin,
                 irc = irc,
+                packSize = packSize,
                 createdAt = now,
                 updatedAt = now,
             )

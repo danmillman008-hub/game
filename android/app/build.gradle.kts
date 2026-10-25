@@ -18,6 +18,13 @@ android {
         buildConfig = true
     }
 
+    // Robolectric برای تست ترکیب صفحه‌ها به منابع اندروید نیاز دارد.
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
+
     // سه ABI جدا + یک universal؛ برای تست روی گوشی، نسخهٔ arm64-v8a کافی است و حجم کمتری دارد.
     splits {
         abi {
@@ -86,6 +93,9 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
+    // تست ترکیب صفحه‌ها روی Robolectric (بدون امولاتور)
+    testImplementation(libs.androidx.ui.test.junit4)
+    testImplementation(libs.androidx.ui.test.manifest)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

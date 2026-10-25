@@ -36,9 +36,7 @@ import ir.darookhaneh.stock.core.presentation.component.AppDatePickerDialog
 import ir.darookhaneh.stock.feature.pharmacy.R
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import ir.darookhaneh.stock.core.model.pharmacy.formatJalali
 
 @Composable
 fun DrugDetailRoute(drugId: Long) {
@@ -263,6 +261,19 @@ private fun InventoryActionsCard(
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedButton(
+                    onClick = { onAction(DrugDetailAction.Record(InventoryEventType.DAMAGE)) },
+                    enabled = uiState.canSubmitAmount,
+                    modifier = Modifier.weight(1f),
+                ) { Text(stringResource(R.string.pharmacy_action_damage)) }
+
+                OutlinedButton(
+                    onClick = { onAction(DrugDetailAction.Record(InventoryEventType.RETURN)) },
+                    enabled = uiState.canSubmitAmount,
+                    modifier = Modifier.weight(1f),
+                ) { Text(stringResource(R.string.pharmacy_action_return)) }
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedButton(
                     onClick = { onAction(DrugDetailAction.Record(InventoryEventType.ADJUSTMENT)) },
                     enabled = uiState.canSubmitAmount,
                     modifier = Modifier.weight(1f),
@@ -356,7 +367,9 @@ private fun eventTypeLabel(type: InventoryEventType): String = when (type) {
     InventoryEventType.DISPENSE -> stringResource(R.string.pharmacy_event_dispense)
     InventoryEventType.ADJUSTMENT -> stringResource(R.string.pharmacy_event_adjust)
     InventoryEventType.COUNT -> stringResource(R.string.pharmacy_event_count)
+    InventoryEventType.DAMAGE -> stringResource(R.string.pharmacy_event_damage)
+    InventoryEventType.RETURN -> stringResource(R.string.pharmacy_event_return)
 }
 
-private fun formatDate(millis: Long): String =
-    SimpleDateFormat("yyyy/MM/dd", Locale.US).format(Date(millis))
+/** تاریخ‌ها در داروخانه شمسی خوانده می‌شوند؛ همه‌جا از یک منبع. */
+private fun formatDate(millis: Long): String = formatJalali(millis)

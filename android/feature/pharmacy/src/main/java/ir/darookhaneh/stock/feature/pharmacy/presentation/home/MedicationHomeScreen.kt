@@ -38,6 +38,7 @@ import androidx.compose.ui.res.stringResource
  */
 @Composable
 fun MedicationHomeRoute(
+    onRecord: () -> Unit = {},
     onAddDrug: () -> Unit,
     onScan: () -> Unit,
     onOpenDrug: (Long) -> Unit,
@@ -48,6 +49,7 @@ fun MedicationHomeRoute(
     MedicationHomeScreen(
         uiState = uiState,
         onAction = viewModel::onAction,
+        onRecord = onRecord,
         onAddDrug = onAddDrug,
         onScan = onScan,
         onOpenDrug = onOpenDrug,
@@ -58,6 +60,7 @@ fun MedicationHomeRoute(
 fun MedicationHomeScreen(
     uiState: MedicationHomeUiState,
     onAction: (MedicationHomeAction) -> Unit,
+    onRecord: () -> Unit = {},
     onAddDrug: () -> Unit,
     onScan: () -> Unit,
     onOpenDrug: (Long) -> Unit,
@@ -74,8 +77,8 @@ fun MedicationHomeScreen(
                     icon = { },
                 )
                 ExtendedFloatingActionButton(
-                    onClick = onAddDrug,
-                    text = { Text(stringResource(R.string.pharmacy_add_manual)) },
+                    onClick = onRecord,
+                    text = { Text(stringResource(R.string.pharmacy_record_title)) },
                     icon = { },
                 )
             }

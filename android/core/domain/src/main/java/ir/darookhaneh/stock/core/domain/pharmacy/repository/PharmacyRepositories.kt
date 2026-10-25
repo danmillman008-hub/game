@@ -4,7 +4,9 @@ import ir.darookhaneh.stock.core.model.pharmacy.Batch
 import ir.darookhaneh.stock.core.model.pharmacy.BatchAlert
 import ir.darookhaneh.stock.core.model.pharmacy.Drug
 import ir.darookhaneh.stock.core.model.pharmacy.DrugSummary
+import ir.darookhaneh.stock.core.model.pharmacy.HistoryEntry
 import ir.darookhaneh.stock.core.model.pharmacy.InventoryEvent
+import ir.darookhaneh.stock.core.model.pharmacy.HistoryEntry
 import ir.darookhaneh.stock.core.model.pharmacy.InventoryEventType
 import kotlinx.coroutines.flow.Flow
 
@@ -22,6 +24,7 @@ interface DrugRepository {
         dosageForm: String? = null,
         gtin: String? = null,
         irc: String? = null,
+        packSize: Int? = null,
     ): Long
 
     suspend fun getById(drugId: Long): Drug?
@@ -78,4 +81,7 @@ interface InventoryRepository {
     ): Long
 
     fun observeEvents(batchId: Long): Flow<List<InventoryEvent>>
+
+    /** تاریخچهٔ سراسری همهٔ عملیات؛ `query` خالی یعنی همه. */
+    fun observeHistory(query: String? = null, limit: Int = 500): Flow<List<HistoryEntry>>
 }

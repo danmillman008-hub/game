@@ -15,7 +15,9 @@ import ir.darookhaneh.stock.core.presentation.navigation.Navigator
 import ir.darookhaneh.stock.feature.pharmacy.presentation.add.AddDrugRoute
 import ir.darookhaneh.stock.feature.pharmacy.presentation.dashboard.DashboardRoute
 import ir.darookhaneh.stock.feature.pharmacy.presentation.detail.DrugDetailRoute
+import ir.darookhaneh.stock.feature.pharmacy.presentation.history.HistoryRoute
 import ir.darookhaneh.stock.feature.pharmacy.presentation.home.MedicationHomeRoute
+import ir.darookhaneh.stock.feature.pharmacy.presentation.record.RecordRoute
 import ir.darookhaneh.stock.feature.pharmacy.presentation.scan.ScannerRoute
 import ir.darookhaneh.stock.feature.settings.navigation.SettingRoute
 import ir.darookhaneh.stock.transition.AppTransitions
@@ -56,6 +58,7 @@ fun AppGraph(
         entryProvider = entryProvider {
             entry<Destination.Dashboard> {
                 DashboardRoute(
+                    onRecord = { backStack.add(Destination.Record) },
                     onAddDrug = { backStack.add(Destination.AddDrug()) },
                     onScan = { backStack.add(Destination.Scanner) },
                     onOpenDrug = { drugId -> backStack.add(Destination.DrugDetail(drugId)) },
@@ -74,6 +77,7 @@ fun AppGraph(
             ) { key ->
                 AddDrugRoute(
                     initialGtin = key.gtin,
+                    initialName = key.nameHint,
                     onSaved = { drugId ->
                         backStack.removeLastOrNull()
                         backStack.add(Destination.DrugDetail(drugId))
@@ -84,10 +88,24 @@ fun AppGraph(
 
             entry<Destination.Drugs> {
                 MedicationHomeRoute(
+                    onRecord = { backStack.add(Destination.Record) },
                     onAddDrug = { backStack.add(Destination.AddDrug()) },
                     onScan = { backStack.add(Destination.Scanner) },
                     onOpenDrug = { drugId -> backStack.add(Destination.DrugDetail(drugId)) },
                 )
+            }
+
+            entry<Destination.Record> {
+                RecordRoute(
+                    onCreatedDrugNeeded = { name ->
+                        backStack.add(Destination.AddDrug(nameHint = name))
+                    },
+                    onOpenScan = { backStack.add(Destination.Scanner) },
+                )
+            }
+
+            entry<Destination.History> {
+                HistoryRoute()
             }
 
             entry<Destination.DrugDetail> { key ->

@@ -20,6 +20,7 @@ import ir.darookhaneh.stock.di.domainModule
 import ir.darookhaneh.stock.di.networkModule
 import ir.darookhaneh.stock.feature.pharmacy.di.pharmacyModule
 import ir.darookhaneh.stock.feature.settings.di.settingModule
+import ir.darookhaneh.stock.utils.CrashReporter
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.workmanager.factory.KoinWorkerFactory
@@ -60,6 +61,10 @@ class StockApp : Application(), KoinComponent, SingletonImageLoader.Factory,
 
     override fun onCreate() {
         super.onCreate()
+
+        // اولین کاری که انجام می‌شود: ثبت کرش تا هیچ خطایی بی‌ردپا نماند.
+        CrashReporter(this).install()
+
         plantTimber()
 
         //Koin for DI

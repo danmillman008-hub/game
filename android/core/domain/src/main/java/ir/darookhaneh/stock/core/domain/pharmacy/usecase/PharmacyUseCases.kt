@@ -31,6 +31,7 @@ class CreateDrugWithStockUseCase(
         dosageForm: String? = null,
         gtin: String? = null,
         irc: String? = null,
+        packSize: Int? = null,
         batchNumber: String? = null,
         expiryDate: Long? = null,
         initialQuantity: Int = 0,
@@ -54,6 +55,7 @@ class CreateDrugWithStockUseCase(
             dosageForm = dosageForm?.trim()?.takeIf { it.isNotEmpty() },
             gtin = DrugRules.normalizeGtin(gtin),
             irc = DrugRules.normalizeIrc(irc),
+            packSize = packSize?.takeIf { it > 0 },
         )
 
         if (wantsBatch) {

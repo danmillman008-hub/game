@@ -21,6 +21,8 @@ data class AddDrugUiState(
     val dosageForm: String = "",
     val gtin: String = "",
     val irc: String = "",
+    /** تعداد واحد در بسته؛ برای تبدیل «کارتن × تعداد» و نمایش معادل بسته. */
+    val packSize: String = "",
     val batchNumber: String = "",
     val expiryDate: Long? = null,
     val quantity: String = "",
@@ -43,6 +45,7 @@ sealed interface AddDrugAction {
     data class OnDosageFormChange(val value: String) : AddDrugAction
     data class OnGtinChange(val value: String) : AddDrugAction
     data class OnIrcChange(val value: String) : AddDrugAction
+    data class OnPackSizeChange(val value: String) : AddDrugAction
     data class OnBatchNumberChange(val value: String) : AddDrugAction
     data class OnExpiryDateChange(val value: Long?) : AddDrugAction
     data class OnQuantityChange(val value: String) : AddDrugAction
@@ -70,6 +73,9 @@ class AddDrugViewModel(
             is AddDrugAction.OnDosageFormChange -> _uiState.update { it.copy(dosageForm = action.value) }
             is AddDrugAction.OnGtinChange -> _uiState.update { it.copy(gtin = action.value) }
             is AddDrugAction.OnIrcChange -> _uiState.update { it.copy(irc = action.value) }
+            is AddDrugAction.OnPackSizeChange -> _uiState.update {
+                it.copy(packSize = action.value.filter(Char::isDigit).take(5))
+            }
             is AddDrugAction.OnBatchNumberChange -> _uiState.update { it.copy(batchNumber = action.value) }
             is AddDrugAction.OnExpiryDateChange -> _uiState.update { it.copy(expiryDate = action.value) }
             is AddDrugAction.OnQuantityChange -> _uiState.update {
@@ -99,6 +105,7 @@ class AddDrugViewModel(
                     dosageForm = state.dosageForm,
                     gtin = state.gtin,
                     irc = state.irc,
+                    packSize = state.packSize.toIntOrNull(),
                     batchNumber = state.batchNumber,
                     expiryDate = state.expiryDate,
                     initialQuantity = quantity,

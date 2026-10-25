@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -29,6 +31,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun DashboardRoute(
+    onRecord: () -> Unit = {},
     onAddDrug: () -> Unit,
     onScan: () -> Unit,
     onOpenDrug: (Long) -> Unit,
@@ -39,6 +42,7 @@ fun DashboardRoute(
 
     DashboardScreen(
         snapshot = uiState,
+        onRecord = onRecord,
         onAddDrug = onAddDrug,
         onScan = onScan,
         onOpenDrug = onOpenDrug,
@@ -49,6 +53,7 @@ fun DashboardRoute(
 @Composable
 fun DashboardScreen(
     snapshot: DashboardSnapshot,
+    onRecord: () -> Unit = {},
     onAddDrug: () -> Unit,
     onScan: () -> Unit,
     onOpenDrug: (Long) -> Unit,
@@ -96,6 +101,22 @@ fun DashboardScreen(
                         label = stringResource(R.string.pharmacy_dashboard_expired),
                         value = snapshot.expired.size,
                         modifier = Modifier.weight(1f),
+                    )
+                }
+            }
+
+            item {
+                // دکمهٔ اصلی: «ثبت سریع» — همان کاری که کاربر روزانه صد بار انجام می‌دهد.
+                Button(
+                    onClick = onRecord,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    shape = RoundedCornerShape(14.dp),
+                ) {
+                    Text(
+                        text = stringResource(R.string.pharmacy_record_title),
+                        style = MaterialTheme.typography.titleMedium,
                     )
                 }
             }

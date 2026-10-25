@@ -18,6 +18,14 @@ sealed interface Destination : NavKey {
     @Serializable
     data object Drugs : Destination
 
+    /** ثبت سریع: دارو → عملیات → مقدار → ثبت، در یک صفحه. */
+    @Serializable
+    data object Record : Destination
+
+    /** تاریخچهٔ سراسری همهٔ عملیات. */
+    @Serializable
+    data object History : Destination
+
     /** جزئیات یک دارو و بچ‌های آن. */
     @Serializable
     data class DrugDetail(val drugId: Long) : Destination
@@ -28,7 +36,7 @@ sealed interface Destination : NavKey {
 
     /** ثبت دستی دارو؛ با کد اسکن‌شدهٔ ناشناخته هم پر می‌شود. */
     @Serializable
-    data class AddDrug(val gtin: String? = null) : Destination
+    data class AddDrug(val gtin: String? = null, val nameHint: String? = null) : Destination
 
     @Serializable
     data class Setting(

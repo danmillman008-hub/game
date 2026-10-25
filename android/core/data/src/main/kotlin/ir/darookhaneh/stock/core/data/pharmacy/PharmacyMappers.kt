@@ -4,11 +4,13 @@ import ir.darookhaneh.stock.core.database.entity.BatchAlertRow
 import ir.darookhaneh.stock.core.database.entity.BatchEntity
 import ir.darookhaneh.stock.core.database.entity.DrugEntity
 import ir.darookhaneh.stock.core.database.entity.DrugSummaryRow
+import ir.darookhaneh.stock.core.database.entity.HistoryRow
 import ir.darookhaneh.stock.core.database.entity.InventoryEventEntity
 import ir.darookhaneh.stock.core.model.pharmacy.Batch
 import ir.darookhaneh.stock.core.model.pharmacy.BatchAlert
 import ir.darookhaneh.stock.core.model.pharmacy.Drug
 import ir.darookhaneh.stock.core.model.pharmacy.DrugSummary
+import ir.darookhaneh.stock.core.model.pharmacy.HistoryEntry
 import ir.darookhaneh.stock.core.model.pharmacy.InventoryEvent
 import ir.darookhaneh.stock.core.model.pharmacy.InventoryEventType
 
@@ -22,6 +24,7 @@ fun DrugEntity.toDomain(): Drug = Drug(
     dosageForm = dosageForm,
     gtin = gtin,
     irc = irc,
+    packSize = packSize,
     createdAt = createdAt,
     updatedAt = updatedAt,
 )
@@ -66,8 +69,24 @@ fun DrugSummaryRow.toDomain(lowStockThreshold: Int): DrugSummary = DrugSummary(
     dosageForm = dosageForm,
     gtin = gtin,
     irc = irc,
+    packSize = packSize,
     totalQuantity = totalQuantity,
     batchCount = batchCount,
     nearestExpiry = nearestExpiry,
     isLowStock = totalQuantity <= lowStockThreshold,
+)
+
+fun HistoryRow.toDomain(): HistoryEntry = HistoryEntry(
+    eventId = eventId,
+    batchId = batchId,
+    drugId = drugId,
+    drugName = drugName,
+    batchNumber = batchNumber,
+    expiryDate = expiryDate,
+    type = InventoryEventType.fromStorage(type),
+    quantityDelta = quantityDelta,
+    note = note,
+    createdAt = createdAt,
+    batchQuantity = batchQuantity,
+    packSize = packSize,
 )

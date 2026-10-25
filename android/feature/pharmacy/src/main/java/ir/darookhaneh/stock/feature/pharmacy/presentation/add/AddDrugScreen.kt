@@ -31,13 +31,12 @@ import ir.darookhaneh.stock.core.designsystem.component.AppTextField
 import ir.darookhaneh.stock.core.presentation.component.AppDatePickerDialog
 import ir.darookhaneh.stock.feature.pharmacy.R
 import org.koin.androidx.compose.koinViewModel
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import ir.darookhaneh.stock.core.model.pharmacy.formatJalali
 
 @Composable
 fun AddDrugRoute(
     initialGtin: String? = null,
+    initialName: String? = null,
     onSaved: (Long) -> Unit,
     onCancel: () -> Unit,
 ) {
@@ -48,6 +47,12 @@ fun AddDrugRoute(
     LaunchedEffect(initialGtin) {
         if (!initialGtin.isNullOrBlank() && uiState.gtin.isBlank()) {
             viewModel.onAction(AddDrugAction.OnGtinChange(initialGtin))
+        }
+    }
+
+    LaunchedEffect(initialName) {
+        if (!initialName.isNullOrBlank() && uiState.name.isBlank()) {
+            viewModel.onAction(AddDrugAction.OnNameChange(initialName))
         }
     }
 
@@ -122,6 +127,12 @@ fun AddDrugScreen(
                 value = uiState.irc,
                 onValueChange = { onAction(AddDrugAction.OnIrcChange(it)) },
                 label = stringResource(R.string.pharmacy_field_irc),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            )
+            AppTextField(
+                value = uiState.packSize,
+                onValueChange = { onAction(AddDrugAction.OnPackSizeChange(it)) },
+                label = stringResource(R.string.pharmacy_field_pack_size),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             )
 
@@ -202,5 +213,4 @@ fun AddDrugScreen(
     }
 }
 
-private fun formatDate(millis: Long): String =
-    SimpleDateFormat("yyyy/MM/dd", Locale.US).format(Date(millis))
+private fun formatDate(millis: Long): String = formatJalali(millis)

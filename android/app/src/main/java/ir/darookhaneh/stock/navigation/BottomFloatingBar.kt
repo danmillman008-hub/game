@@ -54,6 +54,12 @@ enum class BottomBarItem(
         unselectedIcon = StockIcons.BottomBar.UnselectedDrugs
     ),
 
+    HISTORY(
+        label = R.string.nav_history,
+        selectedIcon = StockIcons.BottomBar.SelectedHistory,
+        unselectedIcon = StockIcons.BottomBar.UnselectedHistory
+    ),
+
     SCAN(
         label = R.string.nav_scan,
         selectedIcon = StockIcons.BottomBar.SelectedScan,
@@ -71,6 +77,8 @@ fun NavKey.toBottomBarItem(): BottomBarItem? {
     return when (this) {
         Destination.Dashboard, is Destination.DrugDetail -> BottomBarItem.DASHBOARD
         Destination.Drugs -> BottomBarItem.DRUGS
+        Destination.History -> BottomBarItem.HISTORY
+        Destination.Record -> BottomBarItem.DRUGS
         Destination.Scanner -> BottomBarItem.SCAN
         is Destination.Setting -> BottomBarItem.SETTINGS
         else -> null
@@ -88,6 +96,7 @@ fun BottomBarItem.toDestination(): Destination {
     return when (this) {
         BottomBarItem.DASHBOARD -> Destination.Dashboard
         BottomBarItem.DRUGS -> Destination.Drugs
+        BottomBarItem.HISTORY -> Destination.History
         BottomBarItem.SCAN -> Destination.Scanner
         BottomBarItem.SETTINGS -> Destination.Setting(destination = SettingDestination.Main)
     }

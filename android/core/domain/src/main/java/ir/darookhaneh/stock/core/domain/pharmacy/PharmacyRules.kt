@@ -102,7 +102,7 @@ object InventoryRules {
      *
      * @param current موجودی فعلی بچ
      * @param type نوع رخداد
-     * @param amount برای RECEIVE/DISPENSE مقدار مثبت (تعداد)،
+     * @param amount برای RECEIVE/RETURN/DISPENSE/DAMAGE مقدار مثبت (تعداد)،
      *               برای ADJUSTMENT تغییر با علامت، برای COUNT مقدار شمارش‌شده
      */
     fun quantityAfter(
@@ -113,12 +113,12 @@ object InventoryRules {
         if (current < 0) return Result.failure(PharmacyException(PharmacyError.NegativeQuantity))
 
         val next = when (type) {
-            InventoryEventType.RECEIVE -> {
+            InventoryEventType.RECEIVE, InventoryEventType.RETURN -> {
                 if (amount <= 0) return invalidAmount()
                 current + amount
             }
 
-            InventoryEventType.DISPENSE -> {
+            InventoryEventType.DISPENSE, InventoryEventType.DAMAGE -> {
                 if (amount <= 0) return invalidAmount()
                 if (amount > current) {
                     return Result.failure(PharmacyException(PharmacyError.InsufficientStock))

@@ -13,6 +13,7 @@ import ir.darookhaneh.stock.core.domain.pharmacy.repository.BatchRepository
 import ir.darookhaneh.stock.core.domain.pharmacy.repository.InventoryRepository
 import ir.darookhaneh.stock.core.model.pharmacy.Batch
 import ir.darookhaneh.stock.core.model.pharmacy.BatchAlert
+import ir.darookhaneh.stock.core.model.pharmacy.HistoryEntry
 import ir.darookhaneh.stock.core.model.pharmacy.TimeProvider
 import ir.darookhaneh.stock.core.model.pharmacy.InventoryEvent
 import ir.darookhaneh.stock.core.model.pharmacy.InventoryEventType
@@ -126,4 +127,13 @@ class InventoryRepositoryImpl(
 
     override fun observeEvents(batchId: Long): Flow<List<InventoryEvent>> =
         inventoryEventDao.observeByBatch(batchId).map { list -> list.map { it.toDomain() } }
+
+    override fun observeHistory(query: String?, limit: Int): Flow<List<HistoryEntry>> {
+        val source = if (query.isNullOrBlank()) {
+            inventoryEventDao.observeHistory(limit)
+        } else {
+            inventoryEventDao.observeHistoryFiltered(query.trim(), limit)
+        }
+        return source.map { rows -> rows.map { it.toDomain() } }
+    }
 }

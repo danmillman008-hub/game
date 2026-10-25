@@ -61,6 +61,7 @@ interface DrugDao {
                d.dosageForm AS dosageForm,
                d.gtin AS gtin,
                d.irc AS irc,
+               d.packSize AS packSize,
                IFNULL(SUM(b.quantity), 0) AS totalQuantity,
                COUNT(b.id) AS batchCount,
                MIN(b.expiryDate) AS nearestExpiry
@@ -81,6 +82,7 @@ interface DrugDao {
                d.dosageForm AS dosageForm,
                d.gtin AS gtin,
                d.irc AS irc,
+               d.packSize AS packSize,
                IFNULL(SUM(b.quantity), 0) AS totalQuantity,
                COUNT(b.id) AS batchCount,
                MIN(b.expiryDate) AS nearestExpiry
