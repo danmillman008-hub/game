@@ -55,7 +55,7 @@ fun SettingRoute(
                     val emailBody = """
                         --- Device Info (Do not delete) ---
                         App Version: ${uiState.versionName}
-                        Android OS: API ${Build.VERSION.SDK_INT} (${Build.RELEASE})
+                        Android OS: API ${Build.VERSION.SDK_INT} (${Build.VERSION.RELEASE})
                         Device Model: ${Build.MANUFACTURER} ${Build.MODEL}
                         -----------------------------------
                     """.trimIndent()
