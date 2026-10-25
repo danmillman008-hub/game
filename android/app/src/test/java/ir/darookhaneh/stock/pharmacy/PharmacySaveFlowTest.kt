@@ -21,7 +21,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -84,7 +85,7 @@ class PharmacySaveFlowTest {
     }
 
     @Test
-    fun `ثبت اولین دارو و باز شدن جزئیات بدون استثنا انجام می‌شود`() = runTest {
+    fun `ثبت اولین دارو و باز شدن جزئیات بدون استثنا انجام می‌شود`() = runBlocking {
         val drugId = createDrugWithStock(
             name = "استامینوفن ۵۰۰",
             packSize = 20,
@@ -111,26 +112,28 @@ class PharmacySaveFlowTest {
             recordInventoryEvent = RecordInventoryEventUseCase(batchRepository, inventoryRepository),
         )
 
-        val state = viewModel.uiState.value
-        assertEquals("استامینوفن ۵۰۰", state.drug?.name ?: run {
-            // اولین انتشار جریان ممکن است کمی بعد برسد؛ یک بار صبر می‌کنیم.
-            kotlinx.coroutines.delay(50)
-            viewModel.uiState.value.drug?.name
-        })
-        assertNotNull(viewModel.uiState.value.selectedBatchId)
+        // جریان‌های Room غیرهمگام منتشر می‌شوند؛ تا رسیدن داده صبر می‌کنیم (نه sleep ثابت).
+        val ready = withTimeout(10_000) {
+            viewModel.uiState.first { it.drug != null && it.selectedBatchId != null }
+        }
+        assertEquals("استامینوفن ۵۰۰", ready.drug?.name)
+        assertNotNull(ready.selectedBatchId)
 
         // ۳) خروج ۵ عدد → ۱۵
-        val batchId = requireNotNull(viewModel.uiState.value.selectedBatchId)
+        val batchId = requireNotNull(ready.selectedBatchId)
         viewModel.onAction(DrugDetailAction.SelectBatch(batchId))
         viewModel.onAction(DrugDetailAction.OnAmountChange("5"))
         viewModel.onAction(DrugDetailAction.Record(InventoryEventType.DISPENSE))
-        kotlinx.coroutines.delay(100)
 
+        val after = withTimeout(10_000) {
+            viewModel.uiState.first { state -> state.batches.firstOrNull()?.quantity == 15 }
+        }
+        assertEquals(15, after.batches.first().quantity)
         assertEquals(15, drugRepository.observeSummaries().first().first().totalQuantity)
     }
 
     @Test
-    fun `ثبت سریع با روش کارتن و ضایعات درست کار می‌کند`() = runTest {
+    fun `ثبت سریع با روش کارتن و ضایعات درست کار می‌کند`() = runBlocking {
         val drugId = createDrugWithStock(
             name = "آموکسی‌سیلین",
             packSize = 24,
