@@ -1,6 +1,9 @@
 package ir.darookhaneh.stock.di
 
 import ir.darookhaneh.stock.core.data.AppNewFeaturesReader
+import ir.darookhaneh.stock.core.data.pharmacy.BatchRepositoryImpl
+import ir.darookhaneh.stock.core.data.pharmacy.DrugRepositoryImpl
+import ir.darookhaneh.stock.core.data.pharmacy.InventoryRepositoryImpl
 import ir.darookhaneh.stock.core.data.repository.LocalMediaStorageImpl
 import ir.darookhaneh.stock.core.data.repository.UpdateRepositoryImpl
 import ir.darookhaneh.stock.core.data.util.AppDispatchers
@@ -17,6 +20,9 @@ import ir.darookhaneh.stock.core.datastore.model.GeneralPreferences
 import ir.darookhaneh.stock.core.datastore.model.NotificationDataStore
 import ir.darookhaneh.stock.core.datastore.model.NotificationPreferences
 import ir.darookhaneh.stock.core.datastore.utils.BaseDataStore
+import ir.darookhaneh.stock.core.domain.pharmacy.repository.BatchRepository
+import ir.darookhaneh.stock.core.domain.pharmacy.repository.DrugRepository
+import ir.darookhaneh.stock.core.domain.pharmacy.repository.InventoryRepository
 import ir.darookhaneh.stock.core.domain.repository.LocalMediaStorage
 import ir.darookhaneh.stock.core.domain.repository.UpdateRepository
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -29,6 +35,11 @@ import org.koin.dsl.module
 @OptIn(ExperimentalSerializationApi::class)
 val dataModule = module {
     singleOf(::AppNewFeaturesReader)
+
+    // داروخانه — همه محلی، بدون شبکه
+    singleOf(::DrugRepositoryImpl) { bind<DrugRepository>() }
+    singleOf(::BatchRepositoryImpl) { bind<BatchRepository>() }
+    singleOf(::InventoryRepositoryImpl) { bind<InventoryRepository>() }
     singleOf(::DefaultAppDispatchers) { bind<AppDispatchers>() }
     singleOf(::LocalMediaStorageImpl) { bind<LocalMediaStorage>() }
     singleOf(::UpdateRepositoryImpl) { bind<UpdateRepository>() }

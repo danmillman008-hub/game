@@ -26,6 +26,10 @@ sealed interface Destination : NavKey {
     @Serializable
     data object Scanner : Destination
 
+    /** ثبت دستی دارو؛ با کد اسکن‌شدهٔ ناشناخته هم پر می‌شود. */
+    @Serializable
+    data class AddDrug(val gtin: String? = null) : Destination
+
     @Serializable
     data class Setting(
         val destination: SettingDestination = SettingDestination.Main

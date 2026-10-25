@@ -41,6 +41,7 @@ dependencies {
     implementation(project(":core:domain"))
 
     implementation(project(":feature:settings"))
+    implementation(project(":feature:pharmacy"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

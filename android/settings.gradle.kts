@@ -39,4 +39,5 @@ include(":core:notifications")
 
 // Feature modules
 include(":feature:settings")
+include(":feature:pharmacy")
 include(":core:domain")

@@ -18,6 +18,7 @@ import ir.darookhaneh.stock.di.dataModule
 import ir.darookhaneh.stock.di.databaseModule
 import ir.darookhaneh.stock.di.domainModule
 import ir.darookhaneh.stock.di.networkModule
+import ir.darookhaneh.stock.feature.pharmacy.di.pharmacyModule
 import ir.darookhaneh.stock.feature.settings.di.settingModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -74,6 +75,7 @@ class StockApp : Application(), KoinComponent, SingletonImageLoader.Factory,
                     domainModule,
                     networkModule,
                     notificationModule,
+                    pharmacyModule,
                     settingModule
                 )
             )

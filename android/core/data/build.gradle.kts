@@ -4,6 +4,12 @@ plugins {
 
 android {
     namespace = "ir.darookhaneh.stock.core.data"
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -15,6 +21,11 @@ dependencies {
     implementation(project(":core:domain"))
     implementation(libs.kotlinx.coroutines.android)
     api(libs.kotlinx.coroutines.play.services)
+
+    // Room (برای تست‌های in-memory هستهٔ داروخانه)
+    testImplementation(libs.room.runtime)
+    testImplementation(libs.room.ktx)
+    testImplementation(libs.androidx.junit)
 
     //Filkit
     api("io.github.vinceglb:filekit-core:0.15.0")

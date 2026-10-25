@@ -12,6 +12,8 @@ import ir.darookhaneh.stock.core.presentation.ObserveEffect
 import ir.darookhaneh.stock.core.presentation.navigation.Destination
 import ir.darookhaneh.stock.core.presentation.navigation.NavigateEvent
 import ir.darookhaneh.stock.core.presentation.navigation.Navigator
+import ir.darookhaneh.stock.feature.pharmacy.presentation.add.AddDrugRoute
+import ir.darookhaneh.stock.feature.pharmacy.presentation.home.MedicationHomeRoute
 import ir.darookhaneh.stock.feature.settings.navigation.SettingRoute
 import ir.darookhaneh.stock.transition.AppTransitions
 import ir.darookhaneh.stock.transition.toContentTransform
@@ -51,9 +53,29 @@ fun AppGraph(
         onBack = { if (backStack.isNotEmpty()) backStack.removeLastOrNull() },
         entryProvider = entryProvider {
             entry<Destination.Dashboard> {
-                PlaceholderScreen(
-                    title = "داشبورد",
-                    description = "هشدار انقضا، موجودی کم و اقدامات سریع",
+                MedicationHomeRoute(
+                    onAddDrug = { backStack.add(Destination.AddDrug()) },
+                    onScan = { backStack.add(Destination.Scanner) },
+                    onOpenDrug = { drugId -> backStack.add(Destination.DrugDetail(drugId)) },
+                )
+            }
+
+            entry<Destination.AddDrug>(
+                metadata = NavDisplay.transitionSpec {
+                    AppTransitions.enterFromBottom.toContentTransform()
+                } + NavDisplay.popTransitionSpec {
+                    AppTransitions.enterFromTop.toContentTransform()
+                } + NavDisplay.predictivePopTransitionSpec {
+                    AppTransitions.enterFromTop.toContentTransform()
+                }
+            ) { key ->
+                AddDrugRoute(
+                    initialGtin = key.gtin,
+                    onSaved = { drugId ->
+                        backStack.removeLastOrNull()
+                        backStack.add(Destination.DrugDetail(drugId))
+                    },
+                    onCancel = { backStack.removeLastOrNull() },
                 )
             }
 
