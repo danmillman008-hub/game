@@ -120,15 +120,29 @@ class Ui:
         self.tap(node)
         return True
 
-    def scroll_to(self, needle: str, swipes: int = 5) -> dict | None:
-        """اگر متن روی صفحه نبود، تا پیدا شدنش اسکرول می‌کند (فرم بلند است)."""
+    def keyboard_shown(self) -> bool:
+        out = self.adb("shell", "dumpsys", "input_method")
+        return "mInputShown=true" in out
+
+    def hide_keyboard(self) -> None:
+        """کیبورد مجازی را می‌بندد تا دکمهٔ پایین فرم دیده شود."""
+        if self.keyboard_shown():
+            self.need("shell", "input", "keyevent", "4")
+            time.sleep(0.8)
+
+    def scroll_to(self, needle: str, swipes: int = 8) -> dict | None:
+        """
+        اگر متن روی صفحه نبود، تا پیدا شدنش اسکرول می‌کند.
+
+        نکتهٔ تجربی: Compose با swipe کوتاه و سریع حرکت نمی‌کند؛ کشیدن طولانی
+        (۹۰۰ پیکسل، ۶۰۰ میلی‌ثانیه) لازم است وگرنه اسکرول نادیده گرفته می‌شود.
+        """
         node = self.find(needle, timeout=2)
         if node is not None:
             return node
         for _ in range(swipes):
-            # کشیدن انگشت از پایین به بالا = اسکرول به سمت پایین فرم
-            self.need("shell", "input", "swipe", "540", "1600", "540", "600", "250")
-            time.sleep(0.8)
+            self.need("shell", "input", "swipe", "540", "1700", "540", "700", "600")
+            time.sleep(1.0)
             node = self.find(needle, timeout=2)
             if node is not None:
                 return node
@@ -199,12 +213,24 @@ def main() -> int:
     step("فیلد نام لمس شد", ui.tap_edit_text())
     ui.need("shell", "input", "text", args.name)
     time.sleep(0.5)
-    ui.need("shell", "input", "keyevent", "66")  # Enter: نوشتن متن، بستن کیبورد
+    ui.need("shell", "input", "keyevent", "66")  # Enter: تثبیت متن
     time.sleep(0.7)
+    # کیبورد باز می‌ماند و نصف صفحه را می‌گیرد؛ اول می‌بندیمش (همان مشکلی که
+    # کاربر را از رسیدن به دکمهٔ ذخیره باز می‌داشت).
+    ui.hide_keyboard()
 
     # دکمهٔ ذخیره پایین فرم است؛ تا رسیدن به آن اسکرول می‌کنیم (همان جایی که
     # کاربر می‌گفت «دکمه‌اش کار نمی‌کند»).
     save_node = ui.scroll_to(SAVE)
+    if save_node is None:
+        # راه دوم: پیمایش با دکمهٔ TAB روی فوکوس‌ها (Compose از آن پشتیبانی می‌کند).
+        ui.say("… اسکرول جواب نداد؛ با TAB دنبال دکمهٔ ذخیره می‌گردیم")
+        for _ in range(14):
+            ui.need("shell", "input", "keyevent", "61")
+            time.sleep(0.3)
+            save_node = ui.find(SAVE, timeout=1)
+            if save_node is not None:
+                break
     step("دکمهٔ «ذخیره» پیدا شد", save_node is not None)
     if save_node is not None:
         ui.tap(save_node)
