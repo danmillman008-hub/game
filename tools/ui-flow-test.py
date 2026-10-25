@@ -32,6 +32,7 @@ ADD_MANUAL = "افزودن دستی دارو"
 NAME_LABEL = "نام دارو"
 SAVE = "ذخیره"
 DRUGS_TAB = "داروها"
+DASHBOARD_TAB = "داشبورد"
 DETAIL_MARKERS = ("بچ‌ها", "موجودی کل", "ثبت شد")
 
 
@@ -119,6 +120,20 @@ class Ui:
         self.tap(node)
         return True
 
+    def scroll_to(self, needle: str, swipes: int = 5) -> dict | None:
+        """اگر متن روی صفحه نبود، تا پیدا شدنش اسکرول می‌کند (فرم بلند است)."""
+        node = self.find(needle, timeout=2)
+        if node is not None:
+            return node
+        for _ in range(swipes):
+            # کشیدن انگشت از پایین به بالا = اسکرول به سمت پایین فرم
+            self.need("shell", "input", "swipe", "540", "1600", "540", "600", "250")
+            time.sleep(0.8)
+            node = self.find(needle, timeout=2)
+            if node is not None:
+                return node
+        return None
+
     def tap_edit_text(self, timeout: float = 15.0) -> bool:
         """اولین فیلد ورودی قابل‌ویرایش را لمس می‌کند."""
         deadline = time.time() + timeout
@@ -172,22 +187,27 @@ def main() -> int:
         ui.say(ui.crash_log()[-4000:])
         return 1
 
-    # تب «داروها» (اگر در همان تب نیستیم)
-    if ui.find(DRUGS_TAB, timeout=3):
-        ui.tap_text(DRUGS_TAB)
-    step("صفحهٔ «داروها» دیده شد", ui.find(ADD_MANUAL, timeout=10) is not None)
+    # شروع از داشبورد (تب اول). اگر دکمهٔ افزودن پیدا نشد، اول تب داشبورد را می‌زنیم.
+    if ui.find(ADD_MANUAL, timeout=8) is None:
+        ui.tap_text(DASHBOARD_TAB)
+        time.sleep(1)
+    step("داشبورد باز شد", ui.find(ADD_MANUAL, timeout=10) is not None)
 
-    step("دکمهٔ «افزودن دستی دارو» زده شد", ui.tap_text(ADD_MANUAL))
+    step("دکمهٔ «افزودن دستی دارو» زده شد", ui.find(ADD_MANUAL, timeout=10) is not None and ui.tap_text(ADD_MANUAL))
     step("فرم افزودن دارو باز شد", ui.find(NAME_LABEL, timeout=10) is not None)
 
     step("فیلد نام لمس شد", ui.tap_edit_text())
     ui.need("shell", "input", "text", args.name)
     time.sleep(0.5)
+    ui.need("shell", "input", "keyevent", "66")  # Enter: نوشتن متن، بستن کیبورد
+    time.sleep(0.7)
 
-    # بستن کیبورد تا دکمهٔ ذخیره دیده شود — همان جایی که کاربر گیر می‌کرد.
-    ui.need("shell", "input", "keyevent", "111")  # ESC
-    time.sleep(0.5)
-    step("دکمهٔ «ذخیره» پیدا و زده شد", ui.tap_text(SAVE))
+    # دکمهٔ ذخیره پایین فرم است؛ تا رسیدن به آن اسکرول می‌کنیم (همان جایی که
+    # کاربر می‌گفت «دکمه‌اش کار نمی‌کند»).
+    save_node = ui.scroll_to(SAVE)
+    step("دکمهٔ «ذخیره» پیدا شد", save_node is not None)
+    if save_node is not None:
+        ui.tap(save_node)
     time.sleep(3)
 
     step("بعد از ذخیره اپ کرش نکرد", ui.alive())

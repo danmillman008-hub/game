@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.HorizontalDivider
@@ -110,7 +111,7 @@ fun MedicationHomeScreen(
                     contentAlignment = Alignment.Center,
                 ) { CircularProgressIndicator() }
 
-                uiState.isEmpty -> EmptyState()
+                uiState.isEmpty -> EmptyState(onAddDrug = onAddDrug)
 
                 uiState.isNoResult -> Box(
                     modifier = Modifier.fillMaxSize(),
@@ -137,18 +138,28 @@ fun MedicationHomeScreen(
 }
 
 @Composable
-private fun EmptyState() {
+private fun EmptyState(onAddDrug: () -> Unit) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
-        Text(
-            text = stringResource(R.string.pharmacy_empty_state),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center,
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier.padding(horizontal = 24.dp),
-        )
+        ) {
+            Text(
+                text = stringResource(R.string.pharmacy_empty_state),
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+            )
+            // «افزودن دستی» قبلاً فقط در داشبورد بود؛ کاربری که در تب داروها بود
+            // آن را پیدا نمی‌کرد و فکر می‌کرد اپ نمی‌گذارد دارو ثبت کند.
+            Button(onClick = onAddDrug) {
+                Text(stringResource(R.string.pharmacy_add_manual))
+            }
+        }
     }
 }
 
