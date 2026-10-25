@@ -7,8 +7,12 @@ import ir.darookhaneh.stock.core.domain.pharmacy.PharmacyError
 import ir.darookhaneh.stock.core.domain.pharmacy.PharmacyException
 import ir.darookhaneh.stock.core.domain.pharmacy.repository.BatchRepository
 import ir.darookhaneh.stock.core.domain.pharmacy.repository.DrugRepository
+import ir.darookhaneh.stock.core.domain.pharmacy.repository.DrugLookupRepository
 import ir.darookhaneh.stock.core.domain.pharmacy.repository.InventoryRepository
 import ir.darookhaneh.stock.core.model.pharmacy.Drug
+import ir.darookhaneh.stock.core.model.pharmacy.DrugLookupResult
+import ir.darookhaneh.stock.core.model.pharmacy.LookupException
+import ir.darookhaneh.stock.core.model.pharmacy.LookupFailure
 import ir.darookhaneh.stock.core.model.pharmacy.InventoryEventType
 
 /**
@@ -151,4 +155,25 @@ class ObserveDrugSummariesUseCase(
 ) {
     operator fun invoke(query: String? = null) =
         drugRepository.observeSummaries(query?.trim()?.takeIf { it.isNotEmpty() })
+}
+
+/**
+ * استعلام کد اسکن‌شده از تیتک.
+ *
+ * قاعدهٔ محصول: این کار **هرگز خودکار** نیست. اپ بدون اینترنت کامل کار می‌کند و
+ * استعلام فقط با دکمهٔ کاربر انجام می‌شود؛ نتیجه در حافظهٔ محلی می‌ماند.
+ */
+class LookupDrugCodeUseCase(
+    private val lookupRepository: DrugLookupRepository,
+) {
+    suspend operator fun invoke(rawCode: String): DrugLookupResult {
+        val code = rawCode.filter(Char::isDigit)
+        if (code.length < 8) {
+            throw LookupException(
+                LookupFailure.INVALID_CODE,
+                "کد معتبر نیست؛ حداقل ۸ رقم لازم است.",
+            )
+        }
+        return lookupRepository.lookup(code)
+    }
 }

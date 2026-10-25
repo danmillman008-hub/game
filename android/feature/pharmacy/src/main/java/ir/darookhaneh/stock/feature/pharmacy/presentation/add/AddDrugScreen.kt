@@ -30,6 +30,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ir.darookhaneh.stock.core.designsystem.component.AppTextField
 import ir.darookhaneh.stock.core.presentation.component.AppDatePickerDialog
 import ir.darookhaneh.stock.feature.pharmacy.R
+import ir.darookhaneh.stock.core.model.pharmacy.JalaliDate
+import ir.darookhaneh.stock.feature.pharmacy.presentation.lookup.LookupSection
 import org.koin.androidx.compose.koinViewModel
 import ir.darookhaneh.stock.core.model.pharmacy.formatJalali
 
@@ -129,6 +131,25 @@ fun AddDrugScreen(
                 label = stringResource(R.string.pharmacy_field_irc),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             )
+            LookupSection(
+                state = uiState.lookup,
+                canLookup = JalaliDate.latinDigits(
+                    uiState.gtin.ifBlank { uiState.irc }
+                ).count(Char::isDigit) >= 8,
+                onStart = { onAction(AddDrugAction.StartLookup) },
+                onApply = { onAction(AddDrugAction.ApplyLookup) },
+                onDismiss = { onAction(AddDrugAction.DismissLookup) },
+                applyLabel = stringResource(R.string.pharmacy_lookup_fill_fields),
+            )
+
+            uiState.lookupNotice?.let { notice ->
+                Text(
+                    text = notice,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+            }
+
             AppTextField(
                 value = uiState.packSize,
                 onValueChange = { onAction(AddDrugAction.OnPackSizeChange(it)) },

@@ -6,6 +6,7 @@ import ir.darookhaneh.stock.core.model.pharmacy.Drug
 import ir.darookhaneh.stock.core.model.pharmacy.DrugSummary
 import ir.darookhaneh.stock.core.model.pharmacy.HistoryEntry
 import ir.darookhaneh.stock.core.model.pharmacy.InventoryEvent
+import ir.darookhaneh.stock.core.model.pharmacy.DrugLookupResult
 import ir.darookhaneh.stock.core.model.pharmacy.InventoryEventType
 import kotlinx.coroutines.flow.Flow
 
@@ -83,4 +84,19 @@ interface InventoryRepository {
 
     /** تاریخچهٔ سراسری همهٔ عملیات؛ `query` خالی یعنی همه. */
     fun observeHistory(query: String? = null, limit: Int = 500): Flow<List<HistoryEntry>>
+}
+
+/**
+ * استعلام کد دارو از سامانهٔ تیتک.
+ *
+ * اختیاری و صریح: فقط با اقدام کاربر صدا زده می‌شود. پیاده‌سازی باید نتیجه را در
+ * حافظهٔ محلی نگه دارد تا دفعهٔ بعد آفلاین هم کار کند.
+ */
+interface DrugLookupRepository {
+
+    /** @throws ir.darookhaneh.stock.core.model.pharmacy.LookupException در صورت شکست */
+    suspend fun lookup(code: String): DrugLookupResult
+
+    /** فقط از حافظهٔ محلی؛ بدون شبکه. null یعنی قبلاً استعلام نشده. */
+    suspend fun cached(code: String): DrugLookupResult?
 }

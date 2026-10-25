@@ -7,6 +7,10 @@ import ir.darookhaneh.stock.core.domain.pharmacy.DrugRules
 import ir.darookhaneh.stock.core.domain.pharmacy.PharmacyError
 import ir.darookhaneh.stock.core.domain.pharmacy.PharmacyException
 import ir.darookhaneh.stock.core.domain.pharmacy.usecase.CreateDrugWithStockUseCase
+import ir.darookhaneh.stock.core.domain.pharmacy.usecase.LookupDrugCodeUseCase
+import ir.darookhaneh.stock.core.model.pharmacy.JalaliDate
+import ir.darookhaneh.stock.core.model.pharmacy.LookupException
+import ir.darookhaneh.stock.feature.pharmacy.presentation.lookup.LookupUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,6 +34,10 @@ data class AddDrugUiState(
     val isSaving: Boolean = false,
     val errorMessage: String? = null,
     val savedDrugId: Long? = null,
+    /** نتیجهٔ استعلام تیتک برای پیش‌پر کردن فرم؛ null یعنی استعلامی خواسته نشده. */
+    val lookup: LookupUiState? = null,
+    /** پیام موفقیت استعلام (مثلاً «فیلدها پر شد»). */
+    val lookupNotice: String? = null,
 ) {
     val canSave: Boolean
         get() = !isSaving && DrugRules.validateName(name) == null
@@ -52,6 +60,13 @@ sealed interface AddDrugAction {
     data class OnLocationChange(val value: String) : AddDrugAction
     data object Save : AddDrugAction
     data object DismissError : AddDrugAction
+
+    /** استعلام کد واردشده (GTIN یا IRC) از تیتک — فقط با دکمهٔ کاربر. */
+    data object StartLookup : AddDrugAction
+
+    /** پر کردن فیلدهای نام/شرکت/GTIN/IRC از نتیجهٔ استعلام. */
+    data object ApplyLookup : AddDrugAction
+    data object DismissLookup : AddDrugAction
 }
 
 /**
@@ -60,6 +75,7 @@ sealed interface AddDrugAction {
  */
 class AddDrugViewModel(
     private val createDrugWithStock: CreateDrugWithStockUseCase,
+    private val lookupDrugCode: LookupDrugCodeUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AddDrugUiState())
@@ -86,6 +102,69 @@ class AddDrugViewModel(
             is AddDrugAction.OnLocationChange -> _uiState.update { it.copy(location = action.value) }
             AddDrugAction.DismissError -> _uiState.update { it.copy(errorMessage = null) }
             AddDrugAction.Save -> save()
+            AddDrugAction.StartLookup -> startLookup()
+            AddDrugAction.ApplyLookup -> applyLookup()
+            AddDrugAction.DismissLookup -> _uiState.update { it.copy(lookup = null) }
+        }
+    }
+
+    /** کدی که استعلام می‌شود: GTIN اگر پر باشد، وگرنه IRC. */
+    private fun lookupCode(): String {
+        val state = _uiState.value
+        val raw = state.gtin.ifBlank { state.irc }
+        return JalaliDate.latinDigits(raw).filter(Char::isDigit)
+    }
+
+    private fun startLookup() {
+        val code = lookupCode()
+        if (code.length < 8) {
+            _uiState.update {
+                it.copy(
+                    lookup = LookupUiState(
+                        code = code,
+                        error = "برای استعلام، کد GTIN یا IRC (حداقل ۸ رقم) را وارد کنید.",
+                    )
+                )
+            }
+            return
+        }
+
+        _uiState.update { it.copy(lookup = LookupUiState(code = code, isLoading = true)) }
+        viewModelScope.launch {
+            try {
+                val result = lookupDrugCode(code)
+                _uiState.update { it.copy(lookup = LookupUiState(code = code, result = result)) }
+            } catch (e: LookupException) {
+                _uiState.update { it.copy(lookup = LookupUiState(code = code, error = e.message)) }
+            } catch (e: Exception) {
+                _uiState.update {
+                    it.copy(
+                        lookup = LookupUiState(
+                            code = code,
+                            error = "استعلام انجام نشد. بدون اینترنت هم ثبت دستی کار می‌کند.",
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    /**
+     * فیلدها را از نتیجهٔ استعلام پر می‌کند.
+     * قاعده: فقط فیلدهای خالی را پر می‌کنیم تا نوشتهٔ دستی کاربر پاک نشود — جز GTIN/IRC
+     * که منبع معتبرشان همان سامانه است.
+     */
+    private fun applyLookup() {
+        val result = _uiState.value.lookup?.result ?: return
+        _uiState.update {
+            it.copy(
+                name = it.name.ifBlank { result.name },
+                genericName = it.genericName.ifBlank { result.englishName.orEmpty() },
+                gtin = result.gtin ?: result.code,
+                irc = result.irc.orEmpty(),
+                lookup = null,
+                lookupNotice = "اطلاعات دارو از سامانهٔ تیتک پر شد؛ بازبینی و ذخیره کنید.",
+            )
         }
     }
 

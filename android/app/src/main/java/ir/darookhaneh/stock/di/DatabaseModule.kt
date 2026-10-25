@@ -22,5 +22,6 @@ val databaseModule = module {
     single { get<AppDatabase>().drugDao() }
     single { get<AppDatabase>().batchDao() }
     single { get<AppDatabase>().inventoryEventDao() }
+    single { get<AppDatabase>().lookupCacheDao() }
     single<TransactionRunner> { RoomTransactionRunner(get<AppDatabase>()) }
 }

@@ -4,6 +4,7 @@ import ir.darookhaneh.stock.core.domain.pharmacy.usecase.AddBatchUseCase
 import ir.darookhaneh.stock.core.domain.pharmacy.usecase.CreateDrugWithStockUseCase
 import ir.darookhaneh.stock.core.domain.pharmacy.usecase.ObserveDashboardUseCase
 import ir.darookhaneh.stock.core.domain.pharmacy.usecase.ObserveDrugSummariesUseCase
+import ir.darookhaneh.stock.core.domain.pharmacy.usecase.LookupDrugCodeUseCase
 import ir.darookhaneh.stock.core.domain.pharmacy.usecase.RecordInventoryEventUseCase
 import ir.darookhaneh.stock.core.domain.pharmacy.usecase.ResolveScannedCodeUseCase
 import ir.darookhaneh.stock.core.domain.usecase.CheckUpdateUseCase
@@ -20,4 +21,5 @@ val domainModule = module {
     factoryOf(::ResolveScannedCodeUseCase)
     factoryOf(::ObserveDrugSummariesUseCase)
     factoryOf(::ObserveDashboardUseCase)
+    factoryOf(::LookupDrugCodeUseCase)
 }

@@ -5,8 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ir.darookhaneh.stock.core.domain.pharmacy.PharmacyError
 import ir.darookhaneh.stock.core.domain.pharmacy.PharmacyException
+import ir.darookhaneh.stock.core.model.pharmacy.LookupException
 import ir.darookhaneh.stock.core.domain.pharmacy.repository.BatchRepository
+import ir.darookhaneh.stock.core.domain.pharmacy.repository.DrugRepository
 import ir.darookhaneh.stock.core.domain.pharmacy.usecase.AddBatchUseCase
+import ir.darookhaneh.stock.core.domain.pharmacy.usecase.CreateDrugWithStockUseCase
+import ir.darookhaneh.stock.core.domain.pharmacy.usecase.LookupDrugCodeUseCase
 import ir.darookhaneh.stock.core.domain.pharmacy.usecase.ObserveDrugSummariesUseCase
 import ir.darookhaneh.stock.core.domain.pharmacy.usecase.RecordInventoryEventUseCase
 import ir.darookhaneh.stock.core.model.pharmacy.Batch
@@ -15,6 +19,7 @@ import ir.darookhaneh.stock.core.model.pharmacy.DrugSummary
 import ir.darookhaneh.stock.core.model.pharmacy.InventoryEventType
 import ir.darookhaneh.stock.core.model.pharmacy.JalaliDate
 import ir.darookhaneh.stock.core.model.pharmacy.QuantityInput
+import ir.darookhaneh.stock.feature.pharmacy.presentation.lookup.LookupUiState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -52,6 +57,8 @@ data class RecordUiState(
     val isSaving: Boolean = false,
     val message: String? = null,
     val isError: Boolean = false,
+    /** وضعیت استعلام تیتک؛ null یعنی کاربر استعلام نخواسته است. */
+    val lookup: LookupUiState? = null,
 ) {
     val packSize: Int? get() = selectedDrug?.packSize
 
@@ -109,14 +116,23 @@ sealed interface RecordAction {
     data class OnNoteChange(val value: String) : RecordAction
     data object Save : RecordAction
     data object DismissMessage : RecordAction
+    /** استعلام کد فعلی از سامانهٔ تیتک (شبکه فقط با تصمیم کاربر). */
+    data object StartLookup : RecordAction
+
+    /** ساخت دارو از نتیجهٔ استعلام و ادامهٔ ثبت. */
+    data object CreateFromLookup : RecordAction
+    data object DismissLookup : RecordAction
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class RecordViewModel(
     observeDrugSummaries: ObserveDrugSummariesUseCase,
     private val batchRepository: BatchRepository,
+    private val drugRepository: DrugRepository,
     private val addBatch: AddBatchUseCase,
     private val recordInventoryEvent: RecordInventoryEventUseCase,
+    private val lookupDrugCode: LookupDrugCodeUseCase,
+    private val createDrugWithStock: CreateDrugWithStockUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(RecordUiState())
@@ -195,6 +211,94 @@ class RecordViewModel(
             is RecordAction.OnNoteChange -> _uiState.update { it.copy(note = action.value) }
             RecordAction.Save -> save()
             RecordAction.DismissMessage -> _uiState.update { it.copy(message = null) }
+            RecordAction.StartLookup -> startLookup()
+            RecordAction.CreateFromLookup -> createFromLookup()
+            RecordAction.DismissLookup -> _uiState.update { it.copy(lookup = null) }
+        }
+    }
+
+    private fun startLookup() {
+        val code = JalaliDate.latinDigits(_uiState.value.query).filter(Char::isDigit)
+        if (code.length < 8) {
+            _uiState.update {
+                it.copy(lookup = LookupUiState(code = code, error = "کد معتبر نیست؛ حداقل ۸ رقم لازم است."))
+            }
+            return
+        }
+        _uiState.update { it.copy(lookup = LookupUiState(code = code, isLoading = true)) }
+
+        viewModelScope.launch {
+            try {
+                val result = lookupDrugCode(code)
+                _uiState.update { it.copy(lookup = LookupUiState(code = code, result = result)) }
+            } catch (e: LookupException) {
+                _uiState.update {
+                    it.copy(lookup = LookupUiState(code = code, error = e.message))
+                }
+            } catch (e: Exception) {
+                _uiState.update {
+                    it.copy(lookup = LookupUiState(code = code, error = "استعلام انجام نشد. دوباره تلاش کنید."))
+                }
+            }
+        }
+    }
+
+    /** دارو را از دادهٔ استعلام‌شده می‌سازد و همان را برای ثبت انتخاب می‌کند. */
+    private fun createFromLookup() {
+        val result = _uiState.value.lookup?.result ?: return
+        _uiState.update { it.copy(lookup = it.lookup?.copy(isLoading = true, error = null)) }
+
+        viewModelScope.launch {
+            try {
+                val gtin = result.gtin ?: result.code
+                // اگر همین دارو از قبل در انبار هست، دوباره ساخته نمی‌شود؛ همان انتخاب می‌شود.
+                val existing = drugRepository.findByGtin(gtin)
+                    ?: result.irc?.let { drugRepository.findByIrc(it) }
+
+                val drug = existing ?: drugRepository.getById(
+                    createDrugWithStock(
+                        name = result.name,
+                        gtin = gtin,
+                        irc = result.irc,
+                    )
+                )
+
+                val summary = DrugSummary(
+                    id = drug?.id ?: 0L,
+                    name = drug?.name ?: result.name,
+                    gtin = drug?.gtin ?: gtin,
+                    irc = drug?.irc ?: result.irc,
+                    totalQuantity = 0,
+                    batchCount = 0,
+                )
+                _uiState.update {
+                    it.copy(
+                        lookup = null,
+                        selectedDrug = summary,
+                        query = "",
+                        creatingBatch = true,
+                        message = if (existing != null) {
+                            "این دارو از قبل در انبار بود و انتخاب شد."
+                        } else {
+                            "دارو از سامانهٔ تیتک ثبت شد. بچ و مقدار را وارد کنید."
+                        },
+                        isError = false,
+                    )
+                }
+            } catch (e: PharmacyException) {
+                _uiState.update {
+                    it.copy(lookup = it.lookup?.copy(isLoading = false, error = e.error.message))
+                }
+            } catch (e: Exception) {
+                _uiState.update {
+                    it.copy(
+                        lookup = it.lookup?.copy(
+                            isLoading = false,
+                            error = "ثبت دارو از نتیجهٔ استعلام انجام نشد.",
+                        )
+                    )
+                }
+            }
         }
     }
 

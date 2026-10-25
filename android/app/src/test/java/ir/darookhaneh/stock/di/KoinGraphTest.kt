@@ -3,6 +3,8 @@ package ir.darookhaneh.stock.di
 import android.app.Application
 import androidx.test.core.app.ApplicationProvider
 import ir.darookhaneh.stock.AppViewModel
+import ir.darookhaneh.stock.core.domain.pharmacy.repository.DrugLookupRepository
+import ir.darookhaneh.stock.core.domain.pharmacy.usecase.LookupDrugCodeUseCase
 import ir.darookhaneh.stock.core.notifications.di.notificationModule
 import ir.darookhaneh.stock.feature.pharmacy.di.pharmacyModule
 import ir.darookhaneh.stock.feature.pharmacy.presentation.add.AddDrugViewModel
@@ -81,6 +83,15 @@ class KoinGraphTest : KoinTest {
         assertNotNull(get<ScannerViewModel>())
         assertNotNull(get<RecordViewModel>())
         assertNotNull(get<HistoryViewModel>())
+    }
+
+    @Test
+    fun `استعلام تیتک در گراف هست و بدون شبکه هم ساخته می‌شود`() {
+        startGraph()
+        // ثبت این دو در گراف مهم است: اگر یکی جا بیفتد، دکمهٔ «استعلام» در صفحهٔ
+        // ثبت سریع در زمان اجرا NoDefinitionFoundException می‌دهد (همان اشکال قبلی).
+        assertNotNull(get<DrugLookupRepository>())
+        assertNotNull(get<LookupDrugCodeUseCase>())
     }
 
     @Test

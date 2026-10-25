@@ -136,3 +136,23 @@ data class HistoryRow(
     val batchQuantity: Int,
     val packSize: Int?,
 )
+
+/**
+ * حافظهٔ محلی نتیجهٔ استعلام تیتک.
+ *
+ * چرا در دیتابیس و نه فقط حافظهٔ موقت: کاربر داروخانه ممکن است در انبار (بدون اینترنت)
+ * همان کد را دوباره اسکن کند؛ با این جدول، همان دارو آفلاین شناسایی می‌شود.
+ */
+@Entity(tableName = "lookup_cache")
+data class LookupCacheEntity(
+    @PrimaryKey val code: String,
+    val name: String,
+    val englishName: String? = null,
+    val gtin: String? = null,
+    val irc: String? = null,
+    val company: String? = null,
+    val price: Long? = null,
+    val statusCode: Int? = null,
+    val statusMessage: String? = null,
+    val fetchedAt: Long,
+)
