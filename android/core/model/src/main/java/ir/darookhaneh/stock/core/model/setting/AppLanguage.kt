@@ -1,22 +1,21 @@
 package ir.darookhaneh.stock.core.model.setting
 
+/**
+ * زبان‌های پشتیبانی‌شده.
+ * محصول داروخانه فارسی است؛ `PERSIAN` زبان پیش‌فرض و مقصد fallback است.
+ */
 enum class AppLanguage(val isoCode: String) {
+    PERSIAN("fa"),
     ENGLISH("en"),
-
-    /*  SPANISH("es"),
-      FRENCH("fr"),
-      GERMAN("de"),
-      PORTUGUESE("pt"),
-      INDONESIAN("id"),
-      ITALIAN("it"),*/
-    VIETNAMESE("vi");
+    VIETNAMESE("vi"),
+    ;
 
     companion object {
-        fun fromIsoCode(code: String?): AppLanguage {
-            return entries.find { it.isoCode == code } ?: ENGLISH
-        }
+        val DEFAULT = PERSIAN
+
+        fun fromIsoCode(code: String?): AppLanguage =
+            entries.firstOrNull { it.isoCode == code } ?: DEFAULT
     }
 }
 
 fun String?.toAppLanguage(): AppLanguage = AppLanguage.fromIsoCode(this)
-

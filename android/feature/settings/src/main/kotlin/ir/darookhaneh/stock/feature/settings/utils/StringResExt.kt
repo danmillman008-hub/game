@@ -17,6 +17,7 @@ fun ThemeMode.toStringRes(): Int {
 @StringRes
 fun AppLanguage.toStringRes(): Int {
     return when (this) {
+        AppLanguage.PERSIAN -> R.string.setting_lang_persian
         AppLanguage.ENGLISH -> R.string.setting_lang_english
         AppLanguage.VIETNAMESE -> R.string.setting_lang_vietnamese
         /*AppLanguage.SPANISH -> R.string.setting_lang_spanish

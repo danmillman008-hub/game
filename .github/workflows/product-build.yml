@@ -16,7 +16,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write   # برای انتشار APK در Releases
   issues: write
 
 concurrency:
@@ -162,6 +162,36 @@ jobs:
           gh issue create --repo "$GITHUB_REPOSITORY" \
             --title "product-build failure (run $RUN_ID)" \
             --body-file /tmp/report-cut.md || echo "issue create failed"
+
+      - name: Publish APK to GitHub Releases
+        # کاربر باید بتواند APK را مستقیم روی گوشی نصب کند؛ آرتیفکت اکشن‌ها نیاز به لاگین دارد.
+        if: always() && steps.assemble.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          APK=$(ls android/app/build/outputs/apk/debug/*.apk | head -1)
+          SIZE=$(du -h "$APK" | cut -f1)
+          SHA=$(sha256sum "$APK" | cut -d' ' -f1)
+          NAME="stock-debug-${GITHUB_SHA::7}.apk"
+          cp "$APK" "/tmp/$NAME"
+          {
+            echo "APK دیباگ محصول «انبار دارو» — قابل نصب روی گوشی اندروید ۱۱ (API 30) و بالاتر."
+            echo
+            echo "- حجم: $SIZE"
+            echo "- commit: \`$GITHUB_SHA\`"
+            echo "- sha256: \`$SHA\`"
+            echo
+            echo "نصب: فایل APK را دانلود کنید، «نصب از منابع نامشخص» را برای مرورگر/فایل‌منیجر فعال کنید و نصب کنید."
+            echo "این نسخه با کلید دیباگ امضا شده است و فقط برای تست داخلی است."
+          } > /tmp/release-notes.md
+
+          # انتشار پایدار «apk-latest» + یک نسخهٔ آرشیوی برای هر commit
+          gh release delete apk-latest --yes --cleanup-tag 2>/dev/null || true
+          gh release create apk-latest "/tmp/$NAME" \
+            --title "APK آزمایشی (آخرین بیلد سبز)" \
+            --notes-file /tmp/release-notes.md \
+            --prerelease || { gh release upload apk-latest "/tmp/$NAME" --clobber; gh release edit apk-latest --notes-file /tmp/release-notes.md; }
 
       - name: Upload debug APK
         if: always() && steps.assemble.outcome == 'success'

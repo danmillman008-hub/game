@@ -25,7 +25,7 @@ import ir.darookhaneh.stock.core.presentation.utils.toVerticalSegmentedShape
 
 @Composable
 fun SelectLanguageBottomSheet(
-    currentLanguage: AppLanguage = AppLanguage.ENGLISH,
+    currentLanguage: AppLanguage = AppLanguage.DEFAULT,
     onLanguageSelect: (AppLanguage) -> Unit,
     onDismiss: () -> Unit
 ) {

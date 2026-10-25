@@ -17,7 +17,7 @@ import kotlinx.serialization.json.Json
 @Serializable
 data class AppearancePreferences(
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
-    val appLanguage: AppLanguage = AppLanguage.ENGLISH,
+    val appLanguage: AppLanguage = AppLanguage.DEFAULT,
     val enableDynamicColor: Boolean = false,
     val enableCategoryGroup: Boolean = false,
     val seedColor: SeedColor = SeedColor.EMERALD,

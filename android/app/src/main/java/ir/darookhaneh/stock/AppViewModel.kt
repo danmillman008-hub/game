@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 @Immutable
 data class AppUiState(
     val font: AppFont = AppFont.DEFAULT,
-    val language: AppLanguage = AppLanguage.ENGLISH,
+    val language: AppLanguage = AppLanguage.DEFAULT,
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val isDynamicColors: Boolean = false,
     val isBiometricLock: Boolean = false,
