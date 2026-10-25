@@ -2,7 +2,8 @@ package ir.darookhaneh.stock.core.data.pharmacy
 
 import ir.darookhaneh.stock.core.database.dao.DrugDao
 import ir.darookhaneh.stock.core.database.entity.DrugEntity
-import ir.darookhaneh.stock.core.domain.pharmacy.PharmacyThresholds
+import ir.darookhaneh.stock.core.model.pharmacy.PharmacyConfig
+import ir.darookhaneh.stock.core.model.pharmacy.TimeProvider
 import ir.darookhaneh.stock.core.domain.pharmacy.repository.DrugRepository
 import ir.darookhaneh.stock.core.model.pharmacy.Drug
 import ir.darookhaneh.stock.core.model.pharmacy.DrugSummary
@@ -15,7 +16,8 @@ import kotlinx.coroutines.flow.map
  */
 class DrugRepositoryImpl(
     private val drugDao: DrugDao,
-    private val clock: () -> Long = System::currentTimeMillis,
+    private val timeProvider: TimeProvider,
+    private val config: PharmacyConfig,
 ) : DrugRepository {
 
     override suspend fun create(
@@ -26,7 +28,7 @@ class DrugRepositoryImpl(
         gtin: String?,
         irc: String?,
     ): Long {
-        val now = clock()
+        val now = timeProvider.now()
         return drugDao.insert(
             DrugEntity(
                 name = name,
@@ -61,7 +63,7 @@ class DrugRepositoryImpl(
         drugDao.observeLowStockDrugCount(threshold)
 
     override fun observeSummaries(query: String?): Flow<List<DrugSummary>> {
-        val threshold = PharmacyThresholds.DEFAULT_LOW_STOCK_THRESHOLD
+        val threshold = config.lowStockThreshold
         val source = if (query.isNullOrBlank()) {
             drugDao.observeSummaries()
         } else {

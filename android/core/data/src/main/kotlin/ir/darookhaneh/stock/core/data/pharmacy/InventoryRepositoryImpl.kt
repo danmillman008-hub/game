@@ -13,6 +13,7 @@ import ir.darookhaneh.stock.core.domain.pharmacy.repository.BatchRepository
 import ir.darookhaneh.stock.core.domain.pharmacy.repository.InventoryRepository
 import ir.darookhaneh.stock.core.model.pharmacy.Batch
 import ir.darookhaneh.stock.core.model.pharmacy.BatchAlert
+import ir.darookhaneh.stock.core.model.pharmacy.TimeProvider
 import ir.darookhaneh.stock.core.model.pharmacy.InventoryEvent
 import ir.darookhaneh.stock.core.model.pharmacy.InventoryEventType
 import kotlinx.coroutines.flow.Flow
@@ -20,7 +21,7 @@ import kotlinx.coroutines.flow.map
 
 class BatchRepositoryImpl(
     private val batchDao: BatchDao,
-    private val clock: () -> Long = System::currentTimeMillis,
+    private val timeProvider: TimeProvider,
 ) : BatchRepository {
 
     override suspend fun create(
@@ -37,7 +38,7 @@ class BatchRepositoryImpl(
             throw PharmacyException(PharmacyError.DuplicateBatch)
         }
 
-        val now = clock()
+        val now = timeProvider.now()
         return try {
             batchDao.insert(
                 BatchEntity(
@@ -63,7 +64,7 @@ class BatchRepositoryImpl(
 
     override fun observeExpiringBefore(until: Long): Flow<List<BatchAlert>> =
         batchDao.observeExpiringBefore(until).map { rows ->
-            val now = clock()
+            val now = timeProvider.now()
             rows.map { it.toDomain(now) }
         }
 
@@ -81,7 +82,7 @@ class InventoryRepositoryImpl(
     private val batchDao: BatchDao,
     private val inventoryEventDao: InventoryEventDao,
     private val transactionRunner: TransactionRunner,
-    private val clock: () -> Long = System::currentTimeMillis,
+    private val timeProvider: TimeProvider,
 ) : InventoryRepository {
 
     override suspend fun record(
@@ -104,7 +105,7 @@ class InventoryRepositoryImpl(
             throw PharmacyException(PharmacyError.InvalidAmount)
         }
 
-        val updated = batchDao.applyDelta(batchId = batchId, delta = delta, now = clock())
+        val updated = batchDao.applyDelta(batchId = batchId, delta = delta, now = timeProvider.now())
         if (updated != 1) {
             // ممنوعیت موجودی منفی در سطح SQL: هیچ تغییری اعمال نشد.
             throw PharmacyException(
@@ -118,7 +119,7 @@ class InventoryRepositoryImpl(
                 type = type.toStorage(),
                 quantityDelta = delta,
                 note = note,
-                createdAt = clock(),
+                createdAt = timeProvider.now(),
             )
         )
     }

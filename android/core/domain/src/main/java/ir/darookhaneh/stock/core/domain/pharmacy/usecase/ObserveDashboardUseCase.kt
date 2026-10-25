@@ -1,9 +1,11 @@
 package ir.darookhaneh.stock.core.domain.pharmacy.usecase
 
-import ir.darookhaneh.stock.core.domain.pharmacy.PharmacyThresholds
 import ir.darookhaneh.stock.core.domain.pharmacy.repository.BatchRepository
 import ir.darookhaneh.stock.core.domain.pharmacy.repository.DrugRepository
 import ir.darookhaneh.stock.core.model.pharmacy.DashboardSnapshot
+import ir.darookhaneh.stock.core.model.pharmacy.PharmacyConfig
+import ir.darookhaneh.stock.core.model.pharmacy.PharmacyThresholds
+import ir.darookhaneh.stock.core.model.pharmacy.TimeProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
@@ -16,13 +18,12 @@ import kotlinx.coroutines.flow.combine
 class ObserveDashboardUseCase(
     private val drugRepository: DrugRepository,
     private val batchRepository: BatchRepository,
-    private val clock: () -> Long = System::currentTimeMillis,
-    private val lowStockThreshold: Int = PharmacyThresholds.DEFAULT_LOW_STOCK_THRESHOLD,
-    private val expiringSoonDays: Long = PharmacyThresholds.DEFAULT_EXPIRING_SOON_DAYS,
+    private val timeProvider: TimeProvider,
+    private val config: PharmacyConfig,
 ) {
     operator fun invoke(): Flow<DashboardSnapshot> {
-        val now = clock()
-        val until = now + expiringSoonDays * PharmacyThresholds.MILLIS_PER_DAY
+        val now = timeProvider.now()
+        val until = now + config.expiringSoonDays * PharmacyThresholds.MILLIS_PER_DAY
 
         return combine(
             drugRepository.observeDrugCount(),

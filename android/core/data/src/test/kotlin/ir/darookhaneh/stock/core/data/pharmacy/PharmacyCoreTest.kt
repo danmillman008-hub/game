@@ -12,6 +12,8 @@ import ir.darookhaneh.stock.core.domain.pharmacy.usecase.CreateDrugWithStockUseC
 import ir.darookhaneh.stock.core.domain.pharmacy.usecase.RecordInventoryEventUseCase
 import ir.darookhaneh.stock.core.domain.pharmacy.usecase.ResolveScannedCodeUseCase
 import ir.darookhaneh.stock.core.model.pharmacy.InventoryEventType
+import ir.darookhaneh.stock.core.model.pharmacy.PharmacyConfig
+import ir.darookhaneh.stock.core.model.pharmacy.TimeProvider
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -40,6 +42,9 @@ import org.robolectric.annotation.Config
 @Config(sdk = [34])
 class PharmacyCoreTest {
 
+    private var fakeNow = 1_700_000_000_000L
+    private val timeProvider = TimeProvider { fakeNow }
+
     private lateinit var db: AppDatabase
     private lateinit var drugRepository: DrugRepositoryImpl
     private lateinit var batchRepository: BatchRepositoryImpl
@@ -56,12 +61,17 @@ class PharmacyCoreTest {
             .allowMainThreadQueries()
             .build()
 
-        drugRepository = DrugRepositoryImpl(db.drugDao())
-        batchRepository = BatchRepositoryImpl(db.batchDao())
+        drugRepository = DrugRepositoryImpl(
+            drugDao = db.drugDao(),
+            timeProvider = timeProvider,
+            config = PharmacyConfig(),
+        )
+        batchRepository = BatchRepositoryImpl(db.batchDao(), timeProvider)
         inventoryRepository = InventoryRepositoryImpl(
             batchDao = db.batchDao(),
             inventoryEventDao = db.inventoryEventDao(),
             transactionRunner = RoomTransactionRunner(db),
+            timeProvider = timeProvider,
         )
         createDrug = CreateDrugWithStockUseCase(drugRepository, batchRepository, inventoryRepository)
         addBatch = AddBatchUseCase(drugRepository, batchRepository)

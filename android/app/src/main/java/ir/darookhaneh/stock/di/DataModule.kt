@@ -24,6 +24,9 @@ import ir.darookhaneh.stock.core.domain.pharmacy.repository.BatchRepository
 import ir.darookhaneh.stock.core.domain.pharmacy.repository.DrugRepository
 import ir.darookhaneh.stock.core.domain.pharmacy.repository.InventoryRepository
 import ir.darookhaneh.stock.core.domain.repository.LocalMediaStorage
+import ir.darookhaneh.stock.core.model.pharmacy.PharmacyConfig
+import ir.darookhaneh.stock.core.model.pharmacy.SystemTimeProvider
+import ir.darookhaneh.stock.core.model.pharmacy.TimeProvider
 import ir.darookhaneh.stock.core.domain.repository.UpdateRepository
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -37,6 +40,8 @@ val dataModule = module {
     singleOf(::AppNewFeaturesReader)
 
     // داروخانه — همه محلی، بدون شبکه
+    single<TimeProvider> { SystemTimeProvider }
+    single { PharmacyConfig() }
     singleOf(::DrugRepositoryImpl) { bind<DrugRepository>() }
     singleOf(::BatchRepositoryImpl) { bind<BatchRepository>() }
     singleOf(::InventoryRepositoryImpl) { bind<InventoryRepository>() }

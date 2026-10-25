@@ -152,14 +152,3 @@ object InventoryRules {
     private fun <T> invalidAmount(): Result<T> =
         Result.failure(PharmacyException(PharmacyError.InvalidAmount))
 }
-
-/** آستانه‌های نمایشی (قابل تغییر در تنظیمات؛ فعلاً مقدار پیش‌فرض). */
-object PharmacyThresholds {
-    /** موجودی کم برای مجموع بچ‌های فعال یک دارو، نه برای هر بچ. */
-    const val DEFAULT_LOW_STOCK_THRESHOLD = 10
-
-    /** «بچ نزدیک انقضا» بر حسب روز. */
-    const val DEFAULT_EXPIRING_SOON_DAYS = 90L
-
-    const val MILLIS_PER_DAY = 24L * 60 * 60 * 1000
-}
