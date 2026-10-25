@@ -93,29 +93,16 @@ jobs:
         if: always()
         working-directory: android
         run: |
-          echo "### نتیجهٔ بیلد محصول" >> "$GITHUB_STEP_SUMMARY"
-          echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "- assemble: \`${{ steps.assemble.outcome }}\`" >> "$GITHUB_STEP_SUMMARY"
-          echo "- unit tests: \`${{ steps.unit.outcome }}\`" >> "$GITHUB_STEP_SUMMARY"
-          echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "| ماژول | تست | وضعیت |" >> "$GITHUB_STEP_SUMMARY"
-          echo "|---|---|---|" >> "$GITHUB_STEP_SUMMARY"
-          if ls */build/test-results/testDebugUnitTest/*.xml > /dev/null 2>&1; then
-            python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
-          import glob, xml.etree.ElementTree as ET
-          rows=[]
-          for f in sorted(glob.glob('*/build/test-results/testDebugUnitTest/*.xml')
-                        + glob.glob('*/*/build/test-results/testDebugUnitTest/*.xml')):
-              if f in seen: continue
-              r=ET.parse(f).getroot()
-              rows.append((r.get('name','?'), r.get('tests','0'), r.get('failures','0'), r.get('errors','0')))
-          for n,t,fa,er in rows:
-              st='✅' if fa=='0' and er=='0' else '❌'
-              print(f"| {n} | {t} | {st} |")
-          PY
-          else
-            echo "| — | — | بدون گزارش |" >> "$GITHUB_STEP_SUMMARY"
-          fi
+          {
+            echo "### نتیجهٔ بیلد محصول"
+            echo ""
+            echo "- assemble: \`${{ steps.assemble.outcome }}\`"
+            echo "- unit tests: \`${{ steps.unit.outcome }}\`"
+            echo ""
+            echo "| ماژول | تست | موفق | شکست | وضعیت |"
+            echo "|---|---|---|---|---|"
+          } >> "$GITHUB_STEP_SUMMARY"
+          python3 .github/scripts/test_summary.py "$GITHUB_STEP_SUMMARY" || true
 
       - name: Publish test summary (rolling issue)
         # لاگ ران قابل خواندن نیست؛ خلاصهٔ تست‌ها در یک Issue ثابت منتشر می‌شود.
@@ -136,27 +123,12 @@ jobs:
             echo "| ماژول | تست | موفق | شکست | وضعیت |"
             echo "|---|---|---|---|---|"
           } > /tmp/summary.md
-          python3 - >> /tmp/summary.md <<'PY'
-          import glob, xml.etree.ElementTree as ET
-          total = failed = 0
-          seen = set()
-          files = sorted(set(
-              glob.glob('*/build/test-results/testDebugUnitTest/*.xml')
-              + glob.glob('*/*/build/test-results/testDebugUnitTest/*.xml')
-          ))
-          for f in files:
-              seen.add(f)
-              r = ET.parse(f).getroot()
-              n = int(r.get('tests', 0)); fa = int(r.get('failures', 0)); er = int(r.get('errors', 0))
-              total += n; failed += fa + er
-              ok = n - fa - er
-              print(f"| {r.get('name','?')} | {n} | {ok} | {fa+er} | {'OK' if fa+er==0 else 'FAIL'} |")
-          print()
-          print(f"**مجموع: {total} تست، {failed} شکست**")
-          if total == 0:
-              print()
-              print("هیچ فایل نتیجه‌ای پیدا نشد — تست‌ها اجرا نشده‌اند.")
-          PY
+          (cd android && python3 ../.github/scripts/test_summary.py) >> /tmp/summary.md || true
+          {
+            echo
+            echo "فایل‌های نتیجهٔ یافت‌شده:"
+            find . -path "*test-results*" -name "*.xml" | head -50 || true
+          } >> /tmp/summary.md
           NUM=$(gh issue list --state open --limit 50 --json number,title --jq '.[] | select(.title == "product-build status") | .number' | head -1)
           if [ -z "$NUM" ]; then
             gh issue create --repo "$GITHUB_REPOSITORY" --title "product-build status" --body-file /tmp/summary.md
