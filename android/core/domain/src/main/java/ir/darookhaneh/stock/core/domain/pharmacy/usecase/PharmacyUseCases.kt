@@ -9,11 +9,13 @@ import ir.darookhaneh.stock.core.domain.pharmacy.repository.BatchRepository
 import ir.darookhaneh.stock.core.domain.pharmacy.repository.DrugRepository
 import ir.darookhaneh.stock.core.domain.pharmacy.repository.DrugLookupRepository
 import ir.darookhaneh.stock.core.domain.pharmacy.repository.InventoryRepository
+import ir.darookhaneh.stock.core.domain.pharmacy.repository.PharmacySettingsRepository
 import ir.darookhaneh.stock.core.model.pharmacy.Drug
 import ir.darookhaneh.stock.core.model.pharmacy.DrugLookupResult
 import ir.darookhaneh.stock.core.model.pharmacy.LookupException
 import ir.darookhaneh.stock.core.model.pharmacy.LookupFailure
 import ir.darookhaneh.stock.core.model.pharmacy.InventoryEventType
+import kotlinx.coroutines.flow.Flow
 
 /**
  * ثبت دارو + بچ + ورود اولیهٔ موجودی، یا فقط دارو.
@@ -176,4 +178,20 @@ class LookupDrugCodeUseCase(
         }
         return lookupRepository.lookup(code)
     }
+}
+
+/**
+ * استعلام خودکار تیتک روشن است یا نه؟
+ * صفحهٔ ثبت با این استفاده می‌کند تا رفتارش با چک‌باکس تنظیمات یکی بماند.
+ */
+class ObserveAutoLookupUseCase(
+    private val settings: PharmacySettingsRepository,
+) {
+    operator fun invoke(): Flow<Boolean> = settings.autoLookup
+}
+
+class SetAutoLookupUseCase(
+    private val settings: PharmacySettingsRepository,
+) {
+    suspend operator fun invoke(enabled: Boolean) = settings.setAutoLookup(enabled)
 }

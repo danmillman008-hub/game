@@ -4,6 +4,7 @@ import ir.darookhaneh.stock.core.data.AppNewFeaturesReader
 import ir.darookhaneh.stock.core.data.pharmacy.BatchRepositoryImpl
 import ir.darookhaneh.stock.core.data.pharmacy.DrugRepositoryImpl
 import ir.darookhaneh.stock.core.data.pharmacy.InventoryRepositoryImpl
+import ir.darookhaneh.stock.core.data.pharmacy.PharmacySettingsRepositoryImpl
 import ir.darookhaneh.stock.core.data.pharmacy.TtacLookupRepositoryImpl
 import ir.darookhaneh.stock.core.data.repository.LocalMediaStorageImpl
 import ir.darookhaneh.stock.core.data.repository.UpdateRepositoryImpl
@@ -25,6 +26,7 @@ import ir.darookhaneh.stock.core.domain.pharmacy.repository.BatchRepository
 import ir.darookhaneh.stock.core.domain.pharmacy.repository.DrugRepository
 import ir.darookhaneh.stock.core.domain.pharmacy.repository.DrugLookupRepository
 import ir.darookhaneh.stock.core.domain.pharmacy.repository.InventoryRepository
+import ir.darookhaneh.stock.core.domain.pharmacy.repository.PharmacySettingsRepository
 import ir.darookhaneh.stock.core.domain.repository.LocalMediaStorage
 import ir.darookhaneh.stock.core.model.pharmacy.PharmacyConfig
 import ir.darookhaneh.stock.core.model.pharmacy.SystemTimeProvider
@@ -53,6 +55,7 @@ val dataModule = module {
     // استعلام تیتک: فقط با دکمهٔ کاربر؛ نتیجه در دیتابیس کش می‌شود.
     // نوع ثبت‌شده باید همان رابطی باشد که repository می‌خواهد؛ Koin بر اساس type
     // تطبیق می‌دهد و ثبت با نوع TtacApi باعث NoDefinitionFoundException می‌شد.
+    singleOf(::PharmacySettingsRepositoryImpl) { bind<PharmacySettingsRepository>() }
     single<DrugLookupRemote> { TtacApi(client = TtacApi.defaultClient()) }
     singleOf(::TtacLookupRepositoryImpl) { bind<DrugLookupRepository>() }
     singleOf(::DefaultAppDispatchers) { bind<AppDispatchers>() }

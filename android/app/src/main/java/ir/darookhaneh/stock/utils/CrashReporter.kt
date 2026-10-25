@@ -49,7 +49,10 @@ class CrashReporter(private val context: Context) {
             appendLine("نخ: ${thread.name}")
             appendLine("--------------------------------")
         }
-        file.writeText(header + buffer.toString())
+        // ردپای مسیر: آخرین صفحه‌ها/کارهای کاربر، قبل از stack trace.
+        val trail = Breadcrumbs.tail(40).takeIf { it.isNotBlank() }
+        val trailBlock = if (trail == null) "" else "آخرین کارها:\n$trail\n---\n"
+        file.writeText(header + trailBlock + buffer.toString())
     }
 
     private fun appVersion(): String = runCatching {

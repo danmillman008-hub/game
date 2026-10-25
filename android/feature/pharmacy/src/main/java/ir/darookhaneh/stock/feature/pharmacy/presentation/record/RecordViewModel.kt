@@ -11,7 +11,9 @@ import ir.darookhaneh.stock.core.domain.pharmacy.repository.DrugRepository
 import ir.darookhaneh.stock.core.domain.pharmacy.usecase.AddBatchUseCase
 import ir.darookhaneh.stock.core.domain.pharmacy.usecase.CreateDrugWithStockUseCase
 import ir.darookhaneh.stock.core.domain.pharmacy.usecase.LookupDrugCodeUseCase
+import ir.darookhaneh.stock.core.domain.pharmacy.usecase.ObserveAutoLookupUseCase
 import ir.darookhaneh.stock.core.domain.pharmacy.usecase.ObserveDrugSummariesUseCase
+import ir.darookhaneh.stock.core.domain.pharmacy.usecase.SetAutoLookupUseCase
 import ir.darookhaneh.stock.core.domain.pharmacy.usecase.RecordInventoryEventUseCase
 import ir.darookhaneh.stock.core.model.pharmacy.Batch
 import ir.darookhaneh.stock.core.model.pharmacy.CountingMode
@@ -57,8 +59,10 @@ data class RecordUiState(
     val isSaving: Boolean = false,
     val message: String? = null,
     val isError: Boolean = false,
-    /** وضعیت استعلام تیتک؛ null یعنی کاربر استعلام نخواسته است. */
+    /** وضعیت استعلام تیتک؛ null یعنی هنوز استعلامی انجام/خواسته نشده است. */
     val lookup: LookupUiState? = null,
+    /** استعلام خودکار تیتک روشن است؟ (همان چک‌باکس نسخهٔ HTML) */
+    val autoLookup: Boolean = true,
 ) {
     val packSize: Int? get() = selectedDrug?.packSize
 
@@ -122,6 +126,9 @@ sealed interface RecordAction {
     /** ساخت دارو از نتیجهٔ استعلام و ادامهٔ ثبت. */
     data object CreateFromLookup : RecordAction
     data object DismissLookup : RecordAction
+
+    /** روشن/خاموش کردن استعلام خودکار تیتک (تنظیم ماندگار). */
+    data class SetAutoLookup(val enabled: Boolean) : RecordAction
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -133,6 +140,8 @@ class RecordViewModel(
     private val recordInventoryEvent: RecordInventoryEventUseCase,
     private val lookupDrugCode: LookupDrugCodeUseCase,
     private val createDrugWithStock: CreateDrugWithStockUseCase,
+    observeAutoLookup: ObserveAutoLookupUseCase,
+    private val setAutoLookup: SetAutoLookupUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(RecordUiState())
@@ -149,7 +158,15 @@ class RecordViewModel(
                         // وقتی دارویی انتخاب شده، فهرست نتایج پنهان می‌شود.
                         state.copy(results = drugs.take(30))
                     }
+                    // نسخهٔ HTML: اگر کد در انبار نبود، خودکار و بی‌صدا از تیتک می‌پرسید.
+                    maybeAutoLookup()
                 }
+        }
+        viewModelScope.launch {
+            observeAutoLookup().collect { enabled ->
+                _uiState.update { it.copy(autoLookup = enabled) }
+                if (enabled) maybeAutoLookup()
+            }
         }
         viewModelScope.launch {
             _uiState
@@ -213,8 +230,39 @@ class RecordViewModel(
             RecordAction.DismissMessage -> _uiState.update { it.copy(message = null) }
             RecordAction.StartLookup -> startLookup()
             RecordAction.CreateFromLookup -> createFromLookup()
-            RecordAction.DismissLookup -> _uiState.update { it.copy(lookup = null) }
+            RecordAction.DismissLookup -> {
+                // اگر کاربر کارت را ببندد، برای همان کد دوباره خودکار باز نشود.
+                lastAutoLookupCode = JalaliDate.latinDigits(_uiState.value.query).filter(Char::isDigit)
+                _uiState.update { it.copy(lookup = null) }
+            }
+
+            is RecordAction.SetAutoLookup -> {
+                _uiState.update { it.copy(autoLookup = action.enabled, lookup = null) }
+                viewModelScope.launch { setAutoLookup(action.enabled) }
+            }
         }
+    }
+
+    /** کردی که برای آن خودکار پرسیده شده (یا کاربر بسته)، تا حلقهٔ بی‌پایان نسازیم. */
+    private var lastAutoLookupCode: String? = null
+
+    /**
+     * استعلام خودکار فقط وقتی: تنظیم روشن باشد، دارویی انتخاب نشده، جست‌وجو نتیجه‌ای
+     * نداده، متن شکل کد داشته باشد (≥۸ رقم) و برای همین کد قبلاً پرسیده نشده باشد.
+     * این کار هرگز در مسیر اسکن/ثبت مزاحمت ایجاد نمی‌کند چون در پس‌زمینه اجرا می‌شود.
+     */
+    private fun maybeAutoLookup() {
+        val state = _uiState.value
+        if (!state.autoLookup || state.selectedDrug != null) return
+        if (state.results.isNotEmpty()) return
+        if (state.lookup?.isLoading == true || state.lookup?.result != null) return
+
+        val code = JalaliDate.latinDigits(state.query).filter(Char::isDigit)
+        if (code.length < 8) return
+        if (code == lastAutoLookupCode) return
+
+        lastAutoLookupCode = code
+        startLookup()
     }
 
     private fun startLookup() {

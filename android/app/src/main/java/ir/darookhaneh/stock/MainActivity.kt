@@ -153,8 +153,15 @@ class MainActivity : AppCompatActivity() {
                             selectedBottomBarItem = currentBottomBarItem,
                             onBottomBarClick = { item ->
                                 val destination = item.toDestination()
-                                // تب‌های اصلی جای‌گذاری می‌شوند، نه روی هم انبار.
-                                backStack.add(destination)
+                                // تب‌های اصلی «جای‌گذاری» می‌شوند: با هر بار زدن تب،
+                                // صفحهٔ قبلی از پشته برداشته می‌شود تا پشته مثل انبار
+                                // روی هم تلنبار نشود و دکمهٔ بازگشت رفتار طبیعی بدهد.
+                                if (backStack.lastOrNull() != destination) {
+                                    while (backStack.size > 1 && backStack.lastOrNull() != Destination.Dashboard) {
+                                        backStack.removeLastOrNull()
+                                    }
+                                    backStack.add(destination)
+                                }
                             }
                         )
                     },

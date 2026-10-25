@@ -16,6 +16,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -149,6 +150,35 @@ fun RecordScreen(
                                 }
                             }
                         }
+                    }
+                }
+            }
+
+            // تنظیم استعلام خودکار: همان چک‌باکس نسخهٔ HTML، ولی همان‌جا که لازم است.
+            if (uiState.selectedDrug == null) {
+                item {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = stringResource(R.string.pharmacy_lookup_auto_title),
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                            Text(
+                                text = stringResource(R.string.pharmacy_lookup_auto_hint),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                        Switch(
+                            checked = uiState.autoLookup,
+                            onCheckedChange = { enabled ->
+                                onAction(RecordAction.SetAutoLookup(enabled))
+                            },
+                        )
                     }
                 }
             }

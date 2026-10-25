@@ -1,6 +1,7 @@
 package ir.darookhaneh.stock.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavBackStack
@@ -21,6 +22,7 @@ import ir.darookhaneh.stock.feature.pharmacy.presentation.record.RecordRoute
 import ir.darookhaneh.stock.feature.pharmacy.presentation.scan.ScannerRoute
 import ir.darookhaneh.stock.feature.settings.navigation.SettingRoute
 import ir.darookhaneh.stock.transition.AppTransitions
+import ir.darookhaneh.stock.utils.Breadcrumbs
 import ir.darookhaneh.stock.transition.toContentTransform
 import org.koin.compose.koinInject
 
@@ -30,6 +32,12 @@ fun AppGraph(
     modifier: Modifier = Modifier,
 ) {
     val navigator = koinInject<Navigator>()
+
+    // ردپای مسیر: با هر تغییر صفحه یک خط ثبت می‌شود (برای گزارش خطا).
+    val currentEntry = backStack.lastOrNull()
+    LaunchedEffect(currentEntry) {
+        Breadcrumbs.mark("صفحه: " + (currentEntry?.let { it::class.simpleName } ?: "?"))
+    }
 
     ObserveEffect(navigator.event) { event ->
         when (event) {
