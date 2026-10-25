@@ -80,6 +80,8 @@ dependencies {
 
     // Testing
     testImplementation(libs.junit)
+    testImplementation(libs.androidx.junit)
+    testImplementation(libs.koin.test)
     testImplementation(libs.robolectric)
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)

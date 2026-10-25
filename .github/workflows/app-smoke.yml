@@ -91,11 +91,14 @@ jobs:
           ./gradlew :app:assembleDebug --stacktrace > ../evidence/build.log 2>&1
           echo "BUILD_EXIT=$?" >> ../evidence/status.txt
           APK=$(find app/build/outputs/apk/debug -name "*x86_64*debug.apk" | head -1)
+          APK="$(pwd)/$APK"
           echo "APK=$APK" >> ../evidence/status.txt
+          ls -la "$APK" >> ../evidence/status.txt 2>&1
           cd ..
 
           adb install -r -t "$APK" > evidence/install.txt 2>&1
           echo "INSTALL_EXIT=$?" >> evidence/status.txt
+          say "نصب APK:" evidence/install.txt
           adb logcat -c || true
           adb shell am start -W -n ir.darookhaneh.stock/.MainActivity > evidence/start.txt 2>&1
           echo "START_EXIT=$?" >> evidence/status.txt
