@@ -75,12 +75,38 @@ jobs:
         working-directory: android
         run: chmod +x gradlew
 
+      - name: Generate internal test keystore
+        # کلید تست داخلی (نه انتشار عمومی). اگر نبود، APK نسخهٔ release امضا نمی‌شود.
+        run: |
+          cd android
+          keytool -genkeypair -v \
+            -keystore test-release.keystore \
+            -alias stock-test \
+            -storepass stocktest123 -keypass stocktest123 \
+            -dname "CN=Stock Internal Test, OU=QA, O=Stock, C=IR" \
+            -keyalg RSA -keysize 2048 -validity 10000 > /dev/null
+          cat > keystore.properties <<'EOF'
+          storeFile=test-release.keystore
+          storePassword=stocktest123
+          keyAlias=stock-test
+          keyPassword=stocktest123
+          EOF
+          echo "keystore ready"
+
       - name: Assemble debug APK
         id: assemble
         working-directory: android
         run: |
           set -o pipefail
           ./gradlew :app:assembleDebug --stacktrace --no-daemon --continue 2>&1 | tee -a /tmp/build.log
+
+      - name: Assemble release APK (minified, test-signed)
+        id: release
+        continue-on-error: true
+        working-directory: android
+        run: |
+          set -o pipefail
+          ./gradlew :app:assembleRelease --stacktrace --no-daemon 2>&1 | tee -a /tmp/build.log
 
       - name: Unit tests (all modules)
         id: unit
@@ -174,24 +200,29 @@ jobs:
           rm -f /tmp/rel/*.apk
           i=0
           {
-            echo "APK دیباگ محصول «انبار دارو» — اندروید ۱۱ (API 30) و بالاتر."
+            echo "APK محصول «انبار دارو» — اندروید ۱۱ (API 30) و بالاتر."
             echo
-            echo "**کدام فایل را نصب کنم؟** برای تقریباً همهٔ گوشی‌های امروزی فایل \`arm64-v8a\` را بگیرید."
-            echo "اگر گوشی قدیمی (۳۲ بیتی) دارید، \`armeabi-v7a\`؛ فایل \`universal\` همهٔ معماری‌ها را دارد و بزرگ‌تر است."
+            echo "**کدام فایل را نصب کنم؟** برای تقریباً همهٔ گوشی‌ها فایل \`release\` و معماری \`arm64\` را بگیرید (کوچک‌ترین و سریع‌ترین)."
+            echo "اگر گوشی قدیمی ۳۲ بیتی دارید \`armv7\`؛ اگر نسخهٔ release روی گوشی مشکل داشت، نسخهٔ \`debug\` را نصب کنید."
+            echo "برای نصب نسخهٔ دیگر، اول نسخهٔ قبلی را حذف کنید (امضای متفاوت)."
             echo
             echo "- commit: \`$GITHUB_SHA\`"
             echo
             echo "| فایل | حجم |"
             echo "|---|---|"
           } > /tmp/release-notes.md
-          for apk in android/app/build/outputs/apk/debug/*.apk; do
+          for apk in android/app/build/outputs/apk/release/*.apk android/app/build/outputs/apk/debug/*.apk; do
             [ -e "$apk" ] || continue
             base=$(basename "$apk")
             case "$base" in
-              *arm64-v8a*) name="stock-arm64-$GITHUB_SHA.apk" ;;
-              *armeabi-v7a*) name="stock-armv7-$GITHUB_SHA.apk" ;;
-              *x86_64*) name="stock-x86_64-$GITHUB_SHA.apk" ;;
-              *) name="stock-universal-$GITHUB_SHA.apk" ;;
+              *arm64-v8a*) abi="arm64" ;;
+              *armeabi-v7a*) abi="armv7" ;;
+              *x86_64*) abi="x86_64" ;;
+              *) abi="universal" ;;
+            esac
+            case "$apk" in
+              */release/*) name="stock-$abi-release-$GITHUB_SHA.apk" ;;
+              *) name="stock-$abi-debug-$GITHUB_SHA.apk" ;;
             esac
             cp "$apk" "/tmp/rel/$name"
             echo "| \`$name\` | $(du -h "$apk" | cut -f1) |" >> /tmp/release-notes.md
