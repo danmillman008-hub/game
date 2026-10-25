@@ -157,6 +157,14 @@ jobs:
             echo
             echo "APKهای ساخته‌شده:"
             find android/app/build/outputs/apk -name "*.apk" 2>/dev/null | sort || true
+            REL=$(ls android/app/build/outputs/apk/release/*arm64*.apk 2>/dev/null | head -1)
+            if [ -n "$REL" ]; then
+              echo
+              echo "محتوای بومی APK نسخهٔ release (arm64):"
+              echo '```'
+              unzip -l "$REL" | grep -E "\.so$|\.dex$" | awk '{print $1, $4}' || true
+              echo '```'
+            fi
           } >> /tmp/summary.md
           if grep -q "RELEASE_ASSEMBLE_FAILED" /tmp/release.log 2>/dev/null; then
             {
