@@ -108,6 +108,23 @@ jobs:
           set -o pipefail
           ./gradlew :app:assembleRelease --stacktrace --no-daemon 2>&1 | tee -a /tmp/build.log /tmp/release.log || echo "RELEASE_ASSEMBLE_FAILED" >> /tmp/release.log
 
+      - name: Verify bundled ML Kit barcode inside APK
+        # قفل فاز ۱: اسکنر نباید به Play Services یا دانلود پویا وابسته باشد.
+        run: |
+          APK=$(ls android/app/build/outputs/apk/release/*arm64*.apk 2>/dev/null | head -1)
+          [ -n "$APK" ] || APK=$(ls android/app/build/outputs/apk/debug/*arm64*.apk | head -1)
+          echo "checking $APK"
+          unzip -l "$APK" | grep -E "\.so$" | awk '{print $4}'
+          if unzip -l "$APK" | grep -q "libbarhopper_v3.so"; then
+            echo "OK: barhopper (ML Kit bundled) داخل APK است"
+          else
+            echo "::error::libbarhopper_v3.so در APK نیست — اسکنر به Play Services/دانلود پویا وابسته می‌شود"
+            exit 1
+          fi
+          if unzip -l "$APK" | grep -q "com/google/android/gms/vision"; then
+            echo "::warning::کلاس‌های vision گوگل داخل APK است"
+          fi
+
       - name: Unit tests (all modules)
         id: unit
         working-directory: android
