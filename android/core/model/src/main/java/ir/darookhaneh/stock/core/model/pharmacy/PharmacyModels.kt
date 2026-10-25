@@ -52,6 +52,13 @@ enum class InventoryEventType {
 
     /** انبارگردانی: مقدار شمارش‌شده ثبت می‌شود. */
     COUNT,
+    ;
+
+    companion object {
+        /** تبدیل رشتهٔ ذخیره‌شده در دیتابیس؛ مقدار ناشناخته به ADJUSTMENT نگاشت می‌شود. */
+        fun fromStorage(value: String): InventoryEventType =
+            entries.firstOrNull { it.name == value } ?: ADJUSTMENT
+    }
 }
 
 /** خلاصهٔ هر دارو برای فهرست و داشبورد. */

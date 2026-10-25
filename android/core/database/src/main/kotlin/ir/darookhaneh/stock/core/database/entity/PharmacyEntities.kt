@@ -94,27 +94,6 @@ data class InventoryEventEntity(
     val note: String? = null,
     val createdAt: Long,
 )
-
-enum class InventoryEventType {
-    /** ورود کالا: مقدار بچ را افزایش می‌دهد. */
-    RECEIVE,
-
-    /** خروج/فروش: مقدار بچ را کاهش می‌دهد. */
-    DISPENSE,
-
-    /** اصلاح دستی با دلیل. */
-    ADJUSTMENT,
-
-    /** انبارگردانی: ثبت مقدار شمارش‌شده. */
-    COUNT,
-    ;
-
-    companion object {
-        fun fromStorage(value: String): InventoryEventType =
-            entries.firstOrNull { it.name == value } ?: ADJUSTMENT
-    }
-}
-
 /** یک ردیف خلاصه برای فهرست داروها. */
 data class DrugSummaryRow(
     val id: Long,
@@ -127,13 +106,4 @@ data class DrugSummaryRow(
     val totalQuantity: Int,
     val batchCount: Int,
     val nearestExpiry: Long?,
-)
-
-/** یک ردیف خلاصه برای داشبورد. */
-data class DashboardCounters(
-    val drugCount: Int,
-    val unitCount: Int,
-    val expiredBatchCount: Int,
-    val expiringSoonBatchCount: Int,
-    val lowStockBatchCount: Int,
 )
