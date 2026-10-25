@@ -6,7 +6,6 @@ import ir.darookhaneh.stock.core.model.pharmacy.Drug
 import ir.darookhaneh.stock.core.model.pharmacy.DrugSummary
 import ir.darookhaneh.stock.core.model.pharmacy.HistoryEntry
 import ir.darookhaneh.stock.core.model.pharmacy.InventoryEvent
-import ir.darookhaneh.stock.core.model.pharmacy.HistoryEntry
 import ir.darookhaneh.stock.core.model.pharmacy.InventoryEventType
 import kotlinx.coroutines.flow.Flow
 

@@ -98,10 +98,10 @@ object StockIcons {
         val SelectedDrugs = IconProvider.ImageVectorIcon(Icons.Rounded.Medication)
         val UnselectedScan = IconProvider.ImageVectorIcon(Icons.Outlined.QrCodeScanner)
         val SelectedScan = IconProvider.ImageVectorIcon(Icons.Rounded.QrCodeScanner)
-        val UnselectedHistory = IconProvider.ImageVectorIcon(Icons.Outlined.History)
-        val SelectedHistory = IconProvider.ImageVectorIcon(Icons.Rounded.History)
-        val UnselectedRecord = IconProvider.ImageVectorIcon(Icons.Outlined.AddCircle)
-        val SelectedRecord = IconProvider.ImageVectorIcon(Icons.Rounded.AddCircle)
+        val UnselectedHistory = IconProvider.ImageVectorIcon(Icons.Outlined.Analytics)
+        val SelectedHistory = IconProvider.ImageVectorIcon(Icons.Rounded.Analytics)
+        val UnselectedRecord = IconProvider.ImageVectorIcon(Icons.Outlined.Add)
+        val SelectedRecord = IconProvider.ImageVectorIcon(Icons.Rounded.Add)
     }
 
     object Pharmacy {
