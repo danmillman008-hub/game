@@ -42,20 +42,26 @@ enum class BottomBarItem(
     val selectedIcon: IconProvider,
     val unselectedIcon: IconProvider
 ) {
-    HOME(
-        label = R.string.inventory_title,
-        selectedIcon = StockIcons.BottomBar.SelectedInventory,
-        unselectedIcon = StockIcons.BottomBar.UnselectedInventory
+    DASHBOARD(
+        label = R.string.nav_dashboard,
+        selectedIcon = StockIcons.BottomBar.SelectedDashboard,
+        unselectedIcon = StockIcons.BottomBar.UnselectedDashboard
     ),
 
-    ANALYTICS(
-        label = R.string.analytics_title,
-        selectedIcon = StockIcons.BottomBar.SelectedAnalytics,
-        unselectedIcon = StockIcons.BottomBar.UnselectedAnalytics
+    DRUGS(
+        label = R.string.nav_drugs,
+        selectedIcon = StockIcons.BottomBar.SelectedDrugs,
+        unselectedIcon = StockIcons.BottomBar.UnselectedDrugs
+    ),
+
+    SCAN(
+        label = R.string.nav_scan,
+        selectedIcon = StockIcons.BottomBar.SelectedScan,
+        unselectedIcon = StockIcons.BottomBar.UnselectedScan
     ),
 
     SETTINGS(
-        label = R.string.settings_title,
+        label = R.string.nav_settings,
         selectedIcon = StockIcons.BottomBar.SelectedSettings,
         unselectedIcon = StockIcons.BottomBar.UnselectedSettings
     )
@@ -63,8 +69,9 @@ enum class BottomBarItem(
 
 fun NavKey.toBottomBarItem(): BottomBarItem? {
     return when (this) {
-        Destination.Analytics -> BottomBarItem.ANALYTICS
-        is Destination.Inventory, Destination.Scanner -> BottomBarItem.HOME
+        Destination.Dashboard, is Destination.DrugDetail -> BottomBarItem.DASHBOARD
+        Destination.Drugs -> BottomBarItem.DRUGS
+        Destination.Scanner -> BottomBarItem.SCAN
         is Destination.Setting -> BottomBarItem.SETTINGS
         else -> null
     }
@@ -79,8 +86,9 @@ fun hideBottomBar(currentDestination: NavKey?): Boolean {
 
 fun BottomBarItem.toDestination(): Destination {
     return when (this) {
-        BottomBarItem.ANALYTICS -> Destination.Analytics
-        BottomBarItem.HOME -> Destination.Inventory.Home
+        BottomBarItem.DASHBOARD -> Destination.Dashboard
+        BottomBarItem.DRUGS -> Destination.Drugs
+        BottomBarItem.SCAN -> Destination.Scanner
         BottomBarItem.SETTINGS -> Destination.Setting(destination = SettingDestination.Main)
     }
 }

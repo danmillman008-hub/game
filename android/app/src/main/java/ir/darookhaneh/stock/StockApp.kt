@@ -13,16 +13,11 @@ import coil3.request.crossfade
 import ir.darookhaneh.stock.core.data.repository.FOLDER_IMAGE
 import ir.darookhaneh.stock.core.notifications.data.NotificationChannelManager
 import ir.darookhaneh.stock.core.notifications.di.notificationModule
-import ir.darookhaneh.stock.core.notifications.worker.WorkerScheduler
 import ir.darookhaneh.stock.di.appModule
 import ir.darookhaneh.stock.di.dataModule
 import ir.darookhaneh.stock.di.databaseModule
 import ir.darookhaneh.stock.di.domainModule
 import ir.darookhaneh.stock.di.networkModule
-import ir.darookhaneh.stock.feature.analytics.di.analyticsModule
-import ir.darookhaneh.stock.feature.food_entry.di.foodEntryModule
-import ir.darookhaneh.stock.feature.inventory.di.inventoryModule
-import ir.darookhaneh.stock.feature.scanner.di.scannerModule
 import ir.darookhaneh.stock.feature.settings.di.settingModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -36,8 +31,6 @@ import timber.log.Timber
 
 class StockApp : Application(), KoinComponent, SingletonImageLoader.Factory,
     Configuration.Provider {
-    private val workerScheduler: WorkerScheduler by inject()
-
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()
             .setWorkerFactory(KoinWorkerFactory())
@@ -80,10 +73,6 @@ class StockApp : Application(), KoinComponent, SingletonImageLoader.Factory,
                     dataModule,
                     domainModule,
                     networkModule,
-                    inventoryModule,
-                    analyticsModule,
-                    scannerModule,
-                    foodEntryModule,
                     notificationModule,
                     settingModule
                 )
@@ -92,15 +81,6 @@ class StockApp : Application(), KoinComponent, SingletonImageLoader.Factory,
 
         //Notification
         NotificationChannelManager.createAllChannels(this)
-
-
-        //Worker Scheduler
-        workerScheduler.apply {
-            scheduleCheckExpiryWorker()
-            scheduleWeeklyReportWorker()
-            scheduleWeeklyCleanUpFileWorker()
-            scheduleCheckUpdateWorker()
-        }
 
     }
 

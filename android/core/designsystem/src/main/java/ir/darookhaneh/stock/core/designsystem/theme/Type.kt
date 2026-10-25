@@ -69,26 +69,39 @@ private val GoogleSansFlexFontFamily = FontFamily(
     ),
 )
 
+/**
+ * فونت اصلی محصول: وزیرمتن.
+ * برای متن فارسی/عربی تنها این خانواده استفاده می‌شود تا شکل حروف و اعداد درست بماند.
+ */
+private val VazirmatnFontFamily = FontFamily(
+    Font(resId = R.font.vazirmatn, weight = FontWeight.Normal),
+    Font(resId = R.font.vazirmatn, weight = FontWeight.Medium),
+    Font(resId = R.font.vazirmatn, weight = FontWeight.SemiBold),
+    Font(resId = R.font.vazirmatn, weight = FontWeight.Bold),
+)
+
 fun getTypographyForFont(): Typography {
 
     val defaultTypography = Typography()
 
     return defaultTypography.copy(
+        // وزیرمتن به عنوان فونت پایهٔ همهٔ استایل‌ها
+    
 
         // -----------------------------------------------------------------
         // Display
         // -----------------------------------------------------------------
 
         displayLarge = defaultTypography.displayLarge.copy(
-            fontFamily = GoogleSansFlexFontFamily,
+            fontFamily = VazirmatnFontFamily,
         ),
 
         displayMedium = defaultTypography.displayMedium.copy(
-            fontFamily = GoogleSansFlexFontFamily,
+            fontFamily = VazirmatnFontFamily,
         ),
 
         displaySmall = defaultTypography.displaySmall.copy(
-            fontFamily = GoogleSansFlexFontFamily,
+            fontFamily = VazirmatnFontFamily,
         ),
 
         // -----------------------------------------------------------------
@@ -96,15 +109,15 @@ fun getTypographyForFont(): Typography {
         // -----------------------------------------------------------------
 
         headlineLarge = defaultTypography.headlineLarge.copy(
-            fontFamily = GoogleSansFlexFontFamily,
+            fontFamily = VazirmatnFontFamily,
         ),
 
         headlineMedium = defaultTypography.headlineMedium.copy(
-            fontFamily = GoogleSansFlexFontFamily,
+            fontFamily = VazirmatnFontFamily,
         ),
 
         headlineSmall = defaultTypography.headlineSmall.copy(
-            fontFamily = GoogleSansFlexFontFamily,
+            fontFamily = VazirmatnFontFamily,
         ),
 
         // -----------------------------------------------------------------
@@ -112,15 +125,15 @@ fun getTypographyForFont(): Typography {
         // -----------------------------------------------------------------
 
         titleLarge = defaultTypography.titleLarge.copy(
-            fontFamily = GoogleSansFlexFontFamily,
+            fontFamily = VazirmatnFontFamily,
         ),
 
         titleMedium = defaultTypography.titleMedium.copy(
-            fontFamily = GoogleSansFlexFontFamily,
+            fontFamily = VazirmatnFontFamily,
         ),
 
         titleSmall = defaultTypography.titleSmall.copy(
-            fontFamily = GoogleSansFlexFontFamily,
+            fontFamily = VazirmatnFontFamily,
         ),
 
         // -----------------------------------------------------------------
@@ -128,27 +141,27 @@ fun getTypographyForFont(): Typography {
         // -----------------------------------------------------------------
 
         bodyLarge = defaultTypography.bodyLarge.copy(
-            fontFamily = GoogleSansFlexFontFamily,
+            fontFamily = VazirmatnFontFamily,
         ),
 
         bodyMedium = defaultTypography.bodyMedium.copy(
-            fontFamily = GoogleSansFlexFontFamily,
+            fontFamily = VazirmatnFontFamily,
         ),
 
         bodySmall = defaultTypography.bodySmall.copy(
-            fontFamily = GoogleSansFlexFontFamily,
+            fontFamily = VazirmatnFontFamily,
         ),
 
         labelLarge = defaultTypography.labelLarge.copy(
-            fontFamily = GoogleSansFlexFontFamily,
+            fontFamily = VazirmatnFontFamily,
         ),
 
         labelMedium = defaultTypography.labelMedium.copy(
-            fontFamily = GoogleSansFlexFontFamily,
+            fontFamily = VazirmatnFontFamily,
         ),
 
         labelSmall = defaultTypography.labelSmall.copy(
-            fontFamily = GoogleSansFlexFontFamily,
+            fontFamily = VazirmatnFontFamily,
         ),
     )
 }

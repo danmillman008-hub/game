@@ -12,13 +12,10 @@ import ir.darookhaneh.stock.core.presentation.ObserveEffect
 import ir.darookhaneh.stock.core.presentation.navigation.Destination
 import ir.darookhaneh.stock.core.presentation.navigation.NavigateEvent
 import ir.darookhaneh.stock.core.presentation.navigation.Navigator
-import ir.darookhaneh.stock.feature.analytics.navigation.AnalyticsRoute
-import ir.darookhaneh.stock.feature.inventory.navigation.InventoryRoute
-import ir.darookhaneh.stock.feature.inventory.navigation.SearchInventoryRoute
-import ir.darookhaneh.stock.feature.scanner.presentation.scanner.ScannerRoute
 import ir.darookhaneh.stock.feature.settings.navigation.SettingRoute
 import ir.darookhaneh.stock.transition.AppTransitions
 import ir.darookhaneh.stock.transition.toContentTransform
+import ir.darookhaneh.stock.ui.PlaceholderScreen
 import org.koin.compose.koinInject
 
 @Composable
@@ -53,17 +50,25 @@ fun AppGraph(
         },
         onBack = { if (backStack.isNotEmpty()) backStack.removeLastOrNull() },
         entryProvider = entryProvider {
-            entry<Destination.Inventory.Home> {
-                InventoryRoute()
-            }
-
-            entry<Destination.Inventory.Search> {
-                SearchInventoryRoute(
+            entry<Destination.Dashboard> {
+                PlaceholderScreen(
+                    title = "داشبورد",
+                    description = "هشدار انقضا، موجودی کم و اقدامات سریع",
                 )
             }
 
-            entry<Destination.Analytics> {
-                AnalyticsRoute()
+            entry<Destination.Drugs> {
+                PlaceholderScreen(
+                    title = "فهرست داروها",
+                    description = "جست‌وجو و مشاهدهٔ موجودی",
+                )
+            }
+
+            entry<Destination.DrugDetail> { key ->
+                PlaceholderScreen(
+                    title = "جزئیات دارو",
+                    description = "شناسه: ${key.drugId}",
+                )
             }
 
             entry<Destination.Scanner>(
@@ -75,7 +80,10 @@ fun AppGraph(
                     AppTransitions.enterFromTop.toContentTransform()
                 }
             ) {
-                ScannerRoute(onNavigateBack = { backStack.removeLastOrNull() })
+                PlaceholderScreen(
+                    title = "اسکن و ثبت",
+                    description = "اسکن بارکد، سپس ثبت موجودی",
+                )
             }
 
             entry<Destination.Setting> { setting ->

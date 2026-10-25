@@ -40,11 +40,7 @@ dependencies {
     implementation(project(":core:datastore"))
     implementation(project(":core:domain"))
 
-    implementation(project(":feature:inventory"))
-    implementation(project(":feature:scanner"))
-    implementation(project(":feature:analytics"))
     implementation(project(":feature:settings"))
-    implementation(project(":feature:food-entry"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -67,10 +63,6 @@ dependencies {
     implementation(libs.androidx.biometric)
 
     //Glance
-    implementation(libs.androidx.glance.appwidget)
-    implementation(libs.androidx.glance.material3)
-    implementation(libs.androidx.glance.preview)
-    implementation(libs.androidx.glance.appwidget.preview)
 
     //Serialization
     implementation(libs.kotlinx.serialization.core)

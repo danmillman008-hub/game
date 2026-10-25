@@ -13,14 +13,14 @@ val databaseModule = module {
         Room.databaseBuilder(
             androidContext(),
             AppDatabase::class.java,
-            "stock-database"
+            "stock-database",
         )
             // محصول منتشرنشده: اسکیمای قدیمی دور ریخته می‌شود، نه مهاجرت داده می‌شود.
             .fallbackToDestructiveMigration(dropAllTables = true)
             .build()
     } bind AppDatabase::class
-    single { get<AppDatabase>().foodDao() }
-    single { get<AppDatabase>().searchDao() }
-    single { get<AppDatabase>().categoryDao() }
+    single { get<AppDatabase>().drugDao() }
+    single { get<AppDatabase>().batchDao() }
+    single { get<AppDatabase>().inventoryEventDao() }
     single<TransactionRunner> { RoomTransactionRunner(get<AppDatabase>()) }
 }

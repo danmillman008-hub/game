@@ -38,9 +38,5 @@ include(":core:datastore")
 include(":core:notifications")
 
 // Feature modules
-include(":feature:inventory")
-include(":feature:scanner")
-include(":feature:analytics")
 include(":feature:settings")
-include(":feature:food-entry")
 include(":core:domain")

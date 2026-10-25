@@ -5,27 +5,7 @@ import ir.darookhaneh.stock.core.presentation.viewmodel.UiEvent
 sealed interface SettingsEvent : UiEvent {
     data object NavigateBack : SettingsEvent
     data object OpenSourceClick : SettingsEvent
-    data object RequestNotificationPermission : SettingsEvent
     data object SendFeedBackEmail : SettingsEvent
     data class ShowSnackBar(val message: String) : SettingsEvent
-    enum class ExportData : SettingsEvent {
-        SUCCESS, FAILURE
-    }
-    sealed interface ImportData : SettingsEvent {
-        data object Success : ImportData
-        data object Failure : ImportData
-        data object PickUri : ImportData
-    }
-
     data object NavigateToGithub : SettingsEvent
-}
-
-sealed interface DeleteAll : SettingsEvent {
-    data object Success : DeleteAll
-    data object Failure : DeleteAll
-}
-
-sealed interface NotifyTimerEvent : SettingsEvent {
-    data object Error : NotifyTimerEvent
-    data object Success : NotifyTimerEvent
 }

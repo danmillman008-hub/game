@@ -20,14 +20,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Stock">
-        <receiver
-            android:name="ir.darookhaneh.stock.core.notifications.receiver.NotificationActionReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="ir.darookhaneh.stock.ACTION_CONSUME" />
-                <action android:name="ir.darookhaneh.stock.ACTION_WASTE" />
-            </intent-filter>
-        </receiver>
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
@@ -64,36 +56,8 @@
         </service>
 
         <!--Food Expiring Widget-->
-        <receiver
-            android:name=".widget.weekly_expiry.WeeklyExpiryWidgetReceiver"
-            android:description="@string/widget_weekly_food_description"
-            android:label="@string/widget_weekly_food_title"
-            android:exported="false">
-
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/food_widget_info" />
-        </receiver>
 
         <!--Weekly Freshness Widget-->
-        <receiver
-            android:name=".widget.total_food.WeeklyFreshnessReceiver"
-            android:description="@string/widget_weekly_freshness_description"
-            android:exported="false"
-            android:label="@string/widget_weekly_freshness_title">
-
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/freshness_widget_info" />
-        </receiver>
 
     </application>
 

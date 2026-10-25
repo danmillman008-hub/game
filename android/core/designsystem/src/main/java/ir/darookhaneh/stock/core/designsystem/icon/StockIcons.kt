@@ -57,6 +57,22 @@ import androidx.compose.material.icons.rounded.Today
 import androidx.compose.material.icons.rounded.Update
 import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material.icons.rounded.WbSunny
+import androidx.compose.material.icons.outlined.Medication
+import androidx.compose.material.icons.outlined.QrCodeScanner
+import androidx.compose.material.icons.outlined.SpaceDashboard
+import androidx.compose.material.icons.rounded.EventBusy
+import androidx.compose.material.icons.rounded.FactCheck
+import androidx.compose.material.icons.rounded.Inventory2
+import androidx.compose.material.icons.rounded.Medication
+import androidx.compose.material.icons.rounded.MoveToInbox
+import androidx.compose.material.icons.rounded.Outbox
+import androidx.compose.material.icons.rounded.Place
+import androidx.compose.material.icons.rounded.QrCode2
+import androidx.compose.material.icons.rounded.QrCodeScanner
+import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.SpaceDashboard
+import androidx.compose.material.icons.rounded.Tune
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Widgets
 import ir.darookhaneh.stock.core.designsystem.R
 
@@ -74,6 +90,27 @@ object StockIcons {
         val SelectedAnalytics = IconProvider.ImageVectorIcon(Icons.Rounded.Analytics)
         val UnselectedSettings = IconProvider.ImageVectorIcon(Icons.Outlined.Settings)
         val SelectedSettings = IconProvider.ImageVectorIcon(Icons.Rounded.Settings)
+
+        // ناوبری محصول داروخانه
+        val UnselectedDashboard = IconProvider.ImageVectorIcon(Icons.Outlined.SpaceDashboard)
+        val SelectedDashboard = IconProvider.ImageVectorIcon(Icons.Rounded.SpaceDashboard)
+        val UnselectedDrugs = IconProvider.ImageVectorIcon(Icons.Outlined.Medication)
+        val SelectedDrugs = IconProvider.ImageVectorIcon(Icons.Rounded.Medication)
+        val UnselectedScan = IconProvider.ImageVectorIcon(Icons.Outlined.QrCodeScanner)
+        val SelectedScan = IconProvider.ImageVectorIcon(Icons.Rounded.QrCodeScanner)
+    }
+
+    object Pharmacy {
+        val Expiry = IconProvider.ImageVectorIcon(Icons.Rounded.EventBusy)
+        val LowStock = IconProvider.ImageVectorIcon(Icons.Rounded.Inventory2)
+        val Add = IconProvider.ImageVectorIcon(Icons.Rounded.Add)
+        val Search = IconProvider.ImageVectorIcon(Icons.Rounded.Search)
+        val Receive = IconProvider.ImageVectorIcon(Icons.Rounded.MoveToInbox)
+        val Dispense = IconProvider.ImageVectorIcon(Icons.Rounded.Outbox)
+        val Adjust = IconProvider.ImageVectorIcon(Icons.Rounded.Tune)
+        val Count = IconProvider.ImageVectorIcon(Icons.Rounded.FactCheck)
+        val Barcode = IconProvider.ImageVectorIcon(Icons.Rounded.QrCode2)
+        val Location = IconProvider.ImageVectorIcon(Icons.Rounded.Place)
     }
 
 

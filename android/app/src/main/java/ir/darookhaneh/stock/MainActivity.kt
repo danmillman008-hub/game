@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
             navigationBarStyle = SystemBarStyle.dark(scrim = Color.TRANSPARENT)
         )
         setContent {
-            val backStack = rememberNavBackStack(Destination.Inventory.Home)
+            val backStack = rememberNavBackStack(Destination.Dashboard)
             val uiState: AppUiState by viewModel.appUiState.collectAsStateWithLifecycle()
             val onAction = viewModel::onAction
             val isUnlocked by viewModel.isUnlocked.collectAsStateWithLifecycle()

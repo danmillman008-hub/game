@@ -2,11 +2,8 @@ package ir.darookhaneh.stock.feature.settings.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import ir.darookhaneh.stock.core.data.AppNewFeaturesReader
-import ir.darookhaneh.stock.core.data.util.onFailure
-import ir.darookhaneh.stock.core.data.util.onSuccess
 import ir.darookhaneh.stock.core.data.util.product
 import ir.darookhaneh.stock.core.domain.usecase.CheckUpdateUseCase
-import ir.darookhaneh.stock.core.notifications.worker.WorkerScheduler
 import ir.darookhaneh.stock.core.presentation.UiResult
 import ir.darookhaneh.stock.core.presentation.navigation.Destination.Setting
 import ir.darookhaneh.stock.core.presentation.navigation.Navigator
@@ -15,18 +12,14 @@ import ir.darookhaneh.stock.core.presentation.toUiResult
 import ir.darookhaneh.stock.core.presentation.viewmodel.BaseViewModel
 import ir.darookhaneh.stock.feature.settings.data.WidgetExceptionLogger
 import ir.darookhaneh.stock.feature.settings.domain.usecase.CheckCapabilityUseCase
-import ir.darookhaneh.stock.feature.settings.domain.usecase.DeleteAllDataUseCase
-import ir.darookhaneh.stock.feature.settings.domain.usecase.ManageDataUseCase
 import ir.darookhaneh.stock.feature.settings.domain.usecase.ObserveSettingStateUseCase
 import ir.darookhaneh.stock.feature.settings.domain.usecase.UpdatePreferencesUseCase
 import ir.darookhaneh.stock.feature.settings.presentation.model.SettingClickableUiModel
-import ir.darookhaneh.stock.feature.settings.presentation.model.SettingSliderType
 import ir.darookhaneh.stock.feature.settings.presentation.model.SettingToggleType
 import ir.darookhaneh.stock.feature.settings.presentation.viewmodel.SettingsEvent.ShowSnackBar
 import ir.darookhaneh.stock.feature.settings.presentation.viewmodel.SettingsOverlay.LanguageSheet
 import ir.darookhaneh.stock.feature.settings.presentation.viewmodel.SettingsOverlay.NewFeatureSheet
 import ir.darookhaneh.stock.feature.settings.presentation.viewmodel.SettingsOverlay.None
-import ir.darookhaneh.stock.feature.settings.presentation.viewmodel.SettingsOverlay.WidgetDebugSheet
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -40,11 +33,8 @@ class SettingsViewModel(
     observeSettingStateUseCase: ObserveSettingStateUseCase,
     private val widgetExceptionLogger: WidgetExceptionLogger,
     private val navigator: Navigator,
-    private val manageDataUseCase: ManageDataUseCase,
     private val checkCapabilityUseCase: CheckCapabilityUseCase,
-    private val deleteDataUseCase: DeleteAllDataUseCase,
     private val updatePreferencesUseCase: UpdatePreferencesUseCase,
-    private val workerScheduler: WorkerScheduler,
     private val checkUpdateUseCase: CheckUpdateUseCase,
 ) : BaseViewModel<SettingsUiState, SettingsEvent, SettingsAction>() {
     private val _uiState = MutableStateFlow(
@@ -81,8 +71,7 @@ class SettingsViewModel(
 
     override fun onAction(action: SettingsAction) {
         when (action) {
-            SettingsAction.OnDismiss,
-            SettingsAction.DeleteAlertDialog.Dismiss -> _uiState.product {
+            SettingsAction.OnDismiss -> _uiState.product {
                 copy(overlay = None, checkUpdateResult = UiResult.Idle)
             }
 
@@ -108,54 +97,9 @@ class SettingsViewModel(
             is SettingsAction.ChangeFont -> viewModelScope.launch {
             }
 
-            is SettingsAction.SetWarningDays -> viewModelScope.launch {
-                updatePreferencesUseCase.updateNotification(
-                    currentCombineState.notificationPreferences.copy(
-                        warningFoodThresholdDays = action.days
-                    )
-                )
-            }
-
             is SettingsAction.ToggleAction -> onToggleAction(action)
             is SettingsAction.ClickableAction -> onClickableAction(action)
 
-            is SettingsAction.ImportData -> viewModelScope.launch {
-                manageDataUseCase.importData(action.uri.toString())
-                    .onSuccess { emitEvent(SettingsEvent.ImportData.Success) }
-                    .onFailure { emitEvent(SettingsEvent.ImportData.Failure) }
-            }
-
-            is SettingsAction.SetNotifyTime -> onSetNotifyTimeAction(action)
-
-            is SettingsAction.OnNotificationGranted -> viewModelScope.launch {
-                checkCapabilityUseCase.updateNotification(action.granted)
-                updatePreferencesUseCase.updateNotification(
-                    currentCombineState.notificationPreferences.copy(
-                        enableNotification = action.granted
-                    )
-                )
-                workerScheduler.scheduleCheckExpiryWorker(forceReplace = true)
-                if (!action.granted) {
-                    emitEvent(ShowSnackBar("Permission denied. Notifications disabled."))
-                }
-            }
-
-            SettingsAction.DeleteAlertDialog.Confirm -> viewModelScope.launch {
-                _uiState.product { copy(overlay = None) }
-                deleteDataUseCase()
-                    .onSuccess { emitEvent(DeleteAll.Success) }
-                    .onFailure { emitEvent(DeleteAll.Failure) }
-            }
-
-            is SettingsAction.SetDeleteThresholdDays -> viewModelScope.launch {
-                updatePreferencesUseCase.updateNotification(
-                    currentCombineState.notificationPreferences.copy(
-                        deleteFoodThresholdDayInWeek = action.thresholdDays
-                    )
-                )
-            }
-
-            is SettingsAction.SliderAction -> onSliderAction(action)
             is SettingsAction.SetSeedColorPreset -> viewModelScope.launch {
                 updatePreferencesUseCase.updateAppearance(
                     currentCombineState.appearancePreferences.copy(
@@ -175,20 +119,17 @@ class SettingsViewModel(
     private fun onClickableAction(action: SettingsAction.ClickableAction) {
         viewModelScope.launch {
             when (action.type) {
-                SettingClickableUiModel.EXPORT -> {
-                    manageDataUseCase.exportData()
-                        .onSuccess { emitEvent(SettingsEvent.ExportData.SUCCESS) }
-                        .onFailure { emitEvent(SettingsEvent.ExportData.FAILURE) }
-                }
+                SettingClickableUiModel.EXPORT,
+                SettingClickableUiModel.IMPORT,
+                SettingClickableUiModel.DELETE_ALL,
+                SettingClickableUiModel.YOUR_DATA,
+                SettingClickableUiModel.DAILY_REMINDER,
+                SettingClickableUiModel.NOTIFICATION -> emitEvent(
+                    SettingsEvent.ShowSnackBar("این بخش در نسخه‌های بعدی فعال می‌شود.")
+                )
 
-                SettingClickableUiModel.IMPORT -> emitEvent(SettingsEvent.ImportData.PickUri)
-                SettingClickableUiModel.DELETE_ALL -> _uiState.product { copy(overlay = SettingsOverlay.DeleteAlertDialog) }
                 SettingClickableUiModel.ABOUT -> {
                     navigator.navigateTo(Setting(SettingDestination.AboutApp))
-                }
-
-                SettingClickableUiModel.DAILY_REMINDER -> {
-                    _uiState.product { copy(overlay = SettingsOverlay.TimePicker) }
                 }
 
                 SettingClickableUiModel.NEW_FEATURES -> {
@@ -223,9 +164,9 @@ class SettingsViewModel(
                     )
                 }
 
-                SettingClickableUiModel.DEBUG -> _uiState.product {
-                    copy(overlay = WidgetDebugSheet)
-                }
+                SettingClickableUiModel.DEBUG -> emitEvent(
+                    SettingsEvent.ShowSnackBar("لاگ خطا در نسخه بعدی نمایش داده می‌شود.")
+                )
 
                 SettingClickableUiModel.APPEARANCE -> navigator.navigateTo(
                     Setting(
@@ -233,13 +174,6 @@ class SettingsViewModel(
                     )
                 )
 
-                SettingClickableUiModel.NOTIFICATION -> navigator.navigateTo(
-                    Setting(
-                        SettingDestination.Notification
-                    )
-                )
-
-                SettingClickableUiModel.YOUR_DATA -> navigator.navigateTo(Setting(SettingDestination.YourData))
                 SettingClickableUiModel.OTHER_SETTING -> navigator.navigateTo(
                     Setting(
                         SettingDestination.OtherSettings
@@ -285,18 +219,11 @@ class SettingsViewModel(
                     )
                 }
 
-                SettingToggleType.NOTIFICATION -> {
-                    if (action.enabled && !currentCombineState.notificationGranted) {
-                        emitEvent(SettingsEvent.RequestNotificationPermission)
-                    } else {
-                        updatePreferencesUseCase.updateNotification(
-                            currentCombineState.notificationPreferences.copy(
-                                enableNotification = action.enabled
-                            )
-                        )
-                        workerScheduler.scheduleCheckExpiryWorker(forceReplace = true)
-                    }
-                }
+                SettingToggleType.NOTIFICATION -> updatePreferencesUseCase.updateNotification(
+                    currentCombineState.notificationPreferences.copy(
+                        enableNotification = action.enabled
+                    )
+                )
 
                 SettingToggleType.WEEKLY_REPORT -> {
                     updatePreferencesUseCase.updateNotification(
@@ -309,44 +236,4 @@ class SettingsViewModel(
         }
     }
 
-    private fun onSliderAction(action: SettingsAction.SliderAction) {
-        viewModelScope.launch {
-            when (action.type) {
-                SettingSliderType.EXPIRED_DELETE_THRESHOLD -> {
-                    updatePreferencesUseCase.updateNotification(
-                        currentCombineState.notificationPreferences.copy(
-                            //Threshold Weeks
-                            deleteFoodThresholdDayInWeek = action.value * 7
-                        )
-                    )
-                }
-
-                SettingSliderType.EXPIRY_WARNING_THRESHOLD -> {
-                    updatePreferencesUseCase.updateNotification(
-                        currentCombineState.notificationPreferences.copy(
-                            warningFoodThresholdDays = action.value
-                        )
-                    )
-                }
-            }
-        }
-
-    }
-
-    private fun onSetNotifyTimeAction(action: SettingsAction.SetNotifyTime) {
-        when (action) {
-            SettingsAction.SetNotifyTime.OpenPicker -> _uiState.product { copy(overlay = SettingsOverlay.TimePicker) }
-            is SettingsAction.SetNotifyTime.SetHourAndMinutes -> viewModelScope.launch {
-                _uiState.product { copy(overlay = None) }
-                updatePreferencesUseCase.updateNotification(
-                    currentCombineState.notificationPreferences.copy(
-                        hour = action.hour,
-                        minutes = action.minutes
-                    )
-                )
-                workerScheduler.scheduleCheckExpiryWorker(forceReplace = true)
-                emitEvent(NotifyTimerEvent.Success)
-            }
-        }
-    }
 }

@@ -2,36 +2,36 @@ package ir.darookhaneh.stock.core.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import ir.darookhaneh.stock.core.database.dao.CategoryDao
-import ir.darookhaneh.stock.core.database.dao.FoodDao
-import ir.darookhaneh.stock.core.database.dao.SearchDao
-import ir.darookhaneh.stock.core.database.entity.CategoryEntity
-import ir.darookhaneh.stock.core.database.entity.FoodItemEntity
-import ir.darookhaneh.stock.core.database.entity.InventoryItemFtsEntity
-import ir.darookhaneh.stock.core.database.entity.SearchHistoryEntity
+import ir.darookhaneh.stock.core.database.dao.BatchDao
+import ir.darookhaneh.stock.core.database.dao.DrugDao
+import ir.darookhaneh.stock.core.database.dao.InventoryEventDao
+import ir.darookhaneh.stock.core.database.entity.BatchEntity
+import ir.darookhaneh.stock.core.database.entity.DrugEntity
+import ir.darookhaneh.stock.core.database.entity.InventoryEventEntity
 
 @Database(
     entities = [
-        FoodItemEntity::class,
-        SearchHistoryEntity::class,
-        InventoryItemFtsEntity::class,
-        CategoryEntity::class
+        DrugEntity::class,
+        BatchEntity::class,
+        InventoryEventEntity::class,
     ],
     version = DatabaseConstant.SCHEMA_VERSION,
-    exportSchema = true
+    exportSchema = true,
 )
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun foodDao(): FoodDao
-    abstract fun searchDao(): SearchDao
-    abstract fun categoryDao(): CategoryDao
+    abstract fun drugDao(): DrugDao
+    abstract fun batchDao(): BatchDao
+    abstract fun inventoryEventDao(): InventoryEventDao
 }
 
 object DatabaseConstant {
     /**
      * نسخهٔ ۱ = شروع تمیز محصول داروخانه‌ای.
-     * محصول قدیمی هرگز منتشر نشده، بنابراین هیچ مهاجرتی لازم نیست و
-     * دیتابیس قدیمی در نصب تازه اصلاً وجود ندارد.
-     * از این پس هر تغییر اسکیما باید نسخه را +۱ کند و Migration واقعی داشته باشد.
+     *
+     * محصول قبلی (مدل غذایی) هرگز منتشر نشده؛ بنابراین هیچ مهاجرت داده‌ای لازم نیست
+     * و اسکیمای قدیمی دور ریخته شده است (پاک‌کردن، نه مهاجرت).
+     *
+     * از این پس هر تغییر اسکیما: نسخه +۱ و Migration واقعی + تست مهاجرت.
      */
     const val SCHEMA_VERSION = 1
 }

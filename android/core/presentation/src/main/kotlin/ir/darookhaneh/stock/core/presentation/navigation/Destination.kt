@@ -3,20 +3,26 @@ package ir.darookhaneh.stock.core.presentation.navigation
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
+/**
+ * نقشهٔ ناوبری نسخهٔ ۱:
+ * داشبورد → فهرست داروها → جزئیات دارو/بچ، و مسیر اسکن/ثبت.
+ */
 @Serializable
 sealed interface Destination : NavKey {
+
+    /** داشبورد: هشدار انقضا، موجودی کم، اقدامات سریع. */
     @Serializable
-    sealed interface Inventory : Destination {
-        @Serializable
-        data object Home : Inventory
+    data object Dashboard : Destination
 
-        @Serializable
-        data object Search : Inventory
-    }
-
+    /** فهرست داروها با جست‌وجو. */
     @Serializable
-    data object Analytics : Destination
+    data object Drugs : Destination
 
+    /** جزئیات یک دارو و بچ‌های آن. */
+    @Serializable
+    data class DrugDetail(val drugId: Long) : Destination
+
+    /** اسکن بارکد و جریان ثبت موجودی. */
     @Serializable
     data object Scanner : Destination
 
@@ -26,13 +32,12 @@ sealed interface Destination : NavKey {
     ) : Destination
 }
 
-
 enum class SettingDestination {
     Main,
-    Notification,
     Appearance,
     OtherSettings,
     YourData,
     AboutApp,
-    OpenSource
+    OpenSource,
+    Notification,
 }

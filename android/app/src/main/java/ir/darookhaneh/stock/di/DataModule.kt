@@ -1,8 +1,6 @@
 package ir.darookhaneh.stock.di
 
 import ir.darookhaneh.stock.core.data.AppNewFeaturesReader
-import ir.darookhaneh.stock.core.data.repository.CategoryRepositoryImpl
-import ir.darookhaneh.stock.core.data.repository.FoodRepositoryImpl
 import ir.darookhaneh.stock.core.data.repository.LocalMediaStorageImpl
 import ir.darookhaneh.stock.core.data.repository.UpdateRepositoryImpl
 import ir.darookhaneh.stock.core.data.util.AppDispatchers
@@ -19,12 +17,8 @@ import ir.darookhaneh.stock.core.datastore.model.GeneralPreferences
 import ir.darookhaneh.stock.core.datastore.model.NotificationDataStore
 import ir.darookhaneh.stock.core.datastore.model.NotificationPreferences
 import ir.darookhaneh.stock.core.datastore.utils.BaseDataStore
-import ir.darookhaneh.stock.core.domain.repository.CategoryRepository
-import ir.darookhaneh.stock.core.domain.repository.FoodRepository
 import ir.darookhaneh.stock.core.domain.repository.LocalMediaStorage
 import ir.darookhaneh.stock.core.domain.repository.UpdateRepository
-import ir.darookhaneh.stock.feature.scanner.data.MLKitBarcodeScanner
-import ir.darookhaneh.stock.feature.scanner.domain.BarcodeScanner
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import org.koin.android.ext.koin.androidApplication
@@ -35,14 +29,11 @@ import org.koin.dsl.module
 @OptIn(ExperimentalSerializationApi::class)
 val dataModule = module {
     singleOf(::AppNewFeaturesReader)
-    singleOf(::FoodRepositoryImpl) { bind<FoodRepository>() }
-    singleOf(::CategoryRepositoryImpl) { bind<CategoryRepository>() }
     singleOf(::DefaultAppDispatchers) { bind<AppDispatchers>() }
-    single<BarcodeScanner> { MLKitBarcodeScanner(get()) }
     singleOf(::LocalMediaStorageImpl) { bind<LocalMediaStorage>() }
     singleOf(::UpdateRepositoryImpl) { bind<UpdateRepository>() }
 
-    //Datastore
+    // Datastore
     single { androidApplication().dataStore }
     single {
         Json {
@@ -56,7 +47,7 @@ val dataModule = module {
     singleOf(::AppearanceDataStore) { bind<BaseDataStore<AppearancePreferences>>() }
     singleOf(::GeneralDataStore) { bind<BaseDataStore<GeneralPreferences>>() }
 
-    //Datastore - Migration
+    // Datastore - Migration
     singleOf(::NotificationMigrator) { bind<BaseMigrator>() }
     singleOf(::AppearanceMigrator) { bind<BaseMigrator>() }
     singleOf(::GeneralMigrator) { bind<BaseMigrator>() }

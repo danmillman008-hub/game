@@ -9,10 +9,8 @@ import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import ir.darookhaneh.stock.core.designsystem.component.StockAlertDialog
 import ir.darookhaneh.stock.core.presentation.R
 import ir.darookhaneh.stock.core.presentation.component.AppNewFeatureBottomSheet
-import ir.darookhaneh.stock.core.presentation.component.AppTimePickerDialog
 import ir.darookhaneh.stock.feature.settings.data.AuthorConstant
 import ir.darookhaneh.stock.feature.settings.presentation.component.WidgetDebugBottomSheet
 import ir.darookhaneh.stock.feature.settings.presentation.component.about_app.CopyrightBottomSheet
@@ -40,34 +38,6 @@ internal fun SettingsOverlayContainer(
 
     when (val overlay = uiState.overlay) {
         SettingsOverlay.None -> Unit
-        SettingsOverlay.DeleteAlertDialog -> StockAlertDialog(
-            icon = ImageVector.vectorResource(R.drawable.ic_delete),
-            confirmText = stringResource(R.string.delete_data_dialog_confirm),
-            dismissText = stringResource(R.string.delete_data_dialog_cancel),
-            onDismissRequest = onDismiss,
-            onConfirm = {
-                onAction(SettingsAction.DeleteAlertDialog.Confirm)
-            },
-            title = stringResource(R.string.delete_data_dialog_title),
-            text = stringResource(R.string.delete_data_dialog_content),
-        )
-
-        SettingsOverlay.TimePicker -> AppTimePickerDialog(
-            hour = combineState.notificationPreferences.hour,
-            minutes = combineState.notificationPreferences.minutes,
-            title = stringResource(R.string.settings_set_time),
-            confirmText = stringResource(R.string.settings_set_time_confirm),
-            onDateSelected = { hour, min ->
-                onAction(
-                    SettingsAction.SetNotifyTime.SetHourAndMinutes(
-                        hour = hour,
-                        minutes = min
-                    )
-                )
-            },
-            onDismiss = onDismiss
-        )
-
         is SettingsOverlay.NewFeatureSheet -> AppNewFeatureBottomSheet(
             versionFeatures = overlay.versionFeatures,
             onDismiss = { onAction(SettingsAction.OnDismiss) }
