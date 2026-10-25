@@ -270,7 +270,8 @@ jobs:
           done
           echo >> /tmp/release-notes.md
           echo "نصب: فایل APK را دانلود کنید، «نصب از منابع نامشخص» را برای مرورگر/فایل‌منیجر فعال کنید." >> /tmp/release-notes.md
-          echo "این نسخه با کلید دیباگ امضا شده و فقط برای تست داخلی است." >> /tmp/release-notes.md
+          echo "این نسخه با **کلید تست داخلی** امضا شده (نه کلید انتشار) و فقط برای تست است." >> /tmp/release-notes.md
+          echo "نسخهٔ release و debug هر دو روی امولاتور AOSP نصب و اجرا می‌شوند (workflow app-smoke)." >> /tmp/release-notes.md
           ls -la /tmp/rel
 
           gh release delete apk-latest --yes --cleanup-tag 2>/dev/null || true
