@@ -211,7 +211,10 @@ jobs:
             echo "| فایل | حجم |"
             echo "|---|---|"
           } > /tmp/release-notes.md
-          for apk in android/app/build/outputs/apk/release/*.apk android/app/build/outputs/apk/debug/*.apk; do
+          echo "--- APK files found:"
+          find android/app/build/outputs/apk -name "*.apk" | sort || true
+          echo "---"
+          for apk in $(find android/app/build/outputs/apk -name "*.apk" | sort); do
             [ -e "$apk" ] || continue
             base=$(basename "$apk")
             case "$base" in
