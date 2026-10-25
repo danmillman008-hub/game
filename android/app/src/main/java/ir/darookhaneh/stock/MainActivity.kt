@@ -122,7 +122,7 @@ class MainActivity : AppCompatActivity() {
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
                         val currentBottomBarItem = backStack.map { it.toBottomBarItem() }
-                            .lastOrNull() ?: BottomBarItem.HOME
+                            .lastOrNull() ?: BottomBarItem.DASHBOARD
                         AnimatedVisibility(
                             visible = !hideBottomBar(currentDestination = backStack.lastOrNull()),
                         ) {
