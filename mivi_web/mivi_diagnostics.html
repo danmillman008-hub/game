@@ -47,7 +47,8 @@
   <div class="card">
     <button id="run">▶️ اجرای همه تست‌ها</button>
     <button id="runE">🧭 پروب E: کاتالوگ قالب‌ها</button>
-    <button class="ghost" id="dlE" type="button">💾 ذخیره JSON پروب E</button>
+    <button id="runF">🗂️ پروب F: resourceNew استخراج‌شده از بایت‌کد</button>
+    <button class="ghost" id="dlE" type="button">💾 ذخیره JSON پروب E/F</button>
     <button class="ghost" id="copy" type="button">📋 کپی گزارش</button>
     <button class="ghost" id="dl" type="button">⬇️ دانلود گزارش</button>
     <div class="bar"><div id="prog"></div></div>
@@ -688,6 +689,95 @@ async function testTemplateCatalog(){
   $("report").value=report.join("\n");
 }
 
+/* ---------- 4d) PROBE-F: EXACT bytecode-derived catalog endpoints ----------
+   از com.ufotosoft.base.net.ServerRequestManager + رتروفیت e (classes7.dex):
+   baseUrl = https://cpi.ufotosoft.com/  (اثبات‌شده در $b.d)
+   appName ثابت = "vibe" (نه package name!)
+   e.i GET common/{appName}/resourceNew  (z-map، بدون country)
+   e.j GET common/{appName}/resource      (همان z-map)
+   e.g GET common/{appName}/getStyleTemplates (u-map + gender)
+   e.e GET /storyart/ncrnau/beat/getResourceList (11 پارامتر دقیق)
+   + فایل‌های استاتیک config/aitools.json و config/ai_home_tools.json */
+window.__probeF=[];
+async function testResourceNewCatalog(){
+  const via=u=>"http://localhost:8770/proxy?u="+encodeURIComponent(u);
+  const id=loadIdentity();
+  const app=id.cp, ver=id.version;
+  const hosts=["https://cpi.ufotosoft.com","https://cpi.wiseoel.com"];
+  const qs=p=>Object.entries(p).filter(([k,v])=>v!==null&&v!=="").map(([k,v])=>k+"="+encodeURIComponent(v)).join("&");
+  const zmap={version:ver,cp:app,platform:"1",ifHttps:"true",day:"0",language:"en",packageLevel:"1"};
+  const umap={version:ver,cp:app,platform:"1",ifHttps:"true",packageLevel:"1"};
+  const targets=[];
+  for(const h of hosts){
+    targets.push(["resourceNew "+h.split("//")[1].split(".")[0],
+      h+"/common/vibe/resourceNew?"+qs(zmap)]);
+    targets.push(["resource(قدیمی) "+h.split("//")[1].split(".")[0],
+      h+"/common/vibe/resource?"+qs(zmap)]);
+    for(const gender of [0,1]){
+      targets.push(["getStyleTemplates g="+gender+" "+h.split("//")[1].split(".")[0],
+        h+"/common/vibe/getStyleTemplates?"+qs({...umap,gender:String(gender)})]);
+    }
+    targets.push(["استاتیک aitools.json "+h.split("//")[1].split(".")[0],
+      h+"/config/aitools.json"]);
+    targets.push(["استاتیک ai_home_tools.json "+h.split("//")[1].split(".")[0],
+      h+"/config/ai_home_tools.json"]);
+  }
+  // getResourceList: مقادیر دقیق از v() — ver=1107,page=1,pageSize=999,st=1
+  for(const rt of [2941,3988,0]){
+    targets.push(["beat/getResourceList rt="+rt,
+      hosts[0]+"/storyart/ncrnau/beat/getResourceList?"+qs(
+        {ver:"1107",pkg:app,page:"1",pageSize:"999",st:"1",rt:String(rt),
+         lang:"en",cc:"",packageLevel:"1",ifWise:"true",ifHttps:"1"})]);
+  }
+  addRow("پروب F کاتالوگ دقیق","info",targets.length+" درخواست GET بدون امضا (appName=vibe، مطابق بایت‌کد)...");
+  rlog("\n--- PROBE-F bytecode-exact catalog via http://localhost:8770 ---");
+  const keys=["example","effectType","imageEffectType","googleId","veoId","cloudalgoParams",
+    "resName","resTypeId","zipUrl","templateId","poseSequenceId","imageKey","resourceItemList"];
+  let hitCount=0;
+  for(const [label,url] of targets){
+    try{
+      const resp=await fetch(via(url),{method:"GET",signal:AbortSignal.timeout(45000)});
+      const txt=await resp.text();
+      window.__probeF.push({label,url,status:resp.status,ct:resp.headers.get("content-type"),body:txt});
+      if(window.__probeE)window.__probeE.push({label,url,status:resp.status,ct:resp.headers.get("content-type"),body:txt});
+      const low=txt.toLowerCase();
+      const hits=keys.filter(k=>low.includes(k.toLowerCase()));
+      const isJson=txt.trim().startsWith("{")||txt.trim().startsWith("[");
+      let haveData=false;
+      try{const p=JSON.parse(txt);const d=p.d||p;
+        haveData=!!(d&&(d.resourceList||d.groupList||d.categoryList||d.toolGroupList||
+          (Array.isArray(d)&&d.length)||d.resourceItemList));}catch(e){}
+      rlog(`PROBE-F ${label} -> HTTP ${resp.status} len=${txt.length} json=${isJson} keyHits=[${hits.join(",")}] haveData=${haveData}`);
+      rlog("URL: "+url);
+      rlog("BODY(0..2500): "+txt.slice(0,2500));
+      if(resp.status===200&&isJson&&(haveData||hits.length)){
+        hitCount++;
+        addRow("F: "+label,"ok",`HTTP 200 len=${txt.length} کلیدها: ${hits.join(", ")||"—"} | ${txt.replace(/\s+/g," ").slice(0,150)}`);
+      }else{
+        addRow("F: "+label,resp.status===200?"warn":"err",
+          `HTTP ${resp.status} len=${txt.length} | ${txt.replace(/\s+/g," ").slice(0,150)}`);
+      }
+    }catch(e){rlog(`PROBE-F ${label} FAIL ${to(e)}`);addRow("F: "+label,"err",to(e).slice(0,130));}
+  }
+  rlog("--- PROBE-F key context ---");
+  let anyCtx=false;
+  for(const item of window.__probeF){
+    for(const k of keys){
+      let idx=0;
+      while((idx=item.body.toLowerCase().indexOf(k.toLowerCase(),idx))>=0){
+        anyCtx=true;
+        const ctx=item.body.slice(Math.max(0,idx-100),idx+260).replace(/\s+/g," ");
+        rlog(`CTX[${item.label}] ...${ctx}...`);
+        idx+=k.length;
+      }
+    }
+  }
+  if(!anyCtx)rlog("PROBE-F هیچ کلید هدف در پاسخ‌ها پیدا نشد");
+  addRow("پروب F جمع‌بندی",hitCount?"ok":"warn",
+    hitCount?`${hitCount} پاسخ دارای داده دریافت شد — فایل JSON کامل را با دکمه ذخیره بفرستید`:"پاسخ داری داده‌ای گرفته نشد؛ متن خام در گزارش هست");
+  $("report").value=report.join("\n");
+}
+
 /* ---------- 5) public proxy battery (GET reachability + real POST where claimed) ---------- */
 async function testProxies(){
   const target=HOSTS[0][1]+EP.query;
@@ -819,11 +909,19 @@ $("runE").addEventListener("click",async()=>{
   catch(e){ addRow("پروب E خطای داخلی","err",to(e));rlog("PROBE-E FATAL "+to(e));$("report").value=report.join("\n"); }
   finally{ $("runE").disabled=false; }
 });
+$("runF").addEventListener("click",async()=>{
+  $("runF").disabled=true;
+  try{ await testResourceNewCatalog(); }
+  catch(e){ addRow("پروب F خطای داخلی","err",to(e));rlog("PROBE-F FATAL "+to(e));$("report").value=report.join("\n"); }
+  finally{ $("runF").disabled=false; }
+});
 $("dlE").addEventListener("click",()=>{
-  if(!window.__probeE||!window.__probeE.length){alert("اول پروب E را اجرا کنید");return;}
-  const blob=new Blob([JSON.stringify(window.__probeE,null,2)],{type:"application/json"});
+  if((!window.__probeE||!window.__probeE.length)&&(!window.__probeF||!window.__probeF.length)){
+    alert("اول پروب E یا F را اجرا کنید");return;}
+  const payload={probeE:window.__probeE||[],probeF:window.__probeF||[]};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
   const a=document.createElement("a");
-  a.href=URL.createObjectURL(blob);a.download="probeE_catalog.json";a.click();
+  a.href=URL.createObjectURL(blob);a.download="probeEF_catalog.json";a.click();
   setTimeout(()=>URL.revokeObjectURL(a.href),4000);
 });
 $("copy").addEventListener("click",async()=>{
