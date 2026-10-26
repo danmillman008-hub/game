@@ -562,7 +562,8 @@ function algoHeaders(capitalUser,ifWise){
   const h={};
   h[capitalUser?"userId":"userid"]=CFG.userId;
   h.timeStamp=t;h.cp=CFG.cp;h.version=CFG.version;h.platform=CFG.platform;
-  h.sign=md5(CFG.userId+t);
+  // بایت‌کد (Image2VideoServer$createAiVideoUnifiedTask/query): sign=MD5(signKey+ts) — مثل آپلود
+  h.sign=md5(CFG.signKey+t);
   h["Content-Type"]="application/json";
   if(ifWise!==null&&ifWise!==undefined)h.ifWise=ifWise?"true":"false";
   return h;

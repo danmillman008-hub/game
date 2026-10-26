@@ -71,15 +71,25 @@
     `taskId, taskStatus ("success"/"fail"/در حال پردازش), taskReason, videoUrl`.
   - صفحه دایگنستیک «پروب C» ماتریس هاست × مسیر را اسکن می‌کند و «پروب D» یک
     آپلود تازه + چهار ترکیب مختلف `example/level` برای unifiedTaskCreate را
-    امضا و تست می‌کند و در صورت ساخت تسک، سه بار با image2VideoQuery وضعیتش را
-    پول می‌کند.
+    با امضای صحیح `MD5(signKey+ts)` و هدر `userId` بزرگ (بدون ifWise) تست
+    می‌کند و در صورت ساخت تسک، سه بار با image2VideoQuery وضعیتش را پول می‌کند.
   - دامنه `wiseoel.com` به allow-list هر دو پروکسی (bat و python) اضافه شده؛
     اگر نسخه قدیمی بات در حال اجراست، فایل جدید را دانلود و جایگزین کنید.
 - signKey ثابت: **`m3snil`** (رمزگشایی DES/CBC از رشته هاردکد `hCzXemhkIkY=`)
-- امضای API الگوریتمی: `MD5(userId + زمان‌یونیکس)`
-- امضای آپلود: `MD5("m3snil" + زمان‌یونیکس)`
-- هدرها: `userid/userId, timeStamp, cp=instagram.story.art.collage,
-  version=407, platform=1, sign, ifWise/ifHttps`
+- **فرمول امضا (تصحیح‌شده با اثبات زنده + بایت‌کد): همه فراخوانی‌های سرویس
+  الگوریتمی `g` و آپلود، `sign = MD5(signKey + زمان‌یونیکس)` یعنی
+  `MD5("m3snil" + ts)` هستند.** فرمول قبلی `MD5(userId+ts)` غلط بود و سرور با
+  `c=1009 "Auth fail [sign illegal]"` ردش می‌کرد (اثبات زنده ۲۰۲۶-۱۰-۲۶).
+  محل بایت‌کد: `Image2VideoServer$createAiVideoUnifiedTask$1` و
+  `$queryAiPhotoTask$1` که آرگومان اول سازنده‌شان `signKey` است و
+  `wa.a.g(signKey + ts)` را به‌عنوان sign می‌فرستند.
+- هدرها مطابق Annotation پارامترهای Retrofit:
+  - ساخت تسک `g.l` (unifiedTaskCreate): `userId` (بزرگ)، `timeStamp, cp,
+    version, platform, sign` — **بدون ifWise**
+  - `g.c0` (integratedTaskCreate): همان‌ها با `userId` بزرگ + `ifWise=true`
+  - کوئری `g.b` (image2VideoQuery): `userid` (کوچک)، `timeStamp, cp, version,
+    platform, sign, ifWise=true`
+  - آپلود: `cp, version, platform, sign, timeStamp, userId, ifHttps=true`
 - اندپوینت‌های استفاده‌شده در فایل:
   - `POST /algo/v1/aiGenerate-aigc/multipleUpload` (multipart، فیلد `files`)
   - `POST /algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate`

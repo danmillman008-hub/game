@@ -189,6 +189,31 @@ const EP={
   query:"/algo/v1/faceFusion/aigc/image2video/queryTask",
   queryNew:"/algo/v1/faceFusion/aigc/image2VideoQuery"
 };
+/* فرمول امضای اثبات‌شده از بایت‌کد (Image2VideoServer): همه فراخوانی‌های سرویس g
+   از sign=MD5(signKey+ts) استفاده می‌کنند، نه MD5(userId+ts).
+   ساخت تسک (g.l): هدر userId بزرگ، بدون ifWise. کوئری (g.b/g.k): userid کوچک + ifWise. */
+function createHeaders(id,withIfWise){
+  const ts=String(Math.floor(Date.now()/1000));
+  const h={"Content-Type":"application/json","userId":id.userId,"timeStamp":ts,
+    "cp":id.cp,"version":id.version,"platform":id.platform,"sign":md5(id.signKey+ts)};
+  // g.l (unifiedTaskCreate) پارامتر ifWise ندارد؛ g.c0 (integratedTaskCreate) دارد
+  if(withIfWise)h.ifWise="true";
+  return h;
+}
+function queryHeaders(id){
+  const ts=String(Math.floor(Date.now()/1000));
+  return {"Content-Type":"application/json","userid":id.userId,"timeStamp":ts,
+    "cp":id.cp,"version":id.version,"platform":id.platform,"sign":md5(id.signKey+ts),
+    "ifWise":"true"};
+}
+/* تطبیق دقیق Annotation های Retrofit کلاس g:
+   unifiedTaskCreate → userId بزرگ بدون ifWise؛ integratedTaskCreate → userId بزرگ با ifWise؛
+   بقیه (V4/V5/کوئری‌ها) → userid کوچک با ifWise */
+function headersForPath(id,p){
+  if(p.endsWith("/unifiedTaskCreate"))return createHeaders(id,false);
+  if(p.endsWith("/integratedTaskCreate"))return createHeaders(id,true);
+  return queryHeaders(id);
+}
 const PROXIES=[
   ["corsproxy.io",u=>"https://corsproxy.io/?url="+encodeURIComponent(u),true],
   ["allorigins/raw",u=>"https://api.allorigins.win/raw?url="+encodeURIComponent(u),false],
@@ -330,17 +355,15 @@ async function testSignedProbe(){
 
   // Probe A: signed JSON POST to queryTask on EVERY candidate host (dummy taskId)
   for(const [label,base] of ALGO_HOSTS){
-    const ts=String(Math.floor(Date.now()/1000));
-    const sign=md5(id.userId+ts);
+    const headers=queryHeaders(id);
     try{
       const resp=await fetch(via(base+EP.query),{method:"POST",
-        headers:{"Content-Type":"application/json","userid":id.userId,"timeStamp":ts,
-          "cp":id.cp,"version":id.version,"platform":id.platform,"sign":sign,"ifWise":"true"},
+        headers:headers,
         body:JSON.stringify({taskId:"diagnostic-probe"}),
         signal:AbortSignal.timeout(20000)});
       const txt=await resp.text();
       let parsed=null;try{parsed=JSON.parse(txt);}catch(e){}
-      rlog(`PROBE-A ${label} HTTP ${resp.status} sign=${sign} body=${txt.slice(0,600)}`);
+      rlog(`PROBE-A ${label} HTTP ${resp.status} sign=${headers.sign} body=${txt.slice(0,600)}`);
       const hasC=parsed&&("c" in parsed);
       const c=hasC?parsed.c:"?";
       // JSON envelope {c,m,d} = correct routing even if c!=200 (business error); 404 = wrong host/path
@@ -396,12 +419,11 @@ async function testRouteMatrix(){
   for(const [label,base,pathCount] of ROUTE_HOSTS){
     const paths=I2V_PATHS.slice(0,pathCount);
     for(const path of paths){
-      const ts=String(Math.floor(Date.now()/1000));
-      const sign=md5(id.userId+ts);
       const short=path.split("/").slice(-2).join("/");
+      // تطبیق دقیق هدر هر مسیر مطابق Annotation های Retrofit
+      const headers=headersForPath(id,path);
       const mkOpts=()=>({method:"POST",
-          headers:{"Content-Type":"application/json","userid":id.userId,"timeStamp":ts,
-            "cp":id.cp,"version":id.version,"platform":id.platform,"sign":sign,"ifWise":"true"},
+          headers:headers,
           body:JSON.stringify({taskId:"diagnostic-probe"}),
           signal:AbortSignal.timeout(15000)});
       try{
@@ -485,12 +507,6 @@ async function testTaskCreateProbe(){
   }catch(e){rlog("PROBE-D upload FAIL "+to(e));addRow("D: آپلود تازه","err",to(e).slice(0,140));return;}
   if(!imgUrl)return;
 
-  const jsonHeaders=()=>{
-    const ts=String(Math.floor(Date.now()/1000));
-    return {"Content-Type":"application/json","userid":id.userId,"timeStamp":ts,
-      "cp":id.cp,"version":id.version,"platform":id.platform,
-      "sign":md5(id.userId+ts),"ifWise":"true"};
-  };
   const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   const variants=[
     ["unified example=URL level=1",EP.create,{imageUrls:[imgUrl],level:1,deviceToken:"",example:imgUrl}],
@@ -500,7 +516,7 @@ async function testTaskCreateProbe(){
   ];
   for(const [label,path,body] of variants){
     try{
-      const resp=await fetch(via(base+path),{method:"POST",headers:jsonHeaders(),
+      const resp=await fetch(via(base+path),{method:"POST",headers:headersForPath(id,path),
         body:JSON.stringify(body),signal:AbortSignal.timeout(30000)});
       const txt=await resp.text();
       let parsed=null;try{parsed=JSON.parse(txt);}catch(e){}
@@ -524,7 +540,7 @@ async function testTaskCreateProbe(){
     for(let i=0;i<3;i++){
       await sleep(3000);
       try{
-        const resp=await fetch(via(base+EP.queryNew),{method:"POST",headers:jsonHeaders(),
+        const resp=await fetch(via(base+EP.queryNew),{method:"POST",headers:queryHeaders(id),
           body:JSON.stringify({taskId:task.taskId}),signal:AbortSignal.timeout(20000)});
         const txt=await resp.text();
         rlog(`PROBE-D query#${i+1} HTTP ${resp.status} body=${txt.slice(0,500)}`);
