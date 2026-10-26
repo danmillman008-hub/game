@@ -46,6 +46,8 @@
 
   <div class="card">
     <button id="run">▶️ اجرای همه تست‌ها</button>
+    <button id="runE">🧭 پروب E: کاتالوگ قالب‌ها</button>
+    <button class="ghost" id="dlE" type="button">💾 ذخیره JSON پروب E</button>
     <button class="ghost" id="copy" type="button">📋 کپی گزارش</button>
     <button class="ghost" id="dl" type="button">⬇️ دانلود گزارش</button>
     <div class="bar"><div id="prog"></div></div>
@@ -616,6 +618,76 @@ async function testTaskCreateProbe(){
   }
 }
 
+/* ---------- 4c) PROBE-E: template/resource catalog (plain GET, no signing) ----------
+   از بایت‌کد com.vibe.res.component.request.ServerRequestManager + رتروفیت b:
+   هاست https://cpi.wiseoel.com ، appName/cp = instagram.story.art.collage
+   GET /common/category/{appName}/resource  (لیست منابع هر گروه)
+   GET /common/{appName}/resource           (منابع بر اساس resTypeId)
+   هدف: پیدا کردن قالب‌های AI Video و فیلدهای example/effectType/googleId داخل JSON سرور */
+window.__probeE=[];
+async function testTemplateCatalog(){
+  const via=u=>"http://localhost:8770/proxy?u="+encodeURIComponent(u);
+  const id=loadIdentity();
+  const app=id.cp, ver=id.version;
+  const hosts=["https://cpi.wiseoel.com","https://cpi.ufotosoft.com"];
+  const groups=[2941,3988];   // 2941=Custom_Ai_Video از ai_home_tools، 3988=نسخه قدیمی‌تر از aitools
+  const qs=p=>Object.entries(p).map(([k,v])=>k+"="+encodeURIComponent(v)).join("&");
+  const targets=[];
+  for(const h of hosts){
+    for(const g of groups){
+      targets.push(["category/"+h.split("//")[1].split(".")[0]+" g="+g,
+        h+"/common/category/"+app+"/resource?"+qs({version:ver,cp:app,platform:"1",
+          ifCdn:0,ifTran:0,packageLevel:1,categoryType:g,ifHttps:1})]);
+      targets.push(["resource/"+h.split("//")[1].split(".")[0]+" rt="+g,
+        h+"/common/"+app+"/resource?"+qs({version:ver,cp:app,platform:"1",country:"",
+          ifCdn:0,ifTran:0,packageLevel:1,resTypeId:g,ifHttps:1})]);
+    }
+  }
+  addRow("پروب E کاتالوگ قالب‌ها","info",targets.length+" درخواست GET بدون امضا از طریق پروکسی ۸۷۷۰...");
+  rlog("\n--- PROBE-E template catalog via http://localhost:8770 ---");
+  const keys=["example","effectType","imageEffectType","googleId","veoId","cloudalgoParams","resName","resTypeId","zipUrl","templateId"];
+  let hitCount=0;
+  for(const [label,url] of targets){
+    try{
+      const resp=await fetch(via(url),{method:"GET",signal:AbortSignal.timeout(30000)});
+      const txt=await resp.text();
+      window.__probeE.push({label,url,status:resp.status,ct:resp.headers.get("content-type"),body:txt});
+      const low=txt.toLowerCase();
+      const hits=keys.filter(k=>low.includes(k.toLowerCase()));
+      rlog(`PROBE-E ${label} -> HTTP ${resp.status} ct=${resp.headers.get("content-type")} len=${txt.length} keyHits=[${hits.join(",")}]`);
+      rlog("URL: "+url);
+      rlog("BODY(0..3000): "+txt.slice(0,3000));
+      let parsed=null;try{parsed=JSON.parse(txt);}catch(e){}
+      const looksResource=parsed&&(parsed.d||parsed.data||Array.isArray(parsed));
+      if(resp.status===200&&looksResource){
+        hitCount++;
+        addRow("E: "+label,"ok",`HTTP 200 len=${txt.length} کلیدها: ${hits.join(", ")||"—"} | ${txt.replace(/\s+/g," ").slice(0,160)}`);
+      }else{
+        addRow("E: "+label,resp.status===200?"warn":"err",
+          `HTTP ${resp.status} len=${txt.length} | ${txt.replace(/\s+/g," ").slice(0,160)}`);
+      }
+    }catch(e){rlog(`PROBE-E ${label} FAIL ${to(e)}`);addRow("E: "+label,"err",to(e).slice(0,130));}
+  }
+  // اگر جایی کلید example/effectType/googleId پیدا شد، با زمینه کامل استخراج کن
+  rlog("--- PROBE-E key context ---");
+  let anyCtx=false;
+  for(const item of window.__probeE){
+    for(const k of keys){
+      let idx=0;
+      while((idx=item.body.toLowerCase().indexOf(k.toLowerCase(),idx))>=0){
+        anyCtx=true;
+        const ctx=item.body.slice(Math.max(0,idx-80),idx+220).replace(/\s+/g," ");
+        rlog(`CTX[${item.label}] ...${ctx}...`);
+        idx+=k.length;
+      }
+    }
+  }
+  if(!anyCtx)rlog("PROBE-E هیچ کلید example/effectType/googleId در پاسخ‌ها پیدا نشد");
+  addRow("پروب E جمع‌بندی",hitCount?"ok":"warn",
+    hitCount?`${hitCount} پاسخ منبع‌دار دریافت شد؛ متن کامل در گزارش و دکمه «ذخیره JSON پروب E»`:"پاسخ منبع‌داری گرفته نشد — متن خام را در گزارش بفرستید");
+  $("report").value=report.join("\n");
+}
+
 /* ---------- 5) public proxy battery (GET reachability + real POST where claimed) ---------- */
 async function testProxies(){
   const target=HOSTS[0][1]+EP.query;
@@ -741,6 +813,19 @@ async function main(){
   }finally{$("run").disabled=false;}
 }
 $("run").addEventListener("click",main);
+$("runE").addEventListener("click",async()=>{
+  $("runE").disabled=true;
+  try{ await testTemplateCatalog(); }
+  catch(e){ addRow("پروب E خطای داخلی","err",to(e));rlog("PROBE-E FATAL "+to(e));$("report").value=report.join("\n"); }
+  finally{ $("runE").disabled=false; }
+});
+$("dlE").addEventListener("click",()=>{
+  if(!window.__probeE||!window.__probeE.length){alert("اول پروب E را اجرا کنید");return;}
+  const blob=new Blob([JSON.stringify(window.__probeE,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);a.download="probeE_catalog.json";a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+});
 $("copy").addEventListener("click",async()=>{
   $("report").select();
   try{await navigator.clipboard.writeText($("report").value);}catch(e){document.execCommand("copy");}
