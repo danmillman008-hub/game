@@ -19,7 +19,7 @@ try {
 } catch {}
 
 $Prefix  = 'http://localhost:8770/'
-$Allowed = @('ufotosoft.com', 'videomate.cc')
+$Allowed = @('ufotosoft.com', 'videomate.cc', 'wiseoel.com')
 $SkipHeaders = @(
     'Connection','Content-Length','Content-Type','Date','Expect','Host',
     'Keep-Alive','Range','Referer','Transfer-Encoding','User-Agent',

@@ -194,7 +194,7 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 
 PORT = 8770
-ALLOW = ("ufotosoft.com", "videomate.cc")
+ALLOW = ("ufotosoft.com", "videomate.cc", "wiseoel.com")
 HOP = {"connection","keep-alive","proxy-authenticate","proxy-authorization",
        "te","trailers","transfer-encoding","upgrade","host",
        "content-length","content-encoding"}
@@ -272,7 +272,7 @@ try {
 } catch {}
 
 $Prefix  = 'http://localhost:8770/'
-$Allowed = @('ufotosoft.com', 'videomate.cc')
+$Allowed = @('ufotosoft.com', 'videomate.cc', 'wiseoel.com')
 $SkipHeaders = @(
     'Connection','Content-Length','Content-Type','Date','Expect','Host',
     'Keep-Alive','Range','Referer','Transfer-Encoding','User-Agent',
@@ -578,6 +578,8 @@ async function connectivityTest(){
   log("شروع تست اتصال...","w");
   const hosts=[
     "https://cpi.ufotosoft.com",
+    "https://cpi.wiseoel.com",
+    "https://algo.ufotosoft.com",
     "https://face-api.ufotosoft.com",
     "https://face-api.videomate.cc"
   ];

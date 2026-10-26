@@ -154,6 +154,8 @@ function loadIdentity(){
 let proxyLocalOk=false;
 const HOSTS=[
   ["cpi (هاست اصلی AIGC)","https://cpi.ufotosoft.com"],
+  ["cpi wiseoel (دامنه کانفیگ ابری)","https://cpi.wiseoel.com"],
+  ["algo (هاست منابع آپلود)","https://algo.ufotosoft.com"],
   ["face-api (درایور Tencent)","https://face-api.ufotosoft.com"],
   ["face-api دامنه دوم","https://face-api.videomate.cc"],
   ["res (CDN)","https://res.ufotosoft.com"]
@@ -163,6 +165,22 @@ const ALGO_HOSTS=[
   ["cpi.ufotosoft.com","https://cpi.ufotosoft.com"],
   ["face-api.ufotosoft.com","https://face-api.ufotosoft.com"],
   ["face-api.videomate.cc","https://face-api.videomate.cc"]
+];
+/* ماتریس کشف مسیر زنده: همه این مسیرها عیناً از Annotation های Retrofit در classes6.dex استخراج شده‌اند */
+const ROUTE_HOSTS=[
+  ["cpi.ufotosoft.com","https://cpi.ufotosoft.com",7],            /* همه مسیرها */
+  ["cpi.wiseoel.com","https://cpi.wiseoel.com",7],                /* دامنه دوم موجود در دکس (کانفیگ ابری) */
+  ["algo.ufotosoft.com","https://algo.ufotosoft.com",3],          /* هاستی که پاسخ آپلود برگرداند */
+  ["face-api.ufotosoft.com","https://face-api.ufotosoft.com",2]   /* فقط مسیرهای جدید (queryTask قبلاً 404 شد) */
+];
+const I2V_PATHS=[
+  "/algo/v1/faceFusion/aigc/image2video/queryTask",
+  "/algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate",
+  "/algo/v1/faceFusion/aigc/image2video/integratedTaskCreate",
+  "/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
+  "/algo/v1/faceFusion/aigc/integrated/image2VideoCreateV4",
+  "/algo/v1/faceFusion/aigc/image2VideoQuery",
+  "/algo/v1/faceFusion/aigc/image2VideoCreate"
 ];
 const EP={
   upload:"/algo/v1/aiGenerate-aigc/multipleUpload",
@@ -361,6 +379,76 @@ async function testSignedProbe(){
   }
 }
 
+/* ---------- 4b) Probe C: host x path matrix (dex-extracted routes) ---------- */
+async function testRouteMatrix(){
+  if(!proxyLocalOk){
+    addRow("ماتریس کشف مسیر (پروب C)","skip","پروکسی محلی بالا نیست");
+    return;
+  }
+  const id=loadIdentity();
+  const via=u=>"http://localhost:8770/proxy?u="+encodeURIComponent(u);
+  window.__diagRoutes=[];
+  let proxyNeedsUpdate=false;
+  rlog("\n--- PROBE-C route matrix via http://localhost:8770 ---");
+  addRow("ماتریس کشف مسیر (پروب C)","info",ROUTE_HOSTS.reduce((n,h)=>n+h[2],0)+" درخواست امضاشده روی "+ROUTE_HOSTS.length+" هاست — کمی صبر کنید...");
+  for(const [label,base,pathCount] of ROUTE_HOSTS){
+    const paths=I2V_PATHS.slice(0,pathCount);
+    for(const path of paths){
+      const ts=String(Math.floor(Date.now()/1000));
+      const sign=md5(id.userId+ts);
+      const short=path.split("/").slice(-2).join("/");
+      const mkOpts=()=>({method:"POST",
+          headers:{"Content-Type":"application/json","userid":id.userId,"timeStamp":ts,
+            "cp":id.cp,"version":id.version,"platform":id.platform,"sign":sign,"ifWise":"true"},
+          body:JSON.stringify({taskId:"diagnostic-probe"}),
+          signal:AbortSignal.timeout(15000)});
+      try{
+        let resp;
+        try{
+          resp=await fetch(via(base+path),mkOpts());
+        }catch(e1){
+          /* برخی هاست‌ها فقط HTTP هستند (مثل آدرسی که خود سرور در پاسخ آپلود برگرداند) */
+          if(base.startsWith("https://")){
+            rlog(`PROBE-C ${label} https failed (${to(e1).slice(0,80)}), retrying http://`);
+            resp=await fetch(via(base.replace("https://","http://")+path),mkOpts());
+          }else throw e1;
+        }
+        const txt=await resp.text();
+        let parsed=null;try{parsed=JSON.parse(txt);}catch(e){}
+        const hasC=parsed&&("c" in parsed);
+        const c=hasC?parsed.c:"?";
+        const is403proxy=resp.status===403&&/host not allowed/i.test(txt);
+        if(is403proxy)proxyNeedsUpdate=true;
+        const exists=hasC||(![404,403].includes(resp.status));
+        rlog(`PROBE-C ${label} ${path} -> HTTP ${resp.status} c=${c} ct=${resp.headers.get("content-type")||"?"} body=${txt.slice(0,400)}`);
+        if(hasC){
+          window.__diagRoutes.push({host:base,label,path,status:resp.status,c,
+            body:txt.replace(/\s+/g," ").slice(0,200)});
+          addRow(`C: ${label} — ${short}`,c===200?"ok":"warn",
+            `HTTP ${resp.status} | c=${c} | پاسخ بیزینسی ✓ | ${txt.replace(/\s+/g," ").slice(0,150)}`);
+        }else if(is403proxy){
+          addRow(`C: ${label} — ${short}`,"err","پروکسی محلی این دامنه را نمی‌شناسد — نسخه جدید bat را دانلود و جایگزین/اجرا کنید");
+        }else if(resp.status===404){
+          addRow(`C: ${label} — ${short}`,"skip",`HTTP 404 (مسیر روی این هاست وجود ندارد)`);
+        }else{
+          window.__diagRoutes.push({host:base,label,path,status:resp.status,c:null,
+            body:txt.replace(/\s+/g," ").slice(0,200)});
+          addRow(`C: ${label} — ${short}`,"warn",
+            `HTTP ${resp.status} (غیر ۴۰۴ — احتمالاً مسیر وجود دارد) | ${txt.replace(/\s+/g," ").slice(0,140)}`);
+        }
+      }catch(e){
+        rlog(`PROBE-C FAIL ${label} ${path} ${to(e)}`);
+        addRow(`C: ${label} — ${short}`,"err",to(e).slice(0,120));
+      }
+    }
+  }
+  if(proxyNeedsUpdate){
+    addRow("به‌روزرسانی پروکسی لازم است","warn","نسخه فعلی bat دامنه‌های جدید (مثل wiseoel.com) را مجاز نمی‌کند. فایل mivi-proxy-windows.bat جدید را دانلود، پنجره قبلی را ببندید و فایل جدید را اجرا کنید، بعد دوباره تست بزنید.");
+    rlog("PROXY NEEDS UPDATE: old allow-list rejects new domains");
+  }
+  rlog("PROBE-C envelope hits: "+JSON.stringify(window.__diagRoutes.map(r=>({h:r.label,p:r.path,c:r.c}))));
+}
+
 /* ---------- 5) public proxy battery (GET reachability + real POST where claimed) ---------- */
 async function testProxies(){
   const target=HOSTS[0][1]+EP.query;
@@ -408,8 +496,20 @@ function buildVerdict(){
   const probeA=rows.filter(r=>r.name.startsWith("پروب A کوئری"));
   const probeAOk=probeA.some(r=>r.status==="ok");
   const probeB=rows.find(r=>r.name.startsWith("پروب B"));
+  const routes=window.__diagRoutes||[];
+  const route200=routes.filter(r=>r.c===200);
   let cls,html;
-  if(probeAOk){
+  if(route200.length){
+    cls="v-ok";
+    html="✅✅ ماتریس پروب C مسیر زنده را پیدا کرد: سرور Mivi با پاسخ بیزینسی <b>c=200</b> جواب داد:<br>"+
+      route200.map(r=>"<code>"+r.label+"</code> ← <code>"+r.path+"</code>").join("<br>")+
+      "<br>این ترکیب‌ها در اپ اصلی استفاده می‌شوند. کل گزارش را بفرستید تا اپ را با همین مقادیر قفل کنم.";
+  }else if(routes.length){
+    cls="v-mid";
+    html="🟡 مسیر(های) زنده پیدا شد (پاسخ بیزینسی، نه ۴۰۴) ولی c=200 نیست — احتمالاً خطای پارامتر/احراز:<br>"+
+      routes.map(r=>"<code>"+r.label+"</code> ← <code>"+r.path+"</code> (HTTP "+r.status+(r.c!==null?(", c="+r.c):"")+")").join("<br>")+
+      "<br>متن کامل در گزارش خام هست؛ بفرستید تا بدنه درخواست را دقیق اصلاح کنم.";
+  }else if(probeAOk){
     cls="v-ok";
     html="✅✅ پروب واقعی امضاشده از طریق پروکسی محلی، <b>پاسخ معتبر c=200 از سرور Mivi</b> گرفت. "+
       "یعنی فرمول امضا، هدرها و مسیر درست‌اند و پروتکل تأیید شد.<br>"+
@@ -421,7 +521,8 @@ function buildVerdict(){
       "این یعنی مسیرها درست‌اند و احتمالاً یک خطای احراز/پارامتر باقی مانده. متن کامل پاسخ در جدول و گزارش خام هست؛ بفرستید تا دقیق اصلاح کنم.";
   }else if(probeA.length){
     cls="v-bad";
-    html="🔴 پروکسی کار می‌کند ولی هیچ‌هاستی پاسخ بیزینسی نداد (همه ۴۰۴). گزارش را بفرستید — ممکن است نسخه سرویس تغییر کرده باشد.";
+    html="🔴 پروکسی و آپلود کار می‌کنند (پروب B پاسخ واقعی سرور را گرفت) ولی هیچ‌هاستی مسیرهای faceFusion را ندارد (همه ۴۰۴). "+
+      "یعنی هاست این ماژول با ریموت‌کانفیگ عوض می‌شود. اگر ردیف «به‌روزرسانی پروکسی لازم است» هست، اول بات جدید را اجرا کنید؛ در غیر این صورت کل گزارش را بفرستید.";
   }else if(corsOk){
     cls="v-ok";html="✅ سرور Mivi خودش CORS می‌دهد — حالت «مستقیم» باید کار کند. اگر کار نمی‌کند مشکل از جای دیگر است؛ گزارش را بفرستید.";
   }else if(localOk){
@@ -448,7 +549,8 @@ async function main(){
     setStatus("تست دسترسی شبکه...",20);await testReach();
     setStatus("تست CORS و preflight سرور...",45);await testCors();
     setStatus("بررسی پروکسی محلی...",58);await testLocal();
-    setStatus("پروب واقعی امضاشده از طریق پروکسی...",72);await testSignedProbe();
+    setStatus("پروب واقعی امضاشده از طریق پروکسی...",66);await testSignedProbe();
+    setStatus("ماتریس کشف مسیرهای زنده (پروب C)...",80);await testRouteMatrix();
     if(!proxyLocalOk){
       setStatus("باتری پروکسی‌های عمومی (کمی صبر کنید)...",85);await testProxies();
     }else{

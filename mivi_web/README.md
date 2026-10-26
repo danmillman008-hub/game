@@ -51,6 +51,20 @@
     `base_url_test/defaultUtl` با مقدار پیش‌فرض `https://cpi.ufotosoft.com`
   - `face-api.ufotosoft.com` و `face-api.videomate.cc` فقط مسیر درایور Tencent
     هستند و روی اندپوینت‌های AIGC پاسخ ۴۰۴ می‌دهند (با درخواست واقعی تأیید شد).
+- **وضعیت زنده (تأییدشده با درخواست واقعی امضاشده):**
+  - آپلود `POST /algo/v1/aiGenerate-aigc/multipleUpload` روی `cpi.ufotosoft.com`
+    پاسخ `{"c":200,"m":"成功","d":["http://algo.ufotosoft.com/...jpg"]}` می‌دهد —
+    یعنی کلید امضا `m3snil`، هدرها و فرمول MD5 کاملاً درست کار می‌کنند.
+  - مسیرهای تسک `faceFusion/*` (مثل `image2video/queryTask`) روی هر سه هاست
+    هاردکدشده ۴۰۴ می‌دهند. در نسخه ۴۰۷ هاست این ماژول از طریق ریموت‌کانفیگ
+    (`ServerRequestManager$b.j/k` و `com.ufotosoft.base.e`) در زمان اجرا بازنویسی
+    می‌شود و مقدار پیش‌فرض دکس دیگر محل استقرار faceFusion نیست.
+  - صفحه دایگنستیک «پروب C» ماتریسی از ۴ هاست
+    (`cpi.ufotosoft.com`، `cpi.wiseoel.com`، `algo.ufotosoft.com`،
+    `face-api.ufotosoft.com`) × ۷ مسیر استخراج‌شده از Annotation های Retrofit
+    کلاس `com.ufotosoft.ai.base.g` را امضا و تست می‌کند تا هاست/مسیر زنده پیدا شود.
+  - دامنه `wiseoel.com` به allow-list هر دو پروکسی (bat و python) اضافه شده؛
+    اگر نسخه قدیمی بات در حال اجراست، فایل جدید را دانلود و جایگزین کنید.
 - signKey ثابت: **`m3snil`** (رمزگشایی DES/CBC از رشته هاردکد `hCzXemhkIkY=`)
 - امضای API الگوریتمی: `MD5(userId + زمان‌یونیکس)`
 - امضای آپلود: `MD5("m3snil" + زمان‌یونیکس)`
