@@ -153,10 +153,16 @@ function loadIdentity(){
 }
 let proxyLocalOk=false;
 const HOSTS=[
-  ["face-api (اصلی)","https://face-api.ufotosoft.com"],
-  ["face-api (دامنه دوم)","https://face-api.videomate.cc"],
-  ["cpi (کانفیگ)","https://cpi.ufotosoft.com"],
+  ["cpi (هاست اصلی AIGC)","https://cpi.ufotosoft.com"],
+  ["face-api (درایور Tencent)","https://face-api.ufotosoft.com"],
+  ["face-api دامنه دوم","https://face-api.videomate.cc"],
   ["res (CDN)","https://res.ufotosoft.com"]
+];
+/* کاندیداهای میزبانی سرویس الگوریتمی — اول cpi چون از روی بایت‌کد اثبات شد */
+const ALGO_HOSTS=[
+  ["cpi.ufotosoft.com","https://cpi.ufotosoft.com"],
+  ["face-api.ufotosoft.com","https://face-api.ufotosoft.com"],
+  ["face-api.videomate.cc","https://face-api.videomate.cc"]
 ];
 const EP={
   upload:"/algo/v1/aiGenerate-aigc/multipleUpload",
@@ -300,9 +306,10 @@ async function testSignedProbe(){
   rlog("\n--- SIGNED PROBES via http://localhost:8770 ---");
   rlog("identity userId="+id.userId+" signKey="+id.signKey);
   const via=u=>"http://localhost:8770/proxy?u="+encodeURIComponent(u);
+  window.__diagAlgoHost=null;
 
-  // Probe A: signed JSON POST to queryTask (dummy taskId) — auth check, no side effects
-  for(const [label,base] of HOSTS.slice(0,2)){
+  // Probe A: signed JSON POST to queryTask on EVERY candidate host (dummy taskId)
+  for(const [label,base] of ALGO_HOSTS){
     const ts=String(Math.floor(Date.now()/1000));
     const sign=md5(id.userId+ts);
     try{
@@ -314,17 +321,21 @@ async function testSignedProbe(){
       const txt=await resp.text();
       let parsed=null;try{parsed=JSON.parse(txt);}catch(e){}
       rlog(`PROBE-A ${label} HTTP ${resp.status} sign=${sign} body=${txt.slice(0,600)}`);
-      const c=parsed&&("c" in parsed)?parsed.c:"?";
-      const status = parsed ? (c===200?"ok":"warn") : "warn";
-      addRow(`پروب A (POST امضاشده کوئری): ${label}`,status,
-        `HTTP ${resp.status} | c=${c} | پاسخ: ${txt.replace(/\s+/g," ").slice(0,260)}`);
+      const hasC=parsed&&("c" in parsed);
+      const c=hasC?parsed.c:"?";
+      // JSON envelope {c,m,d} = correct routing even if c!=200 (business error); 404 = wrong host/path
+      const status=hasC?(c===200?"ok":"warn"):(resp.status===404?"err":"warn");
+      if(hasC&&!window.__diagAlgoHost)window.__diagAlgoHost=base;
+      addRow(`پروب A کوئری: ${label}`,status,
+        `HTTP ${resp.status} | c=${c} | ${hasC?"مسیر درست است (پاسخ بیزینسی سرور)":"مسیر روی این هاست وجود ندارد"} | ${txt.replace(/\s+/g," ").slice(0,200)}`);
     }catch(e){
       rlog(`PROBE-A ${label} FAIL ${to(e)}`);
-      addRow(`پروب A (POST امضاشده کوئری): ${label}`,"err",to(e).slice(0,160));
+      addRow(`پروب A کوئری: ${label}`,"err",to(e).slice(0,160));
     }
   }
 
-  // Probe B: multipart upload probe (tiny 1x1 jpeg) — checks upload signature + multipart path
+  // Probe B: multipart upload probe (tiny jpeg) against the host that answered with an envelope
+  const uploadBase=window.__diagAlgoHost||ALGO_HOSTS[0][1];
   try{
     const jpgB64="/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/wAALCAABAAEBAREA/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8AfwD/2Q==";
     const bin=atob(jpgB64);const arr=new Uint8Array(bin.length);
@@ -333,16 +344,17 @@ async function testSignedProbe(){
     fd.append("files",new Blob([arr],{type:"image/jpg"}),"diag.jpg");
     const ts=String(Math.floor(Date.now()/1000));
     const sign=md5(id.signKey+ts); // upload uses MD5(signKey+ts)
-    const resp=await fetch(via(HOSTS[0][1]+EP.upload),{method:"POST",
+    const resp=await fetch(via(uploadBase+EP.upload),{method:"POST",
       headers:{"cp":id.cp,"version":id.version,"platform":id.platform,
         "sign":sign,"timeStamp":ts,"userId":id.userId,"ifHttps":"true"},
       body:fd,signal:AbortSignal.timeout(30000)});
     const txt=await resp.text();
     let parsed=null;try{parsed=JSON.parse(txt);}catch(e){}
-    rlog(`PROBE-B upload HTTP ${resp.status} sign=${sign} body=${txt.slice(0,600)}`);
-    const c=parsed&&("c" in parsed)?parsed.c:"?";
-    addRow("پروب B (آپلود multipart امضاشده)",parsed&&c===200?"ok":"warn",
-      `HTTP ${resp.status} | c=${c} | پاسخ: ${txt.replace(/\s+/g," ").slice(0,260)}`);
+    rlog(`PROBE-B upload ${uploadBase} HTTP ${resp.status} sign=${sign} body=${txt.slice(0,600)}`);
+    const hasC=parsed&&("c" in parsed);
+    const c=hasC?parsed.c:"?";
+    addRow(`پروب B آپلود: ${uploadBase.replace("https://","")}`,hasC?(c===200?"ok":"warn"):"err",
+      `HTTP ${resp.status} | c=${c} | پاسخ: ${txt.replace(/\s+/g," ").slice(0,240)}`);
   }catch(e){
     rlog("PROBE-B FAIL "+to(e));
     addRow("پروب B (آپلود multipart امضاشده)","err",to(e).slice(0,160));
@@ -393,7 +405,7 @@ function buildVerdict(){
   const corsOk=rows.some(r=>r.name.includes("POST واقعی")&&r.status==="ok");
   const localOk=rows.some(r=>r.name.includes("proxy.py")&&r.status==="ok");
   const proxyPost=rows.filter(r=>r.name.includes("POST از طریق")&&r.status==="ok");
-  const probeA=rows.filter(r=>r.name.startsWith("پروب A"));
+  const probeA=rows.filter(r=>r.name.startsWith("پروب A کوئری"));
   const probeAOk=probeA.some(r=>r.status==="ok");
   const probeB=rows.find(r=>r.name.startsWith("پروب B"));
   let cls,html;
@@ -401,11 +413,15 @@ function buildVerdict(){
     cls="v-ok";
     html="✅✅ پروب واقعی امضاشده از طریق پروکسی محلی، <b>پاسخ معتبر c=200 از سرور Mivi</b> گرفت. "+
       "یعنی فرمول امضا، هدرها و مسیر درست‌اند و پروتکل تأیید شد.<br>"+
-      "حالا در اپ اصلی (<code>mivi_all_in_one.html</code>) با حالت «پروکسی محلی» عکس و پرامپت بدهید و تولید ویدیو را بزنید."+
+      "هاست صحیح: <code>"+(window.__diagAlgoHost||"?")+"</code> — در اپ اصلی همین را انتخاب کنید."+
       (probeB?("<br>پروب آپلود: "+(probeB.status==="ok"?"موفق ✓":"هشدار — جزئیات در جدول")):"");
-  }else if(probeA.length){
+  }else if(window.__diagAlgoHost){
     cls="v-mid";
-    html="🟡 پروکسی محلی کار می‌کند و سرور پاسخ JSON داد، ولی <b>c=200 نبود</b> (احتمال خطای احراز یا پارامتر). متن کامل پاسخ در جدول و گزارش خام هست؛ آن را بفرستید تا فرمول امضا/فیلدها را اصلاح کنم.";
+    html="🟡 مسیر درست روی <code>"+window.__diagAlgoHost+"</code> پیدا شد (سرور پاسخ بیزینسی JSON داد، نه ۴۰۴) ولی <b>c=200 نیست</b>. "+
+      "این یعنی مسیرها درست‌اند و احتمالاً یک خطای احراز/پارامتر باقی مانده. متن کامل پاسخ در جدول و گزارش خام هست؛ بفرستید تا دقیق اصلاح کنم.";
+  }else if(probeA.length){
+    cls="v-bad";
+    html="🔴 پروکسی کار می‌کند ولی هیچ‌هاستی پاسخ بیزینسی نداد (همه ۴۰۴). گزارش را بفرستید — ممکن است نسخه سرویس تغییر کرده باشد.";
   }else if(corsOk){
     cls="v-ok";html="✅ سرور Mivi خودش CORS می‌دهد — حالت «مستقیم» باید کار کند. اگر کار نمی‌کند مشکل از جای دیگر است؛ گزارش را بفرستید.";
   }else if(localOk){

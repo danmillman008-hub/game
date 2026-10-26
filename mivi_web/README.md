@@ -36,8 +36,9 @@
 3. اگر تست اتصال حتی با پروکسی محلی هم خطای شبکه داد، یعنی ISP شما دامنه را
    مسدود کرده و باید VPN روشن کنید.
 
-امکانات دیگر: انتخاب هاست جایگزین `face-api.videomate.cc`، پروکسی سفارشی با
-جایگره `{url}`، و گزارش URL کامل هر درخواست در «گزارش مراحل».
+امکانات دیگر: انتخاب هاست جایگزین `face-api.ufotosoft.com` یا
+`face-api.videomate.cc`، پروکسی سفارشی با جایگره `{url}`، و گزارش URL کامل هر
+درخواست در «گزارش مراحل».
 
 > محدودیت پروکسی‌های عمومی: allorigins فقط GET است (آپلود POST کار نمی‌کند) و
 > corsproxy.io ممکن است کلید/ثبت Origin بخواهد؛ بنابراین پروکسی محلی گزینه
@@ -45,7 +46,11 @@
 
 ## پروتکل (استخراج‌شده از APK)
 
-- هاست: `https://face-api.ufotosoft.com`
+- هاست AIGC (اثبات‌شده از روی بایت‌کد classes7.dex): `https://cpi.ufotosoft.com`
+  - مسیر زنجیره: `net.b.a()` ← `DebugAssemblyUtils$a.d()/c()` ← کلید
+    `base_url_test/defaultUtl` با مقدار پیش‌فرض `https://cpi.ufotosoft.com`
+  - `face-api.ufotosoft.com` و `face-api.videomate.cc` فقط مسیر درایور Tencent
+    هستند و روی اندپوینت‌های AIGC پاسخ ۴۰۴ می‌دهند (با درخواست واقعی تأیید شد).
 - signKey ثابت: **`m3snil`** (رمزگشایی DES/CBC از رشته هاردکد `hCzXemhkIkY=`)
 - امضای API الگوریتمی: `MD5(userId + زمان‌یونیکس)`
 - امضای آپلود: `MD5("m3snil" + زمان‌یونیکس)`

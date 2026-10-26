@@ -128,8 +128,9 @@
 
       <label>هاست سرور</label>
       <select id="hostPreset">
-        <option value="https://face-api.ufotosoft.com">face-api.ufotosoft.com (پیش‌فرض)</option>
-        <option value="https://face-api.videomate.cc">face-api.videomate.cc (دامنه جایگزین)</option>
+        <option value="https://cpi.ufotosoft.com">cpi.ufotosoft.com (پیش‌فرض — هاست واقعی AIGC)</option>
+        <option value="https://face-api.ufotosoft.com">face-api.ufotosoft.com (درایور Tencent، جایگزین)</option>
+        <option value="https://face-api.videomate.cc">face-api.videomate.cc (دامنه قدیمی)</option>
         <option value="__custom__">هاست سفارشی...</option>
       </select>
       <input type="text" id="host" dir="ltr" style="margin-top:8px">
@@ -487,7 +488,7 @@ function md5(inputString){
 
 /* ================= پیکربندی ================= */
 const DEFAULTS={
-  host:"https://face-api.ufotosoft.com",
+  host:"https://cpi.ufotosoft.com",
   signKey:"m3snil",
   cp:"instagram.story.art.collage",
   version:"407",
@@ -501,6 +502,10 @@ function loadCfg(){
   let cfg;
   try{cfg=JSON.parse(localStorage.getItem(LS_KEY)||"{}");}catch(e){cfg={};}
   cfg=Object.assign({},DEFAULTS,cfg);
+  // مهاجرت: نسخه‌های قبلی پیش‌فرض face-api داشتند که فقط درایور Tencent است؛ هاست AIGC صحیح cpi است
+  if(cfg.host==="https://face-api.ufotosoft.com" && !cfg.__hostMigrated){
+    cfg.host=DEFAULTS.host; cfg.__hostMigrated=true;
+  }
   if(!cfg.userId){
     const b=new Uint8Array(8);crypto.getRandomValues(b);
     cfg.userId=Array.from(b).map(x=>x.toString(16).padStart(2,"0")).join("");
@@ -572,6 +577,7 @@ function uploadHeaders(){
 async function connectivityTest(){
   log("شروع تست اتصال...","w");
   const hosts=[
+    "https://cpi.ufotosoft.com",
     "https://face-api.ufotosoft.com",
     "https://face-api.videomate.cc"
   ];
