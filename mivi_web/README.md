@@ -16,11 +16,69 @@
 ## نحوه استفاده
 
 ۱. فایل `mivi_all_in_one.html` را با مرورگر باز کنید (دابل‌کلیک، همان file://).
-۲. عکس انتخاب کنید، یک افکت از لیست ۳۱۰تایی کاتالوگ انتخاب کنید (پیش‌فرض
-   Catwalk/4991 که تست زندهٔ موفق با آن انجام شد)، پرامپت اختیاری بنویسید و
-   «تولید ویدیو» بزنید.
-۳. ویدیوی ~۶ ثانیه‌ای (معمولاً ظرف ۱۵–۳۰ ثانیه) در همان صفحه پخش و قابل
-   دانلود است.
+۲. حالت تولید را انتخاب کنید:
+   - **✍️ پرامپت اختصاصی (Make AI Video):** عکس + متن دلخواه خودتان + کلید
+     کیفیت 360P (`quality=1`) / 720P (`quality=2`). این معادل دقیق همان بخش
+     «Make AI Video» اپ است (نه افکت‌های آماده).
+   - **🎞️ افکت آمادهٔ کاتالوگ:** یک افکت از ۳۱۰ قالب (پیش‌فرض Catwalk/4991 که
+     تست زندهٔ موفق با آن انجام شد) + پرامپت اختیاری.
+۳. «تولید ویدیو» بزنید؛ ویدیوی ~۶ ثانیه‌ای (معمولاً ظرف ۱۵–۳۰ ثانیه) در همان
+   صفحه پخش و قابل دانلود است.
+
+## 🔬 زنجیره کامل «Make AI Video» (استخراج کامل از APK، classes5–7)
+
+مسیر دقیق دکمهٔ 720P/360P با تصویر و پرامپت شخصی، از UI تا سرور:
+
+1. `AiToolsFragment` (گروه `Custom_Ai_Video`، category=1402، از
+   `ToolsResponseKt.transform`/`AiToolsDataKt.transform`) →
+   `AiToolVideoHugActivity` (روت `/edit/aiphoto_ai_tool_hug`)، آبجکت
+   `TemplateItem` با extra `key_mv_entry_info`.
+2. متد `Z3()`: مدل آنالیتیکس `model = "720p"` اگر سوئیچ `binding.k0` تیک خورده
+   باشد وگرنه `"360p"`؛ تک‌تصویر = type `aivideo`/phototype 1.
+3. `K3()` → `processSingle$1` (کراپ/فشرده‌سازی) → `o3()` → `K2()`:
+   `TemplateItem.setPrompt(متن کاربر)` و `setQuality(2 برای 720P / 1 برای 360P)`،
+   سپس روت `/gallery/facecombinetask` با `face_fusion_from=custom_aivideo`.
+4. `CombineTaskActivity` چون `groupName == "Custom_Ai_Video"` (متد `a1()`)
+   پیش‌بارگذار `com.gallery.preload.f0` و ابزرور
+   `com.gallery.facefusion.observer.g` را انتخاب می‌کند.
+5. `observer.g.k0()`:
+   - userId = شناسهٔ دستگاه (`com.ufotosoft.base.d.c.a().b()`)،
+   - signKey = رمزگشایی DES/CBC/PKCS5 از `hCzXemhkIkY=` با کلید `IM41OUCa` و
+     IV `12345678 90ABCDEF` → **`m3snil`** (به‌صورت مستقل در پایتون تأیید شد)،
+   - `P2Type.GX_AiVideoP2V` (ثابت؛ نوع وئو با کیفیت عوض نمی‌شود)،
+   - اگر گروه Custom_Ai_Video باشد: `f.R(prompt)` و `f.S(quality)`.
+6. `Image2VideoTask.e2()` → جدول `$b` case 9 → `b3()` → `j3()` → `g3()` →
+   کوروتین `startSequenceVideo$2` → فشرده‌سازی JPEG →
+   `Image2VideoServer.y()` → کوروتین **`createGXAiVideoTask$1`**.
+7. **درخواست نهایی HTTP (همان اندپوینت اثبات‌شدهٔ beat، نه مسیر جداگانهٔ Veo):**
+   - `POST /algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask`
+     (متد Retrofit `g.P`)
+   - هدرها (از annotation پارامترها): `userid, timeStamp(ثانیه), cp, version,
+     platform, sign=MD5("m3snil"+ts), ifWise=true` + `Content-Type: application/json`
+   - بدنه:
+     ```json
+     {"imageUrls":["<url آپلودشده>"], "level":1, "effectType":0,
+      "imageEffectType":<فقط اگر ناصفر>, "prompt":"<متن کاربر>",
+      "quality":2}
+     ```
+     (`imageEffectType` در حالت سفارشی صفر و حذف می‌شود؛ `prompt` فقط اگر
+     خالی نباشد؛ `quality` همیشه 1 یا 2).
+   - کوئری: `POST .../beatImage2Video/queryTask` با `{"taskId":"..."}`
+     (متد `g.M`)، لغو: `.../cancelTask` (متد `g.r`).
+
+**نکته کلیدی:** کلاس‌های `AiVideoGoogleVeo` / `startGoogleVeoVideo$2` /
+`createGoogleVeoVideoTask$1` به مسیر **جداگانهٔ**
+`/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5` (متد `g.g0`، با
+فیلدهای `googleId/deviceToken/audio/duration`) تعلق دارند و P2Type آن‌ها
+`AiVideoGoogleVeo=10` است. زنجیرهٔ «Make AI Video» اپ هرگز به این مسیر نمی‌رود؛
+هر دو کیفیت 360P و 720P از همان سرویس beat استفاده می‌کنند و تفاوت فقط فیلد
+`quality` است. (لوگوی Gemini روی خروجی، در صورت وجود، سمت سرور روی این بک‌اند
+اعمال می‌شود، نه از طریق یک اندپوینت کلاینت دیگر.)
+
+شمارندهٔ محدودیت روزانهٔ اپ (`_custom_aivideo_<تاریخ>` در SharedPreferences،
+کلاس `com.ufotosoft.base.c`) کاملاً سمت کلاینت است؛ فراخوانی مستقیم API این
+مرز را ندارد. گیت پریمیوم (`com.ufotosoft.common.utils.q.b`) هم فقط در UI
+بررسی می‌شود و در بدنهٔ درخواست چیزی جز `quality` وجود ندارد.
 
 ### اگر خطای CORS / Failed to fetch گرفتید
 
@@ -67,8 +125,10 @@
     `POST /algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask` (متد
     Retrofit `g.P`، از بایت‌کد `Image2VideoServer$createGXAiVideoTask$1`).
     بدنه: `{"imageUrls":["..."],"level":1,"effectType":4991,"prompt":"..."}`
-    — **فیلد `example` ندارد**؛ `effectType` شناسهٔ افکت از کاتالوگ زندهٔ سرور
-    است. کوئری همتای آن:
+    (حالت افکت کاتالوگ) — **فیلد `example` ندارد**؛ `effectType` شناسهٔ افکت
+    از کاتالوگ زندهٔ سرور است. در حالت Make AI Video همان اندپوینت با
+    `effectType=0` و فیلد اضافهٔ `quality` (1=360P، 2=720P) صدا زده می‌شود
+    (جزئیات کامل در بخش «زنجیره کامل Make AI Video» بالاتر). کوئری همتای آن:
     `POST /algo/v1/faceFusion/aigc/beatImage2Video/queryTask` با
     `{"taskId":"..."}` (متد `g.M`)، هدر `userid` کوچک + `ifWise=true`.
   - تست زندهٔ موفق: آپلود `c=200` → ساخت با `effectType=4991` (Catwalk)

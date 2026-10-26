@@ -43,6 +43,15 @@
   .banner{border-radius:12px;padding:12px 14px;font-size:13px;margin-bottom:16px;line-height:1.9}
   .banner.warn{background:#3a2c12;border:1px solid #6b4f1c;color:#ffd98a}
   details summary{cursor:pointer;color:var(--mut);font-size:13px}
+  .modeBox{display:flex;flex-direction:column;gap:8px;margin:6px 0 14px}
+  .modeOpt{display:flex;gap:10px;align-items:flex-start;background:var(--card2);border:1px solid var(--line);
+    border-radius:12px;padding:10px 12px;cursor:pointer}
+  .modeOpt input{margin-top:3px}
+  .modeOpt:has(input:checked){border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+  .seg{display:flex;gap:8px;margin-top:6px}
+  .segBtn{flex:1;background:var(--card2);border:1px solid var(--line);color:var(--fg);border-radius:10px;
+    padding:10px 12px;cursor:pointer;font-weight:700}
+  .segBtn.on{background:var(--accent);border-color:var(--accent);color:#fff}
   .pill{display:inline-block;background:var(--card2);border:1px solid var(--line);border-radius:999px;
     padding:3px 10px;font-size:11px;color:var(--mut);margin:2px}
   a.dl{display:inline-block;margin-top:10px;text-decoration:none}
@@ -58,8 +67,9 @@
   <h1>🎬 Mivi AI — تولید ویدیو از تصویر + متن</h1>
   <div class="sub">
     نسخه تک‌فایل و کاملاً مستقل — بدون نیاز به نصب پکیج. فقط این فایل را با مرورگر باز کنید.<br>
-    خط لولهٔ اثبات‌شده با تست زنده: آپلود تصویر → ساخت تسک با افکت کاتالوگ (beatImage2Video)
-    → پردازش ابری (~۶ ثانیه کلیپ) → پخش و دانلود ویدیو.
+    دو حالت تولید: <b>✍️ پرامپت اختصاصی (تصویر + متن خودتان، کلید 360P/720P — همان بخش Make AI Video اپ)</b>
+    و <b>🎞️ افکت آمادهٔ کاتالوگ</b>. هر دو از خط لولهٔ اثبات‌شده با تست زنده عبور می‌کنند:
+    آپلود تصویر → ساخت تسک (beatImage2Video/createNormalTask) → پردازش ابری (~۶ ثانیه کلیپ) → پخش و دانلود.
   </div>
 
   <div class="banner warn">
@@ -76,22 +86,50 @@
       <img id="preview" alt="preview">
     </div>
 
-    <label>۲) پرامپت (اختیاری — توضیح حرکت و صحنه)</label>
-    <textarea id="prompt" placeholder="مثلاً: حرکت آرام دوربین به جلو، نور نرم سینمایی، باد موها را تکان می‌دهد"></textarea>
+    <label>۲) حالت تولید</label>
+    <div class="modeBox">
+      <label class="modeOpt"><input type="radio" name="genMode" value="custom" checked>
+        <span><b>✍️ ویدیوی هوشمند با پرامپت خودم (Make AI Video)</b><br>
+        <small>تصویر + متن دلخواه شما — معادل دقیق بخش «Make AI Video» اپ؛ با کلید کیفیت 360P/720P</small></span>
+      </label>
+      <label class="modeOpt"><input type="radio" name="genMode" value="preset">
+        <span><b>🎞️ افکت آمادهٔ کاتالوگ (۳۱۰ قالب)</b><br>
+        <small>قالب‌های حرکتی آماده مثل Catwalk — مسیر تست‌شدهٔ پروب G (بدون نیاز به پرامپت)</small></span>
+      </label>
+    </div>
 
-    <div class="row">
-      <div style="flex:2">
-        <label>افکت حرکتی (از کاتالوگ زندهٔ سرور — ۳۱۰ قالب)</label>
-        <select id="effect"></select>
+    <div id="customBox2">
+      <label>۳) پرامپت خودتان (به انگلیسی نتیجهٔ بهتری می‌دهد)</label>
+      <textarea id="prompt" placeholder="مثلا: slow camera push-in, soft cinematic light, gentle wind moving the hair, natural motion"></textarea>
+      <label style="margin-top:10px">کیفیت خروجی</label>
+      <div class="seg">
+        <button type="button" class="segBtn" data-q="1" id="q360">360P — استاندارد</button>
+        <button type="button" class="segBtn on" data-q="2" id="q720">720P — کیفیت بالا (پریمیوم)</button>
       </div>
-      <div>
-        <label>سطح (level)</label>
-        <input type="number" id="level" value="1" min="1" max="10">
+      <div class="muted" style="margin-top:8px">
+        معادل بایت‌کد اپ: <code>quality=1</code> برای 360P و <code>quality=2</code> برای 720P
+        (سوئیچ <code>binding.k0</code> در AiToolVideoHugActivity). بدنهٔ درخواست:
+        <code>imageUrls, level=1, effectType=0, prompt, quality</code>.
       </div>
     </div>
-    <div class="muted" style="margin-top:8px">
-      گروه <b>AIvideo_US</b> قالب‌های ویدیویی اثبات‌شده است (مثلاً Catwalk با کد 4991 که تست واقعی آن موفق بود).
-      کد افکت انتخابی: <code id="effCode">4991</code>
+
+    <div id="presetBox" style="display:none">
+      <label>۳) پرامپت (اختیاری — توضیح حرکت و صحنه)</label>
+      <textarea id="promptPreset" placeholder="مثلاً: حرکت آرام دوربین به جلو، نور نرم سینمایی، باد موها را تکان می‌دهد"></textarea>
+      <div class="row" style="margin-top:10px">
+        <div style="flex:2">
+          <label>افکت حرکتی (از کاتالوگ زندهٔ سرور — ۳۱۰ قالب)</label>
+          <select id="effect"></select>
+        </div>
+        <div>
+          <label>سطح (level)</label>
+          <input type="number" id="level" value="1" min="1" max="10">
+        </div>
+      </div>
+      <div class="muted" style="margin-top:8px">
+        گروه <b>AIvideo_US</b> قالب‌های ویدیویی اثبات‌شده است (مثلاً Catwalk با کد 4991 که تست واقعی آن موفق بود).
+        کد افکت انتخابی: <code id="effCode">4991</code>
+      </div>
     </div>
 
     <div style="margin-top:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -519,6 +557,7 @@ const DEFAULTS={
   platform:"1",
   userId:"",
   connMode:"direct",
+  quality:2,
   customProxy:"http://localhost:8770/proxy?u={url}"
 };
 const LS_KEY="mivi_all_in_one_cfg";
@@ -651,12 +690,16 @@ async function uploadImage(file){
   return j.d[0];
 }
 
-async function createTask(imageUrl,prompt,level,effectType){
-  log("مرحله ۲: ساخت تسک تولید ویدیو (مسیر beatImage2Video، افکت "+effectType+")...");step(2,"on");
+async function createTask(imageUrl,prompt,level,effectType,quality){
+  log("مرحله ۲: ساخت تسک تولید ویدیو (مسیر beatImage2Video، افکت "+effectType+
+      (quality?("، کیفیت "+(Number(quality)===2?"720P":"360P")):"")+")...");step(2,"on");
   // مسیر اثبات‌شده با تست زنده (پروب G): beatImage2Video/createNormalTask
-  // بدنه از بایت‌کد createGXAiVideoTask: imageUrls/level/effectType (+ prompt اختیاری) — بدون فیلد example
+  // بدنه از بایت‌کد createGXAiVideoTask$1 (classes6):
+  //   imageUrls/level/effectType (+ imageEffectType اگر ناصفر) + prompt اگر خالی نباشد + quality اگر مقدار داشته باشد
+  // حالت Make AI Video اپ دقیقاً همین اندپوینت است با effectType=0 و quality=1|2
   const body={imageUrls:[imageUrl],level:Number(level)||1,effectType:Number(effectType)};
   if(prompt&&prompt.trim())body.prompt=prompt.trim();
+  if(quality!==null&&quality!==undefined)body.quality=Number(quality);
   const url=apiUrl("/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask");
   let r;
   try{ r=await fetch(url,{method:"POST",headers:algoHeaders(false,true),body:JSON.stringify(body)}); }
@@ -726,10 +769,22 @@ $("go").addEventListener("click",async()=>{
     [1,2,3,4].forEach(n=>step(n,""));
     $("resultCard").style.display="none";
     if(!pickedFile)throw new Error("اول یک تصویر انتخاب کنید");
+    const mode=document.querySelector('input[name="genMode"]:checked').value;
+    let prompt,level,effectType,quality=null;
+    if(mode==="custom"){
+      // حالت Make AI Video: effectType=0، پرامپت کاربر، quality 1=360P / 2=720P
+      prompt=$("prompt").value;
+      if(!prompt||!prompt.trim())throw new Error("در حالت «پرامپت اختصاصی» باید متن حرکت/صحنه را بنویسید");
+      level=1;effectType=0;quality=Number(CFG.quality)||2;
+      log("حالت تولید: Make AI Video (custom_aivideo) — quality="+quality+" ("+(quality===2?"720P":"360P")+")","w");
+    }else{
+      prompt=$("promptPreset").value;
+      level=$("level").value;effectType=$("effect").value;
+      log("حالت تولید: افکت کاتالوگ — effectType="+effectType,"w");
+    }
     btn.disabled=true;btn.textContent="⏳ در حال پردازش...";
     const url=await uploadImage(pickedFile);
-    const taskId=await createTask(url,$("prompt").value,
-      $("level").value,$("effect").value);
+    const taskId=await createTask(url,prompt,level,effectType,quality);
     const videoUrl=await waitForVideo(taskId);
     log("مرحله ۴: ویدیو آماده شد ✓","ok");step(4,"done");
     $("video").src=videoUrl;
@@ -839,6 +894,27 @@ function buildEffectSelect(){
   sel.addEventListener("change",()=>{$("effCode").textContent=sel.value;});
 }
 buildEffectSelect();
+
+/* ================= انتخاب حالت تولید و کلید کیفیت ================= */
+function applyGenMode(){
+  const mode=document.querySelector('input[name="genMode"]:checked').value;
+  $("customBox2").style.display=mode==="custom"?"block":"none";
+  $("presetBox").style.display=mode==="preset"?"block":"none";
+}
+document.querySelectorAll('input[name="genMode"]').forEach(r=>
+  r.addEventListener("change",applyGenMode));
+document.querySelectorAll(".segBtn").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll(".segBtn").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on");
+  CFG.quality=Number(b.dataset.q);saveCfg(CFG);
+  log("کیفیت خروجی روی "+(CFG.quality===2?"720P (پریمیوم)":"360P")+" تنظیم شد.","w");
+}));
+(function initQuality(){
+  const q=Number(CFG.quality)===1?"1":"2";
+  document.querySelectorAll(".segBtn").forEach(x=>
+    x.classList.toggle("on",x.dataset.q===q));
+})();
+applyGenMode();
 
 fillSettings();
 log("آماده. userId="+CFG.userId+" signKey="+CFG.signKey);
