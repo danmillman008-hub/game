@@ -48,6 +48,7 @@
     <button id="run">▶️ اجرای همه تست‌ها</button>
     <button id="runE">🧭 پروب E: کاتالوگ قالب‌ها</button>
     <button id="runF">🗂️ پروب F: resourceNew استخراج‌شده از بایت‌کد</button>
+    <button id="runG">🎬 پروب G: ساخت تسک با effect واقعی کاتالوگ</button>
     <button class="ghost" id="dlE" type="button">💾 ذخیره JSON پروب E/F</button>
     <button class="ghost" id="copy" type="button">📋 کپی گزارش</button>
     <button class="ghost" id="dl" type="button">⬇️ دانلود گزارش</button>
@@ -192,6 +193,8 @@ const EP={
   createV1:"/algo/v1/faceFusion/aigc/image2VideoCreate",
   createV4:"/algo/v1/faceFusion/aigc/integrated/image2VideoCreateV4",
   createV5:"/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
+  beatCreate:"/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",
+  beatQuery:"/algo/v1/faceFusion/aigc/beatImage2Video/queryTask",
   query:"/algo/v1/faceFusion/aigc/image2video/queryTask",
   queryNew:"/algo/v1/faceFusion/aigc/image2VideoQuery"
 };
@@ -778,6 +781,126 @@ async function testResourceNewCatalog(){
   $("report").value=report.join("\n");
 }
 
+/* ---------- 4e) PROBE-G: REAL task create with catalog effectType values ----------
+   کاتالوگ زندهٔ سرور (پروب F، گروه AIvideo_US id=4995) ۴۱ قالب واقعی با effectsType داد.
+   مسیر g.P = beatImage2Video/createNormalTask بدنه‌اش فقط imageUrls/level/effectType است
+   (هیچ example نمی‌خواهد!). کوئری: g.M = beatImage2Video/queryTask با {taskId}.
+   مسیر جایگزین: V4 integrated/image2VideoCreateV4 با همان effectTypeها. */
+window.__probeG={attempts:[],polls:[],videoUrl:null,taskId:null};
+async function testRealEffectCreate(){
+  const id=loadIdentity();
+  const via=u=>"http://localhost:8770/proxy?u="+encodeURIComponent(u);
+  const base="https://cpi.ufotosoft.com";
+  const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+  rlog("\n--- PROBE-G real effectType task create via http://localhost:8770 ---");
+  addRow("پروب G","info","آپلود تازه + ساخت تسک با effectTypeهای واقعی کاتالوگ (بدون example)...");
+
+  // 1) fresh upload — همان فلوی اثبات‌شدهٔ پروب B/D
+  let imgUrl=null;
+  try{
+    const jpgB64="/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/wAALCAABAAEBAREA/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8AfwD/2Q==";
+    const bin=atob(jpgB64);const arr=new Uint8Array(bin.length);
+    for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
+    const fd=new FormData();
+    fd.append("files",new Blob([arr],{type:"image/jpg"}),"diag.jpg");
+    const ts=String(Math.floor(Date.now()/1000));
+    const r1=await fetch(via(base+EP.upload),{method:"POST",
+      headers:{"cp":id.cp,"version":id.version,"platform":id.platform,
+        "sign":md5(id.signKey+ts),"timeStamp":ts,"userId":id.userId,"ifHttps":"true"},
+      body:fd,signal:AbortSignal.timeout(30000)});
+    const t1=await r1.text();
+    const p1=JSON.parse(t1);
+    if(p1.c===200&&Array.isArray(p1.d)&&p1.d.length)imgUrl=p1.d[0];
+    rlog(`PROBE-G upload HTTP ${r1.status} body=${t1.slice(0,300)}`);
+    addRow("G: آپلود",imgUrl?"ok":"err",imgUrl||t1.slice(0,150));
+  }catch(e){rlog("PROBE-G upload FAIL "+to(e));addRow("G: آپلود","err",to(e).slice(0,140));return;}
+  if(!imgUrl)return;
+
+  // effectTypeهای واقعی استخراج‌شده از کاتالوگ زنده (گروه AIvideo_US)
+  const effects=[
+    [4991,"Catwalk"],[5041,"Run"],[4990,"Sing"],[5202,"AI Walk"],[4877,"AI Muscle"]
+  ];
+  let won=null;
+  // 2) مسیر اصلی: beatImage2Video/createNormalTask (g.P)
+  for(const [eff,name] of effects){
+    const body={imageUrls:[imgUrl],level:1,effectType:eff};
+    try{
+      const resp=await fetch(via(base+EP.beatCreate),{method:"POST",
+        headers:headersForPath(id,EP.beatCreate),body:JSON.stringify(body),
+        signal:AbortSignal.timeout(30000)});
+      const txt=await resp.text();
+      let parsed=null;try{parsed=JSON.parse(txt);}catch(e){}
+      const c=parsed?parsed.c:"?";
+      const taskId=parsed&&parsed.d?parsed.d.taskId:null;
+      window.__probeG.attempts.push({route:"beat",effectType:eff,name,body,http:resp.status,response:txt});
+      rlog(`PROBE-G beat eff=${eff}(${name}) -> HTTP ${resp.status} c=${c} body=${txt.slice(0,500)}`);
+      if(c===200&&taskId){won={route:"beat",path:EP.beatQuery,effectType:eff,name,taskId,first:txt};break;}
+      addRow(`G: beat eff=${eff} ${name}`,c===200?"warn":"err",
+        `HTTP ${resp.status} c=${c} | ${txt.replace(/\s+/g," ").slice(0,180)}`);
+    }catch(e){rlog(`PROBE-G beat eff=${eff} FAIL ${to(e)}`);addRow(`G: beat eff=${eff}`,"err",to(e).slice(0,120));}
+  }
+  // 3) فال‌بک: V4 integrated/image2VideoCreateV4 با همان effectTypeها
+  if(!won){
+    for(const [eff,name] of effects.slice(0,3)){
+      const body={imageUrls:[imgUrl],level:1,effectType:eff};
+      try{
+        const resp=await fetch(via(base+EP.createV4),{method:"POST",
+          headers:headersForPath(id,EP.createV4),body:JSON.stringify(body),
+          signal:AbortSignal.timeout(30000)});
+        const txt=await resp.text();
+        let parsed=null;try{parsed=JSON.parse(txt);}catch(e){}
+        const c=parsed?parsed.c:"?";
+        const taskId=parsed&&parsed.d?parsed.d.taskId:null;
+        window.__probeG.attempts.push({route:"v4",effectType:eff,name,body,http:resp.status,response:txt});
+        rlog(`PROBE-G v4 eff=${eff}(${name}) -> HTTP ${resp.status} c=${c} body=${txt.slice(0,500)}`);
+        if(c===200&&taskId){won={route:"v4",path:EP.queryNew,effectType:eff,name,taskId,first:txt};break;}
+        addRow(`G: V4 eff=${eff} ${name}`,c===200?"warn":"err",
+          `HTTP ${resp.status} c=${c} | ${txt.replace(/\s+/g," ").slice(0,180)}`);
+      }catch(e){rlog(`PROBE-G v4 eff=${eff} FAIL ${to(e)}`);addRow(`G: V4 eff=${eff}`,"err",to(e).slice(0,120));}
+    }
+  }
+
+  if(!won){
+    addRow("پروب G جمع‌بندی","err","هیچ مسیری با effectTypeهای کاتالوگ taskId نداد — جزئیات کامل در گزارش خام");
+    $("report").value=report.join("\n");
+    return;
+  }
+  window.__probeG.taskId=won.taskId;
+  addRow(`G: ساخت تسک موفق ✓ (${won.route} eff=${won.effectType} ${won.name})`,"ok",
+    "taskId="+won.taskId+" | "+won.first.replace(/\s+/g," ").slice(0,200));
+  rlog(`PROBE-G TASK CREATED route=${won.route} eff=${won.effectType} taskId=${won.taskId}`);
+
+  // 4) polling — تا ۱۲ بار، هر ۶ ثانیه (حدود ۷۲ ثانیه)
+  for(let i=1;i<=12;i++){
+    await sleep(6000);
+    try{
+      const resp=await fetch(via(base+won.path),{method:"POST",
+        headers:headersForPath(id,won.path),body:JSON.stringify({taskId:won.taskId}),
+        signal:AbortSignal.timeout(20000)});
+      const txt=await resp.text();
+      window.__probeG.polls.push({n:i,http:resp.status,response:txt});
+      rlog(`PROBE-G poll#${i} HTTP ${resp.status} body=${txt.slice(0,600)}`);
+      let p=null;try{p=JSON.parse(txt);}catch(e){}
+      const d=p&&p.d?p.d:{};
+      const st=d.taskStatus||p.m||"?";
+      if(d.videoUrl){
+        window.__probeG.videoUrl=d.videoUrl;
+        addRow(`G: کوئری #${i} — ویدیو آماده شد 🎉`,"ok","videoUrl="+d.videoUrl);
+        rlog("PROBE-G VIDEO URL = "+d.videoUrl);
+        break;
+      }
+      const terminalFail=d.taskStatus&&/fail|error|cancel/i.test(String(d.taskStatus));
+      addRow(`G: کوئری #${i}`,"info","status="+st+" | "+txt.replace(/\s+/g," ").slice(0,150));
+      if(terminalFail){rlog("PROBE-G terminal failure status");break;}
+    }catch(e){rlog(`PROBE-G poll#${i} FAIL ${to(e)}`);}
+  }
+  addRow("پروب G جمع‌بندی",window.__probeG.videoUrl?"ok":"warn",
+    window.__probeG.videoUrl
+      ? "ویدیوی واقعی از سرور دریافت شد: "+window.__probeG.videoUrl
+      : "تسک ساخته شد ولی در ۷۲ ثانیه videoUrl نیامد — ممکن است تولید بیشتر طول بکشد؛ گزارش را بفرستید");
+  $("report").value=report.join("\n");
+}
+
 /* ---------- 5) public proxy battery (GET reachability + real POST where claimed) ---------- */
 async function testProxies(){
   const target=HOSTS[0][1]+EP.query;
@@ -915,10 +1038,16 @@ $("runF").addEventListener("click",async()=>{
   catch(e){ addRow("پروب F خطای داخلی","err",to(e));rlog("PROBE-F FATAL "+to(e));$("report").value=report.join("\n"); }
   finally{ $("runF").disabled=false; }
 });
+$("runG").addEventListener("click",async()=>{
+  $("runG").disabled=true;
+  try{ await testRealEffectCreate(); }
+  catch(e){ addRow("پروب G خطای داخلی","err",to(e));rlog("PROBE-G FATAL "+to(e));$("report").value=report.join("\n"); }
+  finally{ $("runG").disabled=false; }
+});
 $("dlE").addEventListener("click",()=>{
   if((!window.__probeE||!window.__probeE.length)&&(!window.__probeF||!window.__probeF.length)){
     alert("اول پروب E یا F را اجرا کنید");return;}
-  const payload={probeE:window.__probeE||[],probeF:window.__probeF||[]};
+  const payload={probeE:window.__probeE||[],probeF:window.__probeF||[],probeG:window.__probeG||null};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
   const a=document.createElement("a");
   a.href=URL.createObjectURL(blob);a.download="probeEF_catalog.json";a.click();
