@@ -10,13 +10,17 @@
 | `mivi_all_in_one.html` | کل اپ در یک فایل: رابط فارسی RTL، MD5 خالص JS، امضای درخواست‌ها، آپلود عکس، ساخت تسک، polling و دانلود ویدیو + دکمه دانلود پروکسی ویندوزی و پایتونی |
 | `mivi_diagnostics.html` | ابزار تشخیص اتصال: تست شبکه، CORS واقعی سرور، پروکسی محلی و باتری پروکسی‌های عمومی + گزارش قابل کپی |
 | `mivi-proxy-windows.bat` | پروکسی محلی تک‌فایل ویندوز با PowerShell داخلی (بدون نصب هیچ چیزی، دابل‌کلیک) |
+| `catalog_effects.json` | خلاصهٔ ۳۱۰ افکت کاتالوگ زندهٔ سرور (گروه، نام، effectsType، نسبت، تک/چندنفره) — نسخهٔ فشرده‌اش داخل HTML جاسازی شده |
 | `RUN_PROXY_FA.md` | راهنمای کامل اجرای پروکسی به فارسی |
 
 ## نحوه استفاده
 
 ۱. فایل `mivi_all_in_one.html` را با مرورگر باز کنید (دابل‌کلیک، همان file://).
-۲. عکس انتخاب کنید، پرامپت بنویسید و «تولید ویدیو» بزنید.
-۳. ویدیوی ~۶ ثانیه‌ای در همان صفحه پخش و قابل دانلود است.
+۲. عکس انتخاب کنید، یک افکت از لیست ۳۱۰تایی کاتالوگ انتخاب کنید (پیش‌فرض
+   Catwalk/4991 که تست زندهٔ موفق با آن انجام شد)، پرامپت اختیاری بنویسید و
+   «تولید ویدیو» بزنید.
+۳. ویدیوی ~۶ ثانیه‌ای (معمولاً ظرف ۱۵–۳۰ ثانیه) در همان صفحه پخش و قابل
+   دانلود است.
 
 ### اگر خطای CORS / Failed to fetch گرفتید
 
@@ -58,21 +62,33 @@
   - هاست زنده سرویس `https://cpi.ufotosoft.com` است (هاست دوم
     `cpi.wiseoel.com` همان بک‌اند را سرو می‌کند). `face-api.*` فقط درایور Tencent
     است و روی این مسیرها ۴۰۴ می‌دهد؛ `algo.ufotosoft.com` فقط CDN منابع است.
-  - مسیر کوئری قدیمی `image2video/queryTask` منسوخ شده (۴۰۴). مسیر زنده نسخه ۴۰۷
-    `POST /algo/v1/faceFusion/aigc/image2VideoQuery` با بدنه `{"taskId":"..."}`
-    است (روی تسک ناموجود `c=3036 IMAGE2VIDEO_TASK_OVERTIME` برمی‌گرداند).
-  - مسیر ساخت تسک: `POST /algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate`.
-    بدنه (استخراج از `Image2VideoServer$createAiVideoUnifiedTask$1`):
-    `imageUrls` (آرایه URLهای آپلودشده)، `level` (int)، `deviceToken` (رشته)،
-    `prompt`/`ratio`/`movementAmplitude` (اختیاری)، و **`example` (اجباری، غیرخالی؛
-    سرور روی حالت خالی `c=400 Parameter error [example不能为空]` می‌دهد)**؛ اپ
-    مقدار example را از همان URL تصویر می‌فرستد.
-  - پاسخ: پاکت `{c,m,d}` و `d` از نوع `CreateVideoResponse` با فیلدهای
-    `taskId, taskStatus ("success"/"fail"/در حال پردازش), taskReason, videoUrl`.
-  - صفحه دایگنستیک «پروب C» ماتریس هاست × مسیر را اسکن می‌کند و «پروب D» یک
-    آپلود تازه + چهار ترکیب مختلف `example/level` برای unifiedTaskCreate را
-    با امضای صحیح `MD5(signKey+ts)` و هدر `userId` بزرگ (بدون ifWise) تست
-    می‌کند و در صورت ساخت تسک، سه بار با image2VideoQuery وضعیتش را پول می‌کند.
+  - مسیر کوئری قدیمی `image2video/queryTask` منسوخ شده (۴۰۴).
+  - **مسیر ساخت تسک اثبات‌شده با تست زندهٔ کامل (۲۰۲۶-۱۰-۲۶):**
+    `POST /algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask` (متد
+    Retrofit `g.P`، از بایت‌کد `Image2VideoServer$createGXAiVideoTask$1`).
+    بدنه: `{"imageUrls":["..."],"level":1,"effectType":4991,"prompt":"..."}`
+    — **فیلد `example` ندارد**؛ `effectType` شناسهٔ افکت از کاتالوگ زندهٔ سرور
+    است. کوئری همتای آن:
+    `POST /algo/v1/faceFusion/aigc/beatImage2Video/queryTask` با
+    `{"taskId":"..."}` (متد `g.M`)، هدر `userid` کوچک + `ifWise=true`.
+  - تست زندهٔ موفق: آپلود `c=200` → ساخت با `effectType=4991` (Catwalk)
+    `c=200` و `taskId=60004-1793049728-...`، وضعیت `doing` و سپس در سومین
+    کوئری (~۱۸ ثانیه) `taskStatus=success` با
+    `videoUrl=https://algo-v1.wiseoel.com/temp/.../img2video_wanlora-....mp4`.
+  - مسیر قدیمی‌تر `image2video/unifiedTaskCreate` فیلد **`example`** اجباری
+    دارد که فقط از کاتالوگ قالب‌های دانلودی سرور پر می‌شود و هیچ مقدار ثابتی
+    در APK ندارد (همهٔ مقادیر آزمایشی با `c=1013 example is empty or illegal`
+    رد شدند)؛ به همین دلیل خط لوله روی مسیر beat متمرکز شد.
+  - **کاتالوگ افکت‌ها (بدون امضا، GET):**
+    `GET /common/vibe/resourceNew?version=407&cp=<package>&platform=1&ifHttps=true&day=0&language=en&packageLevel=1`
+    روی `cpi.ufotosoft.com`/`cpi.wiseoel.com` (appName ثابت `vibe`، از
+    `ServerRequestManager.D()`). پاسخ ۲۴ گروه و ۳۱۰ قالب با فیلد
+    `extraObject.effectsType` است؛ خلاصهٔ استخراج‌شده در
+    `catalog_effects.json` و نسخهٔ فشرده داخل خود HTML جاسازی شده.
+  - پاسخ: پاکت `{c,m,d}` و `d` با فیلدهای
+    `taskId, taskStatus ("success"/"fail"/"doing"), taskReason, videoUrl`.
+  - صفحه دایگنستیک پروب‌های A–G را دارد؛ پروب G کل زنجیره را با
+    effectTypeهای واقعی کاتالوگ به‌صورت زنده اجرا و تا گرفتن videoUrl پول می‌کند.
   - دامنه `wiseoel.com` به allow-list هر دو پروکسی (bat و python) اضافه شده؛
     اگر نسخه قدیمی بات در حال اجراست، فایل جدید را دانلود و جایگزین کنید.
 - signKey ثابت: **`m3snil`** (رمزگشایی DES/CBC از رشته هاردکد `hCzXemhkIkY=`)
@@ -92,8 +108,9 @@
   - آپلود: `cp, version, platform, sign, timeStamp, userId, ifHttps=true`
 - اندپوینت‌های استفاده‌شده در فایل:
   - `POST /algo/v1/aiGenerate-aigc/multipleUpload` (multipart، فیلد `files`)
-  - `POST /algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate`
-  - `POST /algo/v1/faceFusion/aigc/image2video/queryTask`
+  - `POST /algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask`
+  - `POST /algo/v1/faceFusion/aigc/beatImage2Video/queryTask`
+  - `GET  /common/vibe/resourceNew` (کاتالوگ ۳۱۰ قالب؛ در HTML جاسازی شده)
 - `userId` به‌صورت محلی ساخته و در `localStorage` ذخیره می‌شود؛ هیچ
   ثبت‌نام/لاگینی در پروتکل اپ وجود ندارد.
 

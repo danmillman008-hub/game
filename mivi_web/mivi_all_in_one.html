@@ -58,7 +58,8 @@
   <h1>🎬 Mivi AI — تولید ویدیو از تصویر + متن</h1>
   <div class="sub">
     نسخه تک‌فایل و کاملاً مستقل — بدون نیاز به نصب پکیج. فقط این فایل را با مرورگر باز کنید.<br>
-    خط لوله: آپلود تصویر → ساخت تسک → پردازش ابری (~۶ ثانیه کلیپ) → پخش و دانلود ویدیو.
+    خط لولهٔ اثبات‌شده با تست زنده: آپلود تصویر → ساخت تسک با افکت کاتالوگ (beatImage2Video)
+    → پردازش ابری (~۶ ثانیه کلیپ) → پخش و دانلود ویدیو.
   </div>
 
   <div class="banner warn">
@@ -75,27 +76,22 @@
       <img id="preview" alt="preview">
     </div>
 
-    <label>۲) پرامپت (توضیح حرکت و صحنه)</label>
+    <label>۲) پرامپت (اختیاری — توضیح حرکت و صحنه)</label>
     <textarea id="prompt" placeholder="مثلاً: حرکت آرام دوربین به جلو، نور نرم سینمایی، باد موها را تکان می‌دهد"></textarea>
 
     <div class="row">
-      <div>
-        <label>نسبت تصویر (ratio)</label>
-        <select id="ratio">
-          <option value="">پیش‌فرض</option>
-          <option value="9:16">9:16 (عمودی)</option>
-          <option value="16:9">16:9 (افقی)</option>
-          <option value="1:1">1:1</option>
-        </select>
+      <div style="flex:2">
+        <label>افکت حرکتی (از کاتالوگ زندهٔ سرور — ۳۱۰ قالب)</label>
+        <select id="effect"></select>
       </div>
       <div>
         <label>سطح (level)</label>
         <input type="number" id="level" value="1" min="1" max="10">
       </div>
-      <div>
-        <label>دامنه حرکت (اختیاری)</label>
-        <input type="text" id="movement" placeholder="">
-      </div>
+    </div>
+    <div class="muted" style="margin-top:8px">
+      گروه <b>AIvideo_US</b> قالب‌های ویدیویی اثبات‌شده است (مثلاً Catwalk با کد 4991 که تست واقعی آن موفق بود).
+      کد افکت انتخابی: <code id="effCode">4991</code>
     </div>
 
     <div style="margin-top:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -486,6 +482,34 @@ function md5(inputString){
   return (wordToHex(a)+wordToHex(b)+wordToHex(c)+wordToHex(d)).toLowerCase();
 }
 
+/* ================= کاتالوگ افکت‌های زندهٔ سرور (resourceNew، ۳۱۰ قالب) ================= */
+const EFFECT_CATALOG={
+"AIvideo_US":[[4991,"Catwalk","4:3",1],[4877,"AI Muscle","4:3",1],[7849,"Tom and Jerry","4:3",1],[5041,"Run","4:3",1],[6686,"Bollywood Dance","4:3",1],[5202,"AI Walk","4:3",1],[5338,"Private Jet","4:3",1],[7600,"Clone","4:3",1],[4990,"Sing","4:3",1],[5031,"Tiger Hug","4:3",1],[5141,"Police Arrest","4:3",1],[5291,"Luxury Car","4:3",1],[6238,"Raincoat","4:3",1],[7603,"Summon Golden Lion","4:3",1],[6886,"Desert Photos","4:3",1],[7599,"Fire Poker","4:3",1],[6993,"Flame Guitar","4:3",1],[5220,"Old Photo","4:3",1],[7898,"Surrounding Dance","4:3",1],[6854,"Snow Eagle","4:3",1],[8386,"Helicopter","4:3",1],[6382,"Rose Photograph","4:3",1],[7655,"Exit and Shrug","4:3",1],[4889,"Clay Effect","4:3",1],[5190,"Gender Swap","4:3",1],[4885,"Long Hair","4:3",1],[4964,"Wave Hand","4:3",1],[4883,"Q-Style Cute","4:3",1],[6064,"Winter Decorations","4:3",1],[6318,"Saree Show","4:3",1],[5377,"Luxury Homes","4:3",1],[5789,"Animal Interviews","4:3",1],[5073,"Throw Money","4:3",1],[5221,"AI Sleep","4:3",1],[4941,"Wear Sunglasses","4:3",1],[5042,"Hold Rose","4:3",1],[5154,"Have a Baby","4:3",1],[6790,"Indian Cricket","4:3",1],[6919,"Bizman Touch Tiger","4:3",1],[6918,"King's Throne","4:3",1],[6992,"Flame Rose","4:3",1]],
+"Hot_USAI":[[4899,"BodyShake","4:3",1],[5202,"Neon Couple","4:3",1],[7969,"Wall Mural","4:3",0],[5926,"Water Splash","4:3",1],[5319,"AI Girlfriend","4:3",1],[8072,"Hand-Drawn Portrait","4:3",0],[8503,"Red Filter","4:3",0],[5109,"Mermaid","4:3",1],[6990,"Rain Photography","4:3",0],[7241,"Graffiti Wall","4:3",0],[7422,"Double Exposure","4:3",0],[5754,"AI Motorcycle","4:3",1],[6350,"Equestrian Portrait","4:3",0],[6882,"Mysterious Shot","4:3",0],[5343,"US Yearbook","4:3",1],[6861,"Happy Birthday","4:3",0],[6971,"Pink Christmas","4:3",0],[6449,"Golden Fall","4:3",0],[8201,"Happy Birthday","4:3",0],[5958,"AI Bodyguard","4:3",1],[6184,"Polaroid","4:3",0],[6829,"Snowfall","4:3",0],[6953,"Warm Christmas","4:3",0],[8323,"Holding Roses","4:3",0],[7519,"King Sitting","4:3",0],[7850,"Triple Exposure","4:3",0],[8341,"Dark Horse Man","4:3",0],[7272,"Tamil Gangster Style","4:3",0],[7542,"Black & White Grass","4:3",0],[8014,"Police Station Photo","4:3",0],[8515,"Mist Raven","4:3",0],[6791,"Flame Rose","4:3",0],[7486,"New Year Calendar","4:3",0],[6314,"Elevator Photo","4:3",0],[7695,"Color Double Expo","4:3",0],[4710,"Tattoo","4:3",0],[7386,"New Year Light Board","4:3",0],[8076,"Sankranti Festival","4:3",0]],
+"MotionPhotography_US":[[6251,"Metamorphosis","4:3",1],[6320,"Ember Glow","4:3",1],[6319,"Gentle Giant","4:3",1],[6886,"Desert Photos","4:3",1],[6383,"Beam Photograph","4:3",1]],
+"Dance_US":[[5013,"Hot Dance","4:3",1],[4943,"Vroom Vroom","4:3",1],[5159,"Front Hip Dance","4:3",1],[5173,"Side Hip Dance","4:3",1],[5339,"Swing","4:3",1],[4899,"BodyShake","4:3",1],[4946,"Subject Three","4:3",1],[5030,"Let's YMCA","4:3",1],[4945,"Jiggle Jiggle","4:3",1]],
+"AIBanner_US":[[4899,"BodyShake","4:3",1],[6093,"3D Model Figure","4:3",1],[5291,"Luxury Car","4:3",1]],
+"AIPhotoshoots_US":[[6324,"Smoke Disguise","4:3",0],[6350,"Equestrian Portrait","4:3",0],[6223,"Silent Narrative","4:3",0],[6309,"Spotlit Moment","4:3",0],[6361,"Mirror Portrait","4:3",0],[6449,"Golden Fall","4:3",0],[6321,"Sunset photo","4:3",0],[6314,"Elevator Photo","4:3",0],[6351,"Black Panther","4:3",0],[6184,"Polaroid","4:3",0],[6347,"Flower Portrait","4:3",0]],
+"AIAttitude_US":[[6313,"Godfather Photo","4:3",0],[6689,"Boss Man","4:3",0],[6374,"Y2K Ghost Face","4:3",0],[6642,"Demon Shadow♂","4:3",0],[6693,"Suited Groom","4:3",0],[6349,"Light & Shadow♂","4:3",0],[6315,"Wall Sketch","4:3",0]],
+"Newyear_US":[[7700,"Hold 2026","4:3",0],[7545,"New Year Fireworks","4:3",1],[7699,"Firework Dress","4:3",0]],
+"MerryChristmas_US":[[7436,"Christmas Wreath","4:3",0],[6953,"Warm Christmas","4:3",0],[6971,"Pink Christmas","4:3",0],[6999,"Christmas Globe","4:3",0],[6987,"Christmas Ball Photo","4:3",0]],
+"FemalePhotography_US":[[5012,"Pregnant","4:3",1],[5114,"Egyptian Queen","4:3",1],[6348,"Light & Shadow♀","4:3",0],[5244,"Black Wings","4:3",1],[5339,"Swing","4:3",1],[6639,"Demon Shadow♀","4:3",0],[5882,"Makeup Artist","4:3",1],[6090,"Trendy Outfit","4:3",1]],
+"RideAnimales_US":[[5740,"Tiger Travel","4:3",1],[5755,"Ride Dinosaur","4:3",1],[6091,"Riding A Broom","4:3",1],[5880,"Riding Dolphins","4:3",1],[5906,"Riding A Cock","4:3",1],[5815,"Horseback riding","4:3",1],[5765,"Ride Mouse","16:9",1]],
+"FantasyScenes_US":[[5080,"Beaten","4:3",1],[6380,"AI Eagle","4:3",1],[6640,"Funny run","4:3",1],[5883,"Wet Man","4:3",1],[6316,"Urban Rain","4:3",1],[6047,"Surfing","4:3",0],[5701,"Earth Effect","4:3",1],[5321,"Shark","4:3",1],[4944,"Flight","4:3",1]],
+"3DModelFigure_US":[[6093,"3D Model Figure","4:3",1],[6148,"Compass Figures","4:3",1],[6237,"Play Figure","4:3",1],[6093,"Animal Figure","4:3",1],[6173,"Car Model Figures","4:3",1],[6172,"Muscle Figure","4:3",1],[6154,"Pole Dancer Figure","4:3",1],[6145,"Keychain Figurines","4:3",1],[6147,"Sculpture Figures","4:3",1],[6119,"Holding Figure","4:3",1],[6118,"Rotating Figure","4:3",1],[6144,"Carved Figures","4:3",1],[6127,"Makeup Figure","4:3",1],[6130,"Dance Figures","4:3",1]],
+"Deformation_US":[[5096,"Wolf","4:3",0],[5095,"Black Panther","4:3",0],[5094,"Panda","4:3",0],[5093,"Red Mecha","4:3",0],[5083,"Black Mecha","4:3",0],[5093,"Black Hawk","4:3",0],[5082,"Saint Seiya","4:3",0]],
+"Hairstyle":[[5091,"Short Black Hair","4:3",0],[432,"Lion Hair1","4:3",0],[3957,"Hair Braid","4:3",0],[2702,"Hairstyle","4:3",0],[5106,"Short CurlyHair","4:3",0],[370,"Rainbow Hair","4:3",0],[2725,"Ponytail Hairstyle","4:3",0],[5107,"White Highlights","4:3",0],[2706,"Hairstyle","4:3",0],[2707,"Hairstyle","4:3",0],[2675,"Black and White Hair","4:3",0],[5102,"Dreadlocks","4:3",0],[433,"Lion Hair","4:3",0],[370,"Tattoo Magic","4:3",0],[2727,"White Curly Hair","4:3",0],[2705,"Hairstyle","4:3",0],[2724,"Straight Hair","4:3",0]],
+"Expression":[[2490,"Pout","4:3",0],[2491,"Eye","4:3",0],[2488,"Sad","4:3",0],[2486,"Laughing","4:3",0],[2480,"Smile","4:3",0],[2489,"Wink","4:3",0],[2493,"White","4:3",0],[2494,"Angry","4:3",0],[2487,"Cool","4:3",0],[2492,"Amazing","4:3",0]],
+"Fashion":[[4682,"Suitman","4:3",0],[4710,"Tattoo","4:3",0],[408,"Barbie","4:3",0],[427,"Suitman","4:3",0],[410,"Wedding Dress","4:3",0],[396,"Doctor","4:3",0],[393,"Man in Suit","4:3",0],[2481,"Male to Female2","4:3",0],[822,"Policewoman","4:3",0],[2761,"Male to Female","4:3",0],[821,"Policeman","4:3",0],[820,"India_bride2","4:3",0],[1111,"90‘s Photo","4:3",0],[819,"India_bride1","4:3",0],[3312,"Suit","4:3",0],[383,"Pregnant woman ","4:3",0],[2762,"Female to Male","4:3",0],[2482,"Female to Male2","4:3",0],[431,"Policewoman","4:3",0],[409,"Barbie","4:3",0]],
+"StyleClothing":[[10,"Ancient style girl","4:3",0],[49,"White haired rose man","4:3",0],[79,"Little Wizard","4:3",0],[67,"Medieval Witch","4:3",0],[13,"Handsome winter boy","4:3",0],[17,"Wedding Suits for Boys","4:3",0],[54,"Exotic GIrl","4:3",0],[53,"Indian Style","4:3",0],[11,"Star Girl","4:3",0],[37,"Winter Girl","4:3",0],[43,"Purple Pupil Star","4:3",0]],
+"Painting":[[4645,"Pixel","4:3",0],[4636,"Retro Comics","4:3",0],[272,"Fairy Tale","4:3",0],[4646,"Ukiyo-e","4:3",0],[246,"3D Style","4:3",0],[258,"Pixel Art","4:3",0],[360,"Calendar Girl","4:3",0],[4648,"Watercolor","4:3",0],[4647,"Colorful Style","4:3",0],[4644,"Oil Painting","4:3",0],[258,"Pixel Art","4:3",0],[4649,"Colorpencil ","4:3",0],[262,"Z Fighters","4:3",0],[359,"Barbie Girl","4:3",0],[270,"Blindbox","4:3",0],[36,"Girl with garland","4:3",0],[260,"Thick Impasto","4:3",0]],
+"Age":[[413,"Baby4","4:3",0],[860,"Aging Filter","4:3",0],[2502,"Middle Aged","4:3",0],[3035,"Elder","4:3",0],[420,"Baby","4:3",0],[2485,"Youth","4:3",0],[2484,"Elder2","4:3",0],[2483,"Child2","4:3",0],[417,"Baby3","4:3",0],[416,"Baby Girl","4:3",0],[3020,"Child","4:3",0],[418,"Baby","4:3",0]],
+"Characters":[[349,"Dark Gothic","4:3",0],[271,"On Fire","4:3",0],[863,"White Statue","4:3",0],[256,"Hell Kight","4:3",0],[261,"Melted Chocolate1","4:3",0],[350,"Armor Girl","4:3",0],[248,"Blindbox","4:3",0],[261,"Melted Chocolate","4:3",0],[249,"Horrible Zombie","4:3",0],[350,"Thunderstruck Armor","4:3",0],[349,"Dark Gothic","4:3",0],[249,"Horrible Zombie","4:3",0],[352,"Japanese Horror","4:3",0]],
+"Anime":[[44,"Golden pupil and Cat ear","4:3",0],[231,"Anime 2D","4:3",0],[2370,"Brick World","4:3",0],[2243,"Cartoon","4:3",0],[225,"90s anime","4:3",0],[2309,"Anime Hero","4:3",0],[33,"Handsome boy","4:3",0],[2316,"Pixel Style","4:3",0],[231,"Anime","4:3",0],[246,"3D Style","4:3",0],[214,"Cyber Punk","4:3",0],[16,"Cyberpunk","4:3",0],[75,"Cute Girl with Big Eyes","4:3",0],[52,"Exotic Girl","4:3",0],[36,"Girl with garland","4:3",0]],
+"MagicEffects":[[343,"Blood of Blue","4:3",0],[232,"Create Magic AI Photo","4:3",0],[206,"Legend of Elf","4:3",0],[230,"Super Hero","4:3",0],[343,"Blood of Blue","4:3",0],[205,"Fanatic Adventure","4:3",0],[360,"Calendar Girl","4:3",0],[213,"New World‘s Pirates","4:3",0],[263,"Pixar Style","4:3",0],[344,"Crazy Scientist","4:3",0]],
+"ComicArt":[[32,"Sci-fi Girl Comic","4:3",0],[67,"Medieval Witch","4:3",0],[20,"Handsome Boy Comic","4:3",0],[855,"White Skin","4:3",0],[2180,"Cartoon Tattoo Muscle","4:3",0],[2310,"City Punk","4:3",0],[4554,"Naruto","4:3",0],[79,"Little Wizard","4:3",0],[16,"Cyberpunk","4:3",0],[70,"Star Watercolor GirlE","4:3",0],[863,"White Statue","4:3",0],[26,"Girl Manga","4:3",0],[4745,"Toybox","4:3",0],[227,"Zelda","4:3",0],[230,"Super Hero","4:3",0],[54,"Exotic GIrl","4:3",0],[71,"Vapor Wave","4:3",0],[28,"Golden Elf Girl Comic","4:3",0]],
+};
+
 /* ================= پیکربندی ================= */
 const DEFAULTS={
   host:"https://cpi.ufotosoft.com",
@@ -593,8 +617,8 @@ async function connectivityTest(){
       log("✗ "+hst+" از شبکه شما قابل دسترسی نیست (DNS/فیلترینگ/قطعی). راه‌حل: VPN.","e");
     }
   }
-  // 2) تست مسیر فعلی (با CORS واقعی)
-  const probe=CFG.host.replace(/\/+$/,"")+"/algo/v1/faceFusion/aigc/image2VideoQuery";
+  // 2) تست مسیر فعلی (با CORS واقعی) — کوئری beat با یک taskId ساختگی
+  const probe=CFG.host.replace(/\/+$/,"")+"/algo/v1/faceFusion/aigc/beatImage2Video/queryTask";
   const url=viaProxy(probe);
   try{
     const r=await fetch(url,{method:"POST",
@@ -627,17 +651,15 @@ async function uploadImage(file){
   return j.d[0];
 }
 
-async function createTask(imageUrl,prompt,ratio,level,movement){
-  log("مرحله ۲: ساخت تسک تولید ویدیو...");step(2,"on");
-  const body={imageUrls:[imageUrl],level:Number(level)||1,deviceToken:""};
+async function createTask(imageUrl,prompt,level,effectType){
+  log("مرحله ۲: ساخت تسک تولید ویدیو (مسیر beatImage2Video، افکت "+effectType+")...");step(2,"on");
+  // مسیر اثبات‌شده با تست زنده (پروب G): beatImage2Video/createNormalTask
+  // بدنه از بایت‌کد createGXAiVideoTask: imageUrls/level/effectType (+ prompt اختیاری) — بدون فیلد example
+  const body={imageUrls:[imageUrl],level:Number(level)||1,effectType:Number(effectType)};
   if(prompt&&prompt.trim())body.prompt=prompt.trim();
-  if(ratio)body.ratio=ratio;
-  if(movement&&movement.trim())body.movementAmplitude=movement.trim();
-  // example اجباری است (سرور روی رشته خالی خطای 400 می‌دهد)؛ همان تصویر آپلودشده را می‌فرستیم
-  body.example=imageUrl;
-  const url=apiUrl("/algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate");
+  const url=apiUrl("/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask");
   let r;
-  try{ r=await fetch(url,{method:"POST",headers:algoHeaders(true,null),body:JSON.stringify(body)}); }
+  try{ r=await fetch(url,{method:"POST",headers:algoHeaders(false,true),body:JSON.stringify(body)}); }
   catch(e){ throw new Error(friendlyError(e,"ساخت تسک",url)); }
   if(!r.ok)throw new Error("ساخت تسک: HTTP "+r.status+" — "+url);
   const j=await r.json();
@@ -649,13 +671,13 @@ async function createTask(imageUrl,prompt,ratio,level,movement){
 }
 
 async function queryTask(taskId){
-  // مسیر زنده نسخه 407: image2VideoQuery (مسیر قدیمی queryTask روی سرور 404 می‌دهد)
-  const url=apiUrl("/algo/v1/faceFusion/aigc/image2VideoQuery");
+  // کوئری همتای مسیر beat (g.M): beatImage2Video/queryTask — همان جفت هدر userid کوچک + ifWise
+  const url=apiUrl("/algo/v1/faceFusion/aigc/beatImage2Video/queryTask");
   const r=await fetch(url,{method:"POST",headers:algoHeaders(false,true),
     body:JSON.stringify({taskId:taskId})});
   if(!r.ok)throw new Error("کوئری: HTTP "+r.status);
   const j=await r.json();
-  // کدهای بیزینسی مثل 3036 (TASK_OVERTIME) در حالت انتظار طبیعی‌اند؛ فقط پاسخ را برگردان
+  // کدهای بیزینسی غیر نهایی در حالت انتظار طبیعی‌اند؛ فقط پاسخ را برگردان
   return {c:j.c,m:j.m,d:j.d||{}};
 }
 
@@ -706,8 +728,8 @@ $("go").addEventListener("click",async()=>{
     if(!pickedFile)throw new Error("اول یک تصویر انتخاب کنید");
     btn.disabled=true;btn.textContent="⏳ در حال پردازش...";
     const url=await uploadImage(pickedFile);
-    const taskId=await createTask(url,$("prompt").value,$("ratio").value,
-      $("level").value,$("movement").value);
+    const taskId=await createTask(url,$("prompt").value,
+      $("level").value,$("effect").value);
     const videoUrl=await waitForVideo(taskId);
     log("مرحله ۴: ویدیو آماده شد ✓","ok");step(4,"done");
     $("video").src=videoUrl;
@@ -789,8 +811,38 @@ $("connMode").addEventListener("change",e=>{
   log("حالت اتصال تغییر کرد: "+MODE_LABEL[CFG.connMode],"w");
 });
 
+/* ================= پر کردن لیست افکت‌ها از کاتالوگ زنده ================= */
+const GROUP_LABEL={
+  AIvideo_US:"🎬 ویدیوی هوش مصنوعی (اثبات‌شده)",Hot_USAI:"🔥 ترندهای داغ",
+  MotionPhotography_US:"📷 عکس متحرک",Dance_US:"💃 رقص",AIBanner_US:"📰 بنر هوشمند",
+  AIPhotoshoots_US:"📸 آتلیه عکس",AIAttitude_US:"😎 نگرش",Newyear_US:"🎊 سال نو",
+  MerryChristmas_US:"🎄 کریسمس",FemalePhotography_US:"👩 پرتره زنانه",
+  RideAnimales_US:"🐎 حیوانات و سواری",FantasyScenes_US:"🧙 صحنه‌های فانتزی",
+  "3DModelFigure_US":"🧍 مدل سه‌بعدی",Deformation_US:"🌀 تغییر شکل",Hairstyle:"💇 مدل مو",
+  Expression:"😀 حالات چهره",Fashion:"👗 مد",StyleClothing:"👕 سبک لباس",
+  Painting:"🎨 نقاشی",Age:"👶 سن",Characters:"🦸 شخصیت‌ها",Anime:"🌸 انیمه",
+  MagicEffects:"✨ جادویی",ComicArt:"💥 کمیک"};
+function buildEffectSelect(){
+  const sel=$("effect");
+  for(const [gn,items] of Object.entries(EFFECT_CATALOG)){
+    const og=document.createElement("optgroup");
+    og.label=(GROUP_LABEL[gn]||gn)+" ("+items.length+")";
+    for(const [eff,name,ratio,single] of items){
+      const o=document.createElement("option");
+      o.value=String(eff);
+      o.textContent=(single?"":"👥 ")+name+" — "+eff+(ratio?(" · "+ratio):"");
+      og.appendChild(o);
+    }
+    sel.appendChild(og);
+  }
+  sel.value="4991"; // Catwalk — همان افکتی که تست زندهٔ موفق با آن انجام شد
+  sel.addEventListener("change",()=>{$("effCode").textContent=sel.value;});
+}
+buildEffectSelect();
+
 fillSettings();
 log("آماده. userId="+CFG.userId+" signKey="+CFG.signKey);
+log("کاتالوگ افکت‌ها: "+Object.values(EFFECT_CATALOG).reduce((a,b)=>a+b.length,0)+" قالب آماده از سرور.");
 </script>
 </body>
 </html>
