@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mivi — ابزار تشخیص اتصال و گزارش کامل</title>
+<style>
+  :root{--bg:#0d1117;--card:#161b22;--card2:#1c2330;--line:#2b3340;--txt:#e6edf3;
+    --mut:#8b97a7;--acc:#6c5ce7;--ok:#2ecc71;--warn:#f39c12;--err:#e74c3c;--info:#7fb3ff}
+  *{box-sizing:border-box;font-family:Tahoma,"Segoe UI",sans-serif}
+  body{margin:0;background:radial-gradient(1200px 600px at 80% -10%,#1d2340 0%,var(--bg) 55%);color:var(--txt);min-height:100vh}
+  .wrap{max-width:960px;margin:0 auto;padding:26px 16px 60px}
+  h1{font-size:22px;margin:6px 0}
+  .sub{color:var(--mut);font-size:13px;line-height:1.9;margin-bottom:18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+  button{border:0;border-radius:11px;padding:12px 24px;font-size:14px;font-weight:bold;cursor:pointer;
+    background:linear-gradient(135deg,var(--acc),#8e7bff);color:#fff}
+  button:disabled{opacity:.5;cursor:not-allowed}
+  .ghost{background:var(--card2);border:1px solid var(--line);color:var(--txt);font-weight:normal}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;vertical-align:top}
+  th{color:var(--mut);font-weight:normal}
+  td.code{direction:ltr;font-family:monospace;font-size:11.5px;color:var(--mut);max-width:380px;word-break:break-all}
+  .badge{padding:2px 9px;border-radius:999px;font-size:11px;font-weight:bold;white-space:nowrap}
+  .b-ok{background:#14361f;color:var(--ok)} .b-err{background:#3d1718;color:var(--err)}
+  .b-warn{background:#3a2c12;color:var(--warn)} .b-info{background:#16263d;color:var(--info)}
+  .b-skip{background:#222833;color:var(--mut)}
+  textarea{width:100%;min-height:300px;background:#0a0e14;border:1px solid var(--line);border-radius:10px;
+    color:#9fe8a7;padding:12px;font-family:monospace;font-size:11.5px;direction:ltr;text-align:left;line-height:1.7}
+  .bar{height:6px;background:var(--card2);border-radius:99px;overflow:hidden;margin:10px 0}
+  .bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--info));transition:width .3s}
+  .verdict{border-radius:12px;padding:14px 16px;font-size:13px;line-height:2;margin-top:10px;display:none}
+  .v-ok{background:#14361f;border:1px solid #1f5130} .v-bad{background:#3d1718;border:1px solid #5c2123}
+  .v-mid{background:#3a2c12;border:1px solid #6b4f1c}
+  code{background:#0a0e14;border:1px solid var(--line);border-radius:5px;padding:1px 6px;direction:ltr;display:inline-block;font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🔧 Mivi — ابزار تشخیص اتصال</h1>
+  <div class="sub">
+    این فایل تمام تست‌های ممکن را در همین مرورگر اجرا می‌کند: دسترسی شبکه، رفتار واقعی CORS سرور،
+    preflight، پروکسی محلی، و باتری پروکسی‌های عمومی (با تست POST واقعی). در پایان یک گزارش متنی
+    می‌سازد که کامل کپی می‌کنید و می‌فرستید. هیچ داده‌ای جایی ارسال نمی‌شود جز درخواست‌های تستی.
+  </div>
+
+  <div class="card">
+    <button id="run">▶️ اجرای همه تست‌ها</button>
+    <button class="ghost" id="copy" type="button">📋 کپی گزارش</button>
+    <button class="ghost" id="dl" type="button">⬇️ دانلود گزارش</button>
+    <div class="bar"><div id="prog"></div></div>
+    <div id="status" style="font-size:12px;color:var(--mut)"></div>
+  </div>
+
+  <div class="card">
+    <table>
+      <thead><tr><th style="width:34%">تست</th><th style="width:14%">نتیجه</th><th>جزئیات</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <b>جمع‌بندی خودکار</b>
+    <div id="verdict" class="verdict"></div>
+  </div>
+
+  <div class="card">
+    <b>گزارش خام (این را کپی و ارسال کنید)</b>
+    <textarea id="report" dir="ltr" readonly></textarea>
+  </div>
+</div>
+
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+if(!AbortSignal.timeout){
+  AbortSignal.timeout=function(ms){const c=new AbortController();setTimeout(()=>c.abort(),ms);return c.signal;};
+}
+const HOSTS=[
+  ["face-api (اصلی)","https://face-api.ufotosoft.com"],
+  ["face-api (دامنه دوم)","https://face-api.videomate.cc"],
+  ["cpi (کانفیگ)","https://cpi.ufotosoft.com"],
+  ["res (CDN)","https://res.ufotosoft.com"]
+];
+const EP={
+  upload:"/algo/v1/aiGenerate-aigc/multipleUpload",
+  create:"/algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate",
+  query:"/algo/v1/faceFusion/aigc/image2video/queryTask"
+};
+const PROXIES=[
+  ["corsproxy.io",u=>"https://corsproxy.io/?url="+encodeURIComponent(u),true],
+  ["allorigins/raw",u=>"https://api.allorigins.win/raw?url="+encodeURIComponent(u),false],
+  ["codetabs",u=>"https://api.codetabs.com/v1/proxy?quest="+encodeURIComponent(u),false],
+  ["cors.sh",u=>"https://proxy.cors.sh/"+u,true],
+  ["thingproxy",u=>"https://thingproxy.freeboard.io/fetch/"+u,true],
+  ["cors-anywhere",u=>"https://cors-anywhere.herokuapp.com/"+u,true],
+  ["corsproxy.org",u=>"https://corsproxy.org/?"+encodeURIComponent(u),true]
+];
+const rows=[],report=[];
+function rlog(s){report.push(s);}
+function addRow(name,status,detail){
+  const map={ok:["b-ok","موفق"],err:["b-err","ناموفق"],warn:["b-warn","هشدار"],
+    info:["b-info","اطلاعات"],skip:["b-skip","رد شد"]};
+  const [cls,txt]=map[status];
+  rows.push({name,status,txt,detail});
+  const tr=document.createElement("tr");
+  tr.innerHTML=`<td>${name}</td><td><span class="badge ${cls}">${txt}</span></td><td class="code">${detail.replace(/</g,"&lt;")}</td>`;
+  $("rows").appendChild(tr);
+}
+function setStatus(t,pct){$("status").textContent=t;$("prog").style.width=pct+"%";}
+function to(e){return (e&&e.message)?e.message:String(e);}
+async function timed(label,fn){
+  const t0=performance.now();
+  try{const v=await fn();return {ok:true,v,ms:Math.round(performance.now()-t0)};}
+  catch(e){return {ok:false,e,ms:Math.round(performance.now()-t0)};}
+}
+
+/* ---------- 1) environment ---------- */
+function testEnv(){
+  const info={
+    time:new Date().toISOString(),
+    ua:navigator.userAgent,
+    platform:navigator.platform||"?",
+    language:navigator.language,
+    onLine:navigator.onLine,
+    location:location.href,
+    origin:location.origin,
+    protocol:location.protocol,
+    secureContext:window.isSecureContext,
+    cookies:navigator.cookieEnabled
+  };
+  Object.entries(info).forEach(([k,v])=>rlog(k+": "+v));
+  addRow("محیط مرورگر","info",`origin=${info.origin} | secure=${info.secureContext} | online=${info.onLine}`);
+  return info;
+}
+
+/* ---------- 2) raw reachability (no-cors, opaque = reachable) ---------- */
+async function testReach(){
+  for(const [label,base] of HOSTS){
+    const r=await timed(label,()=>fetch(base+"/",{mode:"no-cors",cache:"no-store",
+      signal:AbortSignal.timeout(12000)}));
+    if(r.ok) addRow("دسترسی شبکه: "+label,"ok",`reachable (پاسخ opaque، ${r.ms}ms)`);
+    else addRow("دسترسی شبکه: "+label,"err",`غیرقابل دسترس (${r.ms}ms): ${to(r.e)}`);
+    rlog(`reach ${base} -> ${r.ok?"OPAQUE OK "+r.ms+"ms":"FAIL "+to(r.e)}`);
+  }
+  // endpoint-level reachability via no-cors simple POST (custom headers impossible in no-cors)
+  for(const [label,base] of HOSTS.slice(0,2)){
+    const r=await timed(label,()=>fetch(base+EP.query,{method:"POST",mode:"no-cors",
+      headers:{"Content-Type":"text/plain"},body:"probe",
+      signal:AbortSignal.timeout(12000)}));
+    if(r.ok) addRow("مسیر API قابل دسترس: "+label,"ok",`endpoint پاسخ داد (opaque، ${r.ms}ms) — سرور زنده و در دسترس`);
+    else addRow("مسیر API: "+label,"err",to(r.e));
+  }
+}
+
+/* ---------- 3) real CORS preflight + direct POST ---------- */
+async function testCors(){
+  for(const [label,base] of HOSTS.slice(0,2)){
+    for(const [epName,path] of Object.entries(EP)){
+      // OPTIONS preflight
+      const r=await timed("preflight",()=>fetch(base+path,{method:"OPTIONS",
+        headers:{"Access-Control-Request-Method":"POST",
+          "Access-Control-Request-Headers":"content-type,sign,timeStamp,cp,version,platform,userid,userId,ifWise",
+          "Origin":location.origin},
+        signal:AbortSignal.timeout(12000)}));
+      if(r.ok){
+        const h=r.v.headers;
+        const acao=h.get("access-control-allow-origin");
+        const acah=h.get("access-control-allow-headers");
+        addRow(`Preflight ${label} / ${epName}`,"ok",
+          `HTTP ${r.v.status} | ACAO=${acao||"ندارد"} | ACAH=${acah||"ندارد"}`);
+        rlog(`preflight ${base+path} -> ${r.v.status} ACAO=${acao} ACAH=${acah}`);
+      }else{
+        addRow(`Preflight ${label} / ${epName}`,"err",`بلاک شد: ${to(r.e).slice(0,110)}`);
+        rlog(`preflight ${base+path} -> FAIL ${to(r.e)}`);
+      }
+      // only query endpoint for the full POST attempt (cheapest)
+      if(epName==="query"){
+        const p=await timed("post",()=>fetch(base+path,{method:"POST",
+          headers:{"Content-Type":"application/json","sign":"0".repeat(32),"timeStamp":"1",
+            "cp":"instagram.story.art.collage","version":"407","platform":"1","userid":"diag"},
+          body:JSON.stringify({taskId:"diagnostic-probe"}),
+          signal:AbortSignal.timeout(12000)}));
+        if(p.ok){
+          let txt="";try{txt=(await p.v.text()).slice(0,200);}catch(e){}
+          addRow(`POST واقعی با هدرهای امضا: ${label}`,"ok",`HTTP ${p.v.status} — CORS اجازه داد! بدنه: ${txt}`);
+          rlog(`direct POST ${base+path} -> ${p.v.status} body=${txt}`);
+        }else{
+          addRow(`POST واقعی با هدرهای امضا: ${label}`,"err",to(p.e).slice(0,140));
+          rlog(`direct POST ${base+path} -> FAIL ${to(p.e)}`);
+        }
+      }
+    }
+  }
+}
+
+/* ---------- 4) local proxy probe ---------- */
+async function testLocal(){
+  const ports=[8770,8080,8000,3000,5000];
+  let any=false;
+  for(const port of ports){
+    const r=await timed("local",()=>fetch(`http://localhost:${port}/`,
+      {mode:"no-cors",signal:AbortSignal.timeout(2500)}));
+    if(r.ok){addRow(`پورت محلی ${port}`,"ok",`چیزی در حال گوش دادن است (${r.ms}ms)`);any=true;
+      rlog(`localhost:${port} OPEN`);}
+    else rlog(`localhost:${port} closed (${to(r.e).slice(0,60)})`);
+  }
+  // functional test of the expected proxy endpoint
+  const tgt=encodeURIComponent(HOSTS[0][1]+"/");
+  const r=await timed("proxyfn",()=>fetch(`http://localhost:8770/proxy?u=${tgt}`,
+    {signal:AbortSignal.timeout(6000)}));
+  if(r.ok){addRow("عملکرد proxy.py روی 8770","ok",`HTTP ${r.v.status} — پروکسی محلی سالم و آماده است`);any=true;}
+  else addRow("عملکرد proxy.py روی 8770","err",`پاسخ نداد: ${to(r.e).slice(0,100)} — یعنی proxy.py اجرا نشده`);
+  if(!any) addRow("پروکسی محلی","warn","هیچ سرور محلی‌ای روی پورت‌های رایج پیدا نشد");
+}
+
+/* ---------- 5) public proxy battery (GET reachability + real POST where claimed) ---------- */
+async function testProxies(){
+  const target=HOSTS[0][1]+EP.query;
+  for(const [name,build,supportsPost] of PROXIES){
+    // GET probe through proxy to the Mivi host root
+    const g=await timed("get",()=>fetch(build(HOSTS[0][1]+"/"),
+      {signal:AbortSignal.timeout(15000)}));
+    if(!g.ok){
+      addRow("پروکسی عمومی: "+name,"err",`GET ناموفق (${g.ms}ms): ${to(g.e).slice(0,90)}`);
+      rlog(`proxy ${name} GET FAIL ${to(g.e)}`);
+      continue;
+    }
+    const hdr=g.v.headers.get("access-control-allow-origin");
+    addRow("پروکسی عمومی: "+name,"ok",`GET کار کرد (${g.ms}ms، HTTP ${g.v.status}) ACAO=${hdr||"ندارد"}`);
+    rlog(`proxy ${name} GET OK ${g.v.status} ACAO=${hdr}`);
+    // POST probe with real signed headers through this proxy
+    if(supportsPost){
+      const p=await timed("post",()=>fetch(build(target),{method:"POST",
+        headers:{"Content-Type":"application/json","sign":"0".repeat(32),"timeStamp":"1",
+          "cp":"instagram.story.art.collage","version":"407","platform":"1","userid":"diag"},
+        body:JSON.stringify({taskId:"diagnostic-probe"}),
+        signal:AbortSignal.timeout(20000)}));
+      if(p.ok){
+        let txt="";try{txt=(await p.v.text()).slice(0,220);}catch(e){}
+        const looksJson=txt.trim().startsWith("{");
+        addRow(`└ POST از طریق ${name}`,looksJson?"ok":"warn",
+          `HTTP ${p.v.status} — ${looksJson?"پاسخ JSON سرور Mivi دریافت شد (زنجیره کامل کار می‌کند!)":"بدنه غیر JSON"}: ${txt.replace(/\s+/g," ").slice(0,150)}`);
+        rlog(`proxy ${name} POST -> ${p.v.status} body=${txt}`);
+      }else{
+        addRow(`└ POST از طریق ${name}`,"err",to(p.e).slice(0,120));
+        rlog(`proxy ${name} POST FAIL ${to(p.e)}`);
+      }
+    }else{
+      addRow(`└ POST از طریق ${name}`,"skip","این پروکسی فقط GET پشتیبانی می‌کند (برای آپلود بی‌فایده)");
+    }
+  }
+}
+
+/* ---------- verdict ---------- */
+function buildVerdict(){
+  const reachOk=rows.some(r=>r.name.startsWith("دسترسی شبکه")&&r.status==="ok");
+  const corsOk=rows.some(r=>r.name.includes("POST واقعی")&&r.status==="ok");
+  const localOk=rows.some(r=>r.name.includes("proxy.py")&&r.status==="ok");
+  const proxyPost=rows.filter(r=>r.name.includes("POST از طریق")&&r.status==="ok");
+  let cls,html;
+  if(corsOk){
+    cls="v-ok";html="✅ سرور Mivi خودش CORS می‌دهد — حالت «مستقیم» باید کار کند. اگر کار نمی‌کند مشکل از جای دیگر است؛ گزارش را بفرستید.";
+  }else if(localOk){
+    cls="v-ok";html="✅ proxy.py در حال اجرا و سالم است. حالت «پروکسی محلی» را انتخاب و تولید ویدیو را تست کنید.";
+  }else if(proxyPost.length){
+    cls="v-mid";html=`🟡 یک پروکسی عمومی POST واقعی را عبور داد: <b>${proxyPost.map(r=>r.name).join("، ")}</b>. همان را در تنظیمات به‌صورت پروکسی سفارشی امتحان کنید.`;
+  }else if(reachOk){
+    cls="v-bad";html="🔴 شبکه به سرور Mivi وصل است، ولی سرور هیچ هدر CORS‌ای نمی‌دهد و هیچ پروکسی عمومیِ آماده‌ای POST را عبور نداد.<br>"+
+      "راه‌حل قطعی: اجرای پروکسی محلی. در پوشه‌ای که proxy.py دانلود شده، ترمینال باز کنید و دستور <code>python3 proxy.py</code> را بزنید "+
+      "(اگر python3 نبود، <code>py proxy.py</code> یا <code>python proxy.py</code>). سپس دوباره همین تست را اجرا کنید.";
+  }else{
+    cls="v-bad";html="🔴 خود سرور Mivi از شبکه شما قابل دسترس نیست (DNS/فیلترینگ). با VPN روشن هم این تست را تکرار کنید.";
+  }
+  const v=$("verdict");v.className="verdict "+cls;v.style.display="block";v.innerHTML=html;
+  rlog("\nVERDICT: "+v.textContent.trim());
+}
+
+async function main(){
+  $("run").disabled=true;$("rows").innerHTML="";rows.length=0;report.length=0;
+  rlog("===== MIVI DIAGNOSTIC REPORT =====");
+  try{
+    setStatus("تست محیط...",8);testEnv();
+    setStatus("تست دسترسی شبکه...",20);await testReach();
+    setStatus("تست CORS و preflight سرور...",45);await testCors();
+    setStatus("بررسی پروکسی محلی...",62);await testLocal();
+    setStatus("باتری پروکسی‌های عمومی (کمی صبر کنید)...",75);await testProxies();
+    setStatus("ساخت گزارش...",96);buildVerdict();
+    rlog("\n===== END REPORT =====");
+    $("report").value=report.join("\n");
+    setStatus("تکمیل شد ✓",100);
+  }catch(e){
+    addRow("خطای داخلی تست","err",to(e));rlog("FATAL "+to(e));
+    $("report").value=report.join("\n");
+  }finally{$("run").disabled=false;}
+}
+$("run").addEventListener("click",main);
+$("copy").addEventListener("click",async()=>{
+  $("report").select();
+  try{await navigator.clipboard.writeText($("report").value);}catch(e){document.execCommand("copy");}
+});
+$("dl").addEventListener("click",()=>{
+  const blob=new Blob([$("report").value],{type:"text/plain"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);a.download="mivi_diagnostic_report.txt";
+  document.body.appendChild(a);a.click();a.remove();
+});
+</script>
+</body>
+</html>
