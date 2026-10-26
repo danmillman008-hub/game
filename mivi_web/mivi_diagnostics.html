@@ -186,6 +186,9 @@ const EP={
   upload:"/algo/v1/aiGenerate-aigc/multipleUpload",
   create:"/algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate",
   createIntegrated:"/algo/v1/faceFusion/aigc/image2video/integratedTaskCreate",
+  createV1:"/algo/v1/faceFusion/aigc/image2VideoCreate",
+  createV4:"/algo/v1/faceFusion/aigc/integrated/image2VideoCreateV4",
+  createV5:"/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
   query:"/algo/v1/faceFusion/aigc/image2video/queryTask",
   queryNew:"/algo/v1/faceFusion/aigc/image2VideoQuery"
 };
@@ -484,7 +487,7 @@ async function testTaskCreateProbe(){
   const base="https://cpi.ufotosoft.com";
   window.__diagTask=null;
   rlog("\n--- PROBE-D real task create via http://localhost:8770 ---");
-  addRow("پروب D ساخت تسک واقعی","info","آپلود تازه + تلاش unifiedTaskCreate با چند مقدار example/level...");
+  addRow("پروب D ساخت تسک واقعی","info","آپلود تازه، سپس: ۴ واریانت قبلی → باتری ۵تایی example با URLهای واقعی CDN مِیوی → مسیرهای جایگزین V1/V4/V5 (بدون example)");
 
   // 1) fresh upload (same proven multipart flow as Probe B)
   let imgUrl=null;
@@ -531,6 +534,68 @@ async function testTaskCreateProbe(){
       addRow("D: "+label,c===200?"warn":"err",
         `HTTP ${resp.status} c=${c} | ${txt.replace(/\s+/g," ").slice(0,220)}`);
     }catch(e){rlog(`PROBE-D ${label} FAIL ${to(e)}`);addRow("D: "+label,"err",to(e).slice(0,130));}
+  }
+
+  // 2b) example battery: مقدار example از کجاست؟ URLهای واقعی CDN خودِ Mivi (از کانفیگ داخل APK)
+  if(!window.__diagTask){
+    const httpsImg=imgUrl.replace("http://","https://");
+    const examples=[
+      ["mp4 https روی res (ویدیوی نمونه کانفیگ)","https://res.ufotosoft.com/common/video/1742469434549_UF2503207f070435-ff79-41f3-b04b-595386299393.mp4"],
+      ["mp4 http روی res","http://res.ufotosoft.com/common/video/1742469434549_UF2503207f070435-ff79-41f3-b04b-595386299393.mp4"],
+      ["jpg https روی res (تصویر نمونه کانفیگ)","https://res.ufotosoft.com/common/img/1742469413191_UF2503201fbdbe96-f445-4bfe-bdc0-2bd20a3daf22.jpg"],
+      ["webp http روی res (تصویر گروه AI Video)","http://res.ufotosoft.com/common/img/1758709142911_UF25092461498a90-df7e-47e6-bce5-cfc07d5d9eac.webp"],
+      ["همان عکس آپلودشده با https",httpsImg]
+    ];
+    rlog("PROBE-D example battery start ("+examples.length+" candidates)");
+    addRow("باتری مقدار example","info","۵ مقدار مختلف (نوع/دامنه/پروتکل) روی unifiedTaskCreate تست می‌شود...");
+    for(const [label,ex] of examples){
+      const body={imageUrls:[imgUrl],level:1,deviceToken:"",example:ex};
+      try{
+        const resp=await fetch(via(base+EP.create),{method:"POST",headers:createHeaders(id,false),
+          body:JSON.stringify(body),signal:AbortSignal.timeout(30000)});
+        const txt=await resp.text();
+        let parsed=null;try{parsed=JSON.parse(txt);}catch(e){}
+        const c=parsed?parsed.c:"?";
+        const taskId=parsed&&parsed.d?parsed.d.taskId:null;
+        rlog(`PROBE-D ex[${label}] -> HTTP ${resp.status} c=${c} body=${txt.slice(0,500)}`);
+        if(c===200&&taskId){
+          window.__diagTask={label:"example="+label,path:EP.create,taskId,body:JSON.stringify(body),firstResponse:txt};
+          addRow("D2: "+label,"ok","c=200 ✓ taskId="+taskId+" | "+txt.replace(/\s+/g," ").slice(0,200));
+          break;
+        }
+        addRow("D2: "+label,c===1013?"err":"warn",
+          `HTTP ${resp.status} c=${c} | ${txt.replace(/\s+/g," ").slice(0,200)}`);
+      }catch(e){rlog(`PROBE-D ex[${label}] FAIL ${to(e)}`);addRow("D2: "+label,"err",to(e).slice(0,120));}
+    }
+  }
+
+  // 2c) مسیرهای جایگزین ساخت تسک که در بایت‌کد فیلد example ندارند (V1 قدیمی، V4، V5)
+  if(!window.__diagTask){
+    const alt=[
+      ["V1 legacy image2VideoCreate (بدون example)",EP.createV1,{imageUrls:[imgUrl],level:1,deviceToken:""}],
+      ["V4 integratedCreateV4 effectType=1",EP.createV4,{imageUrls:[imgUrl],level:1,effectType:1}],
+      ["V5 createV5 googleId خالی",EP.createV5,{imageUrls:[imgUrl],level:1,deviceToken:"",googleId:"",prompt:""}]
+    ];
+    rlog("PROBE-D alt routes start ("+alt.length+" routes)");
+    addRow("مسیرهای جایگزین V1/V4/V5","info","سه مسیر ساخت تسک قدیمی‌تر که فیلد example نمی‌گیرند...");
+    for(const [label,path,body] of alt){
+      try{
+        const resp=await fetch(via(base+path),{method:"POST",headers:headersForPath(id,path),
+          body:JSON.stringify(body),signal:AbortSignal.timeout(30000)});
+        const txt=await resp.text();
+        let parsed=null;try{parsed=JSON.parse(txt);}catch(e){}
+        const c=parsed?parsed.c:"?";
+        const taskId=parsed&&parsed.d?parsed.d.taskId:null;
+        rlog(`PROBE-D alt[${label}] -> HTTP ${resp.status} c=${c} body=${txt.slice(0,500)}`);
+        if(c===200&&taskId){
+          window.__diagTask={label,path,taskId,body:JSON.stringify(body),firstResponse:txt};
+          addRow("D3: "+label,"ok","c=200 ✓ taskId="+taskId+" | "+txt.replace(/\s+/g," ").slice(0,200));
+          break;
+        }
+        addRow("D3: "+label,c===404?"warn":"err",
+          `HTTP ${resp.status} c=${c} | ${txt.replace(/\s+/g," ").slice(0,200)}`);
+      }catch(e){rlog(`PROBE-D alt[${label}] FAIL ${to(e)}`);addRow("D3: "+label,"err",to(e).slice(0,120));}
+    }
   }
 
   // 3) poll the new query endpoint image2VideoQuery if a task was created
