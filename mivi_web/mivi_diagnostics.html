@@ -49,6 +49,9 @@
     <button id="runE">🧭 پروب E: کاتالوگ قالب‌ها</button>
     <button id="runF">🗂️ پروب F: resourceNew استخراج‌شده از بایت‌کد</button>
     <button id="runG">🎬 پروب G: ساخت تسک با effect واقعی کاتالوگ</button>
+    <label style="font-size:12px;color:var(--mut)">عکس اختیاری برای پروب G
+      <input type="file" id="gImg" accept="image/*" style="font-size:11px">
+    </label>
     <button class="ghost" id="dlE" type="button">💾 ذخیره JSON پروب E/F</button>
     <button class="ghost" id="copy" type="button">📋 کپی گزارش</button>
     <button class="ghost" id="dl" type="button">⬇️ دانلود گزارش</button>
@@ -795,14 +798,20 @@ async function testRealEffectCreate(){
   rlog("\n--- PROBE-G real effectType task create via http://localhost:8770 ---");
   addRow("پروب G","info","آپلود تازه + ساخت تسک با effectTypeهای واقعی کاتالوگ (بدون example)...");
 
-  // 1) fresh upload — همان فلوی اثبات‌شدهٔ پروب B/D
+  // 1) fresh upload — همان فلوی اثبات‌شدهٔ پروب B/D (عکس انتخابی کاربر در اولویت است)
   let imgUrl=null;
   try{
-    const jpgB64="/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/wAALCAABAAEBAREA/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8AfwD/2Q==";
-    const bin=atob(jpgB64);const arr=new Uint8Array(bin.length);
-    for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
+    const picked=$("gImg").files&&$("gImg").files[0];
     const fd=new FormData();
-    fd.append("files",new Blob([arr],{type:"image/jpg"}),"diag.jpg");
+    if(picked){
+      fd.append("files",picked,picked.name||"g.jpg");
+      rlog("PROBE-G using picked image: "+picked.name+" "+picked.size+"B");
+    }else{
+      const jpgB64="/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/wAALCAABAAEBAREA/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8AfwD/2Q==";
+      const bin=atob(jpgB64);const arr=new Uint8Array(bin.length);
+      for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
+      fd.append("files",new Blob([arr],{type:"image/jpg"}),"diag.jpg");
+    }
     const ts=String(Math.floor(Date.now()/1000));
     const r1=await fetch(via(base+EP.upload),{method:"POST",
       headers:{"cp":id.cp,"version":id.version,"platform":id.platform,
