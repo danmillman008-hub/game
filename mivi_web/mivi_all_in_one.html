@@ -35,7 +35,7 @@
   button:disabled{opacity:.55;cursor:not-allowed}
   .ghost{background:var(--card2);border:1px solid var(--line);color:var(--txt);font-weight:normal;font-size:12px;padding:8px 12px}
   .log{background:#0a0e14;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-family:monospace;
-    font-size:12px;line-height:1.9;max-height:230px;overflow:auto;white-space:pre-wrap;direction:ltr;text-align:left}
+    font-size:12px;line-height:1.9;max-height:260px;overflow:auto;white-space:pre-wrap;direction:ltr;text-align:left}
   .log .i{color:#7fb3ff}.log .ok{color:var(--ok)}.log .w{color:var(--warn)}.log .e{color:var(--err)}
   .step{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--line);margin-left:6px}
   .step.on{background:var(--acc)}.step.done{background:var(--ok)}.step.fail{background:var(--err)}
@@ -47,20 +47,23 @@
     padding:3px 10px;font-size:11px;color:var(--mut);margin:2px}
   a.dl{display:inline-block;margin-top:10px;text-decoration:none}
   .muted{color:var(--mut);font-size:12px;line-height:1.9}
+  code{background:#0a0e14;border:1px solid var(--line);border-radius:6px;padding:2px 6px;direction:ltr;
+    display:inline-block;font-size:12px}
+  pre{background:#0a0e14;border:1px solid var(--line);border-radius:10px;padding:12px;overflow:auto;
+    direction:ltr;text-align:left;font-size:12px;line-height:1.7}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>🎬 Mivi AI — تولید ویدیو از تصویر + متن</h1>
   <div class="sub">
-    نسخه تک‌فایل و کاملاً مستقل — بدون نیاز به نصب چیزی. فقط این فایل را با مرورگر باز کنید.<br>
+    نسخه تک‌فایل و کاملاً مستقل — بدون نیاز به نصب پکیج. فقط این فایل را با مرورگر باز کنید.<br>
     خط لوله: آپلود تصویر → ساخت تسک → پردازش ابری (~۶ ثانیه کلیپ) → پخش و دانلود ویدیو.
   </div>
 
   <div class="banner warn">
-    ⚠️ اگر دکمه تولید با خطای <b>CORS / Failed to fetch</b> روبه‌رو شد، یعنی مرورگر اجازه تماس
-    مستقیم با سرور را نمی‌دهد. از بخش «تنظیمات اتصال» پایین صفحه، حالت پروکسی را انتخاب کنید
-    (یک پروکسی CORS عمومی یا آدرس پروکسی شخصی خودتان).
+    اگر دکمه تولید با <b>Failed to fetch</b> روبه‌رو شد، اول دکمه «🔍 تست اتصال» را بزنید تا مشخص شود
+    مشکل از شبکه/فیلترینگ است یا CORS مرورگر. راه‌حل مطمئن: پروکسی محلی (دکمه دانلود در پایین همین صفحه).
   </div>
 
   <div class="card">
@@ -97,6 +100,7 @@
 
     <div style="margin-top:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
       <button id="go">🚀 تولید ویدیو</button>
+      <button class="ghost" id="netTest" type="button">🔍 تست اتصال</button>
       <span>
         <span class="step" id="s1"></span><span class="step" id="s2"></span>
         <span class="step" id="s3"></span><span class="step" id="s4"></span>
@@ -122,25 +126,39 @@
     <details>
       <summary>⚙️ تنظیمات اتصال و احراز هویت</summary>
 
+      <label>هاست سرور</label>
+      <select id="hostPreset">
+        <option value="https://face-api.ufotosoft.com">face-api.ufotosoft.com (پیش‌فرض)</option>
+        <option value="https://face-api.videomate.cc">face-api.videomate.cc (دامنه جایگزین)</option>
+        <option value="__custom__">هاست سفارشی...</option>
+      </select>
+      <input type="text" id="host" dir="ltr" style="margin-top:8px">
+
       <label>حالت اتصال به سرور</label>
       <select id="connMode">
-        <option value="direct">مستقیم (پیش‌فرض — اگر سرور CORS بدهد کار می‌کند)</option>
-        <option value="corsproxyio">پروکسی عمومی corsproxy.io</option>
-        <option value="allorigins">پروکسی عمومی api.allorigins.win</option>
+        <option value="direct">مستقیم (پیش‌فرض — فقط اگر سرور CORS بدهد یا با پروکسی سیستم/VPN)</option>
+        <option value="local">پروکسی محلی (مطمئن‌ترین — فایل proxy.py را با دکمه زیر بسازید)</option>
+        <option value="corsproxyio">پروکسی عمومی corsproxy.io (ممکن است کلید بخواهد)</option>
+        <option value="allorigins">پروکسی عمومی allorigins (فقط GET — برای آپلود کار نمی‌کند)</option>
         <option value="custom">پروکسی سفارشی (آدرس را وارد کنید)</option>
       </select>
       <div id="customBox" style="display:none">
-        <label>آدرس پروکسی — باید با {url} خاتمه یابد یا خودش URL هدف را به انتها بچسباند</label>
-        <input type="url" id="customProxy" dir="ltr" placeholder="https://example-proxy.com/?url={url}">
+        <label>آدرس پروکسی — از جایگره <code>{url}</code> استفاده کنید</label>
+        <input type="url" id="customProxy" dir="ltr" placeholder="http://localhost:8770/proxy?u={url}">
       </div>
 
-      <label>هاست سرور</label>
-      <input type="text" id="host" dir="ltr">
+      <div style="margin-top:14px">
+        <button class="ghost" id="dlProxy" type="button">⬇️ ساخت و دانلود فایل پروکسی محلی (proxy.py)</button>
+      </div>
+      <pre id="proxyHelp" style="display:none">۱) فایل proxy.py که همین الان دانلود شد را کنار خود نگه دارید.
+۲) در همان پوشه، این دستور را اجرا کنید (پایتون ۳، بدون نصب هیچ پکیجی):
+   python3 proxy.py
+۳) حالت اتصال را روی «پروکسی محلی» بگذارید (به‌صورت خودکار تنظیم می‌شود).
+۴) دکمه «تست اتصال» و سپس «تولید ویدیو» را بزنید.</pre>
+
+      <label>شناسه کاربر (userId) — خودکار ساخته و ذخیره می‌شود</label>
       <div class="row">
-        <div>
-          <label>شناسه کاربر (userId) — خودکار ساخته و ذخیره می‌شود</label>
-          <input type="text" id="userId" dir="ltr">
-        </div>
+        <div><input type="text" id="userId" dir="ltr"></div>
         <div style="flex:0 0 auto;align-self:flex-end">
           <button class="ghost" id="newId" type="button">شناسه جدید</button>
         </div>
@@ -154,16 +172,81 @@
         <span class="pill">platform: 1</span>
       </div>
       <p class="muted" style="margin-top:12px">
-        نکته: پخش ویدیو با تگ ویدیو حتی بدون CORS هم کار می‌کند؛ فقط دانلود خودکار و فراخوانی API
-        به مجوز CORS نیاز دارد. همه تنظیمات فقط در همین مرورگر (localStorage) ذخیره می‌شوند.
+        همه تنظیمات فقط در همین مرورگر (localStorage) ذخیره می‌شوند. اگر «تست اتصال» در حالت پروکسی محلی هم
+        خطای شبکه داد، یعنی خود شبکه/ISP شما به دامنه‌های ufotosoft دسترسی ندارد و باید VPN روشن کنید.
       </p>
     </details>
   </div>
 </div>
 
+<!-- پروکسی محلی: متن خام پایتون که دکمه «دانلود proxy.py» آن را به فایل تبدیل می‌کند -->
+<script type="text/plain" id="proxySource">#!/usr/bin/env python3
+# Mivi local CORS proxy — stdlib only, no pip install.
+# Run:  python3 proxy.py     then use http://localhost:8770/proxy?u=<url>
+import sys, urllib.request, urllib.error
+from http.server import HTTPServer, BaseHTTPRequestHandler
+from urllib.parse import urlparse, parse_qs
+
+PORT = 8770
+ALLOW = ("ufotosoft.com", "videomate.cc")
+HOP = {"connection","keep-alive","proxy-authenticate","proxy-authorization",
+       "te","trailers","transfer-encoding","upgrade","host",
+       "content-length","content-encoding"}
+
+class H(BaseHTTPRequestHandler):
+    def cors(self):
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "*")
+
+    def do_OPTIONS(self):
+        self.send_response(204); self.cors(); self.end_headers()
+
+    def do_GET(self):  self.forward("GET")
+    def do_POST(self): self.forward("POST")
+
+    def forward(self, method):
+        u = parse_qs(urlparse(self.path).query).get("u", [""])[0]
+        if not u:
+            self.send_error(400, "missing u="); return
+        host = urlparse(u).netloc.lower().split("@")[-1].split(":")[0]
+        if not any(host == s or host.endswith("." + s) for s in ALLOW):
+            self.send_error(403, "host not allowed: " + host); return
+        n = int(self.headers.get("Content-Length", 0) or 0)
+        body = self.rfile.read(n) if n else None
+        hdr = {k: v for k, v in self.headers.items() if k.lower() not in HOP}
+        req = urllib.request.Request(u, data=body, headers=hdr, method=method)
+        try:
+            with urllib.request.urlopen(req, timeout=300) as up:
+                data = up.read()
+                self.send_response(up.status); self.cors()
+                self.send_header("Content-Type",
+                    up.headers.get("Content-Type", "application/octet-stream"))
+                self.send_header("Content-Length", str(len(data)))
+                self.end_headers(); self.wfile.write(data)
+        except urllib.error.HTTPError as e:
+            data = e.read()
+            self.send_response(e.code); self.cors()
+            self.send_header("Content-Type", e.headers.get("Content-Type", "text/plain"))
+            self.send_header("Content-Length", str(len(data)))
+            self.end_headers(); self.wfile.write(data)
+        except Exception as e:
+            msg = ("proxy error: " + str(e)).encode("utf-8")
+            self.send_response(502); self.cors()
+            self.send_header("Content-Type", "text/plain; charset=utf-8")
+            self.send_header("Content-Length", str(len(msg)))
+            self.end_headers(); self.wfile.write(msg)
+
+    def log_message(self, fmt, *args):
+        sys.stderr.write("[proxy] " + fmt % args + "\n")
+
+print("Mivi CORS proxy running: http://localhost:%d/proxy?u=<url>" % PORT)
+HTTPServer(("127.0.0.1", PORT), H).serve_forever()
+</script>
+
 <script>
 "use strict";
-/* ================= MD5 خالص جاوااسکریپت (خروجی hex کوچک، UTF-8) ================= */
+/* ================= MD5 خالص جاوااسکریپت (hex کوچک، UTF-8) ================= */
 function md5(inputString){
   function rotateLeft(lValue,iShift){return (lValue<<iShift)|(lValue>>>(32-iShift));}
   function addUnsigned(lX,lY){
@@ -186,7 +269,7 @@ function md5(inputString){
   function HH(a,b,c,d,x,s,ac){a=addUnsigned(a,addUnsigned(addUnsigned(H(b,c,d),x),ac));return addUnsigned(rotateLeft(a,s),b);}
   function II(a,b,c,d,x,s,ac){a=addUnsigned(a,addUnsigned(addUnsigned(I(b,c,d),x),ac));return addUnsigned(rotateLeft(a,s),b);}
   function convertToWordArray(str){
-    str=unescape(encodeURIComponent(str)); // UTF-8 -> رشته بایتی
+    str=unescape(encodeURIComponent(str));
     var lMessageLength=str.length;
     var nTemp1=lMessageLength+8;
     var nTemp2=(nTemp1-(nTemp1%64))/64;
@@ -259,7 +342,7 @@ function md5(inputString){
   return (wordToHex(a)+wordToHex(b)+wordToHex(c)+wordToHex(d)).toLowerCase();
 }
 
-/* ================= پیکربندی (معادل کلاینت پایتونی mivi.py) ================= */
+/* ================= پیکربندی ================= */
 const DEFAULTS={
   host:"https://face-api.ufotosoft.com",
   signKey:"m3snil",
@@ -268,7 +351,7 @@ const DEFAULTS={
   platform:"1",
   userId:"",
   connMode:"direct",
-  customProxy:""
+  customProxy:"http://localhost:8770/proxy?u={url}"
 };
 const LS_KEY="mivi_all_in_one_cfg";
 function loadCfg(){
@@ -285,10 +368,11 @@ function loadCfg(){
 function saveCfg(c){localStorage.setItem(LS_KEY,JSON.stringify(c));}
 let CFG=loadCfg();
 
-/* ================= پروکسی CORS داخلی (قابل انتخاب، پیش‌فرض خاموش) ================= */
+/* ================= مسیریابی اتصال ================= */
 function viaProxy(absUrl){
   const enc=encodeURIComponent(absUrl);
   switch(CFG.connMode){
+    case "local":       return "http://localhost:8770/proxy?u="+enc;
     case "corsproxyio": return "https://corsproxy.io/?url="+enc;
     case "allorigins":  return "https://api.allorigins.win/raw?url="+enc;
     case "custom":
@@ -296,12 +380,12 @@ function viaProxy(absUrl){
       return CFG.customProxy.includes("{url}")
         ? CFG.customProxy.replace("{url}",enc)
         : CFG.customProxy.replace(/\/+$/,"")+"/"+absUrl;
-    default: return absUrl; // direct
+    default: return absUrl;
   }
 }
 function apiUrl(path){ return viaProxy(CFG.host.replace(/\/+$/,"")+path); }
 
-/* ================= ابزار UI ================= */
+/* ================= UI ================= */
 const $=id=>document.getElementById(id);
 const logEl=$("log");
 function log(msg,cls){
@@ -312,15 +396,18 @@ function log(msg,cls){
   logEl.appendChild(span);logEl.scrollTop=logEl.scrollHeight;
 }
 function step(n,state){$("s"+n).className="step "+state;}
-function friendlyError(e,stage){
+function friendlyError(e,stage,url){
   if(e instanceof TypeError){
-    return stage+" ناموفق بود (Failed to fetch). معمولاً یعنی CORS یا قطعی شبکه. "
-      +"از تنظیمات، حالت پروکسی را امتحان کنید. جزئیات: "+e.message;
+    return stage+" ناموفق بود (Failed to fetch)."+
+      (CFG.connMode==="direct"
+        ? " در حالت مستقیم معمولاً CORS مرورگر یا فیلترینگ شبکه جلوی درخواست را می‌گیرد."
+        : " اتصال به پروکسی برقرار نشد (پروکسی محلی اجرا نیست، یا پروکسی عمومی/شبکه در دسترس نیست).")+
+      "\nURL: "+url;
   }
-  return stage+" ناموفق: "+e.message;
+  return stage+" ناموفق: "+e.message+"\nURL: "+url;
 }
 
-/* ================= هدرها و امضا ================= */
+/* ================= امضا ================= */
 function ts(){return String(Math.floor(Date.now()/1000));}
 function algoHeaders(capitalUser,ifWise){
   const t=ts();
@@ -338,16 +425,49 @@ function uploadHeaders(){
     sign:md5(CFG.signKey+t),timeStamp:t,userId:CFG.userId,ifHttps:"true"};
 }
 
+/* ================= تست اتصال ================= */
+async function connectivityTest(){
+  log("شروع تست اتصال...","w");
+  const hosts=[
+    "https://face-api.ufotosoft.com",
+    "https://face-api.videomate.cc"
+  ];
+  // 1) دسترسی شبکه خام (بدون CORS): پاسخ opaque یعنی سرور از شبکه شما reachable است
+  for(const hst of hosts){
+    try{
+      const r=await fetch(hst+"/",{mode:"no-cors",cache:"no-store"});
+      log("✓ دسترسی شبکه به "+hst+" برقرار است (نوع پاسخ: "+r.type+").","ok");
+    }catch(e){
+      log("✗ "+hst+" از شبکه شما قابل دسترسی نیست (DNS/فیلترینگ/قطعی). راه‌حل: VPN.","e");
+    }
+  }
+  // 2) تست مسیر فعلی (با CORS واقعی)
+  const probe=CFG.host.replace(/\/+$/,"")+"/algo/v1/faceFusion/aigc/image2video/queryTask";
+  const url=viaProxy(probe);
+  try{
+    const r=await fetch(url,{method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({taskId:"connectivity-probe"})});
+    log("✓ مسیر «"+CFG.connMode+"» پاسخ HTTP "+r.status+" داد — یعنی CORS رد نمی‌شود.",r.ok?"ok":"w");
+  }catch(e){
+    log("✗ مسیر «"+CFG.connMode+"» کار نمی‌کند: "+e.message,"e");
+    if(CFG.connMode==="direct")
+      log("  → پروکسی محلی یا VPN را امتحان کنید.","w");
+    if(CFG.connMode==="local")
+      log("  → مطمئن شوید proxy.py در حال اجراست: python3 proxy.py","w");
+  }
+}
+
 /* ================= مراحل API ================= */
 async function uploadImage(file){
   log("مرحله ۱: آپلود تصویر روی سرور...");step(1,"on");
   const fd=new FormData();
-  fd.append("files",file,file.name||"image.jpg"); // نام فیلد دقیقاً files، image/jpg
+  fd.append("files",file,file.name||"image.jpg");
+  const url=apiUrl("/algo/v1/aiGenerate-aigc/multipleUpload");
   let r;
-  try{ r=await fetch(apiUrl("/algo/v1/aiGenerate-aigc/multipleUpload"),
-        {method:"POST",headers:uploadHeaders(),body:fd}); }
-  catch(e){ throw new Error(friendlyError(e,"آپلود")); }
-  if(!r.ok)throw new Error("آپلود: HTTP "+r.status);
+  try{ r=await fetch(url,{method:"POST",headers:uploadHeaders(),body:fd}); }
+  catch(e){ throw new Error(friendlyError(e,"آپلود",url)); }
+  if(!r.ok)throw new Error("آپلود: HTTP "+r.status+" — "+url);
   const j=await r.json();
   if(j.c!==200)throw new Error("خطای سرور آپلود: c="+j.c+" m="+j.m);
   if(!j.d||!j.d.length)throw new Error("پاسخ آپلود بدون URL بود");
@@ -362,11 +482,11 @@ async function createTask(imageUrl,prompt,ratio,level,movement){
   if(ratio)body.ratio=ratio;
   if(movement&&movement.trim())body.movementAmplitude=movement.trim();
   body.example="";
+  const url=apiUrl("/algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate");
   let r;
-  try{ r=await fetch(apiUrl("/algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate"),
-        {method:"POST",headers:algoHeaders(true,null),body:JSON.stringify(body)}); }
-  catch(e){ throw new Error(friendlyError(e,"ساخت تسک")); }
-  if(!r.ok)throw new Error("ساخت تسک: HTTP "+r.status);
+  try{ r=await fetch(url,{method:"POST",headers:algoHeaders(true,null),body:JSON.stringify(body)}); }
+  catch(e){ throw new Error(friendlyError(e,"ساخت تسک",url)); }
+  if(!r.ok)throw new Error("ساخت تسک: HTTP "+r.status+" — "+url);
   const j=await r.json();
   if(j.c!==200)throw new Error("خطای ساخت تسک: c="+j.c+" m="+j.m);
   const taskId=j.d&&j.d.taskId;
@@ -376,8 +496,9 @@ async function createTask(imageUrl,prompt,ratio,level,movement){
 }
 
 async function queryTask(taskId){
-  const r=await fetch(apiUrl("/algo/v1/faceFusion/aigc/image2video/queryTask"),
-    {method:"POST",headers:algoHeaders(false,true),body:JSON.stringify({taskId:taskId})});
+  const url=apiUrl("/algo/v1/faceFusion/aigc/image2video/queryTask");
+  const r=await fetch(url,{method:"POST",headers:algoHeaders(false,true),
+    body:JSON.stringify({taskId:taskId})});
   if(!r.ok)throw new Error("کوئری: HTTP "+r.status);
   const j=await r.json();
   if(j.c!==200)throw new Error("خطای کوئری: c="+j.c+" m="+j.m);
@@ -416,6 +537,8 @@ function setFile(f){
   log("تصویر انتخاب شد: "+f.name+" ("+Math.round(f.size/1024)+" KB)");
 }
 
+$("netTest").addEventListener("click",connectivityTest);
+
 $("go").addEventListener("click",async()=>{
   const btn=$("go");
   try{
@@ -428,15 +551,14 @@ $("go").addEventListener("click",async()=>{
       $("level").value,$("movement").value);
     const videoUrl=await waitForVideo(taskId);
     log("مرحله ۴: ویدیو آماده شد ✓","ok");step(4,"done");
-    $("video").src=videoUrl; // پخش مستقیم حتی بدون CORS کار می‌کند
+    $("video").src=videoUrl;
     $("openBtn").href=videoUrl;
     $("resultCard").style.display="block";
-    try{ // دانلود blob (اگر CORS اجازه دهد) وگرنه لینک مستقیم
+    try{
       const resp=await fetch(viaProxy(videoUrl));
       if(!resp.ok)throw new Error("HTTP "+resp.status);
       const blob=await resp.blob();
-      const bu=URL.createObjectURL(blob);
-      $("dlBtn").href=bu;
+      $("dlBtn").href=URL.createObjectURL(blob);
     }catch(e){
       log("دانلود خودکار ممکن نشد ("+e.message+")؛ از «لینک مستقیم» استفاده کنید.","w");
       $("dlBtn").href=videoUrl;
@@ -457,15 +579,33 @@ $("newId").addEventListener("click",()=>{
   saveCfg(CFG);fillSettings();log("شناسه کاربری جدید ساخته شد: "+CFG.userId,"w");
 });
 
-const MODE_LABEL={direct:"مستقیم",corsproxyio:"پروکسی corsproxy.io",
+$("dlProxy").addEventListener("click",()=>{
+  const src=$("proxySource").textContent;
+  const blob=new Blob([src],{type:"text/x-python"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);a.download="proxy.py";
+  document.body.appendChild(a);a.click();a.remove();
+  $("proxyHelp").style.display="block";
+  CFG.connMode="local";saveCfg(CFG);fillSettings();
+  log("فایل proxy.py دانلود شد و حالت اتصال روی «پروکسی محلی» تنظیم شد.","ok");
+});
+
+const MODE_LABEL={direct:"مستقیم",local:"پروکسی محلی",corsproxyio:"پروکسی corsproxy.io",
   allorigins:"پروکسی allorigins",custom:"پروکسی سفارشی"};
 function fillSettings(){
-  $("host").value=CFG.host;$("userId").value=CFG.userId;
-  $("signKey").value=CFG.signKey;$("connMode").value=CFG.connMode;
+  $("host").value=CFG.host;
+  const preset=$("hostPreset");
+  preset.value=[...preset.options].some(o=>o.value===CFG.host)?CFG.host:"__custom__";
+  $("userId").value=CFG.userId;
+  $("signKey").value=CFG.signKey;
+  $("connMode").value=CFG.connMode;
   $("customProxy").value=CFG.customProxy||"";
   $("customBox").style.display=CFG.connMode==="custom"?"block":"none";
   $("modePill").textContent="حالت: "+MODE_LABEL[CFG.connMode];
 }
+$("hostPreset").addEventListener("change",e=>{
+  if(e.target.value!=="__custom__"){CFG.host=e.target.value;saveCfg(CFG);fillSettings();}
+});
 ["host","userId","customProxy"].forEach(id=>$(id).addEventListener("change",e=>{
   if(id==="host")CFG.host=e.target.value.trim();
   else if(id==="userId")CFG.userId=e.target.value.trim();
