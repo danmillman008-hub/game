@@ -55,14 +55,24 @@
   - آپلود `POST /algo/v1/aiGenerate-aigc/multipleUpload` روی `cpi.ufotosoft.com`
     پاسخ `{"c":200,"m":"成功","d":["http://algo.ufotosoft.com/...jpg"]}` می‌دهد —
     یعنی کلید امضا `m3snil`، هدرها و فرمول MD5 کاملاً درست کار می‌کنند.
-  - مسیرهای تسک `faceFusion/*` (مثل `image2video/queryTask`) روی هر سه هاست
-    هاردکدشده ۴۰۴ می‌دهند. در نسخه ۴۰۷ هاست این ماژول از طریق ریموت‌کانفیگ
-    (`ServerRequestManager$b.j/k` و `com.ufotosoft.base.e`) در زمان اجرا بازنویسی
-    می‌شود و مقدار پیش‌فرض دکس دیگر محل استقرار faceFusion نیست.
-  - صفحه دایگنستیک «پروب C» ماتریسی از ۴ هاست
-    (`cpi.ufotosoft.com`، `cpi.wiseoel.com`، `algo.ufotosoft.com`،
-    `face-api.ufotosoft.com`) × ۷ مسیر استخراج‌شده از Annotation های Retrofit
-    کلاس `com.ufotosoft.ai.base.g` را امضا و تست می‌کند تا هاست/مسیر زنده پیدا شود.
+  - هاست زنده سرویس `https://cpi.ufotosoft.com` است (هاست دوم
+    `cpi.wiseoel.com` همان بک‌اند را سرو می‌کند). `face-api.*` فقط درایور Tencent
+    است و روی این مسیرها ۴۰۴ می‌دهد؛ `algo.ufotosoft.com` فقط CDN منابع است.
+  - مسیر کوئری قدیمی `image2video/queryTask` منسوخ شده (۴۰۴). مسیر زنده نسخه ۴۰۷
+    `POST /algo/v1/faceFusion/aigc/image2VideoQuery` با بدنه `{"taskId":"..."}`
+    است (روی تسک ناموجود `c=3036 IMAGE2VIDEO_TASK_OVERTIME` برمی‌گرداند).
+  - مسیر ساخت تسک: `POST /algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate`.
+    بدنه (استخراج از `Image2VideoServer$createAiVideoUnifiedTask$1`):
+    `imageUrls` (آرایه URLهای آپلودشده)، `level` (int)، `deviceToken` (رشته)،
+    `prompt`/`ratio`/`movementAmplitude` (اختیاری)، و **`example` (اجباری، غیرخالی؛
+    سرور روی حالت خالی `c=400 Parameter error [example不能为空]` می‌دهد)**؛ اپ
+    مقدار example را از همان URL تصویر می‌فرستد.
+  - پاسخ: پاکت `{c,m,d}` و `d` از نوع `CreateVideoResponse` با فیلدهای
+    `taskId, taskStatus ("success"/"fail"/در حال پردازش), taskReason, videoUrl`.
+  - صفحه دایگنستیک «پروب C» ماتریس هاست × مسیر را اسکن می‌کند و «پروب D» یک
+    آپلود تازه + چهار ترکیب مختلف `example/level` برای unifiedTaskCreate را
+    امضا و تست می‌کند و در صورت ساخت تسک، سه بار با image2VideoQuery وضعیتش را
+    پول می‌کند.
   - دامنه `wiseoel.com` به allow-list هر دو پروکسی (bat و python) اضافه شده؛
     اگر نسخه قدیمی بات در حال اجراست، فایل جدید را دانلود و جایگزین کنید.
 - signKey ثابت: **`m3snil`** (رمزگشایی DES/CBC از رشته هاردکد `hCzXemhkIkY=`)

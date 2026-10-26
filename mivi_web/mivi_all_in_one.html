@@ -593,7 +593,7 @@ async function connectivityTest(){
     }
   }
   // 2) تست مسیر فعلی (با CORS واقعی)
-  const probe=CFG.host.replace(/\/+$/,"")+"/algo/v1/faceFusion/aigc/image2video/queryTask";
+  const probe=CFG.host.replace(/\/+$/,"")+"/algo/v1/faceFusion/aigc/image2VideoQuery";
   const url=viaProxy(probe);
   try{
     const r=await fetch(url,{method:"POST",
@@ -632,7 +632,8 @@ async function createTask(imageUrl,prompt,ratio,level,movement){
   if(prompt&&prompt.trim())body.prompt=prompt.trim();
   if(ratio)body.ratio=ratio;
   if(movement&&movement.trim())body.movementAmplitude=movement.trim();
-  body.example="";
+  // example اجباری است (سرور روی رشته خالی خطای 400 می‌دهد)؛ همان تصویر آپلودشده را می‌فرستیم
+  body.example=imageUrl;
   const url=apiUrl("/algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate");
   let r;
   try{ r=await fetch(url,{method:"POST",headers:algoHeaders(true,null),body:JSON.stringify(body)}); }
@@ -647,13 +648,14 @@ async function createTask(imageUrl,prompt,ratio,level,movement){
 }
 
 async function queryTask(taskId){
-  const url=apiUrl("/algo/v1/faceFusion/aigc/image2video/queryTask");
+  // مسیر زنده نسخه 407: image2VideoQuery (مسیر قدیمی queryTask روی سرور 404 می‌دهد)
+  const url=apiUrl("/algo/v1/faceFusion/aigc/image2VideoQuery");
   const r=await fetch(url,{method:"POST",headers:algoHeaders(false,true),
     body:JSON.stringify({taskId:taskId})});
   if(!r.ok)throw new Error("کوئری: HTTP "+r.status);
   const j=await r.json();
-  if(j.c!==200)throw new Error("خطای کوئری: c="+j.c+" m="+j.m);
-  return j.d||{};
+  // کدهای بیزینسی مثل 3036 (TASK_OVERTIME) در حالت انتظار طبیعی‌اند؛ فقط پاسخ را برگردان
+  return {c:j.c,m:j.m,d:j.d||{}};
 }
 
 async function waitForVideo(taskId){
@@ -661,11 +663,16 @@ async function waitForVideo(taskId){
   const deadline=Date.now()+15*60*1000;
   let last="";
   while(Date.now()<deadline){
-    let d;
-    try{ d=await queryTask(taskId); }
+    let env;
+    try{ env=await queryTask(taskId); }
     catch(e){ log("خطای موقت در کوئری، تلاش مجدد: "+e.message,"w"); await sleep(5000); continue; }
+    const d=env.d||{};
     const st=d.taskStatus||"";
-    if(st!==last){log("وضعیت: "+(st||"نامشخص")+(d.taskReason?(" — "+d.taskReason):""));last=st;}
+    if(st){
+      if(st!==last){log("وضعیت: "+st+(d.taskReason?(" — "+d.taskReason):""));last=st;}
+    }else if(env.m&&env.m!==last){
+      log("وضعیت سرور: c="+env.c+" "+env.m,"w");last=env.m;
+    }
     if(st==="success"&&d.videoUrl){step(3,"done");return d.videoUrl;}
     if(st==="fail")throw new Error("تسک ناموفق: "+(d.taskReason||st));
     await sleep(5000);

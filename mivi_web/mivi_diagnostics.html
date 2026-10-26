@@ -185,7 +185,9 @@ const I2V_PATHS=[
 const EP={
   upload:"/algo/v1/aiGenerate-aigc/multipleUpload",
   create:"/algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate",
-  query:"/algo/v1/faceFusion/aigc/image2video/queryTask"
+  createIntegrated:"/algo/v1/faceFusion/aigc/image2video/integratedTaskCreate",
+  query:"/algo/v1/faceFusion/aigc/image2video/queryTask",
+  queryNew:"/algo/v1/faceFusion/aigc/image2VideoQuery"
 };
 const PROXIES=[
   ["corsproxy.io",u=>"https://corsproxy.io/?url="+encodeURIComponent(u),true],
@@ -449,6 +451,90 @@ async function testRouteMatrix(){
   rlog("PROBE-C envelope hits: "+JSON.stringify(window.__diagRoutes.map(r=>({h:r.label,p:r.path,c:r.c}))));
 }
 
+/* ---------- 4c) Probe D: real unifiedTaskCreate attempts + task polling ---------- */
+async function testTaskCreateProbe(){
+  if(!proxyLocalOk){
+    addRow("پروب D ساخت تسک واقعی","skip","پروکسی محلی بالا نیست");
+    return;
+  }
+  const id=loadIdentity();
+  const via=u=>"http://localhost:8770/proxy?u="+encodeURIComponent(u);
+  const base="https://cpi.ufotosoft.com";
+  window.__diagTask=null;
+  rlog("\n--- PROBE-D real task create via http://localhost:8770 ---");
+  addRow("پروب D ساخت تسک واقعی","info","آپلود تازه + تلاش unifiedTaskCreate با چند مقدار example/level...");
+
+  // 1) fresh upload (same proven multipart flow as Probe B)
+  let imgUrl=null;
+  try{
+    const jpgB64="/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/wAALCAABAAEBAREA/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8AfwD/2Q==";
+    const bin=atob(jpgB64);const arr=new Uint8Array(bin.length);
+    for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
+    const fd=new FormData();
+    fd.append("files",new Blob([arr],{type:"image/jpg"}),"diag.jpg");
+    const ts=String(Math.floor(Date.now()/1000));
+    const r1=await fetch(via(base+EP.upload),{method:"POST",
+      headers:{"cp":id.cp,"version":id.version,"platform":id.platform,
+        "sign":md5(id.signKey+ts),"timeStamp":ts,"userId":id.userId,"ifHttps":"true"},
+      body:fd,signal:AbortSignal.timeout(30000)});
+    const t1=await r1.text();
+    const p1=JSON.parse(t1);
+    if(p1.c===200&&Array.isArray(p1.d)&&p1.d.length){imgUrl=p1.d[0];}
+    rlog(`PROBE-D upload HTTP ${r1.status} body=${t1.slice(0,400)}`);
+    addRow("D: آپلود تازه",imgUrl?"ok":"err",imgUrl?("URL: "+imgUrl):t1.slice(0,160));
+  }catch(e){rlog("PROBE-D upload FAIL "+to(e));addRow("D: آپلود تازه","err",to(e).slice(0,140));return;}
+  if(!imgUrl)return;
+
+  const jsonHeaders=()=>{
+    const ts=String(Math.floor(Date.now()/1000));
+    return {"Content-Type":"application/json","userid":id.userId,"timeStamp":ts,
+      "cp":id.cp,"version":id.version,"platform":id.platform,
+      "sign":md5(id.userId+ts),"ifWise":"true"};
+  };
+  const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+  const variants=[
+    ["unified example=URL level=1",EP.create,{imageUrls:[imgUrl],level:1,deviceToken:"",example:imgUrl}],
+    ["unified example=1 level=1",EP.create,{imageUrls:[imgUrl],level:1,deviceToken:"",example:"1"}],
+    ["unified example=URL level=2",EP.create,{imageUrls:[imgUrl],level:2,deviceToken:"",example:imgUrl}],
+    ["integrated فقط imageUrls",EP.createIntegrated,{imageUrls:[imgUrl],level:1,deviceToken:""}]
+  ];
+  for(const [label,path,body] of variants){
+    try{
+      const resp=await fetch(via(base+path),{method:"POST",headers:jsonHeaders(),
+        body:JSON.stringify(body),signal:AbortSignal.timeout(30000)});
+      const txt=await resp.text();
+      let parsed=null;try{parsed=JSON.parse(txt);}catch(e){}
+      const c=parsed?parsed.c:"?";
+      const taskId=parsed&&parsed.d?parsed.d.taskId:null;
+      rlog(`PROBE-D ${label} -> HTTP ${resp.status} c=${c} body=${txt.slice(0,500)}`);
+      if(c===200&&taskId){
+        window.__diagTask={label,path,taskId,body:JSON.stringify(body),firstResponse:txt};
+        addRow("D: "+label,"ok","c=200 ✓ taskId="+taskId+" | "+txt.replace(/\s+/g," ").slice(0,200));
+        break;
+      }
+      addRow("D: "+label,c===200?"warn":"err",
+        `HTTP ${resp.status} c=${c} | ${txt.replace(/\s+/g," ").slice(0,220)}`);
+    }catch(e){rlog(`PROBE-D ${label} FAIL ${to(e)}`);addRow("D: "+label,"err",to(e).slice(0,130));}
+  }
+
+  // 3) poll the new query endpoint image2VideoQuery if a task was created
+  const task=window.__diagTask;
+  if(task){
+    rlog("PROBE-D polling task "+task.taskId+" via "+EP.queryNew);
+    for(let i=0;i<3;i++){
+      await sleep(3000);
+      try{
+        const resp=await fetch(via(base+EP.queryNew),{method:"POST",headers:jsonHeaders(),
+          body:JSON.stringify({taskId:task.taskId}),signal:AbortSignal.timeout(20000)});
+        const txt=await resp.text();
+        rlog(`PROBE-D query#${i+1} HTTP ${resp.status} body=${txt.slice(0,500)}`);
+        let st="?";try{st=JSON.parse(txt).d&&JSON.parse(txt).d.taskStatus||JSON.parse(txt).m;}catch(e){}
+        addRow(`D: کوئری #${i+1} (image2VideoQuery)`,"info","HTTP "+resp.status+" | وضعیت: "+st+" | "+txt.replace(/\s+/g," ").slice(0,180));
+      }catch(e){rlog(`PROBE-D query#${i+1} FAIL ${to(e)}`);}
+    }
+  }
+}
+
 /* ---------- 5) public proxy battery (GET reachability + real POST where claimed) ---------- */
 async function testProxies(){
   const target=HOSTS[0][1]+EP.query;
@@ -498,8 +584,15 @@ function buildVerdict(){
   const probeB=rows.find(r=>r.name.startsWith("پروب B"));
   const routes=window.__diagRoutes||[];
   const route200=routes.filter(r=>r.c===200);
+  const task=window.__diagTask;
   let cls,html;
-  if(route200.length){
+  if(task){
+    cls="v-ok";
+    html="✅✅✅ <b>تسک واقعی روی سرور Mivi ساخته شد!</b> ترکیب برنده: <code>"+task.label+"</code><br>"+
+      "taskId: <code>"+task.taskId+"</code><br>مسیر: <code>"+task.path+"</code><br>"+
+      "بدنه: <code>"+task.body+"</code><br>"+
+      "نتیجه کوئری‌ها در جدول بالا هست؛ اگر ویدیو ساخته شد، خط لوله کامل تأیید می‌شود. کل گزارش را بفرستید تا اپ اصلی را با همین تنظیمات قفل کنم.";
+  }else if(route200.length){
     cls="v-ok";
     html="✅✅ ماتریس پروب C مسیر زنده را پیدا کرد: سرور Mivi با پاسخ بیزینسی <b>c=200</b> جواب داد:<br>"+
       route200.map(r=>"<code>"+r.label+"</code> ← <code>"+r.path+"</code>").join("<br>")+
@@ -550,7 +643,8 @@ async function main(){
     setStatus("تست CORS و preflight سرور...",45);await testCors();
     setStatus("بررسی پروکسی محلی...",58);await testLocal();
     setStatus("پروب واقعی امضاشده از طریق پروکسی...",66);await testSignedProbe();
-    setStatus("ماتریس کشف مسیرهای زنده (پروب C)...",80);await testRouteMatrix();
+    setStatus("ماتریس کشف مسیرهای زنده (پروب C)...",78);await testRouteMatrix();
+    setStatus("تست ساخت تسک واقعی و کوئری (پروب D)...",88);await testTaskCreateProbe();
     if(!proxyLocalOk){
       setStatus("باتری پروکسی‌های عمومی (کمی صبر کنید)...",85);await testProxies();
     }else{
