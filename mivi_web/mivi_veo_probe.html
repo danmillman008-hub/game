@@ -311,6 +311,12 @@ function algoHeaders(){
     "version":"407","platform":"1","sign":md5("m3snil"+t),
     "ifWise":"true","Content-Type":"application/json"};
 }
+// هدر آپلود دقیقاً مثل فایل اصلی (بدون Content-Type تا مرز multipart خودکار ست شود)
+function uploadHeaders(){
+  const t=ts();
+  return {cp:"instagram.story.art.collage",version:"407",platform:"1",
+    sign:md5("m3snil"+t),timeStamp:t,userId:CFG.userId,ifHttps:"true"};
+}
 function rnd(n){let s="";for(let i=0;i<n;i++)s+=Math.floor(Math.random()*10);return s;}
 function engineFromUrl(u){
   const s=String(u||"").toLowerCase();
@@ -340,7 +346,7 @@ $("uploadBtn").onclick=async()=>{
     log("آپلود تصویر ("+Math.round(f.size/1024)+" KB) ...");
     const fd=new FormData();fd.append("files",f,f.name||"image.jpg");
     const r=await fetch(apiUrl("/algo/v1/aiGenerate-aigc/multipleUpload"),
-      {method:"POST",headers:{"userid":CFG.userId,"ifWise":"true"},body:fd});
+      {method:"POST",headers:uploadHeaders(),body:fd});
     const j=await r.json();
     if(j.c!==200||!j.d||!j.d.length)throw new Error("c="+j.c+" m="+j.m);
     uploadedUrl=j.d[0];
