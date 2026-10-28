@@ -43,7 +43,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28d</span></h1>
+  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28e</span></h1>
   <div class="muted" style="margin-bottom:14px">
     هدف: کشف شرط بازشدن اندپوینت
     <code>/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5</code>.
@@ -53,9 +53,11 @@
     <code>c=1013 effectType illegal</code>؛ <b>۶۲۰۹ و کیفیت/پرامپت هم نپذیرفته شد</b> (رجیستری effectType
     جداست)؛ حذف googleId → <code>c=400 googleId不能为空</code>؛
     unified/integrated → فیلد <code>example</code> لازم دارند؛ <code>createTask</code> اصلاً استقرار ندارد (404)؛
-    کنترل beat با ۶۲۰۹ موفق (c=200). جاروب نسخهٔ c: هر ۱۰ کد effectType روی V5 رد شدند و
-    example با URL عکس پذیرفته نشد. <b>باتری نسخهٔ d:</b> فرضیهٔ example=ویدیوی نمونهٔ کاتالوگ
-    (videoPreviewUrl) روی unified/integrated + ابزار کوئری تسک‌های قبلی.
+    کنترل beat با ۶۲۰۹ موفق (c=200). جاروب نسخهٔ c: هر ۱۰ کد effectType روی V5 رد شدند.
+    نسخهٔ d: example با URL ویدیوی کاتالوگ هم رد شد و روی V5 خطا به
+    <code>c=1001 example illegal</code> تغییر کرد (یعنی اعتبارسنجی جلوتر رفت ولی فرمت example غلط است).
+    <b>باتری نسخهٔ e:</b> ابتدا کوئری تسک‌های beat همین جلسه برای کشف موتور واقعی خروجی،
+    سپس example به‌صورت شناسهٔ عددی، taskId و videoUrl تست می‌شود.
   </div>
 
   <div class="card">
@@ -415,46 +417,38 @@ async function pollTask(taskId,label){
 /* ---------- تعریف پروب‌ها ---------- */
 function probes(){
   const p=$("prompt").value.trim();
-  const g10=rnd(10),g19=rnd(19);
-  const z={imageUrls:[uploadedUrl],level:1,deviceToken:"0",googleId:"0",
-           audio:false,duration:6,ifTest:1};
   const uni="/algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate";
   const integ="/algo/v1/faceFusion/aigc/image2video/integratedTaskCreate";
-  // videoPreviewUrlهای واقعی کاتالوگ — محتمل‌ترین مقدار برای فیلد example
-  const ex1="https://res.wiseoel.com/common/video/UF2506124cd6ff1d-676a-47ae-862c-27552aa28199_press.mp4"; // Catwalk 4991
-  const ex2="https://res.wiseoel.com/common/video/UF250620171dcbed-2119-4321-b241-0aa0bc74ad98_press.mp4"; // BodyShake 4899
+  const qBeat="/algo/v1/faceFusion/aigc/beatImage2Video/queryTask";
+  const qI2v="/algo/v1/faceFusion/aigc/image2video/queryTask";
+  // تسک‌های beat موفق همین جلسه (برای کشف موتور و احتمالاً مقدار example)
+  const t1="60014-1793218134-556ac417-c29e-4712-8673-53a92155cee3";
+  const t2="60014-1793217603-a0fae8ae-9803-4b7c-885f-7b9b9c8ba553";
+  window.__exVideo=""; // اگر کوئری videoUrl داد، اینجا ذخیره و در پروب‌های بعدی استفاده می‌شود
   const ub=(over)=>Object.assign({imageUrls:[uploadedUrl],level:1,deviceToken:"0",
-    prompt:p,ratio:"16:9",movementAmplitude:"0.5",example:ex1,ifTest:1},over||{});
+    prompt:p,ratio:"16:9",movementAmplitude:"0.5",ifTest:1},over||{});
+  const vb=(over)=>Object.assign({imageUrls:[uploadedUrl],level:1,deviceToken:"0",
+    googleId:"0",audio:false,duration:6,ifTest:1,effectType:6209,prompt:p},over||{});
   const list=[
-  // لنگرهای رگرسیون
-  ["P01 لنگر: V5 فیلد خالی (NumberFormatException)",V5,
-    {imageUrls:[uploadedUrl],level:1,deviceToken:"",googleId:"",audio:false,duration:6,ifTest:1}],
-  ["P02 لنگر: V5 صفر بدون effectType (effectType illegal)",V5,
-    {imageUrls:[uploadedUrl],level:1,deviceToken:"0",googleId:"0",audio:false,duration:6,ifTest:1}],
-  // فرضیهٔ example=ویدیوی نمونه روی unified (بدنهٔ دقیق بایت‌کد، بدون effectType)
-  ["P03 unified + example=ویدیوی نمونهٔ کاتالوگ (بدنهٔ کامل)",uni,ub()],
-  ["P04 unified + example=ویدیو، movementAmplitude خالی",uni,ub({movementAmplitude:""})],
-  ["P05 unified + example=ویدیو، حداقلی (بدون ratio/amplitude)",uni,
-    {imageUrls:[uploadedUrl],level:1,deviceToken:"0",prompt:p,example:ex1,ifTest:1}],
-  ["P06 unified + example=ویدیوی دوم (تست وابستگی به URL)",uni,ub({example:ex2})],
-  ["P07 unified + example=ویدیو بدون ifTest (حالت واقعی؟)",uni,
-    {imageUrls:[uploadedUrl],level:1,deviceToken:"0",prompt:p,ratio:"16:9",movementAmplitude:"0.5",example:ex1}],
-  ["P08 unified + example=ویدیو با ifTest=0",uni,ub({ifTest:0})],
-  // همان فرضیه روی integrated
-  ["P09 integrated + example=ویدیو (بدنهٔ کامل)",integ,ub()],
-  ["P10 integrated + example=ویدیو، حداقلی",integ,
-    {imageUrls:[uploadedUrl],level:1,deviceToken:"0",prompt:p,example:ex1,ifTest:1}],
-  // V5: آیا example یا شناسهٔ عددی دیگر خطا را عوض می‌کند؟
-  ["P11 V5 + example=ویدیو + effectType=6209 (آیا پیام عوض می‌شود؟)",V5,
-    Object.assign({},z,{effectType:6209,prompt:p,example:ex1})],
-  ["P12 V5 با googleId=1 و deviceToken=1 (شاید 0 مخصوصاً نامعتبر است)",V5,
-    Object.assign({},z,{googleId:"1",deviceToken:"1",effectType:6209,prompt:p})],
-  ["P13 V5 googleId=1 بدون effectType (ترتیب اعتبارسنجی؟)",V5,
-    {imageUrls:[uploadedUrl],level:1,deviceToken:"1",googleId:"1",audio:false,duration:6,ifTest:1}],
-  ["P14 V5 اعداد بزرگ واقع‌گرایانه + 6209 + example",V5,
-    Object.assign({},z,{googleId:g10,deviceToken:g19,effectType:6209,prompt:p,example:ex1})],
-  ["P15 V5 بدون googleId اما با example (لنگر اجباری‌بودن googleId)",V5,
-    {imageUrls:[uploadedUrl],level:1,deviceToken:"0",effectType:6209,audio:false,duration:6,ifTest:1,example:ex1,prompt:p}],
+  // اول کوئری تسک‌های موفق قبلی برای دیدن موتور واقعی خروجی
+  ["P01 کوئری تسک beat اخیر (مسیر beat) → کشف موتور",qBeat,()=>({taskId:t1})],
+  ["P02 کوئری همان تسک با مسیر image2video",qI2v,()=>({taskId:t1})],
+  ["P03 کوئری تسک beat دوم",qBeat,()=>({taskId:t2})],
+  // فرضیه: example یک شناسهٔ عددی/رشتهٔ پلتفرمی است نه URL
+  ["P04 unified example=رشتهٔ عددی 4991",uni,ub({example:"4991"})],
+  ["P05 unified example=عدد JSON 4991",uni,ub({example:4991})],
+  ["P06 unified example=6209",uni,ub({example:"6209"})],
+  ["P07 unified example=taskId تسک موفق",uni,ub({example:t1})],
+  ["P08 unified example=videoUrl تسک (اگر کوئری داده باشد)",uni,
+    ()=>ub({example:window.__exVideo||"pending"})],
+  ["P09 integrated example=4991",integ,ub({example:"4991"})],
+  ["P10 integrated example=taskId",integ,ub({example:t1})],
+  // همان فرضیه‌ها روی V5 (خطای 1001 باید عوض شود اگر فرمت درست باشد)
+  ["P11 V5 example=rشتهٔ 4991",V5,vb({example:"4991"})],
+  ["P12 V5 example=عدد 4991",V5,vb({example:4991})],
+  ["P13 V5 example=taskId",V5,vb({example:t1})],
+  ["P14 V5 example=videoUrl تسک",V5,()=>vb({example:window.__exVideo||"pending"})],
+  ["P15 V5 لنگر بدون example (باید 1013 بدهد)",V5,vb({})],
   // کنترل اثبات‌شده + تشخیص موتور خروجی
   ["P16 کنترل beat (اثبات‌شده) + تشخیص موتور","/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",
     {imageUrls:[uploadedUrl],level:1,effectType:6209,prompt:p,quality:2}],
@@ -468,9 +462,10 @@ function setPill(idx,state){
   const el=document.querySelector('[data-p="'+idx+'"]');
   if(el){el.classList.remove("run");el.classList.add(state);}
 }
-async function runOne(idx,label,path,body){
+async function runOne(idx,label,path,bodyOrFn){
   const el=document.querySelector('[data-p="'+idx+'"]');
   if(el)el.classList.add("run");
+  const body=typeof bodyOrFn==="function"?bodyOrFn():bodyOrFn;
   head(label);
   log("POST "+path);
   log("BODY "+JSON.stringify(body));
@@ -483,7 +478,15 @@ async function runOne(idx,label,path,body){
       j&&j.c===200?"ok":(env.http>=500?"e":"w"));
   if(j&&j.c===200){
     setPill(idx,"done");
-    const tid=j.d&&(j.d.taskId||j.d.jobId)||j.taskId;
+    const d=j.d||{};
+    if(d.videoUrl){
+      log("✓ videoUrl: "+d.videoUrl,"ok");
+      log("موتور شناسایی‌شده: "+engineFromUrl(d.videoUrl),"w");
+      window.__exVideo=d.videoUrl;
+      if($("videoOut")){$("videoOut").src=d.videoUrl;$("videoBox").style.display="block";}
+    }
+    if(path.includes("queryTask")) return; // پروب کوئری، تسک جدید نساخته
+    const tid=d.taskId||d.jobId||j.taskId;
     if(tid){ log("تسک ساخته شد: "+tid,"ok"); await pollTask(tid,label); }
     else log("پاسخ ۲۰۰ بدون taskId — جزئیات در RAW بالا.","w");
   }else setPill(idx,"fail");
@@ -498,7 +501,7 @@ $("runAll").onclick=async()=>{
     const s=document.createElement("span");s.className="pill";s.dataset.p=i;
     s.textContent=l[0].split(" ")[0];prog.appendChild(s);
   });
-  log("شروع باتری نسخهٔ d: "+list.length+" پروب، فاصلهٔ ایمنی ۱ ثانیه‌ای.","h");
+  log("شروع باتری نسخهٔ e: "+list.length+" پروب، فاصلهٔ ایمنی ۱ ثانیه‌ای.","h");
   for(let i=0;i<list.length;i++){
     if(stopFlag){log("توقف توسط کاربر.","w");break;}
     try{ await runOne(i,list[i][0],list[i][1],list[i][2]); }
@@ -555,7 +558,7 @@ $("qBtn").onclick=async()=>{
   }
 };
 
-log("آماده [نسخهٔ باتری: 2026-10-28d — اگر این برچسب را نمی‌بینید فایل کش شده است]. userId="+CFG.userId,"ok");
+log("آماده [نسخهٔ باتری: 2026-10-28e — اگر این برچسب را نمی‌بینید فایل کش شده است]. userId="+CFG.userId,"ok");
 </script>
 </body>
 </html>

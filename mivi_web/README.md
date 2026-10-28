@@ -162,8 +162,18 @@
   قالب‌های کاتالوگ، مثل `res.wiseoel.com/common/video/UF…_press.mp4`) روی
   unified/integrated با بدنهٔ دقیق بایت‌کد (بدون effectType، با
   ratio/movementAmplitude)، حالت‌های مختلف ifTest، و چند واریانت V5 برای
-  کشف ترتیب اعتبارسنجی googleId. به‌علاوه کارت «کوئری تسک‌های ساخته‌شده» برای
-  گرفتن videoUrl و تشخیص موتور بدون تولید دوباره.
+  کشف ترتیب اعتبارسنجی googleId. نتیجهٔ زنده: روی unified/integrated همان
+  `"example" is empty or illegal` و روی V5 با حضور فیلد example خطا به
+  **`c=1001 example illegal`** تغییر کرد (به‌جای 1013 effectType) — یعنی سرور
+  example را می‌بیند ولی URL ویدیوی کاتالوگ برایش قانونی نیست؛ googleId=1 هم
+  رفتار را عوض نکرد. اندپوینت‌های `image2VideoCustomer/*` در کل APK بدون هیچ
+  ارجاع کدی‌اند (فقط رشتهٔ Retrofit یتیم) — مسیر ساخت قالب مشتری هم در دسترس نیست.
+- باتری نسخهٔ e (۱۶ پروب): سه پروب اول کوئری تسک‌های beat موفق همین جلسه از هر
+  دو اندپوینت queryTask برای کشف `videoUrl` و موتور واقعی خروجی (نام فایل، مثل
+  wanlora/veo)؛ سپس `example` به‌صورت رشته/عدد ۴۹۹۱، ۶۲۰۹، taskId و videoUrl
+  همان تسک روی unified/integrated/V5 تست می‌شود. هر پاسخی غیر از 1001/1013 یعنی
+  فرمت example را پیدا کرده‌ایم. پروب‌ها از بدنهٔ تابعی پشتیبانی می‌کنند تا
+  videoUrl کشف‌شده در همان اجرا در پروب‌های بعدی استفاده شود.
 
 ### اگر خطای CORS / Failed to fetch گرفتید
 
