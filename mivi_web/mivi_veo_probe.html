@@ -43,7 +43,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28e</span></h1>
+  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28f</span></h1>
   <div class="muted" style="margin-bottom:14px">
     هدف: کشف شرط بازشدن اندپوینت
     <code>/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5</code>.
@@ -56,8 +56,12 @@
     کنترل beat با ۶۲۰۹ موفق (c=200). جاروب نسخهٔ c: هر ۱۰ کد effectType روی V5 رد شدند.
     نسخهٔ d: example با URL ویدیوی کاتالوگ هم رد شد و روی V5 خطا به
     <code>c=1001 example illegal</code> تغییر کرد (یعنی اعتبارسنجی جلوتر رفت ولی فرمت example غلط است).
-    <b>باتری نسخهٔ e:</b> ابتدا کوئری تسک‌های beat همین جلسه برای کشف موتور واقعی خروجی،
-    سپس example به‌صورت شناسهٔ عددی، taskId و videoUrl تست می‌شود.
+    <b>باتری نسخهٔ e:</b> هیچ فرمتی از example (عددی ۴۹۹۱/۶۲۰۹، taskId، videoUrl،
+    URL کاتالوگ) پذیرفته نشد؛ <code>image2video/queryTask</code> هم استقرار ندارد (404).
+    خروجی‌های beat با نام هشی بدون برند موتور در URL برمی‌گردند.
+    <b>نسخهٔ f:</b> کارت «تحلیل فنی ویدیو» با پارس اتم‌های MP4 (برند ftyp،
+    رزولوشن واقعی، مدت، هندلرها، اسکن توکن موتور در باینری) و تست مقایسه‌ای
+    quality=1/2 برای اثبات تفاوت واقعی 360P و 720P.
   </div>
 
   <div class="card">
@@ -141,6 +145,30 @@
     <div id="videoBox" style="display:none;margin-top:12px">
       <video id="videoOut" controls playsinline style="width:100%;border-radius:10px"></video>
     </div>
+  </div>
+
+  <div class="card">
+    <h2>🔬 تحلیل فنی ویدیوهای خروجی (فارنزیک MP4 درون‌مرورگری)</h2>
+    <div class="muted" style="margin-bottom:10px">
+      نام فایل‌های جدید سرور هش ساده است و برند موتور در URL نیست. این ابزار فایل ویدیو را از طریق پروکسی
+      دانلود و اتم‌های MP4 را پارس می‌کند: برند ftyp، رزولوشن واقعی (اثبات 720P/360P)، مدت زمان، هندلرها و
+      هر رشتهٔ ASCII مشکوک به نام موتور (wan/veo/kling/vidu/…).
+    </div>
+    <label>لینک ویدیو (بعد از کوئری خودکار پر می‌شود؛ دو لینک موفق این جلسه هم در منو هست)</label>
+    <div class="row">
+      <div style="flex:3">
+        <input id="fUrl" dir="ltr" list="knownUrls" placeholder="https://algo-v1.wiseoel.com/...mp4">
+        <datalist id="knownUrls">
+          <option value="https://algo-v1.wiseoel.com/temp/60014/261029/7a82a44d57254b04a87a80e31d17d4e9.mp4"></option>
+          <option value="https://algo-v1.wiseoel.com/temp/60014/261029/5a13e2ede6da48099b63cd904c43b268.mp4"></option>
+        </datalist>
+      </div>
+      <div style="max-width:170px"><button id="fBtn" type="button">🔍 تحلیل این ویدیو</button></div>
+    </div>
+    <div style="margin-top:12px">
+      <button id="cmpBtn" type="button">⚖️ تست مقایسه‌ای: ساخت همزمان quality=1 و quality=2 + تحلیل هر دو</button>
+    </div>
+    <div id="forensicOut" style="margin-top:14px"></div>
   </div>
 
   <div class="card">
@@ -349,6 +377,8 @@ function engineFromUrl(u){
     ["vidu","Vidu"],["ltx","LTX"],["pika","Pika"],["runway","Runway"],
     ["hailuo","Hailuo/MiniMax"],["seedance","Seedance"],["tencent","Tencent"]];
   for(const [k,v] of map)if(s.includes(k))return v;
+  if(/\/temp\/\d+\/\d+\/[0-9a-f]{20,}\.mp4/.test(s))
+    return "بدون برند در URL (نام‌گذاری هشی جدید سرور — موتور فقط با فارنزیک MP4 قابل تشخیص است)";
   return "نامشخص (فایل: "+(s.split("/").pop()||"—").slice(0,70)+")";
 }
 async function postJson(path,body){
@@ -483,6 +513,7 @@ async function runOne(idx,label,path,bodyOrFn){
       log("✓ videoUrl: "+d.videoUrl,"ok");
       log("موتور شناسایی‌شده: "+engineFromUrl(d.videoUrl),"w");
       window.__exVideo=d.videoUrl;
+      if($("fUrl"))$("fUrl").value=d.videoUrl;
       if($("videoOut")){$("videoOut").src=d.videoUrl;$("videoBox").style.display="block";}
     }
     if(path.includes("queryTask")) return; // پروب کوئری، تسک جدید نساخته
@@ -501,7 +532,7 @@ $("runAll").onclick=async()=>{
     const s=document.createElement("span");s.className="pill";s.dataset.p=i;
     s.textContent=l[0].split(" ")[0];prog.appendChild(s);
   });
-  log("شروع باتری نسخهٔ e: "+list.length+" پروب، فاصلهٔ ایمنی ۱ ثانیه‌ای.","h");
+  log("شروع باتری نسخهٔ f: "+list.length+" پروب، فاصلهٔ ایمنی ۱ ثانیه‌ای.","h");
   for(let i=0;i<list.length;i++){
     if(stopFlag){log("توقف توسط کاربر.","w");break;}
     try{ await runOne(i,list[i][0],list[i][1],list[i][2]); }
@@ -553,12 +584,136 @@ $("qBtn").onclick=async()=>{
     if(d.videoUrl){
       log("✓ videoUrl: "+d.videoUrl,"ok");
       log("موتور شناسایی‌شده: "+engineFromUrl(d.videoUrl),"w");
+      $("fUrl")&&($("fUrl").value=d.videoUrl);
       $("videoOut")&&($("videoOut").src=d.videoUrl,$("videoBox").style.display="block");
     }
   }
 };
 
-log("آماده [نسخهٔ باتری: 2026-10-28e — اگر این برچسب را نمی‌بینید فایل کش شده است]. userId="+CFG.userId,"ok");
+/* ---------- فارنزیک MP4 ---------- */
+function fourcc(dv,p){let s="";for(let i=0;i<4;i++)s+=String.fromCharCode(dv.getUint8(p+i));return s;}
+function walkBoxes(dv,cb,start,end){
+  let p=start;
+  while(p+8<=end){
+    let size=dv.getUint32(p),type=fourcc(dv,p+4),hdr=8;
+    if(size===1){size=Number(dv.getBigUint64(p+8));hdr=16;}
+    if(size===0)size=end-p;
+    if(size<8||p+size>end+8)break;
+    cb(type,p,size,hdr);
+    if(["moov","trak","mdia","minf","stbl","udta","meta","edts"].includes(type))
+      walkBoxes(dv,cb,p+hdr,p+size);
+    p+=size;
+  }
+}
+function analyzeMp4(buf){
+  const dv=new DataView(buf), out={size:buf.byteLength,ftyp:"",width:0,height:0,durationSec:0,
+    handlers:[],tokens:[],brands:[]};
+  const KEYS=["wan","veo","kling","vidu","pika","runway","hailuo","minimax","seedance",
+    "tencent","luma","ltx","pixverse","google","gemini","encoder","lavf","x264","go-","python","ffmpeg","aliyun","aws"];
+  try{
+    walkBoxes(dv,(type,p,size,hdr)=>{
+      const c=p+hdr;
+      if(type==="ftyp"){
+        out.ftyp=fourcc(dv,p+4)+" brand="+fourcc(dv,c);
+        for(let i=0;i<Math.min(4,(size-8)/4);i++)out.brands.push(fourcc(dv,c+4*i));
+      }
+      if(type==="mvhd"&&!out.durationSec){
+        const ver=dv.getUint8(c);
+        if(ver===1){const ts=dv.getUint32(c+20);const du=Number(dv.getBigUint64(c+24));if(ts)out.durationSec=du/ts;}
+        else{const ts=dv.getUint32(c+12);const du=dv.getUint32(c+16);if(ts)out.durationSec=du/ts;}
+      }
+      if(type==="avc1"&&!out.width){
+        out.width=dv.getUint16(p+4+24); out.height=dv.getUint16(p+4+26);
+      }
+      if(type==="hvc1"&&!out.width){
+        out.width=dv.getUint16(p+4+24); out.height=dv.getUint16(p+4+26);
+      }
+      if(type==="hdlr"){
+        let name="";for(let q=c+24;q<p+size&&dv.getUint8(q)!==0;q++)name+=String.fromCharCode(dv.getUint8(q));
+        if(name)out.handlers.push(name);
+      }
+    },0,buf.byteLength);
+  }catch(e){ out.parseError=e.message; }
+  // اسکن رشته‌های ASCII کل فایل
+  try{
+    const bytes=new Uint8Array(buf), hits=new Set(); let cur="";
+    for(let i=0;i<bytes.length;i++){
+      const b=bytes[i];
+      if(b>=0x20&&b<0x7f){cur+=String.fromCharCode(b);}
+      else{ if(cur.length>=4){const lc=cur.toLowerCase();
+        if(KEYS.some(k=>lc.includes(k)))hits.add(cur.slice(0,90));} cur=""; }
+    }
+    out.tokens=Array.from(hits).slice(0,40);
+  }catch(e){}
+  return out;
+}
+function forensicCard(title,u,r){
+  const d=document.createElement("div");
+  d.style.cssText="border:1px solid #30363d;border-radius:10px;padding:12px;margin-top:12px;background:#0a0d12";
+  const rows=[
+    ["فایل",u],
+    ["حجم",(r.size/1024/1024).toFixed(2)+" MB"],
+    ["ftyp",r.ftyp+" ("+r.brands.join(", ")+")"],
+    ["رزولوشن واقعی",(r.width+"×"+r.height+(r.height===720?" ← دقیقاً 720P":r.height===360?" ← 360P":""))],
+    ["مدت",r.durationSec.toFixed(2)+" ثانیه"],
+    ["هندلرها",r.handlers.join(" | ")||"—"],
+    ["رشته‌های مشکوک موتور",r.tokens.length?r.tokens.join("<br>"):"هیچ نام موتوری در باینری نیست (محتوای کاملاً نرمال‌شده)"],
+  ];
+  d.innerHTML="<b>"+title+"</b>"+rows.map(([k,v])=>
+    '<div style="margin-top:6px;font-size:12.5px"><span style="color:#8b949e">'+k+":</span> "+v+"</div>").join("")+
+    '<video controls playsinline src="'+u+'" style="width:100%;border-radius:8px;margin-top:10px"></video>';
+  $("forensicOut").prepend(d);
+}
+async function forensicFromUrl(u,title){
+  title=title||"تحلیل";
+  log("فارنزیک: دانلود "+u,"h");
+  const r=await fetch(viaProxy(u));
+  if(!r.ok)throw new Error("HTTP "+r.status);
+  const buf=await r.arrayBuffer();
+  const res=analyzeMp4(buf);
+  log("ftyp="+res.ftyp+" | "+res.width+"×"+res.height+" | "+res.durationSec.toFixed(1)+"s | "
+      +(res.tokens.length?("توکن‌ها: "+res.tokens.slice(0,6).join("; ")):"بدون توکن موتور"),"ok");
+  forensicCard(title,u,res);
+  $("fUrl").value=u;
+  return res;
+}
+$("fBtn").onclick=async()=>{
+  const u=$("fUrl").value.trim();
+  if(!u)return alert("لینک ویدیو را وارد کنید");
+  try{ await forensicFromUrl(u,"تحلیل دستی"); }catch(e){ log("خطای فارنزیک: "+e.message,"e"); }
+};
+async function pollBeat(tid,deadlineMs){
+  const end=Date.now()+deadlineMs;
+  while(Date.now()<end){
+    await sleep(4000);
+    const env=await postJson("/algo/v1/faceFusion/aigc/beatImage2Video/queryTask",{taskId:tid});
+    const d=env.j&&env.j.d?env.j.d:{};
+    if(d.taskStatus==="success"&&d.videoUrl)return d.videoUrl;
+    if(d.taskStatus==="fail")throw new Error("تسک fail: "+(d.taskReason||""));
+  }
+  throw new Error("مهلت polling تمام شد");
+}
+$("cmpBtn").onclick=async()=>{
+  if(!uploadedUrl)return alert("اول تصویر را آپلود کنید");
+  const p=$("prompt").value.trim();
+  const btn=$("cmpBtn");btn.disabled=true;
+  try{
+    for(const q of [1,2]){
+      head("تست کیفیت quality="+q);
+      const env=await postJson("/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",
+        {imageUrls:[uploadedUrl],level:1,effectType:6209,prompt:p,quality:q});
+      if(!(env.j&&env.j.c===200)){ log("ساخت تسک q="+q+" ناموفق: "+env.txt,"e"); continue; }
+      const tid=env.j.d.taskId; log("تسک q="+q+" ساخته شد: "+tid,"w");
+      const vu=await pollBeat(tid,6*60*1000);
+      log("خروجی q="+q+": "+vu,"ok");
+      await forensicFromUrl(vu,"کیفیت quality="+q+(q===2?" (720P)":" (360P)"));
+    }
+    head("پایان مقایسه — رزولوشن واقعی دو ویدیو را در کارت‌ها مقایسه کنید");
+  }catch(e){ log("خطای تست مقایسه: "+e.message,"e"); }
+  finally{ btn.disabled=false; }
+};
+
+log("آماده [نسخهٔ باتری: 2026-10-28f — اگر این برچسب را نمی‌بینید فایل کش شده است]. userId="+CFG.userId,"ok");
 </script>
 </body>
 </html>
