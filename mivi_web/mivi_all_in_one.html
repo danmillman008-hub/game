@@ -200,9 +200,12 @@
       <div class="muted" style="margin-top:8px">
         پاسخ خام سرور (هر کدی که بدهد) در گزارش مراحل چاپ می‌شود تا دقیقاً ببینیم Veo با چه شرطی باز می‌شود.
         پرامپت از جعبهٔ پرامپت بخش بالا خوانده می‌شود و تصویر هم همان تصویر انتخاب‌شده است.<br>
-        <b>نتیجهٔ تست زندهٔ ۲۰۲۶-۱۰-۲۸:</b> V5 با رشتهٔ خالی پاسخ
-        <code>c=500 NumberFormatException: For input string: ""</code> داد — سرور فیلد خالی را عددی پارس می‌کند؛
-        حالت «جایگزینی با 0» را امتحان کنید. برای آزمایش سیستماتیک ۱۶ حالته، فایل جداگانهٔ
+        <b>نتایج تست زندهٔ ۲۰۲۶-۱۰-۲۸:</b> فیلد خالی →
+        <code>c=500 NumberFormatException: For input string: ""</code>؛ با
+        <code>googleId/deviceToken="0"</code> → <code>c=1013 effectType illegal</code>.
+        پس V5 هم <code>effectType</code> معتبر می‌خواهد؛ این کارت حالا به‌صورت خودکار
+        <code>effectType=6209</code> و <code>quality</code> را در بدنه می‌گذارد.
+        برای آزمایش سیستماتیک ۱۶ حالته، فایل جداگانهٔ
         <code>mivi_veo_probe.html</code> در همین پوشهٔ گیت‌هاب ساخته شده (باتری خودکار + ارسال دستی).
       </div>
     </details>
@@ -871,9 +874,14 @@ async function createVeoTask(imageUrl,prompt){
   const fill=$("veoFillMode").value;
   const rnd=n=>{let s="";for(let i=0;i<n;i++)s+=Math.floor(Math.random()*10);return s;};
   let googleId=gRaw,deviceToken=dRaw;
+  // تست زنده ۲۰۲۶-۱۰-۲۸: V5 با فیلد خالی NumberFormatException و با "0" خطای
+  // «effectType illegal» داد — پس V5 هم effectType معتبر (همان 6209 حالت سفارشی) می‌خواهد
+  const effectType=Number($("customEffect").value)||6209;
   const body={
     imageUrls:[imageUrl],
     level:1,
+    effectType:effectType,
+    quality:Number(CFG.quality)||2,
     audio:$("veoAudio").checked,
     duration:Number($("veoDuration").value)||6,
     ifTest:1

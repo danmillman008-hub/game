@@ -48,9 +48,10 @@
     هدف: کشف شرط بازشدن اندپوینت
     <code>/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5</code>.
     تحلیل بایت‌کد نشان داد این مسیر در اپ 2.37.407 خفته است و فیلد موردنیاز
-    <code>googleId/veoId</code> هیچ تولیدکننده‌ای در اپ ندارد. تست زندهٔ اولیه خطای
-    <code>c=500 NumberFormatException: For input string: ""</code> داد — یعنی سرور یکی از
-    فیلدهای خالی را عددی پارس می‌کند. این صفحه با باتری پروب‌های سیستماتیک تشخیص می‌دهد کدام فیلد و چه مقداری لازم است.
+    <code>googleId/veoId</code> هیچ تولیدکننده‌ای در اپ ندارد. <b>یافته‌های زندهٔ ۲۰۲۶-۱۰-۲۸:</b>
+    فیلد خالی → <code>c=500 NumberFormatException</code>؛ با <code>"0"</code> →
+    <code>c=1013 effectType illegal</code>. یعنی V5 هم مثل beat یک <code>effectType</code>
+    معتبر (۶۲۰۹) می‌خواهد. باتری جدید این فرضیه را در ۱۶ حالت می‌آزماید.
   </div>
 
   <div class="card">
@@ -362,7 +363,7 @@ const V5="/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5";
 const Q_I2V="/algo/v1/faceFusion/aigc/image2video/queryTask";
 const Q_BEAT="/algo/v1/faceFusion/aigc/beatImage2Video/queryTask";
 function baseV5(over){ return Object.assign({imageUrls:[uploadedUrl],level:1,
-  deviceToken:"",googleId:"",audio:false,duration:6,ifTest:1},over||{}); }
+  deviceToken:"0",googleId:"0",effectType:6209,audio:false,duration:6,ifTest:1},over||{}); }
 function refreshManualBody(){
   $("manualBody").value=JSON.stringify(baseV5({prompt:$("prompt").value.trim()}),null,2);
 }
@@ -394,21 +395,31 @@ function probes(){
   const p=$("prompt").value.trim();
   const g10=rnd(10),g19=rnd(19);
   const list=[
-  ["P01 V5 مبنا (رونمایی خطا: هر دو خالی)",V5,baseV5()],
-  ["P02 V5 حذف کامل فیلدهای خالی",V5,{imageUrls:[uploadedUrl],level:1,audio:false,duration:6,ifTest:1}],
-  ["P03 V5 فقط googleId=0",V5,{imageUrls:[uploadedUrl],level:1,googleId:"0",audio:false,duration:6,ifTest:1}],
-  ["P04 V5 googleId عددی تصادفی",V5,{imageUrls:[uploadedUrl],level:1,googleId:g10,audio:false,duration:6,ifTest:1}],
-  ["P05 V5 فقط deviceToken=0",V5,{imageUrls:[uploadedUrl],level:1,deviceToken:"0",audio:false,duration:6,ifTest:1}],
-  ["P06 V5 هر دو =0",V5,baseV5({googleId:"0",deviceToken:"0"})],
-  ["P07 V5 هر دو عددی تصادفی",V5,baseV5({googleId:g10,deviceToken:g19})],
-  ["P08 V5 googleId=0 بدون ifTest",V5,{imageUrls:[uploadedUrl],level:1,googleId:"0",audio:false,duration:6}],
-  ["P09 V5 googleId=0 با audio=true",V5,baseV5({googleId:"0",audio:true})],
-  ["P10 V5 googleId=0 بدون duration",V5,{imageUrls:[uploadedUrl],level:1,googleId:"0",audio:false,ifTest:1}],
-  ["P11 V5 googleId=0 + پرامپت",V5,baseV5({googleId:"0",prompt:p})],
-  ["P12 unifiedTaskCreate با بدنه V5","/algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate",baseV5({googleId:"0",prompt:p})],
-  ["P13 createTask با بدنه V5","/algo/v1/faceFusion/aigc/image2video/createTask",baseV5({googleId:"0",prompt:p})],
-  ["P14 integratedTaskCreate با بدنه V5","/algo/v1/faceFusion/aigc/image2video/integratedTaskCreate",baseV5({googleId:"0",prompt:p})],
-  ["P15 V4 یکپارچه با بدنه V5","/algo/v1/faceFusion/aigc/integrated/image2VideoCreateV4",baseV5({googleId:"0",prompt:p})],
+  // لنگرهای شناخته‌شده از تست‌های زندهٔ قبلی
+  ["P01 V5 لنگر: هر دو فیلد خالی (NumberFormatException)",V5,
+    {imageUrls:[uploadedUrl],level:1,deviceToken:"",googleId:"",audio:false,duration:6,ifTest:1}],
+  ["P02 V5 لنگر: صفر بدون effectType (effectType illegal)",V5,
+    {imageUrls:[uploadedUrl],level:1,deviceToken:"0",googleId:"0",audio:false,duration:6,ifTest:1}],
+  // آزمون‌های کلیدی: effectType=6209 بازکنندهٔ دروازه؟
+  ["P03 V5 صفر + effectType=6209",V5,baseV5()],
+  ["P04 V5 صفر + 6209 + quality=2 + پرامپت",V5,baseV5({quality:2,prompt:p})],
+  ["P05 V5 اعداد تصادفی + 6209 + quality=2 + پرامپت",V5,baseV5({googleId:g10,deviceToken:g19,quality:2,prompt:p})],
+  ["P06 V5 فقط بدنهٔ beat (بدون googleId/deviceToken/ifTest)",V5,
+    {imageUrls:[uploadedUrl],level:1,effectType:6209,prompt:p,quality:2}],
+  ["P07 V5 صفر + 6209 بدون ifTest",V5,
+    {imageUrls:[uploadedUrl],level:1,deviceToken:"0",googleId:"0",effectType:6209,audio:false,duration:6}],
+  ["P08 V5 صفر + 6209 با audio=true",V5,baseV5({audio:true})],
+  ["P09 V5 صفر + 6209 بدون duration",V5,
+    {imageUrls:[uploadedUrl],level:1,deviceToken:"0",googleId:"0",effectType:6209,audio:false,ifTest:1}],
+  ["P10 V5 صفر + 6209 + quality=1 (360P)",V5,baseV5({quality:1,prompt:p})],
+  // اندپوینت‌های هم‌خانواده با بدنهٔ کامل V5
+  ["P11 unifiedTaskCreate + بدنهٔ کامل V5","/algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate",baseV5({quality:2,prompt:p})],
+  ["P12 createTask + بدنهٔ کامل V5","/algo/v1/faceFusion/aigc/image2video/createTask",baseV5({quality:2,prompt:p})],
+  ["P13 integratedTaskCreate + بدنهٔ کامل V5","/algo/v1/faceFusion/aigc/image2video/integratedTaskCreate",baseV5({quality:2,prompt:p})],
+  ["P14 V4 یکپارچه + بدنهٔ کامل V5","/algo/v1/faceFusion/aigc/integrated/image2VideoCreateV4",baseV5({quality:2,prompt:p})],
+  ["P15 V5 صفر + 6209 بدون فیلدهای صوتی/مدت (حداقل کامل)",V5,
+    {imageUrls:[uploadedUrl],level:1,deviceToken:"0",googleId:"0",effectType:6209,prompt:p,quality:2}],
+  // کنترل اثبات‌شده + تشخیص موتور خروجی
   ["P16 کنترل beat (اثبات‌شده) + تشخیص موتور","/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",
     {imageUrls:[uploadedUrl],level:1,effectType:6209,prompt:p,quality:2}],
   ];
