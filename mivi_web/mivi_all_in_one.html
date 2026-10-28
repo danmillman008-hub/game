@@ -161,6 +161,44 @@
 
   <div class="card">
     <details>
+      <summary>🧪 آزمایشگاه موتور Google Veo / Gemini (مسیر V5) — تحلیل مهندسی معکوس</summary>
+      <div class="muted" style="line-height:1.9;margin:10px 0">
+        <b>یافتهٔ قطعی از بایت‌کد نسخهٔ 2.37.407 (هر ۸ دکس + کتابخانه‌های .so):</b><br>
+        • اپ فقط سه موتور را روی درخواست‌ها ست می‌کند: <code>GX_AiVideoP2V</code> (همان مسیر beat/Wan-LoRA که دکمهٔ اصلی بالا استفاده می‌کند)،
+        <code>AiVideoLtx</code> و یک مسیر ویرایشگر LTX. هیچ‌جای کل اپ <code>AiVideoGoogleVeo</code> ست نمی‌شود.<br>
+        • کد Veo وجود دارد اما <b>خفته (dormant)</b> است: <code>e2 case 3 → d3 → c3 → startGoogleVeoVideo$2 →
+        POST image2video/image2VideoCreateV5</code>. فیلد موردنیاز <code>veoId/googleId</code> در اپ هیچ مقداردهی‌کننده‌ای ندارد و
+        رشته‌های <code>googleVeoId/googleVeoEnableAudio</code> هیچ ارجاع کدی ندارند. کلمهٔ «gemini» اصلاً در APK وجود ندارد.<br>
+        • بنابراین «Make AI Video» خود اپ هم دقیقاً همین اندپوینت beat را صدا می‌زند؛ انتخاب موتور نهایی سمت سرور است و فقط از روی
+        نام فایل <code>videoUrl</code> (مثلاً <code>img2video_wanlora-…mp4</code>) قابل تشخیص است.
+      </div>
+      <label>googleId / veoId (در اپ هیچ تولیدکننده‌ای ندارد — برای کشف پیام خطای سرور خالی بگذارید)</label>
+      <input type="text" id="veoGoogleId" dir="ltr" placeholder="(خالی)">
+      <div class="row" style="margin-top:10px">
+        <div style="flex:1">
+          <label>deviceToken</label>
+          <input type="text" id="veoDeviceToken" dir="ltr" placeholder="(خالی)">
+        </div>
+        <div>
+          <label>duration (ثانیه)</label>
+          <input type="number" id="veoDuration" value="6" min="1" max="60" style="max-width:110px">
+        </div>
+        <div style="display:flex;align-items:flex-end;padding-bottom:6px">
+          <label style="margin:0"><input type="checkbox" id="veoAudio"> audio</label>
+        </div>
+      </div>
+      <div style="margin-top:12px">
+        <button id="veoGo" type="button" class="ghost">🧪 آزمایش مسیر Veo (V5)</button>
+      </div>
+      <div class="muted" style="margin-top:8px">
+        پاسخ خام سرور (هر کدی که بدهد) در گزارش مراحل چاپ می‌شود تا دقیقاً ببینیم Veo با چه شرطی باز می‌شود.
+        پرامپت از جعبهٔ پرامپت بخش بالا خوانده می‌شود و تصویر هم همان تصویر انتخاب‌شده است.
+      </div>
+    </details>
+  </div>
+
+  <div class="card">
+    <details>
       <summary>⚙️ تنظیمات اتصال و احراز هویت</summary>
 
       <label>هاست سرور</label>
@@ -761,8 +799,21 @@ async function createTask(imageUrl,prompt,level,effectType,quality){
   }
   const taskId=j.d&&j.d.taskId;
   if(!taskId)throw new Error("taskId در پاسخ وجود ندارد: "+JSON.stringify(j).slice(0,300));
+  log("پاسخ خام سرور ساخت تسک: "+JSON.stringify(j).slice(0,400),"i");
   log("تسک ساخته شد: "+taskId,"ok");step(2,"done");
   return taskId;
+}
+
+// تشخیص موتور بک‌اند از روی نام/مسیر فایل خروجی (کلاینت فیلد موتور ندارد؛
+// بایت‌کد فقط videoUrl برمی‌گرداند — Image2VideoResult/QueryOutput)
+function engineFromUrl(u){
+  const s=String(u||"").toLowerCase();
+  const map=[["wanlora","Wan-LoRA (مسیر beat/GX — همان موتور پیش‌فرض اپ)"],
+             ["veo","Google Veo"],["kling","Kling"],["vidu","Vidu"],
+             ["ltx","LTX"],["pika","Pika"],["runway","Runway"],
+             ["hailuo","Hailuo/MiniMax"],["seedance","Seedance"],["tencent","Tencent"]];
+  for(const [k,v] of map) if(s.includes(k)) return v;
+  return "نامشخص از روی URL (نام فایل: "+(s.split("/").pop()||"—").slice(0,80)+")";
 }
 
 async function queryTask(taskId){
@@ -791,12 +842,62 @@ async function waitForVideo(taskId){
     }else if(env.m&&env.m!==last){
       log("وضعیت سرور: c="+env.c+" "+env.m,"w");last=env.m;
     }
-    if(st==="success"&&d.videoUrl){step(3,"done");return d.videoUrl;}
+    if(st==="success"&&d.videoUrl){step(3,"done");return {videoUrl:d.videoUrl,last:env};}
     if(st==="fail")throw new Error("تسک ناموفق: "+(d.taskReason||st));
     await sleep(5000);
   }
   throw new Error("زمان انتظار به پایان رسید (۱۵ دقیقه)");
 }
+/* ================= آزمایش مسیر Google Veo (image2VideoCreateV5) =================
+   بایت‌کد: Image2VideoServer$createGoogleVeoVideoTask$1 -> g.g0
+   POST /algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5
+   بدنه دقیق مطابق دیکامپایل: imageUrls, level, deviceToken, googleId (=veoId،
+   در اپ هیچ‌وقت مقداردهی نمی‌شود), audio, prompt, duration, ifTest=1 + همان هدرهای امضا
+   این مسیر در نسخه 2.37.407 از هیچ رابطی صدا زده نمی‌شود (کد خفته)؛ هدف این تابع
+   فقط تست زندهٔ واکنش سرور و کشف پارامترهای موردنیاز است. */
+async function createVeoTask(imageUrl,prompt){
+  const body={
+    imageUrls:[imageUrl],
+    level:1,
+    deviceToken:$("veoDeviceToken").value.trim(),
+    googleId:$("veoGoogleId").value.trim(),
+    audio:$("veoAudio").checked,
+    duration:Number($("veoDuration").value)||6,
+    ifTest:1
+  };
+  if(prompt&&prompt.trim())body.prompt=prompt.trim();
+  const url=apiUrl("/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5");
+  log("🧪 تست مسیر Veo/V5 → "+url.replace(/^https?:\/\/[^/]+/,""),"w");
+  log("بدنه درخواست: "+JSON.stringify(body),"i");
+  let r;
+  try{ r=await fetch(url,{method:"POST",headers:algoHeaders(false,true),body:JSON.stringify(body)}); }
+  catch(e){ throw new Error(friendlyError(e,"V5",url)); }
+  const txt=await r.text();
+  let j; try{ j=JSON.parse(txt); }catch(e){ j=null; }
+  log("پاسخ خام HTTP "+r.status+": "+txt.slice(0,600), j&&j.c===200?"ok":"w");
+  if(!j) throw new Error("پاسخ V5 JSON نبود (HTTP "+r.status+")");
+  if(j.c!==200) throw new Error("V5 رد شد: c="+j.c+" m="+(j.m||""));
+  const taskId=(j.d&&(j.d.taskId||j.d.jobId))||j.taskId;
+  if(!taskId){ log("پاسخ ۲۰۰ ولی taskId ندارد — پاسخ کامل در بالا ثبت شد.","w"); return null; }
+  log("V5 تسک ساخت: "+taskId+" — بررسی وضعیت با image2video/queryTask ...","ok");
+  return taskId;
+}
+async function queryVeoTask(taskId){
+  // خانوادهٔ image2video/* (هم‌خانواده با image2VideoCreateV5)؛ در صورت خطا مسیر beat به‌عنوان fallback
+  const paths=["/algo/v1/faceFusion/aigc/image2video/queryTask",
+               "/algo/v1/faceFusion/aigc/beatImage2Video/queryTask"];
+  for(let i=0;i<paths.length;i++){
+    const url=apiUrl(paths[i]);
+    const r=await fetch(url,{method:"POST",headers:algoHeaders(false,true),
+      body:JSON.stringify({taskId:taskId})});
+    const txt=await r.text();
+    let j; try{ j=JSON.parse(txt); }catch(e){ j=null; }
+    if(j&&(j.c===200||(j.d&&(j.d.taskStatus||j.d.videoUrl)))) return {http:r.status,txt:txt,j:j};
+    if(i===0) log("کوئری image2video/queryTask پاسخ نامناسب داد ("+r.status+")، امتحان مسیر beat ...","w");
+    if(i===paths.length-1) return {http:r.status,txt:txt,j:j};
+  }
+}
+
 function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
 
 /* ================= رویدادها ================= */
@@ -839,8 +940,11 @@ $("go").addEventListener("click",async()=>{
     btn.disabled=true;btn.textContent="⏳ در حال پردازش...";
     const url=await uploadImage(pickedFile);
     const taskId=await createTask(url,prompt,level,effectType,quality);
-    const videoUrl=await waitForVideo(taskId);
+    const {videoUrl,last}=await waitForVideo(taskId);
     log("مرحله ۴: ویدیو آماده شد ✓","ok");step(4,"done");
+    log("لینک خام خروجی: "+videoUrl,"i");
+    log("موتور شناسایی‌شده: "+engineFromUrl(videoUrl),"w");
+    try{ log("آخرین پاسخ کوئری سرور: "+JSON.stringify(last).slice(0,400),"i"); }catch(e){}
     $("video").src=videoUrl;
     $("openBtn").href=videoUrl;
     $("resultCard").style.display="block";
@@ -860,6 +964,40 @@ $("go").addEventListener("click",async()=>{
     alert("خطا رخ داد:\n"+err.message);
   }finally{
     btn.disabled=false;btn.textContent="🚀 تولید ویدیو";
+  }
+});
+
+$("veoGo").addEventListener("click",async()=>{
+  const btn=$("veoGo");
+  try{
+    if(!pickedFile)throw new Error("اول در بخش بالا یک تصویر انتخاب کنید");
+    btn.disabled=true;btn.textContent="⏳ در حال آزمایش Veo...";
+    const prompt=$("prompt").value;
+    const img=await uploadImage(pickedFile);
+    const taskId=await createVeoTask(img,prompt);
+    if(!taskId) return;
+    const deadline=Date.now()+6*60*1000;
+    while(Date.now()<deadline){
+      await sleep(5000);
+      const env=await queryVeoTask(taskId);
+      log("V5 query HTTP "+env.http+": "+env.txt.slice(0,400),"i");
+      const d=env.j&&env.j.d?env.j.d:{};
+      const st=d.taskStatus||"";
+      if(st==="success"&&d.videoUrl){
+        log("✓ خروجی Veo: "+d.videoUrl,"ok");
+        log("موتور شناسایی‌شده: "+engineFromUrl(d.videoUrl),"w");
+        $("video").src=d.videoUrl;$("openBtn").href=d.videoUrl;
+        $("dlBtn").href=d.videoUrl;$("dlBtn").setAttribute("download","mivi_veo_"+taskId+".mp4");
+        $("resultCard").style.display="block";
+        return;
+      }
+      if(st==="fail"){ log("تسک Veo ناموفق: "+(d.taskReason||""),"e"); return; }
+    }
+    log("مهلت ۶ دقیقه‌ای انتظار Veo تمام شد؛ taskId="+taskId,"w");
+  }catch(err){
+    log("خطای آزمایش Veo: "+err.message,"e");
+  }finally{
+    btn.disabled=false;btn.textContent="🧪 آزمایش مسیر Veo (V5)";
   }
 });
 

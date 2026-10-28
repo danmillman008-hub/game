@@ -66,14 +66,34 @@
    - کوئری: `POST .../beatImage2Video/queryTask` با `{"taskId":"..."}`
      (متد `g.M`)، لغو: `.../cancelTask` (متد `g.r`).
 
-**نکته کلیدی:** کلاس‌های `AiVideoGoogleVeo` / `startGoogleVeoVideo$2` /
+**نکته کلیدی — بازبینی کامل موتور (۲۰۲۶-۱۰-۲۸، هر ۸ دکس + همهٔ کتابخانه‌های
+`.so`):** کلاس‌های `AiVideoGoogleVeo` / `startGoogleVeoVideo$2` /
 `createGoogleVeoVideoTask$1` به مسیر **جداگانهٔ**
 `/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5` (متد `g.g0`، با
-فیلدهای `googleId/deviceToken/audio/duration`) تعلق دارند و P2Type آن‌ها
-`AiVideoGoogleVeo=10` است. زنجیرهٔ «Make AI Video» اپ هرگز به این مسیر نمی‌رود؛
-هر دو کیفیت 360P و 720P از همان سرویس beat استفاده می‌کنند و تفاوت فقط فیلد
-`quality` است. (لوگوی Gemini روی خروجی، در صورت وجود، سمت سرور روی این بک‌اند
-اعمال می‌شود، نه از طریق یک اندپوینت کلاینت دیگر.)
+فیلدهای `googleId/deviceToken/audio/duration/ifTest`) تعلق دارند و P2Type آن‌ها
+`AiVideoGoogleVeo=10` است. ادلهٔ قطعی خفته‌بودن این مسیر در نسخهٔ ۲.۳۷.۴۰۷:
+
+1. در کل APK تنها سه جا P2Type روی پارامتر ست می‌شود (`f.P`/`e.A`):
+   `observer.g.k0 → GX_AiVideoP2V`، `observer.b.k0 → AiVideoLtx` و
+   `AiVideoLtxEditInterface → LTX`. **هیچ‌کدام Veo را ست نمی‌کند.**
+2. تنها `sget` مقدار `AiVideoGoogleVeo` خارج از جدول‌های switch در متد سنتتیک
+   `Image2VideoTask.d3` است که فقط از `e2` case 3 صدا زده می‌شود؛ ورودی آن
+   (`f.l()` به‌عنوان `veoId`) هیچ ست‌کننده‌ای در کل اپ ندارد و
+   رشته‌های `googleVeoId/googleVeoEnableAudio` هیچ ارجاع کدی ندارند.
+3. کلمهٔ «gemini» هیچ‌جای APK نیست؛ رشتهٔ «Veo» فقط در همین کد خفته است و
+   هیچ کتابخانهٔ nativeای حاوی اندپوینت/موتور شبکه نیست (همهٔ `.so`ها
+   اف‌اف‌مپگ، فیس‌ترکینگ، تبلیغات و آنالیتیکس‌اند).
+
+بنابراین زنجیرهٔ «Make AI Video» خود اپ — در هر دو کیفیت 360P و 720P — فقط
+همان سرویس beat را صدا می‌زند و تفاوت کیفیت تنها فیلد `quality` است. انتخاب
+موتور واقعی تولید (Wan-LoRA/Veo/…) سمت **سرور** انجام می‌شود و کلاینت هیچ
+پارامتر انتخاب موتوری ندارد؛ تنها نشانهٔ قابل مشاهده، نام فایل داخل `videoUrl`
+است (مثلاً `img2video_wanlora-….mp4`). اپ وب این موتور را از روی لینک خروجی
+در گزارش مراحل اعلام می‌کند و بخش
+**«🧪 آزمایشگاه موتور Google Veo / Gemini (مسیر V5)»** امکان تست زندهٔ مستقیم
+اندپوینت V5 را فراهم می‌کند تا پاسخ دقیق سرور (شرط بازشدن Veo، احتمالاً
+`googleId` معتبر) ثبت شود. (لوگوی Gemini روی خروجی، در صورت وجود، سمت سرور
+روی همین بک‌اند اعمال می‌شود، نه از طریق یک اندپوینت کلاینت دیگر.)
 
 شمارندهٔ محدودیت روزانهٔ اپ (`_custom_aivideo_<تاریخ>` در SharedPreferences،
 کلاس `com.ufotosoft.base.c`) کاملاً سمت کلاینت است؛ فراخوانی مستقیم API این
