@@ -43,7 +43,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28f</span></h1>
+  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28g</span></h1>
   <div class="muted" style="margin-bottom:14px">
     هدف: کشف شرط بازشدن اندپوینت
     <code>/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5</code>.
@@ -164,6 +164,9 @@
         </datalist>
       </div>
       <div style="max-width:170px"><button id="fBtn" type="button">🔍 تحلیل این ویدیو</button></div>
+    </div>
+    <div style="margin-top:10px">
+      <button class="ghost" id="fKnownBtn" type="button">📼 تحلیل هر دو ویدیوی موفق این جلسه (بدون تولید جدید)</button>
     </div>
     <div style="margin-top:12px">
       <button id="cmpBtn" type="button">⚖️ تست مقایسه‌ای: ساخت همزمان quality=1 و quality=2 + تحلیل هر دو</button>
@@ -532,7 +535,7 @@ $("runAll").onclick=async()=>{
     const s=document.createElement("span");s.className="pill";s.dataset.p=i;
     s.textContent=l[0].split(" ")[0];prog.appendChild(s);
   });
-  log("شروع باتری نسخهٔ f: "+list.length+" پروب، فاصلهٔ ایمنی ۱ ثانیه‌ای.","h");
+  log("شروع باتری نسخهٔ g: "+list.length+" پروب، فاصلهٔ ایمنی ۱ ثانیه‌ای.","h");
   for(let i=0;i<list.length;i++){
     if(stopFlag){log("توقف توسط کاربر.","w");break;}
     try{ await runOne(i,list[i][0],list[i][1],list[i][2]); }
@@ -606,7 +609,7 @@ function walkBoxes(dv,cb,start,end){
   }
 }
 function analyzeMp4(buf){
-  const dv=new DataView(buf), out={size:buf.byteLength,ftyp:"",width:0,height:0,durationSec:0,
+  const dv=new DataView(buf), out={size:buf.byteLength,ftyp:"",codec:"",width:0,height:0,durationSec:0,
     handlers:[],tokens:[],brands:[]};
   const KEYS=["wan","veo","kling","vidu","pika","runway","hailuo","minimax","seedance",
     "tencent","luma","ltx","pixverse","google","gemini","encoder","lavf","x264","go-","python","ffmpeg","aliyun","aws"];
@@ -614,19 +617,27 @@ function analyzeMp4(buf){
     walkBoxes(dv,(type,p,size,hdr)=>{
       const c=p+hdr;
       if(type==="ftyp"){
-        out.ftyp=fourcc(dv,p+4)+" brand="+fourcc(dv,c);
-        for(let i=0;i<Math.min(4,(size-8)/4);i++)out.brands.push(fourcc(dv,c+4*i));
+        out.ftyp=fourcc(dv,c);
+        for(let i=0;c+8+4*i+4<=p+size&&i<6;i++)out.brands.push(fourcc(dv,c+8+4*i));
       }
       if(type==="mvhd"&&!out.durationSec){
         const ver=dv.getUint8(c);
         if(ver===1){const ts=dv.getUint32(c+20);const du=Number(dv.getBigUint64(c+24));if(ts)out.durationSec=du/ts;}
         else{const ts=dv.getUint32(c+12);const du=dv.getUint32(c+16);if(ts)out.durationSec=du/ts;}
       }
-      if(type==="avc1"&&!out.width){
-        out.width=dv.getUint16(p+4+24); out.height=dv.getUint16(p+4+26);
+      // VisualSampleEntry: 8 (ref fields) + 16 (reserved) = 24 بایت از شروع payload → width
+      // این منبع اصلی و معتبر ابعاد است؛ هر بار بازنویسی کن تا بر tkhd اولویت داشته باشد
+      if(["avc1","avc3","hvc1","hev1"].includes(type)){
+        const w=dv.getUint16(p+8+24), h=dv.getUint16(p+8+26);
+        if(w>0&&h>0){out.width=w;out.height=h;out.codec=type;}
       }
-      if(type==="hvc1"&&!out.width){
-        out.width=dv.getUint16(p+4+24); out.height=dv.getUint16(p+4+26);
+      // fallback: ابعاد در tkhd به‌صورت fixed-point 16.16 (فقط اگر SampleEntry هنوز چیزی نداده)
+      if(type==="tkhd"&&!out.width){
+        const ver=dv.getUint8(c), off=ver===1?88:76;
+        if(c+off+8<=p+size){
+          const w=dv.getUint32(c+off)>>>16, h=dv.getUint32(c+off+4)>>>16;
+          if(w>0&&h>0){out.width=w;out.height=h;out.codec="tkhd";}
+        }
       }
       if(type==="hdlr"){
         let name="";for(let q=c+24;q<p+size&&dv.getUint8(q)!==0;q++)name+=String.fromCharCode(dv.getUint8(q));
@@ -653,8 +664,9 @@ function forensicCard(title,u,r){
   const rows=[
     ["فایل",u],
     ["حجم",(r.size/1024/1024).toFixed(2)+" MB"],
-    ["ftyp",r.ftyp+" ("+r.brands.join(", ")+")"],
-    ["رزولوشن واقعی",(r.width+"×"+r.height+(r.height===720?" ← دقیقاً 720P":r.height===360?" ← 360P":""))],
+    ["ftyp major",r.ftyp+" — برندهای سازگار: "+r.brands.join(", ")],
+    ["کدک",r.codec||"—"],
+    ["رزولوشن واقعی",(r.width+"×"+r.height+(r.height===720?" ← دقیقاً 720P":r.height===360?" ← 360P":r.height>=720?" ← HD/بالا":""))],
     ["مدت",r.durationSec.toFixed(2)+" ثانیه"],
     ["هندلرها",r.handlers.join(" | ")||"—"],
     ["رشته‌های مشکوک موتور",r.tokens.length?r.tokens.join("<br>"):"هیچ نام موتوری در باینری نیست (محتوای کاملاً نرمال‌شده)"],
@@ -681,6 +693,17 @@ $("fBtn").onclick=async()=>{
   const u=$("fUrl").value.trim();
   if(!u)return alert("لینک ویدیو را وارد کنید");
   try{ await forensicFromUrl(u,"تحلیل دستی"); }catch(e){ log("خطای فارنزیک: "+e.message,"e"); }
+};
+$("fKnownBtn").onclick=async()=>{
+  const urls=Array.from(document.querySelectorAll("#knownUrls option")).map(o=>o.value);
+  $("fKnownBtn").disabled=true;
+  try{
+    for(let i=0;i<urls.length;i++){
+      try{ await forensicFromUrl(urls[i],"ویدیوی موفق جلسه ("+(i+1)+"/"+urls.length+")"); }
+      catch(e){ log("خطای تحلیل "+urls[i]+": "+e.message,"e"); }
+    }
+    head("تحلیل هر دو ویدیو تمام شد — رزولوشن/کدک/توکن‌ها را در کارت‌های پایین مقایسه کنید");
+  }finally{ $("fKnownBtn").disabled=false; }
 };
 async function pollBeat(tid,deadlineMs){
   const end=Date.now()+deadlineMs;
@@ -713,7 +736,7 @@ $("cmpBtn").onclick=async()=>{
   finally{ btn.disabled=false; }
 };
 
-log("آماده [نسخهٔ باتری: 2026-10-28f — اگر این برچسب را نمی‌بینید فایل کش شده است]. userId="+CFG.userId,"ok");
+log("آماده [نسخهٔ باتری: 2026-10-28g — اگر این برچسب را نمی‌بینید فایل کش شده است]. userId="+CFG.userId,"ok");
 </script>
 </body>
 </html>
