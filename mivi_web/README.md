@@ -181,12 +181,58 @@
     URL ویدیوی کاتالوگ، URL عکس) رد شدند: unified/integrated همیشه
     `1013 "example" is empty or illegal` و V5 همیشه `1001 example illegal`.
     هیچ مقدار example در داده‌های کلاینت (دکس/کاتالوگ/assets) وجود ندارد.
-- نسخهٔ f/g — کارت فارنزیک MP4 درون‌مرورگری: چون برند موتور در URL نیست، خود فایل
-  ویدیو دانلود و اتم‌های MP4 پارس می‌شوند (ftyp/برندها، رزولوشن واقعی avc1/hvc1
-  برای اثبات 720P در برابر 360P، مدت از mvhd، هندلرهای hdlr، و اسکن رشته‌های
-  ASCII برای نشانه‌های موتور مثل wan/veo/kling/vidu/encoder). دکمهٔ
-  «تست مقایسه‌ای» دو تسک beat با quality=1 و quality=2 می‌سازد و هر دو ویدیو را
-  کنار هم تحلیل می‌کند تا تفاوت واقعی کیفیت سمت سرور اثبات شود.
+### نقشهٔ کامل موتورها (P2Type، ۱۳ مقدار enum) — تحلیل نسخهٔ 2.37.407
+
+جدول `Image2VideoTask$b` هر موتور را به case متد `e2()` نگاشت می‌کند؛ اما فقط
+موتورهایی که جایی `f.P(...)`/`e.A(...)` رویشان صدا زده شود واقعاً قابل اجرا هستند:
+
+| موتور | case/e2 | متد | وضعیت در این نسخه |
+|---|---|---|---|
+| GX_AiVideoP2V | 9 | b3 → beat/createNormalTask | **زنده** — observer.g/preload f0، شامل Custom_Ai_Video |
+| AiVideoLtx | 8 | a3 → createAiVideoLtxTask | زنده ولی قالب‌محور (نیاز modelId/projectId/template) — observer.b و ویرایشگر استاتیک |
+| TencentDriven | — | — | زنده (انیمیشن چهره/رقص، قالب‌محور) |
+| AiVideoUnify | 2 | Z2 → unifiedTaskCreate (نیاز `example`) | خفته: هیچ setter برای P2Type آن نیست |
+| AiVideoGoogleVeo | 3 | d3 → image2VideoCreateV5 | خفته + سرور بسته (۷۰+ پروب زنده) |
+| AiSequenceVideo | 4 | h3 (poseSequenceId/pixVerseId) | خفته |
+| AiVideoT2V | 5 | m3 (text2video) | خفته |
+| AiVideoPixVerse | 6 | f3 | خفته |
+| AiHug / AiHugP2V / AiDance | 7/10/13 | j3/e3/... | خفته/قالب‌محور |
+| **AiVideoHD** | 11 | k3 → **createVideoHdTask** (ارتقای ویدیوی موجود: videoUrl/fileMd5/fileSize/fileTime/width/height) | خفته در UI، ولی اندپوینت در حال تست زنده |
+| **AiVideoHDVidu** | 12 | l3 → **createVideoHdTaskVidu** (بدنه: taskId/level/deviceToken/ifTest) | خفته در UI، ولی اندپوینت در حال تست زنده |
+
+اثبات خفته‌بودن: جست‌وجوی هر ۸ دکس نشان می‌دهد `AiVideoHD`/`AiVideoHDVidu`
+(و Veo/PixVerse/Unify/...) فقط در خود کلاس‌های classes6 (enum، جدول switch،
+متدهای k3/l3/...) ظاهر می‌شوند و هیچ کلاس UI/observerای این مقادیر را روی
+پارامتر درخواست ست نمی‌کند. سه صداکنندهٔ موجود f.P/e.A فقط GX و LTX را ست
+می‌کنند. رشتهٔ "HD" در `CombineEditActivity.c3` صرفاً برچسب آنالیتیکس
+`exproSize=HD` هنگام ذخیره است.
+
+### فارنزیک خروجی beat (تست زنده ۲۰۲۶-۱۰-۲۸)
+
+دو ویدیوی موفق quality=2 با پارس اتم‌های MP4: هر دو
+`ftyp=isom`، **1280×960** (نسبت 4:3 منبع)، **۴ ثانیه**، کدک H.264 با انکدر
+نهایی `x264 core 164`، بدون هیچ رشتهٔ شناسایی موتور در باینری (نام‌گذاری
+سرور هم هشی بدون برند است). انکدر x264 فقط مرحلهٔ نهایی نرمال‌سازی سرور است
+و موتور مولد را لو نمی‌دهد.
+
+### نسخهٔ f/g/h — فارنزیک MP4 و آزمایشگاه ارتقای HD
+
+- کارت فارنزیک: فایل ویدیو دانلود و اتم‌های MP4 پارس می‌شوند (ftyp/برندها،
+  رزولوشن واقعی avc1/hvc1 برای اثبات 720P در برابر 360P، مدت از mvhd،
+  هندلرهای hdlr، و اسکن رشته‌های ASCII با کلیدهای طولانی موتور تا تطبیق تصادفی
+  روی بیت‌استریم رخ ندهد). دکمهٔ «تست مقایسه‌ای» دو تسک beat با quality=1 و
+  quality=2 می‌سازد و هر دو ویدیو را کنار هم تحلیل می‌کند. پارسر با تست
+  واحد روی یک ISO-BMFF مصنوعی (1280×720/6s/چندبرندی) و تابع MD5 بایتی با
+  بردارهای استاندارد MD5 (شامل ورودی باینری) راستی‌آزمایی شده است.
+- آزمایشگاه HD (نسخهٔ h): دو اندپوینت خفتهٔ ارتقای کیفیت با ویدیو/تسک واقعی
+  beat آزمایش می‌شوند —
+  `POST /algo/v1/faceFusion/aigc/createVideoHdTaskVidu`
+  (بدنهٔ `taskId/level/deviceToken/ifTest`) و
+  `POST /algo/v1/faceFusion/aigc/createVideoHdTask`
+  (بدنهٔ `videoUrl/fileMd5/fileSize/fileTime/width/height/level/deviceToken/ifTest`
+  که fileMd5 با MD5 خالص JS روی بایت واقعی فایل محاسبه می‌شود)، سپس
+  polling با `queryVideoHdTask` و فارنزیک خودکار خروجی. باتری ۸ حالته، گیت‌های
+  پارامتری را مثل روش موفقِ مسیر beat یکی‌یکی کشف می‌کند.
 
 ### اگر خطای CORS / Failed to fetch گرفتید
 
