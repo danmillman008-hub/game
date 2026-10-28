@@ -43,15 +43,17 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5</h1>
+  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28c</span></h1>
   <div class="muted" style="margin-bottom:14px">
     هدف: کشف شرط بازشدن اندپوینت
     <code>/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5</code>.
     تحلیل بایت‌کد نشان داد این مسیر در اپ 2.37.407 خفته است و فیلد موردنیاز
     <code>googleId/veoId</code> هیچ تولیدکننده‌ای در اپ ندارد. <b>یافته‌های زندهٔ ۲۰۲۶-۱۰-۲۸:</b>
     فیلد خالی → <code>c=500 NumberFormatException</code>؛ با <code>"0"</code> →
-    <code>c=1013 effectType illegal</code>. یعنی V5 هم مثل beat یک <code>effectType</code>
-    معتبر (۶۲۰۹) می‌خواهد. باتری جدید این فرضیه را در ۱۶ حالت می‌آزماید.
+    <code>c=1013 effectType illegal</code>؛ <b>۶۲۰۹ و کیفیت/پرامپت هم نپذیرفته شد</b> (رجیستری effectType
+    جداست)؛ حذف googleId → <code>c=400 googleId不能为空</code>؛
+    unified/integrated → فیلد <code>example</code> لازم دارند؛ <code>createTask</code> اصلاً استقرار ندارد (404)؛
+    کنترل beat با ۶۲۰۹ موفق (c=200). باتری نسخهٔ c در ۱۸ حالت: جاروب ۱۰ کد effectType روی V5 و مسیرهای example‌دار unified/integrated.
   </div>
 
   <div class="card">
@@ -113,7 +115,7 @@
       پروب کنترلی آخر، مسیر شناخته‌شدهٔ beat را با <code>effectType=6209, quality=2</code> اجرا و موتور خروجی را از روی نام فایل اعلام می‌کند.
     </div>
     <div class="row">
-      <button id="runAll" type="button">▶ اجرای کل باتری (۱۶ پروب)</button>
+      <button id="runAll" type="button">▶ اجرای کل باتری (۱۸ پروب)</button>
       <button class="ghost" id="stopBtn" type="button" disabled>⏹ توقف</button>
       <button class="ghost" id="copyLog" type="button">کپی گزارش</button>
       <button class="ghost" id="clearLog" type="button">پاک‌سازی</button>
@@ -393,34 +395,43 @@ async function pollTask(taskId,label){
 /* ---------- تعریف پروب‌ها ---------- */
 function probes(){
   const p=$("prompt").value.trim();
-  const g10=rnd(10),g19=rnd(19);
+  const z={imageUrls:[uploadedUrl],level:1,deviceToken:"0",googleId:"0",
+           audio:false,duration:6,ifTest:1};
+  const uni="/algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate";
+  const integ="/algo/v1/faceFusion/aigc/image2video/integratedTaskCreate";
   const list=[
   // لنگرهای شناخته‌شده از تست‌های زندهٔ قبلی
   ["P01 V5 لنگر: هر دو فیلد خالی (NumberFormatException)",V5,
     {imageUrls:[uploadedUrl],level:1,deviceToken:"",googleId:"",audio:false,duration:6,ifTest:1}],
   ["P02 V5 لنگر: صفر بدون effectType (effectType illegal)",V5,
     {imageUrls:[uploadedUrl],level:1,deviceToken:"0",googleId:"0",audio:false,duration:6,ifTest:1}],
-  // آزمون‌های کلیدی: effectType=6209 بازکنندهٔ دروازه؟
-  ["P03 V5 صفر + effectType=6209",V5,baseV5()],
-  ["P04 V5 صفر + 6209 + quality=2 + پرامپت",V5,baseV5({quality:2,prompt:p})],
-  ["P05 V5 اعداد تصادفی + 6209 + quality=2 + پرامپت",V5,baseV5({googleId:g10,deviceToken:g19,quality:2,prompt:p})],
-  ["P06 V5 فقط بدنهٔ beat (بدون googleId/deviceToken/ifTest)",V5,
-    {imageUrls:[uploadedUrl],level:1,effectType:6209,prompt:p,quality:2}],
-  ["P07 V5 صفر + 6209 بدون ifTest",V5,
-    {imageUrls:[uploadedUrl],level:1,deviceToken:"0",googleId:"0",effectType:6209,audio:false,duration:6}],
-  ["P08 V5 صفر + 6209 با audio=true",V5,baseV5({audio:true})],
-  ["P09 V5 صفر + 6209 بدون duration",V5,
-    {imageUrls:[uploadedUrl],level:1,deviceToken:"0",googleId:"0",effectType:6209,audio:false,ifTest:1}],
-  ["P10 V5 صفر + 6209 + quality=1 (360P)",V5,baseV5({quality:1,prompt:p})],
-  // اندپوینت‌های هم‌خانواده با بدنهٔ کامل V5
-  ["P11 unifiedTaskCreate + بدنهٔ کامل V5","/algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate",baseV5({quality:2,prompt:p})],
-  ["P12 createTask + بدنهٔ کامل V5","/algo/v1/faceFusion/aigc/image2video/createTask",baseV5({quality:2,prompt:p})],
-  ["P13 integratedTaskCreate + بدنهٔ کامل V5","/algo/v1/faceFusion/aigc/image2video/integratedTaskCreate",baseV5({quality:2,prompt:p})],
-  ["P14 V4 یکپارچه + بدنهٔ کامل V5","/algo/v1/faceFusion/aigc/integrated/image2VideoCreateV4",baseV5({quality:2,prompt:p})],
-  ["P15 V5 صفر + 6209 بدون فیلدهای صوتی/مدت (حداقل کامل)",V5,
-    {imageUrls:[uploadedUrl],level:1,deviceToken:"0",googleId:"0",effectType:6209,prompt:p,quality:2}],
+  // جاروب effectType روی V5: 6209 قطعاً رد شد؛ دنبال هر کدی که پیام خطا را عوض کند
+  ["P03 V5 جاروب effectType=0",V5,Object.assign({},z,{effectType:0,prompt:p})],
+  ["P04 V5 جاروب effectType=1",V5,Object.assign({},z,{effectType:1,prompt:p})],
+  ["P05 V5 جاروب effectType=2",V5,Object.assign({},z,{effectType:2,prompt:p})],
+  ["P06 V5 جاروب effectType=5",V5,Object.assign({},z,{effectType:5,prompt:p})],
+  ["P07 V5 جاروب effectType=10",V5,Object.assign({},z,{effectType:10,prompt:p})],
+  ["P08 V5 جاروب effectType=4991 (Catwalk beat)",V5,Object.assign({},z,{effectType:4991,prompt:p})],
+  ["P09 V5 جاروب effectType=4899 (BodyShake)",V5,Object.assign({},z,{effectType:4899,prompt:p})],
+  ["P10 V5 جاروب effectType=5291 (Luxury Car)",V5,Object.assign({},z,{effectType:5291,prompt:p})],
+  ["P11 V5 جاروب effectType=6093 (3D Model)",V5,Object.assign({},z,{effectType:6093,prompt:p})],
+  ["P12 V5 جاروب effectType=7969 (Wall Mural)",V5,Object.assign({},z,{effectType:7969,prompt:p})],
+  // مسیر unified: بایت‌کد می‌گوید بدنه example/ratio/movementAmplitude دارد و effectType ندارد
+  ["P13 unified با example خالی (تست حضور فیلد)",uni,
+    {imageUrls:[uploadedUrl],level:1,deviceToken:"0",prompt:p,ratio:"16:9",movementAmplitude:"",example:"",ifTest:1}],
+  ["P14 unified با example=URL تصویر، حرکت 0.5",uni,
+    {imageUrls:[uploadedUrl],level:1,deviceToken:"0",prompt:p,ratio:"16:9",movementAmplitude:"0.5",
+     example:uploadedUrl,ifTest:1}],
+  ["P15 unified حداقلی: فقط example=URL",uni,
+    {imageUrls:[uploadedUrl],level:1,deviceToken:"0",prompt:p,example:uploadedUrl,ifTest:1}],
+  // مسیر integrated که همان خطای example را داد
+  ["P16 integrated + example=URL تصویر",integ,
+    {imageUrls:[uploadedUrl],level:1,deviceToken:"0",prompt:p,ratio:"16:9",movementAmplitude:"0.5",
+     example:uploadedUrl,ifTest:1}],
+  ["P17 integrated بدنهٔ V5 + example",integ,
+    Object.assign({},z,{effectType:6209,prompt:p,example:uploadedUrl})],
   // کنترل اثبات‌شده + تشخیص موتور خروجی
-  ["P16 کنترل beat (اثبات‌شده) + تشخیص موتور","/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",
+  ["P18 کنترل beat (اثبات‌شده) + تشخیص موتور","/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",
     {imageUrls:[uploadedUrl],level:1,effectType:6209,prompt:p,quality:2}],
   ];
   return list;
@@ -462,7 +473,7 @@ $("runAll").onclick=async()=>{
     const s=document.createElement("span");s.className="pill";s.dataset.p=i;
     s.textContent=l[0].split(" ")[0];prog.appendChild(s);
   });
-  log("شروع باتری: "+list.length+" پروب، فاصلهٔ ایمنی ۱ ثانیه‌ای.","h");
+  log("شروع باتری نسخهٔ c: "+list.length+" پروب، فاصلهٔ ایمنی ۱ ثانیه‌ای.","h");
   for(let i=0;i<list.length;i++){
     if(stopFlag){log("توقف توسط کاربر.","w");break;}
     try{ await runOne(i,list[i][0],list[i][1],list[i][2]); }
@@ -499,7 +510,7 @@ $("manualSend").onclick=async()=>{
     if(tid)await pollTask(tid,"ارسال دستی");
   }
 };
-log("آماده. userId="+CFG.userId,"ok");
+log("آماده [نسخهٔ باتری: 2026-10-28c — اگر این برچسب را نمی‌بینید فایل کش شده است]. userId="+CFG.userId,"ok");
 </script>
 </body>
 </html>

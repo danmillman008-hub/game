@@ -132,6 +132,27 @@
 - در فایل اصلی هم کارت آزمایشگاه Veo با «حالت پر کردن فیلد خالی» (دقیق/حذف/صفر/تصادفی)
   به‌روزرسانی شد.
 
+مرحله ۳ — باتری ۱۶ پروبی زنده (همان جلسه):
+
+- V5 با `effectType=6209` (و کیفیت/پرامپت/صوت/مدت متنوع) همیشه
+  `c=1013 effectType illegal` داد؛ یعنی V5 رجیستری effectType **جدا از beat**
+  دارد و ۶۲۰۹ در آن معتبر نیست.
+- حذف googleId از بدنه V5 → `c=400 googleId不能为空`: googleId فیلد اجباری
+  حضور‌ی است و `"0"` فقط چک خالی‌نبودن را رد می‌کند.
+- `image2video/unifiedTaskCreate` → `c=400 example不能为空` و
+  `image2video/integratedTaskCreate` → `c=1013 "example" is empty or illegal`.
+  از بایت‌کد `createAiVideoUnifiedTask$1`: بدنهٔ این مسیر
+  `imageUrls, level, deviceToken, prompt, ratio, movementAmplitude, example,
+  ifTest` است و اصلاً effectType ندارد.
+- `image2video/createTask` روی سرور استقرار ندارد (HTTP 404 واقعی)؛
+  `integrated/image2VideoCreateV4` هم ۶۲۰۹ را با `c=1001 effectType illegal` رد کرد.
+- کنترل `beatImage2Video/createNormalTask` با همان بدنهٔ ۶۲۰۹/quality=2 پاسخ
+  `c=200` و taskId گرفت — اثبات دوبارهٔ اینکه تنها مسیر کاریِ این کلاینت beat است.
+- باتری نسخهٔ c (۱۸ پروب): جاروب ۱۰ کد effectType روی V5 (۰،۱،۲،۵،۱۰ و کدهای
+  کاتالوگ ۴۹۹۱/۴۸۹۹/۵۲۹۱/۶۰۹۳/۷۹۶۹) برای کشف رجیستری V5، و سه حالت ارسال
+  `example` (رشته خالی / URL تصویر / حداقلی) روی unified و integrated.
+  هر پاسخی غیر از ۱۰۱۳ یعنی یک لایه جلوتر رفته‌ایم.
+
 ### اگر خطای CORS / Failed to fetch گرفتید
 
 در همان فایل، بخش **«⚙️ تنظیمات اتصال و احراز هویت»** را باز کنید:

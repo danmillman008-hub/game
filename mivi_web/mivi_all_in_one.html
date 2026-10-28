@@ -161,7 +161,7 @@
 
   <div class="card">
     <details>
-      <summary>🧪 آزمایشگاه موتور Google Veo / Gemini (مسیر V5) — تحلیل مهندسی معکوس</summary>
+      <summary>🧪 آزمایشگاه موتور Google Veo / Gemini (مسیر V5) — تحلیل مهندسی معکوس <span style="font-size:10px;background:#1f6feb22;border:1px solid #1f6feb55;color:#58a6ff;border-radius:6px;padding:1px 7px">نسخهٔ V5-Lab: 2026-10-28c</span></summary>
       <div class="muted" style="line-height:1.9;margin:10px 0">
         <b>یافتهٔ قطعی از بایت‌کد نسخهٔ 2.37.407 (هر ۸ دکس + کتابخانه‌های .so):</b><br>
         • اپ فقط سه موتور را روی درخواست‌ها ست می‌کند: <code>GX_AiVideoP2V</code> (همان مسیر beat/Wan-LoRA که دکمهٔ اصلی بالا استفاده می‌کند)،
@@ -200,13 +200,15 @@
       <div class="muted" style="margin-top:8px">
         پاسخ خام سرور (هر کدی که بدهد) در گزارش مراحل چاپ می‌شود تا دقیقاً ببینیم Veo با چه شرطی باز می‌شود.
         پرامپت از جعبهٔ پرامپت بخش بالا خوانده می‌شود و تصویر هم همان تصویر انتخاب‌شده است.<br>
-        <b>نتایج تست زندهٔ ۲۰۲۶-۱۰-۲۸:</b> فیلد خالی →
-        <code>c=500 NumberFormatException: For input string: ""</code>؛ با
-        <code>googleId/deviceToken="0"</code> → <code>c=1013 effectType illegal</code>.
-        پس V5 هم <code>effectType</code> معتبر می‌خواهد؛ این کارت حالا به‌صورت خودکار
-        <code>effectType=6209</code> و <code>quality</code> را در بدنه می‌گذارد.
-        برای آزمایش سیستماتیک ۱۶ حالته، فایل جداگانهٔ
-        <code>mivi_veo_probe.html</code> در همین پوشهٔ گیت‌هاب ساخته شده (باتری خودکار + ارسال دستی).
+        <b>نتایج قطعی تست زندهٔ ۲۰۲۶-۱۰-۲۸ (باتری ۱۸ پروبی):</b>
+        فیلد خالی → <code>c=500 NumberFormatException</code>؛ با
+        <code>googleId/deviceToken="0"</code> → <code>c=1013 effectType illegal</code>؛
+        <b>6209 توسط V5 رد شد</b> در حالی که همان کد در beat موفق است (رجیستری effectType این اندپوینت جداست)؛
+        حذف googleId → <code>c=400 googleId不能为空</code> (googleId اجباری است)؛
+        اندپوینت‌های unified/integrated فیلد <code>example</code> می‌خواهند و
+        <code>createTask</code> اصلاً روی سرور نیست (404). در مقابل مسیر beat با همان 6209
+        پاسخ <code>c=200</code> گرفت. برای جزییات کامل و تست‌های بعدی
+        <code>mivi_veo_probe.html</code> (نسخهٔ باتری c) را ببینید.
       </div>
     </details>
   </div>
@@ -1139,7 +1141,7 @@ document.querySelectorAll(".segBtn").forEach(b=>b.addEventListener("click",()=>{
 applyGenMode();
 
 fillSettings();
-log("آماده. userId="+CFG.userId+" signKey="+CFG.signKey);
+log("آماده [نسخهٔ فایل: 2026-10-28c — اگر این برچسب را نمی‌بینید فایل کش شده است]. userId="+CFG.userId+" signKey="+CFG.signKey);
 log("کاتالوگ افکت‌ها: "+Object.values(EFFECT_CATALOG).reduce((a,b)=>a+b.length,0)+" قالب آماده از سرور.");
 </script>
 </body>
