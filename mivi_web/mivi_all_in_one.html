@@ -172,7 +172,14 @@
         • بنابراین «Make AI Video» خود اپ هم دقیقاً همین اندپوینت beat را صدا می‌زند؛ انتخاب موتور نهایی سمت سرور است و فقط از روی
         نام فایل <code>videoUrl</code> (مثلاً <code>img2video_wanlora-…mp4</code>) قابل تشخیص است.
       </div>
-      <label>googleId / veoId (در اپ هیچ تولیدکننده‌ای ندارد — برای کشف پیام خطای سرور خالی بگذارید)</label>
+      <label>حالت پر کردن فیلدهای خالی (بر اساس خطای زندهٔ <code>NumberFormatException: ""</code>)</label>
+      <select id="veoFillMode" dir="rtl">
+        <option value="exact">دقیق بایت‌کد: ارسال رشتهٔ خالی "" (همان که c=500 داد)</option>
+        <option value="omit">حذف کامل فیلدهای خالی از بدنه</option>
+        <option value="zero" selected>جایگزینی با "0" عددی</option>
+        <option value="random">عدد تصادفی (googleId ۱۰ رقم، deviceToken ۱۹ رقم)</option>
+      </select>
+      <label style="margin-top:10px">googleId / veoId (در اپ هیچ تولیدکننده‌ای ندارد — خالی = طبق حالت بالا)</label>
       <input type="text" id="veoGoogleId" dir="ltr" placeholder="(خالی)">
       <div class="row" style="margin-top:10px">
         <div style="flex:1">
@@ -192,7 +199,11 @@
       </div>
       <div class="muted" style="margin-top:8px">
         پاسخ خام سرور (هر کدی که بدهد) در گزارش مراحل چاپ می‌شود تا دقیقاً ببینیم Veo با چه شرطی باز می‌شود.
-        پرامپت از جعبهٔ پرامپت بخش بالا خوانده می‌شود و تصویر هم همان تصویر انتخاب‌شده است.
+        پرامپت از جعبهٔ پرامپت بخش بالا خوانده می‌شود و تصویر هم همان تصویر انتخاب‌شده است.<br>
+        <b>نتیجهٔ تست زندهٔ ۲۰۲۶-۱۰-۲۸:</b> V5 با رشتهٔ خالی پاسخ
+        <code>c=500 NumberFormatException: For input string: ""</code> داد — سرور فیلد خالی را عددی پارس می‌کند؛
+        حالت «جایگزینی با 0» را امتحان کنید. برای آزمایش سیستماتیک ۱۶ حالته، فایل جداگانهٔ
+        <code>mivi_veo_probe.html</code> در همین پوشهٔ گیت‌هاب ساخته شده (باتری خودکار + ارسال دستی).
       </div>
     </details>
   </div>
@@ -856,15 +867,26 @@ async function waitForVideo(taskId){
    این مسیر در نسخه 2.37.407 از هیچ رابطی صدا زده نمی‌شود (کد خفته)؛ هدف این تابع
    فقط تست زندهٔ واکنش سرور و کشف پارامترهای موردنیاز است. */
 async function createVeoTask(imageUrl,prompt){
+  const gRaw=$("veoGoogleId").value.trim(), dRaw=$("veoDeviceToken").value.trim();
+  const fill=$("veoFillMode").value;
+  const rnd=n=>{let s="";for(let i=0;i<n;i++)s+=Math.floor(Math.random()*10);return s;};
+  let googleId=gRaw,deviceToken=dRaw;
   const body={
     imageUrls:[imageUrl],
     level:1,
-    deviceToken:$("veoDeviceToken").value.trim(),
-    googleId:$("veoGoogleId").value.trim(),
     audio:$("veoAudio").checked,
     duration:Number($("veoDuration").value)||6,
     ifTest:1
   };
+  // حالت پر کردن فیلدها: دقیقاً مثل بایت‌کد (رشته خالی) / حذف فیلد خالی / صفر عددی / عدد تصادفی
+  if(fill==="exact"){ body.googleId=googleId; body.deviceToken=deviceToken; }
+  else if(fill==="zero"){ body.googleId=googleId||"0"; body.deviceToken=deviceToken||"0"; }
+  else if(fill==="random"){ body.googleId=googleId||rnd(10); body.deviceToken=deviceToken||rnd(19); }
+  // fill==="omit": فقط مقادیر غیرخالی فرستاده می‌شوند
+  if(fill!=="exact"){
+    if(googleId)body.googleId=googleId;
+    if(deviceToken)body.deviceToken=deviceToken;
+  }
   if(prompt&&prompt.trim())body.prompt=prompt.trim();
   const url=apiUrl("/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5");
   log("🧪 تست مسیر Veo/V5 → "+url.replace(/^https?:\/\/[^/]+/,""),"w");
