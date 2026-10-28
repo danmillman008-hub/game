@@ -151,7 +151,19 @@
 - باتری نسخهٔ c (۱۸ پروب): جاروب ۱۰ کد effectType روی V5 (۰،۱،۲،۵،۱۰ و کدهای
   کاتالوگ ۴۹۹۱/۴۸۹۹/۵۲۹۱/۶۰۹۳/۷۹۶۹) برای کشف رجیستری V5، و سه حالت ارسال
   `example` (رشته خالی / URL تصویر / حداقلی) روی unified و integrated.
-  هر پاسخی غیر از ۱۰۱۳ یعنی یک لایه جلوتر رفته‌ایم.
+  نتیجهٔ زنده: **همهٔ ۱۰ کد effectType روی V5 همان `1013 effectType illegal`
+  را دادند** — یا رجیستری V5 کاملاً جداست یا اعتبارسنجی به googleId گره خورده
+  و با شناسهٔ `"0"` هیچ کدی معتبر نیست. `example` با URL تصویر هم با
+  `"example" is empty or illegal` رد شد (example تصویر نیست). assets اپ
+  (AdConfig/SceneConfig/aigc/lock) فقط تبلیغات/انیمیشن Lottie‌اند و هیچ کانفیگ
+  V5/example ندارند؛ رشتهٔ `example` فقط در classes6 و فقط به‌صورت خواندن از
+  HashMap وجود دارد.
+- باتری نسخهٔ d (۱۶ پروب): فرضیهٔ `example = videoPreviewUrl` (ویدیوی نمونهٔ
+  قالب‌های کاتالوگ، مثل `res.wiseoel.com/common/video/UF…_press.mp4`) روی
+  unified/integrated با بدنهٔ دقیق بایت‌کد (بدون effectType، با
+  ratio/movementAmplitude)، حالت‌های مختلف ifTest، و چند واریانت V5 برای
+  کشف ترتیب اعتبارسنجی googleId. به‌علاوه کارت «کوئری تسک‌های ساخته‌شده» برای
+  گرفتن videoUrl و تشخیص موتور بدون تولید دوباره.
 
 ### اگر خطای CORS / Failed to fetch گرفتید
 

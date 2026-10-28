@@ -43,7 +43,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28c</span></h1>
+  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28d</span></h1>
   <div class="muted" style="margin-bottom:14px">
     هدف: کشف شرط بازشدن اندپوینت
     <code>/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5</code>.
@@ -53,7 +53,9 @@
     <code>c=1013 effectType illegal</code>؛ <b>۶۲۰۹ و کیفیت/پرامپت هم نپذیرفته شد</b> (رجیستری effectType
     جداست)؛ حذف googleId → <code>c=400 googleId不能为空</code>؛
     unified/integrated → فیلد <code>example</code> لازم دارند؛ <code>createTask</code> اصلاً استقرار ندارد (404)؛
-    کنترل beat با ۶۲۰۹ موفق (c=200). باتری نسخهٔ c در ۱۸ حالت: جاروب ۱۰ کد effectType روی V5 و مسیرهای example‌دار unified/integrated.
+    کنترل beat با ۶۲۰۹ موفق (c=200). جاروب نسخهٔ c: هر ۱۰ کد effectType روی V5 رد شدند و
+    example با URL عکس پذیرفته نشد. <b>باتری نسخهٔ d:</b> فرضیهٔ example=ویدیوی نمونهٔ کاتالوگ
+    (videoPreviewUrl) روی unified/integrated + ابزار کوئری تسک‌های قبلی.
   </div>
 
   <div class="card">
@@ -115,12 +117,28 @@
       پروب کنترلی آخر، مسیر شناخته‌شدهٔ beat را با <code>effectType=6209, quality=2</code> اجرا و موتور خروجی را از روی نام فایل اعلام می‌کند.
     </div>
     <div class="row">
-      <button id="runAll" type="button">▶ اجرای کل باتری (۱۸ پروب)</button>
+      <button id="runAll" type="button">▶ اجرای کل باتری (۱۶ پروب)</button>
       <button class="ghost" id="stopBtn" type="button" disabled>⏹ توقف</button>
       <button class="ghost" id="copyLog" type="button">کپی گزارش</button>
       <button class="ghost" id="clearLog" type="button">پاک‌سازی</button>
     </div>
     <div class="prog" id="prog"></div>
+  </div>
+
+  <div class="card">
+    <h2>۳٫۵) کوئری نتیجهٔ تسک‌های ساخته‌شده (بدون تولید دوباره)</h2>
+    <label>taskId (مثلاً تسک‌های beat این جلسه: 60014-1793217603-a0fae8ae-9803-4b7c-885f-7b9b9c8ba553)</label>
+    <div class="row">
+      <div style="flex:3"><input id="qTaskId" dir="ltr" placeholder="60014-..."></div>
+      <div style="max-width:210px"><button id="qBtn" type="button">🔎 کوئری هر دو اندپوینت</button></div>
+    </div>
+    <div class="muted" style="margin-top:8px">
+      هر دو مسیر <code>beatImage2Video/queryTask</code> و <code>image2video/queryTask</code> با همین taskId
+      امتحان و پاسخ خام (شامل videoUrl و موتور از روی نام فایل) چاپ می‌شود.
+    </div>
+    <div id="videoBox" style="display:none;margin-top:12px">
+      <video id="videoOut" controls playsinline style="width:100%;border-radius:10px"></video>
+    </div>
   </div>
 
   <div class="card">
@@ -135,6 +153,8 @@
           <option value="/algo/v1/faceFusion/aigc/image2video/integratedTaskCreate">image2video/integratedTaskCreate</option>
           <option value="/algo/v1/faceFusion/aigc/integrated/image2VideoCreateV4">integrated/image2VideoCreateV4</option>
           <option value="/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask">beatImage2Video/createNormalTask (کنترل)</option>
+          <option value="/algo/v1/faceFusion/aigc/beatImage2Video/queryTask">beatImage2Video/queryTask (کوئری)</option>
+          <option value="/algo/v1/faceFusion/aigc/image2video/queryTask">image2video/queryTask (کوئری V5)</option>
           <option value="__custom__">مسیر سفارشی...</option>
         </select>
         <input id="customEp" dir="ltr" style="margin-top:8px;display:none" placeholder="/algo/v1/...">
@@ -395,43 +415,48 @@ async function pollTask(taskId,label){
 /* ---------- تعریف پروب‌ها ---------- */
 function probes(){
   const p=$("prompt").value.trim();
+  const g10=rnd(10),g19=rnd(19);
   const z={imageUrls:[uploadedUrl],level:1,deviceToken:"0",googleId:"0",
            audio:false,duration:6,ifTest:1};
   const uni="/algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate";
   const integ="/algo/v1/faceFusion/aigc/image2video/integratedTaskCreate";
+  // videoPreviewUrlهای واقعی کاتالوگ — محتمل‌ترین مقدار برای فیلد example
+  const ex1="https://res.wiseoel.com/common/video/UF2506124cd6ff1d-676a-47ae-862c-27552aa28199_press.mp4"; // Catwalk 4991
+  const ex2="https://res.wiseoel.com/common/video/UF250620171dcbed-2119-4321-b241-0aa0bc74ad98_press.mp4"; // BodyShake 4899
+  const ub=(over)=>Object.assign({imageUrls:[uploadedUrl],level:1,deviceToken:"0",
+    prompt:p,ratio:"16:9",movementAmplitude:"0.5",example:ex1,ifTest:1},over||{});
   const list=[
-  // لنگرهای شناخته‌شده از تست‌های زندهٔ قبلی
-  ["P01 V5 لنگر: هر دو فیلد خالی (NumberFormatException)",V5,
+  // لنگرهای رگرسیون
+  ["P01 لنگر: V5 فیلد خالی (NumberFormatException)",V5,
     {imageUrls:[uploadedUrl],level:1,deviceToken:"",googleId:"",audio:false,duration:6,ifTest:1}],
-  ["P02 V5 لنگر: صفر بدون effectType (effectType illegal)",V5,
+  ["P02 لنگر: V5 صفر بدون effectType (effectType illegal)",V5,
     {imageUrls:[uploadedUrl],level:1,deviceToken:"0",googleId:"0",audio:false,duration:6,ifTest:1}],
-  // جاروب effectType روی V5: 6209 قطعاً رد شد؛ دنبال هر کدی که پیام خطا را عوض کند
-  ["P03 V5 جاروب effectType=0",V5,Object.assign({},z,{effectType:0,prompt:p})],
-  ["P04 V5 جاروب effectType=1",V5,Object.assign({},z,{effectType:1,prompt:p})],
-  ["P05 V5 جاروب effectType=2",V5,Object.assign({},z,{effectType:2,prompt:p})],
-  ["P06 V5 جاروب effectType=5",V5,Object.assign({},z,{effectType:5,prompt:p})],
-  ["P07 V5 جاروب effectType=10",V5,Object.assign({},z,{effectType:10,prompt:p})],
-  ["P08 V5 جاروب effectType=4991 (Catwalk beat)",V5,Object.assign({},z,{effectType:4991,prompt:p})],
-  ["P09 V5 جاروب effectType=4899 (BodyShake)",V5,Object.assign({},z,{effectType:4899,prompt:p})],
-  ["P10 V5 جاروب effectType=5291 (Luxury Car)",V5,Object.assign({},z,{effectType:5291,prompt:p})],
-  ["P11 V5 جاروب effectType=6093 (3D Model)",V5,Object.assign({},z,{effectType:6093,prompt:p})],
-  ["P12 V5 جاروب effectType=7969 (Wall Mural)",V5,Object.assign({},z,{effectType:7969,prompt:p})],
-  // مسیر unified: بایت‌کد می‌گوید بدنه example/ratio/movementAmplitude دارد و effectType ندارد
-  ["P13 unified با example خالی (تست حضور فیلد)",uni,
-    {imageUrls:[uploadedUrl],level:1,deviceToken:"0",prompt:p,ratio:"16:9",movementAmplitude:"",example:"",ifTest:1}],
-  ["P14 unified با example=URL تصویر، حرکت 0.5",uni,
-    {imageUrls:[uploadedUrl],level:1,deviceToken:"0",prompt:p,ratio:"16:9",movementAmplitude:"0.5",
-     example:uploadedUrl,ifTest:1}],
-  ["P15 unified حداقلی: فقط example=URL",uni,
-    {imageUrls:[uploadedUrl],level:1,deviceToken:"0",prompt:p,example:uploadedUrl,ifTest:1}],
-  // مسیر integrated که همان خطای example را داد
-  ["P16 integrated + example=URL تصویر",integ,
-    {imageUrls:[uploadedUrl],level:1,deviceToken:"0",prompt:p,ratio:"16:9",movementAmplitude:"0.5",
-     example:uploadedUrl,ifTest:1}],
-  ["P17 integrated بدنهٔ V5 + example",integ,
-    Object.assign({},z,{effectType:6209,prompt:p,example:uploadedUrl})],
+  // فرضیهٔ example=ویدیوی نمونه روی unified (بدنهٔ دقیق بایت‌کد، بدون effectType)
+  ["P03 unified + example=ویدیوی نمونهٔ کاتالوگ (بدنهٔ کامل)",uni,ub()],
+  ["P04 unified + example=ویدیو، movementAmplitude خالی",uni,ub({movementAmplitude:""})],
+  ["P05 unified + example=ویدیو، حداقلی (بدون ratio/amplitude)",uni,
+    {imageUrls:[uploadedUrl],level:1,deviceToken:"0",prompt:p,example:ex1,ifTest:1}],
+  ["P06 unified + example=ویدیوی دوم (تست وابستگی به URL)",uni,ub({example:ex2})],
+  ["P07 unified + example=ویدیو بدون ifTest (حالت واقعی؟)",uni,
+    {imageUrls:[uploadedUrl],level:1,deviceToken:"0",prompt:p,ratio:"16:9",movementAmplitude:"0.5",example:ex1}],
+  ["P08 unified + example=ویدیو با ifTest=0",uni,ub({ifTest:0})],
+  // همان فرضیه روی integrated
+  ["P09 integrated + example=ویدیو (بدنهٔ کامل)",integ,ub()],
+  ["P10 integrated + example=ویدیو، حداقلی",integ,
+    {imageUrls:[uploadedUrl],level:1,deviceToken:"0",prompt:p,example:ex1,ifTest:1}],
+  // V5: آیا example یا شناسهٔ عددی دیگر خطا را عوض می‌کند؟
+  ["P11 V5 + example=ویدیو + effectType=6209 (آیا پیام عوض می‌شود؟)",V5,
+    Object.assign({},z,{effectType:6209,prompt:p,example:ex1})],
+  ["P12 V5 با googleId=1 و deviceToken=1 (شاید 0 مخصوصاً نامعتبر است)",V5,
+    Object.assign({},z,{googleId:"1",deviceToken:"1",effectType:6209,prompt:p})],
+  ["P13 V5 googleId=1 بدون effectType (ترتیب اعتبارسنجی؟)",V5,
+    {imageUrls:[uploadedUrl],level:1,deviceToken:"1",googleId:"1",audio:false,duration:6,ifTest:1}],
+  ["P14 V5 اعداد بزرگ واقع‌گرایانه + 6209 + example",V5,
+    Object.assign({},z,{googleId:g10,deviceToken:g19,effectType:6209,prompt:p,example:ex1})],
+  ["P15 V5 بدون googleId اما با example (لنگر اجباری‌بودن googleId)",V5,
+    {imageUrls:[uploadedUrl],level:1,deviceToken:"0",effectType:6209,audio:false,duration:6,ifTest:1,example:ex1,prompt:p}],
   // کنترل اثبات‌شده + تشخیص موتور خروجی
-  ["P18 کنترل beat (اثبات‌شده) + تشخیص موتور","/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",
+  ["P16 کنترل beat (اثبات‌شده) + تشخیص موتور","/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",
     {imageUrls:[uploadedUrl],level:1,effectType:6209,prompt:p,quality:2}],
   ];
   return list;
@@ -473,7 +498,7 @@ $("runAll").onclick=async()=>{
     const s=document.createElement("span");s.className="pill";s.dataset.p=i;
     s.textContent=l[0].split(" ")[0];prog.appendChild(s);
   });
-  log("شروع باتری نسخهٔ c: "+list.length+" پروب، فاصلهٔ ایمنی ۱ ثانیه‌ای.","h");
+  log("شروع باتری نسخهٔ d: "+list.length+" پروب، فاصلهٔ ایمنی ۱ ثانیه‌ای.","h");
   for(let i=0;i<list.length;i++){
     if(stopFlag){log("توقف توسط کاربر.","w");break;}
     try{ await runOne(i,list[i][0],list[i][1],list[i][2]); }
@@ -510,7 +535,27 @@ $("manualSend").onclick=async()=>{
     if(tid)await pollTask(tid,"ارسال دستی");
   }
 };
-log("آماده [نسخهٔ باتری: 2026-10-28c — اگر این برچسب را نمی‌بینید فایل کش شده است]. userId="+CFG.userId,"ok");
+/* ---------- کوئری تسک قبلی ---------- */
+$("qBtn").onclick=async()=>{
+  const tid=$("qTaskId").value.trim();
+  if(!tid)return alert("taskId را وارد کنید");
+  head("کوئری taskId: "+tid);
+  for(const qp of ["/algo/v1/faceFusion/aigc/beatImage2Video/queryTask",
+                   "/algo/v1/faceFusion/aigc/image2video/queryTask"]){
+    const env=await postJson(qp,{taskId:tid});
+    if(env.error){ log(qp.split("/").slice(-2).join("/")+" FETCH ERROR: "+env.error,"e"); continue; }
+    log(qp.split("/").slice(-2).join("/")+" → HTTP "+env.http+" RAW: "+env.txt.slice(0,700),
+        env.j&&env.j.c===200?"ok":"w");
+    const d=env.j&&env.j.d?env.j.d:{};
+    if(d.videoUrl){
+      log("✓ videoUrl: "+d.videoUrl,"ok");
+      log("موتور شناسایی‌شده: "+engineFromUrl(d.videoUrl),"w");
+      $("videoOut")&&($("videoOut").src=d.videoUrl,$("videoBox").style.display="block");
+    }
+  }
+};
+
+log("آماده [نسخهٔ باتری: 2026-10-28d — اگر این برچسب را نمی‌بینید فایل کش شده است]. userId="+CFG.userId,"ok");
 </script>
 </body>
 </html>
