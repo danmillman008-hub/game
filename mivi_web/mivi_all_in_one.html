@@ -109,8 +109,11 @@
       <div class="muted" style="margin-top:8px">
         معادل بایت‌کد اپ: <code>quality=1</code> برای 360P و <code>quality=2</code> برای 720P
         (سوئیچ <code>binding.k0</code> در AiToolVideoHugActivity). بدنهٔ درخواست:
-        <code>imageUrls, level=1, effectType=0, prompt, quality</code>.
+        <code>imageUrls, level=1, effectType=6209, prompt, quality</code>.
       </div>
+      <label style="margin-top:10px">کد افکت حالت سفارشی (معمولاً تغییری لازم ندارد)</label>
+      <input type="number" id="customEffect" value="6209" min="1" dir="ltr"
+             style="max-width:220px" title="هاردکد اپ در ToolsResponseKt.transform برای گروه Custom_Ai_Video">
     </div>
 
     <div id="presetBox" style="display:none">
@@ -738,7 +741,9 @@ async function createTask(imageUrl,prompt,level,effectType,quality){
   // مسیر اثبات‌شده با تست زنده (پروب G): beatImage2Video/createNormalTask
   // بدنه از بایت‌کد createGXAiVideoTask$1 (classes6):
   //   imageUrls/level/effectType (+ imageEffectType اگر ناصفر) + prompt اگر خالی نباشد + quality اگر مقدار داشته باشد
-  // حالت Make AI Video اپ دقیقاً همین اندپوینت است با effectType=0 و quality=1|2
+  // حالت Make AI Video اپ همین اندپوینت است با effectType=6209 (هاردکد
+  // ToolsResponseKt.transform برای گروه Custom_Ai_Video؛ سرور effectType=0 را
+  // با c=1013 «effectType illegal» رد می‌کند — تأییدشده با تست زنده ۲۰۲۶-۱۰-۲۸) و quality=1|2
   const body={imageUrls:[imageUrl],level:Number(level)||1,effectType:Number(effectType)};
   if(prompt&&prompt.trim())body.prompt=prompt.trim();
   if(quality!==null&&quality!==undefined)body.quality=Number(quality);
@@ -748,7 +753,12 @@ async function createTask(imageUrl,prompt,level,effectType,quality){
   catch(e){ throw new Error(friendlyError(e,"ساخت تسک",url)); }
   if(!r.ok)throw new Error("ساخت تسک: HTTP "+r.status+" — "+url);
   const j=await r.json();
-  if(j.c!==200)throw new Error("خطای ساخت تسک: c="+j.c+" m="+j.m);
+  if(j.c!==200){
+    let hint="";
+    if(j.c===1013&&String(j.m).includes("effectType"))
+      hint=" — کد effectType غیرمجاز است. در حالت پرامپت اختصاصی باید 6209 باشد (فیلد «کد افکت حالت سفارشی»)؛ در حالت کاتالوگ یک افکت دیگر انتخاب کنید.";
+    throw new Error("خطای ساخت تسک: c="+j.c+" m="+j.m+hint);
+  }
   const taskId=j.d&&j.d.taskId;
   if(!taskId)throw new Error("taskId در پاسخ وجود ندارد: "+JSON.stringify(j).slice(0,300));
   log("تسک ساخته شد: "+taskId,"ok");step(2,"done");
@@ -814,11 +824,13 @@ $("go").addEventListener("click",async()=>{
     const mode=document.querySelector('input[name="genMode"]:checked').value;
     let prompt,level,effectType,quality=null;
     if(mode==="custom"){
-      // حالت Make AI Video: effectType=0، پرامپت کاربر، quality 1=360P / 2=720P
+      // حالت Make AI Video: effectType=6209 (هاردکد اپ برای Custom_Ai_Video)،
+      // پرامپت کاربر، quality 1=360P / 2=720P
       prompt=$("prompt").value;
       if(!prompt||!prompt.trim())throw new Error("در حالت «پرامپت اختصاصی» باید متن حرکت/صحنه را بنویسید");
-      level=1;effectType=0;quality=Number(CFG.quality)||2;
-      log("حالت تولید: Make AI Video (custom_aivideo) — quality="+quality+" ("+(quality===2?"720P":"360P")+")","w");
+      level=1;effectType=Number($("customEffect").value)||6209;quality=Number(CFG.quality)||2;
+      log("حالت تولید: Make AI Video (custom_aivideo) — effectType="+effectType+
+          "، quality="+quality+" ("+(quality===2?"720P":"360P")+")","w");
     }else{
       prompt=$("promptPreset").value;
       level=$("level").value;effectType=$("effect").value;

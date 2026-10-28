@@ -57,9 +57,9 @@
      platform, sign=MD5("m3snil"+ts), ifWise=true` + `Content-Type: application/json`
    - بدنه:
      ```json
-     {"imageUrls":["<url آپلودشده>"], "level":1, "effectType":0,
-      "imageEffectType":<فقط اگر ناصفر>, "prompt":"<متن کاربر>",
-      "quality":2}
+     {"imageUrls":["<url آپلودشده>"], "level":1, "effectType":6209,
+      "imageEffectType":<فقط اگر ناصفر — در حالت سفارشی وجود ندارد>,
+      "prompt":"<متن کاربر>", "quality":2}
      ```
      (`imageEffectType` در حالت سفارشی صفر و حذف می‌شود؛ `prompt` فقط اگر
      خالی نباشد؛ `quality` همیشه 1 یا 2).
@@ -127,8 +127,13 @@
     بدنه: `{"imageUrls":["..."],"level":1,"effectType":4991,"prompt":"..."}`
     (حالت افکت کاتالوگ) — **فیلد `example` ندارد**؛ `effectType` شناسهٔ افکت
     از کاتالوگ زندهٔ سرور است. در حالت Make AI Video همان اندپوینت با
-    `effectType=0` و فیلد اضافهٔ `quality` (1=360P، 2=720P) صدا زده می‌شود
-    (جزئیات کامل در بخش «زنجیره کامل Make AI Video» بالاتر). کوئری همتای آن:
+    `effectType=6209` (کد هاردکدشدهٔ `ToolsResponseKt.transform` برای گروه
+    `Custom_Ai_Video`؛ در فیلد `TemplateExtra.effectsType` قرار می‌گیرد و
+    `observer.g` آن را به `f.M` → فیلد `effectType` بدنه می‌دهد) و فیلد اضافهٔ
+    `quality` (1=360P، 2=720P) صدا زده می‌شود. **تست زنده ۲۰۲۶-۱۰-۲۸ نشان داد
+    سرور `effectType=0` را با `c=1013 "param error: effectType illegal"` رد
+    می‌کند**؛ کد صحیح همان 6209 است (جزئیات کامل در بخش «زنجیره کامل Make AI
+    Video» بالاتر). کوئری همتای آن:
     `POST /algo/v1/faceFusion/aigc/beatImage2Video/queryTask` با
     `{"taskId":"..."}` (متد `g.M`)، هدر `userid` کوچک + `ifWise=true`.
   - تست زندهٔ موفق: آپلود `c=200` → ساخت با `effectType=4991` (Catwalk)
