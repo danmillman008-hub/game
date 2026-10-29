@@ -1,12 +1,18 @@
-"""Super-resolution round trip: create -> query -> download -> dimensions.
-Plus a matrix for image2image/createImageTask, which answered 500 NullPointer
-(so the path is live but our body is missing a field).
+"""Does an upscaled input make a better video?
+
+1. upscale the source image with createSuperResolutionNew (measured: 1152x1536 -> 2304x3072)
+2. make the same clip twice: from the original URL and from the upscaled URL
+3. download both, measure sharpness (Laplacian var), noise (Immerkaer) and bitrate
+4. save one frame of each so the pictures can be compared by eye
 """
-import json, hashlib, time, urllib.request, urllib.error, pathlib, subprocess
+import json, hashlib, time, urllib.request, urllib.error, pathlib, subprocess, os
+import numpy as np
+from PIL import Image
 
 HOST = "https://cpi.ufotosoft.com"
 CP = "instagram.story.art.collage"; USER = "7da75eed37c61d33"
 IMG = "http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"
+SR_URL_FILE = "probe_out/sr_url.txt"
 OUT = []
 def p(*a):
     s = " ".join(str(x) for x in a); print(s, flush=True); OUT.append(s)
@@ -26,50 +32,68 @@ def call(path, body):
         except Exception: return {"_http": e.code}
     except Exception as e: return {"_err": repr(e)[:100]}
 
-def dims(path):
-    r = subprocess.run('ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 "%s"' % path,
-                       shell=True, capture_output=True, text=True)
-    return r.stdout.strip().replace("\n", " ") or r.stderr.strip()[-80:]
-
 def dl(url, dest):
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-    with urllib.request.urlopen(req, timeout=120) as r, open(dest, "wb") as o: o.write(r.read())
+    with urllib.request.urlopen(req, timeout=180) as r, open(dest, "wb") as o: o.write(r.read())
     return dest
 
+def sh(cmd):
+    r = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    return (r.stdout or "").strip() or (r.stderr or "").strip()[-100:]
+
+def metrics(jpg):
+    a = np.asarray(Image.open(jpg).convert("L"), dtype=np.float64)
+    # Laplacian variance = sharpness
+    k = np.array([[0, 1, 0], [1, -4, 1], [0, 1, 0]], dtype=np.float64)
+    from numpy.lib.stride_tricks import sliding_window_view as sw
+    lap = (sw(a, (3, 3)) * k).sum(axis=(2, 3))
+    sharp = lap.var()
+    # Immerkaer noise sigma
+    m = np.array([[1, -2, 1], [-2, 4, -2], [1, -2, 1]], dtype=np.float64)
+    conv = (sw(a, (3, 3)) * m).sum(axis=(2, 3))
+    sigma = np.sqrt(np.pi / 2) / 6 * np.abs(conv).mean()
+    return sharp, sigma
+
 pathlib.Path("probe_out").mkdir(exist_ok=True)
-orig = dl(IMG, "probe_out/sr_src.jpg")
-p("[src]", pathlib.Path(orig).stat().st_size, "bytes", dims(orig))
 
-# ---- super resolution
-r = call("/algo/v1/faceFusion/aigc/createSuperResolutionNew", {"imageUrls": [IMG], "level": 2})
-p("[superres create]", json.dumps(r, ensure_ascii=False)[:300])
+# ---- 1) upscale the source (level 3 = "imagesharpen-3")
+r = call("/algo/v1/faceFusion/aigc/createSuperResolutionNew", {"imageUrls": [IMG], "level": 3})
 job = (r.get("d") or {}).get("jobId")
-if job:
-    out = ""
-    for i in range(20):
-        time.sleep(5)
-        q = call("/algo/v1/faceFusion/aigc/querySuperResolutionNew", {"jobId": job})
-        d = q.get("d") or {}
-        p("   poll", i, "c=", q.get("c"), json.dumps(d, ensure_ascii=False)[:180])
-        urls = d.get("imageUrls") or d.get("resultUrls") or []
-        if urls:
-            out = urls[0]; break
-        if str(d.get("jobStatus", "")) in ("3", "4", "fail", "failed"): break
-    if out:
-        f = dl(out, "probe_out/sr_out.jpg")
-        p("[superres out]", out[:110], pathlib.Path(f).stat().st_size, "bytes", dims(f))
+sr = ""
+for i in range(20):
+    time.sleep(5)
+    q = call("/algo/v1/faceFusion/aigc/querySuperResolutionNew", {"jobId": job})
+    urls = (q.get("d") or {}).get("imageUrls") or []
+    if urls: sr = urls[0]; break
+p("[superres]", sr[:110] if sr else "no url", "job", str(job)[:40])
+pathlib.Path(SR_URL_FILE).write_text(sr or IMG)
 
-# ---- image2image matrix
-II = "/algo/v1/faceFusion/aigc/image2image/createImageTask"
-cands = [
-    ("a", {"imageUrls": [IMG], "prompt": "golden hour", "level": 1, "deviceToken": "", "ifTest": False, "imageRatio": "3:4"}),
-    ("b", {"imageUrl": IMG, "prompt": "golden hour", "level": 1, "deviceToken": "", "ifTest": False}),
-    ("c", {"imageUrls": [IMG], "prompt": "golden hour", "token": "", "level": 1, "deviceToken": "", "ifTest": False}),
-    ("d", {"imageKeys": [IMG], "prompt": "golden hour", "level": 1, "deviceToken": "", "ifTest": False}),
-    ("e", {"imageUrls": [IMG], "prompt": "golden hour"}),
-]
-for tag, body in cands:
-    r = call(II, body)
-    p(f"[img2img {tag}] c={r.get('c') or r.get('_http')} {str(r.get('m'))[:70]} d={json.dumps(r.get('d'), ensure_ascii=False)[:120]}")
+# ---- 2) two clips, same prompt and settings
+PROMPT = "the person breathes calmly, soft window light from the left, static camera"
+made = []
+for tag, src in (("orig", IMG), ("srup", sr or IMG)):
+    b = {"imageUrls": [src], "level": 1, "effectType": 6209, "prompt": PROMPT, "quality": 2}
+    r = call("/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask", b)
+    tid = (r.get("d") or {}).get("taskId", "") if isinstance(r.get("d"), dict) else ""
+    p(f"[make {tag}] c={r.get('c')} tid={tid[:34]}")
+    if tid: made.append((tag, tid))
+
+# ---- 3) poll, download, measure
+for tag, tid in made:
+    url = ""
+    for i in range(40):
+        time.sleep(6)
+        q = call("/algo/v1/faceFusion/aigc/beatImage2Video/queryTask", {"taskId": tid})
+        u = (q.get("d") or {}).get("videoUrl")
+        if u: url = u; break
+    if not url:
+        p(f"[{tag}] TIMEOUT"); continue
+    f = dl(url, f"probe_out/{tag}.mp4")
+    meta = sh('ffprobe -v error -select_streams v:0 -show_entries stream=width,height,bit_rate '
+              '-show_entries format=size,duration -of csv=p=0 "%s"' % f).replace("\n", " ")
+    sh('ffmpeg -y -v error -ss 1.5 -i "%s" -frames:v 1 -q:v 2 "probe_out/%s.jpg"' % (f, tag))
+    sharp, sigma = metrics(f"probe_out/{tag}.jpg")
+    p(f"[{tag}] {meta}  sharp={sharp:.1f} noise={sigma:.2f}  frame={tag}.jpg")
+    os.remove(f)
 
 pathlib.Path("probe_out/out.txt").write_text("\n".join(OUT), encoding="utf-8")
