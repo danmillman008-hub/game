@@ -47,6 +47,11 @@
   .modeOpt{display:flex;gap:10px;align-items:flex-start;background:var(--card2);border:1px solid var(--line);
     border-radius:12px;padding:10px 12px;cursor:pointer}
   .modeOpt input{margin-top:3px}
+  .ratioOpt{display:inline-flex;align-items:center;gap:6px;background:var(--card2);border:1px solid var(--line);
+    border-radius:9px;padding:8px 14px;cursor:pointer;font-weight:600;font-size:13.5px}
+  .ratioOpt:has(input:checked){border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset;color:var(--accent)}
+  .ratioOpt input{margin:0}
+  #qBox{border-radius:10px;padding:10px 12px;margin-top:12px;font-size:13px;line-height:1.9;border:1px solid var(--line);background:var(--card2)}
   .modeOpt:has(input:checked){border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
   .seg{display:flex;gap:8px;margin-top:6px}
   .segBtn{flex:1;background:var(--card2);border:1px solid var(--line);color:var(--fg);border-radius:10px;
@@ -115,6 +120,19 @@
       <input type="number" id="customEffect" value="6209" min="1" dir="ltr"
              style="max-width:220px" title="هاردکد اپ در ToolsResponseKt.transform برای گروه Custom_Ai_Video">
 
+      <label style="margin-top:14px">نسبت تصویر (همان انتخابگر اپ)</label>
+      <div class="row" style="margin-top:6px" id="ratioRow">
+        <label class="ratioOpt"><input type="radio" name="ratioSel" value="9:16" checked> 9:16</label>
+        <label class="ratioOpt"><input type="radio" name="ratioSel" value="3:4"> 3:4</label>
+        <label class="ratioOpt"><input type="radio" name="ratioSel" value="1:1"> 1:1</label>
+        <label class="ratioOpt"><input type="radio" name="ratioSel" value="4:3"> 4:3</label>
+      </div>
+      <div class="muted" style="margin-top:6px">
+        اپ برای هر نسبت یک خروجی با ضلع کوچک ۹۶۰ می‌دهد: 9:16 ⟶ ۵۴۰×۹۶۰ (یا ۷۲۰×۱۲۸۰)،
+        3:4 ⟶ ۹۶۰×۱۲۸۰، 1:1 ⟶ ۹۶۰×۹۶۰، 4:3 ⟶ ۱۲۸۰×۹۶۰.
+        اگر این فیلد فرستاده نشود سرور نسبت عکس ورودی را می‌گیرد (همان اشتباهی که ما داشتیم).
+      </div>
+
       <label style="margin-top:14px">مدت کلیپ نهایی</label>
       <select id="clipLen" style="max-width:340px">
         <option value="4" selected>۴ ثانیه — تک‌قطعه (خروجی مستقیم سرور)</option>
@@ -170,6 +188,7 @@
       <a class="dl" id="dlBtn"><button>⬇️ دانلود ویدیو</button></a>
       <a class="dl" id="openBtn" target="_blank"><button class="ghost">باز کردن لینک مستقیم</button></a>
     </div>
+    <div id="qBox" style="display:none"></div>
     <div id="chainBox" style="display:none;margin-top:16px">
       <label>قطعات کلیپ زنجیره‌ای</label>
       <div id="segsOut"></div>
@@ -183,7 +202,7 @@
 
   <div class="card">
     <details>
-      <summary>🧪 آزمایشگاه موتور Google Veo / Gemini (مسیر V5) — تحلیل مهندسی معکوس <span style="font-size:10px;background:#1f6feb22;border:1px solid #1f6feb55;color:#58a6ff;border-radius:6px;padding:1px 7px">نسخهٔ V5-Lab: 2026-10-28m</span></summary>
+      <summary>🧪 آزمایشگاه موتور Google Veo / Gemini (مسیر V5) — تحلیل مهندسی معکوس <span style="font-size:10px;background:#1f6feb22;border:1px solid #1f6feb55;color:#58a6ff;border-radius:6px;padding:1px 7px">نسخهٔ V5-Lab: 2026-10-28q</span></summary>
       <div class="muted" style="line-height:1.9;margin:10px 0">
         <b>یافتهٔ قطعی از بایت‌کد نسخهٔ 2.37.407 (هر ۸ دکس + کتابخانه‌های .so):</b><br>
         • اپ فقط سه موتور را روی درخواست‌ها ست می‌کند: <code>GX_AiVideoP2V</code> (همان مسیر beat/Wan-LoRA که دکمهٔ اصلی بالا استفاده می‌کند)،
@@ -811,9 +830,10 @@ async function uploadImage(file){
   return j.d[0];
 }
 
-async function createTask(imageUrl,prompt,level,effectType,quality){
+async function createTask(imageUrl,prompt,level,effectType,quality,ratio){
   log("مرحله ۲: ساخت تسک تولید ویدیو (مسیر beatImage2Video، افکت "+effectType+
-      (quality?("، کیفیت "+(Number(quality)===2?"720P":"360P")):"")+")...");step(2,"on");
+      (quality?("، کیفیت "+(Number(quality)===2?"720P":"360P")):"")+
+      (ratio?("، نسبت "+ratio):"")+")...");step(2,"on");
   // مسیر اثبات‌شده با تست زنده (پروب G): beatImage2Video/createNormalTask
   // بدنه از بایت‌کد createGXAiVideoTask$1 (classes6):
   //   imageUrls/level/effectType (+ imageEffectType اگر ناصفر) + prompt اگر خالی نباشد + quality اگر مقدار داشته باشد
@@ -823,6 +843,10 @@ async function createTask(imageUrl,prompt,level,effectType,quality){
   const body={imageUrls:[imageUrl],level:Number(level)||1,effectType:Number(effectType)};
   if(prompt&&prompt.trim())body.prompt=prompt.trim();
   if(quality!==null&&quality!==undefined)body.quality=Number(quality);
+  // نسبت تصویر: همان انتخابگر صفحهٔ «Image to Video» اپ (9:16 / 3:4 / 1:1 / 4:3).
+  // در تحلیل ۸ نمونهٔ اپ، هندسه‌ها ۹۶۰×۱۲۸۰ (۳:۴)، ۱۲۸۰×۹۶۰ (۴:۳) و ۹۶۰×۹۶۰ (۱:۱)
+  // بودند؛ ضلع کوچک همیشه ۹۶۰ ⇒ نسبت را کلاینت تعیین می‌کند و باید فرستاده شود.
+  if(ratio)body.ratio=String(ratio);
   const url=apiUrl("/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask");
   let r;
   try{ r=await fetch(url,{method:"POST",headers:algoHeaders(false,true),body:JSON.stringify(body)}); }
@@ -975,6 +999,99 @@ $("netTest").addEventListener("click",connectivityTest);
    راه‌حل: آخرین فریم هر قطعه را با canvas برمی‌داریم، آپلود می‌کنیم و به‌عنوان
    تصویر شروع قطعهٔ بعد می‌دهیم؛ همهٔ قطعات از همان مسیر beat/Wan-LoRA و همان
    quality=2 می‌آیند، پس کیفیت و ظاهر یکنواخت می‌ماند. */
+/* ---------- بازرسی کیفیت خروجی: همان عدد bpp که تفاوت را ثابت کرد ----------
+   مبنای اپ از تحلیل ۸ نمونهٔ واقعی: bpp بین ۰.۰۴۶ و ۰.۰۹۹ با CRF 19 و ۳۲fps.
+   bpp بالا (>۰.۱۵) یعنی فریم پُرنویز/بزرگ‌شده. */
+function quickMp4(buf){
+  const dv=new DataView(buf), out={w:0,h:0,dur:0,frames:0,fps:0,size:buf.byteLength,crf:null};
+  const fcc=o=>String.fromCharCode(dv.getUint8(o),dv.getUint8(o+1),dv.getUint8(o+2),dv.getUint8(o+3));
+  const walk=(s,e)=>{
+    let p=s;
+    while(p+8<=e){
+      let size=dv.getUint32(p),type=fcc(p+4),hdr=8;
+      if(size===1){size=Number(dv.getBigUint64(p+8));hdr=16;}
+      if(size===0)size=e-p;
+      if(size<8)break;
+      const c=p+hdr;
+      if(type==="mdhd"){
+        const ver=dv.getUint8(c);
+        const ts=ver===1?dv.getUint32(c+20):dv.getUint32(c+12);
+        const du=ver===1?Number(dv.getBigUint64(c+24)):dv.getUint32(c+16);
+        if(ts&&!out.dur)out.dur=du/ts;
+      }
+      if(type==="stts"){
+        const n=dv.getUint32(c+4);let tot=0,d0=0;
+        for(let i=0;i<n;i++){const cnt=dv.getUint32(c+8+8*i);if(i===0)d0=dv.getUint32(c+12+8*i);tot+=cnt;}
+        out.frames=tot;
+        if(d0&&out.dur)out.fps=tot/out.dur;
+      }
+      if(["moov","trak","mdia","minf","stbl"].includes(type))walk(c,p+size);
+      p+=size;
+    }
+  };
+  walk(0,buf.byteLength);
+  const bytes=new Uint8Array(buf);
+  for(let i=4;i+4<=bytes.length;i++){
+    const t=String.fromCharCode(bytes[i],bytes[i+1],bytes[i+2],bytes[i+3]);
+    if(!out.w&&(t==="avc1"||t==="hvc1"||t==="hev1"||t==="avc3")){
+      const w=(bytes[i+28]<<8)|bytes[i+29], h=(bytes[i+30]<<8)|bytes[i+31];
+      if(w>0&&h>0&&w<10000&&h<10000){out.w=w;out.h=h;}
+    }
+  }
+  let s="";
+  for(let i=0;i+4<=bytes.length;i++){
+    if(bytes[i]===0x78&&bytes[i+1]===0x32&&bytes[i+2]===0x36&&bytes[i+3]===0x34){
+      let k=i,lim=Math.min(i+900,bytes.length);
+      while(k<lim&&bytes[k]>=32&&bytes[k]<127)s+=String.fromCharCode(bytes[k++]);
+      break;
+    }
+  }
+  const m=s.match(/crf=([0-9.]+)/); if(m)out.crf=Number(m[1]);
+  return out;
+}
+function bppOf(o){
+  if(!o.w||!o.h||!o.fps||!o.dur)return null;
+  return (o.size*8)/(o.dur*o.w*o.h*o.fps);
+}
+async function qualityCheck(videoUrl){
+  try{
+    const r=await fetch(viaProxy(videoUrl));
+    if(!r.ok)throw new Error("HTTP "+r.status);
+    const o=quickMp4(await r.arrayBuffer());
+    const bpp=bppOf(o);
+    const box=$("qBox");
+    if(bpp===null){ box.style.display="none"; return; }
+    const appMin=0.0463, appMax=0.0994;
+    let verdict,color;
+    if(bpp<=appMax*1.5){verdict="✅ در محدودهٔ کیفیت اپ است";color="#3fb950";}
+    else if(bpp<=0.25){verdict="⚠️ بالاتر از اپ اما نه بحرانی";color="#d29922";}
+    else {verdict="❌ بسیار نویزی‌تر از اپ (چند برابر آنتروپی)";color="#f85149";}
+    const mbps=(o.size*8/o.dur/1e6);
+    box.style.display="block";
+    box.innerHTML='<b style="color:'+color+'">بازرسی کیفیت خروجی — '+verdict+'</b>'+
+      '<div style="margin-top:6px;color:#8b949e">'+
+      'رزولوشن <b style="color:#e6edf3">'+o.w+'×'+o.h+'</b> · '+
+      'مدت <b style="color:#e6edf3">'+o.dur.toFixed(2)+'s</b> · '+
+      'فریم <b style="color:#e6edf3">'+o.frames+'</b> · '+
+      'fps <b style="color:#e6edf3">'+o.fps.toFixed(1)+'</b> · '+
+      'حجم <b style="color:#e6edf3">'+(o.size/1048576).toFixed(2)+' MB</b> · '+
+      'بیت‌ریت <b style="color:#e6edf3">'+mbps.toFixed(2)+' Mbps</b> · '+
+      'CRF <b style="color:#e6edf3">'+(o.crf===null?"؟":o.crf)+'</b></div>'+
+      '<div style="margin-top:6px">bpp = <b style="color:'+color+'">'+bpp.toFixed(4)+
+      '</b> &nbsp;|&nbsp; محدودهٔ اپ: '+appMin+' تا '+appMax+
+      '</div>'+
+      '<div style="margin-top:6px;color:#8b949e;font-size:12px">'+
+      'با CRF و انکودر یکسان، bpp بالاتر یعنی فریم پُرنویزتر. اگر این عدد نزدیک اپ شد،'+
+      ' یعنی به کیفیت هدف رسیده‌اید.</div>';
+    log("بازرسی کیفیت: "+o.w+"×"+o.h+" | "+o.frames+" فریم | bpp="+bpp.toFixed(4)+" ("+verdict+")",
+        bpp<=appMax*1.5?"ok":"w");
+    return {o,bpp};
+  }catch(e){
+    log("بازرسی کیفیت ممکن نشد: "+e.message,"w");
+    return null;
+  }
+}
+
 async function uploadBlobAs(blob,name){
   const fd=new FormData();fd.append("files",blob,name);
   const url=apiUrl("/algo/v1/aiGenerate-aigc/multipleUpload");
@@ -1084,6 +1201,7 @@ $("go").addEventListener("click",async()=>{
     if(!pickedFile)throw new Error("اول یک تصویر انتخاب کنید");
     const mode=document.querySelector('input[name="genMode"]:checked').value;
     let prompt,level,effectType,quality=null;
+    let ratio=(document.querySelector('input[name="ratioSel"]:checked')||{}).value||"";
     if(mode==="custom"){
       // حالت Make AI Video: effectType=6209 (هاردکد اپ برای Custom_Ai_Video)،
       // پرامپت کاربر، quality 1=360P / 2=720P
@@ -1106,7 +1224,7 @@ $("go").addEventListener("click",async()=>{
     const segs=[];
 
     let url=await uploadImage(pickedFile);
-    let taskId=await createTask(url,prompt,level,effectType,quality);
+    let taskId=await createTask(url,prompt,level,effectType,quality,ratio);
     let res=await waitForVideo(taskId);
     let videoUrl=res.videoUrl,last=res.last;
     segs.push(videoUrl);
@@ -1126,7 +1244,7 @@ $("go").addEventListener("click",async()=>{
         }
         try{
           // پرامپت اختصاصی برای نماهای ادامه‌دار حفظ می‌شود
-          taskId=await createTask(url,prompt,level,effectType,quality);
+          taskId=await createTask(url,prompt,level,effectType,quality,ratio);
           res=await waitForVideo(taskId);
           videoUrl=res.videoUrl;last=res.last;
           segs.push(videoUrl);
@@ -1157,6 +1275,7 @@ $("go").addEventListener("click",async()=>{
       $("dlBtn").href=videoUrl;
     }
     $("dlBtn").setAttribute("download","mivi_"+taskId+".mp4");
+    await qualityCheck(videoUrl);
   }catch(err){
     log("خطا: "+err.message,"e");
     [1,2,3,4].forEach(n=>{if($("s"+n).className.includes("on"))step(n,"fail");});
@@ -1308,7 +1427,7 @@ document.querySelectorAll(".segBtn").forEach(b=>b.addEventListener("click",()=>{
 applyGenMode();
 
 fillSettings();
-log("آماده [نسخهٔ فایل: 2026-10-28m — اگر این برچسب را نمی‌بینید فایل کش شده است]. userId="+CFG.userId+" signKey="+CFG.signKey);
+log("آماده [نسخهٔ فایل: 2026-10-28q — اگر این برچسب را نمی‌بینید فایل کش شده است]. userId="+CFG.userId+" signKey="+CFG.signKey);
 log("کاتالوگ افکت‌ها: "+Object.values(EFFECT_CATALOG).reduce((a,b)=>a+b.length,0)+" قالب آماده از سرور.");
 </script>
 </body>

@@ -43,7 +43,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28p</span></h1>
+  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28r</span></h1>
   <div class="muted" style="margin-bottom:14px">
     هدف: کشف شرط بازشدن اندپوینت
     <code>/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5</code>.
@@ -273,6 +273,24 @@
       <div style="max-width:260px"><label>&nbsp;</label><button class="ghost" id="qlDurBtn" type="button">⑪ فقط تست مدت ۶ ثانیه</button></div>
     </div>
     <div id="qlOut" style="margin-top:14px"></div>
+  </div>
+
+  <div class="card">
+    <h2>📐 آزمایشگاه r: نسبت تصویر (فیلد گمشدهٔ اپ) + سنجش bpp</h2>
+    <div class="muted" style="margin-bottom:10px">
+      از اسکرین‌شات‌های اپ: صفحهٔ «Image to Video» چهار دکمهٔ نسبت دارد
+      (<code>9:16</code> · <code>3:4</code> · <code>1:1</code> · <code>4:3</code>) و یک سوئیچ
+      «Pro Mode (720P)». در هر ۸ نمونهٔ اپ ضلع کوچک <b>۹۶۰</b> بود
+      (۹۶۰×۱۲۸۰ برای ۳:۴، ۱۲۸۰×۹۶۰ برای ۴:۳، ۹۶۰×۹۶۰ برای ۱:۱) ⇒ نسبت را کلاینت
+      تعیین می‌کند. ما تا حالا این فیلد را <b>نمی‌فرستادیم</b> و سرور نسبت عکس ورودی
+      را می‌گرفت. این باتری سه چیز را می‌سنجد: نام درست فیلد، هندسهٔ خروجی، و
+      <b>bpp</b> (مبنای اپ: ۰.۰۴۶ تا ۰.۰۹۹).
+    </div>
+    <div class="row">
+      <div style="max-width:330px"><label>&nbsp;</label><button id="ratioSweepBtn" type="button">⑬ سوییپ نسبت تصویر (۶ مورد)</button></div>
+      <div style="max-width:330px"><label>&nbsp;</label><button class="ghost" id="ratioFieldBtn" type="button">⑭ کشف نام فیلد (ratio/outputRatio/aspectRatio)</button></div>
+    </div>
+    <div id="ratioOut" style="margin-top:14px"></div>
   </div>
 
   <div class="card">
@@ -524,7 +542,7 @@ function loadCfg(){
   return c;
 }
 let CFG=loadCfg();
-const VER="2026-10-28p";
+const VER="2026-10-28r";
 const $=id=>document.getElementById(id);
 $("host").value=CFG.host;$("connMode").value=CFG.connMode;
 $("customProxy").value=CFG.customProxy;$("userId").value=CFG.userId;
@@ -1431,6 +1449,93 @@ $("qlDurBtn").onclick=async()=>{
   await qlRun("مدت ۶ با duration+seconds+videoDuration",{duration:6,seconds:6,videoDuration:6});
 };
 
+/* ---------- آزمایشگاه r: نسبت تصویر و سنجش bpp ---------- */
+const APP_BPP_MIN=0.0463, APP_BPP_MAX=0.0994;
+function bppFromSig(sig){
+  if(!sig.w||!sig.h||!sig.fps||!sig.durationSec)return null;
+  return (sig.size*8)/(sig.durationSec*sig.w*sig.h*sig.fps);
+}
+function ratioRow(label,extra,sig,bpp,url){
+  const tb=$("ratioOut");
+  let tbl=tb.querySelector("table");
+  if(!tbl){
+    tbl=document.createElement("table");
+    tbl.style.cssText="width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px";
+    tbl.innerHTML='<tr style="color:#8b949e">'+
+      ["مورد","فیلدهای اضافه","هندسه","مدت","Mbps","bpp (اپ: 0.046–0.099)"]
+      .map(h=>'<th style="padding:6px;border-bottom:1px solid #30363d">'+h+"</th>").join("")+"</tr>";
+    tb.prepend(tbl);
+  }
+  let bppCell="—", color="#8b949e";
+  if(bpp!==null){
+    bppCell=bpp.toFixed(4);
+    color=bpp<=APP_BPP_MAX*1.5?"#3fb950":(bpp<=0.25?"#d29922":"#f85149");
+  }
+  const cells=[
+    {v:label,ltr:true},
+    {v:extra||"—",ltr:true},
+    {v:sig?(sig.w+"×"+sig.h):"—"},
+    {v:sig?sig.durationSec.toFixed(2)+"s":"—"},
+    {v:sig?sig.bitrateMbps.toFixed(2):"—"},
+    {v:bppCell,bold:true,color},
+  ];
+  const tr=document.createElement("tr");
+  tr.innerHTML=cells.map(c=>'<td style="padding:6px;border-bottom:1px solid #21262d'+
+    (c.ltr?";direction:ltr":"")+(c.bold?";font-weight:bold":"")+
+    (c.color?";color:"+c.color:"")+'">'+c.v+"</td>").join("");
+  if(url)tr.title=url;
+  tbl.appendChild(tr);
+}
+async function ratioRun(label,over){
+  if(!uploadedUrl){ log("اول تصویر را آپلود کنید","e"); return null; }
+  const body=Object.assign({imageUrls:[uploadedUrl],level:1,effectType:6209,
+    prompt:$("prompt").value.trim(),quality:2},over||{});
+  const shown=JSON.stringify(Object.assign({},body,{imageUrls:["…"]}));
+  head("نسبت — "+label);
+  log("BODY "+shown,"i");
+  const env=await postJson("/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",body);
+  if(!(env.j&&env.j.c===200)){
+    log("ساخت تسک رد شد: "+env.txt.slice(0,220),"e");
+    ratioRow(label,shown.replace(/^\{|\}$/g,""),null,null,null);
+    return null;
+  }
+  const tid=env.j.d.taskId;
+  log("taskId="+tid,"w");
+  let vu;
+  try{ vu=await pollBeat(tid,8*60*1000); }
+  catch(e){ log("polling ناموفق: "+e.message,"e"); return null; }
+  log("خروجی: "+vu,"ok");
+  let sig=null,bpp=null;
+  try{
+    const r=await fetch(viaProxy(vu));
+    sig=deepSignature(await r.arrayBuffer());
+    bpp=bppFromSig(sig);
+    log("هندسه "+sig.w+"×"+sig.h+" | "+sig.durationSec.toFixed(2)+"s | "+
+        sig.fps.toFixed(1)+"fps | "+sig.bitrateMbps.toFixed(2)+"Mbps | bpp "+
+        (bpp===null?"؟":bpp.toFixed(4)),"ok");
+    forensicCard("نسبت — "+label,vu,{size:sig.size,ftyp:sig.ftyp,brands:sig.brands,
+      codec:"avc1",width:sig.w,height:sig.h,durationSec:sig.durationSec,
+      handlers:[sig.handler],tokens:[]});
+  }catch(e){ log("فارنزیک ناموفق: "+e.message,"e"); }
+  ratioRow(label,Object.keys(over||{}).map(k=>k+"="+over[k]).join(", ")||"بدون فیلد نسبت",sig,bpp,vu);
+  return {vu,sig,bpp};
+}
+$("ratioSweepBtn").onclick=async()=>{
+  await ratioRun("کنترل: بدون نسبت",{});
+  await ratioRun("ratio=9:16",{ratio:"9:16"});
+  await ratioRun("ratio=3:4",{ratio:"3:4"});
+  await ratioRun("ratio=1:1",{ratio:"1:1"});
+  await ratioRun("ratio=4:3",{ratio:"4:3"});
+  head("پایان سوییپ نسبت — مقایسه با اپ: ۳:۴⟶۹۶۰×۱۲۸۰، ۴:۳⟶۱۲۸۰×۹۶۰، ۱:۱⟶۹۶۰×۹۶۰، ۹:۱۶⟶۵۴۰×۹۶۰");
+};
+$("ratioFieldBtn").onclick=async()=>{
+  head("کشف نام فیلد نسبت (هر سه نام با مقدار 9:16)");
+  await ratioRun("outputRatio=9:16",{outputRatio:"9:16"});
+  await ratioRun("aspectRatio=9:16",{aspectRatio:"9:16"});
+  await ratioRun("ratioRatio=9:16",{ratioRatio:"9:16"});
+  head("اگر فقط یکی هندسه را عوض کرد، همان نام درست است");
+};
+
 /* ---------- مقایسهٔ دو ویدیو با bpp ---------- */
 async function bufFrom(urlInputId,fileInputId){
   const f=$(fileInputId).files&&$(fileInputId).files[0];
@@ -1912,7 +2017,8 @@ $("extRecBtn").onclick=async()=>{
 let BUSY=false;
 ["qBtn","cmpBtn","hdBatteryBtn","hdBillingBtn","hdUpBtn","hdViduBtn","catKeyBtn",
  "catSweepBtn","beatDurBtn","beatQBtn","beatUpBtn2","appCmpBtn","fKnownBtn",
- "qlSweepBtn","qlDurBtn","extBtn","extRecBtn","sigBtn","sigAllBtn","labDumpBtn","labTryBtn","cmpRunBtn"].forEach(id=>{
+ "qlSweepBtn","qlDurBtn","extBtn","extRecBtn","sigBtn","sigAllBtn","labDumpBtn","labTryBtn","cmpRunBtn",
+ "ratioSweepBtn","ratioFieldBtn"].forEach(id=>{
   const el=$(id); if(!el||typeof el.onclick!=="function")return;
   const orig=el.onclick;
   el.onclick=async ev=>{
