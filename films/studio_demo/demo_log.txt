@@ -6,21 +6,21 @@ $ filmkit still /home/runner/work/game/game/films/studio_demo --shot 1 --from ur
 shot 1: still -> /home/runner/work/game/game/films/studio_demo/stills/s01.jpg
 
 $ filmkit shot /home/runner/work/game/game/films/studio_demo --shot 1 --quality 1 --takes 1  [0]
-shot 1 take 1: task 60014-1793300834-900072b0-1e27-4ddb-96eb-34cf824865f0
-  take 1 ok 448x576 4.062s 950747B
+shot 1 take 1: task 60014-1793301174-85bfa5fc-df63-4ed2-8032-53f523482c50
+  take 1 ok 448x576 4.062s 940474B
 shot 1: clip -> /home/runner/work/game/game/films/studio_demo/clips/s01_t1.mp4
 
 $ filmkit chain /home/runner/work/game/game/films/studio_demo --from 1 --to 2  [0]
 chained shot 1 -> shot 2 (s02.jpg)
 
 $ filmkit shot /home/runner/work/game/game/films/studio_demo --shot 2 --quality 1 --takes 1  [0]
-shot 2 take 1: task 60014-1793300888-06ba3d74-8f7b-45d4-b333-7a60850218e1
-  take 1 ok 448x576 4.062s 660188B
+shot 2 take 1: task 60014-1793301229-c4a6092e-4f73-4015-b5bd-ecaa64e1f0ba
+  take 1 ok 448x576 4.062s 610103B
 shot 2: clip -> /home/runner/work/game/game/films/studio_demo/clips/s02_t1.mp4
 
 $ filmkit assemble /home/runner/work/game/game/films/studio_demo --crossfade 0.4  [0]
 assembled 2 clips -> /home/runner/work/game/game/films/studio_demo/out/final.mp4
-{"path": "/home/runner/work/game/game/films/studio_demo/out/final.mp4", "width": 448, "height": 576, "fps": 16.0, "has_audio": false, "duration_s": 7.75, "bytes": 1528578}
+{"path": "/home/runner/work/game/game/films/studio_demo/out/final.mp4", "width": 448, "height": 576, "fps": 16.0, "has_audio": false, "duration_s": 7.75, "bytes": 1474456}
 
 $ filmkit qc /home/runner/work/game/game/films/studio_demo  [0]
 {
@@ -34,7 +34,7 @@ $ filmkit qc /home/runner/work/game/game/films/studio_demo  [0]
       "fps": 16.0,
       "has_audio": false,
       "duration_s": 4.062,
-      "bytes": 950747
+      "bytes": 940474
     },
     {
       "n": 2,
@@ -44,7 +44,7 @@ $ filmkit qc /home/runner/work/game/game/films/studio_demo  [0]
       "fps": 16.0,
       "has_audio": false,
       "duration_s": 4.062,
-      "bytes": 660188
+      "bytes": 610103
     }
   ],
   "issues": [],
@@ -55,7 +55,7 @@ $ filmkit qc /home/runner/work/game/game/films/studio_demo  [0]
     "fps": 16.0,
     "has_audio": false,
     "duration_s": 7.75,
-    "bytes": 1528578
+    "bytes": 1474456
   },
   "frames": [
     "qc/frames/t00.39.jpg",
@@ -65,10 +65,10 @@ $ filmkit qc /home/runner/work/game/game/films/studio_demo  [0]
     "qc/frames/t07.36.jpg"
   ],
   "frame_delta": [
-    18.7,
-    10.4,
-    25.4,
-    21.4
+    18.8,
+    10.1,
+    21.0,
+    12.8
   ]
 }
 
