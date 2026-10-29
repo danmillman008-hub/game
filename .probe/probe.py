@@ -1,11 +1,16 @@
-"""Follow-up on the HD result: is c=2002 a billing problem of THIS user or a
-general "credits needed" wall?  Also retry HD at level 2, and read whatever the
-billing endpoints will tell us.  Read-only except the HD attempts.
+"""Second route with an `enhance` flag + the image-side endpoints.
+
+Bytecode bodies so far:
+  createAiPhotoTaskV2 : imageUrls, level, deviceToken, effectType, poseSequenceId,
+                        duration, prompt, enhance, ifTest      -> image2VideoCreateV2
+  createAiPhotoTaskV3 : imageUrls, level, deviceToken, pixVerseId, duration, prompt, enhance, ifTest
+Read-only attempts below are cheap; only the V2 creates can cost credits.
 """
 import json, hashlib, time, urllib.request, urllib.error, pathlib
 
 HOST = "https://cpi.ufotosoft.com"
 CP = "instagram.story.art.collage"; USER = "7da75eed37c61d33"
+IMG = "http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"
 OUT = []
 def p(*a):
     s = " ".join(str(x) for x in a); print(s, flush=True); OUT.append(s)
@@ -16,39 +21,48 @@ def hdr():
             "ifWise": "true", "Content-Type": "application/json",
             "sign": hashlib.md5(("m3snil" + t).encode()).hexdigest()}
 
-def call(path, body, method="POST"):
-    data = json.dumps(body).encode() if body is not None else None
-    req = urllib.request.Request(HOST + path, data=data, headers=hdr(), method=method if data else "GET")
+def call(path, body):
+    req = urllib.request.Request(HOST + path, data=json.dumps(body).encode(), headers=hdr(), method="POST")
     try:
-        with urllib.request.urlopen(req, timeout=40) as r: return json.loads(r.read().decode())
+        with urllib.request.urlopen(req, timeout=45) as r: return json.loads(r.read().decode())
     except urllib.error.HTTPError as e:
         try: return {"_http": e.code, **json.loads(e.read().decode())}
         except Exception: return {"_http": e.code}
     except Exception as e: return {"_err": repr(e)[:100]}
 
-def brief(r):
-    if not isinstance(r, dict): return str(r)[:90]
+def show(tag, path, body):
+    r = call(path, body)
     d = r.get("d")
-    return f"c={r.get('c') or r.get('_http')} m={str(r.get('m'))[:60]} d={json.dumps(d, ensure_ascii=False)[:200] if d is not None else None}"
+    extra = ""
+    if isinstance(d, dict): extra = " keys=" + ",".join(list(d)[:8])
+    elif isinstance(d, list): extra = f" list[{len(d)}]"
+    p(f"[{tag}] c={r.get('c') or r.get('_http')} {str(r.get('m'))[:80]}{extra}")
+    return r
 
-# the clip the previous run made and hashed
-URL = "https://algo-v1.wiseoel.com/temp/60004/261029/img2video_wanlora-20261029233329-861114-d30e4-dwt.mp4"
-META = {"videoUrl": URL, "fileMd5": "0e5201cbb795", "fileSize": 861114, "width": 432, "height": 576}
-FULL_MD5 = None  # unknown here; the endpoint accepted the short one before, so keep it
+# ---------- 1) image -> video, second route, with `enhance`
+V2 = "/algo/v1/faceFusion/aigc/image2VideoCreateV2"
+for tag, et, enh in [("v2_6209_enh", 6209, True), ("v2_6209_noenh", 6209, False),
+                     ("v2_0_enh", 0, True)]:
+    show(tag, V2, {"imageUrls": [IMG], "level": 1, "deviceToken": "", "effectType": et,
+                   "poseSequenceId": "", "duration": 4, "prompt": "آرام نفس می‌کشد", "enhance": enh,
+                   "ifTest": False})
 
-for lvl in (1, 2, 3):
-    body = {**META, "fileTime": 4, "level": lvl, "deviceToken": "", "ifTest": False}
-    p(f"[hd lvl{lvl}]", brief(call("/algo/v1/faceFusion/aigc/createVideoHdTask", body)))
+# ---------- 2) image upscale
+SR = "/algo/v1/faceFusion/aigc/createSuperResolutionNew"
+show("superres_min", SR, {"imageUrls": [IMG]})
+show("superres_full", SR, {"imageUrls": [IMG], "level": 2, "deviceToken": "", "ifTest": False})
 
-# what the app shows about credits / subscription
-for path, body in [
-    ("/billing/property/getUpgradeInfo", {"cp": CP}),
-    ("/billing/property/restore", {"cp": CP}),
-    ("/algo/v1/faceFusion/aigc/queryVideoHdTask", {"taskId": "0"}),
-    ("/algo/v1/faceFusion/aigc/getUserInfo", {}),
-    ("/algo/v1/faceFusion/aigc/getUserIntegral", {}),
-]:
-    p(f"[{path.rsplit('/',1)[-1]}]", brief(call(path, body)))
+# ---------- 3) image generation / restyle from an image + prompt
+II = "/algo/v1/faceFusion/aigc/image2image/createImageTask"
+show("img2img_min", II, {"imageUrls": [IMG], "prompt": "same person, golden hour light"})
+show("img2img_style", II, {"imageUrls": [IMG], "prompt": "same person, golden hour light",
+                           "styleId": 0, "level": 1, "deviceToken": "", "ifTest": False})
+show("img2img_model", II, {"imageUrls": [IMG], "prompt": "same person, golden hour light",
+                           "modelId": 0, "level": 1, "deviceToken": "", "ifTest": False})
+
+AS = "/algo/v1/faceFusion/aigc/image2image/createAiStyleTask"
+show("aistyle_min", AS, {"imageUrls": [IMG]})
+show("aistyle_style", AS, {"imageUrls": [IMG], "styleId": 0, "level": 1, "deviceToken": "", "ifTest": False})
 
 pathlib.Path("probe_out").mkdir(exist_ok=True)
 pathlib.Path("probe_out/out.txt").write_text("\n".join(OUT), encoding="utf-8")
