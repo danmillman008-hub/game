@@ -62,11 +62,15 @@ def build_still(d: Path, proj: dict, s: dict, force=False) -> Path | None:
         rel, box = parts[0], tuple(int(x) for x in parts[1:5])
         from PIL import Image
         im = Image.open(d / rel).crop(box)
-        tmp = d / "stills" / f"_crop{s['n']}.png"
-        im.save(tmp)
-        up = upscale_url(tmp)
-        M.download(up, str(out))
-        tmp.unlink(missing_ok=True)
+        # rebuild a 3:4 frame at 960x1280 locally; Mivi's superres is async and flaky,
+        # so upscaling is done here and only used when a crop is very small
+        target = (960, 1280)
+        scale = min(target[0] / im.width, target[1] / im.height)
+        im = im.resize((max(1, int(im.width * scale)), max(1, int(im.height * scale))),
+                       Image.LANCZOS)
+        canvas = Image.new("RGB", target)
+        canvas.paste(im, ((target[0] - im.width) // 2, (target[1] - im.height) // 2))
+        canvas.save(out)
     elif kind == "compose":
         a, b = [x.strip() for x in val.split(",")]
         r = M.t_compose({"images": [str(d / a), str(d / b)],
