@@ -1,11 +1,11 @@
-"""Field discovery loop.
+"""Field discovery, round 2 — the server doubles the field name in its messages
+(`imageUrlsimageUrls不能为空`), so instead of regexing a name we scan the message
+for known field names and add whichever is missing.
 
-For every untested endpoint: send the body, read the error, add the field the
-server names, repeat. If the server answers 500 NullPointer (no field name),
-bulk-add the plausible fields and try again. Prints the body that finally gets
-past validation, plus the job/task id when one comes back.
+Also tries the two upload endpoints that hand out `imageKey` / `audioKey`, since
+emoVideoCreate asks for exactly those.
 """
-import json, hashlib, time, urllib.request, urllib.error, pathlib, re
+import json, hashlib, time, urllib.request, urllib.error, pathlib, re, uuid
 
 HOST = "https://cpi.ufotosoft.com"
 CP = "instagram.story.art.collage"; USER = "7da75eed37c61d33"
@@ -15,11 +15,13 @@ OUT = []
 def p(*a):
     s = " ".join(str(x) for x in a); print(s, flush=True); OUT.append(s)
 
-def hdr():
+def hdr(extra=None):
     t = str(int(time.time()))
-    return {"userid": USER, "timeStamp": t, "cp": CP, "version": "407", "platform": "1",
-            "ifWise": "true", "Content-Type": "application/json",
-            "sign": hashlib.md5(("m3snil" + t).encode()).hexdigest()}
+    h = {"userid": USER, "timeStamp": t, "cp": CP, "version": "407", "platform": "1",
+         "ifWise": "true", "Content-Type": "application/json",
+         "sign": hashlib.md5(("m3snil" + t).encode()).hexdigest()}
+    if extra: h.update(extra)
+    return h
 
 def call(path, body):
     req = urllib.request.Request(HOST + path, data=json.dumps(body).encode(), headers=hdr(), method="POST")
@@ -30,105 +32,90 @@ def call(path, body):
         except Exception: return {"_http": e.code}
     except Exception as e: return {"_err": repr(e)[:100]}
 
-def guess(name):
-    n = name.lower()
-    if n in ("imageurls", "imagekeys", "srcimages"): return [IMG]
-    if n in ("imageurl", "imagekey", "image", "srcimage", "originurl", "targeturl"): return IMG
-    if n in ("audiourls", "audiokeys"): return [IMG]
-    if n in ("audiokey", "audiourl"): return IMG
-    if n == "token": return ""
-    if n == "deviceToken".lower(): return ""
-    if n in ("level", "quality", "duration", "styleid", "modelid", "templateid", "lorAid".lower(),
-             "type", "gender", "imagetype", "resolution", "ratio"): return 1
-    if n in ("prompt", "text", "desc"): return "same person, golden hour light"
-    if n in ("iftest",): return False
-    if n in ("poseSequenceId".lower(), "pixverseid", "googleid"): return "0"
-    return ""
+def upload(path, url):
+    data = urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"}), timeout=90).read()
+    b = uuid.uuid4().hex
+    parts = [("--" + b).encode(), b'Content-Disposition: form-data; name="files"; filename="a.jpg"',
+             b"Content-Type: image/jpeg", b"", data, ("--" + b + "--").encode(), b""]
+    raw = b"\r\n".join(parts)
+    h = hdr({"Content-Type": "multipart/form-data; boundary=" + b})
+    h.pop("sign"); t = h["timeStamp"]
+    h["sign"] = hashlib.md5(("m3snil" + t).encode()).hexdigest()
+    req = urllib.request.Request(HOST + path, data=raw, headers=h, method="POST")
+    try:
+        with urllib.request.urlopen(req, timeout=120) as r: return json.loads(r.read().decode())
+    except urllib.error.HTTPError as e:
+        try: return {"_http": e.code, **json.loads(e.read().decode())}
+        except Exception: return {"_http": e.code}
+    except Exception as e: return {"_err": repr(e)[:100]}
 
-MISS = [
-    re.compile(r'"([A-Za-z_]+)"\s*is\s*empty'),
-    re.compile(r'([A-Za-z_]+)\s*不能为空'),
-    re.compile(r'param illegal:\s*([A-Za-z_]+)'),
-    re.compile(r'param error:\s*param\s+([A-Za-z_]+)'),
-    re.compile(r'param error:\s*([A-Za-z_]+)'),
-    re.compile(r'"([A-Za-z_]+)"\s*must'),
-    re.compile(r'([A-Za-z_]+)\s+is\s+invalid'),
+FIELDS = ["imageUrls", "maskUrls", "templateIds", "images", "imageKey", "audioKey", "modelId",
+          "poseSequenceId", "effectType", "prompt", "level", "deviceToken", "token", "styleId",
+          "ratio", "duration", "quality", "ifTest", "pixVerseId", "googleId", "videoUrl",
+          "fileMd5", "fileSize", "fileTime", "width", "height", "jobId", "taskId", "imageEffectType"]
+
+def missing(msg):
+    low = msg
+    hits = []
+    for f in FIELDS:
+        if (f + f) in low or (f in low and ("不能为空" in low or "not empty" in low or "not null" in low)):
+            hits.append(f)
+    return hits
+
+def guess(f):
+    if f.endswith("Urls") or f in ("images", "templateIds"):
+        return [IMG, IMG2] if f in ("images", "templateIds") else [IMG]
+    if f in ("imageKey", "audioKey", "imageUrl"):
+        return IMG
+    if f in ("level", "quality", "duration", "styleId", "modelId", "ratio", "width", "height"): return 1
+    if f == "prompt": return "same person, golden hour light"
+    if f == "ifTest": return False
+    if f in ("deviceToken", "token"): return ""
+    return "0"
+
+BASE = {"imageUrls": [IMG], "level": 1, "deviceToken": "", "ifTest": False}
+
+TARGETS = [
+    ("inpaintAnything", "/algo/v1/faceFusion/aigc/createInpaintAnything", dict(BASE)),
+    ("inpaintCleaner", "/algo/v1/faceFusion/aigc/createInpaintCleaner",
+     {"imageUrls": [IMG], "maskUrls": [IMG2], "level": 1, "deviceToken": "", "ifTest": False}),
+    ("swapFace", "/algo/v1/faceFusion/aigc/createSwapFace", dict(BASE)),
+    ("faceKey", "/algo/v1/faceFusion/aigc/createFaceKeyTask", {"images": [IMG], "level": 1, "deviceToken": "", "ifTest": False}),
+    ("stitch", "/algo/v1/faceFusion/aigc/stitchImage/createTask",
+     {"imageUrls": [IMG, IMG2], "level": 1, "deviceToken": "", "ifTest": False}),
+    ("livePortrait", "/algo/v1/faceFusion/aigc/livePortraitCreate",
+     {"imageUrls": [IMG], "level": 1, "deviceToken": "", "ifTest": False}),
+    ("image2image", "/algo/v1/faceFusion/aigc/image2image/createImageTask",
+     {"imageUrls": [IMG], "prompt": "same person, golden hour light"}),
 ]
 
-BULK = {
-    "imageUrls": [IMG], "level": 1, "deviceToken": "", "ifTest": False,
-    "prompt": "same person, golden hour light", "token": "",
-    "ratio": "3:4", "quality": 2, "duration": 4,
-}
+# ---- the two upload endpoints that may hand out keys
+for up in ["/algo/v1/faceAnimation/multipleUpload", "/algo/v1/faceFusion/aigc/image2VideoCustomer/upload"]:
+    r = upload(up, IMG)
+    p(f"[upload {up.rsplit('/',1)[-1]}] {json.dumps(r, ensure_ascii=False)[:220]}")
 
-ENDPOINTS = [
-    "/algo/v1/faceFusion/aigc/image2image/createImageTask",
-    "/algo/v1/faceFusion/aigc/image2image/createAiStyleTask",
-    "/algo/v1/faceFusion/aigc/createInpaintAnything",
-    "/algo/v1/faceFusion/aigc/createInpaintCleaner",
-    "/algo/v1/faceFusion/aigc/createSwapFace",
-    "/algo/v1/faceFusion/aigc/createFaceKeyTask",
-    "/algo/v1/faceFusion/aigc/stitchImage/createTask",
-    "/algo/v1/faceFusion/aigc/livePortraitCreate",
-    "/algo/v1/faceFusion/aigc/emoVideoCreate",
-    "/algo/v1/faceFusion/aigc/image2VideoCreateV2",
-]
-
-def discover(path):
-    body = {}
-    log = []
-    for rnd in range(10):
+for name, path, body in TARGETS:
+    seen = []
+    r = {}
+    for rnd in range(8):
         r = call(path, body)
-        c = r.get("c") or r.get("_http")
-        m = str(r.get("m") or "")
-        log.append((rnd, c, m[:70], dict(body)))
-        if c == 200:
-            return "OK", body, r, log
-        if rnd == 6:  # give up on hints, bulk-add everything still missing
-            for k, v in BULK.items():
-                body.setdefault(k, v)
+        c = r.get("c") or r.get("_http"); m = str(r.get("m") or "")
+        seen.append((rnd, c, m[:80]))
+        if c == 200: break
+        miss = [f for f in missing(m) if f not in body]
+        if miss:
+            for f in miss: body[f] = guess(f)
             continue
-        hit = None
-        for rx in MISS:
-            mm = rx.search(m)
-            if mm:
-                hit = mm.group(1); break
-        if "NullPointer" in m or c == 500:
-            for k, v in BULK.items():
-                body.setdefault(k, v)
-            continue
-        if hit and hit not in body:
-            body[hit] = guess(hit)
-            continue
-        if hit and hit in body:
-            # value was rejected: try a different shape once
-            cur = body[hit]
-            alts = [IMG, [IMG], [IMG, IMG2], 1, 2, "3:4", "0", ""]
-            nxt = 0
-            for i, a in enumerate(alts):
-                if a == cur:
-                    nxt = i + 1
-            body[hit] = alts[nxt] if nxt < len(alts) else 0
-            continue
-        return "STUCK", body, r, log
-    return "MAXROUNDS", body, call(path, body), log
-
-results = {}
-for path in ENDPOINTS:
-    name = path.rsplit("/", 1)[-1]
-    status, body, r, log = discover(path)
-    c = r.get("c") or r.get("_http")
-    p(f"## {name}: {status}  final c={c} m={str(r.get('m'))[:70]}")
-    for rnd, cc, mm, bb in log[-3:]:
-        p(f"   r{rnd} c={cc} {mm}")
-    p("   body:", json.dumps(body, ensure_ascii=False)[:260])
+        if c == 500:
+            for f in ("prompt", "token", "ratio", "quality"):
+                body.setdefault(f, guess(f))
+            break
+        break
     d = r.get("d")
-    if isinstance(d, dict):
-        p("   d.keys:", ",".join(list(d)[:10]))
-        jid = d.get("jobId") or d.get("taskId")
-        if jid: p("   id:", str(jid)[:50])
-    results[name] = {"status": status, "c": c, "body": body, "d": d}
+    p(f"## {name}: c={r.get('c') or r.get('_http')} {str(r.get('m'))[:80]}")
+    for x in seen[-2:]: p(f"   r{x[0]} c={x[1]} {x[2]}")
+    p("   body:", json.dumps(body, ensure_ascii=False)[:300])
+    if isinstance(d, dict): p("   d:", json.dumps(d, ensure_ascii=False)[:200])
 
 pathlib.Path("probe_out").mkdir(exist_ok=True)
-pathlib.Path("probe_out/found.json").write_text(json.dumps(results, ensure_ascii=False, indent=1), encoding="utf-8")
 pathlib.Path("probe_out/out.txt").write_text("\n".join(OUT), encoding="utf-8")
