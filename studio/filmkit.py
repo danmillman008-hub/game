@@ -377,7 +377,8 @@ def cmd_assemble(a):
     elif (d / "subs" / "final.srt").exists():
         _burn(d, out, d / "subs" / "final.srt")
 
-    vo = Path(a.vo) if a.vo else (d / "audio" / "vo.mp3" if (d / "audio" / "vo.mp3").exists() else None)
+    vo = Path(a.vo) if a.vo else next((p for p in (d / "audio" / "vo_timeline.mp3",
+                                                   d / "audio" / "vo.mp3") if p.exists()), None)
     music = Path(a.music) if a.music else (d / "audio" / "bed.mp3" if (d / "audio" / "bed.mp3").exists() else None)
     if vo or music:
         cmd_mix(argparse.Namespace(name=a.name, vo=str(vo) if vo else None,
@@ -468,6 +469,53 @@ def cmd_srt(a):
     out = d / "subs" / "final.srt"
     out.write_text("\n".join(blocks), encoding="utf-8")
     print(f"{n} subtitle cues -> {out}  (timeline step {step:.2f}s, xfade {xf}s)")
+
+
+def cmd_vo(a):
+    """Assemble one VO track on the cut timeline from per-shot clips.
+
+    Expects audio/vo/s<shot><any>.mp3 (e.g. s18_part1.mp3, s18_part2.mp3) — every file
+    for a shot is laid at that shot's start, in filename order, with a small gap.
+    """
+    d, proj = load(a.name)
+    (d / "audio").mkdir(parents=True, exist_ok=True)
+    vo_dir = d / "audio" / "vo"
+    if not vo_dir.exists():
+        raise SystemExit(f"no {vo_dir}")
+    xf = float(a.crossfade if a.crossfade is not None else (proj.get("crossfade_s") or 0))
+    step = SHOT_LEN - xf
+    args = [FF, "-y", "-v", "error"]
+    parts = []          # (input_index, delay_seconds)
+    idx = 0
+    for s_ in proj["shots"]:
+        n = int(s_["n"])
+        files = sorted(vo_dir.glob(f"s{n:02d}*.mp3")) + sorted(vo_dir.glob(f"s{n}_*.mp3"))
+        files = sorted({p for p in files})
+        if not files:
+            continue
+        base = (n - 1) * step + 0.35
+        off = 0.0
+        for f in files:
+            args += ["-i", str(f)]
+            parts.append((idx, base + off))
+            idx += 1
+            off += duration_of(f) + 0.18
+    if not parts:
+        raise SystemExit("no VO clips found")
+    fc, labels = [], []
+    for k, (i, delay) in enumerate(parts):
+        ms = int(delay * 1000)
+        fc.append(f"[{i}:a]aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo,"
+                  f"adelay={ms}|{ms}[v{k}]")
+        labels.append(f"[v{k}]")
+    fc.append("".join(labels) + f"amix=inputs={len(labels)}:duration=longest:normalize=0,"
+              f"apad=whole_dur={(len(proj['shots']) * step + 1):.2f}[vomix]")
+    out = d / "audio" / "vo_timeline.mp3"
+    args += ["-filter_complex", ";".join(fc), "-map", "[vomix]", "-c:a", "libmp3lame",
+             "-b:a", "192k", str(out)]
+    run(args)
+    print(f"{len(parts)} VO clips -> {out} ({duration_of(out):.1f}s)")
+    print("next: filmkit assemble <project>  (it picks up audio/vo.mp3 or --vo)")
 
 
 def cmd_qc(a):
@@ -598,6 +646,9 @@ def main():
     p = sub.add_parser("srt"); p.add_argument("name")
     p.add_argument("--crossfade", type=float); p.add_argument("--cps", type=float)
     p.set_defaults(fn=cmd_srt)
+
+    p = sub.add_parser("vo"); p.add_argument("name"); p.add_argument("--crossfade", type=float)
+    p.set_defaults(fn=cmd_vo)
 
     p = sub.add_parser("qc"); p.add_argument("name"); p.set_defaults(fn=cmd_qc)
 
