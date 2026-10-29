@@ -1,28 +1,11 @@
-[upload multipleUpload] {"c": 200, "m": "成功", "d": ["http://algo.ufotosoft.com/original/261029/aec24a6b-8127-4588-b9fc-e4f150d7a746.jpeg"]}
-[upload upload] {"c": 501, "m": "Network error [MissingServletRequestPartException: Required request part 'file' is not present]", "d": null, "traceId": "fd1fa20d9bbe466cb4a1886e5e14bb38"}
-## inpaintAnything: c=200 None
-   r0 c=200 
-   body: {"imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "level": 1, "deviceToken": "", "ifTest": false}
-   d: {"maskUrlList": [{"url": "https://algo-v1.ufotosoft.com/temp/aiInpaint/261030/871a8c6b-4207-41bb-836d-1aeb678849c2-1793291801226.jpg", "label": "Background"}, {"url": "https://algo-v1.ufotosoft.com/te
-## inpaintCleaner: c=-1 ALGO_RPC_ERROR
-   r0 c=-1 ALGO_RPC_ERROR
-   body: {"imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "maskUrls": ["http://algo.ufotosoft.com/original/261029/56061a5f-6fed-4807-904e-aa42782de3df.jpeg"], "level": 1, "deviceToken": "", "ifTest": false}
-## swapFace: c=501 Network error [HttpMessageNotReadableException: JSON parse error: Cannot deseria
-   r0 c=400 Parameter error [templateIdstemplateIds not empty]
-   r1 c=501 Network error [HttpMessageNotReadableException: JSON parse error: Cannot deseria
-   body: {"imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "level": 1, "deviceToken": "", "ifTest": false, "templateIds": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg", "http://algo.ufotosoft.com/original/261029/560
-## faceKey: c=200 成功
-   r0 c=200 成功
-   body: {"images": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "level": 1, "deviceToken": "", "ifTest": false}
-## stitch: c=200 Success
-   r0 c=200 Success
-   body: {"imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg", "http://algo.ufotosoft.com/original/261029/56061a5f-6fed-4807-904e-aa42782de3df.jpeg"], "level": 1, "deviceToken": "", "ifTest": false}
-   d: {"responseUrl": null, "taskId": "imageStitching-1793291803-64a37489-1319-441a-bc2f-f322b9ed6eb5", "taskStatus": "doing", "taskReason": null}
-## livePortrait: c=200 None
-   r0 c=400 Parameter error [modelIdmodelId不能为空]
-   r1 c=200 
-   body: {"imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "level": 1, "deviceToken": "", "ifTest": false, "modelId": 1}
-   d: {"taskId": "livePortrait-1793291804-974f3e3a-63cc-46cc-bd4f-33ed82e1770b", "taskStatus": "doing", "taskReason": null, "videoUrl": null}
-## image2image: c=500 Internal Server Error [NullPointerException: ]
-   r0 c=500 Internal Server Error [NullPointerException: ]
-   body: {"imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "prompt": "same person, golden hour light", "token": "", "ratio": 1, "quality": 1}
+[stitch create] 200 imageStitching-1793291927-2493f305-927a-42aa
+[stitch] timeout {"c": 200, "m": "Success", "d": {"responseUrl": null, "taskId": "imageStitching-1793291927-2493f305-927a-42aa-91b5-8de7a6cb495a", "taskStatus": "doing", "taskRe
+[live create] 200 livePortrait-1793292014-8bde4106-be23-4f78-a
+[live] timeout {"c": -1, "m": "ALGO_RPC_ERROR", "d": null}
+[inpaint masks] 7 https://algo-v1.ufotosoft.com/temp/aiInpaint/261030/c2d5daa6-ce30-47a8-9be7-0e2e0ab28aa2-1
+[inpaint with_mask] 200 None {"maskUrlList": [{"url": "https://algo-v1.ufotosoft.com/temp/aiInpaint/261030/98344443-3d8f-49f8-a36b-3da877d6ffb9-1793292181365.jpg", "labe
+[inpaint mask_label] 200 None {"maskUrlList": [{"url": "https://algo-v1.ufotosoft.com/temp/aiInpaint/261030/57b1cf91-49a6-4171-abb9-eac6b4837ba8-1793292182853.jpg", "labe
+[swap [1]] 1003 param illegal: template id invalid null
+[swap [0]] 1003 param illegal: template id invalid null
+[swap [1001]] 200 None {"urlList": ["https://algo-v1.vidmix.cc/temp/aiSwapFace/261030/586bccf4-dda0-4c10-b636-de7ddbb12463-1793292185746.jpg"]}
+[faceKey] {"c": 200, "m": "成功", "d": "fkp_new-3-20261030004306cbae3ddc560ca05d24"}
