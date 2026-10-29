@@ -43,7 +43,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28j</span></h1>
+  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28k</span></h1>
   <div class="muted" style="margin-bottom:14px">
     هدف: کشف شرط بازشدن اندپوینت
     <code>/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5</code>.
@@ -239,6 +239,25 @@
   </div>
 
   <div class="card">
+    <h2>🧬 آزمایشگاه k: کشف effectType مجاز برای موتور Veo از کاتالوگ زندهٔ سرور</h2>
+    <div class="muted" style="margin-bottom:10px">
+      در گزارش شما یک سرنخ تازه بود: V5 بدون <code>example</code> خطای
+      <code>param error: effectType illegal</code> داد. یعنی مقدار 6209 (مخصوص beat) در فهرست مجاز V5
+      نیست و V5 فهرست جداگانه‌ای دارد. آن فهرست همان کاتالوگ زندهٔ
+      <code>/common/vibe/resourceNew</code> است که ۳۱۰ قالب با <code>effectsType</code> دارد.
+      این آزمایشگاه اول کاتالوگ را زنده می‌گیرد و همهٔ کلیدهای خامش را نشان می‌دهد
+      (شاید فیلدهای مخصوص مدل مثل example/modelVersion داخلش باشد)، بعد مقادیر
+      <code>effectsType</code> را روی V5 می‌فرستد و هر کدام که خطای «illegal» نداد،
+      یعنی مدل مجازِ V5 است. آن‌وقت فقط گیت <code>example</code> می‌ماند.
+    </div>
+    <div class="row">
+      <div style="max-width:280px"><label>&nbsp;</label><button id="catKeyBtn" type="button">⑧ فقط کاتالوگ زنده + کلیدهای خام</button></div>
+      <div style="max-width:320px"><label>&nbsp;</label><button class="ghost" id="catSweepBtn" type="button">⑨ پیمایش effectType روی V5 (۴۰ مقدار)</button></div>
+    </div>
+    <div id="catOut" style="margin-top:14px"></div>
+  </div>
+
+  <div class="card">
     <h2>۴) ارسال دستی</h2>
     <div class="row">
       <div style="flex:2">
@@ -388,6 +407,7 @@ function loadCfg(){
   return c;
 }
 let CFG=loadCfg();
+const VER="2026-10-28k";
 const $=id=>document.getElementById(id);
 $("host").value=CFG.host;$("connMode").value=CFG.connMode;
 $("customProxy").value=CFG.customProxy;$("userId").value=CFG.userId;
@@ -599,7 +619,7 @@ $("runAll").onclick=async()=>{
     const s=document.createElement("span");s.className="pill";s.dataset.p=i;
     s.textContent=l[0].split(" ")[0];prog.appendChild(s);
   });
-  log("شروع باتری نسخهٔ h: "+list.length+" پروب، فاصلهٔ ایمنی ۱ ثانیه‌ای.","h");
+  log("شروع باتری نسخهٔ "+VER+": "+list.length+" پروب، فاصلهٔ ایمنی ۱ ثانیه‌ای.","h");
   for(let i=0;i<list.length;i++){
     if(stopFlag){log("توقف توسط کاربر.","w");break;}
     try{ await runOne(i,list[i][0],list[i][1],list[i][2]); }
@@ -1130,7 +1150,115 @@ $("beatQBtn").onclick=async()=>{
   head("پایان باتری کیفیت beat — جدول بالا را مقایسه کنید (مبنا: 1280×960 / 4.00s / ~17.4Mbps)");
 };
 
-log("آماده [نسخهٔ باتری: 2026-10-28j — اگر این برچسب را نمی‌بینید فایل کش شده است]. userId="+CFG.userId,"ok");
+/* ---------- آزمایشگاه k: کشف effectType مجاز V5 از کاتالوگ زنده ---------- */
+const CAT_URL="/common/vibe/resourceNew?version=407&cp=instagram.story.art.collage&platform=1&ifHttps=true&day=0&language=en&packageLevel=1";
+async function fetchCatalog(){
+  const tries=[
+    ["بدون هدر",{}],
+    ["با هدرهای algo",algoHeaders()],
+  ];
+  for(const [label,h] of tries){
+    try{
+      const r=await fetch(apiUrl(CAT_URL),{method:"GET",headers:h});
+      const txt=await r.text();
+      log("کاتالوگ ("+label+") HTTP "+r.status+" طول "+txt.length,"i");
+      if(r.ok&&txt.trim().startsWith("{"))return {j:JSON.parse(txt),txt,label};
+    }catch(e){ log("خطای کاتالوگ ("+label+"): "+e.message,"e"); }
+  }
+  return null;
+}
+function collectTypes(cat){
+  const types=new Set(), names={}, rawKeys=new Set();
+  const walk=o=>{
+    if(!o||typeof o!=="object")return;
+    if(Array.isArray(o)){o.forEach(walk);return;}
+    Object.keys(o).forEach(k=>rawKeys.add(k));
+    if(o.effectsType!=null&&o.effectsType!==""){
+      const t=String(o.effectsType);
+      types.add(t);
+      if(o.name&&!names[t])names[t]=o.name;
+    }
+    Object.values(o).forEach(walk);
+  };
+  walk(cat);
+  return {types:Array.from(types),names,rawKeys:Array.from(rawKeys)};
+}
+$("catKeyBtn").onclick=async()=>{
+  head("کاتالوگ زندهٔ سرور: کلیدهای خام");
+  const c=await fetchCatalog();
+  if(!c)return log("کاتالوگ در دسترس نبود","e");
+  const {types,names,rawKeys}=collectTypes(c.j);
+  log("تعداد effectsType یکتا: "+types.length,"ok");
+  log("کلیدهای خام دیده‌شده: "+rawKeys.join(", "),"w");
+  const sus=rawKeys.filter(k=>/example|model|version|param|prompt|duration|token/i.test(k));
+  if(sus.length)log("کلیدهای مشکوک/مهم: "+sus.join(", "),"ok");
+  const box=document.createElement("div");
+  box.style.cssText="border:1px solid #30363d;border-radius:10px;padding:12px;margin-top:10px;background:#0a0d12;font-size:12.5px";
+  box.innerHTML="<b>کلیدهای خام کاتالوگ ("+rawKeys.length+")</b><div style=\"margin-top:6px;direction:ltr\">"+rawKeys.join(", ")+"</div>"+
+    "<b style=\"display:block;margin-top:10px\">effectsType ها ("+types.length+")</b><div style=\"margin-top:6px;direction:ltr\">"+
+    types.slice(0,80).map(t=>t+" ("+(names[t]||"")+")").join(" · ")+"</div>";
+  $("catOut").prepend(box);
+  window.__catTypes=types; window.__catNames=names;
+  return types;
+};
+$("catSweepBtn").onclick=async()=>{
+  const btn=$("catSweepBtn"); btn.disabled=true;
+  try{
+    head("پیمایش effectType روی image2VideoCreateV5");
+    let types=window.__catTypes;
+    if(!types||!types.length){
+      const c=await fetchCatalog();
+      if(!c)return log("کاتالوگ در دسترس نبود","e");
+      types=collectTypes(c.j).types; window.__catNames=collectTypes(c.j).names;
+    }
+    const cand=types.slice(0,40);
+    log("ارسال "+cand.length+" مقدار effectsType به V5 با فاصلهٔ ۷۰۰ms","i");
+    const rows=[];
+    for(const t of cand){
+      const body={imageUrls:[uploadedUrl||"http://algo.ufotosoft.com/original/261029/3171f961-6509-451b-ad0d-4acd7ef050eb.jpeg"],
+        level:1,deviceToken:"0",googleId:"0",audio:false,duration:6,ifTest:1,effectType:t,
+        prompt:$("prompt").value.trim()};
+      const env=await postJson(V5,body);
+      const m=(env.j&&env.j.m)||env.txt.slice(0,120)||("HTTP "+env.http);
+      const ok200=env.j&&env.j.c===200;
+      const legal=ok200||!/effectType illegal/i.test(m);
+      rows.push({t,m,legal,c:env.j&&env.j.c});
+      if(legal)log("★ effectType="+t+" ("+(window.__catNames&&window.__catNames[t]||"?")+") → "+m,"ok");
+      if(ok200){
+        log("‼️ تسک ساخته شد! بدنهٔ موفق: "+JSON.stringify(body),"ok");
+        const tid=env.j.d&&(env.j.d.taskId||env.j.d.jobId);
+        if(tid){
+          log("taskId="+tid+" — polling با beat queryTask","w");
+          try{
+            const vu=await pollBeat(tid,8*60*1000);
+            log("خروجی V5: "+vu,"ok");
+            await forensicFromUrl(vu,"خروجی V5 با effectType="+t);
+          }catch(e){ log("polling ناموفق: "+e.message,"e"); }
+        }
+      }
+      await sleep(700);
+    }
+    const legalRows=rows.filter(r=>r.legal);
+    head("نتیجهٔ پیمایش: "+legalRows.length+" از "+rows.length+" مقدار برای V5 مجاز شد");
+    if(legalRows.length){
+      log("مقادیر مجاز: "+legalRows.map(r=>r.t+" → "+r.m).join(" | "),"ok");
+      log("یعنی گیت effectType حل شد؛ تنها دروازهٔ باقی‌مانده example است.","w");
+    }else{
+      log("هیچ‌کدام از این ۴۰ مقدار مجاز نشد — فهرست V5 از کاتالوگ نمی‌آید.","w");
+    }
+    const tbl=document.createElement("table");
+    tbl.style.cssText="width:100%;border-collapse:collapse;font-size:12px;margin-top:8px";
+    tbl.innerHTML='<tr style="color:#8b949e">'+
+      ["effectType","نام","پیام"].map(h=>'<th style="padding:5px;border-bottom:1px solid #30363d">'+h+"</th>").join("")+"</tr>"+
+      rows.map(r=>'<tr><td style="padding:5px;border-bottom:1px solid #21262d;direction:ltr">'+r.t+
+        '</td><td style="padding:5px;border-bottom:1px solid #21262d">'+((window.__catNames&&window.__catNames[r.t])||"—")+
+        '</td><td style="padding:5px;border-bottom:1px solid #21262d;direction:ltr;color:'+(r.legal?"#3fb950":"#8b949e")+'">'+
+        String(r.m).slice(0,90)+"</td></tr>").join("");
+    $("catOut").prepend(tbl);
+  }finally{ btn.disabled=false; }
+};
+
+log("آماده [نسخهٔ باتری: "+VER+" — اگر این برچسب را نمی‌بینید فایل کش شده است]. userId="+CFG.userId,"ok");
 </script>
 </body>
 </html>
