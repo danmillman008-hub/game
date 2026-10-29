@@ -58,7 +58,7 @@
 <body>
 <div class="wrap">
 
-  <h1>🧬 Mivi — تست موتورها با یک دکمه <span class="tag" id="verTag">2026-10-29y</span></h1>
+  <h1>🧬 Mivi — تست موتورها با یک دکمه <span class="tag" id="verTag">build 2026-10-29y</span></h1>
   <div class="sub">
     یک عکس بده، یک دکمه بزن. این صفحه هر پنج مسیر تولیدی که در APK هست را با بدنهٔ
     دقیق خودش صدا می‌زند، خروجی هرکدام را می‌گیرد و کنار هم می‌گذارد.
@@ -231,6 +231,7 @@ function md5(inputString){
 }
 
 const $=id=>document.getElementById(id);
+const VERSION="2026-10-29y";   /* ← اگر این عدد در خط اول لاگ نبود، نسخهٔ کش‌شده اجرا شده */
 const logEl=$("log");
 function ts(){return String(Math.floor(Date.now()/1000));}
 function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
@@ -503,6 +504,7 @@ $("run").onclick=async()=>{
   btn.textContent="⏳ در حال اجرا… (صفحه را نبندید)";
   try{
     persist();
+    head("شروع اجرا — بیلد "+VERSION);
     const f=$("file").files[0];
     if(!f)throw new Error("اول یک عکس انتخاب کنید");
     const ratio=$("ratio").value;
@@ -608,7 +610,8 @@ $("run").onclick=async()=>{
   }
 };
 
-log("آماده. یک عکس انتخاب کن و دکمهٔ آبی را بزن.","ok");
+log("آماده — نسخهٔ "+VERSION+" — یک عکس انتخاب کن و دکمهٔ آبی را بزن.","ok");
+if(VERSION!=="2026-10-29y")log("⚠️ نسخهٔ صفحه با نسخهٔ انتظاری نمی‌خواند.","e");
 log("host="+CFG.host+" | mode="+CFG.connMode+" | userId="+CFG.userId,"i");
 </script>
 </body>
