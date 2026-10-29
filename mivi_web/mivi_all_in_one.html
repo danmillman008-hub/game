@@ -202,7 +202,7 @@
 
   <div class="card">
     <details>
-      <summary>🧪 آزمایشگاه موتور Google Veo / Gemini (مسیر V5) — تحلیل مهندسی معکوس <span style="font-size:10px;background:#1f6feb22;border:1px solid #1f6feb55;color:#58a6ff;border-radius:6px;padding:1px 7px">نسخهٔ V5-Lab: 2026-10-28q</span></summary>
+      <summary>🧪 آزمایشگاه موتور Google Veo / Gemini (مسیر V5) — تحلیل مهندسی معکوس <span style="font-size:10px;background:#1f6feb22;border:1px solid #1f6feb55;color:#58a6ff;border-radius:6px;padding:1px 7px">نسخهٔ V5-Lab: 2026-10-29s</span></summary>
       <div class="muted" style="line-height:1.9;margin:10px 0">
         <b>یافتهٔ قطعی از بایت‌کد نسخهٔ 2.37.407 (هر ۸ دکس + کتابخانه‌های .so):</b><br>
         • اپ فقط سه موتور را روی درخواست‌ها ست می‌کند: <code>GX_AiVideoP2V</code> (همان مسیر beat/Wan-LoRA که دکمهٔ اصلی بالا استفاده می‌کند)،
@@ -813,9 +813,58 @@ async function connectivityTest(){
   }
 }
 
+/* ================= برش تصویر به نسبت هدف ================= */
+/* 🔑 کشف ۲۰۲۶-۱۰-۲۹: فیلد `ratio` در بدنهٔ درخواست توسط سرور نادیده گرفته می‌شود
+   (در ۹+ قالب آزمایش شد و همیشه هندسهٔ تصویر ورودی برگشت). نسبت خروجی از
+   پیکسل‌های خودِ تصویر آپلودی می‌آید:
+     ورودی ۳:۴ (۲۱۳۶×۲۸۵۰)  → خروجی ۹۶۰×۱۲۸۰
+     ورودی ~۹:۱۶ (پیش‌برش‌خورده) → خروجی ۸۰۰×۱۴۰۸
+   پس نسبت را قبل از آپلود با برش دقیق اعمال می‌کنیم. */
+const RATIO_WH={"9:16":[9,16],"3:4":[3,4],"1:1":[1,1],"4:3":[4,3],"16:9":[16,9]};
+function loadImgFromFile(file){
+  return new Promise((res,rej)=>{
+    const u=URL.createObjectURL(file);
+    const im=new Image();
+    im.onload=()=>{URL.revokeObjectURL(u);res(im);};
+    im.onerror=()=>{URL.revokeObjectURL(u);rej(new Error("تصویر قابل خواندن نیست"));};
+    im.src=u;
+  });
+}
+async function cropToRatio(file,ratio,maxSide){
+  const r=RATIO_WH[ratio];
+  if(!r)return file;
+  const [a,b]=r;
+  const im=await loadImgFromFile(file);
+  const sw=im.naturalWidth, sh=im.naturalHeight;
+  const target=a/b, cur=sw/sh;
+  let cw=sw, ch=sh;
+  if(cur>target) cw=Math.round(sh*target); else ch=Math.round(sw/target);
+  const cx=Math.round((sw-cw)/2), cy=Math.round((sh-ch)/2);
+  const cap=maxSide||1536;
+  let ow=cw, oh=ch;
+  if(Math.max(cw,ch)>cap){
+    if(cw>=ch){ ow=cap; oh=Math.round(ch*cap/cw); } else { oh=cap; ow=Math.round(cw*cap/ch); }
+  }
+  ow=Math.max(2,ow-ow%2); oh=Math.max(2,oh-oh%2);
+  const cv=document.createElement("canvas");cv.width=ow;cv.height=oh;
+  const ctx=cv.getContext("2d");
+  ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality="high";
+  ctx.drawImage(im,cx,cy,cw,ch,0,0,ow,oh);
+  const blob=await new Promise(res=>cv.toBlob(res,"image/jpeg",0.95));
+  if(!blob)throw new Error("ساخت تصویر برش‌خورده ناموفق بود");
+  log("برش به "+ratio+": "+sw+"×"+sh+" → "+ow+"×"+oh+
+      " (نسبت "+((a/b)).toFixed(4)+"، خروجی "+(ow/oh).toFixed(4)+")","i");
+  return new File([blob],(file.name||"image").replace(/\.[^.]+$/,"")+"_"+ratio.replace(":","x")+".jpg",
+                  {type:"image/jpeg"});
+}
+
 /* ================= مراحل API ================= */
-async function uploadImage(file){
+async function uploadImage(file,ratio){
   log("مرحله ۱: آپلود تصویر روی سرور...");step(1,"on");
+  if(ratio){
+    try{ file=await cropToRatio(file,ratio,1536); }
+    catch(e){ log("برش تصویر انجام نشد ("+e.message+") — تصویر اصلی آپلود می‌شود","w"); }
+  }
   const fd=new FormData();
   fd.append("files",file,file.name||"image.jpg");
   const url=apiUrl("/algo/v1/aiGenerate-aigc/multipleUpload");
@@ -1223,7 +1272,7 @@ $("go").addEventListener("click",async()=>{
     const maxSegs=Math.ceil(targetSec/4);
     const segs=[];
 
-    let url=await uploadImage(pickedFile);
+    let url=await uploadImage(pickedFile,ratio);   // برش دقیق به نسبت انتخاب‌شده
     let taskId=await createTask(url,prompt,level,effectType,quality,ratio);
     let res=await waitForVideo(taskId);
     let videoUrl=res.videoUrl,last=res.last;
@@ -1427,7 +1476,7 @@ document.querySelectorAll(".segBtn").forEach(b=>b.addEventListener("click",()=>{
 applyGenMode();
 
 fillSettings();
-log("آماده [نسخهٔ فایل: 2026-10-28q — اگر این برچسب را نمی‌بینید فایل کش شده است]. userId="+CFG.userId+" signKey="+CFG.signKey);
+log("آماده [نسخهٔ فایل: 2026-10-29s — اگر این برچسب را نمی‌بینید فایل کش شده است]. userId="+CFG.userId+" signKey="+CFG.signKey);
 log("کاتالوگ افکت‌ها: "+Object.values(EFFECT_CATALOG).reduce((a,b)=>a+b.length,0)+" قالب آماده از سرور.");
 </script>
 </body>
