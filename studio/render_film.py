@@ -49,6 +49,8 @@ def build_still(d: Path, proj: dict, s: dict, force=False) -> Path | None:
     if not src:
         raise SystemExit(f"shot {s['n']}: no still spec for key {key!r}")
     kind, _, val = src.partition(":")
+    (d / "stills").mkdir(parents=True, exist_ok=True)
+    (d / "clips").mkdir(parents=True, exist_ok=True)
     out = d / "stills" / f"s{int(s['n']):02d}_{key}.png"
     if out.exists() and not force:
         s["still"] = str(out.relative_to(d)); return out
