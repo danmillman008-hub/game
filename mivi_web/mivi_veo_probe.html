@@ -43,7 +43,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28o</span></h1>
+  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28p</span></h1>
   <div class="muted" style="margin-bottom:14px">
     هدف: کشف شرط بازشدن اندپوینت
     <code>/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5</code>.
@@ -325,6 +325,37 @@
   </div>
 
   <div class="card">
+    <h2>⚖️ مقایسهٔ دو ویدیو با عدد bpp (کلید تشخیص کیفیت)</h2>
+    <div class="muted" style="margin-bottom:10px">
+      هر ۸ نمونهٔ اپ یک پروفایل ثابت دارند: <b>۱۲۹ فریم · ۳۲ فریم/ثانیه · ۴.۰۳۱s ·
+      CRF 19 · x264 core 164</b> و جعبه‌های MP4 حداقلی بدون <code>udta</code>/<code>edts</code>/
+      <code>btrt</code>/<code>pasp</code> — یعنی اپ موقع ذخیره فایل را با
+      <b>Android MediaMuxer</b> دوباره MUX می‌کند (به همین دلیل <code>Lavf</code> ندارد؛
+      این نشانهٔ موتور متفاوت نیست).
+      <br>عدد تعیین‌کننده <b>bpp = بیت‌ریت ÷ (عرض×ارتفاع×fps)</b> است: با CRF و انکودر یکسان،
+      bpp بالاتر = فریم پُرنویزتر و بی‌ثبات‌تر. نمونه‌های اپ: <b>۰.۰۴۶ تا ۰.۰۹۹</b>.
+      خروجی ما با همان ۱۲۸۰×۹۶۰ و همان CRF: حدود <b>۰.۴۴</b> — یعنی ۵ تا ۱۰ برابر
+      آنتروپی بیشتر، که یعنی تصویر ما نویزی/بزرگ‌شده است نه رندر تمیز.
+    </div>
+    <div class="row">
+      <div style="flex:2"><label>ویدیوی A (لینک — مثلاً خروجی خودمان)</label>
+        <input id="cmpAUrl" dir="ltr" value="https://algo-v1.wiseoel.com/temp/60014/261029/f0fe0420e19c447693f82323b29fb95a.mp4">
+      </div>
+      <div style="flex:2"><label>یا فایل محلی A</label><input id="cmpAFile" type="file" accept="video/*"></div>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <div style="flex:2"><label>ویدیوی B (لینک — مثلاً نمونهٔ اپ)</label>
+        <input id="cmpBUrl" dir="ltr" placeholder="لینک مستقیم ویدیوی اپ (اختیاری)">
+      </div>
+      <div style="flex:2"><label>یا فایل محلی B (ویدیوی اپ از گالری)</label><input id="cmpBFile" type="file" accept="video/*"></div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <div style="max-width:250px"><label>&nbsp;</label><button id="cmpRunBtn" type="button">⚖️ مقایسهٔ A و B</button></div>
+    </div>
+    <div id="cmpOut" style="margin-top:14px"></div>
+  </div>
+
+  <div class="card">
     <h2>🤖 آزمایشگاه o: کشف مدل‌های پرمیوم از aiLabGroupList</h2>
     <div class="muted" style="margin-bottom:10px">
       کاتالوگ زنده علاوه بر <code>groupList</code> سه بخش دیگر دارد:
@@ -493,7 +524,7 @@ function loadCfg(){
   return c;
 }
 let CFG=loadCfg();
-const VER="2026-10-28o";
+const VER="2026-10-28p";
 const $=id=>document.getElementById(id);
 $("host").value=CFG.host;$("connMode").value=CFG.connMode;
 $("customProxy").value=CFG.customProxy;$("userId").value=CFG.userId;
@@ -1400,6 +1431,91 @@ $("qlDurBtn").onclick=async()=>{
   await qlRun("مدت ۶ با duration+seconds+videoDuration",{duration:6,seconds:6,videoDuration:6});
 };
 
+/* ---------- مقایسهٔ دو ویدیو با bpp ---------- */
+async function bufFrom(urlInputId,fileInputId){
+  const f=$(fileInputId).files&&$(fileInputId).files[0];
+  if(f)return {buf:await f.arrayBuffer(),label:f.name,objUrl:URL.createObjectURL(f)};
+  const u=$(urlInputId).value.trim();
+  if(!u)return null;
+  const r=await fetch(viaProxy(u));
+  if(!r.ok)throw new Error("HTTP "+r.status);
+  return {buf:await r.arrayBuffer(),label:u.split("/").pop().slice(0,40),objUrl:u};
+}
+function bppOf(sig){
+  if(!sig.w||!sig.h||!sig.fps||!sig.durationSec)return null;
+  return (sig.size*8)/(sig.durationSec*sig.w*sig.h*sig.fps);
+}
+$("cmpRunBtn").onclick=async()=>{
+  const btn=$("cmpRunBtn"); btn.disabled=true;
+  try{
+    head("مقایسهٔ دو ویدیو");
+    const A=await bufFrom("cmpAUrl","cmpAFile");
+    const B=await bufFrom("cmpBUrl","cmpBFile");
+    if(!A&&!B)return log("حداقل یک ویدیو لازم است","e");
+    const sa=A?deepSignature(A.buf):null;
+    const sb=B?deepSignature(B.buf):null;
+    const row=(k,fa,fb)=>{
+      const va=sa?fa(sa):"—", vb=sb?fb(sb):"—";
+      const same=String(va)===String(vb);
+      return '<tr><td style="padding:6px;border-bottom:1px solid #21262d;color:#8b949e">'+k+'</td>'+
+        '<td style="padding:6px;border-bottom:1px solid #21262d;direction:ltr;color:'+(same?"#3fb950":"#f0883e")+'">'+va+'</td>'+
+        '<td style="padding:6px;border-bottom:1px solid #21262d;direction:ltr;color:'+(same?"#3fb950":"#f0883e")+'">'+vb+'</td></tr>';
+    };
+    const bpa=sa?bppOf(sa):null, bpb=sb?bppOf(sb):null;
+    const tbl=document.createElement("table");
+    tbl.style.cssText="width:100%;border-collapse:collapse;font-size:13px";
+    tbl.innerHTML='<tr style="color:#8b949e"><th style="padding:6px;text-align:right">ویژگی</th>'+
+      '<th style="padding:6px">A: '+(A?A.label:"—")+'</th><th style="padding:6px">B: '+(B?B.label:"—")+'</th></tr>'+
+      row("رزولوشن",s=>s.w+"×"+s.h,s=>s.w+"×"+s.h)+
+      row("مدت",s=>s.durationSec.toFixed(3)+"s",s=>s.durationSec.toFixed(3)+"s")+
+      row("فریم/ثانیه",s=>s.fps.toFixed(2),s=>s.fps.toFixed(2))+
+      row("تعداد فریم",s=>String(s.frames),s=>String(s.frames))+
+      row("کی‌فریم",s=>String(s.keyframes),s=>String(s.keyframes))+
+      row("CRF",s=>s.crf===null?"؟":String(s.crf),s=>s.crf===null?"؟":String(s.crf))+
+      row("حجم",s=>(s.size/1048576).toFixed(2)+" MB",s=>(s.size/1048576).toFixed(2)+" MB")+
+      row("بیت‌ریت",s=>s.bitrateMbps.toFixed(2)+" Mbps",s=>s.bitrateMbps.toFixed(2)+" Mbps")+
+      '<tr><td style="padding:6px;border-bottom:1px solid #21262d;color:#8b949e">bpp (کلید)</td>'+
+      '<td style="padding:6px;border-bottom:1px solid #21262d;direction:ltr;font-weight:bold;color:'+
+        (bpa===null?"#8b949e":(bpa>0.15?"#f85149":"#3fb950"))+'">'+(bpa===null?"—":bpa.toFixed(4))+'</td>'+
+      '<td style="padding:6px;border-bottom:1px solid #21262d;direction:ltr;font-weight:bold;color:'+
+        (bpb===null?"#8b949e":(bpb>0.15?"#f85149":"#3fb950"))+'">'+(bpb===null?"—":bpb.toFixed(4))+'</td></tr>'+
+      row("پروفایل/سطح",s=>s.profile+"/"+s.level,s=>s.profile+"/"+s.level)+
+      row("هندلر",s=>s.handler,s=>s.handler)+
+      row("Lavf",s=>s.hasLavf?"دارد":"ندارد",s=>s.hasLavf?"دارد":"ندارد")+
+      row("mdta",s=>s.hasMdta?"دارد":"ندارد",s=>s.hasMdta?"دارد":"ندارد")+
+      row("moov اول",s=>s.faststart?"بله":"نه",s=>s.faststart?"بله":"نه");
+    const box=document.createElement("div");
+    box.style.cssText="border:1px solid #30363d;border-radius:10px;padding:12px;margin-top:10px;background:#0a0d12;overflow:auto";
+    box.appendChild(tbl);
+    if(bpa!==null&&bpb!==null){
+      const ratio=(bpa/bpb);
+      const verdict=document.createElement("div");
+      verdict.style.cssText="margin-top:10px;font-size:13.5px;line-height:1.9";
+      verdict.innerHTML=ratio>2
+        ? "⚠️ <b>A حدود "+ratio.toFixed(1)+" برابر B آنتروپی دارد</b> — یعنی فریم‌های A پُرنویزتر/بی‌ثبات‌تر یا بزرگ‌شده‌اند. با CRF و انکودر یکسان، این تفاوت از <b>محتوا</b> می‌آید نه از تنظیمات."
+        : "✅ A و B از نظر آنتروپی هم‌رده‌اند (نسبت "+ratio.toFixed(2)+") — اگر کیفیت بصری متفاوت است، عاملش انکود نیست.";
+      box.appendChild(verdict);
+    }
+    const vids=document.createElement("div");
+    vids.style.cssText="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap";
+    [A,B].forEach((X,i)=>{
+      if(!X)return;
+      const w=document.createElement("div");w.style.cssText="flex:1;min-width:240px";
+      const v=document.createElement("video");
+      v.controls=true;v.playsInline=true;v.src=X.objUrl;v.style.cssText="width:100%;border-radius:8px";
+      const cap=document.createElement("div");
+      cap.style.cssText="font-size:12px;color:#8b949e;margin-top:4px";
+      cap.textContent=(i===0?"A: ":"B: ")+X.label;
+      w.appendChild(v);w.appendChild(cap);vids.appendChild(w);
+    });
+    box.appendChild(vids);
+    $("cmpOut").prepend(box);
+    if(sa)log("A: "+sa.w+"×"+sa.h+" | "+sa.frames+" فریم | "+sa.fps.toFixed(1)+"fps | CRF "+(sa.crf??"?")+" | bpp "+(bpa??0).toFixed(4),"i");
+    if(sb)log("B: "+sb.w+"×"+sb.h+" | "+sb.frames+" فریم | "+sb.fps.toFixed(1)+"fps | CRF "+(sb.crf??"?")+" | bpp "+(bpb??0).toFixed(4),"i");
+  }catch(e){ log("خطای مقایسه: "+e.message,"e"); }
+  finally{ btn.disabled=false; }
+};
+
 /* ---------- آزمایشگاه o: کشف مدل‌های AI Lab ---------- */
 let LAB_JSON=null;
 function flattenLab(cat){
@@ -1796,7 +1912,7 @@ $("extRecBtn").onclick=async()=>{
 let BUSY=false;
 ["qBtn","cmpBtn","hdBatteryBtn","hdBillingBtn","hdUpBtn","hdViduBtn","catKeyBtn",
  "catSweepBtn","beatDurBtn","beatQBtn","beatUpBtn2","appCmpBtn","fKnownBtn",
- "qlSweepBtn","qlDurBtn","extBtn","extRecBtn","sigBtn","sigAllBtn","labDumpBtn","labTryBtn"].forEach(id=>{
+ "qlSweepBtn","qlDurBtn","extBtn","extRecBtn","sigBtn","sigAllBtn","labDumpBtn","labTryBtn","cmpRunBtn"].forEach(id=>{
   const el=$(id); if(!el||typeof el.onclick!=="function")return;
   const orig=el.onclick;
   el.onclick=async ev=>{
