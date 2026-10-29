@@ -530,3 +530,69 @@ audio    = String.valueOf(boolean)
 
 فقط `beatImage2Video/createNormalTask` باز است و از همان دروازه سه موتور پشت
 سرور بیرون می‌آید. اندازهٔ خروجی هر افکت سمت سرور قفل است.
+
+---
+
+# پیوست ۶: نتیجهٔ جست‌وجوی خودکار ۲۹ اکتبر (۱۵:۲۷ تا ۱۵:۳۶)
+
+## ۱) `createVideoHdTask` واقعی است و فقط پول می‌خواهد
+
+بدنهٔ غیر-Vidu از بایت‌کد:
+
+```
+videoUrl, fileMd5, fileSize, fileTime, width, height, level, deviceToken, ifTest
+```
+
+روی ویدیوی خودمان (۴۳۲×۵۷۶، ۸۶۱٬۱۱۴ بایت، ۴٬۰۶ ثانیه) امتحان شد:
+
+| بدنه | پاسخ |
+|---|---|
+| `fileTime=0` | `c=1013 param error: video metadata incomplete` |
+| `fileTime=4` (ثانیه) + md5 + size + dims | **`c=2002 积分扣减失败：积分不足或billing服务异常`** |
+| همان با `fileTime=4062` (میلی‌ثانیه) | همان `c=2002` |
+
+یعنی مسیر و قرارداد درست است و از اعتبارسنجی گذشت؛ تنها سد، **کسر اعتبار** است.
+این همان «Enhancer» است که در اپ دیده می‌شود: ویدیوی ساخته‌شده را می‌گیرد و
+ارتقا می‌دهد — نه اینکه از عکس بسازد.
+
+## ۲) `example` در مسیر Unified یک واژهٔ ساده نیست
+
+بدنه: `imageUrls, level, deviceToken, prompt, ratio, movementAmplitude, example, ifTest`
+و `example` بی‌قید‌و‌شرط `put` می‌شود (نه فقط وقتی خالی نباشد).
+
+هشت مقدار آزموده شد — `Animate, Walk, Wave, Dance, animate, walk, wave, Animate01`
+— و **همه** `c=1013 "example" is empty or illegal` گرفتند. پس یا شناسهٔ عددی است
+یا ساختار JSON؛ از APK قابل استخراج نبود.
+
+## ۳) Sequence (V4) هم همان دیوار Veo را دارد
+
+`poseSequenceId` ∈ {0,1} و `effectType` ∈ {4991, 7600} → همه `c=1001 param error: param effectType illegal`.
+یعنی این مسیر هم فهرست سفید افکت مخصوص خودش را دارد، مثل V5.
+
+## ۴) اندپوینت‌های کانفیگ
+
+| مسیر | نتیجه |
+|---|---|
+| `GET /common/vibe/resourceNew` | ۲۰۰ — همان ۲۴ گروه / ۲۷۷ افکت |
+| `GET /common/vibe/resource` | ۲۰۰ — **دقیقاً همان داده** |
+| `GET /common/vibe/{aiTools,aitools,config,getConfig,appConfig,aiLabGroup,toolGroups,category}` | همه ۴۰۴ |
+| `GET /common/vibe/resourceNew?language=fa` | `c=500 未查询到对应的语言大区信息…` ⇒ حساب به منطقهٔ زبانی دیگری قفل است |
+| `GET /storyart/ncrnau/beat/getResourceList` | ۵۰۰ با بدنهٔ `null` برای هر پارامتری که حدس زدیم؛ POST اصلاً پشتیبانی نمی‌شود |
+
+## ۵) `imageEffectType` فقط وقتی صفر نباشد فرستاده می‌شود
+
+بایت‌کد `createGXAiVideoTask$1`:
+
+```
+if (imageEffectType.intValue() != 0) put("imageEffectType", …)
+if (!TextUtils.isEmpty(prompt))       put("prompt", …)
+```
+
+⇒ در حالت عادیِ «عکس + متن» این فیلد اصلاً در بدنه نیست و بدنهٔ ما با اپ یکی است.
+فقط وقتی مقدار بگیرد، تسک با پیشوند `INTEGRATED_60019` ساخته می‌شود.
+
+## ۶) در APK هیچ نام مدل ثالثی نیست
+
+شمارش رشته‌ها در هر ۸ دکس: `kling`=۰، `hailuo`=۰، `seedance`=۰، `minimax`=۰.
+یعنی سطح مدل‌های اپ همان ۱۳ مقدار `P2Type` است و بس؛ هر نام مدلی که در UI دیده
+شود از کانفیگ سرور می‌آید، نه از خود برنامه.
