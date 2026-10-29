@@ -171,3 +171,77 @@ level, deviceToken, duration, prompt, enhance, style, ratio, ifTest
 `Lcom/ufotosoft/ai/base/g;` به annotationهای کلاس‌های دیگر (IronSource/AdMob)
 اشاره می‌کنند ⇒ خواندن آفست‌ها یک لایه جابه‌جا است. چون همهٔ اطلاعات عملی
 (بدنه‌ها، هدرها، مسیرها) از راه دیگری به‌دست آمد، این کار متوقف شد.
+
+---
+
+# پیوست: بدنهٔ واقعی هر مسیر، خوانده‌شده از دستورالعمل‌های dex
+
+منبع: `Lcom/ufotosoft/ai/image2video/Image2VideoServer$create*Task$1` — هر کلاس
+درونی یک مسیر است و `invokeSuspend` آن با `org.json.JSONObject.put` بدنه را
+می‌سازد. نام کلاس‌ها **خودشان** مسیر را نام‌گذاری می‌کنند:
+
+`createAiPhotoTask` (V1) · `createAiPhotoTaskV2` · `createAiPhotoTaskV3` ·
+`createAiVideoLtxTask` · `createAiVideoUnifiedTask` · `createGXAiVideoTask` ·
+`createGoogleVeoVideoTask` · `createAiSequenceVideoTask` ·
+`createText2VideoTaskVidu` · `createText2VideoUnifiedTask` ·
+`createVideoHdTask` · `createVideoHdTaskVidu` · `getAllPoseSequenceId`
+
+## بدنه‌ها (به ترتیب قرار گرفتن در کد)
+
+| مسیر | فیلدهایی که واقعاً گذاشته می‌شود |
+|---|---|
+| `createAiVideoLtxTask` | `imageUrls[]`, `level`, `effectType` — **نه prompt، نه duration، نه ratio** |
+| `createGoogleVeoVideoTask` | `imageUrls[]`, `level`, `deviceToken`, `googleId`, `audio`, `prompt`, `duration`, `ifTest` |
+| `createAiVideoUnifiedTask` | `imageUrls[]`, `level`, `deviceToken`, `prompt`, `ratio`, `movementAmplitude`, `example`, `ifTest` |
+| `createAiSequenceVideoTask` | `imageUrls[]`, `level`, `deviceToken`, سپس **یا** `effectType`+`poseSequenceId`+`pixVerseId` **یا** `example`+`extParams`، سپس `ifTest` |
+| `createAiPhotoTaskV3` | `imageUrls[]`, `level`, `deviceToken`, …, `pixVerseId` |
+
+## سه نتیجهٔ قطعی
+
+**۱) Veo هیچ‌وقت `effectType` نمی‌فرستد.** بدنهٔ بالا کامل است. سرور روی
+`image2VideoCreateV5` می‌گوید `param error: effectType illegal` ⇒ **V5 اندپوینت
+Veo نیست**؛ با بدنهٔ دقیق اپ هم همان خطا را می‌دهد. پس آن مسیر به موتور دیگری
+تعلق دارد و `googleId` هم کلید Veo نیست.
+
+**۲) `createAiVideoLtxTask` ⇒ PixVerse است، نه LTX.** بدنه فقط
+`imageUrls`+`level`+`effectType` است، و `image2VideoCreateV3` پاسخ داد
+`pixVerseId不能为空` ⇒ همان مسیر V3 و همان `pixVerseId` کلاس V3. مسیر LTX واقعی
+هنوز پیدا نشده.
+
+**۳) Sequence دو نسخه دارد و کلیدش `extParams["example"]` است.**
+`Image2VideoTask.g()` این را می‌خواند:
+
+```java
+String ex = extParams.get("example");
+boolean isNewVersion = (ex != null && ex.length() > 0);
+Log.d("Image2VideoServer", "createAiSequenceVideoTask isNewVersion: " + isNewVersion);
+if (!isNewVersion) { body.put("effectType", …); body.put("poseSequenceId", …); body.put("pixVerseId", …); }
+for (Map.Entry e : extParams.entrySet()) body.put(e.getKey(), e.getValue());
+```
+
+یعنی وقتی `example` پر باشد، `effectType` و بقیه **کامل حذف** می‌شوند و فقط
+`example` + هر چه در `extParams` باشد فرستاده می‌شود. پس رد شدن
+`effectType=4991/5041/4877/5202` طبیعی است: آن اعداد افکت ویدیوی پیش‌ساخته‌اند
+و مسیر Sequence آن‌ها را نمی‌پذیرد. **آزمون درست، فرستادن `example` بدون
+`effectType` است** — چیپ‌های Animate/Walk/Wave در اسکرین‌شات هم دقیقاً
+`samples` همین `example` هستند.
+
+## ابزار تازه: `re/annpaths.py`
+
+پارسر خام annotation روی خودِ فایل dex (بدون androguard). `encoded_value`
+های ثابت‌عرض را با `value_arg+1` بایت می‌خواند، نه uleb — این یک اشتباه رایج
+است که کل پارس را یک بایت جابه‌جا می‌کند. روی هشت dex اجرا شد:
+**۷۴٬۵۸۲ متد annotate‌شده با ۱۲۹ نوع annotation** خوانده شد.
+
+ولی **هیچ annotation از `retrofit2` پیدا نشد** ⇒ لایهٔ HTTP این اپ Retrofit
+نیست (برخلاف حدس قبلی) و مسیرها از جای دیگری می‌آیند. بنابراین نگاشت
+مسیر↔متد با annotation **قابل حل نیست** و باید تجربی (همان جدول واریانت‌ها)
+بسته شود.
+
+## تنها راه قانونی برای `poseSequenceId` / `pixVerseId`
+
+اندپوینت `getAllPoseSequenceId` در APK هست
+(`Image2VideoServer$getAllPoseSequenceId$1`، متد کلاینت `g.V(...)`). این
+همان API‌ای است که اپ برای پر کردن `poseSequenceId` و `pixVerseId` صدا می‌زند؛
+یعنی **این دو مقدار دادهٔ سرورند و در APK ثابت نیستند**. تا مسیر این اندپوینت
+پیدا نشود، مسیرهای V3/Sequence-قدیم عملاً بسته‌اند.

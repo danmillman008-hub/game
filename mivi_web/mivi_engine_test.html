@@ -58,7 +58,7 @@
 <body>
 <div class="wrap">
 
-  <h1>🧬 Mivi — تست موتورها با یک دکمه <span class="tag" id="verTag">build 2026-10-29y</span></h1>
+  <h1>🧬 Mivi — تست موتورها با یک دکمه <span class="tag" id="verTag">build 2026-10-29z</span></h1>
   <div class="sub">
     یک عکس بده، یک دکمه بزن. این صفحه هر پنج مسیر تولیدی که در APK هست را با بدنهٔ
     دقیق خودش صدا می‌زند، خروجی هرکدام را می‌گیرد و کنار هم می‌گذارد.
@@ -231,7 +231,7 @@ function md5(inputString){
 }
 
 const $=id=>document.getElementById(id);
-const VERSION="2026-10-29y";   /* ← اگر این عدد در خط اول لاگ نبود، نسخهٔ کش‌شده اجرا شده */
+const VERSION="2026-10-29z";   /* ← اگر این عدد در خط اول لاگ نبود، نسخهٔ کش‌شده اجرا شده */
 const logEl=$("log");
 function ts(){return String(Math.floor(Date.now()/1000));}
 function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
@@ -350,12 +350,19 @@ async function upload(file){
 }
 
 /* ===================== پنج موتور + واریانت‌ها ===================== */
-/* خطاهای واقعی سرور (تست ۱۴:۳۵) دقیقاً گفتند چه چیزی کم است:
-   UNI → c=400 "exampleexample不能为空"  ⇒ فیلد example باید مقدار داشته باشد
-   VEO → c=500 NumberFormatException ""   ⇒ یکی از فیلدها باید عدد باشد
-   SEQ → c=1001 "param effectType illegal"⇒ این اندپوینت ۶۲۰۹ را قبول نمی‌کند
-   LTX → HTTP 404 روی cpi.ufotosoft.com    ⇒ مسیر/هاست دیگر
-   پس هر موتور فهرستی از واریانت‌ها دارد و صفحه تا اولین موفقیت جلو می‌رود. */
+/* وضعیت واقعی سرورها (اجرای بیلد y، ۱۴:۴۱):
+   GX     → c=200 ✅ (این همان مسیر واقعی اپ است)
+   LTX V3 → c=400 "pixVerseId不能为空"   ⇒ V3 موتور PixVerse است، نه LTX
+   LTX V2 → c=1001 "invalid user"        ⇒ احراز هویت/کاربر دیگر
+   UNI    → c=1013 "example empty or illegal" ⇒ مقدار example نامعتبر است
+   V5     → c=1013 "param error: effectType illegal"
+            ولی بدنهٔ Veo در خود اپ هیچ effectType‌ای ندارد ⇒
+            اندپوینت V5 اندپوینت Veo نیست. حالا با effectType واقعی تست می‌شود.
+   SEQ V4 → c=1001 "param effectType illegal" برای ۴۹۹۱/۵۰۴۱/۴۸۷۷/۵۲۰۲
+   HD     → c=1001 "taskId is invalid"   ⇒ تسک GX را قبول نمی‌کند
+   پس هر موتور فهرستی از واریانت‌ها دارد و صفحه تا اولین موفقیت جلو می‌رود.
+   (کد dex ثابت کرد بدنهٔ Sequence با پر بودن extParams["example"] کاملاً
+   عوض می‌شود — همان چیزی که واریانت‌های «نسخهٔ نو» آزمون می‌کنند.) */
 const CATALOG_EFFECTS=[4991,5041,4877,5202,6686,7849];
 const EX_EXAMPLE=[
   "3141","4995","Catwalk",
@@ -363,49 +370,48 @@ const EX_EXAMPLE=[
   "6209"
 ];
 
+const EX_NAMES=["animate","walk","wave","Animate","Walk","Wave"];
+/* کشف تازهٔ RE (بیلد y+): سازندهٔ بدنهٔ Sequence یک شرط دارد —
+   اگر extParams["example"] غیرخالی باشد «نسخهٔ نو» می‌شود و
+   effectType/poseSequenceId/pixVerseId را کامل حذف می‌کند و فقط
+   example + extParams را می‌فرستد. پس مثال‌های Animate/Walk/Wave
+   (چیپ‌های صفحهٔ اپ) باید بدون effectType آزمایش شوند. */
 const ENGINES=[
   {key:"GX",name:"GX / beat",query:"/algo/v1/faceFusion/aigc/beatImage2Video/queryTask",
    variants:[{note:"بدنهٔ تأییدشده",path:"/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",
      body:o=>({imageUrls:[o.img],level:o.level,effectType:o.eff,prompt:o.prompt,quality:o.quality})}]},
 
-  {key:"LTX",name:"LTX",query:"/algo/v1/faceFusion/aigc/image2VideoQuery",
+  {key:"LTX",name:"LTX / PixVerse",query:"/algo/v1/faceFusion/aigc/image2VideoQuery",
    variants:[
-     {note:"createTask روی هاست دوم",host:"https://cpi.wiseoel.com",
-      path:"/algo/v1/faceFusion/aigc/image2video/createTask",
+     {note:"V3 بدون pixVerseId",path:"/algo/v1/faceFusion/aigc/image2VideoCreateV3",
       body:o=>({imageUrls:[o.img],level:o.level,effectType:o.eff})},
-     {note:"image2VideoCreateV3",path:"/algo/v1/faceFusion/aigc/image2VideoCreateV3",
-      body:o=>({imageUrls:[o.img],level:o.level,effectType:o.eff})},
-     {note:"image2VideoCreateV2",path:"/algo/v1/faceFusion/aigc/image2VideoCreateV2",
+     {note:"V2 بدون pixVerseId",path:"/algo/v1/faceFusion/aigc/image2VideoCreateV2",
       body:o=>({imageUrls:[o.img],level:o.level,effectType:o.eff})}
    ]},
 
   {key:"UNI",name:"Unified",query:"/algo/v1/faceFusion/aigc/image2VideoQuery",
-   variants:EX_EXAMPLE.map(ex=>({note:"example="+ex.slice(0,34),
+   variants:EX_EXAMPLE.concat(EX_NAMES).map(ex=>({note:"example="+ex.slice(0,34),
      path:"/algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate",
      body:o=>({imageUrls:[o.img],level:o.level,deviceToken:"",prompt:o.prompt,
                ratio:o.ratio,movementAmplitude:0,example:ex,ifTest:false})}))},
 
-  {key:"VEO",name:"Google Veo (V5)",query:"/algo/v1/faceFusion/aigc/image2VideoQuery",
+  {key:"V5",name:"V5 (effectType می‌خواهد)",query:"/algo/v1/faceFusion/aigc/image2VideoQuery",
    variants:[
-     {note:"googleId=1 + deviceToken",path:"/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
-      body:o=>({imageUrls:[o.img],level:o.level,deviceToken:"",googleId:"1",
-                audio:true,prompt:o.prompt,duration:o.dur,ifTest:false})},
-     {note:"googleId=1 بدون deviceToken",path:"/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
-      body:o=>({imageUrls:[o.img],level:o.level,googleId:"1",
-                audio:true,prompt:o.prompt,duration:o.dur,ifTest:false})},
-     {note:"googleId=2 بدون deviceToken",path:"/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
-      body:o=>({imageUrls:[o.img],level:o.level,googleId:"2",
-                audio:true,prompt:o.prompt,duration:o.dur,ifTest:false})},
-     {note:"googleId=0 بدون deviceToken",path:"/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
-      body:o=>({imageUrls:[o.img],level:o.level,googleId:"0",
-                audio:true,prompt:o.prompt,duration:o.dur,ifTest:false})}
-   ]},
+     {note:"effectType=6209 (بدنهٔ کامل اپ)",path:"/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
+      body:o=>({imageUrls:[o.img],level:o.level,deviceToken:"",googleId:"1",audio:true,
+                effectType:o.eff,prompt:o.prompt,duration:o.dur,ifTest:false})}
+   ].concat([4899,4991,6093,7849].map(et=>({note:"effectType="+et+" (فقط لازم‌ها)",
+      path:"/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
+      body:o=>({imageUrls:[o.img],level:o.level,effectType:et,ifTest:false})})))},
 
   {key:"SEQ",name:"Sequence / V4",query:"/algo/v1/faceFusion/aigc/image2VideoQuery",
-   variants:CATALOG_EFFECTS.slice(0,4).map(et=>({note:"effectType="+et,
-     path:"/algo/v1/faceFusion/aigc/integrated/image2VideoCreateV4",
-     body:o=>({imageUrls:[o.img],level:o.level,deviceToken:"",effectType:et,
-               poseSequenceId:"",pixVerseId:"",ifTest:false})}))}
+   variants:EX_NAMES.map(ex=>({note:"نسخهٔ نو example="+ex,
+      path:"/algo/v1/faceFusion/aigc/integrated/image2VideoCreateV4",
+      body:o=>({imageUrls:[o.img],level:o.level,deviceToken:"",example:ex,ifTest:false})}))
+    .concat(CATALOG_EFFECTS.slice(0,2).map(et=>({note:"نسخهٔ قدیم effectType="+et,
+      path:"/algo/v1/faceFusion/aigc/integrated/image2VideoCreateV4",
+      body:o=>({imageUrls:[o.img],level:o.level,deviceToken:"",effectType:et,
+                poseSequenceId:"",pixVerseId:"",ifTest:false})})))}
 ];
 
 /* ===================== جدول ===================== */

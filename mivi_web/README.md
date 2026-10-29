@@ -1026,3 +1026,41 @@ AiText2VideoUnify · AiSequenceVideo · AiHug · AiHugP2V · AiDance
 - **Sequence V4**: `effectType` ∈ {`4991`,`5041`,`4877`,`5202`} (شناسه‌های واقعی کاتالوگ)
 
 تست ساختار واریانت‌ها: **۵/۵ PASS** (۲۱ واریانت در کل).
+
+## اجرای سوم صفحهٔ آزمون (بیلد `2026-10-29y`، ساعت ۱۴:۴۱) — نتیجه
+
+این بار بیلد درست اجرا شد (خط اول لاگ مُهر نسخه داشت). خروجی، همان پنج خطای
+قبلی بود ولی این بار **هر خطا نامِ پارامتر گمشده را گفت**:
+
+| مسیر | پاسخ | خوانش |
+|---|---|---|
+| GX / beat | `c=200` + taskId، ۷۵ ثانیه بعد ویدیو | ✅ سالم — همان مسیر واقعی اپ |
+| LTX `image2VideoCreateV3` | `c=400 pixVerseId不能为空` | V3 = PixVerse؛ `pixVerseId` اجباری |
+| LTX `image2VideoCreateV2` | `c=1001 invalid user` | احراز هویت/کاربر متفاوت |
+| Unified ×۵ | `c=1013 "example" is empty or illegal` | مقدار `example` نامعتبر |
+| V5 ×۴ | `c=1013 param error: effectType illegal` | V5 `effectType` می‌خواهد |
+| Sequence V4 ×۴ | `c=1001 param error: effectType illegal` | اعداد کاتالوگ را نمی‌پذیرد |
+| Vidu HD | `c=1001 taskId is invalid` | تسک GX را قبول نمی‌کند |
+
+### آنچه از dex درآمد و وضعیت را عوض کرد
+
+`Image2VideoServer$create*Task$1` را کامل خواندم (جدول بدنه‌ها در
+`API_MAP.md`). سه نتیجه:
+
+1. بدنهٔ **Veo** هیچ `effectType` ندارد و دقیقاً همان چیزی است که ما فرستادیم،
+   با این حال V5 خطای `effectType` می‌دهد ⇒ **V5 اندپوینت Veo نیست.**
+2. بدنهٔ `createAiVideoLtxTask` فقط `imageUrls`+`level`+`effectType` است و
+   V3 `pixVerseId` می‌خواهد ⇒ **آن مسیر PixVerse است، نه LTX.**
+3. بدنهٔ **Sequence** یک شرط دارد: اگر `extParams["example"]` پر باشد،
+   `effectType`/`poseSequenceId`/`pixVerseId` **حذف** می‌شوند و فقط
+   `example` + `extParams` می‌رود. پس آزمون درست، `example` بدون `effectType` است.
+
+### تغییرات بیلد `2026-10-29z`
+
+- واریانت‌های LTX به دو مورد (V3/V2) کاهش یافت؛ هاستِ دوم که ۴۰۴ داد حذف شد.
+- مسیر V5 حالا با `effectType` واقعی آزمایش می‌شود (۶۲۰۹ در بدنهٔ کامل، سپس
+  ۴۸۹۹/۴۹۹۱/۶۰۹۳/۷۸۴۹ با بدنهٔ حداقلی) — چون ثابت شد V5 همان چیزی را می‌خواهد.
+- Unified شش مثال تازه گرفت: `animate/walk/wave` با حرف بزرگ و کوچک
+  (چیپ‌های اسکرین‌شات).
+- Sequence شش واریانت «نسخهٔ نو» گرفت: `example` بدون `effectType`.
+- جمعاً **۲۷ واریانت**، همه با `node --check` و آزمون ساخت بدنه تأیید شدند.
