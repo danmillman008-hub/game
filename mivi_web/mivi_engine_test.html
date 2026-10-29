@@ -58,7 +58,7 @@
 <body>
 <div class="wrap">
 
-  <h1>🧬 Mivi — تست موتورها با یک دکمه <span class="tag" id="verTag">2026-10-29x</span></h1>
+  <h1>🧬 Mivi — تست موتورها با یک دکمه <span class="tag" id="verTag">2026-10-29y</span></h1>
   <div class="sub">
     یک عکس بده، یک دکمه بزن. این صفحه هر پنج مسیر تولیدی که در APK هست را با بدنهٔ
     دقیق خودش صدا می‌زند، خروجی هرکدام را می‌گیرد و کنار هم می‌گذارد.
@@ -110,7 +110,9 @@
     </div>
     <button id="run" type="button">🚀 اجرای کامل: آپلود + پنج موتور + خروجی‌ها</button>
     <div class="hint">
-      طول این آزمایش تا ~۱۰ دقیقه است (پنج تولید موازی نیستند). صفحه را نبندید.
+      هر موتور چند واریانت پارامتر را امتحان می‌کند و روی اولین موفقیت می‌ایستد.
+      ردها آنی برمی‌گردند، پس معمولاً چند ثانیه؛ ولی اگر چند موتور قبول شوند،
+      گرفتن خروجی تا ~۱۰ دقیقه طول می‌کشد. صفحه را نبندید.
     </div>
   </div>
 
@@ -289,8 +291,8 @@ function uploadHeaders(){
   return {cp:"instagram.story.art.collage",version:"407",platform:"1",
     sign:md5("m3snil"+t),timeStamp:t,userId:CFG.userId,ifHttps:"true"};
 }
-async function postJson(path,body){
-  const url=apiUrl(path);
+async function postJsonAt(host,path,body){
+  const url=viaProxy(host.replace(/\/+$/,"")+path);
   let r,txt;
   try{r=await fetch(url,{method:"POST",headers:algoHeaders(),body:JSON.stringify(body)});}
   catch(e){return {http:0,error:e.message,txt:"",j:null};}
@@ -298,6 +300,7 @@ async function postJson(path,body){
   let j=null;try{j=JSON.parse(txt);}catch(e){}
   return {http:r.status,txt,j};
 }
+async function postJson(path,body){return postJsonAt(CFG.host,path,body);}
 
 /* ===================== برش تصویر ===================== */
 const RATIO_WH={"9:16":[9,16],"3:4":[3,4],"1:1":[1,1],"4:3":[4,3]};
@@ -345,26 +348,63 @@ async function upload(file){
   return j.d[0];
 }
 
-/* ===================== پنج موتور ===================== */
+/* ===================== پنج موتور + واریانت‌ها ===================== */
+/* خطاهای واقعی سرور (تست ۱۴:۳۵) دقیقاً گفتند چه چیزی کم است:
+   UNI → c=400 "exampleexample不能为空"  ⇒ فیلد example باید مقدار داشته باشد
+   VEO → c=500 NumberFormatException ""   ⇒ یکی از فیلدها باید عدد باشد
+   SEQ → c=1001 "param effectType illegal"⇒ این اندپوینت ۶۲۰۹ را قبول نمی‌کند
+   LTX → HTTP 404 روی cpi.ufotosoft.com    ⇒ مسیر/هاست دیگر
+   پس هر موتور فهرستی از واریانت‌ها دارد و صفحه تا اولین موفقیت جلو می‌رود. */
+const CATALOG_EFFECTS=[4991,5041,4877,5202,6686,7849];
+const EX_EXAMPLE=[
+  "3141","4995","Catwalk",
+  "https://res.wiseoel.com/common/video/UF250620171dcbed-2119-4321-b241-0aa0bc74ad98_press.mp4",
+  "6209"
+];
+
 const ENGINES=[
-  {key:"GX",name:"GX / beat (مسیر فعلی)",path:"/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",
-   body:(o)=>({imageUrls:[o.img],level:o.level,effectType:o.eff,prompt:o.prompt,quality:o.quality}),
-   query:"/algo/v1/faceFusion/aigc/beatImage2Video/queryTask"},
-  {key:"LTX",name:"LTX",path:"/algo/v1/faceFusion/aigc/image2video/createTask",
-   body:(o)=>({imageUrls:[o.img],level:o.level,effectType:o.eff}),
-   query:"/algo/v1/faceFusion/aigc/image2VideoQuery"},
-  {key:"UNI",name:"Unified",path:"/algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate",
-   body:(o)=>({imageUrls:[o.img],level:o.level,deviceToken:"",prompt:o.prompt,
-               ratio:o.ratio||"3:4",movementAmplitude:0,example:"",ifTest:false}),
-   query:"/algo/v1/faceFusion/aigc/image2VideoQuery"},
-  {key:"VEO",name:"Google Veo (V5)",path:"/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
-   body:(o)=>({imageUrls:[o.img],level:o.level,deviceToken:"",googleId:"",audio:true,
-               prompt:o.prompt,duration:o.dur,ifTest:false}),
-   query:"/algo/v1/faceFusion/aigc/image2VideoQuery"},
-  {key:"SEQ",name:"Sequence / PixVerse",path:"/algo/v1/faceFusion/aigc/integrated/image2VideoCreateV4",
-   body:(o)=>({imageUrls:[o.img],level:o.level,deviceToken:"",effectType:o.eff,
-               poseSequenceId:"",pixVerseId:"",ifTest:false}),
-   query:"/algo/v1/faceFusion/aigc/image2VideoQuery"}
+  {key:"GX",name:"GX / beat",query:"/algo/v1/faceFusion/aigc/beatImage2Video/queryTask",
+   variants:[{note:"بدنهٔ تأییدشده",path:"/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",
+     body:o=>({imageUrls:[o.img],level:o.level,effectType:o.eff,prompt:o.prompt,quality:o.quality})}]},
+
+  {key:"LTX",name:"LTX",query:"/algo/v1/faceFusion/aigc/image2VideoQuery",
+   variants:[
+     {note:"createTask روی هاست دوم",host:"https://cpi.wiseoel.com",
+      path:"/algo/v1/faceFusion/aigc/image2video/createTask",
+      body:o=>({imageUrls:[o.img],level:o.level,effectType:o.eff})},
+     {note:"image2VideoCreateV3",path:"/algo/v1/faceFusion/aigc/image2VideoCreateV3",
+      body:o=>({imageUrls:[o.img],level:o.level,effectType:o.eff})},
+     {note:"image2VideoCreateV2",path:"/algo/v1/faceFusion/aigc/image2VideoCreateV2",
+      body:o=>({imageUrls:[o.img],level:o.level,effectType:o.eff})}
+   ]},
+
+  {key:"UNI",name:"Unified",query:"/algo/v1/faceFusion/aigc/image2VideoQuery",
+   variants:EX_EXAMPLE.map(ex=>({note:"example="+ex.slice(0,34),
+     path:"/algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate",
+     body:o=>({imageUrls:[o.img],level:o.level,deviceToken:"",prompt:o.prompt,
+               ratio:o.ratio,movementAmplitude:0,example:ex,ifTest:false})}))},
+
+  {key:"VEO",name:"Google Veo (V5)",query:"/algo/v1/faceFusion/aigc/image2VideoQuery",
+   variants:[
+     {note:"googleId=1 + deviceToken",path:"/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
+      body:o=>({imageUrls:[o.img],level:o.level,deviceToken:"",googleId:"1",
+                audio:true,prompt:o.prompt,duration:o.dur,ifTest:false})},
+     {note:"googleId=1 بدون deviceToken",path:"/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
+      body:o=>({imageUrls:[o.img],level:o.level,googleId:"1",
+                audio:true,prompt:o.prompt,duration:o.dur,ifTest:false})},
+     {note:"googleId=2 بدون deviceToken",path:"/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
+      body:o=>({imageUrls:[o.img],level:o.level,googleId:"2",
+                audio:true,prompt:o.prompt,duration:o.dur,ifTest:false})},
+     {note:"googleId=0 بدون deviceToken",path:"/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
+      body:o=>({imageUrls:[o.img],level:o.level,googleId:"0",
+                audio:true,prompt:o.prompt,duration:o.dur,ifTest:false})}
+   ]},
+
+  {key:"SEQ",name:"Sequence / V4",query:"/algo/v1/faceFusion/aigc/image2VideoQuery",
+   variants:CATALOG_EFFECTS.slice(0,4).map(et=>({note:"effectType="+et,
+     path:"/algo/v1/faceFusion/aigc/integrated/image2VideoCreateV4",
+     body:o=>({imageUrls:[o.img],level:o.level,deviceToken:"",effectType:et,
+               poseSequenceId:"",pixVerseId:"",ifTest:false})}))}
 ];
 
 /* ===================== جدول ===================== */
@@ -484,25 +524,31 @@ $("run").onclick=async()=>{
     o.img=img;
     log("آپلود موفق: "+img,"ok");
 
-    head("پنج موتور، یک عکس");
+    head("پنج موتور، یک عکس (با جستجوی پارامتر گمشده)");
     const ok=[];
     for(const en of ENGINES){
-      const body=en.body(o);
-      log("→ "+en.name+" | "+JSON.stringify(body).slice(0,220),"i");
-      const env=await postJson(en.path,body);
-      const c=(env.j&&typeof env.j.c!=="undefined")?env.j.c:null;
-      const d=(env.j&&env.j.d)?env.j.d:{};
-      const tid=d.taskId||d.jobId||"";
-      const msg=c===200?(tid||"۲۰۰ بدون taskId"):
-        (env.http===0?("شبکه: "+env.error):(env.txt||"").slice(0,140));
-      row(en.key,en.path,env.http,c,msg);
-      if(c===200&&tid){
-        ok.push({en,tid});
-        log("✓ "+en.key+" تسک ساخت: "+tid,"ok");
-      }else{
-        log("✗ "+en.key+" HTTP "+env.http+" c="+c+" — "+(env.txt||env.error||"").slice(0,160),"e");
+      let won=null;
+      for(const v of en.variants){
+        const host=v.host||CFG.host;
+        const body=v.body(o);
+        log("→ "+en.key+" ["+v.note+"] "+JSON.stringify(body).slice(0,200),"i");
+        const env=await postJsonAt(host,v.path,body);
+        const c=(env.j&&typeof env.j.c!=="undefined")?env.j.c:null;
+        const d=(env.j&&env.j.d&&typeof env.j.d==="object")?env.j.d:{};
+        const tid=d.taskId||d.jobId||"";
+        const msg=c===200?(tid||"۲۰۰ بدون taskId"):
+          (env.http===0?("شبکه: "+env.error):(env.txt||"").slice(0,140));
+        row(en.key+" · "+v.note,v.path,env.http,c,msg);
+        if(c===200&&tid){
+          log("✓ "+en.key+" پذیرفت با «"+v.note+"» → "+tid,"ok");
+          won={en,tid,v};
+          break;
+        }
+        log("✗ "+en.key+" «"+v.note+"» HTTP "+env.http+" c="+c+" — "+
+            (env.txt||env.error||"").slice(0,170),"e");
+        await sleep(700);
       }
-      await sleep(800);
+      if(won)ok.push(won);
     }
 
     if(!ok.length){
