@@ -103,7 +103,12 @@ def discover(path):
         if hit and hit in body:
             # value was rejected: try a different shape once
             cur = body[hit]
-            body[hit] = {"": IMG, IMG: [IMG], "[URL]": 1, 1: "3:4", "3:4": "4:3"}.get(cur, 0)
+            alts = [IMG, [IMG], [IMG, IMG2], 1, 2, "3:4", "0", ""]
+            nxt = 0
+            for i, a in enumerate(alts):
+                if a == cur:
+                    nxt = i + 1
+            body[hit] = alts[nxt] if nxt < len(alts) else 0
             continue
         return "STUCK", body, r, log
     return "MAXROUNDS", body, call(path, body), log
