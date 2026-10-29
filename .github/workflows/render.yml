@@ -1,0 +1,36 @@
+name: render
+on:
+  workflow_dispatch:
+  push:
+    branches: [arena/e3952d18-game]
+    paths: ['films/before_leaving/project.json', 'studio/render_film.py']
+permissions:
+  contents: write
+concurrency:
+  group: render-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - name: deps
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          pip install -q pillow
+      - name: render (resumable, budgeted)
+        run: python3 studio/render_film.py films/before_leaving --budget-min 200 --quality 2
+      - name: publish project state + film
+        if: always()
+        run: |
+          git config user.name "render-bot"
+          git config user.email "render@local"
+          git add -f films/before_leaving/ probe_out/ || true
+          git commit -m "render: $(date -u +%H:%M:%S) $(python3 -c "
+import json;p=json.load(open('films/before_leaving/project.json'))
+print(sum(1 for s in p['shots'] if s.get('clip')),'/',len(p['shots']))" 2>/dev/null)" || echo "no change"
+          git pull --rebase -q origin "${GITHUB_REF_NAME}" || true
+          git push || true
