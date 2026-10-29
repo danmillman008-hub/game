@@ -1,145 +1,109 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-<meta charset="utf-8">
+<!doctype html>
+<html lang="fa" dir="rtl"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Mivi — تست موتورها (یک دکمه)</title>
+<title>آزمایشگاه موتور — یک دکمه</title>
 <style>
-  :root{--bg:#0d1117;--card:#161b22;--bd:#30363d;--fg:#e6edf3;--mut:#8b949e;
-        --ok:#3fb950;--wn:#d29922;--er:#f85149;--ac:#58a6ff;}
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--fg);
-       font-family:Vazirmatn,Tahoma,system-ui,sans-serif;font-size:14px;line-height:1.85}
-  .wrap{max-width:1050px;margin:0 auto;padding:18px 16px 80px}
-  h1{font-size:19px;margin:0 0 4px}
-  .tag{font-size:11px;background:#1f6feb22;border:1px solid #1f6feb55;color:var(--ac);
-       border-radius:6px;padding:1px 7px;font-weight:400}
-  .sub{color:var(--mut);font-size:12.5px;margin-bottom:16px}
-  .card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:14px}
-  .card h2{font-size:15px;margin:0 0 10px;font-weight:600}
-  label{display:block;font-size:12px;color:var(--mut);margin-bottom:4px}
-  input,select{width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--bd);
-       background:#0d1117;color:var(--fg);font-family:inherit;font-size:13px}
-  input[type=file]{padding:6px}
-  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
-  .row>div{flex:1;min-width:120px}
-  button{cursor:pointer;border-radius:9px;border:1px solid var(--bd);background:#21262d;
-       color:var(--fg);padding:9px 14px;font-family:inherit;font-size:13px;font-weight:600}
-  button:hover:not(:disabled){border-color:var(--ac)}
-  button:disabled{opacity:.45;cursor:not-allowed}
-  #run{width:100%;margin-top:14px;padding:16px;font-size:16px;font-weight:700;
-       background:linear-gradient(180deg,#1f6feb,#1a5fd0);border:1px solid #388bfd;color:#fff}
-  #run:disabled{background:#21262d;color:var(--mut);border-color:var(--bd)}
-  .hint{font-size:12px;color:var(--mut);margin-top:8px;line-height:1.9}
-  code{background:#0d1117;border:1px solid var(--bd);border-radius:5px;padding:1px 5px;
-       direction:ltr;display:inline-block;font-size:11.5px}
-  table{width:100%;border-collapse:collapse;font-size:12.5px}
-  th{color:var(--mut);font-weight:500;text-align:right;padding:7px 6px;border-bottom:1px solid var(--bd)}
-  td{padding:7px 6px;border-bottom:1px solid #21262d;vertical-align:top}
-  .dir{direction:ltr;text-align:left}
-  .pill{display:inline-block;padding:1px 8px;border-radius:20px;font-size:11px;font-weight:700}
-  .p-ok{background:#3fb95022;color:var(--ok);border:1px solid #3fb95055}
-  .p-er{background:#f8514922;color:var(--er);border:1px solid #f8514955}
-  .p-wa{background:#d2992222;color:var(--wn);border:1px solid #d2992255}
-  #log{background:#010409;border:1px solid var(--bd);border-radius:10px;padding:12px;
-       height:260px;overflow:auto;font-family:ui-monospace,Menlo,monospace;font-size:11.5px;
-       direction:ltr;text-align:left;white-space:pre-wrap;word-break:break-all}
-  #log .i{color:#9aa4af}#log .ok{color:var(--ok)}#log .e{color:var(--er)}
-  #log .w{color:var(--wn)}#log .h{color:var(--ac);font-weight:700}
-  details summary{cursor:pointer;color:var(--mut);font-size:12.5px;user-select:none}
-  .vid{border:1px solid var(--bd);border-radius:10px;padding:12px;margin-top:10px;background:#0d1117}
-  .vid h3{margin:0 0 8px;font-size:14px}
-  .meta{font-size:12px;color:var(--mut);margin-bottom:8px}
-  .meta b{color:var(--fg)}
-  video{width:100%;max-height:420px;border-radius:8px;background:#000;display:block}
-  a{color:var(--ac)}
-</style>
-</head>
-<body>
-<div class="wrap">
+:root{--bg:#0d1117;--card:#161b22;--line:#30363d;--txt:#e6edf3;--dim:#8b949e;
+      --ok:#3fb950;--er:#f85149;--wa:#d29922;--ac:#58a6ff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:system-ui,Tahoma,sans-serif;font-size:14px}
+.wrap{max-width:1020px;margin:0 auto;padding:18px}
+h1{font-size:19px;margin:0 0 2px}
+.sub{color:var(--dim);font-size:12.5px;margin-bottom:14px}
+.tag{background:#1f6feb33;color:var(--ac);border:1px solid #1f6feb66;border-radius:20px;
+     padding:1px 9px;font-size:11.5px;vertical-align:middle}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:12px}
+label{display:block;font-size:12.5px;color:var(--dim);margin:0 0 4px}
+input,select{width:100%;background:#0d1117;color:var(--txt);border:1px solid var(--line);
+             border-radius:6px;padding:7px 9px;font-family:inherit;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+button{cursor:pointer;border:0;border-radius:8px;font-family:inherit}
+#run{width:100%;padding:16px;font-size:17px;font-weight:700;color:#fff;
+     background:linear-gradient(180deg,#2f81f7,#1f6feb);margin:4px 0 8px}
+#run:disabled{background:#30363d;color:#8b949e;cursor:default}
+details summary{cursor:pointer;color:var(--dim);font-size:13px;margin-bottom:8px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{padding:6px 5px;border-bottom:1px solid #21262d;text-align:right;vertical-align:top}
+th{color:var(--dim);font-weight:500}
+.pill{display:inline-block;padding:1px 8px;border-radius:20px;font-size:11.5px;font-weight:600}
+.p-ok{background:#2386364d;color:var(--ok)} .p-er{background:#f8514933;color:var(--er)}
+.p-wa{background:#d2992233;color:var(--wa)}
+.dir{direction:ltr;text-align:left;color:var(--dim);font-family:ui-monospace,monospace}
+#log{background:#010409;border:1px solid var(--line);border-radius:8px;padding:10px;
+     height:300px;overflow:auto;font-family:ui-monospace,monospace;font-size:12px;
+     direction:ltr;text-align:left;white-space:pre-wrap;line-height:1.65}
+.i{color:#9da7b3}.ok{color:var(--ok)}.er{color:var(--er)}.wa{color:var(--wa)}
+.h{color:var(--ac);font-weight:700}
+.vidx{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.vcard{background:#0d1117;border:1px solid var(--line);border-radius:8px;padding:10px}
+.vcard video{width:100%;border-radius:6px;background:#000}
+.vcard a{color:var(--ac);font-size:12px;word-break:break-all}
+.meta{color:var(--dim);font-size:11.5px;margin-top:6px;line-height:1.7}
+</style></head><body><div class="wrap">
 
-  <h1>🧬 Mivi — تست موتورها با یک دکمه <span class="tag" id="verTag">build 2026-10-30c</span></h1>
-  <div class="sub">
-    یک عکس بده، یک دکمه بزن. این صفحه هر پنج مسیر تولیدی که در APK هست را با بدنهٔ
-    دقیق خودش صدا می‌زند، خروجی هرکدام را می‌گیرد و کنار هم می‌گذارد.
-  </div>
-
-  <div class="card">
-    <details>
-      <summary>⚙️ تنظیمات اتصال و شناسهٔ کاربر (اگر قبلاً کار می‌کرد، دست نزن)</summary>
-      <div class="row" style="margin-top:12px">
-        <div><label>هاست</label><input id="host" dir="ltr"></div>
-        <div><label>حالت اتصال</label>
-          <select id="connMode">
-            <option value="local">پروکسی محلی (localhost:8770)</option>
-            <option value="custom">پروکسی سفارشی</option>
-            <option value="direct">مستقیم</option>
-          </select></div>
-        <div style="flex:2"><label>آدرس پروکسی سفارشی</label><input id="customProxy" dir="ltr"></div>
-        <div style="flex:1"><label>userId</label><input id="userId" dir="ltr"></div>
-      </div>
-      <div class="hint">
-        پیش‌فرض «پروکسی محلی» است. اگر آن را ندارید، فایل <code>mivi_all_in_one.html</code>
-        دکمهٔ ساخت <code>proxy.py</code> دارد؛ یا حالت «مستقیم» را امتحان کنید.
-        تنظیمات در مرورگر ذخیره می‌شود.
-      </div>
-    </details>
-  </div>
-
-  <div class="card">
-    <h2>۱) ورودی</h2>
-    <div class="row">
-      <div style="flex:2"><label>عکس</label><input id="file" type="file" accept="image/*"></div>
-      <div style="flex:2"><label>پرامپت (خالی = بدون پرامپت)</label>
-        <input id="prompt" dir="ltr" placeholder="a person slowly turns their head"></div>
-    </div>
-    <div class="row" style="margin-top:10px">
-      <div><label>نسبت (برش قبل از آپلود)</label>
-        <select id="ratio">
-          <option value="">بدون برش</option>
-          <option value="9:16">9:16</option>
-          <option value="3:4" selected>3:4</option>
-          <option value="1:1">1:1</option>
-          <option value="4:3">4:3</option>
-        </select></div>
-      <div><label>کیفیت (مسیر GX)</label>
-        <select id="quality"><option value="2" selected>720P</option><option value="1">360P</option></select></div>
-      <div><label>level</label><input id="level" type="number" value="1"></div>
-      <div><label>effectType</label><input id="eff" type="number" value="6209"></div>
-      <div><label>مدت Veo</label><input id="dur" type="number" value="8"></div>
-    </div>
-    <button id="run" type="button">🚀 اجرای کامل: آپلود + پنج موتور + خروجی‌ها</button>
-    <div class="hint">
-      هر موتور چند واریانت پارامتر را امتحان می‌کند و روی اولین موفقیت می‌ایستد.
-      ردها آنی برمی‌گردند، پس معمولاً چند ثانیه؛ ولی اگر چند موتور قبول شوند،
-      گرفتن خروجی تا ~۱۰ دقیقه طول می‌کشد. صفحه را نبندید.
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>۲) نتیجهٔ موتورها</h2>
-    <div id="tblWrap">
-      <table id="tbl">
-        <tr><th>موتور</th><th>اندپوینت</th><th>HTTP</th><th>c</th><th>taskId / پیام</th></tr>
-      </table>
-    </div>
-    <div id="vids"></div>
-  </div>
-
-  <div class="card">
-    <h2>۳) گزارش زنده</h2>
-    <div id="log"></div>
-    <div class="card" style="margin-top:12px">
-      <h3 style="margin:0 0 6px">کاتالوگ pose / pixVerse (خام)</h3>
-      <pre id="pose" style="white-space:pre-wrap;word-break:break-all;font-size:11px;
-        max-height:260px;overflow:auto;background:#0d1117;padding:8px;border-radius:6px"></pre>
-    </div>
-  </div>
-
+<h1>آزمایشگاه موتور <span class="tag" id="ver">—</span></h1>
+<div class="sub">
+  یک عکس بده، یک دکمه بزن. این صفحه همهٔ موارد باقی‌مانده را پشت سر هم می‌آزماید،
+  هر تسکی که ساخته شد را خودش پول می‌کند و ویدیو را نشان می‌دهد.
 </div>
 
+<details class="card">
+  <summary>⚙️ تنظیمات اتصال (اگر لازم شد)</summary>
+  <div class="grid">
+    <div><label>هاست</label><input id="host"></div>
+    <div><label>حالت</label>
+      <select id="connMode">
+        <option value="local">پروکسی محلی (localhost:8770)</option>
+        <option value="custom">پروکسی دلخواه</option>
+        <option value="direct">مستقیم (CORS لازم است)</option>
+      </select></div>
+    <div><label>آدرس پروکسی</label><input id="customProxy"></div>
+    <div><label>userId</label><input id="userId"></div>
+  </div>
+</details>
+
+<div class="card">
+  <div class="grid">
+    <div style="grid-column:1/-1"><label>عکس (اجباری)</label><input id="file" type="file" accept="image/*"></div>
+    <div><label>برش</label>
+      <select id="ratio">
+        <option value="3:4">3:4 — مثل اپ</option>
+        <option value="">بدون برش</option>
+        <option value="9:16">9:16</option>
+        <option value="1:1">1:1</option>
+        <option value="4:3">4:3</option>
+      </select></div>
+    <div><label>کیفیت</label>
+      <select id="quality"><option value="2">720P (Pro)</option><option value="1">360P</option></select></div>
+    <div><label>prompt (اختیاری)</label><input id="prompt" placeholder="خالی بگذار = مثل تست اپ"></div>
+    <div><label>level</label><input id="level" value="1"></div>
+  </div>
+  <button id="run">🚀 اجرا — همهٔ آزمایش‌ها با یک بار زدن</button>
+  <div class="sub" style="margin:0">
+    فقط دو مورد از این آزمایش‌ها اعتبار خرج می‌کنند (GX و Neon)؛ بقیه یا رد می‌شوند یا رایگان‌اند.
+  </div>
+</div>
+
+<div class="card">
+  <h1 style="font-size:15px;margin:0 0 8px">نتیجهٔ درخواست‌ها</h1>
+  <div id="tblWrap"><table><thead><tr>
+    <th>آزمون</th><th>اندپوینت</th><th>HTTP</th><th>c</th><th>پیام / taskId</th>
+  </tr></thead><tbody id="tbl"></tbody></table></div>
+</div>
+
+<div class="card">
+  <h1 style="font-size:15px;margin:0 0 8px">ویدیوهای ساخته‌شده</h1>
+  <div id="vids" class="vidx"><span class="sub">هنوز چیزی ساخته نشده.</span></div>
+</div>
+
+<div class="card">
+  <h1 style="font-size:15px;margin:0 0 8px">لاگ</h1>
+  <div id="log"></div>
+</div>
+
+</div>
 <script>
-/* ===================== ابزارها ===================== */
+/* ============================ md5 (تأییدشده با node crypto) ============================ */
 function md5(inputString){
   function rotateLeft(lValue,iShift){return (lValue<<iShift)|(lValue>>>(32-iShift));}
   function addUnsigned(lX,lY){
@@ -162,8 +126,7 @@ function md5(inputString){
   function HH(a,b,c,d,x,s,ac){a=addUnsigned(a,addUnsigned(addUnsigned(H(b,c,d),x),ac));return addUnsigned(rotateLeft(a,s),b);}
   function II(a,b,c,d,x,s,ac){a=addUnsigned(a,addUnsigned(addUnsigned(I(b,c,d),x),ac));return addUnsigned(rotateLeft(a,s),b);}
   function convertToWordArray(str){
-    const isBin=!!(str&&str.BYTES_PER_ELEMENT===1);
-    if(!isBin)str=unescape(encodeURIComponent(str));
+    str=unescape(encodeURIComponent(str));
     var lMessageLength=str.length;
     var nTemp1=lMessageLength+8;
     var nTemp2=(nTemp1-(nTemp1%64))/64;
@@ -174,8 +137,7 @@ function md5(inputString){
     while(lByteCount<lMessageLength){
       lWordCount=(lByteCount-(lByteCount%4))/4;
       lBytePosition=(lByteCount%4)*8;
-      words[lWordCount]=(words[lWordCount]|
-        ((isBin?str[lByteCount]:str.charCodeAt(lByteCount))<<lBytePosition));
+      words[lWordCount]=(words[lWordCount]|(str.charCodeAt(lByteCount)<<lBytePosition));
       lByteCount++;
     }
     lWordCount=(lByteCount-(lByteCount%4))/4;
@@ -237,8 +199,28 @@ function md5(inputString){
   return (wordToHex(a)+wordToHex(b)+wordToHex(c)+wordToHex(d)).toLowerCase();
 }
 
+/* ============================ تنظیمات ============================ */
+const VERSION="2026-10-30d";
+const DEFAULTS={host:"https://cpi.ufotosoft.com",connMode:"local",
+  customProxy:"http://localhost:8770/proxy?u={url}",userId:"7da75eed37c61d33"};
+function loadCfg(){
+  let c={};try{c=JSON.parse(localStorage.getItem("mivi_engine_test_cfg")||"{}");}catch(e){}
+  return Object.assign({},DEFAULTS,c);
+}
+let CFG=loadCfg();
 const $=id=>document.getElementById(id);
-const VERSION="2026-10-30c";   /* ← اگر این عدد در خط اول لاگ نبود، نسخهٔ کش‌شده اجرا شده */
+$("host").value=CFG.host;$("connMode").value=CFG.connMode;
+$("customProxy").value=CFG.customProxy;$("userId").value=CFG.userId;
+$("ver").textContent="build "+VERSION;
+function persist(){
+  CFG.host=$("host").value.trim()||CFG.host;
+  CFG.connMode=$("connMode").value;
+  CFG.customProxy=$("customProxy").value.trim()||CFG.customProxy;
+  CFG.userId=$("userId").value.trim()||CFG.userId;
+  localStorage.setItem("mivi_engine_test_cfg",JSON.stringify(CFG));
+}
+["host","connMode","customProxy","userId"].forEach(id=>$(id).addEventListener("change",persist));
+
 const logEl=$("log");
 function ts(){return String(Math.floor(Date.now()/1000));}
 function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
@@ -249,34 +231,6 @@ function log(m,c){
   logEl.appendChild(s);logEl.scrollTop=logEl.scrollHeight;
 }
 function head(t){log("\n===== "+t+" =====","h");}
-
-/* ===================== پیکربندی ===================== */
-const DEFAULTS={host:"https://cpi.ufotosoft.com",connMode:"local",
-  customProxy:"http://localhost:8770/proxy?u={url}",userId:""};
-function loadCfg(){
-  let c={};try{c=JSON.parse(localStorage.getItem("mivi_engine_test_cfg")||"{}");}catch(e){}
-  c=Object.assign({},DEFAULTS,c);
-  if(!c.userId){
-    try{const m=JSON.parse(localStorage.getItem("mivi_all_in_one_cfg")||"{}");
-        if(m.userId)c.userId=m.userId;}catch(e){}
-  }
-  if(!c.userId){
-    const b=new Uint8Array(8);crypto.getRandomValues(b);
-    c.userId=Array.from(b).map(x=>x.toString(16).padStart(2,"0")).join("");
-  }
-  return c;
-}
-let CFG=loadCfg();
-$("host").value=CFG.host;$("connMode").value=CFG.connMode;
-$("customProxy").value=CFG.customProxy;$("userId").value=CFG.userId;
-function persist(){
-  CFG.host=$("host").value.trim()||DEFAULTS.host;
-  CFG.connMode=$("connMode").value;
-  CFG.customProxy=$("customProxy").value.trim();
-  CFG.userId=$("userId").value.trim()||CFG.userId;
-  localStorage.setItem("mivi_engine_test_cfg",JSON.stringify(CFG));
-}
-["host","connMode","customProxy","userId"].forEach(id=>$(id).addEventListener("change",persist));
 
 function viaProxy(abs){
   const enc=encodeURIComponent(abs);
@@ -291,449 +245,261 @@ function apiUrl(p){return viaProxy(CFG.host.replace(/\/+$/,"")+p);}
 function algoHeaders(){
   const t=ts();
   return {"userid":CFG.userId,"timeStamp":t,"cp":"instagram.story.art.collage",
-    "version":"407","platform":"1","sign":md5("m3snil"+t),
-    "ifWise":"true","Content-Type":"application/json"};
+    "version":"407","platform":"1","sign":md5("m3snil"+t),"ifWise":"true",
+    "Content-Type":"application/json"};
 }
 function uploadHeaders(){
   const t=ts();
   return {cp:"instagram.story.art.collage",version:"407",platform:"1",
     sign:md5("m3snil"+t),timeStamp:t,userId:CFG.userId,ifHttps:"true"};
 }
-/* GET با همان هدرها و همان پارامترها (بعضی اندپوینت‌ها GET هستند:
-   در dex، annotation متفاوت Lak/f; دارند نه Lak/o;) */
-async function getJsonAt(host,path,params){
-  const q=new URLSearchParams(params).toString();
-  const url=viaProxy(host.replace(/\/+$/,"")+path+(q?"?"+q:""));
+async function postJson(path,body){
+  let url;try{url=apiUrl(path);}catch(e){return {http:0,error:e.message,txt:"",j:null};}
   let r,txt;
-  try{r=await fetch(url,{method:"GET",headers:algoHeaders()});}
-  catch(e){return {http:0,error:e.message,txt:"",j:null};}
+  try{r=await fetch(url,{method:"POST",headers:algoHeaders(),body:JSON.stringify(body)});}
+  catch(e){return {http:0,error:e.message,txt:""+e.message,j:null};}
   try{txt=await r.text();}catch(e){txt="";}
   let j=null;try{j=JSON.parse(txt);}catch(e){}
   return {http:r.status,txt,j};
 }
-
 async function postJsonAt(host,path,body){
   const url=viaProxy(host.replace(/\/+$/,"")+path);
   let r,txt;
   try{r=await fetch(url,{method:"POST",headers:algoHeaders(),body:JSON.stringify(body)});}
-  catch(e){return {http:0,error:e.message,txt:"",j:null};}
+  catch(e){return {http:0,error:e.message,txt:""};}
   try{txt=await r.text();}catch(e){txt="";}
   let j=null;try{j=JSON.parse(txt);}catch(e){}
   return {http:r.status,txt,j};
 }
-async function postJson(path,body){return postJsonAt(CFG.host,path,body);}
+function row(key,path,http,c,msg){
+  const tr=document.createElement("tr");
+  const cls=c===200?"p-ok":((c===null||c===undefined)?"p-wa":"p-er");
+  tr.innerHTML=[
+    "<b>"+key+"</b>",
+    '<span class="dir" style="font-size:11px">'+String(path).split("/").slice(-1)[0]+"</span>",
+    '<span class="dir">'+http+"</span>",
+    '<span class="pill '+cls+'">'+(c===null||c===undefined?"—":c)+"</span>",
+    '<span class="dir" style="font-size:11px">'+(msg||"")+"</span>"
+  ].map(v=>"<td>"+v+"</td>").join("");
+  $("tbl").appendChild(tr);
+}
 
-/* ===================== برش تصویر ===================== */
-const RATIO_WH={"9:16":[9,16],"3:4":[3,4],"1:1":[1,1],"4:3":[4,3]};
-function loadImg(file){
+/* ============================ برش تصویر به نسبت دقیق ============================ */
+function cropToRatio(file,ratio,maxSide){
   return new Promise((res,rej)=>{
-    const u=URL.createObjectURL(file),im=new Image();
-    im.onload=()=>{URL.revokeObjectURL(u);res(im);};
-    im.onerror=()=>{URL.revokeObjectURL(u);rej(new Error("عکس خوانده نشد"));};
-    im.src=u;
+    const img=new Image();
+    const url=URL.createObjectURL(file);
+    img.onload=()=>{
+      try{
+        const parts=ratio.split(":").map(Number);
+        const target=parts[0]/parts[1];
+        const iw=img.naturalWidth,ih=img.naturalHeight,cur=iw/ih;
+        let sw,sh;
+        if(Math.abs(cur-target)<0.01){sw=iw;sh=ih;}
+        else if(cur>target){sh=ih;sw=Math.round(ih*target);}
+        else{sw=iw;sh=Math.round(iw/target);}
+        sw=Math.min(sw,iw);sh=Math.min(sh,ih);
+        const sx=Math.round((iw-sw)/2),sy=Math.round((ih-sh)/2);
+        let dw=sw,dh=sh;
+        const lim=maxSide||1536;
+        if(Math.max(dw,dh)>lim){const k=lim/Math.max(dw,dh);dw=Math.round(dw*k);dh=Math.round(dh*k);}
+        const cv=document.createElement("canvas");cv.width=dw;cv.height=dh;
+        cv.getContext("2d").drawImage(img,sx,sy,sw,sh,0,0,dw,dh);
+        cv.toBlob(b=>{
+          if(!b)return rej(new Error("toBlob نال"));
+          log("برش "+ratio+": "+iw+"×"+ih+" → "+dw+"×"+dh,"i");
+          res(new File([b],(file.name||"img").replace(/\.[^.]+$/,"")+"_"+ratio.replace(":","x")+".jpg",{type:"image/jpeg"}));
+        },"image/jpeg",0.95);
+      }catch(e){rej(e);}
+      finally{URL.revokeObjectURL(url);}
+    };
+    img.onerror=()=>{URL.revokeObjectURL(url);rej(new Error("عکس خوانده نشد"));};
+    img.src=url;
   });
 }
-async function cropToRatio(file,ratio,maxSide){
-  const r=RATIO_WH[ratio];if(!r)return file;
-  const [a,b]=r;
-  const im=await loadImg(file);
-  const sw=im.naturalWidth,sh=im.naturalHeight,t= a/b;
-  let cw=sw,ch=sh;
-  if(sw/sh>t)cw=Math.round(sh*t);else ch=Math.round(sw/t);
-  const cx=Math.round((sw-cw)/2),cy=Math.round((sh-ch)/2);
-  const cap=maxSide||1536;let ow=cw,oh=ch;
-  if(Math.max(cw,ch)>cap){
-    if(cw>=ch){ow=cap;oh=Math.round(ch*cap/cw);}else{oh=cap;ow=Math.round(cw*cap/ch);}
-  }
-  ow-=ow%2;oh-=oh%2;
-  const cv=document.createElement("canvas");cv.width=ow;cv.height=oh;
-  const ctx=cv.getContext("2d");
-  ctx.imageSmoothingQuality="high";
-  ctx.drawImage(im,cx,cy,cw,ch,0,0,ow,oh);
-  const blob=await new Promise(res=>cv.toBlob(res,"image/jpeg",0.95));
-  log("برش "+ratio+": "+sw+"×"+sh+" → "+ow+"×"+oh,"w");
-  return new File([blob],(file.name||"img").replace(/\.[^.]+$/,"")+"_"+ratio.replace(":","x")+".jpg",
-                  {type:"image/jpeg"});
-}
 
-/* ===================== آپلود ===================== */
+/* ============================ آپلود ============================ */
 async function upload(file){
   const fd=new FormData();fd.append("files",file,file.name||"image.jpg");
-  const url=apiUrl("/algo/v1/aiGenerate-aigc/multipleUpload");
-  let r;
-  try{r=await fetch(url,{method:"POST",headers:uploadHeaders(),body:fd});}
-  catch(e){throw new Error("آپلود ناموفق (شبکه/پروکسی): "+e.message);}
-  let j;
-  try{j=await r.json();}catch(e){throw new Error("پاسخ آپلود JSON نبود (HTTP "+r.status+")");}
+  const r=await fetch(apiUrl("/algo/v1/aiGenerate-aigc/multipleUpload"),
+    {method:"POST",headers:uploadHeaders(),body:fd});
+  const j=await r.json();
   if(j.c!==200||!j.d||!j.d.length)throw new Error("آپلود رد شد: c="+j.c+" m="+j.m);
   return j.d[0];
 }
 
-/* ===================== پنج موتور + واریانت‌ها ===================== */
-/* وضعیت واقعی سرورها (اجرای بیلد y، ۱۴:۴۱):
-   GX     → c=200 ✅ (این همان مسیر واقعی اپ است)
-   LTX V3 → c=400 "pixVerseId不能为空"   ⇒ V3 موتور PixVerse است، نه LTX
-   LTX V2 → c=1001 "invalid user"        ⇒ احراز هویت/کاربر دیگر
-   UNI    → c=1013 "example empty or illegal" ⇒ مقدار example نامعتبر است
-   V5     → c=1013 "param error: effectType illegal"
-            ولی بدنهٔ Veo در خود اپ هیچ effectType‌ای ندارد ⇒
-            اندپوینت V5 اندپوینت Veo نیست. حالا با effectType واقعی تست می‌شود.
-   SEQ V4 → c=1001 "param effectType illegal" برای ۴۹۹۱/۵۰۴۱/۴۸۷۷/۵۲۰۲
-   HD     → c=1001 "taskId is invalid"   ⇒ تسک GX را قبول نمی‌کند
-   پس هر موتور فهرستی از واریانت‌ها دارد و صفحه تا اولین موفقیت جلو می‌رود.
-   (کد dex ثابت کرد بدنهٔ Sequence با پر بودن extParams["example"] کاملاً
-   عوض می‌شود — همان چیزی که واریانت‌های «نسخهٔ نو» آزمون می‌کنند.) */
-const CATALOG_EFFECTS=[4991,5041,4877,5202,6686,7849];
-const EX_EXAMPLE=[
-  "3141","4995","Catwalk",
-  "https://res.wiseoel.com/common/video/UF250620171dcbed-2119-4321-b241-0aa0bc74ad98_press.mp4",
-  "6209"
-];
+/* ============================ موارد آزمایش ============================ */
+/* هر مورد: {key,path,body,host?} — فقط مواردی که هنوز جواب قطعی نگرفته‌اند. */
+function CASES(o){
+  const I=o.img, L=o.level;
+  const list=[
+    /* --- بدون اعتبار: کاتالوگ pose --- */
+    {key:"pose·POST", path:"/algo/v1/faceFusion/aigc/getAllPoseSequenceId", body:{}},
+    {key:"pose·GET→POST خالی؟", path:"/algo/v1/faceFusion/aigc/getAllPoseSequenceId",
+     body:{}, host:"https://cpi.wiseoel.com"},
 
-/* وضعیت پس از اجرای ۱۵:۰۱ (بیلد a):
-   - getAllPoseSequenceId → ۴۰۴ (مسیر در dex هست، روی این هاست باز نیست)
-   - GXi (imageEffectType) پذیرفت و تسک با پیشوند INTEGRATED_60019 ساخت
-     ⇒ imageEffectType ما را به موتور «integrated» دیگری می‌برد (۶۰۰۱۹ ≠ ۶۰۰۱۴)
-   - V5 با effectType=4899/4991/6093/7849 از «effectType illegal» گذشت و
-     رسید به «googleId不能为空» ⇒ این چهار عدد برای V5 قانونی‌اند، فقط googleId کم است
-   - Sequence «نسخهٔ نو» هم effectType می‌خواهد ⇒ آن مسیر فعلاً بسته است
-   پس واریانت‌های مرده (LTX/UNI/SEQ) حذف شدند تا اجرا کوتاه شود. */
-const ENGINES=[
-  {key:"GX",name:"GX / beat",query:"/algo/v1/faceFusion/aigc/beatImage2Video/queryTask",
-   variants:[{note:"بدنهٔ تأییدشده",path:"/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",
-     body:o=>({imageUrls:[o.img],level:o.level,effectType:o.eff,prompt:o.prompt,quality:o.quality})}]},
+    /* --- واقعی: مسیر تأییدشدهٔ beat --- */
+    {key:"GX·beat", path:"/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",
+     body:{imageUrls:[I],level:L,effectType:6209,prompt:o.prompt,quality:o.quality},
+     poll:"beat"},
 
-  {key:"GXi",name:"GX + imageEffectType (۶۰۰۱۹)",query:"/algo/v1/faceFusion/aigc/queryAiPhotoTask",
-   variants:[{note:"imageEffectType=7186",path:"/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",
-     body:o=>({imageUrls:[o.img],level:o.level,effectType:o.eff,imageEffectType:7186,
-               prompt:o.prompt,quality:o.quality})}]},
+    /* --- موتور Neon (imageEffectType) --- */
+    {key:"GX+Neon", path:"/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",
+     body:{imageUrls:[I],level:L,effectType:5202,imageEffectType:7186,
+           prompt:o.prompt,quality:o.quality}, poll:"beat"},
 
-  {key:"LTX",name:"LTX (g.C → image2video/createTask)",query:"/algo/v1/faceFusion/aigc/image2video/queryTask",
-   variants:[
-     {note:"createTask روی هاست اصلی",path:"/algo/v1/faceFusion/aigc/image2video/createTask",
-      body:o=>({imageUrls:[o.img],level:o.level,effectType:o.eff})},
-     {note:"createTask روی هاست دوم",host:"https://cpi.wiseoel.com",
-      path:"/algo/v1/faceFusion/aigc/image2video/createTask",
-      body:o=>({imageUrls:[o.img],level:o.level,effectType:o.eff})}
-   ]},
+    /* --- LTX: بدنهٔ گ.C --- */
+    {key:"LTX·createTask", path:"/algo/v1/faceFusion/aigc/image2video/createTask",
+     body:{imageUrls:[I],level:L,effectType:6209}},
+    {key:"LTX·هاست دوم", host:"https://cpi.wiseoel.com",
+     path:"/algo/v1/faceFusion/aigc/image2video/createTask",
+     body:{imageUrls:[I],level:L,effectType:6209}},
 
-  {key:"SEQ",name:"Sequence (g.c0 → integratedTaskCreate)",query:"/algo/v1/faceFusion/aigc/image2VideoQuery",
-   variants:[{note:"integratedTaskCreate",path:"/algo/v1/faceFusion/aigc/image2video/integratedTaskCreate",
-     body:o=>({imageUrls:[o.img],level:o.level,deviceToken:"",effectType:o.eff,
-               poseSequenceId:"",pixVerseId:"",ifTest:false})}]},
+    /* --- Unified با مثال‌های چیپ‌های اپ --- */
+    {key:"UNI·animate", path:"/algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate",
+     body:{imageUrls:[I],level:L,deviceToken:"",prompt:o.prompt,ratio:o.ratio,
+           movementAmplitude:0,example:"animate",ifTest:false}},
+    {key:"UNI·walk", path:"/algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate",
+     body:{imageUrls:[I],level:L,deviceToken:"",prompt:o.prompt,ratio:o.ratio,
+           movementAmplitude:0,example:"walk",ifTest:false}},
+    {key:"UNI·wave", path:"/algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate",
+     body:{imageUrls:[I],level:L,deviceToken:"",prompt:o.prompt,ratio:o.ratio,
+           movementAmplitude:0,example:"wave",ifTest:false}},
 
-  {key:"V5",name:"V5 — شکار Veo",query:"/algo/v1/faceFusion/aigc/image2VideoQuery",
-   variants:
-     [4899,4991,6093,7849].map(et=>({note:"effectType="+et+" googleId=\"1\"",
-       path:"/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
-       body:o=>({imageUrls:[o.img],level:o.level,deviceToken:"",googleId:"1",audio:true,
-                 effectType:et,prompt:o.prompt,duration:o.dur,ifTest:false})}))
-     .concat([
-       {note:"effectType=4899 googleId عددی 1",
-        path:"/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
-        body:o=>({imageUrls:[o.img],level:o.level,deviceToken:"",googleId:1,audio:true,
-                  effectType:4899,prompt:o.prompt,duration:o.dur,ifTest:false})},
-       {note:"effectType=4899 googleId=\"2\"",
-        path:"/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
-        body:o=>({imageUrls:[o.img],level:o.level,deviceToken:"",googleId:"2",audio:true,
-                  effectType:4899,prompt:o.prompt,duration:o.dur,ifTest:false})},
-       {note:"effectType=4899 googleId=\"veo3\"",
-        path:"/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
-        body:o=>({imageUrls:[o.img],level:o.level,deviceToken:"",googleId:"veo3",audio:true,
-                  effectType:4899,prompt:o.prompt,duration:o.dur,ifTest:false})}
-     ])}
-];
+    /* --- Sequence هر دو نسخه --- */
+    {key:"SEQ·integrTask", path:"/algo/v1/faceFusion/aigc/image2video/integratedTaskCreate",
+     body:{imageUrls:[I],level:L,deviceToken:"",effectType:4991,
+           poseSequenceId:"",pixVerseId:"",ifTest:false}},
+    {key:"SEQ·V4 قدیم", path:"/algo/v1/faceFusion/aigc/integrated/image2VideoCreateV4",
+     body:{imageUrls:[I],level:L,deviceToken:"",effectType:4991,
+           poseSequenceId:"",pixVerseId:"",ifTest:false}},
 
-/* ===================== جدول ===================== */
-function row(key,path,http,c,msg){
-  const tbl=$("tbl");
-  const tr=document.createElement("tr");
-  const cls=c===200?"p-ok":(c===null||c===undefined?"p-wa":"p-er");
-  tr.innerHTML=[
-    "<b>"+key+"</b>",
-    '<span class="dir" style="font-size:11px">'+path.split("/").slice(-1)[0]+"</span>",
-    '<span class="dir">'+http+"</span>",
-    '<span class="pill '+cls+'">'+(c===null||c===undefined?"—":c)+"</span>",
-    '<span class="dir" style="font-size:11px;word-break:break-all">'+(msg||"")+"</span>"
-  ].map(v=>"<td>"+v+"</td>").join("");
-  tbl.appendChild(tr);
+    /* --- V5: هر بار یک متغیر --- */
+    {key:"V5·et=4899", path:"/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
+     body:{imageUrls:[I],level:L,deviceToken:"",googleId:"1",audio:true,
+           effectType:4899,prompt:o.prompt,duration:8,ifTest:false}},
+    {key:"V5·بدون effectType", path:"/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
+     body:{imageUrls:[I],level:L,deviceToken:"",googleId:"1",audio:true,
+           prompt:o.prompt,duration:8,ifTest:false}}
+  ];
+  return list;
 }
 
-/* ===================== پولینگ ===================== */
-const QUERY_FALLBACK=[
-  "/algo/v1/faceFusion/aigc/queryAiPhotoTask",
-  "/algo/v1/faceFusion/aigc/beatImage2Video/queryTask",
-  "/algo/v1/faceFusion/aigc/image2VideoQuery",
-  "/algo/v1/faceFusion/aigc/image2video/queryTask"
-];
-function pickStatus(d){
-  return d.taskStatus||d.status||d.state||"";
-}
-async function poll(paths,tid,label,deadlineMs){
-  const end=Date.now()+(deadlineMs||9*60*1000);
-  let n=0, idx=0;
+/* ============================ پولینگ ============================ */
+async function poll(taskId,kind){
+  const paths = kind==="beat"
+    ? ["/algo/v1/faceFusion/aigc/beatImage2Video/queryTask",
+       "/algo/v1/faceFusion/aigc/image2VideoQuery"]
+    : ["/algo/v1/faceFusion/aigc/image2VideoQuery",
+       "/algo/v1/faceFusion/aigc/image2video/queryTask",
+       "/algo/v1/faceFusion/aigc/beatImage2Video/queryTask"];
+  const end=Date.now()+9*60*1000;let n=0,i=0;
   while(Date.now()<end){
-    await sleep(5000); n++;
-    const path=paths[idx%paths.length];
-    /* بعضی تسک‌ها پیشوند موتور دارند (INTEGRATED_…) — هر سه بار یک بار
-       شناسهٔ بدون پیشوند هم امتحان می‌شود. */
-    const id=(n%3===0&&/^[A-Z]+_/.test(tid))?tid.replace(/^[A-Z]+_/,""):tid;
-    const env=await postJson(path,{taskId:id,jobId:id});
+    await sleep(6000);n++;
+    const path=paths[i%paths.length];
+    const env=await postJson(path,{taskId});
     const d=(env.j&&env.j.d&&typeof env.j.d==="object")?env.j.d:{};
-    const st=pickStatus(d);
-    const vu=d.videoUrl||d.url||d.videoURL;
-    if(n%3===1)log(label+" پول #"+n+" ("+path.split("/").slice(-1)[0]+") → "+
-                  (st||("HTTP "+env.http+" c="+(env.j?env.j.c:"?"))),"i");
-    if(vu&&/^https?:/.test(vu))return vu;
-    if(st==="fail"||st==="failed")throw new Error("تسک fail: "+(d.taskReason||d.reason||""));
-    // اگر مسیر کوئری ۴۰۴/غیر۲۰۰ بود، مسیر بعدی را امتحان کن
-    if(env.http===404||(env.j&&env.j.c&&env.j.c!==200))idx++;
+    const st=d.taskStatus||d.status||"";
+    if(d.videoUrl) return d.videoUrl;
+    if(st==="fail"||st==="failed") throw new Error("fail: "+(d.taskReason||""));
+    if(n%4===1) log("  پول #"+n+" → "+(st||("c="+(env.j?env.j.c:"?"))),"i");
+    if(env.http===404||(env.j&&env.j.c&&env.j.c!==200)) i++;
   }
-  throw new Error("مهلت پولینگ تمام شد ("+n+" بار)");
+  throw new Error("مهلت پولینگ");
 }
 
-/* ===================== فارنزیک سبک ===================== */
-async function videoMeta(url){
-  const v=document.createElement("video");
-  v.muted=true;v.playsInline=true;v.preload="metadata";
-  v.crossOrigin="anonymous";
-  const abs=viaProxy(url);
-  await new Promise((res,rej)=>{
-    const t=setTimeout(()=>rej(new Error("مهلت خواندن متادیتا")),25000);
-    v.onloadedmetadata=()=>{clearTimeout(t);res();};
-    v.onerror=()=>{clearTimeout(t);rej(new Error("ویدیو بارگذاری نشد (CORS?)"));};
-    v.src=abs;
-  });
-  let size=0,md5h="";
+/* ============================ ویدیو ============================ */
+async function videoCard(title,url){
+  const box=$("vids");
+  if(box.querySelector(".sub"))box.innerHTML="";
+  const el=document.createElement("div");el.className="vcard";
+  el.innerHTML='<div style="font-size:13px;font-weight:700;margin-bottom:7px">'+title+"</div>"+
+    '<video controls playsinline preload="metadata" src="'+viaProxy(url)+'"></video>'+
+    '<div class="meta">در حال خواندن مشخصات…</div>'+
+    '<a href="'+url+'" target="_blank" rel="noopener">دانلود مستقیم</a>';
+  box.appendChild(el);
+  const meta=el.querySelector(".meta");
   try{
-    const r=await fetch(abs);
-    if(r.ok){const b=await r.arrayBuffer();size=b.byteLength;
-             md5h=md5(new Uint8Array(b));}
-  }catch(e){}
-  const w=v.videoWidth,h=v.videoHeight,d=v.duration||0;
-  const mbps=size&&d?(size*8/d/1e6):null;
-  const bpp=(size&&d&&w&&h)?(size*8)/(d*w*h*32):null;   // فرض ۳۲fps مثل اپ
-  return {w,h,d,size,mbps,bpp,md5:md5h};
-}
-function videoCard(title,url){
-  const box=document.createElement("div");
-  box.className="vid";
-  box.innerHTML='<h3>'+title+'</h3><div class="meta">در حال اندازه‌گیری…</div>'+
-    '<video controls preload="metadata" src="'+viaProxy(url)+'"></video>'+
-    '<div class="meta" style="margin-top:8px"><a href="'+url+'" target="_blank" rel="noopener">'+
-    'دانلود مستقیم</a></div>';
-  $("vids").appendChild(box);
-  videoMeta(url).then(m=>{
-    box.querySelector(".meta").innerHTML=
-      "رزولوشن <b>"+m.w+"×"+m.h+"</b> · مدت <b>"+m.d.toFixed(2)+"s</b> · "+
-      "حجم <b>"+(m.size?(m.size/1048576).toFixed(2)+" MB":"؟")+"</b> · "+
-      "بیت‌ریت <b>"+(m.mbps?m.mbps.toFixed(2)+" Mbps":"؟")+"</b> · "+
-      "bpp≈<b>"+(m.bpp?m.bpp.toFixed(4):"—")+"</b> <span style='opacity:.7'>(فرض ۳۲fps)</span>";
-  }).catch(e=>{
-    box.querySelector(".meta").textContent="اندازه‌گیری نشد: "+e.message;
-  });
+    const v=el.querySelector("video");
+    await new Promise((res,rej)=>{v.onloadedmetadata=res;v.onerror=()=>rej(new Error("لود نشد"));setTimeout(res,12000);});
+    let size=0;
+    try{const r=await fetch(viaProxy(url));const b=await r.arrayBuffer();size=b.byteLength;}catch(e){}
+    const w=v.videoWidth,h=v.videoHeight,d=v.duration||0;
+    const mbps=size&&d?(size*8/d/1e6):0;
+    const bpp=(size&&d&&w&&h)?(size*8)/(d*w*h*32):0;
+    meta.innerHTML=w+"×"+h+" · "+d.toFixed(2)+"s · "+Math.round(size/1024)+"KB · "+
+      mbps.toFixed(2)+" Mb/s · bpp≈"+bpp.toFixed(3)+" <span style='font-size:10px'>(با فرض ۳۲fps)</span>";
+  }catch(e){meta.textContent="مشخصات خوانده نشد: "+e.message;}
 }
 
-/* همهٔ شناسه‌های عددی داخل یک آبجکت را جمع می‌کند (برای خواندن کاتالوگ) */
-function collectNumbers(o,out){
-  out=out||[];
-  if(Array.isArray(o)){o.forEach(v=>collectNumbers(v,out));}
-  else if(o&&typeof o==="object"){
-    for(const k in o){
-      const v=o[k];
-      if(/^(c|code|status|level|ifTest|type|count|total|page|size)$/.test(k))continue;
-      if(typeof v==="number"&&v>100&&v<1e9)out.push(k+"="+v);
-      else if(typeof v==="string"&&/^\d{3,12}$/.test(v))out.push(k+"="+v);
-      else collectNumbers(v,out);
-    }
-  }
-  return out;
-}
-
-/* ===================== دکمهٔ اصلی ===================== */
+/* ============================ دکمهٔ اصلی ============================ */
 $("run").onclick=async()=>{
   const btn=$("run");
-  const tbl=$("tbl");
-  tbl.querySelectorAll("tr").forEach((tr,i)=>{if(i>0)tr.remove();});
-  $("vids").innerHTML="";
-  btn.disabled=true;
-  const old=btn.textContent;
-  btn.textContent="⏳ در حال اجرا… (صفحه را نبندید)";
+  $("tbl").innerHTML="";$("vids").innerHTML='<span class="sub">هنوز چیزی ساخته نشده.</span>';
+  btn.disabled=true;const old=btn.textContent;btn.textContent="⏳ در حال اجرا… صفحه را نبند";
   try{
     persist();
     head("شروع اجرا — بیلد "+VERSION);
     const f=$("file").files[0];
-    if(!f)throw new Error("اول یک عکس انتخاب کنید");
+    if(!f)throw new Error("اول یک عکس انتخاب کن");
     const ratio=$("ratio").value;
-    const o={
-      prompt:$("prompt").value.trim(),
-      level:Number($("level").value)||1,
-      eff:Number($("eff").value)||6209,
-      quality:Number($("quality").value)||2,
-      dur:Number($("dur").value)||8,
-      ratio:ratio||"3:4"
-    };
+    const o={prompt:$("prompt").value.trim(),
+             level:Number($("level").value)||1,
+             quality:Number($("quality").value)||2,
+             ratio:ratio||"3:4"};
+
     head("آپلود");
     let file=f;
-    if(ratio){
-      try{file=await cropToRatio(f,ratio,1536);}
-      catch(e){log("برش انجام نشد: "+e.message,"w");}
-    }
-    const img=await upload(file);
-    o.img=img;
-    log("آپلود موفق: "+img,"ok");
+    if(ratio){try{file=await cropToRatio(f,ratio,1536);}catch(e){log("برش نشد: "+e.message,"w");}}
+    o.img=await upload(file);
+    log("آپلود موفق: "+o.img,"ok");
 
-    /* ---- کاتالوگ pose: منبع قانونی poseSequenceId و pixVerseId ---- */
-    head("کاتالوگ pose — getAllPoseSequenceId");
-    try{
-      const POSE="/algo/v1/faceFusion/aigc/getAllPoseSequenceId";
-      const qp={userid:CFG.userId,timeStamp:ts(),cp:"instagram.story.art.collage",
-                version:"407",platform:"1",sign:md5("m3snil"+ts()),ifWise:"true"};
-      let pe=await postJson(POSE,{});
-      if(pe.http===404){ log("POST ۴۰۴ — حالا GET…","w"); pe=await getJsonAt(CFG.host,POSE,qp); }
-      if(pe.http===404){
-        log("روی هاست اصلی ۴۰۴ — نسخهٔ GET روی هاست دوم…","w");
-        pe=await getJsonAt("https://cpi.wiseoel.com",POSE,qp);
-      }
-      const pc=(pe.j&&pe.j.c!==undefined)?pe.j.c:null;
-      row("POSE","/algo/v1/faceFusion/aigc/getAllPoseSequenceId",pe.http,pc,
-          pc===200?"۲۰۰ — کاتالوگ آمد":(pe.txt||pe.error||"").slice(0,140));
-      if(pc===200){
-        log("پاسخ کاتالوگ (خلاصه): "+(pe.txt||"").slice(0,900),"i");
-        const ids=collectNumbers(pe.j);
-        log("شناسه‌های داخل کاتالوگ ("+ids.length+"): "+ids.slice(0,80).join(" , "),"ok");
-        const box=$("pose"); if(box)box.textContent=(pe.txt||"").slice(0,60000);
-      }else{
-        log("کاتالوگ رد شد: HTTP "+pe.http+" c="+pc+" — "+(pe.txt||"").slice(0,200),"e");
-      }
-    }catch(e){log("کاتالوگ pose خطا: "+e.message,"e");}
-
-    head("موتورها (با جستجوی پارامتر گمشده)");
-    const ok=[];
-    for(const en of ENGINES){
-      let won=null;
-      for(const v of en.variants){
-        const host=v.host||CFG.host;
-        const body=v.body(o);
-        log("→ "+en.key+" ["+v.note+"] "+JSON.stringify(body).slice(0,200),"i");
-        const env=await postJsonAt(host,v.path,body);
-        const c=(env.j&&typeof env.j.c!=="undefined")?env.j.c:null;
-        const d=(env.j&&env.j.d&&typeof env.j.d==="object")?env.j.d:{};
-        const tid=d.taskId||d.jobId||"";
-        const msg=c===200?(tid||"۲۰۰ بدون taskId"):
-          (env.http===0?("شبکه: "+env.error):(env.txt||"").slice(0,140));
-        row(en.key+" · "+v.note,v.path,env.http,c,msg);
-        if(c===200&&tid){
-          log("✓ "+en.key+" پذیرفت با «"+v.note+"» → "+tid,"ok");
-          won={en,tid,v};
-          break;
-        }
-        log("✗ "+en.key+" «"+v.note+"» HTTP "+env.http+" c="+c+" — "+
-            (env.txt||env.error||"").slice(0,170),"e");
-        await sleep(700);
-      }
-      if(won)ok.push(won);
+    head("درخواست‌ها");
+    const wins=[];
+    for(const c of CASES(o)){
+      const body=c.body;
+      const env=c.host?await postJsonAt(c.host,c.path,body):await postJson(c.path,body);
+      const cc=(env.j&&typeof env.j.c!=="undefined")?env.j.c:null;
+      const d=(env.j&&env.j.d&&typeof env.j.d==="object")?env.j.d:{};
+      const tid=d.taskId||d.jobId||"";
+      const msg=cc===200?(tid||"۲۰۰ بدون taskId"):(env.txt||env.error||"").slice(0,150);
+      row(c.key,c.path,env.http,cc,msg);
+      if(cc===200&&tid){log("✓ "+c.key+" → "+tid,"ok");wins.push({c,tid});}
+      else log("✗ "+c.key+" HTTP "+env.http+" c="+cc+" — "+String(msg).slice(0,120),"e");
+      await sleep(600);
     }
 
-    if(!ok.length){
-      head("نتیجه");
-      log("هیچ موتوری تسک نساخت. اگر همه HTTP 0 دادند → پروکسی/شبکه. "+
-          "اگر c=1013/404 دادند → مسیر روی سرور فعال نیست.","w");
-      return;
-    }
+    if(!wins.length){head("پایان");log("هیچ تسکی ساخته نشد.","w");return;}
 
-    head("گرفتن خروجی "+ok.length+" موتور");
-    for(const it of ok){
+    head("گرفتن خروجی "+wins.length+" تسک (موازی)");
+    await Promise.all(wins.map(async w=>{
       try{
-        log("منتظر "+it.en.key+" ("+it.tid+") …","w");
-        const vu=await poll([it.en.query].concat(QUERY_FALLBACK),it.tid,it.en.key,
-                           it.en.key==="GX"?9*60*1000:5*60*1000);
-        log("✓ خروجی "+it.en.key+": "+vu,"ok");
-        videoCard(it.en.name+" — "+it.en.key,vu);
-        it.vu=vu;
-      }catch(e){
-        log("✗ "+it.en.key+" خروجی نداد: "+e.message,"e");
-      }
-    }
+        const vu=await poll(w.tid,w.c.poll==="beat"?"beat":"other");
+        log("✓ خروجی "+w.c.key+": "+vu,"ok");
+        await videoCard(w.c.key,vu);
+        w.vu=vu;
+      }catch(e){log("✗ "+w.c.key+" خروجی نداد: "+e.message,"e");}
+    }));
 
-    head("ارتقای Vidu HD (اگر تسک GX ساخته شده باشد)");
-    const gx=ok.find(x=>x.en.key==="GX");
-    if(gx){
-      try{
-        log("درخواست HD برای taskId="+gx.tid,"w");
-        const env=await postJson("/algo/v1/faceFusion/aigc/createVideoHdTaskVidu",
-          {taskId:gx.tid,level:o.level,deviceToken:"",ifTest:false});
-        const c=(env.j&&env.j.c!==undefined)?env.j.c:null;
-        const d=(env.j&&env.j.d)?env.j.d:{};
-        const hid=d.taskId||d.jobId||"";
-        row("HD",'/algo/v1/faceFusion/aigc/createVideoHdTaskVidu',env.http,c,
-            c===200?(hid||"۲۰۰ بدون taskId"):(env.txt||"").slice(0,140));
-        if(c===200&&hid){
-          log("✓ تسک HD ساخته شد: "+hid,"ok");
-          const vu=await poll(["/algo/v1/faceFusion/aigc/image2VideoQuery"]
-                              .concat(QUERY_FALLBACK),hid,"HD");
-          log("✓ خروجی HD: "+vu,"ok");
-          videoCard("Vidu HD (ارتقای خروجی GX)",vu);
-        }else{
-          log("✗ HD رد شد: "+(env.txt||env.error||"").slice(0,200),"e");
-        }
-      }catch(e){ log("✗ مسیر HD: "+e.message,"e"); }
-    }else{
-      log("تسک GX ساخته نشد، پس مرحلهٔ HD اجرا نشد.","w");
-    }
-
-    /* ---- ارتقای ویدیوی خودمان با createVideoHdTask (همان «Enhanced Visuals») ----
-       بدنهٔ واقعی این متد در dex:
-       videoUrl, fileMd5, fileSize, fileTime, width, height, level, deviceToken, ifTest
-       مسیرش در فهرست رشته‌های APK نبود، پس با نام متد آزمون می‌شود؛
-       حتی اگر ۴۰۴ بدهد، معلوم می‌شود همین قرارداد را باید کجا صدا زد. */
-    head("Enhanced Visuals — ارتقای ویدیوی تولیدشده");
-    const mine=ok.find(x=>x.vu);
-    if(mine){
-      try{
-        const m=await videoMeta(mine.vu);
-        log("متادیتای ویدیوی ما: "+m.w+"×"+m.h+" — "+Math.round((m.size||0)/1024)+"KB", "i");
-        log("md5 فایل: "+(m.md5||"—")+" | مدت: "+(m.d||0)+"s","i");
-        const base={videoUrl:mine.vu,fileMd5:m.md5||"",fileSize:m.size||0,
-                    width:m.w,height:m.h,level:o.level,deviceToken:"",ifTest:false};
-        const tries=[{note:"fileTime=مدت(ms)",body:Object.assign({},base,{fileTime:Math.round((m.d||0)*1000)})},
-                     {note:"fileTime=حالا(ms)",body:Object.assign({},base,{fileTime:Date.now()})}];
-        for(const t of tries){
-          const path="/algo/v1/faceFusion/aigc/createVideoHdTask";
-          const body=t.body;
-          const env=await postJson(path,body);
-          const c=(env.j&&env.j.c!==undefined)?env.j.c:null;
-          const d=(env.j&&env.j.d)?env.j.d:{};const hid=d.taskId||d.jobId||"";
-          row("UP",path,env.http,c,c===200?(hid||"۲۰۰ بدون taskId"):(env.txt||"").slice(0,140));
-          log("→ createVideoHdTask ["+t.note+"] HTTP "+env.http+" c="+c+" — "+
-              (env.txt||env.error||"").slice(0,200), c===200?"ok":"e");
-          if(c===200&&hid){
-            const vu2=await poll(["/algo/v1/faceFusion/aigc/image2VideoQuery"]
-                                 .concat(QUERY_FALLBACK),hid,"UP");
-            videoCard("Enhanced (ارتقای ویدیوی خودمان)",vu2);
-            break;
-          }
-          await sleep(600);
-        }
-      }catch(e){ log("✗ ارتقا: "+e.message,"e"); }
-    }else{
-      log("ویدیویی برای ارتقا نبود.","w");
+    /* ارتقای Vidu HD روی اولین خروجی */
+    const first=wins.find(w=>w.vu);
+    if(first){
+      head("ارتقای Vidu HD");
+      const env=await postJson("/algo/v1/faceFusion/aigc/createVideoHdTaskVidu",
+        {taskId:first.tid,level:o.level,deviceToken:"",ifTest:false});
+      const cc=(env.j&&typeof env.j.c!=="undefined")?env.j.c:null;
+      row("HD·Vidu",'/algo/v1/faceFusion/aigc/createVideoHdTaskVidu',env.http,cc,
+          (env.txt||"").slice(0,150));
+      log((cc===200?"✓":"✗")+" HD روی "+first.c.key+" → c="+cc+" "+(env.txt||"").slice(0,120),
+          cc===200?"ok":"e");
     }
 
     head("پایان");
-    const got=ok.filter(x=>x.vu);
-    log("موتورهای موفق: "+got.map(x=>x.en.key).join(", ")+
-        (got.length?"":" — هیچ خروجی‌ای برنگشت"), got.length?"ok":"w");
+    log("تسک‌های ساخته‌شده: "+wins.map(w=>w.c.key).join(", "),"ok");
   }catch(e){
     log("خطای اجرا: "+(e&&e.message||e),"e");
   }finally{
     btn.disabled=false;btn.textContent=old;
   }
 };
-
-log("آماده — نسخهٔ "+VERSION+" — یک عکس انتخاب کن و دکمهٔ آبی را بزن.","ok");
-if(VERSION!=="2026-10-29y")log("⚠️ نسخهٔ صفحه با نسخهٔ انتظاری نمی‌خواند.","e");
-log("host="+CFG.host+" | mode="+CFG.connMode+" | userId="+CFG.userId,"i");
-</script>
-</body>
-</html>
+</script></body></html>
