@@ -6,20 +6,75 @@ $ filmkit still /home/runner/work/game/game/films/studio_demo --shot 1 --from ur
 shot 1: still -> /home/runner/work/game/game/films/studio_demo/stills/s01.jpg
 
 $ filmkit shot /home/runner/work/game/game/films/studio_demo --shot 1 --quality 1 --takes 1  [0]
-shot 1 take 1: task 60014-1793298694-bdf8e57c-3220-48c0-b4ad-9946ab2b26e4
-  take 1 ok 448x576 4.062s 952506B
+shot 1 take 1: task 60014-1793299027-065f2fba-1117-4809-97dd-9e03410b7375
+  take 1 ok 448x576 4.062s 964448B
 shot 1: clip -> /home/runner/work/game/game/films/studio_demo/clips/s01_t1.mp4
 
-$ filmkit chain /home/runner/work/game/game/films/studio_demo --from 1 --to 2  [1]
+$ filmkit chain /home/runner/work/game/game/films/studio_demo --from 1 --to 2  [0]
+chained shot 1 -> shot 2 (s02.jpg)
 
-STDERR: shot 1 not in project (has [1, 2])
+$ filmkit shot /home/runner/work/game/game/films/studio_demo --shot 2 --quality 1 --takes 1  [0]
+shot 2 take 1: task 60014-1793299088-8d98b818-7a65-472c-9896-7763f66f1cde
+  take 1 ok 448x576 4.062s 643431B
+shot 2: clip -> /home/runner/work/game/game/films/studio_demo/clips/s02_t1.mp4
 
-FAILED: filmkit chain /home/runner/work/game/game/films/studio_demo --from 1 --to 2 failed
-Traceback (most recent call last):
-  File "/home/runner/work/game/game/studio/demo.py", line 65, in <module>
-    run_all()
-  File "/home/runner/work/game/game/studio/demo.py", line 55, in run_all
-    kit("chain", PROJ, "--from", 1, "--to", 2)
-  File "/home/runner/work/game/game/studio/demo.py", line 35, in kit
-    raise RuntimeError(f"filmkit {' '.join(str(a) for a in args)} failed")
-RuntimeError: filmkit chain /home/runner/work/game/game/films/studio_demo --from 1 --to 2 failed
+$ filmkit assemble /home/runner/work/game/game/films/studio_demo --crossfade 0.4  [0]
+assembled 2 clips -> /home/runner/work/game/game/films/studio_demo/out/final.mp4
+{"path": "/home/runner/work/game/game/films/studio_demo/out/final.mp4", "width": 448, "height": 576, "fps": 16.0, "has_audio": false, "duration_s": 7.75, "bytes": 1488798}
+
+$ filmkit qc /home/runner/work/game/game/films/studio_demo  [0]
+{
+  "project": "studio_demo",
+  "shots": [
+    {
+      "n": 1,
+      "path": "/home/runner/work/game/game/films/studio_demo/clips/s01_t1.mp4",
+      "width": 448,
+      "height": 576,
+      "fps": 16.0,
+      "has_audio": false,
+      "duration_s": 4.062,
+      "bytes": 964448
+    },
+    {
+      "n": 2,
+      "path": "/home/runner/work/game/game/films/studio_demo/clips/s02_t1.mp4",
+      "width": 448,
+      "height": 576,
+      "fps": 16.0,
+      "has_audio": false,
+      "duration_s": 4.062,
+      "bytes": 643431
+    }
+  ],
+  "issues": [],
+  "final": {
+    "path": "/home/runner/work/game/game/films/studio_demo/out/final.mp4",
+    "width": 448,
+    "height": 576,
+    "fps": 16.0,
+    "has_audio": false,
+    "duration_s": 7.75,
+    "bytes": 1488798
+  },
+  "frames": [
+    "qc/frames/t00.39.jpg",
+    "qc/frames/t01.94.jpg",
+    "qc/frames/t03.88.jpg",
+    "qc/frames/t05.81.jpg",
+    "qc/frames/t07.36.jpg"
+  ],
+  "frame_delta": [
+    18.7,
+    10.0,
+    24.9,
+    21.2
+  ]
+}
+
+report: /home/runner/work/game/game/films/studio_demo/qc/report.json
+
+$ filmkit deliver /home/runner/work/game/game/films/studio_demo  [0]
+/home/runner/work/game/game/films/studio_demo/out/final.mp4  1.5 MB
+
+DEMO OK
