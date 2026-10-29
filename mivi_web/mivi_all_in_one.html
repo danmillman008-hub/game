@@ -114,6 +114,19 @@
       <label style="margin-top:10px">کد افکت حالت سفارشی (معمولاً تغییری لازم ندارد)</label>
       <input type="number" id="customEffect" value="6209" min="1" dir="ltr"
              style="max-width:220px" title="هاردکد اپ در ToolsResponseKt.transform برای گروه Custom_Ai_Video">
+
+      <label style="margin-top:14px">مدت کلیپ نهایی</label>
+      <select id="clipLen" style="max-width:340px">
+        <option value="4" selected>۴ ثانیه — تک‌قطعه (خروجی مستقیم سرور)</option>
+        <option value="8">۸ ثانیه — ۲ قطعه (زنجیرهٔ فریم آخر)</option>
+        <option value="12">۱۲ ثانیه — ۳ قطعه (زنجیرهٔ فریم آخر)</option>
+        <option value="16">۱۶ ثانیه — ۴ قطعه (زنجیرهٔ فریم آخر)</option>
+      </select>
+      <div class="muted" style="margin-top:8px">
+        سرور مدت را ثابت ۴ ثانیه می‌دهد (<code>duration=6</code> در تست زنده رد شد) و کیفیت
+        <code>quality</code> دقیقاً دوحالتی است (<code>2</code>=۷۲۰P، هر مقدار دیگر=۳۶۰P).
+        برای کلیپ بلندتر، قطعهٔ بعدی از <b>آخرین فریم</b> قطعهٔ قبل ساخته می‌شود تا تصویر پیوسته بماند.
+      </div>
     </div>
 
     <div id="presetBox" style="display:none">
@@ -157,11 +170,20 @@
       <a class="dl" id="dlBtn"><button>⬇️ دانلود ویدیو</button></a>
       <a class="dl" id="openBtn" target="_blank"><button class="ghost">باز کردن لینک مستقیم</button></a>
     </div>
+    <div id="chainBox" style="display:none;margin-top:16px">
+      <label>قطعات کلیپ زنجیره‌ای</label>
+      <div id="segsOut"></div>
+      <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <button id="mergeBtn" type="button">🎬 ساخت فایل یکپارچه از قطعات</button>
+        <span class="muted" id="mergeHint">قطعات را پشت سر هم در یک فایل ضبط می‌کند (mp4 یا webm).</span>
+      </div>
+      <div id="mergedOut" style="margin-top:12px"></div>
+    </div>
   </div>
 
   <div class="card">
     <details>
-      <summary>🧪 آزمایشگاه موتور Google Veo / Gemini (مسیر V5) — تحلیل مهندسی معکوس <span style="font-size:10px;background:#1f6feb22;border:1px solid #1f6feb55;color:#58a6ff;border-radius:6px;padding:1px 7px">نسخهٔ V5-Lab: 2026-10-28l</span></summary>
+      <summary>🧪 آزمایشگاه موتور Google Veo / Gemini (مسیر V5) — تحلیل مهندسی معکوس <span style="font-size:10px;background:#1f6feb22;border:1px solid #1f6feb55;color:#58a6ff;border-radius:6px;padding:1px 7px">نسخهٔ V5-Lab: 2026-10-28m</span></summary>
       <div class="muted" style="line-height:1.9;margin:10px 0">
         <b>یافتهٔ قطعی از بایت‌کد نسخهٔ 2.37.407 (هر ۸ دکس + کتابخانه‌های .so):</b><br>
         • اپ فقط سه موتور را روی درخواست‌ها ست می‌کند: <code>GX_AiVideoP2V</code> (همان مسیر beat/Wan-LoRA که دکمهٔ اصلی بالا استفاده می‌کند)،
@@ -948,6 +970,112 @@ function setFile(f){
 
 $("netTest").addEventListener("click",connectivityTest);
 
+/* ---------- زنجیرهٔ فریم آخر: ساخت کلیپ بلندتر از ۴ ثانیه ----------
+   سرور مدت را ثابت ۴ ثانیه می‌دهد (تست زنده: duration=6 نادیده گرفته شد، خروجی ۴.۰s).
+   راه‌حل: آخرین فریم هر قطعه را با canvas برمی‌داریم، آپلود می‌کنیم و به‌عنوان
+   تصویر شروع قطعهٔ بعد می‌دهیم؛ همهٔ قطعات از همان مسیر beat/Wan-LoRA و همان
+   quality=2 می‌آیند، پس کیفیت و ظاهر یکنواخت می‌ماند. */
+async function uploadBlobAs(blob,name){
+  const fd=new FormData();fd.append("files",blob,name);
+  const url=apiUrl("/algo/v1/aiGenerate-aigc/multipleUpload");
+  let r;
+  try{ r=await fetch(url,{method:"POST",headers:uploadHeaders(),body:fd}); }
+  catch(e){ throw new Error(friendlyError(e,"آپلود فریم",url)); }
+  const j=await r.json();
+  if(j.c!==200||!j.d||!j.d.length)throw new Error("آپلود فریم ناموفق: c="+j.c+" m="+j.m);
+  return j.d[0];
+}
+async function lastFrameBlob(videoUrl){
+  const v=document.createElement("video");
+  v.muted=true;v.playsInline=true;v.crossOrigin="anonymous";v.preload="auto";
+  v.src=viaProxy(videoUrl);
+  await new Promise((res,rej)=>{
+    const t=setTimeout(()=>rej(new Error("مهلت بارگذاری قطعه")),30000);
+    v.onloadeddata=()=>{clearTimeout(t);res();};
+    v.onerror=()=>{clearTimeout(t);rej(new Error("بارگذاری قطعه برای استخراج فریم ناموفق"));};
+  });
+  if(!isFinite(v.duration)||v.duration<=0)throw new Error("مدت قطعه نامعتبر است");
+  await new Promise((res,rej)=>{
+    const t=setTimeout(()=>rej(new Error("مهلت جابه‌جایی به آخرین فریم")),15000);
+    v.onseeked=()=>{clearTimeout(t);res();};
+    v.currentTime=Math.max(0,v.duration-0.08);
+  });
+  const c=document.createElement("canvas");
+  c.width=v.videoWidth;c.height=v.videoHeight;
+  if(!c.width||!c.height)throw new Error("ابعاد قطعه خوانده نشد");
+  c.getContext("2d").drawImage(v,0,0,c.width,c.height);
+  let blob;
+  try{ blob=await new Promise(r=>c.toBlob(r,"image/jpeg",0.95)); }
+  catch(e){ throw new Error("استخراج فریم مسدود شد (canvas آلوده) — پروکسی محلی را روشن کنید"); }
+  if(!blob)throw new Error("استخراج فریم ناموفق بود");
+  log("آخرین فریم استخراج شد: "+c.width+"×"+c.height+" ("+Math.round(blob.size/1024)+" KB)","i");
+  return blob;
+}
+function renderSegments(segs){
+  $("chainBox").style.display="block";
+  $("segsOut").innerHTML=segs.map((u,k)=>
+    '<div style="margin-top:10px;border:1px solid #30363d;border-radius:10px;padding:10px;background:#0a0d12">'+
+    '<div style="font-size:12px;color:#8b949e">قطعهٔ '+(k+1)+' — '+
+    '<a href="'+u+'" target="_blank" rel="noopener" style="color:#58a6ff">لینک مستقیم</a></div>'+
+    '<video controls playsinline preload="metadata" src="'+u+'" style="width:100%;border-radius:8px;margin-top:6px"></video></div>').join("");
+  $("mergeBtn").onclick=()=>mergeSegments(segs);
+}
+async function mergeSegments(segs){
+  const btn=$("mergeBtn");btn.disabled=true;
+  try{
+    if(!window.MediaRecorder)throw new Error("مرورگر MediaRecorder ندارد");
+    if(!segs.length)throw new Error("قطعه‌ای برای اتصال نیست");
+    log("اتصال "+segs.length+" قطعه در یک فایل...","w");
+    const probe=document.createElement("video");
+    probe.muted=true;probe.src=segs[0];
+    await new Promise((res,rej)=>{probe.onloadedmetadata=res;probe.onerror=rej;});
+    const W=probe.videoWidth||1280,H=probe.videoHeight||960;
+    const cvs=document.createElement("canvas");cvs.width=W;cvs.height=H;
+    const g=cvs.getContext("2d");
+    let mime="video/mp4;codecs=avc1.42E01E";
+    if(!MediaRecorder.isTypeSupported(mime)){
+      mime=MediaRecorder.isTypeSupported("video/webm;codecs=vp9")?"video/webm;codecs=vp9":"video/webm";
+    }
+    log("قالب ضبط: "+mime,"i");
+    const rec=new MediaRecorder(cvs.captureStream(30),{mimeType:mime,videoBitsPerSecond:12e6});
+    const chunks=[];rec.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data);};
+    const done=new Promise(r=>rec.onstop=r);
+    rec.start(1000);
+    for(let k=0;k<segs.length;k++){
+      log("ضبط قطعهٔ "+(k+1)+" از "+segs.length+"...","i");
+      const v=document.createElement("video");
+      v.src=segs[k];v.muted=true;v.playsInline=true;v.crossOrigin="anonymous";
+      await new Promise((res,rej)=>{v.onloadeddata=res;v.onerror=()=>rej(new Error("بارگذاری قطعهٔ "+(k+1)));});
+      await v.play();
+      await new Promise(res=>{
+        const loop=()=>{
+          if(v.ended||v.paused)return res();
+          g.drawImage(v,0,0,W,H);
+          requestAnimationFrame(loop);
+        };
+        loop();
+      });
+      v.pause();
+    }
+    await sleep(300);
+    rec.stop();await done;
+    const blob=new Blob(chunks,{type:mime});
+    const ext=mime.includes("mp4")?"mp4":"webm";
+    const url=URL.createObjectURL(blob);
+    log("فایل یکپارچه آماده شد: "+(blob.size/1048576).toFixed(2)+" MB ("+ext+")","ok");
+    $("mergedOut").innerHTML=
+      '<div style="border:1px solid #3fb950;border-radius:10px;padding:10px;background:#0a0d12">'+
+      '<b style="color:#3fb950">✓ خروجی یکپارچه ('+segs.length+' قطعه)</b>'+
+      '<div style="margin-top:8px"><a download="mivi_chain.'+ext+'" href="'+url+'" style="color:#58a6ff">⬇️ دانلود فایل یکپارچه ('+(blob.size/1048576).toFixed(2)+' MB)</a></div>'+
+      '<video controls playsinline src="'+url+'" style="width:100%;border-radius:8px;margin-top:8px"></video>'+
+      '<div class="muted" style="margin-top:8px;font-size:11.5px">اتصال بدون افت کیفیت (اگر ffmpeg دارید): '+
+      '<code dir="ltr">ffmpeg -f concat -safe 0 -i list.txt -c copy final.mp4</code></div></div>';
+  }catch(e){
+    log("اتصال قطعات ناموفق: "+e.message,"e");
+    alert("اتصال قطعات ناموفق:\n"+e.message);
+  }finally{btn.disabled=false;}
+}
+
 $("go").addEventListener("click",async()=>{
   const btn=$("go");
   try{
@@ -970,9 +1098,48 @@ $("go").addEventListener("click",async()=>{
       log("حالت تولید: افکت کاتالوگ — effectType="+effectType,"w");
     }
     btn.disabled=true;btn.textContent="⏳ در حال پردازش...";
-    const url=await uploadImage(pickedFile);
-    const taskId=await createTask(url,prompt,level,effectType,quality);
-    const {videoUrl,last}=await waitForVideo(taskId);
+    $("chainBox").style.display="none";$("mergedOut").innerHTML="";
+
+    // مدت هدف: ۴ ثانیه = تک‌قطعه (خروجی مستقیم سرور) — بیشتر = زنجیرهٔ فریم آخر
+    const targetSec=Math.max(4,Number($("clipLen").value)||4);
+    const maxSegs=Math.ceil(targetSec/4);
+    const segs=[];
+
+    let url=await uploadImage(pickedFile);
+    let taskId=await createTask(url,prompt,level,effectType,quality);
+    let res=await waitForVideo(taskId);
+    let videoUrl=res.videoUrl,last=res.last;
+    segs.push(videoUrl);
+    let elapsed=Number(last&&last.d&&last.d.duration)||4;
+
+    if(maxSegs>1){
+      log("کلیپ زنجیره‌ای: هدف "+targetSec+" ثانیه → تا "+maxSegs+" قطعه از موتور Wan-LoRA","w");
+      for(let k=2;k<=maxSegs;k++){
+        log("— آماده‌سازی قطعهٔ "+k+" از "+maxSegs+" (زمان تا اینجا "+elapsed.toFixed(1)+"s) —","h");
+        try{
+          const frame=await lastFrameBlob(videoUrl);
+          url=await uploadBlobAs(frame,"seg"+k+".jpg");
+          log("فریم شروع قطعهٔ "+k+" آپلود شد: "+url,"i");
+        }catch(e){
+          log("زنجیره در قطعهٔ "+k+" قطع شد: "+e.message,"e");
+          break;
+        }
+        try{
+          // پرامپت اختصاصی برای نماهای ادامه‌دار حفظ می‌شود
+          taskId=await createTask(url,prompt,level,effectType,quality);
+          res=await waitForVideo(taskId);
+          videoUrl=res.videoUrl;last=res.last;
+          segs.push(videoUrl);
+          elapsed+=Number(last&&last.d&&last.d.duration)||4;
+          log("قطعهٔ "+k+" آماده شد ("+segs.length+" قطعه، حدود "+elapsed.toFixed(1)+"s)","ok");
+        }catch(e){
+          log("تولید قطعهٔ "+k+" ناموفق: "+e.message+" — قطعات قبلی حفظ می‌شوند","e");
+          break;
+        }
+      }
+      renderSegments(segs);
+    }
+
     log("مرحله ۴: ویدیو آماده شد ✓","ok");step(4,"done");
     log("لینک خام خروجی: "+videoUrl,"i");
     log("موتور شناسایی‌شده: "+engineFromUrl(videoUrl),"w");
@@ -1141,7 +1308,7 @@ document.querySelectorAll(".segBtn").forEach(b=>b.addEventListener("click",()=>{
 applyGenMode();
 
 fillSettings();
-log("آماده [نسخهٔ فایل: 2026-10-28l — اگر این برچسب را نمی‌بینید فایل کش شده است]. userId="+CFG.userId+" signKey="+CFG.signKey);
+log("آماده [نسخهٔ فایل: 2026-10-28m — اگر این برچسب را نمی‌بینید فایل کش شده است]. userId="+CFG.userId+" signKey="+CFG.signKey);
 log("کاتالوگ افکت‌ها: "+Object.values(EFFECT_CATALOG).reduce((a,b)=>a+b.length,0)+" قالب آماده از سرور.");
 </script>
 </body>
