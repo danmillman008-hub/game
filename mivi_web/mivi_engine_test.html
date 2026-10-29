@@ -58,7 +58,7 @@
 <body>
 <div class="wrap">
 
-  <h1>🧬 Mivi — تست موتورها با یک دکمه <span class="tag" id="verTag">build 2026-10-29z</span></h1>
+  <h1>🧬 Mivi — تست موتورها با یک دکمه <span class="tag" id="verTag">build 2026-10-30a</span></h1>
   <div class="sub">
     یک عکس بده، یک دکمه بزن. این صفحه هر پنج مسیر تولیدی که در APK هست را با بدنهٔ
     دقیق خودش صدا می‌زند، خروجی هرکدام را می‌گیرد و کنار هم می‌گذارد.
@@ -129,6 +129,11 @@
   <div class="card">
     <h2>۳) گزارش زنده</h2>
     <div id="log"></div>
+    <div class="card" style="margin-top:12px">
+      <h3 style="margin:0 0 6px">کاتالوگ pose / pixVerse (خام)</h3>
+      <pre id="pose" style="white-space:pre-wrap;word-break:break-all;font-size:11px;
+        max-height:260px;overflow:auto;background:#0d1117;padding:8px;border-radius:6px"></pre>
+    </div>
   </div>
 
 </div>
@@ -231,7 +236,7 @@ function md5(inputString){
 }
 
 const $=id=>document.getElementById(id);
-const VERSION="2026-10-29z";   /* ← اگر این عدد در خط اول لاگ نبود، نسخهٔ کش‌شده اجرا شده */
+const VERSION="2026-10-30a";   /* ← اگر این عدد در خط اول لاگ نبود، نسخهٔ کش‌شده اجرا شده */
 const logEl=$("log");
 function ts(){return String(Math.floor(Date.now()/1000));}
 function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
@@ -381,6 +386,11 @@ const ENGINES=[
    variants:[{note:"بدنهٔ تأییدشده",path:"/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",
      body:o=>({imageUrls:[o.img],level:o.level,effectType:o.eff,prompt:o.prompt,quality:o.quality})}]},
 
+  {key:"GXi",name:"GX + imageEffectType",query:"/algo/v1/faceFusion/aigc/beatImage2Video/queryTask",
+   variants:[{note:"like GX + imageEffectType=7186",path:"/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",
+     body:o=>({imageUrls:[o.img],level:o.level,effectType:o.eff,imageEffectType:7186,
+               prompt:o.prompt,quality:o.quality})}]},
+
   {key:"LTX",name:"LTX / PixVerse",query:"/algo/v1/faceFusion/aigc/image2VideoQuery",
    variants:[
      {note:"V3 بدون pixVerseId",path:"/algo/v1/faceFusion/aigc/image2VideoCreateV3",
@@ -499,6 +509,22 @@ function videoCard(title,url){
   });
 }
 
+/* همهٔ شناسه‌های عددی داخل یک آبجکت را جمع می‌کند (برای خواندن کاتالوگ) */
+function collectNumbers(o,out){
+  out=out||[];
+  if(Array.isArray(o)){o.forEach(v=>collectNumbers(v,out));}
+  else if(o&&typeof o==="object"){
+    for(const k in o){
+      const v=o[k];
+      if(/^(c|code|status|level|ifTest|type|count|total|page|size)$/.test(k))continue;
+      if(typeof v==="number"&&v>100&&v<1e9)out.push(k+"="+v);
+      else if(typeof v==="string"&&/^\d{3,12}$/.test(v))out.push(k+"="+v);
+      else collectNumbers(v,out);
+    }
+  }
+  return out;
+}
+
 /* ===================== دکمهٔ اصلی ===================== */
 $("run").onclick=async()=>{
   const btn=$("run");
@@ -532,7 +558,24 @@ $("run").onclick=async()=>{
     o.img=img;
     log("آپلود موفق: "+img,"ok");
 
-    head("پنج موتور، یک عکس (با جستجوی پارامتر گمشده)");
+    /* ---- کاتالوگ pose: منبع قانونی poseSequenceId و pixVerseId ---- */
+    head("کاتالوگ pose — getAllPoseSequenceId");
+    try{
+      const pe=await postJson("/algo/v1/faceFusion/aigc/getAllPoseSequenceId",{});
+      const pc=(pe.j&&pe.j.c!==undefined)?pe.j.c:null;
+      row("POSE","/algo/v1/faceFusion/aigc/getAllPoseSequenceId",pe.http,pc,
+          pc===200?"۲۰۰ — کاتالوگ آمد":(pe.txt||pe.error||"").slice(0,140));
+      if(pc===200){
+        log("پاسخ کاتالوگ (خلاصه): "+(pe.txt||"").slice(0,900),"i");
+        const ids=collectNumbers(pe.j);
+        log("شناسه‌های داخل کاتالوگ ("+ids.length+"): "+ids.slice(0,80).join(" , "),"ok");
+        const box=$("pose"); if(box)box.textContent=(pe.txt||"").slice(0,60000);
+      }else{
+        log("کاتالوگ رد شد: HTTP "+pe.http+" c="+pc+" — "+(pe.txt||"").slice(0,200),"e");
+      }
+    }catch(e){log("کاتالوگ pose خطا: "+e.message,"e");}
+
+    head("موتورها (با جستجوی پارامتر گمشده)");
     const ok=[];
     for(const en of ENGINES){
       let won=null;
@@ -603,6 +646,40 @@ $("run").onclick=async()=>{
       }catch(e){ log("✗ مسیر HD: "+e.message,"e"); }
     }else{
       log("تسک GX ساخته نشد، پس مرحلهٔ HD اجرا نشد.","w");
+    }
+
+    /* ---- ارتقای ویدیوی خودمان با createVideoHdTask (همان «Enhanced Visuals») ----
+       بدنهٔ واقعی این متد در dex:
+       videoUrl, fileMd5, fileSize, fileTime, width, height, level, deviceToken, ifTest
+       مسیرش در فهرست رشته‌های APK نبود، پس با نام متد آزمون می‌شود؛
+       حتی اگر ۴۰۴ بدهد، معلوم می‌شود همین قرارداد را باید کجا صدا زد. */
+    head("Enhanced Visuals — ارتقای ویدیوی تولیدشده");
+    const mine=ok.find(x=>x.vu);
+    if(mine){
+      try{
+        const m=await videoMeta(mine.vu);
+        log("متادیتای ویدیوی ما: "+m.w+"×"+m.h+" — "+Math.round((m.size||0)/1024)+"KB", "i");
+        const body={videoUrl:mine.vu,fileSize:m.size||0,width:m.w,height:m.h,
+                    fileTime:0,level:o.level,deviceToken:"",ifTest:false};
+        for(const path of ["/algo/v1/faceFusion/aigc/createVideoHdTask",
+                           "/algo/v1/faceFusion/aigc/createSuperResolutionNew"]){
+          const env=await postJson(path,body);
+          const c=(env.j&&env.j.c!==undefined)?env.j.c:null;
+          const d=(env.j&&env.j.d)?env.j.d:{};const hid=d.taskId||d.jobId||"";
+          row("UP",path,env.http,c,c===200?(hid||"۲۰۰ بدون taskId"):(env.txt||"").slice(0,140));
+          log("→ "+path.split("/").pop()+" HTTP "+env.http+" c="+c+" — "+
+              (env.txt||env.error||"").slice(0,200), c===200?"ok":"e");
+          if(c===200&&hid){
+            const vu2=await poll(["/algo/v1/faceFusion/aigc/image2VideoQuery"]
+                                 .concat(QUERY_FALLBACK),hid,"UP");
+            videoCard("Enhanced (ارتقای ویدیوی خودمان)",vu2);
+            break;
+          }
+          await sleep(600);
+        }
+      }catch(e){ log("✗ ارتقا: "+e.message,"e"); }
+    }else{
+      log("ویدیویی برای ارتقا نبود.","w");
     }
 
     head("پایان");

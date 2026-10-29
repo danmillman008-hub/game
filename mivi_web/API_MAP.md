@@ -245,3 +245,75 @@ for (Map.Entry e : extParams.entrySet()) body.put(e.getKey(), e.getValue());
 همان API‌ای است که اپ برای پر کردن `poseSequenceId` و `pixVerseId` صدا می‌زند؛
 یعنی **این دو مقدار دادهٔ سرورند و در APK ثابت نیستند**. تا مسیر این اندپوینت
 پیدا نشود، مسیرهای V3/Sequence-قدیم عملاً بسته‌اند.
+
+---
+
+# پیوست ۲: آپدیت ۲.۳۷.۴۰۸ — چه چیزی عوض شد و چه چیزی نه
+
+منبع: `new apk` در درایو (سه بخش: `.z01` ۵۰MB + `.z02` ۵۰MB + `.zip` ۱۹.۲MB).
+یک نکتهٔ فنی: این یک zip چندبخشی (spanned) است؛ چسباندن سرهم کافی نیست، چون
+EOCD عدد دیسک را ۲ می‌گذارد و `zipfile` ارور `Bad magic number` می‌دهد. با
+صفر کردن `disk`/`cddisk` و افزودن آفست بخش آخر به `cdoff` درست می‌شود.
+APK نهایی: ۱۹۸٬۹۷۷٬۴۶۷ بایت، ۴٬۵۷۷ فایل، ۸ dex.
+
+## ۱) چه چیزی عوض نشده (مهم‌ترین نتیجه)
+
+| بررسی | نتیجه |
+|---|---|
+| فهرست مسیرهای `/algo/v1/...` | **۶۴ مسیر در هر دو نسخه، صفر تفاوت** |
+| کلاس `Image2VideoServer` (۱۴۸ متد) | **رشته‌های بدنه بی‌ته‌تفاوت‌اند** |
+| کل بستهٔ `com/ufotosoft/ai/image2video/` (۷۹۳ خط رشته) | فقط حروف ابفاسکیت عوض شده (`xa`→`ya`, `hi`→`ii`) |
+| تعداد کلاس‌ها | ۷۰٬۶۱۹ → ۷۴٬۰۵۱ (+۴٬۸۲۷ / −۱٬۳۹۵) |
+
+پس **آپدیت هیچ پاسخی برای مسیرهای ویدیو نداشت**. تغییرات واقعی:
+فیچر تازهٔ «Ref to Image» (`RefToImageEditActivity`, `RefToImageStylesManager`,
+`RefToImageStyleItem`, `TemplateScene`)، بازنویسی کامل کراپ
+(`edit/crop/CropImageView`, `HeadTailCropActivity`, `HugProcessInfo`) و
+۴٬۸۲۷ کلاس تبلیغاتی Facebook.
+
+تنها رشته‌های تازهٔ مرتبط: `aigc_params`، `getPoseSequenceId` (یک getter)،
+` , poseSequenceId=` (لاگ).
+
+## ۲) ولی در بازخوانی، سه چیز پیدا شد که در نسخهٔ قبل هم بود
+
+### الف) `getAllPoseSequenceId` مسیرش را دارد
+
+```
+POST /algo/v1/faceFusion/aigc/getAllPoseSequenceId
+body = {}            ← در کد: new JSONObject() خالی، بدون هیچ فیلدی
+```
+
+این **همان API‌ای** است که `poseSequenceId` و `pixVerseId` قانونی را می‌دهد.
+تا امروز فکر می‌کردیم مسیرش را نداریم؛ در فهرست ۶۴ مسیر بود و از چشم افتاده بود.
+
+### ب) بدنهٔ کامل هر مسیر (نسخهٔ ۴۰۸، با فیلدهای تازه)
+
+| متد | بدنه |
+|---|---|
+| `createAiPhotoTask` (V1) | `poseSequenceId, imageKey, level, deviceToken, videoRatio, specialPic, audioKey, ifTest` |
+| `createAiPhotoTaskV2` | `imageUrls, level, deviceToken, effectType, poseSequenceId, duration, prompt, **enhance**, ifTest` |
+| `createAiPhotoTaskV3` | `imageUrls, level, deviceToken, pixVerseId, duration, prompt, **enhance**, ifTest` |
+| `createGXAiVideoTask` | `imageUrls, level, effectType, **imageEffectType**, prompt, quality` |
+| `createAiVideoLtxTask` | `imageUrls, level, effectType` |
+| `createAiVideoUnifiedTask` | `imageUrls, level, deviceToken, prompt, ratio, movementAmplitude, example, ifTest` |
+| `createGoogleVeoVideoTask` | `imageUrls, level, deviceToken, googleId, audio, prompt, duration, ifTest` |
+| `createAiSequenceVideoTask` | `imageUrls, level, deviceToken` + (**`example`** یا `effectType`+`poseSequenceId`+`pixVerseId`) + `ifTest` |
+| `createText2VideoTaskVidu` | `level, deviceToken, duration, prompt, **enhance**, style, ratio, ifTest` |
+| `createText2VideoUnifiedTask` | `level, deviceToken, duration, prompt, ratio, ifTest` |
+| `createVideoHdTaskVidu` | `taskId, level, deviceToken, ifTest` |
+| `createVideoHdTask` | `videoUrl, fileMd5, fileSize, fileTime, width, height, level, deviceToken, ifTest` |
+
+دو فیلد تازه نسبت به نقشهٔ قبلی:
+
+- **`enhance`** — یک بولین در V2/V3/Text2Video-Vidu. این همان چیزی است که در
+  اسکرین‌شات «Pro: 720p & **Enhanced Visuals**» نامیده شده. مسیر GX آن را ندارد.
+- **`imageEffectType`** — فقط در مسیر GX/beat. در کاتالوگ ۳۱۰ افکت، **یک**
+  منبع این فیلد را دارد: `resId` با `imageEffectType = 7186`. یعنی مسیر beat
+  علاوه بر افکت ویدیو، می‌تواند یک افکت «تصویری» هم بگیرد.
+
+### ج) `createVideoHdTask` روی ویدیوی خودمان کار می‌کند
+
+بدنه‌اش `videoUrl` + متادیتای فایل است، نه `taskId`. یعنی برخلاف
+`createVideoHdTaskVidu` (که تسک GX را رد کرد) این یکی قرار است یک ویدیوی موجود
+را ارتقا بدهد. مسیرش در فهرست رشته‌ها نیست؛ به همین دلیل صفحهٔ آزمون آن را
+با نام متد صدا می‌زند تا یا کار کند یا خطای واقعی بدهد.
