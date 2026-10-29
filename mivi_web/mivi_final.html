@@ -72,6 +72,10 @@ a.dl{display:inline-block;margin-top:10px;background:#1d6f42;color:#fff;padding:
     <textarea id="prompt" placeholder="مثلاً: دختر آرام سرش را برمی‌گرداند و لبخند می‌زند، نور نرم از سمت چپ، دوربین ثابت"></textarea>
     <div class="hint" style="margin-top:6px">هر چه صحنه و حرکت را دقیق‌تر بنویسی، نتیجه به عکس اصلی نزدیک‌تر می‌ماند.</div>
   </div>
+  <label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13.5px;color:#c9d3e3">
+    <input id="upscale" type="checkbox" style="width:auto;margin:0">
+    اول عکس را ۲ برابر بزرگ و شارپ کن (حدود ۱۰ ثانیه) — جزئیات بیشتر برای مدل
+  </label>
   <button id="go">🎬 ساختن ویدیو</button>
   <div id="bar"><i></i></div>
   <div class="hint" id="hint">آماده.</div>
@@ -226,7 +230,7 @@ function md5(inputString){
   return (wordToHex(a)+wordToHex(b)+wordToHex(c)+wordToHex(d)).toLowerCase();
 }
 
-const VERSION="2026-10-31-final";
+const VERSION="2026-11-01-final";
 const DEFAULTS={host:"https://cpi.ufotosoft.com",connMode:"local",
   customProxy:"http://localhost:8770/proxy?u={url}",userId:"7da75eed37c61d33"};
 function loadCfg(){let c={};try{c=JSON.parse(localStorage.getItem("mivi_final_cfg")||"{}");}catch(e){}return Object.assign({},DEFAULTS,c);}
@@ -352,6 +356,24 @@ async function makeVideo(o){
   return await wait(Number(o.effectType),Number(o.quality));
 }
 
+/* ---------- ارتقای عکس (createSuperResolutionNew) ---------- */
+async function upscale(imgUrl){
+  const c=await postJson("/algo/v1/faceFusion/aigc/createSuperResolutionNew",{imageUrls:[imgUrl],level:3});
+  if(!c.j||c.j.c!==200)throw new Error("ارتقا رد شد c="+(c.j?c.j.c:"?")+" "+String(c.j&&c.j.m||"").slice(0,80));
+  const job=(c.j.d||{}).jobId;
+  if(!job)throw new Error("jobId برنگشت");
+  log("کار ارتقا: "+job.slice(0,28)+"…");
+  for(let i=0;i<24;i++){
+    await sleep(3000);
+    const q=await postJson("/algo/v1/faceFusion/aigc/querySuperResolutionNew",{jobId:job});
+    const d=(q.j&&q.j.d)||{};
+    if(d.imageUrls&&d.imageUrls.length){log("عکس ارتقا یافت: "+d.imageUrls[0],"ok");return d.imageUrls[0];}
+    if(String(d.jobStatus)==="4")throw new Error("ارتقا شکست خورد");
+    hint("در حال ارتقای عکس… ("+((i+1)*3)+" ثانیه)");
+  }
+  throw new Error("ارتقای عکس زمان‌بر شد");
+}
+
 /* ---------- نمایش ---------- */
 async function show(url){
   $("out").style.display="block";
@@ -378,10 +400,14 @@ $("go").onclick=async()=>{
     const ratio=$("ratio").value;
     prog(8);hint("آماده‌سازی عکس…");
     let file=f;
-    if(ratio){try{file=await crop(f,ratio,1536);}catch(e){log("برش نشد: "+e.message,"wa");}}
+    if(ratio){try{file=await crop(f,ratio,2560);}catch(e){log("برش نشد: "+e.message,"wa");}}
     prog(20);hint("آپلود…");
-    const img=await upload(file);
+    let img=await upload(file);
     log("آپلود شد: "+img,"ok");
+    if($("upscale").checked){
+      prog(26);hint("ارتقای عکس…");
+      try{img=await upscale(img);}catch(e){log("ارتقا نشد، با عکس اصلی ادامه می‌دهم: "+e.message,"wa");}
+    }
     $("outTitle").textContent="در حال ساخت…";
     prog(35);
     const url=await makeVideo({
