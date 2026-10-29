@@ -370,3 +370,101 @@ fileTime + width + height` است. `fileTime=0` به‌عنوان «خالی» �
 
 همچنین `createSuperResolutionNew` زنده است ولی `imageUrls` می‌خواهد ⇒
 **ارتقای عکس** است، نه ویدیو.
+
+---
+
+# پیوست ۴: نقشهٔ کامل «متد ← مسیر» — چیزی که تا حالا باز بود
+
+این بار جواب در کد بود، نه در تست. آن ۶۴ مسیر در dex **هیچ ارجاع
+`const-string`ی ندارند** (با شاهد: `imageUrls` ۳۷ ارجاع دارد،
+`createNormalTask` صفر). علتش پیدا شد: مسیرها **مقدارِ annotation** هستند،
+نه رشتهٔ داخل کد — و androguard آن‌ها را برای متدها برنمی‌گرداند. با خواندن
+خام بخش `ANNOTATION_ITEM` درآمدند.
+
+نقشهٔ کلاینت `Lcom/ufotosoft/ai/base/g;` (همان که `Image2VideoServer` صدا
+می‌زند) کامل است:
+
+| متد کلاینت | نوع annotation | مسیر |
+|---|---|---|
+| `a` | `Lak/o;` | `/algo/v1/aiGenerate-aigc/multipleUpload` |
+| `m` | `Lak/o;` | `/algo/v1/faceFusion/aigc/babyPredictCreate` |
+| `w` | `Lak/o;` | `/algo/v1/faceFusion/aigc/babyPredictCreateV2` |
+| `f` | `Lak/o;` | `/algo/v1/faceFusion/aigc/babyPredictQuery` |
+| `h0` | `Lak/o;` | `/algo/v1/faceFusion/aigc/babyPredictQueryV2` |
+| `r` | `Lak/o;` | `/algo/v1/faceFusion/aigc/beatImage2Video/cancelTask` |
+| `P` | `Lak/o;` | `/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask` |
+| `M` | `Lak/o;` | `/algo/v1/faceFusion/aigc/beatImage2Video/queryTask` |
+| `o` | `Lak/o;` | `/algo/v1/faceFusion/aigc/cancelAiCustomizeTask` |
+| `W` | `Lak/o;` | `/algo/v1/faceFusion/aigc/createAiCustomizeTask` |
+| `i0` | `Lak/o;` | `/algo/v1/faceFusion/aigc/createAiPhotoModel` |
+| `z` | `Lak/o;` | `/algo/v1/faceFusion/aigc/createAiPhotoModelV2` |
+| `g` | `Lak/o;` | `/algo/v1/faceFusion/aigc/createAiPhotoTask` |
+| `y` | `Lak/o;` | `/algo/v1/faceFusion/aigc/createAiPhotoTaskV2` |
+| `F` | `Lak/o;` | `/algo/v1/faceFusion/aigc/createFaceKeyTask` |
+| `j0` | `Lak/o;` | `/algo/v1/faceFusion/aigc/createFaceKeyTaskV2` |
+| `B` | `Lak/o;` | `/algo/v1/faceFusion/aigc/createInpaintAnything` |
+| `d` | `Lak/o;` | `/algo/v1/faceFusion/aigc/createInpaintCleaner` |
+| `i` | `Lak/o;` | `/algo/v1/faceFusion/aigc/createPictureDetectTask` |
+| `x` | `Lak/o;` | `/algo/v1/faceFusion/aigc/createSwapFace` |
+| `R` | `Lak/o;` | `/algo/v1/faceFusion/aigc/createVideoHdTaskVidu` |
+| `Q` | `Lak/o;` | `/algo/v1/faceFusion/aigc/emoImageDetect` |
+| `q` | `Lak/o;` | `/algo/v1/faceFusion/aigc/emoVideoCancel` |
+| `f0` | `Lak/o;` | `/algo/v1/faceFusion/aigc/emoVideoCreate` |
+| `d0` | `Lak/o;` | `/algo/v1/faceFusion/aigc/emoVideoQuery` |
+| `V` | `Lak/f;` | `/algo/v1/faceFusion/aigc/getAllPoseSequenceId` |
+| `t` | `Lak/o;` | `/algo/v1/faceFusion/aigc/getFaceInfo` |
+| `u` | `Lak/o;` | `/algo/v1/faceFusion/aigc/image2VideoCancel` |
+| `J` | `Lak/o;` | `/algo/v1/faceFusion/aigc/image2VideoCreate` |
+| `a0` | `Lak/o;` | `/algo/v1/faceFusion/aigc/image2VideoCreateV2` |
+| `U` | `Lak/o;` | `/algo/v1/faceFusion/aigc/image2VideoCreateV3` |
+| `E` | `Lak/o;` | `/algo/v1/faceFusion/aigc/image2VideoCustomer/cancelTemplate` |
+| `l0` | `Lak/o;` | `/algo/v1/faceFusion/aigc/image2VideoCustomer/createTemplate` |
+| `s` | `Lak/o;` | `/algo/v1/faceFusion/aigc/image2VideoCustomer/queryTemplate` |
+| `j` | `Lak/o;` | `/algo/v1/faceFusion/aigc/image2VideoDetect` |
+| `b` | `Lak/o;` | `/algo/v1/faceFusion/aigc/image2VideoQuery` |
+| `D` | `Lak/o;` | `/algo/v1/faceFusion/aigc/image2image/createAiStyleTask` |
+| `I` | `Lak/o;` | `/algo/v1/faceFusion/aigc/image2image/createImageTask` |
+| `C` | `Lak/o;` | `/algo/v1/faceFusion/aigc/image2video/createTask` |
+| `g0` | `Lak/o;` | `/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5` |
+| `c0` | `Lak/o;` | `/algo/v1/faceFusion/aigc/image2video/integratedTaskCreate` |
+| `k` | `Lak/o;` | `/algo/v1/faceFusion/aigc/image2video/queryTask` |
+| `l` | `Lak/o;` | `/algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate` |
+| `X` | `Lak/o;` | `/algo/v1/faceFusion/aigc/integrated/image2VideoCreateV4` |
+| `b0` | `Lak/o;` | `/algo/v1/faceFusion/aigc/livePortraitCreate` |
+| `h` | `Lak/o;` | `/algo/v1/faceFusion/aigc/livePortraitQuery` |
+| `O` | `Lak/o;` | `/algo/v1/faceFusion/aigc/queryAiCustomizeTask` |
+| `A` | `Lak/o;` | `/algo/v1/faceFusion/aigc/queryAiPhotoModels` |
+| `p` | `Lak/o;` | `/algo/v1/faceFusion/aigc/queryAiPhotoTask` |
+| `Y` | `Lak/o;` | `/algo/v1/faceFusion/aigc/queryFaceKeyTask` |
+| `K` | `Lak/o;` | `/algo/v1/faceFusion/aigc/queryFaceKeyTaskV2` |
+| `H` | `Lak/o;` | `/algo/v1/faceFusion/aigc/queryPictureDetectTask` |
+| `c` | `Lak/o;` | `/algo/v1/faceFusion/cancelAiStyleTask` |
+| `T` | `Lak/o;` | `/algo/v1/faceFusion/createAiStyleTask` |
+| `L` | `Lak/o;` | `/algo/v1/faceFusion/queryAiStyleTask` |
+
+## و اتصال هر مسیر به سازندهٔ بدنه
+
+هر کلاس `Image2VideoServer$create*Task$1` در کد یکی از این متدها را صدا
+می‌زند؛ یعنی نقشه دیگر حدس نیست:
+
+| سازندهٔ بدنه | متد کلاینت | مسیر واقعی | وضعیت |
+|---|---|---|---|
+| `createGXAiVideoTask` | `g.P` | `/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask` | ✅ کار می‌کند |
+| `createAiVideoLtxTask` | `g.C` | `/algo/v1/faceFusion/aigc/image2video/**createTask**` | قبلاً با `image2VideoCreateV3` اشتباه گرفته شده بود |
+| `createAiPhotoTaskV3` (PixVerse) | `g.U` | `/algo/v1/faceFusion/aigc/image2VideoCreateV3` | `pixVerseId` لازم دارد |
+| `createAiVideoUnifiedTask` | `g.l` | `/algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate` | `example` لازم دارد |
+| `createGoogleVeoVideoTask` | `g.g0` | `/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5` | **پس V5 واقعاً Veo است** |
+| `createAiSequenceVideoTask` | `g.X` / `g.c0` | `integrated/image2VideoCreateV4` / `image2video/**integratedTaskCreate**` | نسخهٔ قدیم/نو |
+| `createText2VideoTaskVidu` | — | `createText2VideoTask` | — |
+| `createVideoHdTaskVidu` | `g.R` | `/algo/v1/faceFusion/aigc/createVideoHdTaskVidu` | تسک GX را رد می‌کند |
+
+### سه نتیجهٔ فوری از این نقشه
+
+1. **LTX هرگز آزموده نشد.** مسیرش `image2video/createTask` است، نه
+   `image2VideoCreateV3`. آن یک بار که ۴۰۴ گرفتیم روی **هاست دوم** بود
+   (`cpi.wiseoel.com`)، نه هاست اصلی.
+2. **`integratedTaskCreate` هرگز آزموده نشد** — فقط `integrated/image2VideoCreateV4`
+   آزموده شد که `effectType` را رد کرد. این توضیح می‌دهد چرا تسک‌های
+   `INTEGRATED_60019-…` هیچ کوئری‌ای نداشتند: **هرگز از درِ درست وارد نشدند.**
+3. **`getAllPoseSequenceId` با annotation نوع `Lak/f;` علامت خورده، نه `Lak/o;`**
+   مثل بقیه. یعنی متد دیگری (احتمالاً GET) است؛ POST دادن ۴۰۴ منطقی است.

@@ -58,7 +58,7 @@
 <body>
 <div class="wrap">
 
-  <h1>🧬 Mivi — تست موتورها با یک دکمه <span class="tag" id="verTag">build 2026-10-30b</span></h1>
+  <h1>🧬 Mivi — تست موتورها با یک دکمه <span class="tag" id="verTag">build 2026-10-30c</span></h1>
   <div class="sub">
     یک عکس بده، یک دکمه بزن. این صفحه هر پنج مسیر تولیدی که در APK هست را با بدنهٔ
     دقیق خودش صدا می‌زند، خروجی هرکدام را می‌گیرد و کنار هم می‌گذارد.
@@ -238,7 +238,7 @@ function md5(inputString){
 }
 
 const $=id=>document.getElementById(id);
-const VERSION="2026-10-30b";   /* ← اگر این عدد در خط اول لاگ نبود، نسخهٔ کش‌شده اجرا شده */
+const VERSION="2026-10-30c";   /* ← اگر این عدد در خط اول لاگ نبود، نسخهٔ کش‌شده اجرا شده */
 const logEl=$("log");
 function ts(){return String(Math.floor(Date.now()/1000));}
 function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
@@ -299,6 +299,19 @@ function uploadHeaders(){
   return {cp:"instagram.story.art.collage",version:"407",platform:"1",
     sign:md5("m3snil"+t),timeStamp:t,userId:CFG.userId,ifHttps:"true"};
 }
+/* GET با همان هدرها و همان پارامترها (بعضی اندپوینت‌ها GET هستند:
+   در dex، annotation متفاوت Lak/f; دارند نه Lak/o;) */
+async function getJsonAt(host,path,params){
+  const q=new URLSearchParams(params).toString();
+  const url=viaProxy(host.replace(/\/+$/,"")+path+(q?"?"+q:""));
+  let r,txt;
+  try{r=await fetch(url,{method:"GET",headers:algoHeaders()});}
+  catch(e){return {http:0,error:e.message,txt:"",j:null};}
+  try{txt=await r.text();}catch(e){txt="";}
+  let j=null;try{j=JSON.parse(txt);}catch(e){}
+  return {http:r.status,txt,j};
+}
+
 async function postJsonAt(host,path,body){
   const url=viaProxy(host.replace(/\/+$/,"")+path);
   let r,txt;
@@ -394,6 +407,20 @@ const ENGINES=[
    variants:[{note:"imageEffectType=7186",path:"/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",
      body:o=>({imageUrls:[o.img],level:o.level,effectType:o.eff,imageEffectType:7186,
                prompt:o.prompt,quality:o.quality})}]},
+
+  {key:"LTX",name:"LTX (g.C → image2video/createTask)",query:"/algo/v1/faceFusion/aigc/image2video/queryTask",
+   variants:[
+     {note:"createTask روی هاست اصلی",path:"/algo/v1/faceFusion/aigc/image2video/createTask",
+      body:o=>({imageUrls:[o.img],level:o.level,effectType:o.eff})},
+     {note:"createTask روی هاست دوم",host:"https://cpi.wiseoel.com",
+      path:"/algo/v1/faceFusion/aigc/image2video/createTask",
+      body:o=>({imageUrls:[o.img],level:o.level,effectType:o.eff})}
+   ]},
+
+  {key:"SEQ",name:"Sequence (g.c0 → integratedTaskCreate)",query:"/algo/v1/faceFusion/aigc/image2VideoQuery",
+   variants:[{note:"integratedTaskCreate",path:"/algo/v1/faceFusion/aigc/image2video/integratedTaskCreate",
+     body:o=>({imageUrls:[o.img],level:o.level,deviceToken:"",effectType:o.eff,
+               poseSequenceId:"",pixVerseId:"",ifTest:false})}]},
 
   {key:"V5",name:"V5 — شکار Veo",query:"/algo/v1/faceFusion/aigc/image2VideoQuery",
    variants:
@@ -559,11 +586,14 @@ $("run").onclick=async()=>{
     /* ---- کاتالوگ pose: منبع قانونی poseSequenceId و pixVerseId ---- */
     head("کاتالوگ pose — getAllPoseSequenceId");
     try{
-      let pe=await postJson("/algo/v1/faceFusion/aigc/getAllPoseSequenceId",{});
+      const POSE="/algo/v1/faceFusion/aigc/getAllPoseSequenceId";
+      const qp={userid:CFG.userId,timeStamp:ts(),cp:"instagram.story.art.collage",
+                version:"407",platform:"1",sign:md5("m3snil"+ts()),ifWise:"true"};
+      let pe=await postJson(POSE,{});
+      if(pe.http===404){ log("POST ۴۰۴ — حالا GET…","w"); pe=await getJsonAt(CFG.host,POSE,qp); }
       if(pe.http===404){
-        log("روی هاست اصلی ۴۰۴ داد؛ هاست دوم امتحان می‌شود…","w");
-        pe=await postJsonAt("https://cpi.wiseoel.com",
-                            "/algo/v1/faceFusion/aigc/getAllPoseSequenceId",{});
+        log("روی هاست اصلی ۴۰۴ — نسخهٔ GET روی هاست دوم…","w");
+        pe=await getJsonAt("https://cpi.wiseoel.com",POSE,qp);
       }
       const pc=(pe.j&&pe.j.c!==undefined)?pe.j.c:null;
       row("POSE","/algo/v1/faceFusion/aigc/getAllPoseSequenceId",pe.http,pc,
