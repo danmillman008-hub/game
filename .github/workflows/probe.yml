@@ -17,9 +17,11 @@ jobs:
       - name: run probe
         run: python3 .probe/probe.py
       - name: publish result back to the branch
+        if: always()
         run: |
           git config user.name "probe-bot"
           git config user.email "probe@local"
-          git add probe_out/
+          git add -f probe_out/ || true
           git commit -m "probe result $(date -u +%H:%M:%S)" || echo "no change"
-          git push
+          git pull --rebase -q origin "${GITHUB_REF_NAME}" || true
+          git push || true
