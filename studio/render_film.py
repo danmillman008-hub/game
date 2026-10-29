@@ -31,8 +31,15 @@ import filmkit as K          # noqa: E402
 import mivi_mcp as M         # noqa: E402
 
 
+LOGPATH = None
+
+
 def log(*a):
-    print(f"[{time.strftime('%H:%M:%S')}]", *a, flush=True)
+    line = f"[{time.strftime('%H:%M:%S')}] " + " ".join(str(x) for x in a)
+    print(line, flush=True)
+    if LOGPATH:
+        with open(LOGPATH, "a", encoding="utf-8") as f:
+            f.write(line + "\n")
 
 
 def build_still(d: Path, proj: dict, s: dict, force=False) -> Path | None:
@@ -152,6 +159,9 @@ def main():
     K.FF, K.FP = K.ffmpeg_bin(), K.ffprobe_bin()
     M.FFMPEG, M.FFPROBE = K.FF, K.FP or "ffprobe"
 
+    global LOGPATH
+    (Path(a.project) / "render.log").write_text("", encoding="utf-8")
+    LOGPATH = str(Path(a.project) / "render.log")
     proj = json.loads((Path(a.project) / "project.json").read_text(encoding="utf-8"))
     d = Path(a.project).resolve()
     quality = int(a.quality or proj.get("quality") or 2)
@@ -189,4 +199,9 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    import traceback
+    try:
+        main()
+    except BaseException:
+        log("FATAL\n" + traceback.format_exc()[-3000:])
+        raise
