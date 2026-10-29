@@ -1,6 +1,6 @@
-import json, hashlib, time, urllib.request, urllib.error, os, pathlib
+import json, hashlib, time, urllib.request, urllib.error, subprocess, pathlib, os, sys
 
-HOST="https://cpi.ufotosoft.com"; MIRROR="https://cpi.wiseoel.com"
+HOST="https://cpi.ufotosoft.com"
 USER="7da75eed37c61d33"
 IMG="http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"
 OUT=[]
@@ -13,59 +13,62 @@ def hdr():
             "platform":"1","ifWise":"true","Content-Type":"application/json",
             "sign":hashlib.md5(("m3snil"+t).encode()).hexdigest()}
 
-def call(method,path,body=None,host=HOST):
-    data=json.dumps(body).encode() if (method=="POST" and body is not None) else (b"{}" if method=="POST" else None)
-    req=urllib.request.Request(host+path,data=data,headers=hdr(),method=method)
+def call(path,body,host=HOST):
+    req=urllib.request.Request(host+path,data=json.dumps(body).encode(),headers=hdr(),method="POST")
     try:
-        with urllib.request.urlopen(req,timeout=40) as r:
-            return r.status, r.read().decode("utf-8","replace")
+        with urllib.request.urlopen(req,timeout=40) as r: return json.loads(r.read().decode())
     except urllib.error.HTTPError as e:
-        return e.code, e.read().decode("utf-8","replace")[:400]
-    except Exception as e:
-        return 0, "ERR "+repr(e)[:200]
+        try: return json.loads(e.read().decode())
+        except Exception: return {"http":e.code}
+    except Exception as e: return {"err":repr(e)[:150]}
 
-def show(tag,res):
-    p(f"[{tag}] HTTP {res[0]} :: {res[1][:260]}")
+def run(cmd):
+    return subprocess.run(cmd,shell=True,capture_output=True,text=True).stdout.strip()
 
-p("=== probe start", time.strftime("%H:%M:%SZ", time.gmtime()), "===")
+def make(tag,body):
+    r=call("/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",body)
+    tid=(r.get("d") or {}).get("taskId","")
+    p(f"[create {tag}] c={r.get('c')} msg={r.get('m')} taskId={tid}")
+    return tid
 
-# 1) pose catalogue — three ways
-show("pose POST main",   call("POST","/algo/v1/faceFusion/aigc/getAllPoseSequenceId",{}))
-show("pose GET  main",   call("GET", "/algo/v1/faceFusion/aigc/getAllPoseSequenceId"))
-show("pose GET  mirror", call("GET", "/algo/v1/faceFusion/aigc/getAllPoseSequenceId",host=MIRROR))
+def wait(tid,limit=40):
+    for i in range(limit):
+        time.sleep(5)
+        r=call("/algo/v1/faceFusion/aigc/beatImage2Video/queryTask",{"taskId":tid})
+        d=r.get("d") or {}
+        st=d.get("taskStatus") or ""
+        if d.get("videoUrl"):
+            p(f"  [{tid[:22]}] done at poll {i+1}: {d['videoUrl']}")
+            return d["videoUrl"]
+        if st in ("fail","failed"):
+            p(f"  [{tid[:22]}] FAILED {json.dumps(d)[:200]}"); return ""
+    p(f"  [{tid[:22]}] timeout"); return ""
 
-# 2) GX with the MATCHING pair from the catalogue: "Neon Couple" = effectType 5202 / imageEffectType 7186
-r=call("POST","/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",
-       {"imageUrls":[IMG],"level":1,"effectType":5202,"imageEffectType":7186,"prompt":"","quality":2})
-show("GX 5202+7186", r)
-tid=""
-try: tid=(json.loads(r[1]).get("d") or {}).get("taskId","")
-except Exception: pass
-p("GX taskId:", tid)
+def study(tag,url):
+    if not url: return
+    f=f"probe_out/{tag}.mp4"; pathlib.Path("probe_out").mkdir(exist_ok=True)
+    urllib.request.urlretrieve(url,f)
+    meta=run(f'ffprobe -v error -select_streams v:0 -show_entries stream=width,height,bit_rate,nb_frames,avg_frame_rate -show_entries format=size,duration -of json "{f}"')
+    p(f"--- {tag} meta: {meta[:400]}")
+    try:
+        j=json.loads(meta); st=j["streams"][0]; fmt=j["format"]
+        w,h=int(st["width"]),int(st["height"]); size=int(fmt["size"]); dur=float(fmt["duration"])
+        bpp=(size*8)/(dur*w*h*32)
+        p(f"    {w}x{h} {dur:.2f}s {size/1024:.0f}KB bpp={bpp:.4f} Mbps={size*8/dur/1e6:.2f}")
+    except Exception as e: p("    meta parse err",e)
+    for i,t in enumerate([0.3,1.8,3.5]):
+        run(f'ffmpeg -y -v error -ss {t} -i "{f}" -frames:v 1 -vf "scale=540:-2" probe_out/{tag}_f{i}.jpg')
+    os.remove(f)
 
-# 3) V5 with a real catalogue effectType (5202) x a couple of googleIds
-for gid in ["1","2"]:
-    show(f"V5 et=5202 gid={gid}", call("POST","/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
-        {"imageUrls":[IMG],"level":1,"deviceToken":"","googleId":gid,"audio":True,
-         "effectType":5202,"prompt":"","duration":8,"ifTest":False}))
+p("=== probe", time.strftime("%H:%M:%SZ",time.gmtime()), "===")
 
-# 4) V5 with imageEffectType instead of effectType
-show("V5 et=7186", call("POST","/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
-    {"imageUrls":[IMG],"level":1,"deviceToken":"","googleId":"1","audio":True,
-     "effectType":7186,"prompt":"","duration":8,"ifTest":False}))
+# A/B: the two beat modes
+a=make("GX6209", {"imageUrls":[IMG],"level":1,"effectType":6209,"prompt":"","quality":2})
+b=make("NEON5202",{"imageUrls":[IMG],"level":1,"effectType":5202,"imageEffectType":7186,"prompt":"","quality":2})
+p("--- waiting ---")
+ua=wait(a) if a else ""
+ub=wait(b) if b else ""
+study("gx6209",ua)
+study("neon5202",ub)
 
-# 5) poll the GX task, if any
-if tid:
-    for i in range(28):
-        time.sleep(6)
-        st=call("POST","/algo/v1/faceFusion/aigc/beatImage2Video/queryTask",{"taskId":tid})
-        try: d=json.loads(st[1]).get("d") or {}
-        except Exception: d={}
-        s=d.get("taskStatus") or d.get("status") or ""
-        if i%3==0: p(f"  poll#{i+1} {s or ('HTTP '+str(st[0]))}")
-        if d.get("videoUrl"): p("  VIDEO:", d["videoUrl"]); break
-        if s in ("fail","failed"): p("  FAILED:", json.dumps(d)[:200]); break
-
-p("=== probe end ===")
-pathlib.Path("probe_out").mkdir(exist_ok=True)
-pathlib.Path("probe_out/out.txt").write_text("\n".join(OUT), encoding="utf-8")
+pathlib.Path("probe_out/out.txt").write_text("\n".join(OUT),encoding="utf-8")
