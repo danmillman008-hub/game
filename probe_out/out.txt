@@ -1,42 +1,28 @@
-## createImageTask: MAXROUNDS  final c=500 m=Internal Server Error [NullPointerException: ]
-   r7 c=500 Internal Server Error [NullPointerException: ]
-   r8 c=500 Internal Server Error [NullPointerException: ]
-   r9 c=500 Internal Server Error [NullPointerException: ]
-   body: {"imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "level": 1, "deviceToken": "", "ifTest": false, "prompt": "same person, golden hour light", "token": "", "ratio": "3:4", "quality": 2, "duration": 4}
-## createAiStyleTask: STUCK  final c=501 m=Network error [HttpMessageNotReadableException: JSON parse error: Cann
-   r2 c=1003 param illegal: token decrypt fail
-   r3 c=1003 param illegal: token decrypt fail
-   r4 c=501 Network error [HttpMessageNotReadableException: JSON parse error: Cann
-   body: {"token": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"]}
-## createInpaintAnything: STUCK  final c=400 m=Parameter error [imageUrlsurls not empty]
-   r0 c=400 Parameter error [imageUrlsurls not empty]
-   body: {}
-## createInpaintCleaner: STUCK  final c=400 m=Parameter error [imageUrlsurls not empty,maskUrlsmaskUrls not empty]
-   r0 c=400 Parameter error [imageUrlsurls not empty,maskUrlsmaskUrls not empty]
-   body: {}
-## createSwapFace: STUCK  final c=400 m=Parameter error [imageUrlsurls not empty,templateIdstemplateIds not em
-   r0 c=400 Parameter error [imageUrlsurls not empty,templateIdstemplateIds not em
-   body: {}
-## createFaceKeyTask: STUCK  final c=400 m=Parameter error [imagesimages not empty,imagesimages not null]
-   r0 c=400 Parameter error [imagesimages not empty,imagesimages not null]
-   body: {}
-## createTask: STUCK  final c=400 m=Parameter error [imageUrlsimageUrls长度不能小于2]
-   r5 c=400 Parameter error [imageUrlsimageUrls不能为空]
-   r6 c=400 Parameter error [imageUrlsimageUrls不能为空]
-   r7 c=400 Parameter error [imageUrlsimageUrls长度不能小于2]
-   body: {"imageUrlsimageUrls": 1, "imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "level": 1, "deviceToken": "", "ifTest": false, "prompt": "same person, golden hour light", "token": "", "ratio": "3:4", "quality": 
-## livePortraitCreate: MAXROUNDS  final c=400 m=Parameter error [modelIdmodelId不能为空]
-   r7 c=400 Parameter error [modelIdmodelId不能为空]
-   r8 c=400 Parameter error [modelIdmodelId不能为空]
-   r9 c=400 Parameter error [modelIdmodelId不能为空]
-   body: {"modelIdmodelId": 1, "imageUrlsimageUrls": "http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg", "imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "level": 1, "deviceToken": 
-## emoVideoCreate: MAXROUNDS  final c=400 m=Parameter error [imageKeyimage_key不能为空,audioKeyaudio_key不能为空]
-   r7 c=400 Parameter error [audioKeyaudio_key不能为空,imageKeyimage_key不能为空]
-   r8 c=400 Parameter error [audioKeyaudio_key不能为空,imageKeyimage_key不能为空]
-   r9 c=400 Parameter error [audioKeyaudio_key不能为空,imageKeyimage_key不能为空]
-   body: {"audioKeyaudio_key": "3:4", "imageKeyimage_key": "", "imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "level": 1, "deviceToken": "", "ifTest": false, "prompt": "same person, golden hour light", "token": "",
-## image2VideoCreateV2: MAXROUNDS  final c=1001 m=param error: param effectType illegal
-   r7 c=1001 param error: poseSequenceId error
-   r8 c=1001 param error: param effectType illegal
-   r9 c=1001 param error: param effectType illegal
-   body: {"imageUrlsimageUrls": 1, "imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "level": 1, "deviceToken": "", "ifTest": false, "prompt": "same person, golden hour light", "token": "", "ratio": "3:4", "quality": 
+[upload multipleUpload] {"c": 200, "m": "成功", "d": ["http://algo.ufotosoft.com/original/261029/aec24a6b-8127-4588-b9fc-e4f150d7a746.jpeg"]}
+[upload upload] {"c": 501, "m": "Network error [MissingServletRequestPartException: Required request part 'file' is not present]", "d": null, "traceId": "fd1fa20d9bbe466cb4a1886e5e14bb38"}
+## inpaintAnything: c=200 None
+   r0 c=200 
+   body: {"imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "level": 1, "deviceToken": "", "ifTest": false}
+   d: {"maskUrlList": [{"url": "https://algo-v1.ufotosoft.com/temp/aiInpaint/261030/871a8c6b-4207-41bb-836d-1aeb678849c2-1793291801226.jpg", "label": "Background"}, {"url": "https://algo-v1.ufotosoft.com/te
+## inpaintCleaner: c=-1 ALGO_RPC_ERROR
+   r0 c=-1 ALGO_RPC_ERROR
+   body: {"imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "maskUrls": ["http://algo.ufotosoft.com/original/261029/56061a5f-6fed-4807-904e-aa42782de3df.jpeg"], "level": 1, "deviceToken": "", "ifTest": false}
+## swapFace: c=501 Network error [HttpMessageNotReadableException: JSON parse error: Cannot deseria
+   r0 c=400 Parameter error [templateIdstemplateIds not empty]
+   r1 c=501 Network error [HttpMessageNotReadableException: JSON parse error: Cannot deseria
+   body: {"imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "level": 1, "deviceToken": "", "ifTest": false, "templateIds": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg", "http://algo.ufotosoft.com/original/261029/560
+## faceKey: c=200 成功
+   r0 c=200 成功
+   body: {"images": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "level": 1, "deviceToken": "", "ifTest": false}
+## stitch: c=200 Success
+   r0 c=200 Success
+   body: {"imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg", "http://algo.ufotosoft.com/original/261029/56061a5f-6fed-4807-904e-aa42782de3df.jpeg"], "level": 1, "deviceToken": "", "ifTest": false}
+   d: {"responseUrl": null, "taskId": "imageStitching-1793291803-64a37489-1319-441a-bc2f-f322b9ed6eb5", "taskStatus": "doing", "taskReason": null}
+## livePortrait: c=200 None
+   r0 c=400 Parameter error [modelIdmodelId不能为空]
+   r1 c=200 
+   body: {"imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "level": 1, "deviceToken": "", "ifTest": false, "modelId": 1}
+   d: {"taskId": "livePortrait-1793291804-974f3e3a-63cc-46cc-bd4f-33ed82e1770b", "taskStatus": "doing", "taskReason": null, "videoUrl": null}
+## image2image: c=500 Internal Server Error [NullPointerException: ]
+   r0 c=500 Internal Server Error [NullPointerException: ]
+   body: {"imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "prompt": "same person, golden hour light", "token": "", "ratio": 1, "quality": 1}
