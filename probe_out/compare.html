@@ -1,0 +1,53 @@
+<!doctype html><meta charset="utf-8">
+<title>مقایسهٔ A/B — خروجی ما در برابر خروجی اپ</title>
+<style>
+ body{background:#0d1117;color:#e6edf3;font-family:system-ui,Tahoma,sans-serif;margin:0;padding:24px}
+ h1{font-size:20px;margin:0 0 4px} .sub{color:#8b949e;font-size:13px;margin-bottom:20px}
+ .row{display:flex;gap:18px;flex-wrap:wrap}
+ .card{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:12px;width:420px}
+ .card h2{font-size:15px;margin:0 0 8px}
+ img{width:100%;border-radius:6px;display:block}
+ table{width:100%;border-collapse:collapse;margin-top:10px;font-size:12.5px}
+ td,th{border-bottom:1px solid #21262d;padding:5px 4px;text-align:right}
+ th{color:#8b949e;font-weight:500}
+ .ok{color:#3fb950}.warn{color:#d29922}
+ code{background:#21262d;padding:1px 5px;border-radius:4px;font-size:12px}
+ .note{margin-top:18px;font-size:13px;line-height:1.9;color:#c9d1d9;max-width:900px}
+</style>
+<h1>مقایسهٔ A/B — همان عکس، همان ثانیه، همان اندازه</h1>
+<div class="sub">عکس ورودی یکی است، فریم در ثانیهٔ ۱.۸ گرفته شده، هر دو به عرض ۵۴۰ پیکسل اسکیل شده‌اند.</div>
+<div class="row">
+  <div class="card">
+    <h2>اپلیکیشن — <code>video_2026-10-29_14-07-50</code></h2>
+    <img src="app/video_2026-10-29_14-07-50.jpg" alt="app">
+    <table>
+      <tr><th>رزولوشن</th><td>960×1280</td></tr>
+      <tr><th>بیتریت</th><td>5572 kb/s</td></tr>
+      <tr><th>bpp</th><td>0.142</td></tr>
+      <tr><th>شارپنس (grad)</th><td>11.31</td></tr>
+      <tr><th>نویز (σ)</th><td>0.01</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>پایپ‌لاین ما — GX / <code>effectType=6209</code></h2>
+    <img src="gx6209_f1.jpg" alt="ours">
+    <table>
+      <tr><th>رزولوشن</th><td>960×1280</td></tr>
+      <tr><th>بیتریت</th><td>6300 kb/s</td></tr>
+      <tr><th>bpp</th><td>0.160</td></tr>
+      <tr><th>شارپنس (grad)</th><td class="ok">11.29</td></tr>
+      <tr><th>نویز (σ)</th><td class="ok">0.00</td></tr>
+    </table>
+  </div>
+</div>
+<div class="note">
+  <p><b>نتیجه:</b> در همان ورودی و همان رزولوشن، خروجی ما و اپ از نظر عددی
+  یکی‌اند: شارپنس ۱۱.۲۹ در برابر ۱۱.۳۱ و نویز عملاً صفر در هر دو. ترکیب‌بندی
+  تصویر هم یکی است — همان ژست، همان قاب، همان نور. پس «افت کیفیت» وجود ندارد؛
+  مقایسهٔ قبلی بین دو <i>ورودی متفاوت</i> بود.</p>
+  <p><b>موتور تازه:</b> افکت «Neon Couple» (<code>effectType=5202</code> +
+  <code>imageEffectType=7186</code>) اصلاً روی موتور دیگری اجرا می‌شود:
+  تسک با پیشوند <code>INTEGRATED_60019</code> و فایل خروجی
+  <code>…/temp/<b>60004</b>/…/<b>wanlora</b>-….mp4</code> — یعنی موتور
+  Wan-LoRA، با خروجی ۳۵۲×۶۴۰ و شارپنس ۶.۵۹. یعنی <b>خیلی</b> پایین‌تر از GX.</p>
+</div>
