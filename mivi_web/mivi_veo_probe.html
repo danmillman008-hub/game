@@ -43,7 +43,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28h</span></h1>
+  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28i</span></h1>
   <div class="muted" style="margin-bottom:14px">
     هدف: کشف شرط بازشدن اندپوینت
     <code>/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5</code>.
@@ -199,7 +199,26 @@
       <div style="max-width:230px"><label>&nbsp;</label><button id="hdViduBtn" type="button">① تست Vidu (فقط taskId)</button></div>
       <div style="max-width:260px"><label>&nbsp;</label><button id="hdUpBtn" type="button">② تست HD upscale (md5/size واقعی)</button></div>
       <div style="max-width:200px"><label>&nbsp;</label><button class="ghost" id="hdBatteryBtn" type="button">③ باتری کامل HD (۸ پروب)</button></div>
+      <div style="max-width:230px"><label>&nbsp;</label><button class="ghost" id="hdBillingBtn" type="button">④ باتری i: گیت صورت‌حساب HD</button></div>
     </div>
+  </div>
+
+  <div class="card">
+    <h2>🔬 کارت مقایسه با خروجی خودِ اپ (پاسخ قطعی به مسئلهٔ کیفیت)</h2>
+    <div class="muted" style="margin-bottom:10px">
+      یک ویدیو با اپ میوی خودتان بسازید (همان حالت «عکس + پرامپت»، ۷۲۰P روشن) و بعد لینک فایلش را
+      اینجا بگذارید — اگر فایل در گالری ماند، لینک CDN آن را از گزارش دانلود همان صفحه کپی کنید.
+      این کارت پروفایل آن را با مبنای beat همین پروژه مقایسه می‌کند: اگر ۱۲۸۰×۹۶۰ و ۴ ثانیه و isom
+      بود، یعنی اپ هم دقیقاً همان مسیر/موتور ما را می‌دهد و تفاوت کیفیت از جای دیگری است؛
+      اگر رزولوشن/مدت/حجم پایه تفاوت داشت، مسیر دیگری در اپ فعال است که باید تعقیب شود.
+    </div>
+    <div class="row">
+      <div style="flex:3"><label>لینک ویدیوی ساخته‌شده با اپ میوی</label>
+        <input id="appCmpUrl" dir="ltr" placeholder="https://algo-v1.wiseoel.com/temp/.../xxxx.mp4">
+      </div>
+      <div style="max-width:280px"><label>&nbsp;</label><button id="appCmpBtn" type="button">🔬 تحلیل و مقایسه با مبنای beat</button></div>
+    </div>
+    <div id="appCmpOut" style="margin-top:12px"></div>
   </div>
 
   <div class="card">
@@ -933,7 +952,76 @@ $("hdBatteryBtn").onclick=async()=>{
   head("پایان باتری HD — هر پاسخ غیر از خطای پارامتری یعنی مسیر ارتقا باز است");
 };
 
-log("آماده [نسخهٔ باتری: 2026-10-28h — اگر این برچسب را نمی‌بینید فایل کش شده است]. userId="+CFG.userId,"ok");
+/* ---------- باتری i: کشف گیت صورت‌حساب HD ---------- */
+$("hdBillingBtn").onclick=async()=>{
+  const u=$("hdVideoUrl").value.trim(), tid=$("hdTaskId").value.trim();
+  head("آماده‌سازی باتری i: دانلود مبدأ و محاسبهٔ md5");
+  let base;
+  try{
+    const r=await fetch(viaProxy(u)); const buf=await r.arrayBuffer();
+    base={videoUrl:u,fileMd5:md5Bytes(new Uint8Array(buf)),fileSize:buf.byteLength,
+      width:Number($("hdW").value)||1280,height:Number($("hdH").value)||960};
+    log("md5="+base.fileMd5+" size="+base.fileSize,"i");
+  }catch(e){ return log("دانلود مبدأ ناموفق: "+e.message,"e"); }
+  const dev=CFG.userId||"0";
+  const cases=[
+    ["deviceToken=userId + ifTest=1",  {...base,fileTime:ts(),level:1,deviceToken:dev,ifTest:1}],
+    ["deviceToken=userId + ifTest=0",  {...base,fileTime:ts(),level:1,deviceToken:dev,ifTest:0}],
+    ["deviceToken=userId بدون ifTest", {...base,fileTime:ts(),level:1,deviceToken:dev}],
+    ["level=2 + ifTest=1",             {...base,fileTime:ts(),level:2,deviceToken:dev,ifTest:1}],
+    ["level=3 + ifTest=1",             {...base,fileTime:ts(),level:3,deviceToken:dev,ifTest:1}],
+    ["بدون level و بدون deviceToken",  {...base,fileTime:ts(),ifTest:1}],
+  ];
+  for(const [label,body] of cases){
+    await hdCall("HD billing: "+label,HD_EP,body);
+    await sleep(1200);
+  }
+  head("تست namespace کوئری HD (مشخص می‌کند تسک‌ها در انبار جدا هستند یا نه)");
+  await hdCall("query با taskId ضربهٔ beat",HD_Q,{taskId:tid,ifTest:1});
+  await sleep(1000);
+  await hdCall("query با taskId جعلی UUID",HD_Q,
+    {taskId:"00000000-0000-0000-0000-000000000000",ifTest:1});
+  head("پایان باتری i — اگر همهٔ حالت‌ها 2002 دادند یعنی گیت «صورت‌حساب/اعتبار» است نه پارامتر، و این موتورها در بک‌اند فعال نیستند");
+};
+
+/* ---------- کارت مقایسه با خروجی خودِ اپ ---------- */
+const BEAT_BASE={w:1280,h:960,dur:4.0,size:8723900,ftyp:"isom"};
+function cmpVerdict(res){
+  const v=[];
+  const sameWH=res.width===BEAT_BASE.w&&res.height===BEAT_BASE.h;
+  const dd=Math.abs(res.durationSec-BEAT_BASE.dur);
+  v.push(sameWH?"رزولوشن: دقیقاً برابر مبنای beat (1280×960)"
+    :"رزولوشن: متفاوت — "+res.width+"×"+res.height+" در برابر 1280×960 مبنای beat");
+  v.push(dd<=0.25?"مدت: برابر مبنای beat ("+res.durationSec.toFixed(2)+"s)"
+    :"مدت: متفاوت — "+res.durationSec.toFixed(2)+"s در برابر 4.00s مبنای beat");
+  v.push(res.ftyp===BEAT_BASE.ftyp?"برند فایل: برابر (isom)":"برند فایل: متفاوت ("+res.ftyp+")");
+  v.push("حجم: "+(res.size/1048576).toFixed(2)+" MB → "+(res.size/BEAT_BASE.size).toFixed(2)
+    +"× مبنای beat (کیفیت بالاتر در همان مدت معمولاً حجم بیشتر می‌دهد)");
+  v.push("بیت‌ریت تقریبی: "+(res.size*8/Math.max(res.durationSec,0.1)/1e6).toFixed(1)
+    +" Mbps (مبنای beat ≈ 17.4 Mbps)");
+  v.unshift(sameWH&&dd<=0.25
+    ? "✅ حکم: خروجی اپ هم‌پروفایل با مبنای beat است → اپ برای این حالت همان مسیر/موتور را می‌دهد"
+    : "⚠️ حکم: خروجی اپ پروفایل متفاوتی دارد → در اپ مسیر/پارامتر دیگری فعال است و باید تعقیب شود");
+  return v;
+}
+$("appCmpBtn").onclick=async()=>{
+  const u=$("appCmpUrl").value.trim();
+  if(!u)return alert("لینک ویدیوی ساخته‌شده با اپ را وارد کنید");
+  const btn=$("appCmpBtn"); btn.disabled=true;
+  try{
+    const res=await forensicFromUrl(u,"ویدیوی ساخته‌شده با اپ میوی");
+    const lines=cmpVerdict(res);
+    const box=document.createElement("div");
+    box.style.cssText="border:1px solid #30363d;border-radius:10px;padding:12px;margin-top:12px;background:#0a0d12";
+    box.innerHTML="<b>مقایسه با مبنای beat</b>"+lines.map((t,i)=>
+      '<div style="margin-top:6px;font-size:13px">'+(i===0?"":"• ")+t+"</div>").join("");
+    $("appCmpOut").prepend(box);
+    lines.forEach(t=>log(t,i===0?"ok":"i"));
+  }catch(e){ log("خطای تحلیل: "+e.message,"e"); }
+  finally{ btn.disabled=false; }
+};
+
+log("آماده [نسخهٔ باتری: 2026-10-28i — اگر این برچسب را نمی‌بینید فایل کش شده است]. userId="+CFG.userId,"ok");
 </script>
 </body>
 </html>
