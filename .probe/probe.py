@@ -1,18 +1,16 @@
-"""Does an upscaled input make a better video?
+"""Field discovery loop.
 
-1. upscale the source image with createSuperResolutionNew (measured: 1152x1536 -> 2304x3072)
-2. make the same clip twice: from the original URL and from the upscaled URL
-3. download both, measure sharpness (Laplacian var), noise (Immerkaer) and bitrate
-4. save one frame of each so the pictures can be compared by eye
+For every untested endpoint: send the body, read the error, add the field the
+server names, repeat. If the server answers 500 NullPointer (no field name),
+bulk-add the plausible fields and try again. Prints the body that finally gets
+past validation, plus the job/task id when one comes back.
 """
-import json, hashlib, time, urllib.request, urllib.error, pathlib, subprocess, os
-import numpy as np
-from PIL import Image
+import json, hashlib, time, urllib.request, urllib.error, pathlib, re
 
 HOST = "https://cpi.ufotosoft.com"
 CP = "instagram.story.art.collage"; USER = "7da75eed37c61d33"
 IMG = "http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"
-SR_URL_FILE = "probe_out/sr_url.txt"
+IMG2 = "http://algo.ufotosoft.com/original/261029/56061a5f-6fed-4807-904e-aa42782de3df.jpeg"
 OUT = []
 def p(*a):
     s = " ".join(str(x) for x in a); print(s, flush=True); OUT.append(s)
@@ -32,68 +30,100 @@ def call(path, body):
         except Exception: return {"_http": e.code}
     except Exception as e: return {"_err": repr(e)[:100]}
 
-def dl(url, dest):
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-    with urllib.request.urlopen(req, timeout=180) as r, open(dest, "wb") as o: o.write(r.read())
-    return dest
+def guess(name):
+    n = name.lower()
+    if n in ("imageurls", "imagekeys", "srcimages"): return [IMG]
+    if n in ("imageurl", "imagekey", "image", "srcimage", "originurl", "targeturl"): return IMG
+    if n in ("audiourls", "audiokeys"): return [IMG]
+    if n in ("audiokey", "audiourl"): return IMG
+    if n == "token": return ""
+    if n == "deviceToken".lower(): return ""
+    if n in ("level", "quality", "duration", "styleid", "modelid", "templateid", "lorAid".lower(),
+             "type", "gender", "imagetype", "resolution", "ratio"): return 1
+    if n in ("prompt", "text", "desc"): return "same person, golden hour light"
+    if n in ("iftest",): return False
+    if n in ("poseSequenceId".lower(), "pixverseid", "googleid"): return "0"
+    return ""
 
-def sh(cmd):
-    r = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-    return (r.stdout or "").strip() or (r.stderr or "").strip()[-100:]
+MISS = [
+    re.compile(r'"([A-Za-z_]+)"\s*is\s*empty'),
+    re.compile(r'([A-Za-z_]+)\s*不能为空'),
+    re.compile(r'param illegal:\s*([A-Za-z_]+)'),
+    re.compile(r'param error:\s*param\s+([A-Za-z_]+)'),
+    re.compile(r'param error:\s*([A-Za-z_]+)'),
+    re.compile(r'"([A-Za-z_]+)"\s*must'),
+    re.compile(r'([A-Za-z_]+)\s+is\s+invalid'),
+]
 
-def metrics(jpg):
-    a = np.asarray(Image.open(jpg).convert("L"), dtype=np.float64)
-    # Laplacian variance = sharpness
-    k = np.array([[0, 1, 0], [1, -4, 1], [0, 1, 0]], dtype=np.float64)
-    from numpy.lib.stride_tricks import sliding_window_view as sw
-    lap = (sw(a, (3, 3)) * k).sum(axis=(2, 3))
-    sharp = lap.var()
-    # Immerkaer noise sigma
-    m = np.array([[1, -2, 1], [-2, 4, -2], [1, -2, 1]], dtype=np.float64)
-    conv = (sw(a, (3, 3)) * m).sum(axis=(2, 3))
-    sigma = np.sqrt(np.pi / 2) / 6 * np.abs(conv).mean()
-    return sharp, sigma
+BULK = {
+    "imageUrls": [IMG], "level": 1, "deviceToken": "", "ifTest": False,
+    "prompt": "same person, golden hour light", "token": "",
+    "ratio": "3:4", "quality": 2, "duration": 4,
+}
+
+ENDPOINTS = [
+    "/algo/v1/faceFusion/aigc/image2image/createImageTask",
+    "/algo/v1/faceFusion/aigc/image2image/createAiStyleTask",
+    "/algo/v1/faceFusion/aigc/createInpaintAnything",
+    "/algo/v1/faceFusion/aigc/createInpaintCleaner",
+    "/algo/v1/faceFusion/aigc/createSwapFace",
+    "/algo/v1/faceFusion/aigc/createFaceKeyTask",
+    "/algo/v1/faceFusion/aigc/stitchImage/createTask",
+    "/algo/v1/faceFusion/aigc/livePortraitCreate",
+    "/algo/v1/faceFusion/aigc/emoVideoCreate",
+    "/algo/v1/faceFusion/aigc/image2VideoCreateV2",
+]
+
+def discover(path):
+    body = {}
+    log = []
+    for rnd in range(10):
+        r = call(path, body)
+        c = r.get("c") or r.get("_http")
+        m = str(r.get("m") or "")
+        log.append((rnd, c, m[:70], dict(body)))
+        if c == 200:
+            return "OK", body, r, log
+        if rnd == 6:  # give up on hints, bulk-add everything still missing
+            for k, v in BULK.items():
+                body.setdefault(k, v)
+            continue
+        hit = None
+        for rx in MISS:
+            mm = rx.search(m)
+            if mm:
+                hit = mm.group(1); break
+        if "NullPointer" in m or c == 500:
+            for k, v in BULK.items():
+                body.setdefault(k, v)
+            continue
+        if hit and hit not in body:
+            body[hit] = guess(hit)
+            continue
+        if hit and hit in body:
+            # value was rejected: try a different shape once
+            cur = body[hit]
+            body[hit] = {"": IMG, IMG: [IMG], "[URL]": 1, 1: "3:4", "3:4": "4:3"}.get(cur, 0)
+            continue
+        return "STUCK", body, r, log
+    return "MAXROUNDS", body, call(path, body), log
+
+results = {}
+for path in ENDPOINTS:
+    name = path.rsplit("/", 1)[-1]
+    status, body, r, log = discover(path)
+    c = r.get("c") or r.get("_http")
+    p(f"## {name}: {status}  final c={c} m={str(r.get('m'))[:70]}")
+    for rnd, cc, mm, bb in log[-3:]:
+        p(f"   r{rnd} c={cc} {mm}")
+    p("   body:", json.dumps(body, ensure_ascii=False)[:260])
+    d = r.get("d")
+    if isinstance(d, dict):
+        p("   d.keys:", ",".join(list(d)[:10]))
+        jid = d.get("jobId") or d.get("taskId")
+        if jid: p("   id:", str(jid)[:50])
+    results[name] = {"status": status, "c": c, "body": body, "d": d}
 
 pathlib.Path("probe_out").mkdir(exist_ok=True)
-
-# ---- 1) upscale the source (level 3 = "imagesharpen-3")
-r = call("/algo/v1/faceFusion/aigc/createSuperResolutionNew", {"imageUrls": [IMG], "level": 3})
-job = (r.get("d") or {}).get("jobId")
-sr = ""
-for i in range(20):
-    time.sleep(5)
-    q = call("/algo/v1/faceFusion/aigc/querySuperResolutionNew", {"jobId": job})
-    urls = (q.get("d") or {}).get("imageUrls") or []
-    if urls: sr = urls[0]; break
-p("[superres]", sr[:110] if sr else "no url", "job", str(job)[:40])
-pathlib.Path(SR_URL_FILE).write_text(sr or IMG)
-
-# ---- 2) two clips, same prompt and settings
-PROMPT = "the person breathes calmly, soft window light from the left, static camera"
-made = []
-for tag, src in (("orig", IMG), ("srup", sr or IMG)):
-    b = {"imageUrls": [src], "level": 1, "effectType": 6209, "prompt": PROMPT, "quality": 2}
-    r = call("/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask", b)
-    tid = (r.get("d") or {}).get("taskId", "") if isinstance(r.get("d"), dict) else ""
-    p(f"[make {tag}] c={r.get('c')} tid={tid[:34]}")
-    if tid: made.append((tag, tid))
-
-# ---- 3) poll, download, measure
-for tag, tid in made:
-    url = ""
-    for i in range(40):
-        time.sleep(6)
-        q = call("/algo/v1/faceFusion/aigc/beatImage2Video/queryTask", {"taskId": tid})
-        u = (q.get("d") or {}).get("videoUrl")
-        if u: url = u; break
-    if not url:
-        p(f"[{tag}] TIMEOUT"); continue
-    f = dl(url, f"probe_out/{tag}.mp4")
-    meta = sh('ffprobe -v error -select_streams v:0 -show_entries stream=width,height,bit_rate '
-              '-show_entries format=size,duration -of csv=p=0 "%s"' % f).replace("\n", " ")
-    sh('ffmpeg -y -v error -ss 1.5 -i "%s" -frames:v 1 -q:v 2 "probe_out/%s.jpg"' % (f, tag))
-    sharp, sigma = metrics(f"probe_out/{tag}.jpg")
-    p(f"[{tag}] {meta}  sharp={sharp:.1f} noise={sigma:.2f}  frame={tag}.jpg")
-    os.remove(f)
-
+pathlib.Path("probe_out/found.json").write_text(json.dumps(results, ensure_ascii=False, indent=1), encoding="utf-8")
 pathlib.Path("probe_out/out.txt").write_text("\n".join(OUT), encoding="utf-8")
