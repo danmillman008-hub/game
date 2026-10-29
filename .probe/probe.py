@@ -1,92 +1,74 @@
 import json, hashlib, time, urllib.request, urllib.error, subprocess, pathlib, os, concurrent.futures
 
-HOST="https://cpi.ufotosoft.com"
-USER="7da75eed37c61d33"
+HOST="https://cpi.ufotosoft.com"; USER="7da75eed37c61d33"
 IMG="http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"
 OUT=[]
 def p(*a):
     s=" ".join(str(x) for x in a); print(s,flush=True); OUT.append(s)
-
 def hdr():
     t=str(int(time.time()))
     return {"userid":USER,"timeStamp":t,"cp":"instagram.story.art.collage","version":"407",
             "platform":"1","ifWise":"true","Content-Type":"application/json",
             "sign":hashlib.md5(("m3snil"+t).encode()).hexdigest()}
-
-def call(path,body=None,host=HOST,method="POST"):
-    data=json.dumps(body if body is not None else {}).encode()
-    req=urllib.request.Request(host+path,data=data,headers=hdr(),method=method)
+def call(path,body):
+    req=urllib.request.Request(HOST+path,data=json.dumps(body).encode(),headers=hdr(),method="POST")
     try:
         with urllib.request.urlopen(req,timeout=45) as r: return json.loads(r.read().decode())
     except urllib.error.HTTPError as e:
-        try: return {"_http":e.code, **json.loads(e.read().decode())}
+        try: return {"_http":e.code,**json.loads(e.read().decode())}
         except Exception: return {"_http":e.code}
     except Exception as e: return {"_err":repr(e)[:120]}
-
 def run(cmd):
     r=subprocess.run(cmd,shell=True,capture_output=True,text=True)
-    if r.returncode!=0: p("  !!",cmd,"->",(r.stderr or "")[-160:])
+    if r.returncode!=0: p("  !!",(r.stderr or "")[-140:])
     return r.stdout.strip()
 
-p("=== probe", time.strftime("%H:%M:%SZ",time.gmtime()), "===")
-
-# ---------- فاز ۱: اندپوینت‌های فقط-خواندنی (بدون اعتبار) ----------
-p("\n--- phase 1: read-only catalogues ---")
-READ=["/algo/v1/faceFusion/aigc/queryAiPhotoModels",
-      "/algo/v1/faceFusion/aigc/image2VideoCustomer/queryTemplate",
-      "/algo/v1/faceFusion/aigc/getAllPoseSequenceId",
-      "/algo/v1/faceFusion/aigc/image2VideoDetect",
-      "/algo/v1/faceFusion/aigc/getFaceInfo"]
-for path in READ:
-    r=call(path,{})
-    body=json.dumps(r,ensure_ascii=False)
-    p(f"[{path.split('/')[-1]}] {body[:420]}")
-
-# ---------- فاز ۲: کدام افکت روی کدام موتور می‌نشیند ----------
-p("\n--- phase 2: engine routing per effectsType (beat/createNormalTask) ---")
-CAND=[4899,6093,5291,5202,7969,5926,5319,4991,4877,5041,6686,7849,7600,4990,5031,5141]
+# (tag, effectsType, extra body fields)
+TRIALS=[
+ ("lv2_7600", 7600, {"level":2,"quality":2}),
+ ("lv2_4991", 4991, {"level":2,"quality":2}),
+ ("lv2_6209", 6209, {"level":2,"quality":2}),
+ ("q720_lv1_7600", 7600, {"level":1,"quality":2}),
+ ("lv2_noq_7600", 7600, {"level":2}),
+]
+p("=== level sweep", time.strftime("%H:%M:%SZ",time.gmtime()), "===")
 made=[]
-for et in CAND:
-    r=call("/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",
-           {"imageUrls":[IMG],"level":1,"effectType":et,"prompt":"","quality":2})
-    d=r.get("d") or {}
-    tid=d.get("taskId","")
-    p(f"  et={et:<5} c={r.get('c')} msg={str(r.get('m'))[:60]} taskId={tid[:34]}")
-    if tid: made.append((et,tid))
-    time.sleep(0.4)
+for tag,et,extra in TRIALS:
+    body={"imageUrls":[IMG],"prompt":"","effectType":et}; body.update(extra)
+    r=call("/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",body)
+    d=r.get("d") or {}; tid=d.get("taskId","")
+    p(f"[{tag}] c={r.get('c')} {str(r.get('m'))[:70]} tid={tid[:30]} body={json.dumps(body)[:120]}")
+    if tid: made.append((tag,tid))
+    time.sleep(0.5)
 
-p(f"\n--- {len(made)} tasks created; polling in parallel ---")
-
-def finish(item):
-    et,tid=item
-    for i in range(40):
+def finish(it):
+    tag,tid=it
+    for i in range(45):
         time.sleep(6)
         r=call("/algo/v1/faceFusion/aigc/beatImage2Video/queryTask",{"taskId":tid})
         d=r.get("d") or {}
-        if d.get("videoUrl"): return et,tid,d["videoUrl"]
-        if (d.get("taskStatus") or "") in ("fail","failed"): return et,tid,""
-    return et,tid,""
+        if d.get("videoUrl"): return tag,tid,d["videoUrl"]
+        if (d.get("taskStatus") or "") in ("fail","failed"): return tag,tid,""
+    return tag,tid,""
 
-results=[]
-with concurrent.futures.ThreadPoolExecutor(max_workers=8) as ex:
-    for et,tid,url in ex.map(finish,made):
-        p(f"  et={et:<5} -> {url[:96] if url else 'TIMEOUT/FAIL'}")
-        results.append((et,url))
+res=[]
+with concurrent.futures.ThreadPoolExecutor(max_workers=6) as ex:
+    for t in ex.map(finish,made): res.append(t)
+for tag,tid,url in res: p(f"  {tag}: {url[:100] if url else 'TIMEOUT'}")
 
 pathlib.Path("probe_out").mkdir(exist_ok=True)
-for et,url in results:
+for tag,tid,url in res:
     if not url: continue
-    f=f"probe_out/e{et}.mp4"
+    f=f"probe_out/{tag}.mp4"
     try:
         req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0"})
         with urllib.request.urlopen(req,timeout=90) as r, open(f,"wb") as o: o.write(r.read())
     except Exception as e:
-        p(f"  e{et}: download failed {e!r}"); continue
-    meta=run('ffprobe -v error -select_streams v:0 -show_entries stream=width,height '
+        p(f"  {tag}: dl fail {e!r}"); continue
+    meta=run('ffprobe -v error -select_streams v:0 -show_entries stream=width,height,bit_rate '
              '-show_entries format=size,duration -of csv=p=0 "%s"' % f)
-    p(f"  e{et}: {meta} path={url.split('/temp/')[-1][:40]}")
-    run('ffmpeg -y -v error -ss 1.5 -i "%s" -frames:v 1 -vf "scale=420:-2" probe_out/e%d.jpg' % (f,et))
+    p(f"  {tag}: {meta}  path={url.split('/temp/')[-1][:44]}")
+    run('ffmpeg -y -v error -ss 1.5 -i "%s" -frames:v 1 -vf "scale=460:-2" probe_out/%s.jpg' % (f,tag))
     try: os.remove(f)
     except Exception: pass
-
 pathlib.Path("probe_out/out.txt").write_text("\n".join(OUT),encoding="utf-8")
