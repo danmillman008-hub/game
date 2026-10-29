@@ -449,8 +449,11 @@ def cmd_qc(a):
         clip = resolve(d, s["clip"])
         meta = probe(clip)
         report["shots"].append({"n": s["n"], **meta})
-        if meta["width"] != 960 or meta["height"] != 1280:
-            report["issues"].append(f"shot {s['n']}: {meta['width']}x{meta['height']} not 960x1280")
+        ok_geo = (meta["width"], meta["height"]) in ((960, 1280), (448, 576))
+        if not ok_geo:
+            report["issues"].append(
+                f"shot {s['n']}: {meta['width']}x{meta['height']} is neither 960x1280 (720P) "
+                f"nor 448x576 (360P draft)")
         if not (3.5 <= meta["duration_s"] <= 4.6):
             report["issues"].append(f"shot {s['n']}: duration {meta['duration_s']}s")
     fin = d / "out" / "final.mp4"

@@ -2,7 +2,7 @@ name: studio
 on:
   push:
     branches: [arena/e3952d18-game]
-    paths: ['studio/**', 'bridge/**', 'films/**', '.probe/studio_demo.py']
+    paths: ['studio/**', 'bridge/**', 'films/**', 'studio/demo.py']
   workflow_dispatch:
 permissions:
   contents: write
@@ -20,7 +20,7 @@ jobs:
       - name: offline editing self-test
         run: python3 studio/selftest.py
       - name: live two-shot demo through filmkit
-        run: python3 .probe/studio_demo.py
+        run: python3 studio/demo.py
       - name: frames for inspection
         if: always()
         run: |
