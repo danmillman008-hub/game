@@ -1,16 +1,22 @@
-[health] {"ok": true, "host": "https://cpi.ufotosoft.com", "user": "7da75eed37c61d33", "models": ["mivi-gx-720p", "mivi-gx-360p", "mivi-catwalk", "mivi-neon-couple", "mi
-[models] ['mivi-gx-720p', 'mivi-gx-360p', 'mivi-catwalk', 'mivi-neon-couple', 'mivi-clone']
-[image] 699369 bytes -> 932492 chars base64
-[create] {"id": "60014-1793294584-e0199f69-4a55-4c89-ac5b-f84e624d4f3f", "object": "video", "status": "queued", "model": "mivi-gx-720p", "created_at": 1793294584, "seconds": "4"}
-  poll 0: in_progress
-  poll 3: in_progress
-  poll 6: in_progress
-  poll 9: in_progress
-  poll 12: in_progress
-  poll 15: in_progress
-  poll 18: in_progress
-  poll 21: in_progress
-  poll 23: completed
-[final] {"id": "60014-1793294584-e0199f69-4a55-4c89-ac5b-f84e624d4f3f", "object": "video", "status": "completed", "progress": 100, "url": "https://algo-v1.wiseoel.com/temp/60014/261030/90b4e44d44e94aaab889dd6dd9e703a2.mp4", "video_url": "https://algo-v1.wiseoel.com/te
-[file] 960,1280 4.031250,3052904
-[bridge log tail] TTP/1.1" 200 - | [bridge] "GET /v1/videos/60014-1793294584-e0199f69-4a55-4c89-ac5b-f84e624d4f3f HTTP/1.1" 200 - | [bridge] "GET /v1/videos/60014-1793294584-e0199f69-4a55-4c89-ac5b-f84e624d4f3f HTTP/1.1" 200 - | [bridge] "GET /v1/videos/60014-1793294584-e0199f69-4a55-4c89-ac5b-f84e624d4f3f HTTP/1.1" 200 - | 
+[screenplay] 8 lines -> 3 shots
+
+[shot 1] prompt: A watchmaker in a dim workshop lifts his head from the bench, dust dri…
+   task 60014-1793295510-68b12207-c1ec-405f-92c9-198109713681
+   ready -> /home/runner/work/game/game/probe_out/shot1.mp4
+   chained on shot1_last.jpg (67250 bytes)
+
+[shot 2] prompt: The same watchmaker now looks straight into the camera, the lamp behin…
+   task 60014-1793295657-5eff5ac0-c45b-469e-9555-5b80a7eaa103
+   ready -> /home/runner/work/game/game/probe_out/shot2.mp4
+   chained on shot2_last.jpg (63509 bytes)
+
+[shot 3] prompt: He closes a small watch case and the room slowly fades to darkness, ca…
+   task 60014-1793295797-05ef539e-883a-44f7-9b2d-819b2f79e3a6
+   ready -> /home/runner/work/game/game/probe_out/shot3.mp4
+   chained on shot3_last.jpg (42375 bytes)
+
+[assemble] crossfade
+    {"saved": "/home/runner/work/game/game/probe_out/film.mp4", "mode": "xfade", "duration_s": 11.29}
+[subtitles] burned
+[probe] film.mp4 {"width": 960, "height": 1280, "fps": "32/1", "duration_s": 11.3125, "bytes": 7465207}
+[probe] film_subbed.mp4 {"width": 960, "height": 1280, "fps": "32/1", "duration_s": 11.3125, "bytes": 3577878}
