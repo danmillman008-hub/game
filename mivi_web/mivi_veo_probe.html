@@ -43,7 +43,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28k</span></h1>
+  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28l</span></h1>
   <div class="muted" style="margin-bottom:14px">
     هدف: کشف شرط بازشدن اندپوینت
     <code>/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5</code>.
@@ -258,6 +258,24 @@
   </div>
 
   <div class="card">
+    <h2>🏁 آزمایشگاه l: سوییپ نهایی کیفیت روی مسیر beat (با قفل، بدون تداخل)</h2>
+    <div class="muted" style="margin-bottom:10px">
+      کشف قطعی: نام فایل خروجی <code>quality=1</code> برابر
+      <code>img2video_wanlora_tail-…mp4</code> بود → موتور همین مسیر <b>Wan-LoRA</b> است
+      (خروجی ۶۰۸×۴۱۶) و <code>quality=2</code> همان مسیر با رزولوشن ۱۲۸۰×۹۶۰.
+      پس ۷۲۰P اپ چیزی جز <code>quality=2</code> نیست. این سوییپ دنبال «بیشتر از اپ» می‌گردد:
+      آیا <code>quality=3</code>، <code>sqLevel</code>، <code>outputRatio</code>،
+      <code>level=2</code> یا <code>duration=6</code> چیزی بهتر از ۱۲۸۰×۹۶۰/۴ ثانیه می‌دهد؟
+      هر ۶ مورد پشت سر هم اجرا و در جدول ثبت می‌شود.
+    </div>
+    <div class="row">
+      <div style="max-width:330px"><label>&nbsp;</label><button id="qlSweepBtn" type="button">⑩ اجرای سوییپ کیفیت (۶ مورد، ~۱۰ دقیقه)</button></div>
+      <div style="max-width:260px"><label>&nbsp;</label><button class="ghost" id="qlDurBtn" type="button">⑪ فقط تست مدت ۶ ثانیه</button></div>
+    </div>
+    <div id="qlOut" style="margin-top:14px"></div>
+  </div>
+
+  <div class="card">
     <h2>۴) ارسال دستی</h2>
     <div class="row">
       <div style="flex:2">
@@ -407,7 +425,7 @@ function loadCfg(){
   return c;
 }
 let CFG=loadCfg();
-const VER="2026-10-28k";
+const VER="2026-10-28l";
 const $=id=>document.getElementById(id);
 $("host").value=CFG.host;$("connMode").value=CFG.connMode;
 $("customProxy").value=CFG.customProxy;$("userId").value=CFG.userId;
@@ -1257,6 +1275,78 @@ $("catSweepBtn").onclick=async()=>{
     $("catOut").prepend(tbl);
   }finally{ btn.disabled=false; }
 };
+
+/* ---------- آزمایشگاه l: سوییپ نهایی کیفیت beat ---------- */
+function qlRow(label,body,r,u){
+  const tb=$("qlOut");
+  let tbl=tb.querySelector("table");
+  if(!tbl){
+    tbl=document.createElement("table");
+    tbl.style.cssText="width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px";
+    tbl.innerHTML='<tr style="color:#8b949e">'+
+      ["مورد","تنظیمات","رزولوشن","مدت","حجم","Mbps"].map(h=>'<th style="padding:6px;border-bottom:1px solid #30363d">'+h+"</th>").join("")+"</tr>";
+    tb.prepend(tbl);
+  }
+  const tr=document.createElement("tr");
+  const set=Object.keys(body).filter(k=>k!=="imageUrls"&&k!=="prompt"&&k!=="effectType")
+    .map(k=>k+"="+body[k]).join(", ");
+  const mbps=(r.size*8/Math.max(r.durationSec,0.1)/1e6).toFixed(1);
+  const better=r.width*r.height>1280*960? " ⬆":"";
+  tr.innerHTML=[label,set,r.width+"×"+r.height+better,r.durationSec.toFixed(2)+"s",
+    (r.size/1048576).toFixed(2)+" MB",mbps]
+    .map(v=>'<td style="padding:6px;border-bottom:1px solid #21262d">'+v+"</td>").join("");
+  tbl.appendChild(tr);
+}
+async function qlRun(label,over){
+  if(!uploadedUrl){ log("اول تصویر را آپلود کنید","e"); return; }
+  const body=Object.assign({imageUrls:[uploadedUrl],level:1,effectType:6209,
+    prompt:$("prompt").value.trim(),quality:2},over||{});
+  head("سوییپ — "+label);
+  log("BODY "+JSON.stringify(Object.assign({},body,{imageUrls:["…"]})));
+  const env=await postJson("/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",body);
+  if(!(env.j&&env.j.c===200)){
+    log("ساخت تسک رد شد: "+env.txt.slice(0,250),"e");
+    qlRow(label,body,{width:"رد شد",height:"",durationSec:0,size:0},"");
+    return;
+  }
+  const tid=env.j.d.taskId;
+  log("taskId="+tid,"w");
+  try{
+    const vu=await pollBeat(tid,8*60*1000);
+    log("خروجی: "+vu,"ok");
+    const r=await forensicFromUrl(vu,"سوییپ — "+label);
+    qlRow(label,body,r,vu);
+  }catch(e){ log("polling ناموفق: "+e.message,"e"); }
+}
+$("qlSweepBtn").onclick=async()=>{
+  await qlRun("کنترل quality=1 (باید ~608×416 باشد)",{quality:1});
+  await qlRun("quality=3",{quality:3});
+  await qlRun("quality=2 + sqLevel=3",{sqLevel:3});
+  await qlRun("quality=2 + outputRatio=16:9",{outputRatio:"16:9"});
+  await qlRun("quality=2 + level=2",{level:2});
+  await qlRun("quality=2 + duration=6",{duration:6});
+  head("پایان سوییپ — مبنا: quality=2 برابر 1280×960/4s/~17.4Mbps");
+};
+$("qlDurBtn").onclick=async()=>{
+  await qlRun("مدت ۶ با duration=6",{duration:6});
+  await qlRun("مدت ۶ با duration+seconds+videoDuration",{duration:6,seconds:6,videoDuration:6});
+};
+
+/* ---------- قفل سراسری: جلوگیری از اجرای هم‌زمان چند عملیات ---------- */
+let BUSY=false;
+["qBtn","cmpBtn","hdBatteryBtn","hdBillingBtn","hdUpBtn","hdViduBtn","catKeyBtn",
+ "catSweepBtn","beatDurBtn","beatQBtn","beatUpBtn2","appCmpBtn","fKnownBtn",
+ "qlSweepBtn","qlDurBtn"].forEach(id=>{
+  const el=$(id); if(!el||typeof el.onclick!=="function")return;
+  const orig=el.onclick;
+  el.onclick=async ev=>{
+    if(BUSY){ log("⏳ یک عملیات دیگر در حال اجراست — تا پایان آن صبر کنید (این پیام یعنی کلیک شما اجرا نشد).","w"); return; }
+    BUSY=true;
+    try{ await orig.call(el,ev); }
+    catch(e){ log("خطای اجرا: "+(e&&e.message||e),"e"); }
+    finally{ BUSY=false; }
+  };
+});
 
 log("آماده [نسخهٔ باتری: "+VER+" — اگر این برچسب را نمی‌بینید فایل کش شده است]. userId="+CFG.userId,"ok");
 </script>
