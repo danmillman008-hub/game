@@ -1064,3 +1064,29 @@ AiText2VideoUnify · AiSequenceVideo · AiHug · AiHugP2V · AiDance
   (چیپ‌های اسکرین‌شات).
 - Sequence شش واریانت «نسخهٔ نو» گرفت: `example` بدون `effectType`.
 - جمعاً **۲۷ واریانت**، همه با `node --check` و آزمون ساخت بدنه تأیید شدند.
+
+## آپدیت ۲.۳۷.۴۰۸ (پوشهٔ `new apk` در درایو) — خلاصهٔ بازخوانی
+
+سه بخش split-zip دانلود و مرج شد (برای روش درست‌کردن EOCD به
+`API_MAP.md` پیوست ۲ نگاه کن). نتیجه:
+
+- **فهرست ۶۴ مسیر `/algo/v1/...` در ۴۰۷ و ۴۰۸ دقیقاً یکی است.**
+- بستهٔ `ai/image2video` (۷۹۳ خط رشته، ۱۴۸ متد در `Image2VideoServer`)
+  **بدون هیچ تغییر رفتاری** است؛ فقط حروف ابفاسکیت جابه‌جا شده‌اند.
+- آپدیت در واقع فیچر «Ref to Image» + بازنویسی کراپ + SDK تبلیغات است.
+
+ولی در همان بازخوانی سه چیز پیدا شد که در ۴۰۷ هم بود:
+
+1. `POST /algo/v1/faceFusion/aigc/getAllPoseSequenceId` با بدنهٔ
+   **خالی** — همان منبع قانونی `poseSequenceId`/`pixVerseId` که فکر می‌کردیم
+   مسیرش را نداریم. اکنون در صفحهٔ آزمون به‌عنوان اولین قدم صدا زده می‌شود.
+2. دو فیلد که در نقشهٔ قبلی نبود: **`enhance`** (بولین، در V2/V3/Text2Video —
+   همان «Enhanced Visuals» اسکرین‌شات) و **`imageEffectType`** (فقط مسیر beat؛
+   تنها مقدار موجود در کاتالوگ: **۷۱۸۶**).
+3. `createVideoHdTask` بدنه‌اش `videoUrl + fileMd5 + fileSize + fileTime +
+   width + height` است، نه `taskId` — یعنی برای ارتقای یک ویدیوی موجود ساخته
+   شده، برخلاف `createVideoHdTaskVidu` که تسک GX را رد کرد.
+
+ساخت `2026-10-30a` این سه مورد را آزمایش می‌کند: قدم کاتالوگ pose، موتور
+`GXi` (همان GX + `imageEffectType=7186`) و بخش «Enhanced Visuals» که ویدیوی
+خودمان را به `createVideoHdTask` می‌دهد.
