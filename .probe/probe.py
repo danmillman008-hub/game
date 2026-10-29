@@ -23,7 +23,9 @@ def call(path,body,host=HOST):
     except Exception as e: return {"err":repr(e)[:150]}
 
 def run(cmd):
-    return subprocess.run(cmd,shell=True,capture_output=True,text=True).stdout.strip()
+    r=subprocess.run(cmd,shell=True,capture_output=True,text=True)
+    if r.returncode!=0: p("   !!",cmd,"->",(r.stderr or "")[-200:])
+    return r.stdout.strip()
 
 def make(tag,body):
     r=call("/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",body)
@@ -47,7 +49,13 @@ def wait(tid,limit=40):
 def study(tag,url):
     if not url: return
     f=f"probe_out/{tag}.mp4"; pathlib.Path("probe_out").mkdir(exist_ok=True)
-    urllib.request.urlretrieve(url,f)
+    try:
+        req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0"})
+        with urllib.request.urlopen(req,timeout=60) as r, open(f,"wb") as o:
+            o.write(r.read())
+        p(f"--- {tag} downloaded {os.path.getsize(f)} bytes")
+    except Exception as e:
+        p(f"--- {tag} DOWNLOAD FAILED {e!r}"); return
     meta=run(f'ffprobe -v error -select_streams v:0 -show_entries stream=width,height,bit_rate,nb_frames,avg_frame_rate -show_entries format=size,duration -of json "{f}"')
     p(f"--- {tag} meta: {meta[:400]}")
     try:
