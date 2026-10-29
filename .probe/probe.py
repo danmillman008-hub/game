@@ -1,12 +1,8 @@
-"""Second route with an `enhance` flag + the image-side endpoints.
-
-Bytecode bodies so far:
-  createAiPhotoTaskV2 : imageUrls, level, deviceToken, effectType, poseSequenceId,
-                        duration, prompt, enhance, ifTest      -> image2VideoCreateV2
-  createAiPhotoTaskV3 : imageUrls, level, deviceToken, pixVerseId, duration, prompt, enhance, ifTest
-Read-only attempts below are cheap; only the V2 creates can cost credits.
+"""Super-resolution round trip: create -> query -> download -> dimensions.
+Plus a matrix for image2image/createImageTask, which answered 500 NullPointer
+(so the path is live but our body is missing a field).
 """
-import json, hashlib, time, urllib.request, urllib.error, pathlib
+import json, hashlib, time, urllib.request, urllib.error, pathlib, subprocess
 
 HOST = "https://cpi.ufotosoft.com"
 CP = "instagram.story.art.collage"; USER = "7da75eed37c61d33"
@@ -30,39 +26,50 @@ def call(path, body):
         except Exception: return {"_http": e.code}
     except Exception as e: return {"_err": repr(e)[:100]}
 
-def show(tag, path, body):
-    r = call(path, body)
-    d = r.get("d")
-    extra = ""
-    if isinstance(d, dict): extra = " keys=" + ",".join(list(d)[:8])
-    elif isinstance(d, list): extra = f" list[{len(d)}]"
-    p(f"[{tag}] c={r.get('c') or r.get('_http')} {str(r.get('m'))[:80]}{extra}")
-    return r
+def dims(path):
+    r = subprocess.run('ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 "%s"' % path,
+                       shell=True, capture_output=True, text=True)
+    return r.stdout.strip().replace("\n", " ") or r.stderr.strip()[-80:]
 
-# ---------- 1) image -> video, second route, with `enhance`
-V2 = "/algo/v1/faceFusion/aigc/image2VideoCreateV2"
-for tag, et, enh in [("v2_6209_enh", 6209, True), ("v2_6209_noenh", 6209, False),
-                     ("v2_0_enh", 0, True)]:
-    show(tag, V2, {"imageUrls": [IMG], "level": 1, "deviceToken": "", "effectType": et,
-                   "poseSequenceId": "", "duration": 4, "prompt": "آرام نفس می‌کشد", "enhance": enh,
-                   "ifTest": False})
-
-# ---------- 2) image upscale
-SR = "/algo/v1/faceFusion/aigc/createSuperResolutionNew"
-show("superres_min", SR, {"imageUrls": [IMG]})
-show("superres_full", SR, {"imageUrls": [IMG], "level": 2, "deviceToken": "", "ifTest": False})
-
-# ---------- 3) image generation / restyle from an image + prompt
-II = "/algo/v1/faceFusion/aigc/image2image/createImageTask"
-show("img2img_min", II, {"imageUrls": [IMG], "prompt": "same person, golden hour light"})
-show("img2img_style", II, {"imageUrls": [IMG], "prompt": "same person, golden hour light",
-                           "styleId": 0, "level": 1, "deviceToken": "", "ifTest": False})
-show("img2img_model", II, {"imageUrls": [IMG], "prompt": "same person, golden hour light",
-                           "modelId": 0, "level": 1, "deviceToken": "", "ifTest": False})
-
-AS = "/algo/v1/faceFusion/aigc/image2image/createAiStyleTask"
-show("aistyle_min", AS, {"imageUrls": [IMG]})
-show("aistyle_style", AS, {"imageUrls": [IMG], "styleId": 0, "level": 1, "deviceToken": "", "ifTest": False})
+def dl(url, dest):
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    with urllib.request.urlopen(req, timeout=120) as r, open(dest, "wb") as o: o.write(r.read())
+    return dest
 
 pathlib.Path("probe_out").mkdir(exist_ok=True)
+orig = dl(IMG, "probe_out/sr_src.jpg")
+p("[src]", pathlib.Path(orig).stat().st_size, "bytes", dims(orig))
+
+# ---- super resolution
+r = call("/algo/v1/faceFusion/aigc/createSuperResolutionNew", {"imageUrls": [IMG], "level": 2})
+p("[superres create]", json.dumps(r, ensure_ascii=False)[:300])
+job = (r.get("d") or {}).get("jobId")
+if job:
+    out = ""
+    for i in range(20):
+        time.sleep(5)
+        q = call("/algo/v1/faceFusion/aigc/querySuperResolutionNew", {"jobId": job})
+        d = q.get("d") or {}
+        p("   poll", i, "c=", q.get("c"), json.dumps(d, ensure_ascii=False)[:180])
+        urls = d.get("imageUrls") or d.get("resultUrls") or []
+        if urls:
+            out = urls[0]; break
+        if str(d.get("jobStatus", "")) in ("3", "4", "fail", "failed"): break
+    if out:
+        f = dl(out, "probe_out/sr_out.jpg")
+        p("[superres out]", out[:110], pathlib.Path(f).stat().st_size, "bytes", dims(f))
+
+# ---- image2image matrix
+II = "/algo/v1/faceFusion/aigc/image2image/createImageTask"
+cands = [
+    ("a", {"imageUrls": [IMG], "prompt": "golden hour", "level": 1, "deviceToken": "", "ifTest": False, "imageRatio": "3:4"}),
+    ("b", {"imageUrl": IMG, "prompt": "golden hour", "level": 1, "deviceToken": "", "ifTest": False}),
+    ("c", {"imageUrls": [IMG], "prompt": "golden hour", "token": "", "level": 1, "deviceToken": "", "ifTest": False}),
+    ("d", {"imageKeys": [IMG], "prompt": "golden hour", "level": 1, "deviceToken": "", "ifTest": False}),
+    ("e", {"imageUrls": [IMG], "prompt": "golden hour"}),
+]
+for tag, body in cands:
+    r = call(II, body)
+    p(f"[img2img {tag}] c={r.get('c') or r.get('_http')} {str(r.get('m'))[:70]} d={json.dumps(r.get('d'), ensure_ascii=False)[:120]}")
+
 pathlib.Path("probe_out/out.txt").write_text("\n".join(OUT), encoding="utf-8")
