@@ -46,7 +46,11 @@ filmkit deliver myfilm --github --tag v1     # or --drive
 |---|---|
 | `studio/selftest.py` (offline) | 2 synthetic clips → assemble → mix → qc: 960×1280, 7.7 s, audio present, 0 issues |
 | `films/watchmaker` (live) | 3 chained shots → 11.31 s film, 960×1280 32 fps, subtitles burned, audio mixed |
-| reference frames | `films/watchmaker/qc/frames/` |
+| `studio/demo.py` (live, CI run 40932388284) | new → still url: → shot 360P → chain → shot → assemble → qc → deliver, **DEMO OK**, 7.75 s, frame_delta ≤24.9 |
+| reference frames | `films/watchmaker/qc/frames/`, `films/studio_demo/qc/frames/` |
+
+Draft note (measured): 360P is **448×576**, not 432×576, and visibly softer than 720P —
+useful for checking motion and continuity, useless for judging look.
 
 ## Relations to the rest of the repo
 

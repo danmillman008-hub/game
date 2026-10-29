@@ -11,7 +11,7 @@ Hard constraints of the engine — design inside them:
 | Constraint | Value |
 |---|---|
 | shot length | **4.03 s**, not adjustable |
-| resolution | 960×1280 (720P) / 432×576 (360P) |
+| resolution | 960×1280 (720P) / **448×576** (360P, measured) |
 | seed | none — a shot cannot be re-rendered identically |
 | end frame | not supported |
 | native audio | none |
