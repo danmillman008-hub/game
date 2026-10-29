@@ -43,7 +43,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28r</span></h1>
+  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28s</span></h1>
   <div class="muted" style="margin-bottom:14px">
     هدف: کشف شرط بازشدن اندپوینت
     <code>/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5</code>.
@@ -291,6 +291,35 @@
       <div style="max-width:330px"><label>&nbsp;</label><button class="ghost" id="ratioFieldBtn" type="button">⑭ کشف نام فیلد (ratio/outputRatio/aspectRatio)</button></div>
     </div>
     <div id="ratioOut" style="margin-top:14px"></div>
+  </div>
+
+  <div class="card">
+    <h2>🧪 آزمایشگاه s: ریشهٔ نویز — مدل یا پیش‌پردازش عکس؟</h2>
+    <div class="muted" style="margin-bottom:12px">
+      نتیجهٔ زنده: با ارسال <code>ratio=9:16</code> خروجی باز هم <b>۱۲۸۰×۹۶۰</b> شد ⇒
+      این فیلد پذیرفته نمی‌شود (نام یا مقدارش چیز دیگری است).
+      و مهم‌تر: هر دو فایل <b>۱۲۹ فریم / ۳۲fps / ۴.۰۳۱s / CRF 19 / x264 core 164</b>
+      دارند ⇒ <b>قالب تسک یکی است</b>؛ فقط آنتروپی محتوا ۷ برابر است (bpp ۰.۴۵ در برابر ۰.۰۷).
+      دو متغیر باقی می‌ماند: <b>مدل (effectType)</b> و <b>پیش‌پردازش عکس</b>.
+    </div>
+    <div class="row">
+      <div style="max-width:300px"><label>&nbsp;</label><button id="sCropBtn" type="button">⑮ برش عکس به نسبت، سپس تولید</button></div>
+      <div style="max-width:330px"><label>&nbsp;</label><button class="ghost" id="sEffBtn" type="button">⑯ پیمایش effectType با سنجش bpp</button></div>
+      <div style="max-width:320px"><label>&nbsp;</label><button class="ghost" id="sRatioFmtBtn" type="button">⑰ کشف قالب مقدار نسبت</button></div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <div><label>نسبت هدف</label>
+        <select id="sRatio" style="max-width:150px">
+          <option value="9:16">9:16</option><option value="3:4" selected>3:4</option>
+          <option value="1:1">1:1</option><option value="4:3">4:3</option>
+        </select>
+      </div>
+      <div><label>تعداد کاندید در پیمایش</label><input id="sEffN" dir="ltr" value="8" style="max-width:90px"></div>
+      <div style="flex:2" class="muted" style="padding-top:22px">
+        هر خروجی با bpp سنجیده می‌شود؛ <b style="color:#3fb950">سبز</b> یعنی به کیفیت اپ رسیده.
+      </div>
+    </div>
+    <div id="sOut" style="margin-top:14px"></div>
   </div>
 
   <div class="card">
@@ -542,7 +571,7 @@ function loadCfg(){
   return c;
 }
 let CFG=loadCfg();
-const VER="2026-10-28r";
+const VER="2026-10-28s";
 const $=id=>document.getElementById(id);
 $("host").value=CFG.host;$("connMode").value=CFG.connMode;
 $("customProxy").value=CFG.customProxy;$("userId").value=CFG.userId;
@@ -1536,6 +1565,157 @@ $("ratioFieldBtn").onclick=async()=>{
   head("اگر فقط یکی هندسه را عوض کرد، همان نام درست است");
 };
 
+/* ---------- آزمایشگاه s: ریشهٔ نویز ---------- */
+function sRow(label,note,sig,bpp,url){
+  const tb=$("sOut");
+  let tbl=tb.querySelector("table.s");
+  if(!tbl){
+    tbl=document.createElement("table");
+    tbl.className="s";
+    tbl.style.cssText="width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px";
+    tbl.innerHTML='<tr style="color:#8b949e">'+
+      ["مورد","توضیح","هندسه","Mbps","bpp","حکم"].map(h=>
+      '<th style="padding:6px;border-bottom:1px solid #30363d;text-align:right">'+h+"</th>").join("")+"</tr>";
+    tb.prepend(tbl);
+  }
+  let cell="—",color="#8b949e",verdict="—";
+  if(bpp!==null){
+    cell=bpp.toFixed(4);
+    if(bpp<=0.12){color="#3fb950";verdict="✅ کیفیت اپ";}
+    else if(bpp<=0.25){color="#d29922";verdict="⚠️ نزدیک";}
+    else {color="#f85149";verdict="❌ نویزی";}
+  }
+  const tr=document.createElement("tr");
+  const cells=[{v:label,ltr:true},{v:note||"—",ltr:true},
+    {v:sig?sig.w+"×"+sig.h:"—"},{v:sig?sig.bitrateMbps.toFixed(2):"—"},
+    {v:cell,bold:true,color},{v:verdict,color}];
+  tr.innerHTML=cells.map(c=>'<td style="padding:6px;border-bottom:1px solid #21262d;text-align:right'+
+    (c.ltr?";direction:ltr":"")+(c.bold?";font-weight:bold":"")+
+    (c.color?";color:"+c.color:"")+'">'+c.v+"</td>").join("");
+  if(url)tr.title=url;
+  tbl.appendChild(tr);
+  return bpp;
+}
+async function sGenerate(label,note,imageUrl,extra){
+  const body=Object.assign({imageUrls:[imageUrl],level:1,effectType:6209,
+    prompt:$("prompt").value.trim(),quality:2},extra||{});
+  log("→ "+label+" | "+JSON.stringify(Object.assign({},body,{imageUrls:["…"],prompt:"…"}))
+      .slice(0,180),"i");
+  const env=await postJson("/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",body);
+  if(!(env.j&&env.j.c===200)){
+    log("رد شد: "+env.txt.slice(0,200),"e");
+    sRow(label,note,null,null,null);
+    return null;
+  }
+  const tid=env.j.d.taskId;
+  let vu;
+  try{ vu=await pollBeat(tid,8*60*1000); }
+  catch(e){ log("polling ناموفق: "+e.message+" (taskId="+tid+")","e"); return null; }
+  let sig=null,bpp=null;
+  try{
+    const r=await fetch(viaProxy(vu));
+    sig=deepSignature(await r.arrayBuffer());
+    bpp=bppFromSig(sig);
+    log("  ↳ "+sig.w+"×"+sig.h+" | "+sig.bitrateMbps.toFixed(2)+"Mbps | bpp="+
+        (bpp===null?"؟":bpp.toFixed(4))+" | "+vu.slice(-28),
+        bpp!==null&&bpp<=0.12?"ok":"w");
+  }catch(e){ log("فارنزیک ناموفق: "+e.message,"e"); }
+  sRow(label,note,sig,bpp,vu);
+  return {vu,sig,bpp};
+}
+/* ⑮ برش عکس به نسبت هدف، مثل کاری که کلاینت اپ می‌کند */
+async function cropToRatio(file,ratio){
+  const [rw,rh]=ratio.split(":").map(Number);
+  const target=rw/rh;
+  const img=await createImageBitmap(file);
+  const src=img.width/img.height;
+  let sx=0,sy=0,sw=img.width,sh=img.height;
+  if(src>target){ sw=Math.round(img.height*target); sx=Math.round((img.width-sw)/2); }
+  else { sh=Math.round(img.width/target); sy=Math.round((img.height-sh)/2); }
+  // ضلع بزرگ را روی 1280 نگه می‌داریم تا کیفیت ورودی حفظ شود
+  const scale=Math.min(1,1280/Math.max(sw,sh));
+  const c=document.createElement("canvas");
+  c.width=Math.round(sw*scale); c.height=Math.round(sh*scale);
+  const g=c.getContext("2d");
+  g.imageSmoothingQuality="high";
+  g.drawImage(img,sx,sy,sw,sh,0,0,c.width,c.height);
+  const blob=await new Promise(r=>c.toBlob(r,"image/jpeg",0.95));
+  log("برش: "+img.width+"×"+img.height+" → "+c.width+"×"+c.height+
+      " ("+ratio+", "+Math.round(blob.size/1024)+" KB)","i");
+  return blob;
+}
+$("sCropBtn").onclick=async()=>{
+  const f=$("file").files[0];
+  if(!f)return alert("اول تصویر را انتخاب کنید");
+  const ratio=$("sRatio").value;
+  head("آزمایش ⑮: برش کلاینتی عکس به "+ratio+" قبل از آپلود");
+  let blob;
+  try{ blob=await cropToRatio(f,ratio); }
+  catch(e){ return log("برش ناموفق: "+e.message,"e"); }
+  const up=await uploadBlobAs(blob,"crop_"+ratio.replace(":","x")+".jpg");
+  log("آپلود شد: "+up,"ok");
+  await sGenerate("عکس برش‌خورده "+ratio,"پیش‌پردازش کلاینتی مثل اپ",up,{});
+  await sGenerate("عکس برش‌خورده + ratio="+ratio,"برش + فیلد نسبت",up,{ratio});
+  head("اگر هندسه به نسبت هدف رفت یا bpp افت کرد، ریشه پیدا شد");
+};
+/* ⑯ پیمایش effectType با سنجش bpp — آیا مدل با effectType عوض می‌شود؟ */
+$("sEffBtn").onclick=async()=>{
+  if(!uploadedUrl){ log("اول تصویر را آپلود کنید","e"); return; }
+  const n=Math.min(12,Math.max(1,Number($("sEffN").value)||8));
+  head("آزمایش ⑯: پیمایش "+n+" مقدار effectType با سنجش bpp");
+  let cands=[];
+  try{
+    const c=await fetchCatalog();
+    if(c){
+      const all=flattenLab(c.j);
+      const seen=new Set([6209]);
+      for(const r of all){
+        if(r.effectsType==null)continue;
+        const t=String(r.effectsType);
+        if(seen.has(t))continue;
+        // گروه‌های ویدیویی اپ را ترجیح می‌دهیم
+        if(!/video|Video|VIDEO/.test(r.group||""))continue;
+        seen.add(t);cands.push({t,name:r.resName||"",g:r.group});
+        if(cands.length>=n)break;
+      }
+      log("کاندیدها: "+cands.map(c=>c.t+"("+c.name+")").join(", "),"i");
+    }
+  }catch(e){ log("کاتالوگ ناموفق: "+e.message,"w"); }
+  if(!cands.length){
+    log("کاتالوگ در دسترس نبود؛ با مقادیر شناخته‌شده ادامه می‌دهیم","w");
+    cands=[{t:"4991",name:"Catwalk",g:"AIvideo_US"},{t:"6093",name:"3D Model Figure",g:"AIBanner_US"},
+           {t:"4899",name:"BodyShake",g:"AIBanner_US"}];
+  }
+  await sGenerate("کنترل 6209", "مسیر فعلی ما", uploadedUrl, {});
+  for(const c of cands){
+    await sGenerate("effectType="+c.t, (c.name||"")+" · "+(c.g||""), uploadedUrl,
+      {effectType:Number(c.t)});
+    await sleep(800);
+  }
+  head("پایان پیمایش — هر ردیف سبز یعنی آن effectType به کیفیت اپ می‌رسد");
+};
+/* ⑰ کشف قالب مقدار نسبت */
+$("sRatioFmtBtn").onclick=async()=>{
+  if(!uploadedUrl){ log("اول تصویر را آپلود کنید","e"); return; }
+  head("آزمایش ⑰: قالب‌های مختلف مقدار نسبت (هدف: هندسه تغییر کند)");
+  const tries=[
+    ["ratio=1 (عدد)",{ratio:1}],
+    ["ratio=2 (عدد)",{ratio:2}],
+    ["ratio=3 (عدد)",{ratio:3}],
+    ["ratio=0.5625",{ratio:0.5625}],
+    ["ratio=\"9x16\"",{ratio:"9x16"}],
+    ["ratioType=1",{ratioType:1}],
+    ["videoRatio=\"9:16\"",{videoRatio:"9:16"}],
+    ["outputRatio=1",{outputRatio:1}],
+  ];
+  await sGenerate("کنترل بدون نسبت","",uploadedUrl,{});
+  for(const [label,extra] of tries){
+    await sGenerate(label,"",uploadedUrl,extra);
+    await sleep(700);
+  }
+  head("اگر یکی از این‌ها هندسه را به ۵۴۰×۹۶۰ یا ۹۶۰×۱۲۸۰ برد، همان قالب درست است");
+};
+
 /* ---------- مقایسهٔ دو ویدیو با bpp ---------- */
 async function bufFrom(urlInputId,fileInputId){
   const f=$(fileInputId).files&&$(fileInputId).files[0];
@@ -2018,7 +2198,7 @@ let BUSY=false;
 ["qBtn","cmpBtn","hdBatteryBtn","hdBillingBtn","hdUpBtn","hdViduBtn","catKeyBtn",
  "catSweepBtn","beatDurBtn","beatQBtn","beatUpBtn2","appCmpBtn","fKnownBtn",
  "qlSweepBtn","qlDurBtn","extBtn","extRecBtn","sigBtn","sigAllBtn","labDumpBtn","labTryBtn","cmpRunBtn",
- "ratioSweepBtn","ratioFieldBtn"].forEach(id=>{
+ "ratioSweepBtn","ratioFieldBtn","sCropBtn","sEffBtn","sRatioFmtBtn"].forEach(id=>{
   const el=$(id); if(!el||typeof el.onclick!=="function")return;
   const orig=el.onclick;
   el.onclick=async ev=>{
