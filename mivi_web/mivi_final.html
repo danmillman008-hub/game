@@ -68,8 +68,9 @@ a.dl{display:inline-block;margin-top:10px;background:#1d6f42;color:#fff;padding:
       </select></div>
   </div>
   <div style="margin-top:12px">
-    <label>توضیح (اختیاری)</label>
-    <textarea id="prompt" placeholder="مثلاً: آرام نفس می‌کشد، نور از سمت چپ می‌آید"></textarea>
+    <label>پرامت — چه اتفاقی در ویدیو بیفتد</label>
+    <textarea id="prompt" placeholder="مثلاً: دختر آرام سرش را برمی‌گرداند و لبخند می‌زند، نور نرم از سمت چپ، دوربین ثابت"></textarea>
+    <div class="hint" style="margin-top:6px">هر چه صحنه و حرکت را دقیق‌تر بنویسی، نتیجه به عکس اصلی نزدیک‌تر می‌ماند.</div>
   </div>
   <button id="go">🎬 ساختن ویدیو</button>
   <div id="bar"><i></i></div>
@@ -95,6 +96,34 @@ a.dl{display:inline-block;margin-top:10px;background:#1d6f42;color:#fff;padding:
       </select></div>
     <div><label>آدرس پروکسی</label><input id="customProxy"></div>
     <div><label>userId</label><input id="userId"></div>
+  </div>
+  <div style="margin-top:14px;border-top:1px solid #252b37;padding-top:12px">
+    <div style="font-size:13px;color:#8a93a6;margin-bottom:6px">
+      اگر «localhost:8770» را انتخاب کردی، این پروکسی کوچک را روی کامپیوتر خودت اجرا کن
+      (پایتون ۳، بدون نصب چیزی) و همان پنجره را باز بگذار:
+    </div>
+    <pre id="proxycmd" style="background:#0f1319;border:1px solid #252b37;border-radius:10px;padding:10px;overflow:auto;direction:ltr;text-align:left;font-size:12px;user-select:all">python3 -c "import http.server,urllib.parse,urllib.request as u;
+class H(http.server.BaseHTTPRequestHandler):
+ def do_GET(s):s.r()
+ def do_POST(s):s.r()
+ def r(s):
+  q=urllib.parse.urlparse(s.path);t=urllib.parse.parse_qs(q.query).get('u',[''])[0]
+  if t:
+   b=s.rfile.read(int(s.headers.get('Content-Length') or 0)) or None
+   rq=u.Request(t,data=b,method=s.command)
+   for k,v in s.headers.items():
+    if k.lower() not in ('host','origin','referer','content-length'):rq.add_header(k,v)
+   try:
+    with u.urlopen(rq) as p:body=p.read();code=p.status
+   except Exception as e:body=str(e).encode();code=502
+   s.send_response(code)
+   for k,v in (('Access-Control-Allow-Origin','*'),('Content-Type','application/json')):s.send_header(k,v)
+   s.end_headers();s.wfile.write(body)
+  else:s.send_response(200);s.end_headers();s.wfile.write(b'proxy ok')
+ def log_message(s,*a):pass
+http.server.ThreadingHTTPServer(('127.0.0.1',8770),H).serve_forever()"</pre>
+    <button id="testproxy" style="margin-top:8px;background:#1b2029;border:1px solid #252b37;color:#e8ecf4;border-radius:10px;padding:8px 14px;font:inherit;font-size:13px;cursor:pointer">🔌 تست اتصال</button>
+    <div class="hint" id="ptest" style="margin-top:6px"></div>
   </div>
 </details>
 
@@ -197,7 +226,7 @@ function md5(inputString){
   return (wordToHex(a)+wordToHex(b)+wordToHex(c)+wordToHex(d)).toLowerCase();
 }
 
-const VERSION="2026-10-30-final";
+const VERSION="2026-10-31-final";
 const DEFAULTS={host:"https://cpi.ufotosoft.com",connMode:"local",
   customProxy:"http://localhost:8770/proxy?u={url}",userId:"7da75eed37c61d33"};
 function loadCfg(){let c={};try{c=JSON.parse(localStorage.getItem("mivi_final_cfg")||"{}");}catch(e){}return Object.assign({},DEFAULTS,c);}
@@ -368,6 +397,21 @@ $("go").onclick=async()=>{
     log("خطا: "+(e&&e.message||e),"er");
   }finally{
     btn.disabled=false;btn.textContent=old;
+  }
+};
+/* ---------- تست اتصال ---------- */
+$("testproxy").onclick=async()=>{
+  const el=$("ptest");el.textContent="در حال تست…";el.style.color="#8a93a6";
+  const target=CFG.host.replace(/\/+$/,"")+"/common/vibe/resourceNew?version=407&cp=instagram.story.art.collage&platform=1&ifHttps=true&day=0&language=en&packageLevel=1";
+  const t0=Date.now();
+  try{
+    const r=await fetch(viaProxy(target),{headers:algoHeaders()});
+    const j=await r.json();
+    el.textContent=(j.c===200?"✓ اتصال برقرار است":"✗ سرور جواب داد c="+j.c)+"  ("+(Date.now()-t0)+"ms)";
+    el.style.color=(j.c===200?"#22d3a7":"#ff6b6b");
+  }catch(e){
+    el.textContent="✗ اتصال نشد — پروکسی اجرا نیست یا آدرسش غلط است ("+e.message+")";
+    el.style.color="#ff6b6b";
   }
 };
 </script></body></html>
