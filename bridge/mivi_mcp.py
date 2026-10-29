@@ -35,8 +35,19 @@ HOST = os.environ.get("MIVI_HOST", "https://cpi.ufotosoft.com")
 USER = os.environ.get("MIVI_USER", "7da75eed37c61d33")
 CP = os.environ.get("MIVI_CP", "instagram.story.art.collage")
 VERSION = os.environ.get("MIVI_VERSION", "407")
-FFMPEG = os.environ.get("FFMPEG", "ffmpeg")
-FFPROBE = os.environ.get("FFPROBE", "ffprobe")
+def _which(name: str, env_key: str) -> str:
+    v = os.environ.get(env_key) or shutil.which(name)
+    if v:
+        return v
+    try:                              # imageio-ffmpeg ships a static binary, no ffprobe
+        import imageio_ffmpeg
+        return imageio_ffmpeg.get_ffmpeg_exe()
+    except Exception:
+        return name
+
+
+FFMPEG = _which("ffmpeg", "FFMPEG")
+FFPROBE = _which("ffprobe", "FFPROBE")
 
 UPLOAD = "/algo/v1/aiGenerate-aigc/multipleUpload"
 CREATE = "/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask"

@@ -131,7 +131,8 @@ def save(d: Path, proj: dict) -> None:
                                     encoding="utf-8")
 
 
-def shot(d: Path, proj: dict, n: int) -> dict:
+def shot(d: Path, proj: dict, n) -> dict:
+    n = int(n)
     for s in proj["shots"]:
         if int(s["n"]) == n:
             return s
@@ -575,6 +576,8 @@ def main():
 
     a = ap.parse_args()
     FF, FP = ffmpeg_bin(), ffprobe_bin()
+    M.FFMPEG = FF                    # the API layer shares the same binaries
+    M.FFPROBE = FP or "ffprobe"
     a.fn(a)
 
 
