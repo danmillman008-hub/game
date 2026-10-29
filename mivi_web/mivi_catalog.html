@@ -24,6 +24,7 @@ code{background:#0f1319;padding:1px 6px;border-radius:5px;font-family:ui-monospa
 .b{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11.5px;white-space:nowrap}
 .b.ok{background:rgba(34,211,167,.14);color:var(--ok);border:1px solid rgba(34,211,167,.3)}
 .b.bad{background:rgba(255,107,107,.12);color:var(--bad);border:1px solid rgba(255,107,107,.3)}
+.b.billing{background:rgba(110,168,254,.14);color:var(--acc);border:1px solid rgba(110,168,254,.3)}
 .b.unk{background:rgba(245,196,81,.12);color:var(--unk);border:1px solid rgba(245,196,81,.3)}
 .controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
 input,select{background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:9px 12px;font:inherit;font-size:13.5px}
@@ -43,7 +44,7 @@ a{color:var(--acc);text-decoration:none}
 
 <div class="chips">
   <div class="chip"><b>3</b>موتور تأییدشده با خروجی واقعی</div>
-  <div class="chip"><b>6</b>مسیر قفل (با کد خطای دقیق)</div>
+  <div class="chip"><b>7</b>مسیر قفل (با کد خطای دقیق)</div>
   <div class="chip"><b>278</b>افکت در کاتالوگ</div>
   <div class="chip"><b>۹۶۰×۱۲۸۰</b>تنها مسیر ۷۲۰p واقعی</div>
 </div>
@@ -51,19 +52,20 @@ a{color:var(--acc);text-decoration:none}
 <h2>یک. موتورها</h2>
 <table>
 <tr><th>موتور (enum)</th><th>اندپوینت</th><th>وضعیت</th><th>مدرک</th></tr>
-<tr><td><code>GX_AiVideoP2V</code></td><td><code>beatImage2Video/createNormalTask</code></td><td><span class='b ok'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم'}[st]</span></td><td>۹۶۰×۱۲۸۰ با effectType=6209 · افکت‌های کاتالوگ هم از همین دروازه رد می‌شوند</td></tr>
-<tr><td><code>— (60004) img2video_wanlora</code></td><td><code>beatImage2Video/createNormalTask</code></td><td><span class='b ok'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم'}[st]</span></td><td>۱۳ افکت کاتالوگ → ۴۳۲×۵۷۶ · همیشه همین اندازه</td></tr>
-<tr><td><code>— (i2v_14b_v131)</code></td><td><code>beatImage2Video/createNormalTask</code></td><td><span class='b ok'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم'}[st]</span></td><td>افکت ۷۶۰۰ (Clone) → ۵۶۲×۷۴۸ · level/quality بی‌اثر</td></tr>
-<tr><td><code>AiVideoGoogleVeo</code></td><td><code>image2video/image2VideoCreateV5</code></td><td><span class='b blocked'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم'}[st]</span></td><td>۱۸ درخواست + جاروب ۵۷ مقدار effectType → همیشه effectType illegal</td></tr>
-<tr><td><code>AiVideoPixVerse</code></td><td><code>image2VideoCreateV3</code></td><td><span class='b blocked'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم'}[st]</span></td><td>pixVerseId لازم است؛ با هر مقداری → invalid user یا effectType illegal</td></tr>
-<tr><td><code>AiVideoUnify</code></td><td><code>image2video/unifiedTaskCreate</code></td><td><span class='b blocked'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم'}[st]</span></td><td>فیلد example اجباری است و هیچ‌کدام از مقادیر ما پذیرفته نشد</td></tr>
-<tr><td><code>AiSequenceVideo</code></td><td><code>integrated/image2VideoCreateV4</code></td><td><span class='b blocked'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم'}[st]</span></td><td>effectType کاتالوگ رد می‌شود (همان خطای Veo)</td></tr>
-<tr><td><code>— (نسخهٔ قدیم)</code></td><td><code>image2video/integratedTaskCreate</code></td><td><span class='b blocked'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم'}[st]</span></td><td>example is empty → مقدار مجاز نامعلوم</td></tr>
-<tr><td><code>AiVideoHDVidu</code></td><td><code>createVideoHdTaskVidu</code></td><td><span class='b blocked'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم'}[st]</span></td><td>ورودی‌اش taskId یک تسک تمام‌شده + متادیتای کامل ویدیو است، نه عکس</td></tr>
-<tr><td><code>AiVideoLtx</code></td><td><code>image2video/createTask</code></td><td><span class='b unknown'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم'}[st]</span></td><td>مسیر در dex هست، روی سرور آزموده نشده</td></tr>
-<tr><td><code>AiVideoT2V</code></td><td><code>createText2VideoTask</code></td><td><span class='b unknown'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم'}[st]</span></td><td>فقط متن→ویدیو، خارج از نیاز فعلی</td></tr>
-<tr><td><code>AiText2VideoUnify</code></td><td><code>—</code></td><td><span class='b unknown'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم'}[st]</span></td><td>مسیر در dex پیدا نشد</td></tr>
-<tr><td><code>AiHug / AiHugP2V / AiDance</code></td><td><code>—</code></td><td><span class='b unknown'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم'}[st]</span></td><td>در کد فقط نام enum؛ بدنهٔ درخواست پیدا نشد</td></tr>
+<tr><td><code>GX_AiVideoP2V</code></td><td><code>beatImage2Video/createNormalTask</code></td><td><span class='b ok'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم','billing':'اعتبار'}[st]</span></td><td>۹۶۰×۱۲۸۰ با effectType=6209 · افکت‌های کاتالوگ هم از همین دروازه رد می‌شوند</td></tr>
+<tr><td><code>— (60004) img2video_wanlora</code></td><td><code>beatImage2Video/createNormalTask</code></td><td><span class='b ok'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم','billing':'اعتبار'}[st]</span></td><td>۱۳ افکت کاتالوگ → ۴۳۲×۵۷۶ · همیشه همین اندازه</td></tr>
+<tr><td><code>— (i2v_14b_v131)</code></td><td><code>beatImage2Video/createNormalTask</code></td><td><span class='b ok'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم','billing':'اعتبار'}[st]</span></td><td>افکت ۷۶۰۰ (Clone) → ۵۶۲×۷۴۸ · level/quality بی‌اثر</td></tr>
+<tr><td><code>AiVideoGoogleVeo</code></td><td><code>image2video/image2VideoCreateV5</code></td><td><span class='b blocked'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم','billing':'اعتبار'}[st]</span></td><td>۱۸ درخواست + جاروب ۵۷ مقدار effectType → همیشه effectType illegal</td></tr>
+<tr><td><code>AiVideoPixVerse</code></td><td><code>image2VideoCreateV3</code></td><td><span class='b blocked'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم','billing':'اعتبار'}[st]</span></td><td>pixVerseId لازم است؛ با هر مقداری → invalid user یا effectType illegal</td></tr>
+<tr><td><code>AiVideoUnify</code></td><td><code>image2video/unifiedTaskCreate</code></td><td><span class='b blocked'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم','billing':'اعتبار'}[st]</span></td><td>فیلد example اجباری است و هیچ‌کدام از مقادیر ما پذیرفته نشد</td></tr>
+<tr><td><code>AiSequenceVideo</code></td><td><code>integrated/image2VideoCreateV4</code></td><td><span class='b blocked'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم','billing':'اعتبار'}[st]</span></td><td>effectType کاتالوگ رد می‌شود (همان خطای Veo)</td></tr>
+<tr><td><code>— (نسخهٔ قدیم)</code></td><td><code>image2video/integratedTaskCreate</code></td><td><span class='b blocked'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم','billing':'اعتبار'}[st]</span></td><td>example is empty → مقدار مجاز نامعلوم</td></tr>
+<tr><td><code>AiVideoHDVidu</code></td><td><code>createVideoHdTaskVidu</code></td><td><span class='b blocked'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم','billing':'اعتبار'}[st]</span></td><td>taskId تسک beat را رد می‌کند (taskId is invalid) — فضای تسک جدا</td></tr>
+<tr><td><code>Enhance (غیر-Vidu)</code></td><td><code>createVideoHdTask</code></td><td><span class='b billing'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم','billing':'اعتبار'}[st]</span></td><td>بدنه‌اش ویدیوی ساخته‌شده است (videoUrl+md5+size+fileTime+dims)؛ از اعتبارسنجی گذشت و فقط c=2002 (اعتبار) خورد</td></tr>
+<tr><td><code>AiVideoLtx</code></td><td><code>image2video/createTask</code></td><td><span class='b unknown'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم','billing':'اعتبار'}[st]</span></td><td>مسیر در dex هست، روی سرور آزموده نشده</td></tr>
+<tr><td><code>AiVideoT2V</code></td><td><code>createText2VideoTask</code></td><td><span class='b unknown'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم','billing':'اعتبار'}[st]</span></td><td>فقط متن→ویدیو، خارج از نیاز فعلی</td></tr>
+<tr><td><code>AiText2VideoUnify</code></td><td><code>—</code></td><td><span class='b unknown'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم','billing':'اعتبار'}[st]</span></td><td>مسیر در dex پیدا نشد</td></tr>
+<tr><td><code>AiHug / AiHugP2V / AiDance</code></td><td><code>—</code></td><td><span class='b unknown'>{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم','billing':'اعتبار'}[st]</span></td><td>در کد فقط نام enum؛ بدنهٔ درخواست پیدا نشد</td></tr>
 </table>
 
 <h2>دو. خروجی اندازه‌گیری‌شده</h2>
@@ -72,6 +74,7 @@ a{color:var(--acc);text-decoration:none}
 <tr><td><code>60014/…/&lt;hash&gt;.mp4</code></td><td><b>۹۶۰×۱۲۸۰</b></td><td>۴٬۰۳ ثانیه</td><td>فقط با <code>effectType=6209</code> — همان مسیر فایل نهایی</td></tr>
 <tr><td><code>img2video_wanlora-…</code></td><td>۴۳۲×۵۷۶</td><td>۴٬۰۶ ثانیه</td><td>۱۳ افکت کاتالوگ · level و quality تغییری نمی‌دهند</td></tr>
 <tr><td><code>i2v_14b_v131-…</code></td><td>۵۶۲×۷۴۸</td><td>۴٬۰۶ ثانیه</td><td>افکت ۷۶۰۰ · با level=2 و بدون quality بایت‌به‌بایت یکسان</td></tr>
+<tr><td><code>createVideoHdTask</code> روی ویدیوی ۴۳۲×۵۷۶</td><td>—</td><td>—</td><td>متادیتا پذیرفته شد، جواب <code>c=2002</code> (کسر اعتبار ناموفق) در level 1/2/3</td></tr>
 <tr><td><code>INTEGRATED_60019-…</code></td><td>—</td><td>—</td><td>با <code>imageEffectType=7186</code> ساخته می‌شود ولی جدول کوئری‌اش پیدا نشد (c=3035)</td></tr>
 </table>
 
@@ -82,6 +85,7 @@ a{color:var(--acc);text-decoration:none}
 <tr><td>googleId=&quot;1&quot;، بدون effectType</td><td><code>c=1013 effectType illegal</code></td><td>اپ هیچ‌وقت effectType نمی‌فرستد، ولی سرور می‌خواهد</td></tr>
 <tr><td>effectType=4899/4991/6093/7849/6209 + googleId</td><td><code>c=1013 effectType illegal</code></td><td>هیچ افکت کاتالوگی برای Veo مجاز نیست</td></tr>
 <tr><td>جاروب effectType: ۰..۲۰، ۱۰۰..۵۰۰، ۱۰۰۰..۱۰۰۳، ۲۰۰۰..۲۰۰۲، ۶۰۰۰..۷۱۰۰، ۹۰۰۰..۱۰۰۰۱</td><td><code>همه: effectType illegal</code></td><td>مجموعهٔ مجاز Veo جای دیگری است</td></tr>
+<tr><td>`googleId=1` بدون هیچ effectType (بدنهٔ دقیق اپ)</td><td><code>c=1013 effectType illegal</code></td><td>حتی بدنهٔ خودِ اپ هم قبول نمی‌شود</td></tr>
 <tr><td>googleId=&quot;veo3&quot;</td><td><code>c=500 NumberFormatException</code></td><td>googleId باید عدد باشد</td></tr>
 </table>
 <div class="sub" style="margin-top:10px">نتیجه: موتور گوگل با این حساب باز نمی‌شود. سرور یک <code>effectType</code> مخصوص Veo می‌خواهد که در APK و در کاتالوگ نیست. تنها راهش پیدا کردن فهرست مدل‌های Veo از یک حساب واقعی است.</div>

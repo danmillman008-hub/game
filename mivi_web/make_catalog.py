@@ -48,7 +48,9 @@ ENGINES = [
     ("— (نسخهٔ قدیم)", "image2video/integratedTaskCreate", "blocked",
      "example is empty → مقدار مجاز نامعلوم"),
     ("AiVideoHDVidu", "createVideoHdTaskVidu", "blocked",
-     "ورودی‌اش taskId یک تسک تمام‌شده + متادیتای کامل ویدیو است، نه عکس"),
+     "taskId تسک beat را رد می‌کند (taskId is invalid) — فضای تسک جدا"),
+    ("Enhance (غیر-Vidu)", "createVideoHdTask", "billing",
+     "بدنه‌اش ویدیوی ساخته‌شده است (videoUrl+md5+size+fileTime+dims)؛ از اعتبارسنجی گذشت و فقط c=2002 (اعتبار) خورد"),
     ("AiVideoLtx", "image2video/createTask", "unknown",
      "مسیر در dex هست، روی سرور آزموده نشده"),
     ("AiVideoT2V", "createText2VideoTask", "unknown", "فقط متن→ویدیو، خارج از نیاز فعلی"),
@@ -62,11 +64,13 @@ V5 = [
     ("googleId=\"1\"، بدون effectType", "c=1013 effectType illegal", "اپ هیچ‌وقت effectType نمی‌فرستد، ولی سرور می‌خواهد"),
     ("effectType=4899/4991/6093/7849/6209 + googleId", "c=1013 effectType illegal", "هیچ افکت کاتالوگی برای Veo مجاز نیست"),
     ("جاروب effectType: ۰..۲۰، ۱۰۰..۵۰۰، ۱۰۰۰..۱۰۰۳، ۲۰۰۰..۲۰۰۲، ۶۰۰۰..۷۱۰۰، ۹۰۰۰..۱۰۰۰۱", "همه: effectType illegal", "مجموعهٔ مجاز Veo جای دیگری است"),
+    ("`googleId=1` بدون هیچ effectType (بدنهٔ دقیق اپ)", "c=1013 effectType illegal", "حتی بدنهٔ خودِ اپ هم قبول نمی‌شود"),
     ("googleId=\"veo3\"", "c=500 NumberFormatException", "googleId باید عدد باشد"),
 ]
 
+ENG_STATUS = {"ok": "کار می‌کند", "blocked": "قفل", "unknown": "نامعلوم", "billing": "فقط اعتبار کم است"}
 ok = sum(1 for e in ENGINES if e[2] == "ok")
-blocked = sum(1 for e in ENGINES if e[2] == "blocked")
+blocked = sum(1 for e in ENGINES if e[2] in ("blocked", "billing"))
 
 def esc(s):
     return (s or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
@@ -99,6 +103,7 @@ code{{background:#0f1319;padding:1px 6px;border-radius:5px;font-family:ui-monosp
 .b{{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11.5px;white-space:nowrap}}
 .b.ok{{background:rgba(34,211,167,.14);color:var(--ok);border:1px solid rgba(34,211,167,.3)}}
 .b.bad{{background:rgba(255,107,107,.12);color:var(--bad);border:1px solid rgba(255,107,107,.3)}}
+.b.billing{{background:rgba(110,168,254,.14);color:var(--acc);border:1px solid rgba(110,168,254,.3)}}
 .b.unk{{background:rgba(245,196,81,.12);color:var(--unk);border:1px solid rgba(245,196,81,.3)}}
 .controls{{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}}
 input,select{{background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:9px 12px;font:inherit;font-size:13.5px}}
@@ -128,7 +133,7 @@ a{{color:var(--acc);text-decoration:none}}
 <tr><th>موتور (enum)</th><th>اندپوینت</th><th>وضعیت</th><th>مدرک</th></tr>
 """ + "\n".join(
     f"<tr><td><code>{esc(n)}</code></td><td><code>{esc(ep)}</code></td>"
-    f"<td><span class='b {st}'>{{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم'}}[st]</span></td>"
+    f"<td><span class='b {st}'>{{'ok':'کار می‌کند','blocked':'قفل','unknown':'نامعلوم','billing':'اعتبار'}}[st]</span></td>"
     f"<td>{esc(ev)}</td></tr>"
     for n, ep, st, ev in ENGINES) + """
 </table>
@@ -139,6 +144,7 @@ a{{color:var(--acc);text-decoration:none}}
 <tr><td><code>60014/…/&lt;hash&gt;.mp4</code></td><td><b>۹۶۰×۱۲۸۰</b></td><td>۴٬۰۳ ثانیه</td><td>فقط با <code>effectType=6209</code> — همان مسیر فایل نهایی</td></tr>
 <tr><td><code>img2video_wanlora-…</code></td><td>۴۳۲×۵۷۶</td><td>۴٬۰۶ ثانیه</td><td>۱۳ افکت کاتالوگ · level و quality تغییری نمی‌دهند</td></tr>
 <tr><td><code>i2v_14b_v131-…</code></td><td>۵۶۲×۷۴۸</td><td>۴٬۰۶ ثانیه</td><td>افکت ۷۶۰۰ · با level=2 و بدون quality بایت‌به‌بایت یکسان</td></tr>
+<tr><td><code>createVideoHdTask</code> روی ویدیوی ۴۳۲×۵۷۶</td><td>—</td><td>—</td><td>متادیتا پذیرفته شد، جواب <code>c=2002</code> (کسر اعتبار ناموفق) در level 1/2/3</td></tr>
 <tr><td><code>INTEGRATED_60019-…</code></td><td>—</td><td>—</td><td>با <code>imageEffectType=7186</code> ساخته می‌شود ولی جدول کوئری‌اش پیدا نشد (c=3035)</td></tr>
 </table>
 
