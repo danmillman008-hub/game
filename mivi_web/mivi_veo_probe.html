@@ -43,7 +43,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-29v</span></h1>
+  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-29w</span></h1>
   <div class="muted" style="margin-bottom:14px">
     هدف: کشف شرط بازشدن اندپوینت
     <code>/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5</code>.
@@ -450,6 +450,33 @@
   </div>
 
   <div class="card">
+    <h2>🧬 موتورها: پنج مسیر تولید که خود اپ دارد (بدنه‌ها از بایت‌کد APK 2.37.407)</h2>
+    <div class="hint" style="margin-bottom:10px">
+      در APK یک enum به نام <code>P2Type</code> با ۱۳ مدل هست:
+      <code>GX_AiVideoP2V</code> (مسیر فعلی ما)، <code>AiVideoLtx</code>،
+      <code>AiVideoPixVerse</code>، <code>AiVideoUnify</code>،
+      <code>AiVideoGoogleVeo</code>، <code>AiVideoHDVidu</code>،
+      <code>AiVideoT2V</code>، <code>AiText2VideoUnify</code>،
+      <code>AiSequenceVideo</code>، <code>AiHug/P2V</code>، <code>AiDance</code>.
+      این کارت هر پنج مسیر <b>ورودی-عکس</b> را با بدنهٔ دقیق خودش صدا می‌زند تا
+      معلوم شود کدام روی سرور زنده است و کدام پاسخ بهتری می‌دهد.
+      <br>منبع: <code>Image2VideoServer</code> متدهای
+      <code>y</code>(GX) · <code>v</code>(Ltx) · <code>w</code>(Unified) ·
+      <code>z</code>(Veo) · <code>F</code>(Vidu HD).
+    </div>
+    <div class="row">
+      <div style="flex:1"><label>سطح (level)</label><input id="engLevel" type="number" value="1"></div>
+      <div style="flex:1"><label>effectType</label><input id="engEff" type="number" value="6209"></div>
+      <div style="flex:1"><label>مدت Veo</label><input id="engDur" type="number" value="8"></div>
+      <div style="flex:2"><label>taskId برای Vidu-HD (اختیاری)</label>
+        <input id="engTask" dir="ltr" placeholder="مثلاً 60004-1793049728-..."></div>
+      <div style="max-width:250px"><label>&nbsp;</label>
+        <button id="engBtn" type="button">🧬 اجرای هر پنج مسیر</button></div>
+    </div>
+    <div id="engOut" style="margin-top:12px"></div>
+  </div>
+
+  <div class="card">
     <h2>🤖 آزمایشگاه o: کشف مدل‌های پرمیوم از aiLabGroupList</h2>
     <div class="muted" style="margin-bottom:10px">
       کاتالوگ زنده علاوه بر <code>groupList</code> سه بخش دیگر دارد:
@@ -618,7 +645,7 @@ function loadCfg(){
   return c;
 }
 let CFG=loadCfg();
-const VER="2026-10-29v";
+const VER="2026-10-29w";
 const $=id=>document.getElementById(id);
 $("host").value=CFG.host;$("connMode").value=CFG.connMode;
 $("customProxy").value=CFG.customProxy;$("userId").value=CFG.userId;
@@ -1616,6 +1643,76 @@ $("ratioFieldBtn").onclick=async()=>{
   head("اگر فقط یکی هندسه را عوض کرد، همان نام درست است");
 };
 
+/* ---------- 🧬 موتورها: پنج مسیر تولید از بایت‌کد APK ---------- */
+/* بدنه‌ها مستقیماً از invokeSuspend این کلاس‌ها استخراج شده‌اند:
+   Image2VideoServer$createGXAiVideoTask$1        → g.P  (مسیر فعلی ما)
+   Image2VideoServer$createAiVideoLtxTask$1       → g.C
+   Image2VideoServer$createAiVideoUnifiedTask$1   → g.l  (فیلد مثال/example)
+   Image2VideoServer$createGoogleVeoVideoTask$1   → g.g0 (googleId + audio + duration)
+   Image2VideoServer$createVideoHdTaskVidu$1      → g.R  (taskId → نسخهٔ HD) */
+const ENGINES=[
+  {key:"GX",   name:"GX / beat (مسیر فعلی)", path:"/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",
+   body:u=>({imageUrls:[u],level:1,effectType:6209,prompt:$("prompt").value.trim(),quality:2})},
+  {key:"LTX",  name:"LTX (AiVideoLtx)", path:"/algo/v1/faceFusion/aigc/image2video/createTask",
+   body:(u,l,e)=>({imageUrls:[u],level:l,effectType:e})},
+  {key:"UNI",  name:"Unified (example)", path:"/algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate",
+   body:(u,l)=>({imageUrls:[u],level:l,deviceToken:"",prompt:$("prompt").value.trim(),
+                 ratio:"3:4",movementAmplitude:0,example:"",ifTest:false})},
+  {key:"VEO",  name:"Google Veo (V5)", path:"/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
+   body:(u,l,e,d)=>({imageUrls:[u],level:l,deviceToken:"",googleId:"",audio:true,
+                     prompt:$("prompt").value.trim(),duration:d,ifTest:false})},
+  {key:"HD",   name:"Vidu HD (ارتقای تسک موجود)", path:"/algo/v1/faceFusion/aigc/createVideoHdTaskVidu",
+   body:(u,l,e,d,t)=>({taskId:t,level:l,deviceToken:"",ifTest:false})}
+];
+function engCard(){
+  let box=$("engOut");
+  if(!box.dataset.init){
+    box.dataset.init="1";
+    box.innerHTML='<table style="width:100%;border-collapse:collapse;font-size:12.5px">'+
+      '<tr style="color:#8b949e">'+["موتور","اندپوینت","HTTP","c","پیام / taskId"]
+      .map(h=>'<th style="padding:6px;border-bottom:1px solid #30363d">'+h+"</th>").join("")+"</tr></table>";
+  }
+  return box.querySelector("table");
+}
+function engRow(tbl,key,path,http,c,msg){
+  const tr=document.createElement("tr");
+  const col=c===200?"#3fb950":(c? "#f85149":"#d29922");
+  tr.innerHTML=[key,path.split("/").slice(-1)[0],String(http),
+    String(c===undefined||c===null?"—":c),
+    String(msg||"").slice(0,160)]
+    .map((v,i)=>'<td style="padding:6px;border-bottom:1px solid #21262d;'+
+      (i===0?"font-weight:bold;":"")+(i===1?"direction:ltr;font-size:11px;":"")+
+      (i===3?"color:"+col+";font-weight:bold;":"")+
+      (i>=2?"direction:ltr;":"")+'">'+v+"</td>").join("");
+  tbl.appendChild(tr);
+}
+$("engBtn").onclick=async()=>{
+  const btn=$("engBtn"); btn.disabled=true;
+  const tbl=engCard();
+  try{
+    if(!uploadedUrl)return alert("اول تصویر را آپلود کنید (کارت آپلود بالای صفحه)");
+    const l=Number($("engLevel").value)||1, e=Number($("engEff").value)||6209;
+    const d=Number($("engDur").value)||8, t=$("engTask").value.trim();
+    head("🧬 آزمون پنج موتور با یک عکس");
+    for(const en of ENGINES){
+      if(en.key==="HD" && !t){ engRow(tbl,en.key,en.path,"—","—","taskId وارد نشده — رد شد"); continue; }
+      const body=en.body(uploadedUrl,l,e,d,t);
+      log("→ "+en.name+" | "+JSON.stringify(body).slice(0,200),"i");
+      const env=await postJson(en.path,body);
+      const c=env.j?env.j.c:null;
+      const tid=env.j&&env.j.d?(env.j.d.taskId||env.j.d.jobId||""):"";
+      const msg=c===200?(tid||"پاسخ ۲۰۰ بدون taskId"):(env.txt||env.error||"").slice(0,160);
+      engRow(tbl,en.key,en.path,env.http,c,msg);
+      log((c===200?"✓ ":"✗ ")+en.key+" HTTP "+env.http+" c="+c+" "+(c===200?tid:env.txt.slice(0,200)),
+          c===200?"ok":"e");
+      await sleep(600);
+    }
+    log("پایان. موتورهایی که c=200 دادند روی سرور فعال‌اند. برای هر کدام که taskId گرفتید،"+
+        " با دکمه‌های پولینگ همان مسیر یا با اصلاح مسیر کوئری، خروجی را بگیرید.","w");
+  }catch(e){ log("آزمون موتورها ناموفق: "+e.message,"e"); }
+  finally{ btn.disabled=false; }
+};
+
 /* ---------- مقایسهٔ کالیبره: یک عکس، دو بدنه ---------- */
 async function calOne(label,body,box){
   log("→ "+label+" | "+JSON.stringify(body).slice(0,220),"i");
@@ -2503,7 +2600,7 @@ let BUSY=false;
 ["qBtn","cmpBtn","hdBatteryBtn","hdBillingBtn","hdUpBtn","hdViduBtn","catKeyBtn",
  "catSweepBtn","beatDurBtn","beatQBtn","beatUpBtn2","appCmpBtn","fKnownBtn",
  "qlSweepBtn","qlDurBtn","extBtn","extRecBtn","sigBtn","sigAllBtn","labDumpBtn","labTryBtn","cmpRunBtn",
- "ratioSweepBtn","ratioFieldBtn","sCropBtn","sEffBtn","sRatioFmtBtn","zoomBtn","calBtn"].forEach(id=>{
+ "ratioSweepBtn","ratioFieldBtn","sCropBtn","sEffBtn","sRatioFmtBtn","zoomBtn","calBtn","engBtn"].forEach(id=>{
   const el=$(id); if(!el||typeof el.onclick!=="function")return;
   const orig=el.onclick;
   el.onclick=async ev=>{

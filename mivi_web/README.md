@@ -903,3 +903,65 @@ bpp خروجی خودِ اپ روی این تصویر = **۰.۱۴۱۹**، یعن
 `🔍 تشخیصی (نه حکم)` + توضیح اینکه بازکدگذاری کلیپ‌های خود اپ با انکودر ما همان
 bpp را می‌دهد (۱.۰۱×) و خروجی خود اپ هم روی عکس تازه به ۰.۱۴۱۹ رسید.
 برچسب فایل: `2026-10-29t`.
+
+## 🧬 بستن نقاط تاریک: کل APK دوباره رمزگشایی شد (۲۰۲۶-۱۰-۲۹ ۱۶:۰۰)
+
+APK از سه بخش آپلودشده در گوگل‌درایو بازسازی شد
+(`cat z01 z02 zip > full.zip` ⇒ `Mivi AI_2.37.407.apk`، ۱۹۶٫۶ MB) و با
+`androguard` در venv تحلیل شد. جزئیات کامل در فایل تازهٔ **`API_MAP.md`**؛
+خلاصهٔ یافته‌ها:
+
+### ۱) اپ ۱۳ موتور دارد، نه یکی
+
+enum `com.ufotosoft.ai.image2video.P2Type`:
+
+```
+GX_AiVideoP2V · AiVideoLtx · AiVideoPixVerse · AiVideoUnify ·
+AiVideoGoogleVeo · AiVideoHD · AiVideoHDVidu · AiVideoT2V ·
+AiText2VideoUnify · AiSequenceVideo · AiHug · AiHugP2V · AiDance
+```
+
+مسیر فعلی ما `GX_AiVideoP2V` است. نام فایل خروجی‌اش
+`img2video_wanlora-*.mp4` هم همین را تأیید می‌کند.
+
+### ۲) پنج مسیر ورودی-عکس و بدنهٔ دقیق‌شان (از بایت‌کد `invokeSuspend`)
+
+| مسیر | متد سرور | بدنه |
+|---|---|---|
+| GX/beat (فعلی) | `y` | `imageUrls, level, effectType, imageEffectType?, prompt?, quality?` |
+| LTX | `v` | `imageUrls, level, effectType` |
+| Unified | `w` | `imageUrls, level, deviceToken, prompt, ratio, movementAmplitude, example, ifTest` |
+| **Google Veo** | `z` | `imageUrls, level, deviceToken, googleId, audio, prompt, duration, ifTest` |
+| **Vidu HD** | `F` | `taskId, level, deviceToken, ifTest` |
+
+دو نکتهٔ مهم:
+- **`duration` واقعاً به سرور می‌رود، اما فقط در مسیر Veo.** در مسیر beat نادیده
+  گرفته می‌شد — و این توضیح می‌دهد چرا هر تلاشی برای مدت ۶ ثانیه شکست خورد.
+- **`audio: true`** فقط در مسیر Veo هست (Veo 3 با صدا).
+- **Vidu HD ورودی‌اش `taskId` است، نه عکس** ⇒ یک مرحلهٔ *پس از تولید* که همان
+  تسک را با کیفیت بالاتر دوباره می‌سازد. این تنها چیزی است که می‌تواند همان
+  «ایهنسر»ی باشد که حس شده بود.
+
+### ۳) `example` رازش حل شد (نصفه)
+
+فیلد `example` در مسیر Unified و Sequence هست، ولی هیچ مقدار ثابتی در APK ندارد:
+از کاتالوگ قالب سرور پر می‌شود. پس «۴۰۴/۱۰۱۳» قبلی یک محدودیت واقعی برای
+*این* مسیر است، نه باگ ما — و مسیر beat درست انتخاب شده بود.
+
+### ۴) «Enhance» ابزار مستقل است، نه حالت Pro
+
+`toolGroups` کاتالوگ دقیقاً سه ورودی دارد و همان سه کاشی اسکرین‌شات است:
+`5074 Custom_Ai_Video` · `5075 AI_Expand` · `5076 AI_Enhance`.
+یعنی متن «Pro: 720p & Enhanced Visuals» برچسب بازاریابی است؛ تقویت واقعی
+اندپوینت جدای `createSuperResolutionNew` / `createVideoHdTaskVidu` است.
+
+### ۵) کارت تازهٔ 🧬 در probe (نسخهٔ `2026-10-29w`)
+
+دکمهٔ «اجرای هر پنج مسیر» با **یک عکس** هر پنج اندپوینت بالا را با بدنهٔ دقیق
+خودش صدا می‌زند و `HTTP`/`c`/`taskId` هرکدام را در جدول می‌نویسد. با یک کلیک
+معلوم می‌شود کدام موتورها روی سرور زنده‌اند.
+
+### ابزارهای بازتولیدپذیر
+
+`mivi_web/re/` : `dexann.py` (پارسر مستقل annotation)، `xref2.py` (ارجاع
+رشته→متد)، `m2.py` (دیس‌اسمبل یک متد)، `dumpclass.py`، `fields.py`.
