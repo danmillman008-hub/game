@@ -1130,3 +1130,21 @@ AiText2VideoUnify · AiSequenceVideo · AiHug · AiHugP2V · AiDance
 همچنین: `queryAiPhotoModels` با `loraId` کار می‌کند (یعنی سرور فهرست LoRA
 دارد)، `image2VideoDetect` و `getFaceInfo` هر دو با `imageUrls` کار می‌کنند،
 و `getAllPoseSequenceId` روی هیچ‌کدام از دو هاست منتشر نشده (۴۰۴).
+
+
+## کاتالوگ موتورها (mivi_catalog.html)
+
+فایل تک‌صفحه‌ای `mivi_catalog.html` فهرست کامل را می‌دهد: ۱۳ موتور enum با
+اندپوینت و وضعیت، خروجی اندازه‌گیری‌شدهٔ هر موتور، زنجیرهٔ خطاهای Veo، و جدول
+جست‌وجوپذیر ۲۷۸ افکت (۲۷۷ افکت کاتالوگ + `6209`). با `python3 make_catalog.py`
+از `catalog_effects.json` ساخته می‌شود.
+
+| موتور | وضعیت | خروجی |
+|---|---|---|
+| GX (`effectType=6209`) | ✅ | ۹۶۰×۱۲۸۰ |
+| `img2video_wanlora` | ✅ | ۴۳۲×۵۷۶ |
+| `i2v_14b_v131` (`7600`) | ✅ | ۵۶۲×۷۴۸ |
+| Google Veo (V5) | ⛔ | `effectType illegal` در ۱۸ درخواست + ۵۰ جاروب |
+| PixVerse (V3) | ⛔ | `invalid user` |
+| Unified / Sequence | ⛔ | `example` / `effectType` |
+| Vidu HD | ⛔ | متادیتای ویدیوی ساخته‌شده لازم دارد |

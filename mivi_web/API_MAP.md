@@ -468,3 +468,65 @@ fileTime + width + height` است. `fileTime=0` به‌عنوان «خالی» �
    `INTEGRATED_60019-…` هیچ کوئری‌ای نداشتند: **هرگز از درِ درست وارد نشدند.**
 3. **`getAllPoseSequenceId` با annotation نوع `Lak/f;` علامت خورده، نه `Lak/o;`**
    مثل بقیه. یعنی متد دیگری (احتمالاً GET) است؛ POST دادن ۴۰۴ منطقی است.
+
+---
+
+# پیوست ۵: آخرین تلاش برای باز کردن Veo و PixVerse (۲۹ اکتبر، ۱۵:۲۲)
+
+## ۱) بدنهٔ Veo در اپ `effectType` ندارد، ولی سرور می‌خواهد
+
+بازخوانی `Image2VideoServer$createGoogleVeoVideoTask$1` دوباره چک شد؛ کلیدهایی که
+اپ `put` می‌کند دقیقاً این‌ها هستند:
+
+```
+imageUrls (Object) · level (I) · deviceToken (Object) · googleId (Object)
+audio (Z) · prompt (Object) · duration (I) · ifTest (Z)
+```
+
+و `Image2VideoTask.c3(...)` (همان `startGoogleVeoVideo`، نام پارامترهای Kotlin داخل
+`Intrinsics.i` دیده می‌شود) این‌ها را در `HashMap` می‌گذارد:
+
+```
+googleId = veoId      ← مقدار پارامتر اول متد
+audio    = String.valueOf(boolean)
+```
+
+پس `googleId` همان `veoId` است و **اپ هیچ‌جا `effectType` نمی‌فرستد** (فقط HashMap
+اضافی ورودی merge می‌شود). با این حال سرور روی V5 همیشه
+`c=1013 param error: effectType illegal` می‌دهد.
+
+## ۲) هجده درخواست V5، هیچ‌کدام نساخت
+
+| درخواست | پاسخ |
+|---|---|
+| `googleId` خالی | `c=400 googleId 不能为空` |
+| `googleId=1`, بدون `effectType` | `c=1013 effectType illegal` |
+| `googleId` ∈ {0,1,100,1234567890123}, بدون `effectType` | `c=1013 effectType illegal` |
+| `effectType` ∈ {4899, 4991, 6093, 7849, 6209} + `googleId=1` | `c=1013 effectType illegal` |
+| `audio=true, duration=8, level=2` | `c=1013 effectType illegal` |
+| بدون `duration` | `c=1013 effectType illegal` |
+| `googleId="veo3"` (تست قدیمی) | `c=500 NumberFormatException` |
+
+⇒ ترتیب اعتبارسنجی: اول `googleId` (باید عدد باشد)، بعد `effectType` که باید در
+یک فهرست سفید مخصوص Veo باشد — فهرستی که نه در APK هست و نه در کاتالوگ ۲۷۷ افکت.
+
+## ۳) جاروب ۵۰ مقدار `effectType` روی V5
+
+مقادیر ۰..۲۰، ۱۰۰..۵۰۰، ۱۰۰۰..۱۰۰۳، ۲۰۰۰..۲۰۰۲، ۳۰۰۰، ۴۰۰۰، ۵۰۰۰، ۵۴۰۰،
+۶۰۰۰، ۶۰۰۱، ۶۱۰۰، ۷۰۰۰، ۷۱۰۰، ۷۲۰۰، ۷۹۰۰، ۸۰۰۰، ۹۰۰۰، ۹۹۹۹، ۱۰۰۰۰، ۱۰۰۰۱،
+۳۱۱۰۰ — **همه بدون استثنا `effectType illegal`**. یعنی حدس زدن بازه بی‌فایده است.
+
+## ۴) PixVerse (`image2VideoCreateV3`) به حساب PixVerse بسته است
+
+| درخواست | پاسخ |
+|---|---|
+| `pixVerseId=1` + `effectType=4991` | `c=1001 invalid user` |
+| `pixVerseId=0` + `effectType=4991` | `c=1001 param error: param effectType illegal` |
+
+`pixVerseId=1` باعث می‌شود سرور سراغ کاربر برود و ردش کند ⇒ این فیلد شناسهٔ
+حساب PixVerse است، نه یک عدد دلخواه. (مقدار صفر می‌گذرد و به مرحلهٔ بعد می‌رسد.)
+
+## ۵) جمع‌بندی موتورها
+
+فقط `beatImage2Video/createNormalTask` باز است و از همان دروازه سه موتور پشت
+سرور بیرون می‌آید. اندازهٔ خروجی هر افکت سمت سرور قفل است.
