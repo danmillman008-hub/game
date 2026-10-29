@@ -138,6 +138,10 @@ def render_shot(d: Path, proj: dict, s: dict, quality: int, takes: int) -> bool:
 
 
 def finish(d: Path, proj: dict):
+    vo_dir = d / "audio" / "vo"
+    if vo_dir.exists() and list(vo_dir.glob("*.mp3")):
+        log("voice track on the cut timeline")
+        K.cmd_vo(argparse.Namespace(name=str(d), crossfade=None))
     log("assemble")
     K.cmd_assemble(argparse.Namespace(name=str(d), crossfade=None, subs=None,
                                      vo=None, music=None, duck=False))
