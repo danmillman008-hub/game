@@ -1,13 +1,15 @@
-"""The stitch endpoint turned out to be an image COMPOSER (engine gx_img2img_speed_2511):
-two photos in, one 960x1280 picture out. Does it also take a prompt? That would be
-the image+prompt -> image tool we were after.
+"""Diagnostics for the five stubborn endpoints.
+
+Goal: tell apart "we send the wrong body" from "the server side is broken".
+An endpoint that answers NullPointerException to an EMPTY body never ran its
+validation, which means the bug is theirs, not ours.
 """
-import json, hashlib, time, urllib.request, urllib.error, pathlib, subprocess
+import json, hashlib, time, urllib.request, urllib.error, pathlib
 
 HOST = "https://cpi.ufotosoft.com"
 CP = "instagram.story.art.collage"; USER = "7da75eed37c61d33"
-A = "http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"
-B = "http://algo.ufotosoft.com/original/261029/56061a5f-6fed-4807-904e-aa42782de3df.jpeg"
+IMG = "http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"
+IMG2 = "http://algo.ufotosoft.com/original/261029/56061a5f-6fed-4807-904e-aa42782de3df.jpeg"
 OUT = []
 def p(*a):
     s = " ".join(str(x) for x in a); print(s, flush=True); OUT.append(s)
@@ -27,39 +29,58 @@ def call(path, body):
         except Exception: return {"_http": e.code}
     except Exception as e: return {"_err": repr(e)[:100]}
 
-def dl(url, dest):
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-    with urllib.request.urlopen(req, timeout=180) as r, open(dest, "wb") as o: o.write(r.read())
-    return dest
+def brief(r):
+    return f"c={r.get('c') or r.get('_http')} m={str(r.get('m'))[:70]} d={json.dumps(r.get('d'), ensure_ascii=False)[:90]}"
+
+# ---------- 1) does image2image validate at all?
+II = "/algo/v1/faceFusion/aigc/image2image/createImageTask"
+for tag, body in [("empty", {}), ("only_urls", {"imageUrls": [IMG]}),
+                  ("urls_style", {"imageUrls": [IMG], "styleId": 1}),
+                  ("keys", {"imageKeys": [IMG], "styleId": 1})]:
+    p(f"[img2img {tag}]", brief(call(II, body)))
+
+# ---------- 2) does inpaintCleaner validate at all?
+IC = "/algo/v1/faceFusion/aigc/createInpaintCleaner"
+p("[cleaner empty]", brief(call(IC, {})))
+r = call("/algo/v1/faceFusion/aigc/createInpaintAnything", {"imageUrls": [IMG], "level": 1, "deviceToken": "", "ifTest": False})
+masks = [x.get("url") for x in ((r.get("d") or {}).get("maskUrlList") or [])]
+p("[masks]", len(masks))
+if masks:
+    p("[cleaner real]", brief(call(IC, {"imageUrls": [IMG], "maskUrls": [masks[0]]})))
+    p("[cleaner img2]", brief(call(IC, {"imageUrls": [IMG], "maskUrls": [masks[-1]]})))
+
+# ---------- 3) livePortrait: token / ifFace + which query answers
+LP = "/algo/v1/faceFusion/aigc/livePortraitCreate"
+tasks = []
+for tag, extra in [("tok_empty", {"token": ""}), ("ifFace_true", {"token": "", "ifFace": True}),
+                   ("ifFace_false", {"token": "", "ifFace": False})]:
+    r = call(LP, {"imageUrls": [IMG], "level": 1, "modelId": 1, **extra})
+    tid = (r.get("d") or {}).get("taskId", "") if isinstance(r.get("d"), dict) else ""
+    p(f"[live {tag}]", brief(r))
+    if tid: tasks.append(tid)
+
+tid = tasks[0] if tasks else ""
+if tid:
+    time.sleep(20)
+    for q in ["/algo/v1/faceFusion/aigc/livePortraitQuery",
+              "/algo/v1/faceFusion/aigc/image2VideoQuery",
+              "/algo/v1/faceFusion/aigc/queryAiPhotoTask",
+              "/algo/v1/faceFusion/aigc/image2video/queryTask"]:
+        p(f"[live q {q.rsplit('/')[ -1]}]", brief(call(q, {"taskId": tid})))
+
+# ---------- 4) image2VideoCreateV2: does poseSequenceId want a small int?
+V2 = "/algo/v1/faceFusion/aigc/image2VideoCreateV2"
+for pose in ["1", "2", "10", 1, 10]:
+    p(f"[v2 pose={pose!r}]", brief(call(V2, {"imageUrls": [IMG], "level": 1, "deviceToken": "",
+                                                "effectType": 0, "poseSequenceId": pose,
+                                                "duration": 4, "prompt": "", "enhance": False, "ifTest": False})))
+
+# ---------- 5) emoVideo with the extra fields its builder sends
+EM = "/algo/v1/faceFusion/aigc/emoVideoCreate"
+for tag, extra in [("with_token", {"token": "", "signKey": "", "templateid": 1}),
+                   ("with_special", {"specialPic": IMG, "face_bbox": "", "ext_bbox": ""})]:
+    p(f"[emo {tag}]", brief(call(EM, {"imageKey": IMG, "audioKey": IMG, "level": 1,
+                                      "deviceToken": "", "ifTest": False, **extra})))
 
 pathlib.Path("probe_out").mkdir(exist_ok=True)
-BASE = {"level": 1, "deviceToken": "", "ifTest": False}
-
-CASES = [
-    ("one_prompt", {"imageUrls": [A], "prompt": "same person, golden hour light, looking at camera"}),
-    ("two_prompt", {"imageUrls": [A, B], "prompt": "the two people stand side by side in a studio"}),
-    ("two_ratio", {"imageUrls": [A, B], "prompt": "the two people stand side by side", "videoRatio": "3:4"}),
-]
-
-for tag, extra in CASES:
-    r = call("/algo/v1/faceFusion/aigc/stitchImage/createTask", {**BASE, **extra})
-    tid = (r.get("d") or {}).get("taskId", "") if isinstance(r.get("d"), dict) else ""
-    p(f"[{tag} create] c={r.get('c')} {str(r.get('m'))[:60]} tid={str(tid)[:34]}")
-    if not tid: continue
-    for i in range(60):
-        time.sleep(6)
-        q = call("/algo/v1/faceFusion/aigc/stitchImage/queryTask", {"taskId": tid})
-        d = q.get("d") or {}
-        u = d.get("responseUrl") or d.get("imageUrl") or d.get("url")
-        if u:
-            f = dl(u, f"probe_out/st_{tag}.bin")
-            out = subprocess.run('/tmp/ffmpeg -y -v error -i "%s" -frames:v 1 -q:v 2 probe_out/st_%s.jpg' % (f, tag),
-                                 shell=True, capture_output=True, text=True)
-            p(f"[{tag} out] {u[:100]} {pathlib.Path(f).stat().st_size} bytes")
-            break
-        if str(d.get("taskStatus", "")).lower() in ("failed", "fail"):
-            p(f"[{tag} fail]", json.dumps(d, ensure_ascii=False)[:120]); break
-    else:
-        p(f"[{tag}] timeout")
-
 pathlib.Path("probe_out/out.txt").write_text("\n".join(OUT), encoding="utf-8")
