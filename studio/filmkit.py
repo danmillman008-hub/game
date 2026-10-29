@@ -59,6 +59,7 @@ def ffprobe_bin():
 
 
 FF, FP = None, None
+SHOT_LEN = 4.03          # what the engine actually returns; measured, not configurable
 
 
 def run(args, timeout=1800) -> str:
@@ -439,6 +440,36 @@ def cmd_mix(a):
     print(json.dumps(probe(src)))
 
 
+def _ts(t: float) -> str:
+    t = max(0.0, t)
+    h = int(t // 3600); m = int((t % 3600) // 60); sec = t % 60
+    return f"{h:02d}:{m:02d}:{sec:06.3f}".replace(".", ",")
+
+
+def cmd_srt(a):
+    """Generate subs/final.srt from each shot's `narration`, on the real cut timeline."""
+    d, proj = load(a.name)
+    (d / "subs").mkdir(parents=True, exist_ok=True)
+    xf = float(a.crossfade if a.crossfade is not None else (proj.get("crossfade_s") or 0))
+    step = SHOT_LEN - xf
+    cps = float(a.cps or 14.0)          # Persian subtitle reading speed, chars/second
+    blocks, t, n = [], 0.0, 0
+    for s_ in proj["shots"]:
+        if not s_.get("clip"):
+            t += step
+            continue
+        line = (s_.get("narration") or "").strip()
+        if line:
+            n += 1
+            start = t + 0.30
+            dur = min(SHOT_LEN - 0.45, max(1.2, len(line) / cps))
+            blocks.append(f"{n}\n{_ts(start)} --> {_ts(start + dur)}\n{line}\n")
+        t += step
+    out = d / "subs" / "final.srt"
+    out.write_text("\n".join(blocks), encoding="utf-8")
+    print(f"{n} subtitle cues -> {out}  (timeline step {step:.2f}s, xfade {xf}s)")
+
+
 def cmd_qc(a):
     d, proj = load(a.name)
     (d / "qc").mkdir(parents=True, exist_ok=True)
@@ -563,6 +594,10 @@ def main():
     p = sub.add_parser("mix"); p.add_argument("name"); p.add_argument("--vo"); p.add_argument("--music")
     p.add_argument("--duck", action="store_true"); p.add_argument("--out")
     p.set_defaults(fn=cmd_mix)
+
+    p = sub.add_parser("srt"); p.add_argument("name")
+    p.add_argument("--crossfade", type=float); p.add_argument("--cps", type=float)
+    p.set_defaults(fn=cmd_srt)
 
     p = sub.add_parser("qc"); p.add_argument("name"); p.set_defaults(fn=cmd_qc)
 

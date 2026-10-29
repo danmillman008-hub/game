@@ -43,8 +43,12 @@ JOBS = [
 
 for tag, a_ref, b_ref, prompt in JOBS:
     p(f"\n[{tag}] compose")
-    r = M.t_compose({"images": [str(A / a_ref), str(A / b_ref)], "prompt": prompt,
-                     "out": str(OUT / f"{tag}.jpeg"), "timeout_s": 420})
+    try:
+        r = M.t_compose({"images": [str(A / a_ref), str(A / b_ref)], "prompt": prompt,
+                         "out": str(OUT / f"{tag}.jpeg"), "timeout_s": 420})
+    except Exception as exc:
+        p(f"  EXC {type(exc).__name__}: {exc}")
+        continue
     p("  ->", json.dumps(r)[:220])
     if r.get("saved"):
         from PIL import Image
@@ -52,3 +56,4 @@ for tag, a_ref, b_ref, prompt in JOBS:
         p(f"  size {im.size}  {pathlib.Path(r['saved']).stat().st_size} B")
 
 (OUT / "images_log.txt").write_text("\n".join(LOG), encoding="utf-8")
+pathlib.Path("probe_out/out.txt").write_text("\n".join(LOG), encoding="utf-8")
