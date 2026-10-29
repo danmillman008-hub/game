@@ -35,25 +35,21 @@ QUERIES = ["/algo/v1/faceFusion/aigc/image2VideoQuery",
 
 def v5(tag, et, gid, audio, dur, level):
     body = {"imageUrls": [IMG], "level": level, "deviceToken": "", "audio": audio,
-            "prompt": "", "duration": dur, "ifTest": False}
+            "prompt": "", "ifTest": False}
+    if dur is not None: body["duration"] = dur
     if gid is not None: body["googleId"] = gid
     if et is not None: body["effectType"] = et
     return tag, V5, body
 
 TRIALS = [
-    v5("v5_4899_g1",     4899, 1,     False, 6, 1),
-    v5("v5_4899_g1_720a", 4899, 1,    True,  8, 2),
-    v5("v5_4991_g1",     4991, 1,     False, 6, 1),
-    v5("v5_6093_g1",     6093, 1,     False, 6, 1),
-    v5("v5_7849_g1",     7849, 1,     False, 6, 1),
-    v5("v5_4899_g0",     4899, 0,     False, 6, 1),
-    v5("v5_6209_g1",     6209, 1,     False, 6, 1),
-    v5("v5_4899_nog",    4899, None,  False, 6, 1),
-    # PixVerse V3: needs pixVerseId
-    ("v3_pv1", V3, {"imageUrls": [IMG], "level": 1, "deviceToken": "", "ifTest": False,
-                    "pixVerseId": "1", "effectType": 4991, "prompt": ""}),
-    ("v3_pv0", V3, {"imageUrls": [IMG], "level": 1, "deviceToken": "", "ifTest": False,
-                    "pixVerseId": "0", "effectType": 4991, "prompt": ""}),
+    ("v5_g1",        None, "1",    False, 6, 1),
+    ("v5_g1_720",    None, "1",    False, 6, 2),
+    ("v5_g1_audio8", None, "1",    True,  8, 2),
+    ("v5_g0",        None, "0",    False, 6, 1),
+    ("v5_g100",      None, "100",  False, 6, 1),
+    ("v5_gbig",      None, "1234567890123", False, 6, 1),
+    ("v5_g1_nodur",  None, "1",    False, None, 1),
+    ("v5_g1_ctl",    6209, "1",    False, 6, 1),
 ]
 
 p("=== veo / pixverse unlock sweep", time.strftime("%H:%M:%SZ", time.gmtime()), "===")
