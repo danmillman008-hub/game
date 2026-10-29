@@ -43,7 +43,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28i</span></h1>
+  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28j</span></h1>
   <div class="muted" style="margin-bottom:14px">
     هدف: کشف شرط بازشدن اندپوینت
     <code>/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5</code>.
@@ -219,6 +219,23 @@
       <div style="max-width:280px"><label>&nbsp;</label><button id="appCmpBtn" type="button">🔬 تحلیل و مقایسه با مبنای beat</button></div>
     </div>
     <div id="appCmpOut" style="margin-top:12px"></div>
+  </div>
+
+  <div class="card">
+    <h2>🎚️ آزمایشگاه j: کیفیت و مدت در همان مسیر زندهٔ beat</h2>
+    <div class="muted" style="margin-bottom:10px">
+      مسیر beat تنها مسیر کارآمد است، پس اهرم‌های کیفیت را روی خودش امتحان می‌کنیم:
+      آیا <code>duration</code> اضافی مدت را از ۴ به ۶ ثانیه می‌برد؟ آیا <code>level</code> بالاتر
+      رزولوشن/بیت‌ریت را بالا می‌برد؟ و آیا اگر عکس ورودی را ۲× بزرگ کنیم، سرور خروجی
+      بزرگ‌تری می‌دهد؟ هر مورد پس از ساخت، خودکار فارنزیک و در جدول ثبت می‌شود.
+      (اول تصویر را آپلود کنید.)
+    </div>
+    <div class="row">
+      <div style="max-width:250px"><label>&nbsp;</label><button id="beatDurBtn" type="button">⑤ تست مدت ۶ ثانیه</button></div>
+      <div style="max-width:300px"><label>&nbsp;</label><button class="ghost" id="beatQBtn" type="button">⑥ باتری کیفیت beat (۴ مورد)</button></div>
+      <div style="max-width:250px"><label>&nbsp;</label><button class="ghost" id="beatUpBtn2" type="button">⑦ فقط ورودی ۲× بزرگ</button></div>
+    </div>
+    <div id="beatOut" style="margin-top:14px"></div>
   </div>
 
   <div class="card">
@@ -1021,7 +1038,99 @@ $("appCmpBtn").onclick=async()=>{
   finally{ btn.disabled=false; }
 };
 
-log("آماده [نسخهٔ باتری: 2026-10-28i — اگر این برچسب را نمی‌بینید فایل کش شده است]. userId="+CFG.userId,"ok");
+/* ---------- آزمایشگاه j: مدت و کیفیت در مسیر beat ---------- */
+async function uploadBlob(blob,name){
+  const fd=new FormData();fd.append("files",blob,name);
+  const r=await fetch(apiUrl("/algo/v1/aiGenerate-aigc/multipleUpload"),
+    {method:"POST",headers:uploadHeaders(),body:fd});
+  const j=await r.json();
+  if(j.c!==200||!j.d||!j.d.length)throw new Error("c="+j.c+" m="+j.m);
+  return j.d[0];
+}
+async function upscaleInput(factor){
+  const f=$("file").files[0];
+  if(!f)throw new Error("اول تصویر را انتخاب کنید");
+  const img=await createImageBitmap(f);
+  const c=document.createElement("canvas");
+  c.width=Math.round(img.width*factor); c.height=Math.round(img.height*factor);
+  const g=c.getContext("2d");
+  g.imageSmoothingEnabled=true; g.imageSmoothingQuality="high";
+  g.drawImage(img,0,0,c.width,c.height);
+  const blob=await new Promise(r=>c.toBlob(r,"image/jpeg",0.95));
+  log("عکس بزرگ‌شده: "+img.width+"×"+img.height+" → "+c.width+"×"+c.height
+    +" ("+Math.round(blob.size/1024)+" KB)","i");
+  return await uploadBlob(blob,"up"+factor+"x.jpg");
+}
+function beatRow(label,r,u){
+  const tb=$("beatOut");
+  let tbl=tb.querySelector("table");
+  if(!tbl){
+    tbl=document.createElement("table");
+    tbl.style.cssText="width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px";
+    tbl.innerHTML='<tr style="color:#8b949e;text-align:right">'+
+      ["مورد","رزولوشن","مدت","حجم","Mbps","لینک"].map(h=>'<th style="padding:6px;border-bottom:1px solid #30363d">'+h+"</th>").join("")+"</tr>";
+    tb.prepend(tbl);
+  }
+  const mbps=(r.size*8/Math.max(r.durationSec,0.1)/1e6).toFixed(1);
+  const tr=document.createElement("tr");
+  tr.innerHTML=[label,r.width+"×"+r.height,r.durationSec.toFixed(2)+"s",
+    (r.size/1048576).toFixed(2)+" MB",mbps,
+    '<a href="'+u+'" target="_blank" rel="noopener">باز کردن</a>']
+    .map(v=>'<td style="padding:6px;border-bottom:1px solid #21262d">'+v+"</td>").join("");
+  tbl.appendChild(tr);
+}
+async function beatRun(label,over){
+  head("beat — "+label);
+  const body=Object.assign({imageUrls:[uploadedUrl],level:1,effectType:6209,
+    prompt:$("prompt").value.trim(),quality:2},over||{});
+  log("BODY "+JSON.stringify(body));
+  const env=await postJson("/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",body);
+  if(!(env.j&&env.j.c===200)){ log("ساخت تسک ناموفق: "+env.txt.slice(0,300),"e"); return null; }
+  log("پاسخ ساخت: "+env.txt.slice(0,400),"ok");
+  const tid=env.j.d&&(env.j.d.taskId||env.j.d.jobId);
+  if(!tid){ log("taskId در پاسخ نبود","e"); return null; }
+  log("taskId="+tid,"w");
+  let vu;
+  try{ vu=await pollBeat(tid,8*60*1000); }
+  catch(e){ log("polling ناموفق: "+e.message,"e"); return null; }
+  log("خروجی: "+vu,"ok");
+  try{
+    const r=await forensicFromUrl(vu,"beat — "+label);
+    beatRow(label,r,vu);
+    return {vu,r};
+  }catch(e){ log("فارنزیک ناموفق: "+e.message,"e"); return {vu,r:null}; }
+}
+$("beatDurBtn").onclick=async()=>{
+  if(!uploadedUrl)return alert("اول تصویر را آپلود کنید");
+  const btn=$("beatDurBtn"); btn.disabled=true;
+  try{
+    await beatRun("مدت ۶ (duration=6)",{duration:6});
+    await beatRun("مدت ۶ (duration+seconds+videoDuration)",{duration:6,seconds:6,videoDuration:6});
+  }finally{ btn.disabled=false; }
+};
+$("beatUpBtn2").onclick=async()=>{
+  const btn=$("beatUpBtn2"); btn.disabled=true;
+  try{
+    const u=await upscaleInput(2);
+    await beatRun("ورودی ۲× بزرگ‌شده",{imageUrls:[u]});
+  }catch(e){ log("خطا: "+e.message,"e"); }
+  finally{ btn.disabled=false; }
+};
+$("beatQBtn").onclick=async()=>{
+  if(!uploadedUrl)return alert("اول تصویر را آپلود کنید");
+  const btn=$("beatQBtn"); btn.disabled=true;
+  try{
+    await beatRun("مبنا: level=1, quality=2",{});
+    await beatRun("level=2",{level:2});
+    await beatRun("level=3",{level:3});
+    let up=null;
+    try{ up=await upscaleInput(2); }catch(e){ log("بزرگ‌کردن ورودی ناموفق: "+e.message,"e"); }
+    if(up)await beatRun("level=1 + ورودی ۲× بزرگ",{imageUrls:[up]});
+  }finally{ btn.disabled=false; }
+  head("پایان باتری کیفیت beat — جدول بالا را مقایسه کنید (مبنا: 1280×960 / 4.00s / ~17.4Mbps)");
+};
+
+log("آماده [نسخهٔ باتری: 2026-10-28j — اگر این برچسب را نمی‌بینید فایل کش شده است]. userId="+CFG.userId,"ok");
 </script>
 </body>
 </html>
