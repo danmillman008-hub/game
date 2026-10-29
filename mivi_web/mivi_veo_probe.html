@@ -43,7 +43,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28m</span></h1>
+  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28o</span></h1>
   <div class="muted" style="margin-bottom:14px">
     هدف: کشف شرط بازشدن اندپوینت
     <code>/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5</code>.
@@ -300,6 +300,50 @@
   </div>
 
   <div class="card">
+    <h2>🔬 امضای فنی v2: مقایسهٔ مستقیم با نمونهٔ باکیفیت اپ</h2>
+    <div class="muted" style="margin-bottom:10px">
+      نمونهٔ ویدیوی اپ (که خودتان دادید) کامل تحلیل شد. مهم‌ترین یافته:
+      <b>CRF 19</b> با همان انکودر <code>x264 core 164 r3191</code> که خروجی ما هم دارد —
+      یعنی تفاوت کیفیت از تنظیمات انکود نیست، از خودِ موتور است. اختلاف پروفایل‌ها:
+      <br>• نمونهٔ اپ: <code>960×1280</code> عمودی · <b>۳۲ فریم/ثانیه</b> · ۱۲۹ فریم ·
+      <b>3.58 Mbps</b> · <code>High profile level 3.2</code> · moov آخر فایل (مثل ما) ·
+      بدون <code>Lavf</code>/<code>mdta</code>
+      <br>• خروجی ما (q=2): <code>1280×960</code> افقی · ۴.۰s · <b>17.4 Mbps</b> ·
+      ۸.۷۲MB · با <code>Lavf61</code> و <code>mdta</code>
+      <br>هر دو ۱.۲۳ مگاپیکسل‌اند، پس اختلاف ۵ برابری بیت‌ریت یعنی محتوای ما پُرنویز و
+      سخت‌فشرده است — نشانهٔ خروجی مدل ضعیف‌تر. این کارت همان امضا را روی خروجی‌های ما
+      محاسبه می‌کند تا تفاوت‌ها عددی ثابت شوند.
+    </div>
+    <div class="row">
+      <div style="flex:3"><label>لینک ویدیو برای امضای فنی (پیش‌فرض: خروجی q=2 خودمان)</label>
+        <input id="sigUrl" dir="ltr" value="https://algo-v1.wiseoel.com/temp/60014/261029/f0fe0420e19c447693f82323b29fb95a.mp4">
+      </div>
+      <div style="max-width:230px"><label>&nbsp;</label><button id="sigBtn" type="button">🔬 محاسبهٔ امضا</button></div>
+      <div style="max-width:260px"><label>&nbsp;</label><button class="ghost" id="sigAllBtn" type="button">🔬 همهٔ ویدیوهای شناخته‌شده</button></div>
+    </div>
+    <div id="sigOut" style="margin-top:14px"></div>
+  </div>
+
+  <div class="card">
+    <h2>🤖 آزمایشگاه o: کشف مدل‌های پرمیوم از aiLabGroupList</h2>
+    <div class="muted" style="margin-bottom:10px">
+      کاتالوگ زنده علاوه بر <code>groupList</code> سه بخش دیگر دارد:
+      <code>aiLabGroupList</code>، <code>toolGroupList</code> و <code>bannerDataList</code>.
+      «AI Lab» در این اپ همان‌جایی است که مدل‌های پرمیوم/مدل‌محور فهرست می‌شوند و منابع آن
+      کلیدهای <code>modelType</code>, <code>modelName</code>, <code>nanoModel</code>,
+      <code>creditVersion</code>, <code>outputRatio</code> را حمل می‌کنند — یعنی شناسهٔ مدل
+      که در V5 به‌جای <code>example</code> لازم است. این کارت آن بخش‌ها را استخراج و
+      تلاش می‌کند شناسهٔ مدل را روی V5 و unified بفرستد.
+    </div>
+    <div class="row">
+      <div style="max-width:300px"><label>&nbsp;</label><button id="labDumpBtn" type="button">🧾 استخراج AI Lab و مدل‌ها</button></div>
+      <div style="max-width:300px"><label>&nbsp;</label><button class="ghost" id="labTryBtn" type="button">🚀 آزمودن شناسه‌های مدل روی V5</button></div>
+      <div style="max-width:220px"><label>&nbsp;</label><button class="ghost" id="labDlBtn" type="button" disabled>⬇️ دانلود JSON</button></div>
+    </div>
+    <div id="labOut" style="margin-top:14px"></div>
+  </div>
+
+  <div class="card">
     <h2>۴) ارسال دستی</h2>
     <div class="row">
       <div style="flex:2">
@@ -449,7 +493,7 @@ function loadCfg(){
   return c;
 }
 let CFG=loadCfg();
-const VER="2026-10-28m";
+const VER="2026-10-28o";
 const $=id=>document.getElementById(id);
 $("host").value=CFG.host;$("connMode").value=CFG.connMode;
 $("customProxy").value=CFG.customProxy;$("userId").value=CFG.userId;
@@ -755,7 +799,7 @@ function analyzeMp4(buf){
       // VisualSampleEntry: 8 (ref fields) + 16 (reserved) = 24 بایت از شروع payload → width
       // این منبع اصلی و معتبر ابعاد است؛ هر بار بازنویسی کن تا بر tkhd اولویت داشته باشد
       if(["avc1","avc3","hvc1","hev1"].includes(type)){
-        const w=dv.getUint16(p+8+24), h=dv.getUint16(p+8+26);
+        const w=dv.getUint16(p+8+32), h=dv.getUint16(p+8+34);
         if(w>0&&h>0){out.width=w;out.height=h;out.codec=type;}
       }
       // fallback: ابعاد در tkhd به‌صورت fixed-point 16.16 (فقط اگر SampleEntry هنوز چیزی نداده)
@@ -1356,6 +1400,264 @@ $("qlDurBtn").onclick=async()=>{
   await qlRun("مدت ۶ با duration+seconds+videoDuration",{duration:6,seconds:6,videoDuration:6});
 };
 
+/* ---------- آزمایشگاه o: کشف مدل‌های AI Lab ---------- */
+let LAB_JSON=null;
+function flattenLab(cat){
+  const out=[];
+  const take=(arr,src)=>{
+    if(!Array.isArray(arr))return;
+    arr.forEach(g=>{
+      const res=g.resourceList||g.resourceItemList||g.resources||[];
+      (Array.isArray(res)?res:[]).forEach(r=>out.push({
+        src,group:g.groupName||g.showName||"",resName:r.resName||r.name||"",
+        resId:r.resId,effectsType:r.effectsType,modelType:r.modelType,modelName:r.modelName,
+        nanoModel:r.nanoModel,creditVersion:r.creditVersion,outputRatio:r.outputRatio,
+        ratio:r.videoRatio||r.ratio,mode:r.mode,packageLevel:r.packageLevel,
+        extra:r.extra,extraObject:r.extraObject,configJsonObject:r.configJsonObject,
+        controlNetId:r.controlNetId,sqLevel:r.sqLevel
+      }));
+    });
+  };
+  take(cat.aiLabGroupList,"aiLab");
+  take(cat.toolGroupList,"tools");
+  take(cat.groupList,"groups");
+  return out;
+}
+$("labDumpBtn").onclick=async()=>{
+  head("استخراج aiLabGroupList / toolGroupList از کاتالوگ زنده");
+  const c=await fetchCatalog();
+  if(!c)return log("کاتالوگ در دسترس نبود","e");
+  LAB_JSON=c.j;
+  const all=flattenLab(c.j);
+  const lab=all.filter(r=>r.src==="aiLab");
+  log("کل منابع: "+all.length+" | منابع AI Lab: "+lab.length+" | ابزارها: "+all.filter(r=>r.src==="tools").length,"ok");
+  const withModel=all.filter(r=>r.modelName||r.modelType||r.nanoModel);
+  log("منابعی که شناسهٔ مدل دارند: "+withModel.length,"w");
+  withModel.slice(0,20).forEach(r=>log("• ["+r.src+"] "+r.group+" / "+r.resName+
+    " | effectsType="+r.effectsType+" modelType="+r.modelType+" modelName="+r.modelName+
+    " nanoModel="+r.nanoModel+" credit="+r.creditVersion,"i"));
+  const box=document.createElement("div");
+  box.style.cssText="border:1px solid #30363d;border-radius:10px;padding:12px;margin-top:10px;background:#0a0d12;overflow:auto";
+  const rows=(lab.length?lab:withModel).slice(0,60);
+  box.innerHTML="<b>منابع AI Lab / دارای مدل ("+rows.length+" از "+(lab.length||withModel.length)+")</b>"+
+    '<table style="width:100%;border-collapse:collapse;font-size:12px;margin-top:8px">'+
+    '<tr style="color:#8b949e">'+["منبع","گروه","نام","effectsType","modelType","modelName","nanoModel","credit"]
+      .map(h=>'<th style="padding:5px;border-bottom:1px solid #30363d;text-align:right">'+h+"</th>").join("")+"</tr>"+
+    rows.map(r=>'<tr>'+
+      [r.src,r.group,r.resName,r.effectsType,r.modelType,r.modelName,r.nanoModel,r.creditVersion]
+      .map(v=>'<td style="padding:5px;border-bottom:1px solid #21262d;direction:ltr;text-align:right">'+(v==null?"—":String(v).slice(0,40))+"</td>").join("")+
+      "</tr>").join("")+"</table>";
+  $("labOut").prepend(box);
+  $("labDlBtn").disabled=false;
+  $("labDlBtn").onclick=()=>{
+    const blob=new Blob([JSON.stringify(c.j)],{type:"application/json"});
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);a.download="mivi_catalog_raw.json";
+    document.body.appendChild(a);a.click();a.remove();
+    log("کاتالوگ خام دانلود شد — این فایل را برای تحلیل کامل بفرستید.","ok");
+  };
+};
+$("labTryBtn").onclick=async()=>{
+  if(!LAB_JSON){ log("اول دکمهٔ استخراج را بزنید","e"); return; }
+  head("آزمودن شناسه‌های مدل روی V5 / unified");
+  const all=flattenLab(LAB_JSON);
+  const cands=all.filter(r=>r.effectsType!=null&&(r.modelName||r.modelType||r.nanoModel||r.src==="aiLab"));
+  const picked=[]; const seen=new Set();
+  for(const r of cands){
+    const k=String(r.effectsType)+"|"+(r.modelName||r.nanoModel||"");
+    if(seen.has(k))continue;
+    seen.add(k);picked.push(r);
+    if(picked.length>=8)break;
+  }
+  if(!picked.length)return log("کاندیدایی با شناسهٔ مدل پیدا نشد","w");
+  log("آزمودن "+picked.length+" کاندید، هر کدام تا ۳ شکل example","i");
+  const img=uploadedUrl||"http://algo.ufotosoft.com/original/261029/3171f961-6509-451b-ad0d-4acd7ef050eb.jpeg";
+  const prompt=$("prompt").value.trim()||"slow camera push-in, soft cinematic light";
+  for(const r of picked){
+    const variants=[r.modelName,r.nanoModel,String(r.resId)].filter(v=>v!=null&&v!=="");
+    let hit=false;
+    for(const ex of Array.from(new Set(variants)).slice(0,3)){
+      const body={imageUrls:[img],level:1,deviceToken:"0",googleId:"0",audio:false,
+        duration:6,ifTest:1,effectType:Number(r.effectsType),prompt,example:String(ex)};
+      const env=await postJson(V5,body);
+      const m=(env.j&&env.j.m)||("HTTP "+env.http);
+      const ok=env.j&&env.j.c===200;
+      const illegal=/illegal|error/i.test(m)&&!/example/i.test(m)?false:true;
+      log((ok?"★ ":"")+"effectType="+r.effectsType+" example="+ex+" → "+m,ok?"ok":(illegal?"i":"w"));
+      if(ok){
+        hit=true;
+        const tid=env.j.d&&(env.j.d.taskId||env.j.d.jobId);
+        if(tid){
+          log("‼️ تسک ساخته شد! polling با beat queryTask — taskId="+tid,"ok");
+          try{
+            const vu=await pollBeat(tid,8*60*1000);
+            log("خروجی: "+vu,"ok");
+            await forensicFromUrl(vu,"خروجی مدل "+r.resName);
+            $("sigUrl").value=vu;
+          }catch(e){ log("polling ناموفق: "+e.message,"e"); }
+        }
+        break;
+      }
+      await sleep(700);
+    }
+    if(!hit)await sleep(400);
+  }
+  head("پایان آزمون مدل‌ها — هر پاسخ c=200 یا پیام غیر از «example illegal» را بفرستید");
+};
+
+/* ---------- امضای فنی v2: همان تحلیل آزمایشگاهی، درون مرورگر ----------
+   مبنای مقایسه: نمونهٔ باکیفیت اپ (video_2026-10-29_12-35-09.mp4) که در
+   محیط تحلیل شد: 960×1280 عمودی، ۳۲fps، ۱۲۹ فریم، ۱ کی‌فریم، CRF 19،
+   High@3.2، moov قبل از mdat، hdlr=VideoHandle، ۳.۵۸Mbps، بدون Lavf/mdta. */
+const APP_SIG={w:960,h:1280,fps:32,frames:129,keyframes:1,crf:19,level:"3.2",
+  faststart:false,handler:"VideoHandle",mbps:3.58,hasLavf:false,hasMdta:false,
+  sizeBytes:1804576,durationSec:4.031};
+function deepSignature(buf){
+  const dv=new DataView(buf), bytes=new Uint8Array(buf);
+  const out={size:buf.byteLength,w:0,h:0,ftyp:"",brands:[],timescale:0,durationSec:0,
+    frames:0,fps:0,keyframes:-1,crf:null,x264:"",profile:null,level:null,
+    faststart:false,handler:"",hasLavf:false,hasMdta:false,bitrateMbps:0};
+  let moovOff=-1,mdatOff=-1,sttsTotal=0,sttsDelta=null;
+  walkBoxes(dv,(type,p,size,hdr)=>{
+    if(type==="ftyp"){
+      out.ftyp=fourcc(dv,p+hdr);
+      for(let i=0;p+hdr+8+4*i+4<=p+size&&i<6;i++)out.brands.push(fourcc(dv,p+hdr+8+4*i));
+    }
+    if(type==="moov"&&moovOff<0)moovOff=p;
+    if(type==="mdat"&&mdatOff<0)mdatOff=p;
+    const c=p+hdr;
+    if(type==="mdhd"){
+      const ver=dv.getUint8(c);
+      const ts=ver===1?dv.getUint32(c+20):dv.getUint32(c+12);
+      const du=ver===1?Number(dv.getBigUint64(c+24)):dv.getUint32(c+16);
+      if(ts){out.timescale=ts;out.durationSec=du/ts;}
+    }
+    if(type==="hdlr"){
+      let n="";for(let q=c+24;q<p+size&&dv.getUint8(q)!==0;q++)n+=String.fromCharCode(dv.getUint8(q));
+      if(n&&!out.handler)out.handler=n;
+    }
+    if(type==="stts"){
+      const n=dv.getUint32(c+4);let tot=0,firstDelta=0;
+      for(let i=0;i<n;i++){
+        const cnt=dv.getUint32(c+8+8*i),delta=dv.getUint32(c+12+8*i);
+        if(i===0)firstDelta=delta;
+        tot+=cnt;
+      }
+      sttsTotal=tot;sttsDelta=firstDelta;
+    }
+    if(type==="stss")out.keyframes=dv.getUint32(c+4);
+  },0,buf.byteLength);
+  // نمونهٔ ویدیویی داخل stsd است که walkBoxes به آن بازگشتی نمی‌کند؛
+  // پس با اسکن بایتی دقیق می‌خوانیم: نمونهٔ بصری ۸ بایت هدر + ۱۶ بایت فیلد
+  // رزرو‌شده، یعنی width در offset ۲۴ و height در ۲۶ از شروع entry (= ۴ بایت قبل از نام avc1).
+  for(let i=4;i+4<=bytes.length;i++){
+    const t=String.fromCharCode(bytes[i],bytes[i+1],bytes[i+2],bytes[i+3]);
+    if(t==="avc1"||t==="avc3"||t==="hvc1"||t==="hev1"){
+      // نام entry در i است، پس entry = i-4 و width در entry+32 = i+28، height در i+30
+      const w=(bytes[i+28]<<8)|bytes[i+29], h=(bytes[i+30]<<8)|bytes[i+31];
+      if(w>0&&h>0&&w<10000&&h<10000){out.w=w;out.h=h;break;}
+    }
+  }
+  for(let i=4;i+8<=bytes.length;i++){
+    if(bytes[i]===0x61&&bytes[i+1]===0x76&&bytes[i+2]===0x63&&bytes[i+3]===0x43){ // avcC
+      out.profile=bytes[i+5];
+      out.level=(bytes[i+7]/10).toFixed(1);
+      break;
+    }
+  }
+  out.frames=sttsTotal;
+  if(sttsTotal&&sttsDelta&&out.timescale)out.fps=out.timescale/sttsDelta;
+  out.faststart=moovOff>=0&&mdatOff>=0&&moovOff<mdatOff;
+  out.bitrateMbps=(buf.byteLength*8/Math.max(out.durationSec,0.01)/1e6);
+  // استخراج رشتهٔ SEI انکودر x264 (شامل CRF و پریست)
+  let s="";
+  for(let i=0;i<bytes.length;i++){
+    if(bytes[i]===0x78&&bytes[i+1]===0x32&&bytes[i+2]===0x36&&bytes[i+3]===0x34){ // "x264"
+      let k=i,lim=Math.min(i+900,bytes.length);
+      while(k<lim&&bytes[k]>=32&&bytes[k]<127)s+=String.fromCharCode(bytes[k++]);
+      break;
+    }
+  }
+  out.x264=s;
+  const m=s.match(/crf=([0-9.]+)/); if(m)out.crf=Number(m[1]);
+  out.hasLavf=s.includes("Lavf")||bytesContains(bytes,"Lavf");
+  out.hasMdta=bytesContains(bytes,"mdta");
+  return out;
+}
+function bytesContains(bytes,str){
+  const pat=Array.from(str).map(c=>c.charCodeAt(0));
+  outer: for(let i=0;i+pat.length<=bytes.length;i++){
+    for(let j=0;j<pat.length;j++)if(bytes[i+j]!==pat[j])continue outer;
+    return true;
+  }
+  return false;
+}
+function sigTable(sig){
+  const rows=[
+    ["رزولوشن",sig.w+"×"+sig.h,sig.w+"×"+sig.h],
+    ["مدت",sig.durationSec.toFixed(2)+"s",APP_SIG.durationSec.toFixed(2)+"s"],
+    ["فریم/ثانیه",sig.fps.toFixed(2),String(APP_SIG.fps)],
+    ["تعداد فریم",String(sig.frames),String(APP_SIG.frames)],
+    ["کی‌فریم",String(sig.keyframes),String(APP_SIG.keyframes)],
+    ["CRF",sig.crf!==null?String(sig.crf):"؟",String(APP_SIG.crf)],
+    ["پروفایل/سطح",(sig.profile!==null?sig.profile:"؟")+"/"+sig.level,APP_SIG.level],
+    ["بیت‌ریت",sig.bitrateMbps.toFixed(2)+" Mbps",APP_SIG.mbps+" Mbps"],
+    ["حجم",(sig.size/1048576).toFixed(2)+" MB",(APP_SIG.sizeBytes/1048576).toFixed(2)+" MB"],
+    ["moov اول (faststart)",sig.faststart?"بله":"نه",APP_SIG.faststart?"بله":"نه"],
+    ["هندلر",sig.handler||"—",APP_SIG.handler],
+    ["Lavf در فایل",sig.hasLavf?"دارد":"ندارد",APP_SIG.hasLavf?"دارد":"ندارد"],
+    ["mdta در فایل",sig.hasMdta?"دارد":"ندارد",APP_SIG.hasMdta?"دارد":"ندارد"],
+    ["برندها",sig.brands.join(","),"isom,iso2,avc1,mp41"],
+  ];
+  const tbl=document.createElement("table");
+  tbl.style.cssText="width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px";
+  tbl.innerHTML='<tr style="color:#8b949e">'+
+    ["ویژگی","این ویدیو","نمونهٔ اپ"].map(h=>'<th style="padding:6px;border-bottom:1px solid #30363d;text-align:right">'+h+"</th>").join("")+"</tr>"+
+    rows.map(([k,a,b])=>{
+      const same=String(a)===String(b);
+      return '<tr><td style="padding:5px;border-bottom:1px solid #21262d">'+k+
+        '</td><td style="padding:5px;border-bottom:1px solid #21262d;direction:ltr;text-align:right;color:'+(same?"#3fb950":"#f0883e")+'">'+a+
+        '</td><td style="padding:5px;border-bottom:1px solid #21262d;direction:ltr;text-align:right;color:#8b949e">'+b+"</td></tr>";
+    }).join("");
+  return tbl;
+}
+async function runSig(u,label){
+  head("امضای فنی: "+(label||u));
+  const r=await fetch(viaProxy(u));
+  if(!r.ok)throw new Error("HTTP "+r.status);
+  const buf=await r.arrayBuffer();
+  const sig=deepSignature(buf);
+  log("رزولوشن "+sig.w+"×"+sig.h+" | "+sig.durationSec.toFixed(2)+"s | "+
+      sig.fps.toFixed(1)+"fps | "+sig.frames+" فریم | CRF "+(sig.crf!==null?sig.crf:"؟")+
+      " | "+sig.bitrateMbps.toFixed(2)+"Mbps","ok");
+  log("پروفایل "+sig.profile+"/"+sig.level+" | faststart "+(sig.faststart?"بله":"نه")+
+      " | Lavf "+(sig.hasLavf?"دارد":"ندارد")+" | mdta "+(sig.hasMdta?"دارد":"ندارد"),"i");
+  if(sig.x264)log("SEI انکودر: "+sig.x264.slice(0,300),"i");
+  const box=document.createElement("div");
+  box.style.cssText="border:1px solid #30363d;border-radius:10px;padding:12px;margin-top:10px;background:#0a0d12";
+  box.innerHTML="<b>"+(label||u)+"</b>";
+  box.appendChild(sigTable(sig));
+  const v=document.createElement("video");
+  v.controls=true;v.playsInline=true;v.src=u;v.style.cssText="width:100%;border-radius:8px;margin-top:10px";
+  box.appendChild(v);
+  $("sigOut").prepend(box);
+  return sig;
+}
+$("sigBtn").onclick=async()=>{
+  const u=$("sigUrl").value.trim();
+  if(!u)return alert("لینک ویدیو را وارد کنید");
+  try{ await runSig(u,"امضای دستی"); }catch(e){ log("خطای امضا: "+e.message,"e"); }
+};
+$("sigAllBtn").onclick=async()=>{
+  const urls=Array.from(document.querySelectorAll("#knownUrls option")).map(o=>o.value);
+  const uniq=Array.from(new Set(urls));
+  for(let i=0;i<uniq.length;i++){
+    try{ await runSig(uniq[i],"ویدیوی جلسه "+(i+1)); }
+    catch(e){ log("خطای امضا: "+e.message,"e"); }
+  }
+  head("مقایسه کنید: هر ردیف سبز یعنی برابر با نمونهٔ اپ");
+};
+
 /* ---------- آزمایشگاه m: زنجیرهٔ فریم آخر برای کلیپ بلندتر ---------- */
 let EXT_SEGS=[];
 async function lastFrame(vu){
@@ -1494,7 +1796,7 @@ $("extRecBtn").onclick=async()=>{
 let BUSY=false;
 ["qBtn","cmpBtn","hdBatteryBtn","hdBillingBtn","hdUpBtn","hdViduBtn","catKeyBtn",
  "catSweepBtn","beatDurBtn","beatQBtn","beatUpBtn2","appCmpBtn","fKnownBtn",
- "qlSweepBtn","qlDurBtn","extBtn","extRecBtn"].forEach(id=>{
+ "qlSweepBtn","qlDurBtn","extBtn","extRecBtn","sigBtn","sigAllBtn","labDumpBtn","labTryBtn"].forEach(id=>{
   const el=$(id); if(!el||typeof el.onclick!=="function")return;
   const orig=el.onclick;
   el.onclick=async ev=>{
