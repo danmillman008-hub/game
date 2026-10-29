@@ -199,17 +199,21 @@ def t_compose(a):
     if r.get("c") != 200:
         raise RuntimeError(f"compose rejected: c={r.get('c')} {r.get('m')}")
     tid = (r.get("d") or {}).get("taskId")
-    deadline = time.time() + float(a.get("timeout_s", 300))
+    deadline = time.time() + float(a.get("timeout_s", 420))
     while time.time() < deadline:
         q = _post(STITCH_QUERY, {"taskId": tid})
         d = q.get("d") or {}
-        url = d.get("imageUrl") or d.get("url") or (d.get("urlList") or [None])[0]
+        # the composer reports its output in `responseUrl`; older paths used imageUrl/url
+        url = (d.get("responseUrl") or d.get("imageUrl") or d.get("url")
+               or (d.get("urlList") or [None])[0])
         if url:
             out = {"task_id": tid, "image_url": url}
             if a.get("out"):
                 download(url, a["out"]); out["saved"] = os.path.abspath(a["out"])
             return out
-        time.sleep(6)
+        if str(d.get("taskStatus") or "").lower() in ("fail", "failed"):
+            return {"task_id": tid, "failed": d.get("taskReason")}
+        time.sleep(8)
     return {"task_id": tid, "timeout": True}
 
 
