@@ -317,3 +317,56 @@ body = {}            ← در کد: new JSONObject() خالی، بدون هیچ 
 `createVideoHdTaskVidu` (که تسک GX را رد کرد) این یکی قرار است یک ویدیوی موجود
 را ارتقا بدهد. مسیرش در فهرست رشته‌ها نیست؛ به همین دلیل صفحهٔ آزمون آن را
 با نام متد صدا می‌زند تا یا کار کند یا خطای واقعی بدهد.
+
+---
+
+# پیوست ۳: نتیجهٔ آزمون زندهٔ بیلد `2026-10-30a` (۱۵:۰۱)
+
+چهار واقعیت تازه که هر کدام یک قدم جلو برد:
+
+## ۱) `imageEffectType` موتور را عوض می‌کند
+
+| درخواست | taskId برگشتی |
+|---|---|
+| GX (بدون `imageEffectType`) | `60014-1793282490-…` |
+| GXi (`imageEffectType=7186`) | `INTEGRATED_60019-1793282490-…` |
+
+پیشوند تسک از **۶۰۰۱۴** به **INTEGRATED_60019** تغییر کرد ⇒ این فیلد یک
+پارامتر استایل نیست، **مسیریاب موتور** است. یعنی با همان بدنهٔ beat می‌شود
+موتور ۶۰۰۱۹ را صدا زد. ولی کوئری‌اش معلوم نیست: روی
+`beatImage2Video/queryTask` و `imageVideo/queryTask` و `image2VideoQuery`
+همه‌جا `c=3035` برگشت (نه وضعیت، نه خطای پارامتر) ⇒ تسک ساخته شد ولی
+جدول کوئری دیگری دارد. مسیر مشکوک بعدی: `queryAiPhotoTask`، یا شناسهٔ
+بدون پیشوند `INTEGRATED_`.
+
+## ۲) چهار اثر کاتالوگ، برای V5 قانونی‌اند
+
+| بدنه | پاسخ |
+|---|---|
+| `effectType=6209` + Veo کامل | `c=1013 effectType illegal` |
+| `effectType=4899/4991/6093/7849` | `c=400 **googleId 不能为空**` |
+
+یعنی اعتبارسنجی از `effectType` **رد شد و به فیلد بعدی رسید** ⇒ این چهار عدد
+پذیرفته می‌شوند. V5 = `effectType` قانونی + `googleId`. تنها مجهول باقی‌مانده
+مقدار `googleId` است. (با `googleId="1"` و `effectType=6209` فقط خطای
+effectType را می‌داد، پس مقدار googleId هنوز آزمون نشده.)
+
+## ۳) `getAllPoseSequenceId` روی این هاست باز نیست
+
+`POST /algo/v1/faceFusion/aigc/getAllPoseSequenceId` با بدنهٔ خالی →
+`HTTP 404`. مسیر در dex هست ولی روی `cpi.ufotosoft.com` منتشر نشده؛
+هاست دوم (`cpi.wiseoel.com`) هم باید آزمون شود.
+
+## ۴) `createVideoHdTask` زنده است و متادیتا می‌خواهد
+
+```
+{"videoUrl":…,"fileSize":3212288,"width":960,"height":1280,"fileTime":0}
+→ c=1013 "param error: video metadata incomplete"
+```
+
+یعنی اندپوینت وجود دارد و قراردادش همان `videoUrl + fileMd5 + fileSize +
+fileTime + width + height` است. `fileTime=0` به‌عنوان «خالی» شمرده می‌شود و
+`fileMd5` هم نبود. بیلد بعدی هر دو را می‌فرستد (md5 خام بایت‌های فایل).
+
+همچنین `createSuperResolutionNew` زنده است ولی `imageUrls` می‌خواهد ⇒
+**ارتقای عکس** است، نه ویدیو.

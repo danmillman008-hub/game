@@ -58,7 +58,7 @@
 <body>
 <div class="wrap">
 
-  <h1>🧬 Mivi — تست موتورها با یک دکمه <span class="tag" id="verTag">build 2026-10-30a</span></h1>
+  <h1>🧬 Mivi — تست موتورها با یک دکمه <span class="tag" id="verTag">build 2026-10-30b</span></h1>
   <div class="sub">
     یک عکس بده، یک دکمه بزن. این صفحه هر پنج مسیر تولیدی که در APK هست را با بدنهٔ
     دقیق خودش صدا می‌زند، خروجی هرکدام را می‌گیرد و کنار هم می‌گذارد.
@@ -162,7 +162,8 @@ function md5(inputString){
   function HH(a,b,c,d,x,s,ac){a=addUnsigned(a,addUnsigned(addUnsigned(H(b,c,d),x),ac));return addUnsigned(rotateLeft(a,s),b);}
   function II(a,b,c,d,x,s,ac){a=addUnsigned(a,addUnsigned(addUnsigned(I(b,c,d),x),ac));return addUnsigned(rotateLeft(a,s),b);}
   function convertToWordArray(str){
-    str=unescape(encodeURIComponent(str));
+    const isBin=!!(str&&str.BYTES_PER_ELEMENT===1);
+    if(!isBin)str=unescape(encodeURIComponent(str));
     var lMessageLength=str.length;
     var nTemp1=lMessageLength+8;
     var nTemp2=(nTemp1-(nTemp1%64))/64;
@@ -173,7 +174,8 @@ function md5(inputString){
     while(lByteCount<lMessageLength){
       lWordCount=(lByteCount-(lByteCount%4))/4;
       lBytePosition=(lByteCount%4)*8;
-      words[lWordCount]=(words[lWordCount]|(str.charCodeAt(lByteCount)<<lBytePosition));
+      words[lWordCount]=(words[lWordCount]|
+        ((isBin?str[lByteCount]:str.charCodeAt(lByteCount))<<lBytePosition));
       lByteCount++;
     }
     lWordCount=(lByteCount-(lByteCount%4))/4;
@@ -236,7 +238,7 @@ function md5(inputString){
 }
 
 const $=id=>document.getElementById(id);
-const VERSION="2026-10-30a";   /* ← اگر این عدد در خط اول لاگ نبود، نسخهٔ کش‌شده اجرا شده */
+const VERSION="2026-10-30b";   /* ← اگر این عدد در خط اول لاگ نبود، نسخهٔ کش‌شده اجرا شده */
 const logEl=$("log");
 function ts(){return String(Math.floor(Date.now()/1000));}
 function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
@@ -375,53 +377,44 @@ const EX_EXAMPLE=[
   "6209"
 ];
 
-const EX_NAMES=["animate","walk","wave","Animate","Walk","Wave"];
-/* کشف تازهٔ RE (بیلد y+): سازندهٔ بدنهٔ Sequence یک شرط دارد —
-   اگر extParams["example"] غیرخالی باشد «نسخهٔ نو» می‌شود و
-   effectType/poseSequenceId/pixVerseId را کامل حذف می‌کند و فقط
-   example + extParams را می‌فرستد. پس مثال‌های Animate/Walk/Wave
-   (چیپ‌های صفحهٔ اپ) باید بدون effectType آزمایش شوند. */
+/* وضعیت پس از اجرای ۱۵:۰۱ (بیلد a):
+   - getAllPoseSequenceId → ۴۰۴ (مسیر در dex هست، روی این هاست باز نیست)
+   - GXi (imageEffectType) پذیرفت و تسک با پیشوند INTEGRATED_60019 ساخت
+     ⇒ imageEffectType ما را به موتور «integrated» دیگری می‌برد (۶۰۰۱۹ ≠ ۶۰۰۱۴)
+   - V5 با effectType=4899/4991/6093/7849 از «effectType illegal» گذشت و
+     رسید به «googleId不能为空» ⇒ این چهار عدد برای V5 قانونی‌اند، فقط googleId کم است
+   - Sequence «نسخهٔ نو» هم effectType می‌خواهد ⇒ آن مسیر فعلاً بسته است
+   پس واریانت‌های مرده (LTX/UNI/SEQ) حذف شدند تا اجرا کوتاه شود. */
 const ENGINES=[
   {key:"GX",name:"GX / beat",query:"/algo/v1/faceFusion/aigc/beatImage2Video/queryTask",
    variants:[{note:"بدنهٔ تأییدشده",path:"/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",
      body:o=>({imageUrls:[o.img],level:o.level,effectType:o.eff,prompt:o.prompt,quality:o.quality})}]},
 
-  {key:"GXi",name:"GX + imageEffectType",query:"/algo/v1/faceFusion/aigc/beatImage2Video/queryTask",
-   variants:[{note:"like GX + imageEffectType=7186",path:"/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",
+  {key:"GXi",name:"GX + imageEffectType (۶۰۰۱۹)",query:"/algo/v1/faceFusion/aigc/queryAiPhotoTask",
+   variants:[{note:"imageEffectType=7186",path:"/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",
      body:o=>({imageUrls:[o.img],level:o.level,effectType:o.eff,imageEffectType:7186,
                prompt:o.prompt,quality:o.quality})}]},
 
-  {key:"LTX",name:"LTX / PixVerse",query:"/algo/v1/faceFusion/aigc/image2VideoQuery",
-   variants:[
-     {note:"V3 بدون pixVerseId",path:"/algo/v1/faceFusion/aigc/image2VideoCreateV3",
-      body:o=>({imageUrls:[o.img],level:o.level,effectType:o.eff})},
-     {note:"V2 بدون pixVerseId",path:"/algo/v1/faceFusion/aigc/image2VideoCreateV2",
-      body:o=>({imageUrls:[o.img],level:o.level,effectType:o.eff})}
-   ]},
-
-  {key:"UNI",name:"Unified",query:"/algo/v1/faceFusion/aigc/image2VideoQuery",
-   variants:EX_EXAMPLE.concat(EX_NAMES).map(ex=>({note:"example="+ex.slice(0,34),
-     path:"/algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate",
-     body:o=>({imageUrls:[o.img],level:o.level,deviceToken:"",prompt:o.prompt,
-               ratio:o.ratio,movementAmplitude:0,example:ex,ifTest:false})}))},
-
-  {key:"V5",name:"V5 (effectType می‌خواهد)",query:"/algo/v1/faceFusion/aigc/image2VideoQuery",
-   variants:[
-     {note:"effectType=6209 (بدنهٔ کامل اپ)",path:"/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
-      body:o=>({imageUrls:[o.img],level:o.level,deviceToken:"",googleId:"1",audio:true,
-                effectType:o.eff,prompt:o.prompt,duration:o.dur,ifTest:false})}
-   ].concat([4899,4991,6093,7849].map(et=>({note:"effectType="+et+" (فقط لازم‌ها)",
-      path:"/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
-      body:o=>({imageUrls:[o.img],level:o.level,effectType:et,ifTest:false})})))},
-
-  {key:"SEQ",name:"Sequence / V4",query:"/algo/v1/faceFusion/aigc/image2VideoQuery",
-   variants:EX_NAMES.map(ex=>({note:"نسخهٔ نو example="+ex,
-      path:"/algo/v1/faceFusion/aigc/integrated/image2VideoCreateV4",
-      body:o=>({imageUrls:[o.img],level:o.level,deviceToken:"",example:ex,ifTest:false})}))
-    .concat(CATALOG_EFFECTS.slice(0,2).map(et=>({note:"نسخهٔ قدیم effectType="+et,
-      path:"/algo/v1/faceFusion/aigc/integrated/image2VideoCreateV4",
-      body:o=>({imageUrls:[o.img],level:o.level,deviceToken:"",effectType:et,
-                poseSequenceId:"",pixVerseId:"",ifTest:false})})))}
+  {key:"V5",name:"V5 — شکار Veo",query:"/algo/v1/faceFusion/aigc/image2VideoQuery",
+   variants:
+     [4899,4991,6093,7849].map(et=>({note:"effectType="+et+" googleId=\"1\"",
+       path:"/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
+       body:o=>({imageUrls:[o.img],level:o.level,deviceToken:"",googleId:"1",audio:true,
+                 effectType:et,prompt:o.prompt,duration:o.dur,ifTest:false})}))
+     .concat([
+       {note:"effectType=4899 googleId عددی 1",
+        path:"/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
+        body:o=>({imageUrls:[o.img],level:o.level,deviceToken:"",googleId:1,audio:true,
+                  effectType:4899,prompt:o.prompt,duration:o.dur,ifTest:false})},
+       {note:"effectType=4899 googleId=\"2\"",
+        path:"/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
+        body:o=>({imageUrls:[o.img],level:o.level,deviceToken:"",googleId:"2",audio:true,
+                  effectType:4899,prompt:o.prompt,duration:o.dur,ifTest:false})},
+       {note:"effectType=4899 googleId=\"veo3\"",
+        path:"/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5",
+        body:o=>({imageUrls:[o.img],level:o.level,deviceToken:"",googleId:"veo3",audio:true,
+                  effectType:4899,prompt:o.prompt,duration:o.dur,ifTest:false})}
+     ])}
 ];
 
 /* ===================== جدول ===================== */
@@ -441,6 +434,7 @@ function row(key,path,http,c,msg){
 
 /* ===================== پولینگ ===================== */
 const QUERY_FALLBACK=[
+  "/algo/v1/faceFusion/aigc/queryAiPhotoTask",
   "/algo/v1/faceFusion/aigc/beatImage2Video/queryTask",
   "/algo/v1/faceFusion/aigc/image2VideoQuery",
   "/algo/v1/faceFusion/aigc/image2video/queryTask"
@@ -454,7 +448,10 @@ async function poll(paths,tid,label,deadlineMs){
   while(Date.now()<end){
     await sleep(5000); n++;
     const path=paths[idx%paths.length];
-    const env=await postJson(path,{taskId:tid});
+    /* بعضی تسک‌ها پیشوند موتور دارند (INTEGRATED_…) — هر سه بار یک بار
+       شناسهٔ بدون پیشوند هم امتحان می‌شود. */
+    const id=(n%3===0&&/^[A-Z]+_/.test(tid))?tid.replace(/^[A-Z]+_/,""):tid;
+    const env=await postJson(path,{taskId:id,jobId:id});
     const d=(env.j&&env.j.d&&typeof env.j.d==="object")?env.j.d:{};
     const st=pickStatus(d);
     const vu=d.videoUrl||d.url||d.videoURL;
@@ -480,15 +477,16 @@ async function videoMeta(url){
     v.onerror=()=>{clearTimeout(t);rej(new Error("ویدیو بارگذاری نشد (CORS?)"));};
     v.src=abs;
   });
-  let size=0;
+  let size=0,md5h="";
   try{
     const r=await fetch(abs);
-    if(r.ok){const b=await r.arrayBuffer();size=b.byteLength;}
+    if(r.ok){const b=await r.arrayBuffer();size=b.byteLength;
+             md5h=md5(new Uint8Array(b));}
   }catch(e){}
   const w=v.videoWidth,h=v.videoHeight,d=v.duration||0;
   const mbps=size&&d?(size*8/d/1e6):null;
   const bpp=(size&&d&&w&&h)?(size*8)/(d*w*h*32):null;   // فرض ۳۲fps مثل اپ
-  return {w,h,d,size,mbps,bpp};
+  return {w,h,d,size,mbps,bpp,md5:md5h};
 }
 function videoCard(title,url){
   const box=document.createElement("div");
@@ -561,7 +559,12 @@ $("run").onclick=async()=>{
     /* ---- کاتالوگ pose: منبع قانونی poseSequenceId و pixVerseId ---- */
     head("کاتالوگ pose — getAllPoseSequenceId");
     try{
-      const pe=await postJson("/algo/v1/faceFusion/aigc/getAllPoseSequenceId",{});
+      let pe=await postJson("/algo/v1/faceFusion/aigc/getAllPoseSequenceId",{});
+      if(pe.http===404){
+        log("روی هاست اصلی ۴۰۴ داد؛ هاست دوم امتحان می‌شود…","w");
+        pe=await postJsonAt("https://cpi.wiseoel.com",
+                            "/algo/v1/faceFusion/aigc/getAllPoseSequenceId",{});
+      }
       const pc=(pe.j&&pe.j.c!==undefined)?pe.j.c:null;
       row("POSE","/algo/v1/faceFusion/aigc/getAllPoseSequenceId",pe.http,pc,
           pc===200?"۲۰۰ — کاتالوگ آمد":(pe.txt||pe.error||"").slice(0,140));
@@ -613,7 +616,8 @@ $("run").onclick=async()=>{
     for(const it of ok){
       try{
         log("منتظر "+it.en.key+" ("+it.tid+") …","w");
-        const vu=await poll([it.en.query].concat(QUERY_FALLBACK),it.tid,it.en.key);
+        const vu=await poll([it.en.query].concat(QUERY_FALLBACK),it.tid,it.en.key,
+                           it.en.key==="GX"?9*60*1000:5*60*1000);
         log("✓ خروجی "+it.en.key+": "+vu,"ok");
         videoCard(it.en.name+" — "+it.en.key,vu);
         it.vu=vu;
@@ -659,15 +663,19 @@ $("run").onclick=async()=>{
       try{
         const m=await videoMeta(mine.vu);
         log("متادیتای ویدیوی ما: "+m.w+"×"+m.h+" — "+Math.round((m.size||0)/1024)+"KB", "i");
-        const body={videoUrl:mine.vu,fileSize:m.size||0,width:m.w,height:m.h,
-                    fileTime:0,level:o.level,deviceToken:"",ifTest:false};
-        for(const path of ["/algo/v1/faceFusion/aigc/createVideoHdTask",
-                           "/algo/v1/faceFusion/aigc/createSuperResolutionNew"]){
+        log("md5 فایل: "+(m.md5||"—")+" | مدت: "+(m.d||0)+"s","i");
+        const base={videoUrl:mine.vu,fileMd5:m.md5||"",fileSize:m.size||0,
+                    width:m.w,height:m.h,level:o.level,deviceToken:"",ifTest:false};
+        const tries=[{note:"fileTime=مدت(ms)",body:Object.assign({},base,{fileTime:Math.round((m.d||0)*1000)})},
+                     {note:"fileTime=حالا(ms)",body:Object.assign({},base,{fileTime:Date.now()})}];
+        for(const t of tries){
+          const path="/algo/v1/faceFusion/aigc/createVideoHdTask";
+          const body=t.body;
           const env=await postJson(path,body);
           const c=(env.j&&env.j.c!==undefined)?env.j.c:null;
           const d=(env.j&&env.j.d)?env.j.d:{};const hid=d.taskId||d.jobId||"";
           row("UP",path,env.http,c,c===200?(hid||"۲۰۰ بدون taskId"):(env.txt||"").slice(0,140));
-          log("→ "+path.split("/").pop()+" HTTP "+env.http+" c="+c+" — "+
+          log("→ createVideoHdTask ["+t.note+"] HTTP "+env.http+" c="+c+" — "+
               (env.txt||env.error||"").slice(0,200), c===200?"ok":"e");
           if(c===200&&hid){
             const vu2=await poll(["/algo/v1/faceFusion/aigc/image2VideoQuery"]
