@@ -1,8 +1,10 @@
-"""Two remaining shots at an unlocked engine, plus the config paths that answer
-GET with a param hint. Read-only calls first, then the unified/sequence create
-attempts with the motion-chip words the app shows (Animate / Walk / Wave).
+"""Experiment: can our own 432x576 catalogue clip be lifted with the HD endpoint?
+
+createVideoHdTask (non-Vidu) body from the bytecode:
+    videoUrl, fileMd5, fileSize, fileTime, width, height, level, deviceToken, ifTest
+So we make a clip, hash it, and ask the server to enhance it.
 """
-import json, hashlib, time, urllib.request, urllib.error, pathlib
+import json, hashlib, time, urllib.request, urllib.error, subprocess, pathlib, os
 
 HOST = "https://cpi.ufotosoft.com"
 CP = "instagram.story.art.collage"; USER = "7da75eed37c61d33"
@@ -17,54 +19,85 @@ def hdr():
             "ifWise": "true", "Content-Type": "application/json",
             "sign": hashlib.md5(("m3snil" + t).encode()).hexdigest()}
 
-def http(url, body=None):
-    data = json.dumps(body).encode() if body is not None else None
-    req = urllib.request.Request(url, data=data, headers=hdr(), method="POST" if data else "GET")
-    try:
-        with urllib.request.urlopen(req, timeout=40) as r:
-            raw = r.read()
-            try: return r.status, json.loads(raw.decode())
-            except Exception: return r.status, raw[:300].decode("utf-8", "replace")
-    except urllib.error.HTTPError as e:
-        try: return e.code, json.loads(e.read().decode())
-        except Exception: return e.code, "<html>"
-    except Exception as e:
-        return 0, repr(e)[:120]
-
 def call(path, body):
-    return http(HOST + path, body)[1]
+    req = urllib.request.Request(HOST + path, data=json.dumps(body).encode(), headers=hdr(), method="POST")
+    try:
+        with urllib.request.urlopen(req, timeout=45) as r: return json.loads(r.read().decode())
+    except urllib.error.HTTPError as e:
+        try: return {"_http": e.code, **json.loads(e.read().decode())}
+        except Exception: return {"_http": e.code}
+    except Exception as e: return {"_err": repr(e)[:100]}
 
-Q = f"version=407&cp={CP}&platform=1&ifHttps=true&day=0&language=en&packageLevel=1"
+def run(cmd):
+    r = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    return (r.stdout or "").strip() or (r.stderr or "").strip()[-120:]
 
-# --- beat resource list: GET only, needs a param we do not know yet
-for extra in ["", "&type=1", "&day=1", "&categoryId=0", "&groupId=5074",
-              "&resourceType=1", "&beatId=0", "&packageLevel=1&start=0"]:
-    st, r = http(f"{HOST}/storyart/ncrnau/beat/getResourceList?{Q}{extra}")
-    msg = r.get("m") if isinstance(r, dict) else str(r)[:60]
-    keys = list(r.get("d").keys()) if isinstance(r, dict) and isinstance(r.get("d"), dict) else ""
-    p(f"[beatList{extra[:22]}] {st} c={r.get('c') if isinstance(r,dict) else '-'} {str(msg)[:60]} {keys}")
+def fetch(url, dest):
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    with urllib.request.urlopen(req, timeout=180) as r, open(dest, "wb") as o: o.write(r.read())
+    return dest
 
-# --- unified: body = imageUrls, level, deviceToken, prompt, ratio, movementAmplitude, example, ifTest
-UNI = "/algo/v1/faceFusion/aigc/image2video/unifiedTaskCreate"
-made = []
-for ex in ["Animate", "Walk", "Wave", "Dance", "animate", "walk", "wave", "Animate01"]:
-    body = {"imageUrls": [IMG], "level": 1, "deviceToken": "", "prompt": "",
-            "ratio": "3:4", "movementAmplitude": 1, "example": ex, "ifTest": False}
-    r = call(UNI, body)
-    tid = (r.get("d") or {}).get("taskId", "") if isinstance(r.get("d"), dict) else ""
-    p(f"[uni:{ex}] c={r.get('c')} {str(r.get('m'))[:60]} tid={tid[:30]}")
-    if tid: made.append(("uni_" + ex, tid, "unified"))
-
-# --- sequence (new route) with a pose id guess + catalogue effect
-SEQ = "/algo/v1/faceFusion/aigc/integrated/image2VideoCreateV4"
-for et, pose in [(4991, "1"), (7600, "1"), (4991, "0")]:
-    body = {"imageUrls": [IMG], "level": 1, "deviceToken": "", "effectType": et,
-            "poseSequenceId": pose, "pixVerseId": "0", "ifTest": False}
-    r = call(SEQ, body)
-    tid = (r.get("d") or {}).get("taskId", "") if isinstance(r.get("d"), dict) else ""
-    p(f"[seq:{et}/{pose}] c={r.get('c')} {str(r.get('m'))[:60]} tid={tid[:30]}")
-    if tid: made.append((f"seq_{et}_{pose}", tid, "seq"))
-
-p(f"created {len(made)} tasks")
 pathlib.Path("probe_out").mkdir(exist_ok=True)
+
+# 1) make a small catalogue clip to enhance
+r = call("/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",
+         {"imageUrls": [IMG], "prompt": "", "effectType": 4991, "level": 1})
+tid = (r.get("d") or {}).get("taskId", "")
+p(f"[make] c={r.get('c')} tid={tid[:34]}")
+url = ""
+for i in range(40):
+    time.sleep(6)
+    q = call("/algo/v1/faceFusion/aigc/beatImage2Video/queryTask", {"taskId": tid})
+    u = (q.get("d") or {}).get("videoUrl")
+    if u: url = u; break
+p("[make] url:", url[:110] if url else "TIMEOUT")
+if not url:
+    pathlib.Path("probe_out/out.txt").write_text("\n".join(OUT), encoding="utf-8"); raise SystemExit
+
+src = fetch(url, "probe_out/hd_src.mp4")
+size = os.path.getsize(src)
+md5 = hashlib.md5(open(src, "rb").read()).hexdigest()
+meta = run('ffprobe -v error -select_streams v:0 -show_entries stream=width,height -show_entries format=duration '
+           '-of csv=p=0 "%s"' % src).replace("\n", " ")
+p(f"[src] {size} bytes md5={md5[:12]}… {meta}")
+try:
+    w, h = meta.split(",")[0], meta.split(",")[1]
+    w, h = int(w), int(h)
+except Exception:
+    w, h = 432, 576
+dur = meta.split(",")[-1]
+try: durf = float(dur)
+except Exception: durf = 4.06
+
+def try_hd(tag, body):
+    r = call("/algo/v1/faceFusion/aigc/createVideoHdTask", body)
+    tid = (r.get("d") or {}).get("taskId", "") if isinstance(r.get("d"), dict) else ""
+    p(f"[{tag}] c={r.get('c')} {str(r.get('m'))[:70]} tid={tid[:30]}")
+    return tid
+
+base = {"videoUrl": url, "fileMd5": md5, "fileSize": size, "width": w, "height": h,
+        "level": 1, "deviceToken": "", "ifTest": False}
+hd_tid = try_hd("hd_sec", {**base, "fileTime": int(round(durf))})
+if not hd_tid:
+    hd_tid = try_hd("hd_ms", {**base, "fileTime": int(durf * 1000)})
+if not hd_tid:
+    hd_tid = try_hd("hd_nofiletime", {**base, "fileTime": 0, "fileMd5": md5})
+
+if hd_tid:
+    out_url = ""
+    for i in range(25):
+        time.sleep(6)
+        q = call("/algo/v1/faceFusion/aigc/queryVideoHdTask", {"taskId": hd_tid})
+        d = q.get("d") or {}
+        u = d.get("videoUrl") or d.get("hdVideoUrl")
+        if u: out_url = u; break
+        if str(d.get("taskStatus", "")).lower() in ("fail", "failed"):
+            p("[hd] failed:", json.dumps(d)[:160]); break
+    p("[hd] out:", out_url[:110] if out_url else "none")
+    if out_url:
+        dst = fetch(out_url, "probe_out/hd_out.mp4")
+        p("[hd] result:", run('ffprobe -v error -select_streams v:0 -show_entries stream=width,height,bit_rate '
+                              '-show_entries format=size,duration -of csv=p=0 "%s"' % dst).replace("\n", " "))
+        run('ffmpeg -y -v error -ss 1.5 -i "%s" -frames:v 1 -vf "scale=460:-2" probe_out/hd_out.jpg' % dst)
+
 pathlib.Path("probe_out/out.txt").write_text("\n".join(OUT), encoding="utf-8")
