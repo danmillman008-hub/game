@@ -1,78 +1,129 @@
-"""End-to-end proof of the bridge, in the exact shape Jellyfish sends:
+"""A three-shot mini film, built entirely through the MCP server.
 
-    POST /v1/videos  {"prompt", "model", "size", "seconds", "ratio",
-                      "input_reference": {"image_url": "data:image/jpeg;base64,…"}}
-    GET  /v1/videos/{id}   until status == completed
+The only input is a tiny "screenplay". Everything after that is the agent's job:
+animate a still, take its last frame, animate that (so the shots are chained),
+join them with a crossfade, burn subtitles, verify the result.
 
-If this works, any OpenAI-compatible studio can render with Mivi by pointing
-base_url at the bridge.
+This is the same loop an agent would run for a real script — just shorter.
 """
-import base64, json, subprocess, sys, time, urllib.request, pathlib
+import json, os, subprocess, sys, pathlib
 
-BRIDGE = "http://127.0.0.1:8099"
-IMG = "http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"
-OUT = []
+ROOT = pathlib.Path(".").resolve()
+OUT = ROOT / "probe_out"
+OUT.mkdir(exist_ok=True)
+LOG = []
 def p(*a):
-    s = " ".join(str(x) for x in a); print(s, flush=True); OUT.append(s)
+    s = " ".join(str(x) for x in a); print(s, flush=True); LOG.append(s)
 
-def req(url, body=None, timeout=90):
-    data = json.dumps(body).encode() if body is not None else None
-    r = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"},
-                               method="POST" if data else "GET")
-    with urllib.request.urlopen(r, timeout=timeout) as resp:
-        return json.loads(resp.read().decode())
+SCREENPLAY = """
+SCENE 1 — INT. WORKSHOP — NIGHT
+   A watchmaker lifts his head from the bench. Dust in a shaft of lamplight.
+   He turns the tiny screw one last time.
 
-# start the bridge as a child process
-proc = subprocess.Popen([sys.executable, "bridge/mivi_bridge.py"],
-                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
-time.sleep(2)
+SCENE 2 — SAME
+   He looks up, straight into the lens. The lamp flickers once.
 
+SCENE 3 — SAME
+   He closes the case, stands, and the room goes dark.
+
+VO: "Every second he saved cost him one of his own."
+"""
+
+SHOTS = [
+    ("A watchmaker in a dim workshop lifts his head from the bench, dust drifting "
+     "through a shaft of lamplight, slow cinematic push in", "shot1.mp4"),
+    ("The same watchmaker now looks straight into the camera, the lamp behind him "
+     "flickers once, subtle handheld drift", "shot2.mp4"),
+    ("He closes a small watch case and the room slowly fades to darkness, "
+     "camera holds still", "shot3.mp4"),
+]
+
+
+class MCP:
+    """Minimal MCP client over stdio."""
+    def __init__(self, script):
+        self.p = subprocess.Popen([sys.executable, str(ROOT / "bridge/mivi_mcp.py")],
+                                  stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                  stderr=subprocess.DEVNULL, text=True, bufsize=1)
+        self.id = 0
+        self.rpc("initialize", {"protocolVersion": "2024-11-05", "capabilities": {},
+                                "clientInfo": {"name": "film-test", "version": "1"}})
+        self.p.stdin.write('{"jsonrpc":"2.0","method":"notifications/initialized"}\n')
+        self.p.stdin.flush()
+
+    def rpc(self, method, params=None):
+        self.id += 1
+        self.p.stdin.write(json.dumps({"jsonrpc": "2.0", "id": self.id,
+                                       "method": method, "params": params or {}}) + "\n")
+        self.p.stdin.flush()
+        d = json.loads(self.p.stdout.readline())
+        if "error" in d:
+            raise RuntimeError(d["error"])
+        return d
+
+    def call(self, name, **args):
+        r = self.rpc("tools/call", {"name": name, "arguments": args})["result"]
+        txt = r["content"][0]["text"]
+        if r.get("isError"):
+            raise RuntimeError(f"{name}: {txt}")
+        return json.loads(txt)
+
+    def close(self):
+        self.p.terminate()
+
+
+m = MCP("bridge/mivi_mcp.py")
 try:
-    p("[health]", json.dumps(req(BRIDGE + "/health"))[:160])
-    p("[models]", [m["id"] for m in req(BRIDGE + "/v1/models")["data"]])
+    p("[screenplay]", len([l for l in SCREENPLAY.strip().splitlines() if l.strip()]), "lines ->",
+      len(SHOTS), "shots")
 
-    raw = urllib.request.urlopen(IMG, timeout=60).read()
-    b64 = base64.b64encode(raw).decode()
-    p("[image]", f"{len(raw)} bytes -> {len(b64)} chars base64")
+    # opening still: a real image from Mivi's CDN (stands in for the script's first frame)
+    still = "http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"
+    clip_paths = []
 
-    body = {
-        "prompt": "the person breathes calmly, soft light from the left, static camera",
-        "model": "mivi-gx-720p",
-        "size": "960x1280",
-        "seconds": 4,
-        "ratio": "3:4",
-        "input_reference": {"image_url": "data:image/jpeg;base64," + b64},
-    }
-    created = req(BRIDGE + "/v1/videos", body)
-    p("[create]", json.dumps(created)[:200])
-    vid = created.get("id")
+    for i, (prompt, fname) in enumerate(SHOTS, 1):
+        p(f"\n[shot {i}] prompt: {prompt[:70]}…")
+        created = m.call("mivi_video", image=still, prompt=prompt, model="mivi-gx-720p")
+        p(f"   task {created['task_id']}")
+        done = m.call("mivi_video_wait", task_id=created["task_id"],
+                      out=str(OUT / fname), timeout_s=300)
+        if not done.get("video_url"):
+            p("   FAILED", json.dumps(done)[:200]); break
+        p(f"   ready -> {done.get('saved')}")
+        clip_paths.append(done["saved"])
 
-    final = {}
-    for i in range(60):
-        time.sleep(6)
-        st = req(f"{BRIDGE}/v1/videos/{vid}")
-        if i % 3 == 0 or st.get("status") == "completed":
-            p(f"  poll {i}: {st.get('status')}")
-        if st.get("status") in ("completed", "failed"):
-            final = st; break
+        # chain: the last frame of this shot is the first frame of the next
+        lf = OUT / f"shot{i}_last.jpg"
+        m.call("film_last_frame", video=done["saved"], out=str(lf))
+        still = str(lf)
+        p(f"   chained on {lf.name} ({lf.stat().st_size} bytes)")
 
-    p("[final]", json.dumps(final)[:260])
-    url = final.get("url")
-    if url:
-        f = str(pathlib.Path("probe_out/bridge.mp4"))
-        pathlib.Path("probe_out").mkdir(exist_ok=True)
-        with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"}), timeout=180) as r, open(f, "wb") as o:
-            o.write(r.read())
-        meta = subprocess.run('ffprobe -v error -select_streams v:0 -show_entries stream=width,height '
-                              '-show_entries format=size,duration -of csv=p=0 "%s"' % f,
-                              shell=True, capture_output=True, text=True).stdout.strip().replace("\n", " ")
-        p("[file]", meta)
-finally:
-    proc.terminate()
+    if len(clip_paths) < 2:
+        raise SystemExit("not enough clips to assemble")
+
+    p("\n[assemble] crossfade")
+    final = OUT / "film.mp4"
     try:
-        log = proc.communicate(timeout=5)[0]
-        p("[bridge log tail]", (log or "")[-300:].replace("\n", " | "))
-    except Exception:
-        proc.kill()
+        res = m.call("film_concat", clips=clip_paths, out=str(final), crossfade_s=0.4)
+    except Exception as e:
+        p("   xfade failed, plain concat:", str(e)[:120])
+        res = m.call("film_concat", clips=clip_paths, out=str(final), crossfade_s=0)
+    p("   ", json.dumps(res))
 
-pathlib.Path("probe_out/out.txt").write_text("\n".join(OUT), encoding="utf-8")
+    srt = OUT / "vo.srt"
+    srt.write_text("1\n00:00:00,400 --> 00:00:04,200\nEvery second he saved\n\n"
+                   "2\n00:00:04,400 --> 00:00:08,000\ncost him one of his own.\n",
+                   encoding="utf-8")
+    subbed = OUT / "film_subbed.mp4"
+    try:
+        m.call("film_subtitle", video=str(final), srt=str(srt), out=str(subbed))
+        p("[subtitles] burned")
+    except Exception as e:
+        p("[subtitles] skipped:", str(e)[:140])
+
+    for f in (final, subbed):
+        if f.exists():
+            p("[probe]", f.name, json.dumps(m.call("film_probe", path=str(f))))
+finally:
+    m.close()
+    (OUT / "out.txt").write_text("\n".join(LOG), encoding="utf-8")
