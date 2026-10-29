@@ -1,5 +1,42 @@
-[superres] https://algo-v1.vidmix.cc/temp/aiImageResolution/261029/imagesharpen-3-20261029235915d3a8ba5ed440cbfe64-1.jpg job aiImageResolution1793289555-e089da51-560
-[make orig] c=200 tid=60014-1793289566-415d35ad-2ad8-48d
-[make srup] c=200 tid=60014-1793289567-25c2b017-308a-463
-[orig] 960,1280,6287159 4.031250,3170671  sharp=167.2 noise=0.70  frame=orig.jpg
-[srup] 960,1280,5352297 4.031250,2699572  sharp=157.5 noise=0.63  frame=srup.jpg
+## createImageTask: MAXROUNDS  final c=500 m=Internal Server Error [NullPointerException: ]
+   r7 c=500 Internal Server Error [NullPointerException: ]
+   r8 c=500 Internal Server Error [NullPointerException: ]
+   r9 c=500 Internal Server Error [NullPointerException: ]
+   body: {"imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "level": 1, "deviceToken": "", "ifTest": false, "prompt": "same person, golden hour light", "token": "", "ratio": "3:4", "quality": 2, "duration": 4}
+## createAiStyleTask: STUCK  final c=501 m=Network error [HttpMessageNotReadableException: JSON parse error: Cann
+   r2 c=1003 param illegal: token decrypt fail
+   r3 c=1003 param illegal: token decrypt fail
+   r4 c=501 Network error [HttpMessageNotReadableException: JSON parse error: Cann
+   body: {"token": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"]}
+## createInpaintAnything: STUCK  final c=400 m=Parameter error [imageUrlsurls not empty]
+   r0 c=400 Parameter error [imageUrlsurls not empty]
+   body: {}
+## createInpaintCleaner: STUCK  final c=400 m=Parameter error [imageUrlsurls not empty,maskUrlsmaskUrls not empty]
+   r0 c=400 Parameter error [imageUrlsurls not empty,maskUrlsmaskUrls not empty]
+   body: {}
+## createSwapFace: STUCK  final c=400 m=Parameter error [imageUrlsurls not empty,templateIdstemplateIds not em
+   r0 c=400 Parameter error [imageUrlsurls not empty,templateIdstemplateIds not em
+   body: {}
+## createFaceKeyTask: STUCK  final c=400 m=Parameter error [imagesimages not empty,imagesimages not null]
+   r0 c=400 Parameter error [imagesimages not empty,imagesimages not null]
+   body: {}
+## createTask: STUCK  final c=400 m=Parameter error [imageUrlsimageUrls长度不能小于2]
+   r5 c=400 Parameter error [imageUrlsimageUrls不能为空]
+   r6 c=400 Parameter error [imageUrlsimageUrls不能为空]
+   r7 c=400 Parameter error [imageUrlsimageUrls长度不能小于2]
+   body: {"imageUrlsimageUrls": 1, "imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "level": 1, "deviceToken": "", "ifTest": false, "prompt": "same person, golden hour light", "token": "", "ratio": "3:4", "quality": 
+## livePortraitCreate: MAXROUNDS  final c=400 m=Parameter error [modelIdmodelId不能为空]
+   r7 c=400 Parameter error [modelIdmodelId不能为空]
+   r8 c=400 Parameter error [modelIdmodelId不能为空]
+   r9 c=400 Parameter error [modelIdmodelId不能为空]
+   body: {"modelIdmodelId": 1, "imageUrlsimageUrls": "http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg", "imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "level": 1, "deviceToken": 
+## emoVideoCreate: MAXROUNDS  final c=400 m=Parameter error [imageKeyimage_key不能为空,audioKeyaudio_key不能为空]
+   r7 c=400 Parameter error [audioKeyaudio_key不能为空,imageKeyimage_key不能为空]
+   r8 c=400 Parameter error [audioKeyaudio_key不能为空,imageKeyimage_key不能为空]
+   r9 c=400 Parameter error [audioKeyaudio_key不能为空,imageKeyimage_key不能为空]
+   body: {"audioKeyaudio_key": "3:4", "imageKeyimage_key": "", "imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "level": 1, "deviceToken": "", "ifTest": false, "prompt": "same person, golden hour light", "token": "",
+## image2VideoCreateV2: MAXROUNDS  final c=1001 m=param error: param effectType illegal
+   r7 c=1001 param error: poseSequenceId error
+   r8 c=1001 param error: param effectType illegal
+   r9 c=1001 param error: param effectType illegal
+   body: {"imageUrlsimageUrls": 1, "imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "level": 1, "deviceToken": "", "ifTest": false, "prompt": "same person, golden hour light", "token": "", "ratio": "3:4", "quality": 
