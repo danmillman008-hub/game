@@ -1,0 +1,40 @@
+name: studio
+on:
+  push:
+    branches: [arena/e3952d18-game]
+    paths: ['studio/**', 'bridge/**', 'films/**', '.probe/studio_demo.py']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  selftest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - name: deps
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          pip install -q pillow
+      - name: offline editing self-test
+        run: python3 studio/selftest.py
+      - name: live two-shot demo through filmkit
+        run: python3 .probe/studio_demo.py
+      - name: frames for inspection
+        if: always()
+        run: |
+          mkdir -p probe_out/demo_frames
+          if [ -f films/studio_demo/out/final.mp4 ]; then
+            ffmpeg -y -v error -ss 1.5 -i films/studio_demo/out/final.mp4 -frames:v 1 probe_out/demo_frames/a.jpg
+            ffmpeg -y -v error -ss 6.0 -i films/studio_demo/out/final.mp4 -frames:v 1 probe_out/demo_frames/b.jpg
+          fi
+      - name: publish result back to the branch
+        if: always()
+        run: |
+          git config user.name "studio-bot"
+          git config user.email "studio@local"
+          git add -f probe_out/ films/studio_demo/ || true
+          git commit -m "studio demo $(date -u +%H:%M:%S)" || echo "no change"
+          git pull --rebase -q origin "${GITHUB_REF_NAME}" || true
+          git push || true
