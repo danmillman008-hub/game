@@ -54,7 +54,8 @@ TRIALS = [
 
 p("=== veo / pixverse unlock sweep", time.strftime("%H:%M:%SZ", time.gmtime()), "===")
 made = []
-for tag, path, body in TRIALS:
+for tag, et, gid, audio, dur, level in TRIALS:
+    _, path, body = v5(tag, et, gid, audio, dur, level)
     r = call(path, body)
     d = r.get("d") or {}
     tid = d.get("taskId") or d.get("id") or ""
