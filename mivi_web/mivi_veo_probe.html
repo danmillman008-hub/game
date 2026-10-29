@@ -43,7 +43,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28l</span></h1>
+  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28m</span></h1>
   <div class="muted" style="margin-bottom:14px">
     هدف: کشف شرط بازشدن اندپوینت
     <code>/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5</code>.
@@ -276,6 +276,30 @@
   </div>
 
   <div class="card">
+    <h2>🔗 آزمایشگاه m: ساخت کلیپ بلندتر از ۴ ثانیه (زنجیرهٔ فریم آخر)</h2>
+    <div class="muted" style="margin-bottom:10px">
+      سرور مدت را ۴ ثانیه ثابت می‌دهد (در سوییپ `duration=6` دیده شد). راه‌حل بدون هیچ موتور
+      جدید: قطعهٔ اول را بساز، <b>آخرین فریمش</b> را به‌عنوان تصویر شروع قطعهٔ بعدی بده، و همین
+      را تا رسیدن به مدت هدف تکرار کن. نتیجه یک ویدیوی پیوسته با همان موتور Wan-LoRA است.
+      در پایان قطعات را پشت سر هم پخش و در یک فایل واحد (mp4/webm) ضبط می‌کند؛ علاوه بر آن
+      هر قطعه را جدا و دستور `ffmpeg` برای اتصال بدون افت کیفیت می‌دهد.
+      <br><b>نکته:</b> برای خواندن آخرین فریم باید ویدیو با CORS قابل خواندن باشد؛ اگر خطای
+      «آلودگی canvas» داد، پروکسی محلی را روشن کنید.
+    </div>
+    <div class="row">
+      <div><label>مدت هدف (ثانیه)</label><input id="extTarget" dir="ltr" value="8" style="max-width:110px"></div>
+      <div><label>حداکثر تعداد قطعه</label><input id="extMax" dir="ltr" value="4" style="max-width:110px"></div>
+      <div style="flex:2"><label>پرامپت ادامه (خالی = همان پرامپت بالا)</label>
+        <input id="extPrompt" dir="ltr" placeholder="continue the same motion, same lighting"></div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <div style="max-width:320px"><label>&nbsp;</label><button id="extBtn" type="button">⑫ ساخت کلیپ زنجیره‌ای</button></div>
+      <div style="max-width:300px"><label>&nbsp;</label><button class="ghost" id="extRecBtn" disabled type="button">⏺ ضبط یکپارچهٔ قطعات</button></div>
+    </div>
+    <div id="extOut" style="margin-top:14px"></div>
+  </div>
+
+  <div class="card">
     <h2>۴) ارسال دستی</h2>
     <div class="row">
       <div style="flex:2">
@@ -425,7 +449,7 @@ function loadCfg(){
   return c;
 }
 let CFG=loadCfg();
-const VER="2026-10-28l";
+const VER="2026-10-28m";
 const $=id=>document.getElementById(id);
 $("host").value=CFG.host;$("connMode").value=CFG.connMode;
 $("customProxy").value=CFG.customProxy;$("userId").value=CFG.userId;
@@ -1332,11 +1356,145 @@ $("qlDurBtn").onclick=async()=>{
   await qlRun("مدت ۶ با duration+seconds+videoDuration",{duration:6,seconds:6,videoDuration:6});
 };
 
+/* ---------- آزمایشگاه m: زنجیرهٔ فریم آخر برای کلیپ بلندتر ---------- */
+let EXT_SEGS=[];
+async function lastFrame(vu){
+  const v=document.createElement("video");
+  v.muted=true; v.playsInline=true; v.crossOrigin="anonymous";
+  v.src=viaProxy(vu);
+  await new Promise((res,rej)=>{
+    const t=setTimeout(()=>rej(new Error("مهلت بارگذاری ویدیو")),30000);
+    v.onloadeddata=()=>{clearTimeout(t);res();};
+    v.onerror=()=>{clearTimeout(t);rej(new Error("بارگذاری ویدیو ناموفق"));};
+  });
+  const dur=v.duration;
+  if(!isFinite(dur)||dur<=0)throw new Error("مدت ویدیو نامعتبر است");
+  await new Promise((res,rej)=>{
+    const t=setTimeout(()=>rej(new Error("مهلت seek")),15000);
+    v.onseeked=()=>{clearTimeout(t);res();};
+    v.currentTime=Math.max(0,dur-0.08);
+  });
+  const c=document.createElement("canvas");
+  c.width=v.videoWidth; c.height=v.videoHeight;
+  const g=c.getContext("2d");
+  g.drawImage(v,0,0,c.width,c.height);
+  let blob;
+  try{ blob=await new Promise(r=>c.toBlob(r,"image/jpeg",0.95)); }
+  catch(e){ throw new Error("canvas آلوده است — پروکسی محلی با هدر CORS لازم است"); }
+  if(!blob)throw new Error("استخراج فریم ناموفق");
+  log("فریم آخر استخراج شد: "+c.width+"×"+c.height+" ("+Math.round(blob.size/1024)+" KB)","i");
+  return blob;
+}
+$("extBtn").onclick=async()=>{
+  if(!uploadedUrl)return alert("اول تصویر را آپلود کنید");
+  const target=Math.max(4,Number($("extTarget").value)||8);
+  const maxSeg=Math.min(8,Math.max(1,Number($("extMax").value)||4));
+  const contPrompt=$("extPrompt").value.trim();
+  head("ساخت زنجیره‌ای تا "+target+" ثانیه (حداکثر "+maxSeg+" قطعه)");
+  EXT_SEGS=[]; $("extOut").innerHTML="";
+  let img=uploadedUrl, elapsed=0, i=0;
+  while(elapsed<target-0.1 && i<maxSeg){
+    i++;
+    log("قطعهٔ "+i+" (زمان تا اینجا "+elapsed.toFixed(0)+"s)","h");
+    const over={};
+    if(i>1&&contPrompt)over.prompt=contPrompt;
+    const body=Object.assign({imageUrls:[img],level:1,effectType:6209,
+      prompt:$("prompt").value.trim(),quality:2},over);
+    const env=await postJson("/algo/v1/faceFusion/aigc/beatImage2Video/createNormalTask",body);
+    if(!(env.j&&env.j.c===200)){ log("قطعهٔ "+i+" رد شد: "+env.txt.slice(0,200),"e"); break; }
+    const tid=env.j.d.taskId; log("taskId="+tid,"w");
+    let vu=null;
+    try{ vu=await pollBeat(tid,8*60*1000); }catch(e){ log("polling ناموفق: "+e.message,"e"); break; }
+    log("قطعهٔ "+i+" آماده: "+vu,"ok");
+    let meta=null;
+    try{ meta=await forensicFromUrl(vu,"قطعهٔ "+i); }catch(e){ log("فارنزیک ناموفق: "+e.message,"e"); }
+    EXT_SEGS.push(vu);
+    elapsed+=meta&&meta.durationSec?meta.durationSec:4;
+    if(elapsed>=target-0.1)break;
+    log("استخراج فریم آخر برای قطعهٔ بعدی...","i");
+    try{
+      const blob=await lastFrame(vu);
+      img=await uploadBlob(blob,"cont"+i+".jpg");
+      log("تصویر شروع قطعهٔ بعد: "+img,"ok");
+    }catch(e){ log("زنجیره قطع شد: "+e.message,"e"); break; }
+    await sleep(800);
+  }
+  head("زنجیره تمام شد: "+EXT_SEGS.length+" قطعه، حدود "+elapsed.toFixed(1)+" ثانیه");
+  if(!EXT_SEGS.length)return;
+  const box=document.createElement("div");
+  box.style.cssText="border:1px solid #30363d;border-radius:10px;padding:12px;margin-top:10px;background:#0a0d12";
+  box.innerHTML="<b>قطعات</b>"+EXT_SEGS.map((u,k)=>
+    '<div style="margin-top:8px"><div style="font-size:12px;direction:ltr;word-break:break-all">'+
+    '<a href="'+u+'" target="_blank" rel="noopener">قطعهٔ '+(k+1)+'</a></div>'+
+    '<video controls playsinline preload="metadata" src="'+u+'" style="width:100%;border-radius:8px;margin-top:6px"></video></div>').join("")+
+    '<div style="margin-top:12px;font-size:12px;color:#8b949e">اتصال بدون افت کیفیت با ffmpeg:</div>'+
+    '<pre dir="ltr" style="background:#161b22;padding:8px;border-radius:6px;overflow:auto;font-size:11.5px">'+
+    "printf \"file '%s'\\n\" "+EXT_SEGS.map((u,k)=>"seg"+(k+1)+".mp4").join(" ")+" > list.txt\nffmpeg -f concat -safe 0 -i list.txt -c copy final.mp4</pre>";
+  $("extOut").prepend(box);
+  $("extRecBtn").disabled=false;
+};
+$("extRecBtn").onclick=async()=>{
+  if(EXT_SEGS.length<1)return alert("اول زنجیره را بسازید");
+  const btn=$("extRecBtn"); btn.disabled=true;
+  try{
+    head("ضبط یکپارچهٔ "+EXT_SEGS.length+" قطعه");
+    const probe=document.createElement("video");
+    probe.muted=true; probe.src=EXT_SEGS[0];
+    await new Promise((res,rej)=>{probe.onloadedmetadata=res;probe.onerror=rej;});
+    const W=probe.videoWidth||1280, H=probe.videoHeight||960;
+    const cvs=document.createElement("canvas"); cvs.width=W; cvs.height=H;
+    const g=cvs.getContext("2d");
+    const stream=cvs.captureStream(30);
+    let mime="video/mp4;codecs=avc1.42E01E";
+    if(!window.MediaRecorder)throw new Error("مرورگر MediaRecorder ندارد");
+    if(!MediaRecorder.isTypeSupported(mime)){
+      mime="video/webm;codecs=vp9";
+      if(!MediaRecorder.isTypeSupported(mime))mime="video/webm";
+    }
+    log("قالب ضبط: "+mime,"i");
+    const rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:12e6});
+    const chunks=[];
+    rec.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data);};
+    const done=new Promise(r=>rec.onstop=r);
+    rec.start(1000);
+    for(let k=0;k<EXT_SEGS.length;k++){
+      log("پخش قطعهٔ "+(k+1)+" برای ضبط...","i");
+      const v=document.createElement("video");
+      v.src=EXT_SEGS[k]; v.muted=true; v.playsInline=true; v.crossOrigin="anonymous";
+      await new Promise((res,rej)=>{v.onloadeddata=res;v.onerror=()=>rej(new Error("بارگذاری قطعه "+(k+1)));});
+      await v.play();
+      await new Promise(res=>{
+        const loop=()=>{
+          if(v.ended||v.paused)return res();
+          g.drawImage(v,0,0,W,H);
+          requestAnimationFrame(loop);
+        };
+        loop();
+      });
+      v.pause();
+    }
+    await sleep(300);
+    rec.stop(); await done;
+    const blob=new Blob(chunks,{type:mime});
+    const url=URL.createObjectURL(blob);
+    const ext=mime.includes("mp4")?"mp4":"webm";
+    log("فایل یکپارچه آماده: "+(blob.size/1048576).toFixed(2)+" MB ("+ext+")","ok");
+    const box=document.createElement("div");
+    box.style.cssText="border:1px solid #3fb950;border-radius:10px;padding:12px;margin-top:10px;background:#0a0d12";
+    box.innerHTML='<b style="color:#3fb950">✓ خروجی یکپارچه</b>'+
+      '<div style="margin-top:8px"><a download="mivi_chain.'+ext+'" href="'+url+
+      '" style="color:#58a6ff">⬇️ دانلود ('+(blob.size/1048576).toFixed(2)+' MB)</a></div>'+
+      '<video controls playsinline src="'+url+'" style="width:100%;border-radius:8px;margin-top:8px"></video>';
+    $("extOut").prepend(box);
+  }catch(e){ log("ضبط ناموفق: "+e.message,"e"); }
+  finally{ btn.disabled=false; }
+};
+
 /* ---------- قفل سراسری: جلوگیری از اجرای هم‌زمان چند عملیات ---------- */
 let BUSY=false;
 ["qBtn","cmpBtn","hdBatteryBtn","hdBillingBtn","hdUpBtn","hdViduBtn","catKeyBtn",
  "catSweepBtn","beatDurBtn","beatQBtn","beatUpBtn2","appCmpBtn","fKnownBtn",
- "qlSweepBtn","qlDurBtn"].forEach(id=>{
+ "qlSweepBtn","qlDurBtn","extBtn","extRecBtn"].forEach(id=>{
   const el=$(id); if(!el||typeof el.onclick!=="function")return;
   const orig=el.onclick;
   el.onclick=async ev=>{
