@@ -1,73 +1,21 @@
-=== probe 14:51:28Z ===
-
---- phase 1: read-only catalogues ---
-[queryAiPhotoModels] {"c": 1003, "m": "param error: loraId is illegal", "d": null}
-[queryTemplate] {"c": 400, "m": "Parameter error [taskIdtaskId not blank,taskIdtaskId not null]", "d": null, "traceId": "d1cd314b176649549b826ae8f1a0371f"}
-[getAllPoseSequenceId] {"_http": 404, "timestamp": 1793285489607, "status": 404, "error": "Not Found", "message": "No message available", "path": "/algo/v1/faceFusion/aigc/getAllPoseSequenceId"}
-[image2VideoDetect] {"c": 400, "m": "Parameter error [imageUrlimage_url不能为空]", "d": null, "traceId": "85abcddc4c394002819ef03bf0c81bd8"}
-[getFaceInfo] {"c": 400, "m": "Parameter error [imageUrlsurls not empty]", "d": null, "traceId": "776752e0c448402882f169dc38f33445"}
-
---- phase 2: engine routing per effectsType (beat/createNormalTask) ---
-  et=4899  c=200 msg=Success taskId=60004-1793285490-abd18de6-e922-49c
-  et=6093  c=200 msg=Success taskId=60014-1793285491-1c6c270f-62c8-43a
-  et=5291  c=200 msg=Success taskId=60004-1793285492-c24de1e3-9d87-4e2
-  et=5202  c=200 msg=Success taskId=60004-1793285492-94e02aea-62a2-43f
-  et=7969  c=1013 msg=param error: effectType illegal taskId=
-  et=5926  c=200 msg=Success taskId=60014-1793285494-225859ce-f611-4b9
-  et=5319  c=200 msg=Success taskId=60004-1793285495-7fcdca78-1c0f-416
-  et=4991  c=200 msg=Success taskId=60004-1793285496-29193ade-ea3f-4ed
-  et=4877  c=200 msg=Success taskId=60004-1793285496-f0c968bc-cef7-43b
-  et=5041  c=200 msg=Success taskId=60004-1793285497-f76605be-ea2d-4f2
-  et=6686  c=200 msg=Success taskId=60014-1793285498-0b201874-a832-422
-  et=7849  c=200 msg=Success taskId=60014-1793285499-5d1c222e-7986-424
-  et=7600  c=200 msg=Success taskId=60014-1793285499-9dad58d4-093b-426
-  et=4990  c=200 msg=Success taskId=60004-1793285500-506a07ba-ab42-419
-  et=5031  c=200 msg=Success taskId=60004-1793285501-d8f964ce-7dd4-45e
-  et=5141  c=200 msg=Success taskId=60004-1793285502-18ff8dcd-3149-445
-
---- 15 tasks created; polling in parallel ---
-  et=4899  -> https://algo-v1.wiseoel.com/temp/60004/261029/img2video_wanlora-20261029225142-638377-2d994-dwt.
-  et=6093  -> https://algo-v1.wiseoel.com/temp/60014/261029/img2video_wanlora-20261029225142-1100321-2f384-dwt
-  et=5291  -> https://algo-v1.wiseoel.com/temp/60004/261029/img2video_wanlora-20261029225144-857137-a8a84-dwt.
-  et=5202  -> https://algo-v1.wiseoel.com/temp/60004/261029/img2video_wanlora-20261029225148-1050408-f5bc4-dwt
-  et=5926  -> https://algo-v1.wiseoel.com/temp/60014/261029/img2video_wanlora-20261029225151-1130470-ea5d4-dwt
-  et=5319  -> https://algo-v1.wiseoel.com/temp/60004/261029/img2video_wanlora-20261029225153-1035396-282d4-dwt
-  et=4991  -> https://algo-v1.wiseoel.com/temp/60004/261029/img2video_wanlora-20261029225153-836740-e1984-dwt.
-  et=4877  -> https://algo-v1.wiseoel.com/temp/60004/261029/img2video_wanlora-20261029225153-803953-4e764-dwt.
-  et=5041  -> https://algo-v1.wiseoel.com/temp/60004/261029/img2video_wanlora-20261029225159-933992-79a04-dwt.
-  et=6686  -> https://algo-v1.wiseoel.com/temp/60014/261029/img2video_wanlora-20261029225201-1031951-34a74-dwt
-  et=7849  -> https://algo-v1.wiseoel.com/temp/60014/261029/img2video_wanlora-20261029225205-1248650-f4a34-dwt
-  et=7600  -> https://algo-v1.wiseoel.com/temp/60014/261029/i2v_14b_v131-20261029225205-1568722-43174-00001.mp
-  et=4990  -> https://algo-v1.wiseoel.com/temp/60004/261029/img2video_wanlora-20261029225210-1003811-81fb4-dwt
-  et=5031  -> https://algo-v1.wiseoel.com/temp/60004/261029/img2video_wanlora-20261029225215-1674856-23c74-dwt
-  et=5141  -> https://algo-v1.wiseoel.com/temp/60004/261029/img2video_wanlora-20261029225213-977611-be2b4-dwt.
-  e4899: 432,576
-4.062500,638377 path=60004/261029/img2video_wanlora-202610292
-  e6093: 432,576
-4.062500,1100321 path=60014/261029/img2video_wanlora-202610292
-  e5291: 432,576
-4.062500,857137 path=60004/261029/img2video_wanlora-202610292
-  e5202: 432,576
-4.062500,1050408 path=60004/261029/img2video_wanlora-202610292
-  e5926: 432,576
-4.062500,1130470 path=60014/261029/img2video_wanlora-202610292
-  e5319: 432,576
-4.062500,1035396 path=60004/261029/img2video_wanlora-202610292
-  e4991: 432,576
-4.062500,836740 path=60004/261029/img2video_wanlora-202610292
-  e4877: 432,576
-4.062500,803953 path=60004/261029/img2video_wanlora-202610292
-  e5041: 432,576
-4.062500,933992 path=60004/261029/img2video_wanlora-202610292
-  e6686: 432,576
-4.062500,1031951 path=60014/261029/img2video_wanlora-202610292
-  e7849: 432,576
-4.062500,1248650 path=60014/261029/img2video_wanlora-202610292
-  e7600: 562,748
-4.062500,1568722 path=60014/261029/i2v_14b_v131-20261029225205
-  e4990: 432,576
-4.062500,1003811 path=60004/261029/img2video_wanlora-202610292
-  e5031: 432,576
-5.062500,1674856 path=60004/261029/img2video_wanlora-202610292
-  e5141: 432,576
-4.062500,977611 path=60004/261029/img2video_wanlora-202610292
+=== level sweep 14:57:46Z ===
+[lv2_7600] c=200 Success tid=60014-1793285866-edf5c115-1ebb body={"imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "prompt": "", "ef
+[lv2_4991] c=200 Success tid=60004-1793285867-7d30d8e6-2b14 body={"imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "prompt": "", "ef
+[lv2_6209] c=200 Success tid=60014-1793285868-dfd7e80f-d053 body={"imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "prompt": "", "ef
+[q720_lv1_7600] c=200 Success tid=60014-1793285869-7d3e6bf4-fdf7 body={"imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "prompt": "", "ef
+[lv2_noq_7600] c=200 Success tid=60014-1793285870-b5b44cb3-3e0f body={"imageUrls": ["http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg"], "prompt": "", "ef
+  lv2_7600: https://algo-v1.wiseoel.com/temp/60014/261029/i2v_14b_v131-20261029225811-1568722-ac804-00001.mp4
+  lv2_4991: https://algo-v1.wiseoel.com/temp/60004/261029/img2video_wanlora-20261029225759-878109-10ab4-dwt.mp4
+  lv2_6209: https://algo-v1.wiseoel.com/temp/60014/261029/31e0836823eb4e1d8fde69ddeb047159.mp4
+  q720_lv1_7600: https://algo-v1.wiseoel.com/temp/60014/261029/i2v_14b_v131-20261029225851-1568722-02f04-00001.mp4
+  lv2_noq_7600: https://algo-v1.wiseoel.com/temp/60014/261029/i2v_14b_v131-20261029225831-1568722-a3d44-00001.mp4
+  lv2_7600: 562,748,3085961
+4.062500,1568722  path=60014/261029/i2v_14b_v131-20261029225811-156
+  lv2_4991: 432,576,1725524
+4.062500,878109  path=60004/261029/img2video_wanlora-2026102922575
+  lv2_6209: 960,1280,6336069
+4.031250,3195317  path=60014/261029/31e0836823eb4e1d8fde69ddeb04715
+  q720_lv1_7600: 562,748,3085961
+4.062500,1568722  path=60014/261029/i2v_14b_v131-20261029225851-156
+  lv2_noq_7600: 562,748,3085961
+4.062500,1568722  path=60014/261029/i2v_14b_v131-20261029225831-156
