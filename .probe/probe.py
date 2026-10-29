@@ -51,22 +51,25 @@ def study(tag,url):
     f=f"probe_out/{tag}.mp4"; pathlib.Path("probe_out").mkdir(exist_ok=True)
     try:
         req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0"})
-        with urllib.request.urlopen(req,timeout=60) as r, open(f,"wb") as o:
+        with urllib.request.urlopen(req,timeout=90) as r, open(f,"wb") as o:
             o.write(r.read())
-        p(f"--- {tag} downloaded {os.path.getsize(f)} bytes")
+        p(f"--- {tag}: downloaded {os.path.getsize(f)} bytes")
     except Exception as e:
-        p(f"--- {tag} DOWNLOAD FAILED {e!r}"); return
-    meta=run(f'ffprobe -v error -select_streams v:0 -show_entries stream=width,height,bit_rate,nb_frames,avg_frame_rate -show_entries format=size,duration -of json "{f}"')
-    p(f"--- {tag} meta: {meta[:400]}")
+        p(f"--- {tag}: DOWNLOAD FAILED {e!r}"); return
     try:
+        meta=run('ffprobe -v error -select_streams v:0 -show_entries '
+                 'stream=width,height,bit_rate,avg_frame_rate,nb_frames '
+                 '-show_entries format=size,duration -of json "%s"' % f)
         j=json.loads(meta); st=j["streams"][0]; fmt=j["format"]
         w,h=int(st["width"]),int(st["height"]); size=int(fmt["size"]); dur=float(fmt["duration"])
-        bpp=(size*8)/(dur*w*h*32)
+        bpp=(size*8)/(dur*w*h*32) if w*h*dur else 0
         p(f"    {w}x{h} {dur:.2f}s {size/1024:.0f}KB bpp={bpp:.4f} Mbps={size*8/dur/1e6:.2f}")
-    except Exception as e: p("    meta parse err",e)
+    except Exception as e:
+        p("    ffprobe failed:",repr(e)[:160])
     for i,t in enumerate([0.3,1.8,3.5]):
-        run(f'ffmpeg -y -v error -ss {t} -i "{f}" -frames:v 1 -vf "scale=540:-2" probe_out/{tag}_f{i}.jpg')
-    os.remove(f)
+        run('ffmpeg -y -v error -ss %s -i "%s" -frames:v 1 -vf "scale=540:-2" probe_out/%s_f%d.jpg' % (t,f,tag,i))
+    try: os.remove(f)
+    except Exception: pass
 
 p("=== probe", time.strftime("%H:%M:%SZ",time.gmtime()), "===")
 
