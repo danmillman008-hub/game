@@ -1,13 +1,10 @@
-=== probe start 14:29:22Z ===
-[pose POST main] HTTP 404 :: {"timestamp":1793284163071,"status":404,"error":"Not Found","message":"No message available","path":"/algo/v1/faceFusion/aigc/getAllPoseSequenceId"}
-[pose GET  main] HTTP 404 :: {"timestamp":1793284163621,"status":404,"error":"Not Found","message":"No message available","path":"/algo/v1/faceFusion/aigc/getAllPoseSequenceId"}
-[pose GET  mirror] HTTP 404 :: {"timestamp":1793284164259,"status":404,"error":"Not Found","message":"No message available","path":"/algo/v1/faceFusion/aigc/getAllPoseSequenceId"}
-[GX 5202+7186] HTTP 200 :: {"c":200,"m":"Success","d":{"taskId":"INTEGRATED_60019-1793284164-36e420ad-f6a0-4760-a3c6-6ba1f558f9db","taskStatus":"doing","taskReason":null,"videoUrl":null},"traceId":"c12445cafa5347fd8d12569bb08bb434"}
-GX taskId: INTEGRATED_60019-1793284164-36e420ad-f6a0-4760-a3c6-6ba1f558f9db
-[V5 et=5202 gid=1] HTTP 200 :: {"c":1013,"m":"param error: effectType illegal","d":null,"traceId":"0ee21c7e3c2342ec804d8745e2e56647"}
-[V5 et=5202 gid=2] HTTP 200 :: {"c":1013,"m":"param error: effectType illegal","d":null,"traceId":"a3dbb3b3e6f7489497ddd6ec6bfbc559"}
-[V5 et=7186] HTTP 200 :: {"c":1013,"m":"param error: effectType illegal","d":null,"traceId":"5a0d1a159d0c46a79d9d2d4f2bd1e57e"}
-  poll#1 doing
-  poll#4 doing
-  VIDEO: https://algo-v1.wiseoel.com/temp/60004/261029/img2video_wanlora-20261029222944-733132-8cbe4-dwt.mp4
-=== probe end ===
+=== probe 14:31:18Z ===
+[create GX6209] c=200 msg=Success taskId=60014-1793284279-c99fda99-74e4-4ec7-b52a-d45388153a2b
+[create NEON5202] c=200 msg=Success taskId=INTEGRATED_60019-1793284279-827da116-694b-4f6c-88de-a8b34f6b2c4a
+--- waiting ---
+  [60014-1793284279-c99fd] done at poll 14: https://algo-v1.wiseoel.com/temp/60014/261029/9d1d869185ba4e57ae25d05d983bd728.mp4
+  [INTEGRATED_60019-17932] done at poll 3: https://algo-v1.wiseoel.com/temp/60004/261029/img2video_wanlora-20261029223246-713248-f0834-dwt.mp4
+--- gx6209 meta: 
+    meta parse err Expecting value: line 1 column 1 (char 0)
+--- neon5202 meta: 
+    meta parse err Expecting value: line 1 column 1 (char 0)
