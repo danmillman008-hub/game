@@ -43,7 +43,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28s</span></h1>
+  <h1>🧪 آزمایشگاه موتور Google Veo / Gemini — پروب زندهٔ V5 <span class="tag" id="verTag">نسخهٔ باتری: 2026-10-28t</span></h1>
   <div class="muted" style="margin-bottom:14px">
     هدف: کشف شرط بازشدن اندپوینت
     <code>/algo/v1/faceFusion/aigc/image2video/image2VideoCreateV5</code>.
@@ -403,6 +403,30 @@
   </div>
 
   <div class="card">
+    <h2>🔍 مقایسهٔ ۱:۱ — نویز را با چشم خودتان ببینید</h2>
+    <div class="muted" style="margin-bottom:10px">
+      این کارت هر دو ویدیو را در مرورگر باز می‌کند، فریمی از وسط هرکدام را برمی‌دارد،
+      یک برش <b>بزرگ‌نمایی‌شده ۲×</b> از مرکز هر دو را کنار هم می‌گذارد و دو عدد می‌دهد:
+      <br>• <b>جزئیات</b> = انرژی فرکانس بالا (لبه‌ها و بافت)
+      <br>• <b>نویز</b> = همان انرژی در نواحی صاف (جایی که بافت واقعی ندارد)
+      <br>اگر ویدیوی ما «جزئیات» بیشتری دارد ولی «نویز» هم چند برابر است، یعنی مدل ما
+      تصویر را با آشغال پر می‌کند؛ اگر نویز پایین و جزئیات بالاست، فقط تیزتر است.
+    </div>
+    <div class="row">
+      <div style="flex:2"><label>ویدیوی اپ (لینک یا فایل)</label>
+        <input id="zAUrl" dir="ltr" placeholder="لینک نمونهٔ اپ — یا فایل بدهید">
+        <input id="zAFile" type="file" accept="video/*" style="margin-top:6px">
+      </div>
+      <div style="flex:2"><label>ویدیوی ما (لینک یا فایل)</label>
+        <input id="zBUrl" dir="ltr" value="https://algo-v1.wiseoel.com/temp/60014/261029/ea0fd6605915443d9515fb935079b832.mp4">
+        <input id="zBFile" type="file" accept="video/*" style="margin-top:6px">
+      </div>
+      <div style="max-width:200px"><label>&nbsp;</label><button id="zoomBtn" type="button">🔍 مقایسهٔ ۱:۱</button></div>
+    </div>
+    <div id="zoomOut" style="margin-top:14px"></div>
+  </div>
+
+  <div class="card">
     <h2>🤖 آزمایشگاه o: کشف مدل‌های پرمیوم از aiLabGroupList</h2>
     <div class="muted" style="margin-bottom:10px">
       کاتالوگ زنده علاوه بر <code>groupList</code> سه بخش دیگر دارد:
@@ -571,7 +595,7 @@ function loadCfg(){
   return c;
 }
 let CFG=loadCfg();
-const VER="2026-10-28s";
+const VER="2026-10-28t";
 const $=id=>document.getElementById(id);
 $("host").value=CFG.host;$("connMode").value=CFG.connMode;
 $("customProxy").value=CFG.customProxy;$("userId").value=CFG.userId;
@@ -1565,6 +1589,132 @@ $("ratioFieldBtn").onclick=async()=>{
   head("اگر فقط یکی هندسه را عوض کرد، همان نام درست است");
 };
 
+/* ---------- مقایسهٔ ۱:۱ و سنجش نویز در نواحی صاف ---------- */
+async function grabFrame(urlInputId,fileInputId,atFrac){
+  const f=$(fileInputId).files&&$(fileInputId).files[0];
+  const src=f?URL.createObjectURL(f):viaProxy($(urlInputId).value.trim());
+  if(!src||src==="null"||!src.length)throw new Error("منبع ویدیو خالی است");
+  const v=document.createElement("video");
+  v.muted=true;v.playsInline=true;v.crossOrigin="anonymous";v.preload="auto";
+  v.src=src;
+  await new Promise((res,rej)=>{
+    const t=setTimeout(()=>rej(new Error("مهلت بارگذاری ویدیو")),30000);
+    v.onloadeddata=()=>{clearTimeout(t);res();};
+    v.onerror=()=>{clearTimeout(t);rej(new Error("بارگذاری ویدیو ناموفق"));};
+  });
+  const d=isFinite(v.duration)&&v.duration>0?v.duration:4;
+  await new Promise((res,rej)=>{
+    const t=setTimeout(()=>rej(new Error("مهلت seek")),15000);
+    v.onseeked=()=>{clearTimeout(t);res();};
+    v.currentTime=Math.min(d*atFrac,Math.max(0,d-0.05));
+  });
+  return {v,W:v.videoWidth,H:v.videoHeight,dur:d};
+}
+/* برآورد نویز استاندارد ایمِروکِر + انرژی جزئیات.
+   هستهٔ M=[[1,-2,1],[-2,4,-2],[1,-2,1]] جمعش صفر است، پس لبه‌های واقعی را
+   تا حد زیادی حذف می‌کند و |I*M| عمدتاً نویز را می‌گیرد.
+   sigma ≈ sqrt(pi/2)/(6n) * sum|I*M|
+   شاخص کلیدی = detail/sigma : هرچه بالاتر، جزئیات واقعی بیشتر و نویز کمتر.
+   (آزمایش واحد: نویز سفید sigma را ۵+ برابر بالا می‌برد، بافت درشت نه؛
+    detail/sigma در تصویر تمیز > تصویر نویزی) */
+function noiseStats(cv){
+  const g=cv.getContext("2d");
+  const W=cv.width,H=cv.height;
+  const px=g.getImageData(0,0,W,H).data;
+  const gray=new Float32Array(W*H);
+  for(let i=0;i<W*H;i++)gray[i]=0.299*px[i*4]+0.587*px[i*4+1]+0.114*px[i*4+2];
+  let sumM=0,sumDetail=0,n=0;
+  for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++){
+    const i=y*W+x;
+    const m=gray[i-W-1]-2*gray[i-W]+gray[i-W+1]
+           -2*gray[i-1]+4*gray[i]-2*gray[i+1]
+           +gray[i+W-1]-2*gray[i+W]+gray[i+W+1];
+    sumM+=Math.abs(m);
+    sumDetail+=Math.abs(4*gray[i]-gray[i-1]-gray[i+1]-gray[i-W]-gray[i+W]);
+    n++;
+  }
+  const sigma=Math.sqrt(Math.PI/2)*sumM/(6*n);
+  const detail=sumDetail/n;
+  return {detail,noise:sigma,quality:detail/Math.max(sigma,0.01)};
+}
+async function zoneAnalyze(A,B){
+  const out=[];
+  for(const [X,label] of [[A,"اپ"],[B,"ما"]]){
+    if(!X)continue;
+    const cv=document.createElement("canvas");
+    cv.width=X.W; cv.height=X.H;
+    cv.getContext("2d").drawImage(X.v,0,0,X.W,X.H);
+    const st=noiseStats(cv);
+    // برش مرکزی ۲× برای نمایش
+    const cw=Math.min(420,Math.round(X.W*0.42)), ch=Math.min(420,Math.round(X.H*0.42));
+    const sx=Math.round((X.W-cw)/2), sy=Math.round((X.H-ch)/2);
+    const zc=document.createElement("canvas");
+    zc.width=cw*2; zc.height=ch*2;
+    const zg=zc.getContext("2d");
+    zg.imageSmoothingEnabled=false;  // پیریکسل، بدون نرم‌سازی
+    zg.drawImage(X.v,sx,sy,cw,ch,0,0,cw*2,ch*2);
+    out.push({label,W:X.W,H:X.H,dur:X.dur,...st,canvas:zc,
+      dataUrl:zc.toDataURL("image/png")});
+  }
+  return out;
+}
+$("zoomBtn").onclick=async()=>{
+  const btn=$("zoomBtn"); btn.disabled=true;
+  try{
+    head("مقایسهٔ ۱:۱ — استخراج فریم از وسط هر دو ویدیو");
+    const A=await grabFrame("zAUrl","zAFile",0.5);
+    log("اپ: "+A.W+"×"+A.H+" | "+A.dur.toFixed(2)+"s","i");
+    const B=await grabFrame("zBUrl","zBFile",0.5);
+    log("ما: "+B.W+"×"+B.H+" | "+B.dur.toFixed(2)+"s","i");
+    const res=await zoneAnalyze(A,B);
+    const box=document.createElement("div");
+    box.style.cssText="border:1px solid #30363d;border-radius:10px;padding:12px;margin-top:10px;background:#0a0d12";
+    box.innerHTML="<b>برش ۲× از مرکز تصویر (پیکسل‌ها بدون نرم‌سازی)</b>";
+    const row=document.createElement("div");
+    row.style.cssText="display:flex;gap:12px;flex-wrap:wrap;margin-top:10px";
+    res.forEach(r=>{
+      const w=document.createElement("div");
+      w.style.cssText="flex:1;min-width:300px";
+      w.innerHTML='<div style="font-size:12.5px;color:#8b949e;margin-bottom:6px">'+
+        r.label+' — '+r.W+"×"+r.H+"</div>"+
+        '<img src="'+r.dataUrl+'" style="width:100%;border-radius:8px;border:1px solid #30363d;image-rendering:pixelated">'+
+        '<div style="margin-top:8px;font-size:13px;line-height:1.9">'+
+        'جزئیات (HF): <b>'+r.detail.toFixed(2)+'</b><br>'+
+        'نویز (sigma): <b style="color:'+(r.noise>6?"#f85149":"#3fb950")+'">'+r.noise.toFixed(2)+'</b><br>'+
+        'شاخص کیفیت (جزئیات÷نویز): <b style="color:'+(r.quality>8?"#3fb950":"#d29922")+'">'+r.quality.toFixed(2)+'</b></div>';
+      row.appendChild(w);
+      log(r.label+": جزئیات="+r.detail.toFixed(2)+" | sigma="+r.noise.toFixed(2)+
+          " | کیفیت="+r.quality.toFixed(2),"i");
+    });
+    box.appendChild(row);
+    if(res.length===2){
+      const dr=res[1].detail/Math.max(res[0].detail,0.01);
+      const nr=res[1].noise/Math.max(res[0].noise,0.01);
+      const qr=res[1].quality/Math.max(res[0].quality,0.01);
+      const verdict=document.createElement("div");
+      verdict.style.cssText="margin-top:12px;font-size:13.5px;line-height:1.9;padding-top:10px;border-top:1px solid #30363d";
+      let txt;
+      if(nr>2&&qr<0.6)
+        txt="❌ <b>نویز ما "+nr.toFixed(1)+"× بیشتر است و شاخص کیفیت "+qr.toFixed(2)+"× اپ</b> — "+
+            "یعنی مدل ما تصویر را با آشغال پر می‌کند، نه اینکه تیزتر باشد. ریشه در تولید است نه انکود.";
+      else if(qr>=0.85)
+        txt="✅ <b>شاخص کیفیت ما "+qr.toFixed(2)+"× اپ است</b> — یعنی به‌ازای هر واحد نویز، جزئیات "+
+            "هم‌رده یا بیشتر داریم؛ اختلاف از نویز نیست.";
+      else
+        txt="ℹ️ نویز "+nr.toFixed(2)+"× و شاخص کیفیت "+qr.toFixed(2)+"× اپ — میانهٔ راه؛ "+
+            "به تفاوت‌ها در عدد sigma و شاخص نگاه کنید.";
+      verdict.innerHTML=txt;
+      box.appendChild(verdict);
+    }
+    $("zoomOut").prepend(box);
+  }catch(e){
+    log("مقایسهٔ ۱:۱ ناموفق: "+e.message,"e");
+    alert("مقایسهٔ ۱:۱ ناموفق:\n"+e.message+
+      "\n\nاگر ویدیو از لینک است، ممکن است CORS بسته باشد؛ پروکسی محلی را روشن کنید "+
+      "یا فایل را مستقیم انتخاب کنید.");
+  }finally{ btn.disabled=false; }
+};
+
 /* ---------- آزمایشگاه s: ریشهٔ نویز ---------- */
 function sRow(label,note,sig,bpp,url){
   const tb=$("sOut");
@@ -2198,7 +2348,7 @@ let BUSY=false;
 ["qBtn","cmpBtn","hdBatteryBtn","hdBillingBtn","hdUpBtn","hdViduBtn","catKeyBtn",
  "catSweepBtn","beatDurBtn","beatQBtn","beatUpBtn2","appCmpBtn","fKnownBtn",
  "qlSweepBtn","qlDurBtn","extBtn","extRecBtn","sigBtn","sigAllBtn","labDumpBtn","labTryBtn","cmpRunBtn",
- "ratioSweepBtn","ratioFieldBtn","sCropBtn","sEffBtn","sRatioFmtBtn"].forEach(id=>{
+ "ratioSweepBtn","ratioFieldBtn","sCropBtn","sEffBtn","sRatioFmtBtn","zoomBtn"].forEach(id=>{
   const el=$(id); if(!el||typeof el.onclick!=="function")return;
   const orig=el.onclick;
   el.onclick=async ev=>{
