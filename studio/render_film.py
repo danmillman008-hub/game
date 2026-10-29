@@ -62,15 +62,14 @@ def build_still(d: Path, proj: dict, s: dict, force=False) -> Path | None:
         rel, box = parts[0], tuple(int(x) for x in parts[1:5])
         from PIL import Image
         im = Image.open(d / rel).crop(box)
-        # rebuild a 3:4 frame at 960x1280 locally; Mivi's superres is async and flaky,
-        # so upscaling is done here and only used when a crop is very small
+        # COVER-fit into 3:4 at 960x1280: no letterboxing, centre crop the overflow
         target = (960, 1280)
-        scale = min(target[0] / im.width, target[1] / im.height)
-        im = im.resize((max(1, int(im.width * scale)), max(1, int(im.height * scale))),
+        scale = max(target[0] / im.width, target[1] / im.height)
+        im = im.resize((max(1, round(im.width * scale)), max(1, round(im.height * scale))),
                        Image.LANCZOS)
-        canvas = Image.new("RGB", target)
-        canvas.paste(im, ((target[0] - im.width) // 2, (target[1] - im.height) // 2))
-        canvas.save(out)
+        left = max(0, (im.width - target[0]) // 2)
+        top = max(0, (im.height - target[1]) // 2)
+        im.crop((left, top, left + target[0], top + target[1])).convert("RGB").save(out)
     elif kind == "compose":
         a, b = [x.strip() for x in val.split(",")]
         r = M.t_compose({"images": [str(d / a), str(d / b)],

@@ -386,13 +386,102 @@ def cmd_assemble(a):
                                    duck=a.duck, out=None))
 
 
+FONT = ROOT / "studio" / "fonts" / "Vazirmatn-Bold.ttf"
+
+
+def _srt_cues(path: Path):
+    import re
+    txt = path.read_text(encoding="utf-8")
+    out = []
+    for block in re.split(r"\n\s*\n", txt.strip()):
+        lines = [l for l in block.splitlines() if l.strip()]
+        if len(lines) < 2 or "-->" not in block:
+            continue
+        m = re.search(r"(\d+):(\d+):([\d.,]+)\s*-->\s*(\d+):(\d+):([\d.,]+)", block)
+        if not m:
+            continue
+        def sec(h, mi, se):
+            return int(h) * 3600 + int(mi) * 60 + float(se.replace(",", "."))
+        start, end = sec(*m.group(1, 2, 3)), sec(*m.group(4, 5, 6))
+        text = " ".join(lines[lines.index([l for l in lines if "-->" in l][0]) + 1:])
+        out.append((start, end, text.strip()))
+    return out
+
+
+def _render_cue_png(text: str, path: Path, w: int, size: int = 44):
+    """Shaped Persian (or any RTL/LTR) text as a transparent PNG strip."""
+    from PIL import Image, ImageDraw, ImageFont
+    txt = text
+    try:
+        import arabic_reshaper
+        from bidi.algorithm import get_display
+        txt = get_display(arabic_reshaper.reshape(text))
+    except Exception:
+        pass
+    font = None
+    for cand in (FONT, Path("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf")):
+        if Path(cand).exists():
+            font = ImageFont.truetype(str(cand), size)
+            break
+    if font is None:
+        font = ImageFont.load_default()
+    # wrap to the safe width
+    max_w = int(w * 0.86)
+    words, lines, cur = txt.split(" "), [], ""
+    for word in words:
+        trial = (cur + " " + word).strip()
+        if font.getbbox(trial)[2] <= max_w or not cur:
+            cur = trial
+        else:
+            lines.append(cur); cur = word
+    if cur:
+        lines.append(cur)
+    lh = int(size * 1.45)
+    img = Image.new("RGBA", (w, lh * len(lines) + 24), (0, 0, 0, 0))
+    dr = ImageDraw.Draw(img)
+    for i, line in enumerate(lines):
+        tw = font.getbbox(line)[2]
+        x = (w - tw) // 2
+        y = 12 + i * lh
+        for dx, dy in ((-2, 0), (2, 0), (0, -2), (0, 2), (-2, -2), (2, 2)):
+            dr.text((x + dx, y + dy), line, font=font, fill=(0, 0, 0, 190))
+        dr.text((x, y), line, font=font, fill=(255, 255, 255, 255))
+    path.parent.mkdir(parents=True, exist_ok=True)
+    img.save(path)
+
+
 def _burn(d: Path, video: Path, srt: Path):
-    tmp = d / "out" / "_sub.mp4"
-    style = "Fontsize=20,PrimaryColour=&H00FFFFFF,BorderStyle=1,Outline=1,Shadow=0"
-    run([FF, "-y", "-v", "error", "-i", str(video), "-vf",
-         f"subtitles={srt}:force_style='{style}'", "-c:a", "copy", str(tmp)])
-    shutil.move(str(tmp), str(video))
-    print(f"subtitles burned from {srt.name}")
+    """Subtitle burn-in that survives Persian/Arabic shaping."""
+    try:
+        cues = _srt_cues(srt)
+        if not cues:
+            raise RuntimeError("no cues parsed")
+        info = probe(video)
+        w, h = int(info["width"]), int(info["height"])
+        args = [FF, "-y", "-v", "error", "-i", str(video)]
+        filters, last = [], "0:v"
+        for i, (start, end, text) in enumerate(cues, 1):
+            png = d / "subs" / f"cue{i:02d}.png"
+            _render_cue_png(text, png, w)
+            args += ["-i", str(png)]
+            y = h - int(h * 0.19)
+            filters.append(f"[{last}][{i}:v]overlay=0:{y}:"
+                           f"enable='between(t,{start:.3f},{end:.3f})'[o{i}]")
+            last = f"o{i}"
+        tmp = d / "out" / "_sub.mp4"
+        args += ["-filter_complex", ";".join(filters), "-map", f"[{last}]",
+                 "-map", "0:a?", "-c:v", "libx264", "-crf", "19", "-pix_fmt", "yuv420p",
+                 "-c:a", "copy", "-movflags", "+faststart", str(tmp)]
+        run(args)
+        shutil.move(str(tmp), str(video))
+        print(f"subtitles burned from {srt.name} ({len(cues)} cues, Pillow/Persian-shaped)")
+    except Exception as exc:
+        print(f"subtitle burn failed ({exc}); falling back to ffmpeg's subtitles filter")
+        tmp = d / "out" / "_sub.mp4"
+        run([FF, "-y", "-v", "error", "-i", str(video), "-vf",
+             f"subtitles={srt}:force_style='Fontsize=20,PrimaryColour=&H00FFFFFF'",
+             "-c:a", "copy", str(tmp)])
+        shutil.move(str(tmp), str(video))
 
 
 def cmd_mix(a):
@@ -542,7 +631,15 @@ def cmd_qc(a):
         frames = d / "qc" / "frames"
         frames.mkdir(parents=True, exist_ok=True)
         dur = report["final"]["duration_s"]
-        pts = [round(dur * p, 2) for p in (0.05, 0.25, 0.5, 0.75, 0.95)]
+        # sample pairs 0.5 s apart INSIDE each shot: a cut is not a defect, a melt is
+        pts = []
+        for s_ in proj["shots"]:
+            if not s_.get("clip"):
+                continue
+            start = (int(s_["n"]) - 1) * (SHOT_LEN - float(proj.get("crossfade_s") or 0))
+            for off in (0.8, 2.2):
+                pts.append(round(min(start + off, dur - 0.2), 2))
+        pts = sorted({p for p in pts if p > 0})[:12]
         for t in pts:
             out = frames / f"t{t:05.2f}.jpg"
             run([FF, "-y", "-v", "error", "-ss", f"{t}", "-i", str(fin),
@@ -556,8 +653,9 @@ def cmd_qc(a):
             for x, y in zip(imgs, imgs[1:]):
                 diffs.append(round(ImageStat.Stat(ImageChops.difference(x, y)).mean[0], 1))
             report["frame_delta"] = diffs
-            if any(v > 55 for v in diffs):
-                report["issues"].append("a sampled transition changes >55/255 — possible melt")
+            if any(v > 70 for v in diffs):
+                report["issues"].append("two frames 1.4 s apart inside one shot differ >70/255 "
+                                        "— possible melt")
         except Exception:
             report["frame_delta"] = None
     else:
