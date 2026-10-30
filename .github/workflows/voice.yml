@@ -1,23 +1,30 @@
 name: voice
 
-# Proves the local-TTS path on a machine that actually has internet: downloads
-# Kokoro-82M int8 (114 MB) + voices (28 MB), renders the two English lines of
-# films/watchmaker, and reports the measured real-time factor.
+# The sandbox that writes this code cannot reach release CDNs or HuggingFace
+# (only github.com, codeload, api.github.com, pypi). A runner can. So the runner is
+# the measuring instrument: it downloads the real models, renders both languages,
+# measures the real-time factor, and commits the numbers + audio back to the branch.
 #
-# Why a workflow and not a sandbox run: the sandbox that writes the code blocks
-# the release CDN, so the only honest place to prove this is CI.
+# Nothing here is a claim. Every number in studio/knowledge/measurements.json was
+# produced by this job on a standard 2-core ubuntu-latest box with no GPU.
 #
-# Kokoro weights are Apache-2.0. Piper (Farsi) is GPL-3.0 and is invoked as an
-# external CLI only — it is installed here, never linked into the repo's code.
+# Licences: Kokoro weights Apache-2.0. Piper is GPL-3.0 and is invoked as an
+# external CLI — installed here, never vendored into this repo.
 
 on:
   workflow_dispatch:
   push:
     branches: [arena/e3952d18-game]
-    paths: ['studio/voice.py', 'studio/lipsync.py', 'studio/voicetest.py', '.github/workflows/voice.yml']
+    paths:
+      - 'studio/voice.py'
+      - 'studio/lipsync.py'
+      - 'studio/voicetest.py'
+      - 'studio/knowledge/measure.py'
+      - 'films/voice_probe/project.json'
+      - '.github/workflows/voice.yml'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   offline-logic:
@@ -31,7 +38,7 @@ jobs:
       - name: voice + lipsync offline tests
         run: python3 studio/voicetest.py
 
-  render-english:
+  measure:
     runs-on: ubuntu-latest
     needs: offline-logic
     steps:
@@ -42,26 +49,42 @@ jobs:
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg espeak-ng
           pip install -q kokoro-onnx soundfile imageio-ffmpeg
-      - name: fetch models (142 MB)
+          pip install -q piper-tts || echo "piper-tts unavailable — Farsi line will be skipped"
+      - name: fetch Kokoro (English)
         run: |
           mkdir -p "$HOME/.cache/studio-tts"
           base=https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.1
-          curl -fL --retry 3 -o "$HOME/.cache/studio-tts/kokoro-v1.0.int8.onnx"  "$base/kokoro-v1.0.int8.onnx"
-          curl -fL --retry 3 -o "$HOME/.cache/studio-tts/voices-v1.0.bin"      "$base/voices-v1.0.bin"
-          ls -l "$HOME/.cache/studio-tts"
-      - name: check
-        run: python3 studio/voice.py check
-      - name: plan (English film)
-        run: python3 studio/voice.py plan watchmaker
-      - name: render (measured RTF per line)
-        run: python3 studio/voice.py render watchmaker --force --no-download
-      - name: assemble the VO on the cut timeline
-        run: python3 studio/filmkit.py vo watchmaker || true
+          curl -fL --retry 3 -o "$HOME/.cache/studio-tts/kokoro-v1.0.int8.onnx" "$base/kokoro-v1.0.int8.onnx"
+          curl -fL --retry 3 -o "$HOME/.cache/studio-tts/voices-v1.0.bin"     "$base/voices-v1.0.bin"
+      - name: fetch Piper (Farsi)
+        continue-on-error: true
+        run: |
+          v=https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/fa/fa_IR/ganji/medium
+          curl -fL --retry 3 -o "$HOME/.cache/studio-tts/fa_IR-ganji-medium.onnx" "$v/fa_IR-ganji-medium.onnx"
+          curl -fL --retry 3 -o "$HOME/.cache/studio-tts/fa_IR-ganji-medium.onnx.json" "$v/fa_IR-ganji-medium.onnx.json"
+      - name: what is installed
+        run: |
+          python3 studio/voice.py check
+          du -sh "$HOME/.cache/studio-tts"/* | sort -h
+      - name: plan + render both languages
+        run: |
+          python3 studio/voice.py plan   voice_probe
+          python3 studio/voice.py render voice_probe --force --no-download || echo "render had gaps"
+      - name: measure
+        run: python3 studio/knowledge/measure.py voice_probe || true
       - uses: actions/upload-artifact@v4
         with:
-          name: english-vo
+          name: voice-probe
           path: |
-            films/watchmaker/audio/vo/*.mp3
-            films/watchmaker/audio/vo/vo_plan.json
-            films/watchmaker/audio/vo_timeline.mp3
+            films/voice_probe/audio/vo/*.mp3
+            films/voice_probe/audio/vo/vo_plan.json
+            studio/knowledge/measurements.json
           if-no-files-found: warn
+      - name: commit the numbers back
+        run: |
+          git config user.name "studio-bot"
+          git config user.email "studio@local"
+          git add -f films/voice_probe/audio/vo studio/knowledge/measurements.json
+          git commit -m "measure: TTS real-time factor + sizes on the runner ($(date -u +%H:%M))" || echo "no change"
+          git pull --rebase -q origin "${GITHUB_REF_NAME}" || true
+          git push || echo "push skipped"
