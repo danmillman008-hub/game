@@ -41,6 +41,12 @@ jobs:
       - name: generate
         run: |
           JOBS="films/short16/gen_jobs_bank.json"
+          # `.mivi-trigger` may name a job file — that is how a batch is dispatched,
+          # because the token here cannot create workflow_dispatch events (403).
+          if [ -s .mivi-trigger ]; then
+            t=$(head -1 .mivi-trigger | tr -d '[:space:]')
+            if [ -n "$t" ] && [ -f "$t" ]; then JOBS="$t"; fi
+          fi
           if [ -f films/short16/gen_jobs_auto.json ]; then JOBS="films/short16/gen_jobs_auto.json"; fi
           echo "jobs file: $JOBS"
           python3 studio/mivi_shot.py "$JOBS" --out films/short16/clips_gen
