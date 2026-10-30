@@ -1,5 +1,14 @@
 # تحویل
 
+## ⭐ صحنهٔ ۶۰ ثانیه‌ای — «دروازه» (۱۵ شات، ۱۵ زاویه)
+
+**https://drive.google.com/file/d/1SJVv6DBc0rYNbNZVIgt3sQUft28AuCsH/view**
+
+- `films/anime_ten/deliver/scene_min1.mp4` — ۶۰.۴۶s · ۹۶۰×۱۲۸۰ · ۲۴fps · ۲۳MB
+- ۱۵ شات، ۱۱ زاویهٔ متفاوت: های‌انگل ۹۰°، لوانگل از زمین، پروفایل، اکستریم کلوزآپ چشم، اینسرت دست، اور-ده-شولدر، دو-شات
+- گزارش کامل با عدد: `MIN1_REPORT.md` · کانتکت‌شیت: `qc/min1_batchA.jpg` و `qc/min1_batchB.jpg`
+
+
 ## ⭐ نمونهٔ ۸ ثانیه‌ای (آخرین، ۲۰۲۶-۱۰-۳۰)
 
 **https://drive.google.com/file/d/1XrcBijPqm_rf5ot_Q-mzEFN6fm_y56_e/view**
