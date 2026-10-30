@@ -38,6 +38,8 @@ jobs:
         run: |
           python3 studio/motionbank.py jobs "${{ github.event.inputs.spec }}" \
                   --out films/short16/gen_jobs_auto.json
+      - name: wiring test (no credits spent)
+        run: python3 studio/tests/test_mivi_shot.py
       - name: generate
         run: |
           JOBS="films/short16/gen_jobs_bank.json"

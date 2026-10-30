@@ -78,7 +78,8 @@ img.rotate(-14)                      # ۴. کادر را کج کن
 | فایل | وضعیت |
 |---|---|
 | `studio/motions/ten_stills.py` | ⚠️ **منسوخ** — فقط برای ساخت کانتکت‌شیت و آزمون کادرنگاری؛ برای تولید استفاده نکن |
-| `studio/motions/ten_keys.py` | ✅ مسیر درست: شیت → ویدیو → زنجیره، بدون PIL |
+| `studio/artgen.py` | ✅ کانواس خالی → کی‌فریم (به‌جای `ten_keys.py` که هرگز نوشته نشد) |
+| `studio/shotplan.py` + `studio/mivi_shot.py` | ✅ لنگر + تولید موازی — مسیر رسمی تولید |
 | `studio/motions/anime_bank.json` | قواعد به‌روز: `draft_pass_first`, `camera_in_post`, `no_composite_input` |
 
 ---

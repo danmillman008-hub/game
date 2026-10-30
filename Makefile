@@ -14,15 +14,16 @@ OUT     ?= films/short16/clips_gen
 NAME    ?= anime_ten
 PAR     ?= 4
 
-.PHONY: help check plan dry gen audit film clean trig
+.PHONY: help check plan dry gen audit film wiring clean trig
 
 help:
 	@grep -E '^#   ' Makefile
 
 check:
-	$(PY) -m py_compile studio/*.py studio/toolbox/*.py bridge/*.py
+	$(PY) -m py_compile studio/*.py studio/toolbox/*.py studio/knowledge/*.py bridge/*.py
+	$(PY) studio/links.py                 # no dangling paths after a move
 	$(PY) studio/knowledge/bank.py check
-	$(PY) studio/selftest.py 2>/dev/null || true
+	$(PY) studio/knowledge/banktest.py
 	@echo "check: ok"
 
 plan:
@@ -43,6 +44,9 @@ film:
 
 trig:
 	@ls -1 .*-trigger 2>/dev/null | while read f; do printf '%-20s %s\n' "$$f" "$$(head -1 $$f)"; done
+
+wiring:
+	$(PY) studio/tests/test_mivi_shot.py   # offline: scheduler, chain, report flags
 
 clean:
 	find . -name __pycache__ -type d -prune -exec rm -rf {} +

@@ -89,7 +89,7 @@ python3 studio/chainkit.py grab   clip.mp4 --mode last
 python3 studio/chainkit.py guide  frame.png --spec guide.json
 ```
 
-جزئیات و دام‌ها: [`CHAIN_WORKFLOW.md`](CHAIN_WORKFLOW.md)
+جزئیات و دام‌ها: [`knowledge/archive/CHAIN_WORKFLOW.md`](knowledge/archive/CHAIN_WORKFLOW.md)
 
 ## scorer.py — داور عینی بهترین‌از‌چند
 
@@ -102,7 +102,7 @@ python3 studio/scorer.py score clip.mp4 --ref still.png --audio vo.mp3
 python3 studio/scorer.py pick  cands/*.mp4 --ref still.png --audio vo.mp3
 ```
 
-گردش کار کامل: [`QUALITY_WORKFLOW.md`](QUALITY_WORKFLOW.md)
+گردش کار کامل: [`knowledge/archive/QUALITY_WORKFLOW.md`](knowledge/archive/QUALITY_WORKFLOW.md)
 
 ## حافظهٔ پروژه
 
