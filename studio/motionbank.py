@@ -286,10 +286,42 @@ def cmd_lint(a):
     return 0 if r["ok"] else 1
 
 
+BANKS = {"live": BANK_PATH, "anime": Path(__file__).resolve().parent / "motions" / "anime_bank.json"}
+
+
+def pick_bank(specs: list[dict], forced: str | None) -> tuple[dict, str]:
+    """Choose the bank the spec actually speaks. The two banks share nine ids with
+    different text, so the wrong pick yields a fluent prompt with the wrong
+    vocabulary and no motion. Reported, never silent."""
+    if forced:
+        return load(forced), str(forced)
+    best, best_hits, best_name = None, -1, ""
+    for name, path in BANKS.items():
+        try:
+            b = load(path)
+        except Exception:  # noqa: BLE001
+            continue
+        idx = index(b)
+        # motion words carry more signal than a shot size the two banks share
+        weighted: dict[str, int] = {}
+        for s in specs:
+            for field, w in (("shot_size", 1), ("camera", 1), ("subject", 3), ("look", 2)):
+                k = s.get(field)
+                if isinstance(k, str):
+                    weighted[k] = max(weighted.get(k, 0), w)
+            m = s.get("micro")
+            for k in ([m] if isinstance(m, str) else (m or [])):
+                weighted[k] = max(weighted.get(k, 0), 2)
+        hits = sum(w for k, w in weighted.items() if k in idx)
+        if hits > best_hits:          # strict: a tie keeps the live-action default
+            best, best_hits, best_name = b, hits, f"{name} ({path.name})"
+    return best, best_name
+
+
 def cmd_jobs(a):
     """spec -> the file studio/mivi_shot.py consumes."""
     specs = json.loads(Path(a.spec).read_text(encoding="utf-8"))
-    bank = load(getattr(a, "bank", None))
+    bank, bank_name = pick_bank(specs, getattr(a, "bank", None))
     jobs, rows, unknown = [], [], []
     missing = [s["id"] for s in specs
                if not s.get("still") and not s.get("still_from") and not s.get("still_from_clip")]
@@ -312,7 +344,7 @@ def cmd_jobs(a):
     Path(a.out).write_text(json.dumps({"shots": jobs}, indent=2, ensure_ascii=False),
                            encoding="utf-8")
     print(json.dumps({"jobs": len(jobs), "out": a.out,
-                      "bank": str(getattr(a, "bank", None) or BANK_PATH),
+                      "bank": bank_name,
                       "clean": sum(1 for r in rows if r["lint_ok"])}, indent=2))
     for r in rows:
         if not r["lint_ok"]:

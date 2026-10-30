@@ -54,6 +54,22 @@ scene gate: 5 shots, 3 anchored, 2 chained, longest chain 1
 اگر پرامپتی ناقض قرارداد Wan باشد یا زنجیره از ۲ بگذرد، **کد ۱** برمی‌گرداند —
 یعنی می‌شود در CI گذاشت.
 
+### ۳٫۵. دو بانک حرکت، و انتخاب خودکار
+
+`studio/motions/bank.json` (لایو‌اکشن، پیش‌فرض قدیمی) و `anime_bank.json` (سل) ۹ آیدی
+مشترک با **متن متفاوت** دارند. اگر اسپک سل با بانک لایو ساخته شود، جملهٔ روان ولی با
+واژگان اشتباه و بدون حرکت می‌دهد — و قبلاً بی‌صدا این کار را می‌کرد.
+
+از امروز:
+
+```bash
+python3 studio/motionbank.py jobs spec.json --out jobs.json            # خودش بانک را انتخاب می‌کند
+python3 studio/motionbank.py jobs spec.json --out jobs.json --bank studio/motions/anime_bank.json
+```
+
+انتخاب با وزن انجام می‌شود (subject ۳، micro/look ۲، camera/shot_size ۱) و بانک
+انتخاب‌شده در خروجی چاپ می‌شود. آیدی ناشناس ⇒ **کد ۱**، نه جملهٔ بی‌معنی در پرامپت.
+
 ### ۴. اجرا
 
 ```bash
