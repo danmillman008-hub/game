@@ -1,0 +1,33 @@
+name: photo
+# The sandbox cannot draw (image tool returns 403) and cannot reach the Mivi host.
+# The runner can reach Mivi, so the picture endpoint is probed there.
+on:
+  workflow_dispatch:
+  push:
+    branches: [arena/e3952d18-game]
+    paths: ['studio/mivi_photo.py', '.photo-trigger']
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - run: pip install -q imageio-ffmpeg
+      - name: probe picture endpoint
+        run: python3 studio/mivi_photo.py probe
+      - name: publish
+        if: always()
+        run: |
+          git config user.name "studio-bot"; git config user.email "studio@local"
+          git add -f probe_out/photo_probe.json 2>/dev/null || true
+          git add -f probe_out/photo_probe.png 2>/dev/null || true
+          git commit -m "photo probe $(date -u +%H:%M)" || echo "no change"
+          for i in 1 2 3; do
+            git pull --rebase --autostash -q origin "${GITHUB_REF_NAME}" || true
+            if git push origin "HEAD:${GITHUB_REF_NAME}"; then break; fi
+            sleep 8
+          done
