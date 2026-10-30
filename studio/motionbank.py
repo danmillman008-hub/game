@@ -248,6 +248,7 @@ def cmd_jobs(a):
         r = compose(s, bank)
         jobs.append({"id": s["id"], "still": s.get("still", ""),
                      "still_from": s.get("still_from"),
+                     "still_from_clip": s.get("still_from_clip"),
                      "prompt": r["prompt"], "attempts": int(s.get("attempts", 1)),
                      "model": s.get("model", "mivi-gx-720p"),
                      "quality": int(s.get("quality", 2))})
