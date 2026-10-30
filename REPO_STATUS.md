@@ -1,12 +1,14 @@
 # وضعیت ریپو — ساخته‌شده با اجرا، نه با ادعا
 
-> خودکار از `python3 studio/verify.py` — 2026-10-30 20:46 UTC · پایتون 3.11.2 · sandbox
+> خودکار از `python3 studio/verify.py` — 2026-10-30 20:47 UTC · پایتون 3.11.17 · runner
 
 | ok | FAIL | skip | warn |
 |---|---|---|---|
 | 42 | 0 | 1 | 1 |
 
-> ⚠️ 4 وابستگی نصب نیست؛ ردیف‌های وابسته `skip` شده‌اند، نه pass — نسخهٔ رانر (verify.yml) این‌ها را نصب می‌کند، پس آنجا باید اجرا شوند: basicsr, pyanime4k, realesrgan, torch
+> ⚠️ 4 وابستگی نصب نیست؛ ردیف‌های وابسته `skip` شده‌اند، نه pass — روی رانر هم اجرا نشدند: basicsr, pyanime4k, realesrgan, torch
+
+> ⏭️ این 1 فایل روی رانر هم اجرا نشد: studio/toolbox/upscale.py
 
 ## compile
 
@@ -32,37 +34,37 @@
 
 ## smoke
 
-- ✅ bridge/mivi_mcp.py --help (0.1s)
+- ✅ bridge/mivi_mcp.py --help (0.0s)
 - ✅ mivi_web/make_catalog.py --help (0.0s)
 - ✅ mivi_web/re/annpaths.py --help (0.0s)
 - ✅ mivi_web/re/dexann.py --help (0.0s)
-- ✅ mivi_web/re/dumpclass.py --help (0.2s)
-- ✅ mivi_web/re/fields.py --help (0.2s)
-- ✅ mivi_web/re/m2.py --help (0.2s)
-- ✅ mivi_web/re/staticdump.py --help (0.2s)
-- ✅ mivi_web/re/xref2.py --help (0.2s)
-- ✅ studio/artgen.py --help (0.1s)
-- ✅ studio/chainkit.py --help (0.1s)
-- ✅ studio/cutlist.py --help (0.2s)
+- ✅ mivi_web/re/dumpclass.py --help (0.3s)
+- ✅ mivi_web/re/fields.py --help (0.1s)
+- ✅ mivi_web/re/m2.py --help (0.1s)
+- ✅ mivi_web/re/staticdump.py --help (0.1s)
+- ✅ mivi_web/re/xref2.py --help (0.1s)
+- ✅ studio/artgen.py --help (0.0s)
+- ✅ studio/chainkit.py --help (0.0s)
+- ✅ studio/cutlist.py --help (0.1s)
 - ✅ studio/filmkit.py --help (0.1s)
-- ✅ studio/knowledge/bank.py --help (0.1s)
+- ✅ studio/knowledge/bank.py --help (0.0s)
 - ✅ studio/knowledge/banktest.py -> ALL OK
-- ✅ studio/knowledge/measure.py --help (0.1s)
+- ✅ studio/knowledge/measure.py --help (0.0s)
 - ✅ studio/links.py -> 695 tracked files · 0 breaks · 1 size warnings
 - ✅ studio/lipsync.py --help (0.0s)
-- ✅ studio/mivi_photo.py --help (0.1s)
-- ✅ studio/mivi_shot.py --help (0.1s)
+- ✅ studio/mivi_photo.py --help (0.0s)
+- ✅ studio/mivi_shot.py --help (0.0s)
 - ✅ studio/motionbank.py --help (0.0s)
 - ✅ studio/motionlint.py --help (0.1s)
 - ✅ studio/motions/ten_shots.py --help (0.0s)
 - ✅ studio/render_film.py --help (0.1s)
-- ✅ studio/scorer.py --help (0.2s)
+- ✅ studio/scorer.py --help (0.1s)
 - ✅ studio/selftest.py -> SELFTEST OK
 - ✅ studio/shotplan.py --help (0.0s)
 - ✅ studio/tests/test_mivi_shot.py -> PASS — success recorded, chain waited, refusal isolated
 - ⏭️ studio/toolbox/upscale.py needs basicsr, pyanime4k, realesrgan, torch — torch + realesrgan + basicsr ~2.5 GB and model weights; not installed on the runner
 - ✅ studio/verify.py --help (0.0s)
-- ✅ studio/voice.py --help (0.1s)
+- ✅ studio/voice.py --help (0.0s)
 - ✅ studio/voicetest.py -> ALL OK
 - ✅ studio/wanprompt.py --help (0.0s)
 
