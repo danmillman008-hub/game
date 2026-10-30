@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "updated": "2026-10-30",
+  "sources": {
+    "purpose": "probe bank, not a finished craft bank: it exists to answer ONE question with evidence — does the video model hold flat 2D cel animation, or does it drift back to photoreal?",
+    "plates": "studio/motions/anime_plate.py — synthetic flat plates, 5-11 colours, so style retention is isolated from input detail",
+    "rules_from": "studio/motions/bank.json (One-Move Rule, one beat, end-state anchor, stated negative) applied unchanged to 2D"
+  },
+  "rules": {
+    "style_is_a_block": "In 2D the [look] block is not grading, it is the medium: flat cel, hard shadow, line art. Never mix a photoreal word into it.",
+    "no_depth_of_field": "Anime backgrounds are painted flat with a horizon band, not a bokeh field. Bokeh is a photoreal tell and invites the model back to 3D.",
+    "blink_is_two_frames": "A blink is the cheapest animation unit there is: two frames closed, hold, open. Ask for 'one blink' and nothing else.",
+    "hold_the_line": "Line width must be constant. Say 'constant line width, clean line art' or the model thickens lines as it moves.",
+    "motion_is_limited": "2D animation is shot on twos and threes. Ask for slow, few, deliberate movements — never for realistic continuous motion.",
+    "one_move": "Only ONE camera move per shot (carried over from the live-action bank).",
+    "end_state": "Anchor the last frame, same as live action: 'by the last frame ...'."
+  },
+  "camera": [
+    {"id": "static_locked", "kind": "static", "en": "locked-off static composition, the camera never moves, no zoom, no pan, no parallax", "fa": "دوربین قفل"},
+    {"id": "micro_push", "kind": "move", "en": "the camera pushes in only {cm} cm over the full {sec} seconds — slow enough to barely register, no zoom", "fa": "پوش‌این بسیار آرام", "needs_magnitude": true, "default": {"cm": 30, "sec": 4}},
+    {"id": "slow_dolly_in", "kind": "move", "en": "slow dolly push from wide to medium over the full {sec} seconds, constant speed", "fa": "دالی آرام", "needs_magnitude": true, "default": {"sec": 4}},
+    {"id": "pan_right", "kind": "move", "en": "a single steady pan right of {deg} degrees over the full {sec} seconds, no handheld", "fa": "پن آرام به راست", "needs_magnitude": true, "default": {"deg": 15, "sec": 4}}
+  ],
+  "shot_size": [
+    {"id": "ews", "en": "extreme wide establishing shot", "fa": "نمای خیلی باز"},
+    {"id": "ws", "en": "wide shot", "fa": "نمای باز"},
+    {"id": "ms", "en": "medium shot", "fa": "نمای متوسط"},
+    {"id": "cu", "en": "close-up", "fa": "کلوزآپ"},
+    {"id": "ecu", "en": "extreme close-up", "fa": "کلوزآپ خیلی نزدیک"}
+  ],
+  "subject": [
+    {"id": "girl_umbrella", "en": "the girl stands still under a clear umbrella, seen from behind, coat hanging straight, only the umbrella tilting {cm} cm and settling", "fa": "دختر با چتر ایستاده", "beats": 1},
+    {"id": "eye_blink", "en": "the eye blinks once — lids close, hold for three frames, open — and then stays open, the pupil still", "fa": "یک پلک زدن", "beats": 1},
+    {"id": "walk_away", "en": "she walks away from camera, four steps, coat tail swaying once per step, then stops", "fa": "از دوربین دور می‌شود", "beats": 2},
+    {"id": "hair_strand", "en": "one strand of hair lifts across the frame and settles back into place, nothing else in the frame moves", "fa": "یک تار مو", "beats": 1},
+    {"id": "rain_only", "en": "nothing in the frame moves except the rain", "fa": "فقط باران", "beats": 1}
+  ],
+  "micro": [
+    {"id": "umbrella_tilt", "en": "the umbrella tilts back no more than {cm} cm and settles", "fa": "چتر کمی برمی‌گردد"},
+    {"id": "blink_once", "en": "one blink, lids closing over three frames and opening again", "fa": "یک پلک"},
+    {"id": "breath", "en": "shoulders rise and fall once with a breath, no other movement", "fa": "یک نفس"}
+  ],
+  "emotion": [
+    {"id": "quiet", "en": "the shoulders drop a little, the head lowers a few degrees", "fa": "آرام"},
+    {"id": "waiting", "en": "her weight shifts from one foot to the other and back", "fa": "منتظر"}
+  ],
+  "environment": [
+    {"id": "rain_streaks", "en": "rain falling as thin straight strokes, constant speed, same direction", "fa": "باران خطی"},
+    {"id": "wires_still", "en": "telephone wires perfectly still across the top of the frame", "fa": "سیم‌های ثابت"},
+    {"id": "window_glow", "en": "the windows of the far building glow steadily, no flicker", "fa": "پنجره‌های روشن"}
+  ],
+  "look": [
+    {"id": "cel_night", "en": "2D cel animation, flat colour fields, hard-edged shadows, constant line width, clean line art, limited palette of deep blue and warm amber, anime background painting, no gradients except the sky band, no texture, no photographic detail, no depth of field, no 3D render", "fa": "انیمیشن سل ۲بعدی"},
+    {"id": "cel_closeup", "en": "2D cel animation close-up, flat skin tone with one hard shadow shape, hair as solid black masses, iris as flat colour with one highlight, constant line width, no gradient, no texture, no depth of field, no 3D render", "fa": "کلوزآپ سل"}
+  ],
+  "negative": {
+    "default": "no text, no subtitle, no watermark, no photorealism, no skin pores, no 3D render, no CGI, no depth of field, no bokeh, no motion blur, no camera shake, no zoom, no warping, no morphing, no frame reversal, no extra limbs, no melting lines",
+    "static": "no camera movement at all, no drift, no reframing, no parallax, no text, no subtitle"
+  }
+}

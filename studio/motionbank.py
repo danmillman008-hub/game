@@ -35,14 +35,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 BANK_PATH = Path(__file__).resolve().parent / "motions" / "bank.json"
 
-CAMERA_WORDS = ["push in", "push-in", "dolly", "pan", "tilt", "orbit", "crane",
-                "track", "zoom", "handheld", "follow", "re-frame", "reframe"]
+CAMERA_WORDS = ["push in", "push-in", "pushes in", "push", "dolly", "pan", "tilt",
+                "orbit", "crane", "track", "zoom", "handheld", "follow", "re-frame", "reframe"]
 VAGUE = ["subtle", "slight", "slightly", "gentle", "gently", "natural", "smooth",
          "slowly", "softly", "a little", "some"]
 
 
-def load() -> dict:
-    return json.loads(BANK_PATH.read_text(encoding="utf-8"))
+def load(path: str | Path | None = None) -> dict:
+    """Default bank is the live-action one; `--bank` selects another (e.g. anime_bank.json)."""
+    return json.loads(Path(path or BANK_PATH).read_text(encoding="utf-8"))
 
 
 def index(bank: dict) -> dict:
@@ -143,20 +144,22 @@ def compose(spec: dict, bank: dict | None = None) -> dict:
     micro = spec.get("micro")
     micros = [get(m) for m in ([micro] if isinstance(micro, str) else (micro or []))]
     env = get(spec.get("environment"))
-    look = get(spec.get("look"), idx["cine_night"])
+    look = get(spec.get("look"), idx.get("cine_night") or {"en": ""})
 
     neg_key = spec.get("negative") or ("static" if cam.get("kind") == "static" else "default")
     neg = bank["negative"].get(neg_key, bank["negative"]["default"]) \
         if neg_key in bank["negative"] else (neg_key if isinstance(neg_key, str) else bank["negative"]["default"])
 
+    mag = spec.get("magnitude") or {}
+    subj_txt = fmt(subj, **mag) if subj.get("en") else ""
     parts = []
-    cam_txt = fmt(cam, **(spec.get("magnitude") or {}))
+    cam_txt = fmt(cam, **mag)
     parts.append(f"[shot] {fmt(shot)}, {cam_txt}")
-    if subj.get("en"):
-        parts.append(f"[subject] {subj['en']}")
+    if subj_txt:
+        parts.append(f"[subject] {subj_txt}")
     if spec.get("place"):
         parts.append(f"[place] {spec['place']}")
-    motion_bits = [fmt(m) for m in micros if m.get("en")]
+    motion_bits = [fmt(m, **mag) for m in micros if m.get("en")]
     if motion_bits:
         parts.append("[motion] " + "; ".join(motion_bits))
     if env and env.get("en"):
@@ -239,9 +242,10 @@ def cmd_lint(a):
 def cmd_jobs(a):
     """spec -> the file studio/mivi_shot.py consumes."""
     specs = json.loads(Path(a.spec).read_text(encoding="utf-8"))
+    bank = load(getattr(a, "bank", None))
     jobs, rows = [], []
     for s in specs:
-        r = compose(s)
+        r = compose(s, bank)
         jobs.append({"id": s["id"], "still": s.get("still", ""),
                      "still_from": s.get("still_from"),
                      "prompt": r["prompt"], "attempts": int(s.get("attempts", 1)),
@@ -260,10 +264,11 @@ def cmd_jobs(a):
 
 
 def cmd_shots(a):
+    bank = load(getattr(a, "bank", None))
     spec = {"id": "adhoc", "subject": a.subject, "camera": a.camera,
             "shot_size": a.size, "micro": a.micro, "environment": a.environment,
             "place": a.place, "end_state": a.end, "look": a.look}
-    r = compose({k: v for k, v in spec.items() if v})
+    r = compose({k: v for k, v in spec.items() if v}, bank)
     print(r["prompt"])
     print()
     for i in r["lint"]["issues"]:
@@ -287,10 +292,11 @@ def main():
 
     p = sub.add_parser("lint"); p.add_argument("text"); p.set_defaults(fn=cmd_lint)
 
-    p = sub.add_parser("jobs"); p.add_argument("spec"); p.add_argument("--out", required=True)
+    p = sub.add_parser("jobs"); p.add_argument("--bank", default=None,
+        help="alternative bank JSON, e.g. studio/motions/anime_bank.json"); p.add_argument("spec"); p.add_argument("--out", required=True)
     p.set_defaults(fn=cmd_jobs)
 
-    p = sub.add_parser("shots")
+    p = sub.add_parser("shots"); p.add_argument("--bank", default=None)
     p.add_argument("--subject"); p.add_argument("--camera"); p.add_argument("--size")
     p.add_argument("--micro", action="append"); p.add_argument("--environment")
     p.add_argument("--place"); p.add_argument("--end"); p.add_argument("--look")
