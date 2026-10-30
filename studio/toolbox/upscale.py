@@ -33,11 +33,12 @@ from PIL import Image, ImageFilter, ImageStat
 ROOT = Path(__file__).resolve().parent.parent.parent
 
 
-def sharpness(p: Path) -> float:
-    """Laplacian-energy proxy: higher = crisper lines. No OpenCV needed."""
+def sharpness(p: Path, norm: int = 1000) -> float:
+    """Edge energy per pixel, measured at a FIXED width so images of different sizes
+    are comparable. Resizing to the same size first is the whole point."""
     im = Image.open(p).convert("L")
-    if max(im.size) > 1200:
-        im = im.resize((im.width // 2, im.height // 2))
+    h = max(1, int(im.height * norm / im.width))
+    im = im.resize((norm, h), Image.LANCZOS)
     lap = im.filter(ImageFilter.FIND_EDGES)
     return round(ImageStat.Stat(lap).var[0] ** 0.5, 2)
 
@@ -69,7 +70,16 @@ def realesrgan(src: Path, dst: Path, scale: int = 4) -> None:
     I.fromarray(out).save(dst)
 
 
-ENGINES = {"anime4k": anime4k, "realesrgan": realesrgan}
+def bicubic(src: Path, dst: Path, scale: int = 4) -> None:
+    """The control. If the special tool does not beat plain Lanczos at the same output
+    size, it is not worth the install — and the first sharpness number I produced was
+    misleading for exactly this reason (bigger image, same edges, lower per-pixel
+    gradient). Every comparison below is measured at ONE output size."""
+    im = Image.open(src).convert("RGB")
+    im.resize((im.width * scale, im.height * scale), Image.LANCZOS).save(dst)
+
+
+ENGINES = {"anime4k": anime4k, "realesrgan": realesrgan, "bicubic": bicubic}
 
 
 # ------------------------------------------------------------------ commands --
@@ -94,9 +104,14 @@ def cmd_refs(a) -> int:
             print(f"  {s.name}: {Image.open(s).size} -> {Image.open(dst).size} "
                   f"in {time.time() - t0:.0f}s")
         rows.append((s.name, before, sharpness(dst)))
-    print(f"\n{'file':10s} {'sharp before':>13s} {'after':>8s} {'x':>6s}")
+    # control: plain Lanczos at the same output size
+    ctrl = 0.0
     for n, b, aft in rows:
-        print(f"{n:10s} {b:>13.2f} {aft:>8.2f} {aft / max(b, 1e-6):>6.2f}")
+        ctrl += aft / max(b, 1e-6)
+    print(f"\n{'file':10s} {'src(1000px)':>12s} {'4x(1000px)':>11s} {'x':>6s}")
+    for n, b, aft in rows:
+        print(f"{n:10s} {b:>12.2f} {aft:>11.2f} {aft / max(b, 1e-6):>6.2f}")
+    print(f"\nmean gain {ctrl / max(len(rows), 1):.2f}x  (≈1.00 means no better than resizing)")
     return 0
 
 

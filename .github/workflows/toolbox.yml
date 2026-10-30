@@ -46,7 +46,9 @@ jobs:
       - name: install realesrgan (may need the functional_tensor shim)
         continue-on-error: true
         run: |
-          pip install -q torch --index-url https://download.pytorch.org/whl/cpu || pip install -q torch
+          # torch and torchvision MUST come from the same index or the C++ op
+          # registration mismatches ("operator torchvision::nms does not exist")
+          pip install -q torch torchvision --index-url https://download.pytorch.org/whl/cpu
           pip install -q basicsr==1.4.2 realesrgan || true
           python3 - <<'PY' || true
           import torchvision, pathlib
@@ -73,6 +75,7 @@ jobs:
           mkdir -p probe_out
           {
             python3 studio/toolbox/upscale.py compare --src films/anime_ten/refs/c1.png || true
+            python3 studio/toolbox/upscale.py compare --src films/anime_ten/refs/c6.png || true
             python3 studio/toolbox/upscale.py refs --scale 4 --engine anime4k || true
             python3 studio/toolbox/upscale.py refs --scale 4 --engine realesrgan --force || true
           } 2>&1 | tee probe_out/toolbox_log.txt
