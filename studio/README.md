@@ -81,3 +81,16 @@ python3 studio/chainkit.py guide  frame.png --spec guide.json
 ```
 
 جزئیات و دام‌ها: [`CHAIN_WORKFLOW.md`](CHAIN_WORKFLOW.md)
+
+## scorer.py — داور عینی بهترین‌از‌چند
+
+تولید رایگان است، داوری گران. این ابزار روی CPU، بدون GPU و بدون ابر، کاندیدها را می‌سنجد:
+هویت (SSIM فریم اول و ناحیهٔ چهره)، شارپنس، فریز، فلیکر، انحراف رنگ، و پروکسی لب‌سینک
+(همبستگی حرکت دهان با پوش صدا).
+
+```bash
+python3 studio/scorer.py score clip.mp4 --ref still.png --audio vo.mp3
+python3 studio/scorer.py pick  cands/*.mp4 --ref still.png --audio vo.mp3
+```
+
+گردش کار کامل: [`QUALITY_WORKFLOW.md`](QUALITY_WORKFLOW.md)
