@@ -1,5 +1,13 @@
 # تحویل
 
+## گردش کار بهینه (۲۰۲۶-۱۰-۳۰)
+
+- `studio/shotplan.py` — پلنر صحنه: لنگر + یک جمله دوربین + یک جمله حرکت؛ زنجیره ≤۲
+- `studio/mivi_shot.py --parallel 4 --dry-run --skip-existing` — تولید موازی
+- بچ ۸ شاتی: ۲۴ دقیقه سریالی → **~۹ دقیقه**
+- `studio/motions/WORKFLOW.md` — خط تولید · `CONSISTENCY_AND_SPEED.md` — پژوهش
+
+
 ## ⭐ صحنهٔ ۶۰ ثانیه‌ای، نسخهٔ ۲ — پرامپت‌های Wan 2
 
 **https://drive.google.com/file/d/1bPl298n5rUc3xJdwCEFlFqJwu9Bpxtvp/view**

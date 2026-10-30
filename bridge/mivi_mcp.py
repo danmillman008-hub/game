@@ -152,7 +152,10 @@ def t_video(a):
     effect, quality = VIDEO_MODELS.get(model, VIDEO_MODELS["mivi-gx-720p"])
     if "quality" in a:
         quality = int(a["quality"])
-    body = {"imageUrls": [as_url(a["image"])], "level": 1, "effectType": effect,
+    # `images` (plural) is a probe, not a promise: the endpoint takes an array, so a
+    # second entry may mean first/last-frame. Nothing in the app code says so.
+    imgs = a.get("images") or [a["image"]]
+    body = {"imageUrls": [as_url(x) for x in imgs], "level": 1, "effectType": effect,
             "prompt": a.get("prompt") or "", "quality": int(quality)}
     r = _post(CREATE, body)
     if r.get("c") != 200:

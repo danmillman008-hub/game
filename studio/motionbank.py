@@ -77,54 +77,37 @@ def _strip_negations(low: str) -> str:
 
 
 def lint(text: str) -> dict:
-    low = text.lower()
+    """The prompt contract is Wan's, not ours.
+
+    Until 2026-10-30 this function demanded a negative block, an end-state sentence
+    and a stated static camera. All three are wrong for I2V: Alibaba's own
+    `I2V_A14B_EN_SYS_PROMPT` says to drop static descriptions, our API has no
+    negative-prompt field, and a "static" clause is already implied by a frame that
+    does not move. The old rules scored a *correct* Wan prompt 64/100 and a wrong one
+    higher — so it is now a thin wrapper over studio/wanprompt.py.
+
+    Returns the same shape as before: {"ok", "score", "issues", "errors"}.
+    """
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import wanprompt
+
+    r = wanprompt.check(text)
     issues = []
-    scan = _strip_negations(low)
-
-    # 1) one move
-    moves = sorted({w for w in CAMERA_WORDS if w in scan})
-    static = ("static" in low) or ("locked-off" in low) or ("locked off" in low)
-    if len(moves) > 2:
-        issues.append({"rule": "one_move", "level": "warn",
-                       "msg": f"{len(moves)} camera terms at once: {moves}"})
-    if not static and not moves:
-        issues.append({"rule": "state_static", "level": "warn",
-                       "msg": "no camera statement — the model will invent a drift"})
-    if static and len(moves) > 1:
-        issues.append({"rule": "state_static", "level": "warn",
-                       "msg": "says static but also names moves"})
-
-    # 2) vague magnitude
-    vague_hits = [w for w in VAGUE if w in scan]
-    has_number = bool(re.search(r"\d", text))
-    if vague_hits and not has_number:
-        issues.append({"rule": "micro_magnitude", "level": "warn",
-                       "msg": f"vague motion words with no number: {vague_hits}"})
-
-    # 3) zoom word for a physical move
-    if "zoom" in scan:
-        issues.append({"rule": "no_zoom_word", "level": "warn",
-                       "msg": "uses 'zoom' — name dolly / push in / track instead"})
-
-    # 4) several beats
-    beats = len(re.findall(r"\bthen\b", low)) + len(re.findall(r"\bthereafter\b", low))
-    if beats >= 2:
-        issues.append({"rule": "one_beat", "level": "warn",
-                       "msg": f"{beats} 'then' clauses — one beat per 4 s clip"})
-
-    # 5) end state
-    if "by the last frame" not in low and "by the end" not in low:
-        issues.append({"rule": "end_state", "level": "warn",
-                       "msg": "no end-state anchor"})
-
-    # 6) negative
-    if "no text" not in low:
-        issues.append({"rule": "negative", "level": "warn",
-                       "msg": "no negative block (text/subtitle)"})
-
-    errors = [i for i in issues if i["level"] == "error"]
-    return {"ok": not issues, "score": max(0, 100 - 12 * len(issues)),
-            "issues": issues, "errors": errors}
+    rules = {
+        "word": "length_100",
+        "static": "no_static_descriptions",
+        "camera": "camera_clause",
+        "subject action": "subject_action",
+        "bracketed": "prose_not_form",
+        "words": "too_thin",
+    }
+    for problem in r["problems"]:
+        rule = next((v for k, v in rules.items() if problem.startswith(k)), "wan_contract")
+        issues.append({"rule": rule, "level": "warn", "msg": problem})
+    return {"ok": r["ok"], "score": max(0, 100 - 20 * len(issues)),
+            "issues": issues, "errors": []}
 
 
 # ------------------------------------------------------------------ compose

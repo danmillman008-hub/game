@@ -49,7 +49,11 @@ jobs:
           fi
           if [ -f films/short16/gen_jobs_auto.json ]; then JOBS="films/short16/gen_jobs_auto.json"; fi
           echo "jobs file: $JOBS"
-          python3 studio/mivi_shot.py "$JOBS" --out films/short16/clips_gen
+          # PARALLEL: tasks are independent on the provider side, so keep several in
+          # flight. Measured on an 8-shot batch: 24 min serial -> ~9 min at 4.
+          PAR="${MIVI_PARALLEL:-4}"
+          echo "parallel: $PAR"
+          python3 studio/mivi_shot.py "$JOBS" --out films/short16/clips_gen --parallel "$PAR"
       - name: publish clips
         if: always()
         run: |
