@@ -209,7 +209,7 @@ def main():
     attempts_used: dict[str, int] = {}
 
     def record(node, res, ok, err=None):
-        report["shots"].append({"id": node["id"], "still": res.get("still"),
+        report["shots"].append({"ok": ok, "id": node["id"], "still": res.get("still"),
                                 "prompt": node.get("prompt", ""),
                                 "chained": node["dep"] is not None,
                                 "attempts": [{"attempt": res["attempt"], "task": res.get("task"),

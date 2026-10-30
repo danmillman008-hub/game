@@ -11,6 +11,7 @@
 | مدل چطور پرامپت می‌خواهد (و چرا خروجی قبلی درهم بود) | [`prompting/WAN_PROMPTS.md`](prompting/WAN_PROMPTS.md) |
 | خط تولید: لنگر، پلنر، تولید موازی | [`workflow/WORKFLOW.md`](workflow/WORKFLOW.md) |
 | چرا هویت می‌شکند و چطور سرعت را بردیم | [`workflow/CONSISTENCY_AND_SPEED.md`](workflow/CONSISTENCY_AND_SPEED.md) |
+| آیا API «فریم اول/آخر» را می‌فهمد؟ (**نه**) | [`workflow/FLF_PROBE.md`](workflow/FLF_PROBE.md) |
 | چطور بدون تصویرساز، تصویر بسازیم | [`method/ARTGEN.md`](method/ARTGEN.md) |
 | روش کی‌فریم: کامپوزیت ممنوع، شیت + زنجیره | [`method/ANIME_METHOD.md`](method/ANIME_METHOD.md) |
 | آپ‌اسکیل انیمه با عدد | [`research/TOOLBOX.md`](research/TOOLBOX.md) |
