@@ -69,11 +69,21 @@ def fmt(entry: dict, **kw) -> str:
 
 
 # ------------------------------------------------------------------ lint
-def _strip_negations(low: str) -> str:
-    """"no zoom, no pan, no handheld" is a *promise*, not a move — drop it."""
-    low = re.sub(r"\b(no|without|never)\s+(zoom|pan|tilt|orbit|crane|track|handheld|dolly|"
-                 r"reframe|reframing|drift|camera movement|movement)\b[^,.;]*", " ", low)
-    return re.sub(r"\s+", " ", low)
+SHOT_NAMES = {"ews": "Extreme wide shot", "ws": "Wide shot", "ms": "Medium shot",
+              "mcu": "Medium close-up", "cu": "Close-up", "ecu": "Extreme close-up",
+              "ots": "Over-the-shoulder shot", "insert": "Insert shot"}
+
+
+def _strip_negations(text: str) -> str:
+    """`no zoom, no pan, no handheld` is a promise, not a move — and Wan has no
+    negative-prompt field to put it in. Drop every `no/never/without X` clause and
+    tidy the punctuation it leaves behind."""
+    out = re.sub(r"\b(no|never|without)\s+[^,.;\u2014\u2013]+", " ", text, flags=re.I)
+    out = re.sub(r"\s*,\s*(?=,|;|\.|$)", "", out)      # dangling / doubled commas
+    out = re.sub(r"^[\s,;\u2014\u2013]+", "", out)
+    out = re.sub(r"[\s,;\u2014\u2013]+(the\s+)?camera\s*$", "", out, flags=re.I)
+    out = re.sub(r"\s+", " ", out).strip(" ,;\u2014\u2013")
+    return out
 
 
 def lint(text: str) -> dict:
@@ -106,7 +116,9 @@ def lint(text: str) -> dict:
     for problem in r["problems"]:
         rule = next((v for k, v in rules.items() if problem.startswith(k)), "wan_contract")
         issues.append({"rule": rule, "level": "warn", "msg": problem})
-    return {"ok": r["ok"], "score": max(0, 100 - 20 * len(issues)),
+    for note in r.get("advice", []):
+        issues.append({"rule": "thin", "level": "info", "msg": note})
+    return {"ok": r["ok"], "score": max(0, 100 - 20 * len(r["problems"]) - 5 * len(r.get("advice", []))),
             "issues": issues, "errors": []}
 
 
@@ -114,49 +126,97 @@ def lint(text: str) -> dict:
 def compose(spec: dict, bank: dict | None = None) -> dict:
     bank = bank or load()
     idx = index(bank)
+    unknown: list[str] = []
+
     def get(key, default=None):
         if not key:
-            return default
+            return default if default is not None else {"id": None, "en": "", "_cat": "free"}
         if isinstance(key, str) and key in idx:
             return idx[key]
-        return {"id": None, "en": key, "_cat": "free"}
+        # previously this pasted the raw id into the prompt ("Fingers_tighten.") —
+        # a misspelt bank id used to become a nonsense instruction instead of an error
+        unknown.append(key)
+        return {"id": None, "en": "", "_cat": "free"}
 
-    shot = get(spec.get("shot_size"), {"en": "wide shot"})
+    # ---- Wan-shaped prose, not a labelled form -------------------------------
+    # Sent by the official I2V contract: under 100 words, motion only, no description
+    # of what is already in the input frame, no negative block (the API has no field
+    # for one). `compose` used to emit `[shot]/[place]/[subject]` tags: 109 words that
+    # failed our own linter, which is exactly the prompt shape that made the model
+    # repaint instead of animate. See knowledge/prompting/WAN_PROMPTS.md.
+    shot = get(spec.get("shot_size"), {"en": ""})
+    shot_txt = SHOT_NAMES.get((spec.get("shot_size") or "").lower(), shot.get("en", ""))
     cam = get(spec.get("camera"), idx["static_locked"])
     subj = get(spec.get("subject"), {"en": ""})
     micro = spec.get("micro")
     micros = [get(m) for m in ([micro] if isinstance(micro, str) else (micro or []))]
-    env = get(spec.get("environment"))
-    look = get(spec.get("look"), idx.get("cine_night") or {"en": ""})
-
-    neg_key = spec.get("negative") or ("static" if cam.get("kind") == "static" else "default")
-    neg = bank["negative"].get(neg_key, bank["negative"]["default"]) \
-        if neg_key in bank["negative"] else (neg_key if isinstance(neg_key, str) else bank["negative"]["default"])
+    have_seed = bool(spec.get("still") or spec.get("still_from") or spec.get("still_from_clip"))
+    look = get(spec.get("look"), {}) if (spec.get("look") and not have_seed) else {}
 
     mag = spec.get("magnitude") or {}
-    subj_txt = fmt(subj, **mag) if subj.get("en") else ""
-    parts = []
-    cam_txt = fmt(cam, **mag)
-    parts.append(f"[shot] {fmt(shot)}, {cam_txt}")
-    if subj_txt:
-        parts.append(f"[subject] {subj_txt}")
-    if spec.get("place"):
-        parts.append(f"[place] {spec['place']}")
-    motion_bits = [fmt(m, **mag) for m in micros if m.get("en")]
-    if motion_bits:
-        parts.append("[motion] " + "; ".join(motion_bits))
-    if env and env.get("en"):
-        parts.append(f"[environment] {fmt(env)}")
-    if spec.get("end_state"):
-        parts.append(f"[end] by the last frame: {spec['end_state']}")
-    parts.append(f"[look] {fmt(look)}")
-    parts.append(f"[negative] {neg}")
+    cam_txt = _strip_negations(fmt(cam, **mag)).strip(" ,")
+    if cam_txt and not cam_txt.endswith("."):
+        cam_txt += "."
+    subj_txt = _strip_negations(fmt(subj, **mag)) if subj.get("en") else ""
+    micro_bits = [_strip_negations(fmt(m, **mag)) for m in micros if m.get("en")]
+    # a micro that repeats the subject ("one blink" twice) is noise, not a second beat
+    def _overlap(x: str, y: str) -> float:
+        stop = {"the", "a", "and", "of", "over", "in"}
+        stem = lambda t: t[:5] if len(t) >= 5 else t          # blink/blinks/blinking
+        a = {stem(t) for t in re.findall(r"[a-z']+", x.lower())} - stop
+        b = {stem(t) for t in re.findall(r"[a-z']+", y.lower())} - stop
+        return len(a & b) / max(1, len(a | b))
 
-    prompt = "\n".join(parts)
+    micro_bits = [b for b in micro_bits if b and (not subj_txt or _overlap(b, subj_txt) < 0.22)]
+
+    lines, dropped = [], []
+    if cam_txt:
+        lines.append(cam_txt[0].upper() + cam_txt[1:])
+    if subj_txt:
+        lines.append(subj_txt[0].upper() + subj_txt[1:] + ".")
+    if micro_bits:
+        lines.append(" ".join(b[0].upper() + b[1:] + "." for b in micro_bits))
+    if spec.get("place") and not have_seed:
+        lines.append(spec["place"].strip(" .") + ".")
+    elif spec.get("place"):
+        dropped.append("place (already in the input frame)")
+    if spec.get("end_state"):
+        lines.append("By the last frame " + spec["end_state"].strip(" .") + ".")
+    if look.get("en"):
+        lines.insert(0, _strip_negations(fmt(look)) + ".")
+    elif spec.get("look"):
+        dropped.append("look (the input frame already carries the style)")
+    if spec.get("environment"):
+        dropped.append("environment (static — Wan DROPS static scene description)")
+    if shot_txt and shot_txt.split()[0].lower() not in " ".join(lines).lower():
+        lines.insert(0, shot_txt + ".")
+    if unknown:
+        dropped.append("unknown bank ids (not in anime_bank.json): " + ", ".join(map(str, unknown)))
+    dropped.append("negative block (no negativePrompt field on this endpoint)")
+
+    prompt = " ".join(lines).strip()
+
+    # trim to the contract, cheapest sentence first
+    def words(t):
+        return len(re.findall(r"[A-Za-z']+", t))
+
+    for victim in ("place", "end"):
+        if words(prompt) <= 100:
+            break
+        keep = [l for l in lines if not (victim == "place" and l == (spec.get("place", "").strip() + "."))
+                and not (victim == "end" and l.lower().startswith("by the last frame"))]
+        if len(keep) != len(lines):
+            dropped.append(f"{victim} sentence (trimmed to stay under 100 words)")
+            lines = keep
+            prompt = " ".join(lines).strip()
+    if words(prompt) > 100:
+        prompt = " ".join(prompt.split()[:100]).rstrip(",;") + "."
+
     report = lint(prompt)
     return {"id": spec.get("id"), "prompt": prompt, "lint": report,
             "beats": subj.get("beats", 1),
-            "camera_kind": cam.get("kind", "move")}
+            "camera_kind": cam.get("kind", "move"),
+            "words": words(prompt), "dropped": dropped}
 
 
 # ------------------------------------------------------------------ verbs
@@ -198,15 +258,19 @@ def cmd_compose(a):
         specs = [specs]
     out = []
     bad = 0
+    bank = load(getattr(a, "bank", None))
     for s in specs:
-        r = compose(s)
+        r = compose(s, bank)
         out.append(r)
         mark = "OK " if r["lint"]["ok"] else "!! "
         print(f"{mark}{r['id']}  ({r['camera_kind']}, {r['beats']} beat)  "
               f"score={r['lint']['score']}")
         for i in r["lint"]["issues"]:
             print(f"     - [{i['rule']}] {i['msg']}")
-        if not r["lint"]["ok"]:
+        for d in r.get("dropped", []):
+            if d.startswith("unknown bank ids"):
+                print(f"     ! {d}")
+        if not r["lint"]["ok"] or any(d.startswith("unknown bank ids") for d in r.get("dropped", [])):
             bad += 1
     if a.out:
         Path(a.out).write_text(json.dumps(out, indent=2, ensure_ascii=False), encoding="utf-8")
@@ -226,7 +290,7 @@ def cmd_jobs(a):
     """spec -> the file studio/mivi_shot.py consumes."""
     specs = json.loads(Path(a.spec).read_text(encoding="utf-8"))
     bank = load(getattr(a, "bank", None))
-    jobs, rows = [], []
+    jobs, rows, unknown = [], [], []
     missing = [s["id"] for s in specs
                if not s.get("still") and not s.get("still_from") and not s.get("still_from_clip")]
     if missing:
@@ -240,15 +304,29 @@ def cmd_jobs(a):
                      "prompt": r["prompt"], "attempts": int(s.get("attempts", 1)),
                      "model": s.get("model", "mivi-gx-720p"),
                      "quality": int(s.get("quality", 2))})
+        miss = [d for d in r.get("dropped", []) if d.startswith("unknown bank ids")]
+        if miss:
+            unknown.append((s["id"], miss[0]))
         rows.append({"id": s["id"], "lint_ok": r["lint"]["ok"], "score": r["lint"]["score"],
-                     "issues": r["lint"]["issues"]})
+                     "issues": r["lint"]["issues"], "words": r.get("words")})
     Path(a.out).write_text(json.dumps({"shots": jobs}, indent=2, ensure_ascii=False),
                            encoding="utf-8")
     print(json.dumps({"jobs": len(jobs), "out": a.out,
+                      "bank": str(getattr(a, "bank", None) or BANK_PATH),
                       "clean": sum(1 for r in rows if r["lint_ok"])}, indent=2))
     for r in rows:
         if not r["lint_ok"]:
             print(f"  ! {r['id']}: " + "; ".join(i["msg"] for i in r["issues"]))
+    for jid, msg in unknown:
+        print(f"  ! {jid}: {msg}")
+    if unknown:
+        # The two banks share nine ids with different text (static_locked, micro_push,
+        # slow_dolly_in ...). Composing an anime spec against the live-action bank
+        # yields a fluent prompt with the wrong vocabulary and no motion — silent.
+        print(f"\nFAILED: {len(unknown)} job(s) reference ids that are not in "
+              f"{Path(str(getattr(a, 'bank', None) or BANK_PATH)).name}. "
+              f"Pass --bank studio/motions/anime_bank.json for the cel bank.")
+        return 1
     return 0
 
 

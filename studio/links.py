@@ -122,28 +122,54 @@ def check_python(files: set[str]) -> list[str]:
     return bad
 
 
+BIG_WARN = 20 * 1024 * 1024     # 20 MB: worth a note
+BIG_FAIL = 40 * 1024 * 1024     # 40 MB: refuse — history keeps every version forever
+
+
+def check_sizes(files: set[str]) -> tuple[list[str], list[str]]:
+    """A 100 MB clip committed once lives in the pack forever; six of them are why
+    `.git` here is 1.2 GB. Big renders belong on Drive (see delivery/DELIVERY.md)."""
+    warn, fail = [], []
+    for rel in sorted(files):
+        p = ROOT / rel
+        if not p.exists():
+            continue
+        mb = p.stat().st_size / 1024 / 1024
+        if mb >= BIG_FAIL / 1024 / 1024:
+            fail.append(f"{rel}: {mb:.0f} MB — over the 40 MB commit limit")
+        elif mb >= BIG_WARN / 1024 / 1024:
+            warn.append(f"{rel}: {mb:.0f} MB")
+    return warn, fail
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--json", action="store_true")
     a = ap.parse_args()
     files = tracked()
+    size_warn, size_fail = check_sizes(files)
     report = {
         "tracked_files": len(files),
+        "large_files": size_fail,
+        "large_files_warn": size_warn,
         "markdown_links": check_md(files),
         "code_paths": check_code_paths(files),
         "moved_paths": check_moved(files),
         "python": check_python(files),
     }
-    breaks = sum(len(v) for k, v in report.items() if isinstance(v, list))
+    hard = ("moved_paths", "markdown_links", "code_paths", "python", "large_files")
+    breaks = sum(len(report[k]) for k in hard)
     if a.json:
         print(json.dumps({**report, "breaks": breaks}, indent=2))
     else:
-        for k in ("moved_paths", "markdown_links", "code_paths", "python"):
+        for k in ("moved_paths", "markdown_links", "code_paths", "python",
+                  "large_files", "large_files_warn"):
             items = report[k]
             print(f"{k:16s} {len(items):3d}  {'ok' if not items else ''}")
             for i in items[:20]:
                 print(f"    - {i}")
-        print(f"\n{report['tracked_files']} tracked files · {breaks} breaks")
+        print(f"\n{report['tracked_files']} tracked files · {breaks} breaks · "
+              f"{len(report['large_files_warn'])} size warnings")
     return 1 if breaks else 0
 
 

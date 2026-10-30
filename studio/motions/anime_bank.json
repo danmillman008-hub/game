@@ -18,7 +18,8 @@
     "camera_in_post": "The model repaints regardless of camera move — drift was the same for static and push-in. Do the push in ffmpeg on a held frame, not in the prompt.",
     "no_composite_input": "Never feed the model a pasted collage. A sheet is one flat drawing, so give the sheet itself; a composed plate of layers makes the model spend the clip repairing edges (legs detached, 15.9 -> 25.6 drift).",
     "frame_with_words": "New shot size is asked for in the prompt on top of the last frame ('now a medium close-up of the same man, his face filling the left half') — that worked; cropping and pasting in PIL did not.",
-    "dutch_in_post": "A tilted key frame comes back upright. Bake the Dutch angle in the edit, not in the image."
+    "dutch_in_post": "A tilted key frame comes back upright. Bake the Dutch angle in the edit, not in the image.",
+    "wan_prompt_shape": "Wan I2V wants motion, not description: under 100 words, no words for what is already in the input frame, no negative block (the endpoint has no field). Official contract: Wan-Video/Wan2.2 wan/utils/system_prompt.py"
   },
   "camera": [
     {
@@ -85,6 +86,21 @@
       "id": "ecu",
       "en": "extreme close-up",
       "fa": "کلوزآپ خیلی نزدیک"
+    },
+    {
+      "id": "mcu",
+      "en": "medium close-up",
+      "fa": "مدیوم کلوزآپ"
+    },
+    {
+      "id": "ots",
+      "en": "over-the-shoulder shot",
+      "fa": "نمای از روی شانه"
+    },
+    {
+      "id": "insert",
+      "en": "insert shot, tight on a single detail",
+      "fa": "اینسرت"
     }
   ],
   "subject": [

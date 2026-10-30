@@ -72,6 +72,24 @@ armoured woman با موی طلایی…». طبق دستور خود مدل، ا
 
 تصویر مقایسه: `films/anime_ten/qc/wanprompt_ab.jpg`
 
+## قالب تگ‌دار از خودِ ابزار حذف شد (۲۰۲۶-۱۰-۳۰)
+
+`motionbank.compose` تا امروز پرامپت را با برچسب می‌ساخت — `[shot] [place] [subject]` —
+و خروجی‌اش **۱۰۹ کلمه و ناقض همان قراردادی** بود که در این سند نوشته‌ایم. یعنی
+ابزارِ خودمان همان پرامپتی را می‌ساخت که باعث «درهم‌برهم» شد.
+
+حالا `compose` نثر می‌سازد و هرچه را که Wan نمی‌خواهد **با نام** حذف می‌کند:
+
+```
+Medium close-up. Locked-off static composition.
+The head turns a few degrees toward camera and stops, eyes finding the lens and staying.
+```
+→ ۲۳ کلمه، صفر درصد توصیف ثابت، صفر بلوک منفی.
+
+و `dropped` را هم برمی‌گرداند: `["environment (static …)", "negative block (no field on this endpoint)", …]`.
+با `--bank` هم می‌شود بانک سل را انتخاب کرد؛ id ناشناس باعث **کد ۱** می‌شود نه
+یک جملهٔ بی‌معنی در پرامپت (`Fingers_tighten.` که قبلاً واقعاً تولید می‌شد).
+
 ## دستور کار
 
 ```bash

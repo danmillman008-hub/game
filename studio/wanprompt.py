@@ -87,7 +87,7 @@ def check(prompt: str) -> dict:
     brackets = len(re.findall(r"\[[^\]]+\]", p))
     # static leak = share of the prompt spent re-describing the frame
     leak = round(100 * sum(w.count(x) for x in STATIC) / max(n, 1))
-    problems = []
+    problems, advice = [], []
     if n > MAX_WORDS:
         problems.append(f"{n} words > {MAX_WORDS} (Wan truncates at 100)")
     if leak > 12:
@@ -99,11 +99,12 @@ def check(prompt: str) -> dict:
     if brackets:
         problems.append(f"{brackets} bracketed labels — Wan wants prose, not a form")
     if n > 0 and n < SWEET[0]:
-        problems.append(f"only {n} words — thin, add one action beat")
+        # advice, not a breach: Wan's own examples include ten-word prompts
+        advice.append(f"only {n} words — thin, one more action beat would help")
     return {
         "words": n, "static_pct": leak, "static": static_hits, "camera": cam_hits,
         "actions": act_hits, "brackets": brackets,
-        "ok": not problems, "problems": problems,
+        "ok": not problems, "problems": problems, "advice": advice,
     }
 
 

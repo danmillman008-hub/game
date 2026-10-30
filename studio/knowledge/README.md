@@ -17,6 +17,7 @@
 | آپ‌اسکیل انیمه با عدد | [`research/TOOLBOX.md`](research/TOOLBOX.md) |
 | کدام ریپو را برداشتیم و کدام را نه | [`BANK.md`](BANK.md) · [`repos.json`](repos.json) · [`research/BANK_GUIDE.md`](research/BANK_GUIDE.md) |
 | درس‌های صدا، لایسنس، محیط | [`LEARNINGS.md`](LEARNINGS.md) |
+| حجم ریپو (۱.۲۵ GB) و راه پاک‌سازی | [`workflow/REPO_HYGIENE.md`](workflow/REPO_HYGIENE.md) |
 | فیلم‌های تحویل‌شده و لینک درایو | [`delivery/DELIVERY.md`](delivery/DELIVERY.md) · [`delivery/MIN1_REPORT.md`](delivery/MIN1_REPORT.md) |
 | چیزهایی که دیگر معتبر نیستند | [`archive/`](archive/) |
 
@@ -49,6 +50,8 @@
 | تولید موازی | ۸ شات: ۲۴ دقیقه → **~۹ دقیقه** |
 | عمق مجاز زنجیره | **≤۲** |
 | آپ‌اسکیل | Anime4K ۱.۷۹× · Real-ESRGAN ۲.۰۶× (کنترل: bicubic) |
+| پرامپت ساخته‌شده با `compose` | ۱۰۹ کلمه، تگ‌دار، **ناقض** → حالا نثر ۲۵–۶۱ کلمه‌ای |
+| حجم `.git` | ۱.۲۵ GB (۴۷۰ MB آن پنج نسخه از یک فایل) |
 | هزینهٔ فیلم ۱۰ دقیقه‌ای | ~۳.۶ ساعت رانر (یک برداشت) |
 
 ## قواعد این پوشه

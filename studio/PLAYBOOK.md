@@ -56,12 +56,16 @@ from, and it costs the same as three unrelated shots.
 
 Every shot needs a still first. Sources, in order of preference:
 
-1. `--from compose:a.png,b.png --prompt "…"` — build the frame from references
-   (character + location plate). This is the only "image edit" Mivi exposes.
-2. `--from upscale:assets/s01.png` — clean 2× hero still.
-3. `--from file:assets/s01.png` — an approved still we already have.
-4. `--from swapface:assets/s01.png --template 1001` — keep a face consistent.
-5. `--from last:3` — chain (step 3b).
+1. `--from file:assets/s01.png` — an approved still (a character sheet, or art the
+   model itself produced from a blank canvas). **This is the default.**
+2. `--from upscale:assets/s01.png` — clean 2–4× still (Anime4K/Real-ESRGAN, CPU).
+3. `--from last:3` — chain from the previous shot's last frame. Keep chains at ≤2 hops.
+4. `--from swapface:assets/s01.png --template 1001` — put a known face back on a
+   generated frame. This is the identity fallback the API actually supports.
+5. `--from compose:a.png,b.png --prompt "…"` — **last resort, and never for cel work.**
+   A pasted/layered plate makes the model spend the clip repairing edges: measured
+   drift 15.9 → 25.6, detached legs, and a white bar from the sheet became a sword in
+   the character's hand. See `knowledge/method/ANIME_METHOD.md`.
 
 Spend the effort here: **the still decides the shot; the prompt only decides the motion.**
 
