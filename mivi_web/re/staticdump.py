@@ -1,5 +1,10 @@
 import sys,glob
 from androguard.core.dex import DEX
+USAGE = "usage: staticdump.py <a.dex[,b.dex]> <string> [<string> ...]\n\nprint the static string fields of classes containing any of the strings"
+if len(sys.argv) > 1 and sys.argv[1] in ('-h', '--help'):
+    print(USAGE); raise SystemExit(0)
+if len(sys.argv) < 3:
+    print(USAGE, file=sys.stderr); raise SystemExit(2)
 TARGET=set(sys.argv[2:])
 def val(ev):
     try: return ev.get_value()

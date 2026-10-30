@@ -8,7 +8,9 @@ It is deliberately boring and offline:
   2. **data**       every tracked .json parses; every workflow has `on:` and `jobs:`.
   3. **triggers**   every `.*-trigger` file names something that exists.
   4. **smoke**      `--help` on every CLI, `run` on every test/check, `.py` compile.
-  5. **report**     writes REPO_STATUS.md from what actually happened.
+  5. **links**      every path named in a doc or a script still exists; nothing has
+                    grown past the size guard (studio/links.py).
+  6. **report**     writes REPO_STATUS.md from what actually happened.
 
 Entries whose dependencies are missing here are SKIPped with the reason — the same
 sweep runs again on the runner (`.github/workflows/verify.yml`) where the deps are
@@ -203,6 +205,30 @@ def check_triggers() -> list[tuple[str, str, str]]:
     return rows
 
 
+def check_links() -> list[tuple[str, str, str]]:
+    """Every path mentioned in a doc or a script still exists, and nothing has
+    silently grown past the size guard. This is what catches the damage after a
+    restructure — stale paths, dead docs, links to files that moved."""
+    import subprocess
+    try:
+        p = subprocess.run([PY, "studio/links.py", "--json"], cwd=ROOT, capture_output=True,
+                           text=True, timeout=120)
+        d = json.loads(p.stdout)
+    except Exception as exc:  # noqa: BLE001
+        return [("links", FAIL, f"studio/links.py could not run: {type(exc).__name__}: {exc}")]
+    rows = []
+    if d.get("breaks"):
+        rows.append(("links", FAIL, f"{d['breaks']} broken reference(s) — run studio/links.py"))
+    for f in d.get("large_files", []):
+        rows.append(("links", FAIL, f"{f} is over the 40 MB guard"))
+    for f in d.get("large_files_warn", []):
+        rows.append(("links", WARN, f"{f} (over 20 MB, tracked in git)"))
+    rows.append(("links", OK if not any(r[1] == FAIL for r in rows) else FAIL,
+                 f"{d.get('tracked_files', '?')} files · {d.get('breaks', 0)} breaks"
+                 f" · {len(d.get('large_files_warn', []))} size warning(s)"))
+    return rows
+
+
 def run_help(path: str) -> tuple[str, str, str]:
     t0 = time.time()
     try:
@@ -235,7 +261,8 @@ def check_smoke(entries: list[dict], quick: bool, ci: bool = False) -> list[tupl
             continue
         lack = gaps_for(e)
         if lack:
-            rows.append(("smoke", SKIP, f"{e['path']} needs {', '.join(lack)}"))
+            why = f" — {e['why']}" if e.get("why") else ""
+            rows.append(("smoke", SKIP, f"{e['path']} needs {', '.join(lack)}{why}"))
             continue
         if e["smoke"] == "run" and quick:
             continue
@@ -246,7 +273,9 @@ def check_smoke(entries: list[dict], quick: bool, ci: bool = False) -> list[tupl
         ran = {m.split(" ")[0] for g, st, m in rows if st == OK}
         for e in entries:
             if e.get("ci") and e["smoke"] in ("help", "run") and e["path"] not in ran:
-                rows.append(("smoke", FAIL, f"{e['path']} did not run (ci=true) — dependency missing"))
+                rows.append(("smoke", FAIL,
+                             f"{e['path']} did not run (ci=true): needs "
+                             f"{', '.join(gaps_for(e)) or 'unknown dependency'}"))
     return rows
 
 
@@ -274,9 +303,15 @@ def write_report(rows: list[tuple[str, str, str]], meta: dict) -> None:
              f"| ok | FAIL | skip | warn |", "|---|---|---|---|",
              f"| {counts[OK]} | {counts[FAIL]} | {counts[SKIP]} | {counts[WARN]} |", ""]
     if meta["gaps"]:
-        lines += [f"> ⚠️ {len(meta['gaps'])} وابستگی در این محیط نصب نبود؛ آن ردیف‌ها "
-                  f"`skip` شده‌اند، نه pass. روی رانر (verify.yml) باید همه اجرا شوند: "
-                  + ", ".join(sorted(meta["gaps"])), ""]
+        if meta["platform"] == "runner":
+            tail = "— روی رانر هم اجرا نشدند"
+        else:
+            tail = "— نسخهٔ رانر (verify.yml) این‌ها را نصب می‌کند، پس آنجا باید اجرا شوند"
+        lines += [f"> ⚠️ {len(meta['gaps'])} وابستگی نصب نیست؛ ردیف‌های وابسته "
+                  f"`skip` شده‌اند، نه pass {tail}: " + ", ".join(sorted(meta["gaps"])), ""]
+    if meta["skipped_paths"] and meta["platform"] == "runner":
+        lines += ["> ⏭️ این " + str(len(meta["skipped_paths"])) + " فایل روی رانر هم اجرا نشد: "
+                  + ", ".join(sorted(meta["skipped_paths"])), ""]
     for group in sorted(by):
         lines.append(f"## {group}")
         lines.append("")
@@ -303,21 +338,26 @@ def main() -> int:
     rows += check_data()
     rows += check_triggers()
     rows += check_deps(entries)
+    rows += check_links()
     rows += check_compile()
     rows += check_smoke(entries, a.quick, a.ci)
 
-    gaps = {n for e in entries for n in gaps_for(e)}
+    gaps = {n for e in entries if e["smoke"] in ("help", "run") for n in gaps_for(e)}
     counts = {s: sum(1 for _, st, _ in rows if st == s) for s in (OK, FAIL, SKIP, WARN)}
+
+    skipped_paths = sorted({m.split(" ")[0] for g, st, m in rows
+                            if g == "smoke" and st == SKIP})
+    meta = {"when": time.strftime("%Y-%m-%d %H:%M UTC", time.gmtime()),
+            "python": sys.version.split()[0],
+            "platform": "runner" if os.environ.get("GITHUB_ACTIONS") else "sandbox",
+            "gaps": gaps, "skipped_paths": skipped_paths}
 
     if a.json:
         print(json.dumps({"counts": counts, "gaps": sorted(gaps),
                           "rows": [{"group": g, "status": s, "msg": m} for g, s, m in rows]},
                          indent=2))
         if not a.no_report:
-            write_report(rows, {"when": time.strftime("%Y-%m-%d %H:%M UTC", time.gmtime()),
-                                "python": sys.version.split()[0],
-                                "platform": "sandbox" if not os.environ.get("GITHUB_ACTIONS") else "runner",
-                                "gaps": gaps})
+            write_report(rows, meta)
         return 1 if counts[FAIL] else 0
     else:
         for group, status, msg in rows:
@@ -329,10 +369,7 @@ def main() -> int:
               f"{' · deps missing: ' + ', '.join(sorted(gaps)) if gaps else ''}")
 
     if not a.no_report:
-        write_report(rows, {"when": time.strftime("%Y-%m-%d %H:%M UTC", time.gmtime()),
-                            "python": sys.version.split()[0],
-                            "platform": "sandbox" if not os.environ.get("GITHUB_ACTIONS") else "runner",
-                            "gaps": gaps})
+        write_report(rows, meta)
         print(f"-> {REPORT.relative_to(ROOT)}")
     return 1 if counts[FAIL] else 0
 

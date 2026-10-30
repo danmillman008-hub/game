@@ -99,6 +99,10 @@ class Dex:
         return cls_ann,fields,methods,params
 
 if __name__=='__main__':
+    if len(sys.argv) < 2 or sys.argv[1] in ('-h', '--help'):
+        print('usage: dexann.py <dex> [method-substring]\n\n'
+              'dump the method annotations of a dex file')
+        raise SystemExit(0 if len(sys.argv) > 1 else 2)
     d=Dex(open(sys.argv[1],'rb').read())
     want=sys.argv[2] if len(sys.argv)>2 else None
     for cd in d.class_defs():

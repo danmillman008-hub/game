@@ -1,5 +1,10 @@
 import sys
 from androguard.core.dex import DEX
+USAGE = "usage: m2.py <classes.dex> <Lcls;,Lcls;> [method-substring]\n\nprint the json-relevant instructions of the named classes"
+if len(sys.argv) > 1 and sys.argv[1] in ('-h', '--help'):
+    print(USAGE); raise SystemExit(0)
+if len(sys.argv) < 3:
+    print(USAGE, file=sys.stderr); raise SystemExit(2)
 d=DEX(open(sys.argv[1],'rb').read())
 want=set(sys.argv[2].split(','))
 filt=sys.argv[3] if len(sys.argv)>3 else None

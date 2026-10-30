@@ -162,6 +162,10 @@ class Dex:
         return 0
 
 if __name__ == '__main__':
+    if not sys.argv[1:] or sys.argv[1] in ('-h', '--help'):
+        print('usage: annpaths.py <dex> [<dex> ...]\n\n'
+              'print the retrofit HTTP path annotation of every annotated method')
+        raise SystemExit(0 if sys.argv[1:] else 2)
     for p in sys.argv[1:]:
         d = Dex(p)
         for cname, acc, mname, proto, anns in d.class_method_annotations():

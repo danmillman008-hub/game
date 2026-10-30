@@ -28,7 +28,11 @@ jobs:
       - name: deps
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
-          pip install -q pillow numpy imageio-ffmpeg opencv-python-headless pyyaml
+          # every dependency the inventory declares for a file that is supposed to
+          # run here. Anything left out shows up as `skip`, which is exactly what
+          # this job exists to prevent.
+          pip install -q pillow numpy imageio-ffmpeg opencv-python-headless pyyaml \
+                       androguard soundfile kokoro-onnx
       - name: verify (strict)
         id: verify
         # NOT `| tee`: a pipe returns tee's status, so a failing verify would still

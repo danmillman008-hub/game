@@ -1,5 +1,10 @@
 import sys,re
 from androguard.core.dex import DEX
+USAGE = "usage: xref2.py <a.dex[,b.dex]> <string> [<string> ...]\n\nfind which methods reference any of the strings"
+if len(sys.argv) > 1 and sys.argv[1] in ('-h', '--help'):
+    print(USAGE); raise SystemExit(0)
+if len(sys.argv) < 3:
+    print(USAGE, file=sys.stderr); raise SystemExit(2)
 TARGETS=set(x for x in sys.argv[2:] if x)
 out={}
 RX=re.compile(r'"([^"]*)"\s*$')
