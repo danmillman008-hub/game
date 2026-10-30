@@ -738,6 +738,56 @@ def cmd_vo(a):
     print("next: filmkit assemble <project>  (it picks up audio/vo.mp3 or --vo)")
 
 
+def _delegate(module: str, argv: list[str]) -> None:
+    """Run a sibling tool (voice.py / lipsync.py) with this interpreter, streamed."""
+    exe = Path(__file__).resolve().parent / module
+    p = subprocess.run([sys.executable, str(exe), *argv])
+    if p.returncode != 0:
+        raise SystemExit(f"{module} exited {p.returncode}")
+
+
+def cmd_voice(a):
+    """Local TTS for the whole film: detect each line's language, write audio/vo/sNN.mp3."""
+    if a.name == "check":            # `filmkit voice check` is the habit we want
+        a.action = "check"
+    argv = [a.action] if a.action == "check" else [a.action, a.name]
+    if a.action != "check":
+        argv += ["--lang", a.lang]
+        if a.voice_en:
+            argv += ["--voice-en", a.voice_en]
+        if a.voice_fa:
+            argv += ["--voice-fa", a.voice_fa]
+    if a.action == "render":
+        if a.only:
+            argv += ["--only", a.only]
+        if a.force:
+            argv += ["--force"]
+        if a.speed != 1.0:
+            argv += ["--speed", str(a.speed)]
+    _delegate("voice.py", argv)
+
+
+def cmd_lip(a):
+    """Lip-sync the shots that need it: plan -> prepare (25 fps/16 kHz) -> run."""
+    if a.name == "check":
+        a.action = "check"
+    argv = [a.action, a.name] if a.action != "check" else ["check"]
+    if a.action == "plan":
+        if a.engine:
+            argv += ["--engine", a.engine]
+    elif a.action == "prepare":
+        if a.shots:
+            argv += ["--shots", a.shots]
+    elif a.action == "run":
+        if a.shots:
+            argv += ["--shots", a.shots]
+        if a.repo:
+            argv += ["--repo", a.repo]
+        if a.dry_run:
+            argv += ["--dry-run"]
+    _delegate("lipsync.py", argv)
+
+
 def cmd_loud(a):
     """Normalise the finished mix to broadcast-ish loudness (-16 LUFS, -1.5 dBTP)."""
     d, proj = load(a.name)
@@ -902,6 +952,21 @@ def main():
 
     p = sub.add_parser("vo"); p.add_argument("name"); p.add_argument("--crossfade", type=float)
     p.set_defaults(fn=cmd_vo)
+
+    p = sub.add_parser("voice"); p.add_argument("name", nargs="?", default="")
+    p.add_argument("--action", default="plan", choices=["check", "plan", "render"])
+    p.add_argument("--lang", default="auto", choices=["auto", "en", "fa"])
+    p.add_argument("--voice-en"); p.add_argument("--voice-fa")
+    p.add_argument("--only"); p.add_argument("--force", action="store_true")
+    p.add_argument("--speed", type=float, default=1.0)
+    p.set_defaults(fn=cmd_voice)
+
+    p = sub.add_parser("lip"); p.add_argument("name", nargs="?", default="")
+    p.add_argument("--action", default="plan", choices=["check", "plan", "prepare", "run"])
+    p.add_argument("--engine", choices=["latentsync16", "latentsync15", "musetalk", "wav2lip_onnx"])
+    p.add_argument("--shots"); p.add_argument("--repo")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(fn=cmd_lip)
 
     p = sub.add_parser("loud"); p.add_argument("name"); p.add_argument("--out")
     p.add_argument("--i", type=float, default=-16.0); p.add_argument("--tp", type=float, default=-1.5)

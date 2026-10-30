@@ -36,6 +36,11 @@ filmkit mix myfilm --vo audio/vo.mp3 --music audio/bed.mp3 --duck
 filmkit qc myfilm
 filmkit frames out/final.mp4 --at 1,4,7
 filmkit deliver myfilm --github --tag v1     # or --drive
+
+filmkit voice myfilm                 # local TTS: line language -> Piper (fa) / Kokoro (en)
+filmkit voice myfilm --action render # -> audio/vo/sNN.mp3, then `filmkit vo`
+filmkit lip myfilm                   # which shots need lip sync + what it costs
+filmkit lip myfilm --action prepare --shots 8,17   # 25 fps / 16 kHz conform
 ```
 
 `--from` accepts: `file:`, `url:`, `last:N`, `compose:a,b`, `upscale:`, `swapface:`, `masks:`.
@@ -46,6 +51,7 @@ filmkit deliver myfilm --github --tag v1     # or --drive
 |---|---|
 | `studio/selftest.py` (offline) | 2 synthetic clips → assemble → mix → qc: 960×1280, 7.7 s, audio present, 0 issues |
 | `films/watchmaker` (live) | 3 chained shots → 11.31 s film, 960×1280 32 fps, subtitles burned, audio mixed |
+| `studio/voicetest.py` (offline) | 25 checks: fa/en routing, VRAM ladder, 25 fps/16 kHz conform → **ALL OK** |
 | `studio/demo.py` (live, CI run 40932388284) | new → still url: → shot 360P → chain → shot → assemble → qc → deliver, **DEMO OK**, 7.75 s, frame_delta ≤24.9 |
 | reference frames | `films/watchmaker/qc/frames/`, `films/studio_demo/qc/frames/` |
 

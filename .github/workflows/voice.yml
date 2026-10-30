@@ -1,0 +1,67 @@
+name: voice
+
+# Proves the local-TTS path on a machine that actually has internet: downloads
+# Kokoro-82M int8 (114 MB) + voices (28 MB), renders the two English lines of
+# films/watchmaker, and reports the measured real-time factor.
+#
+# Why a workflow and not a sandbox run: the sandbox that writes the code blocks
+# the release CDN, so the only honest place to prove this is CI.
+#
+# Kokoro weights are Apache-2.0. Piper (Farsi) is GPL-3.0 and is invoked as an
+# external CLI only — it is installed here, never linked into the repo's code.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [arena/e3952d18-game]
+    paths: ['studio/voice.py', 'studio/lipsync.py', 'studio/voicetest.py', '.github/workflows/voice.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  offline-logic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - name: ffmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - name: voice + lipsync offline tests
+        run: python3 studio/voicetest.py
+
+  render-english:
+    runs-on: ubuntu-latest
+    needs: offline-logic
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - name: deps
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg espeak-ng
+          pip install -q kokoro-onnx soundfile imageio-ffmpeg
+      - name: fetch models (142 MB)
+        run: |
+          mkdir -p "$HOME/.cache/studio-tts"
+          base=https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.1
+          curl -fL --retry 3 -o "$HOME/.cache/studio-tts/kokoro-v1.0.int8.onnx"  "$base/kokoro-v1.0.int8.onnx"
+          curl -fL --retry 3 -o "$HOME/.cache/studio-tts/voices-v1.0.bin"      "$base/voices-v1.0.bin"
+          ls -l "$HOME/.cache/studio-tts"
+      - name: check
+        run: python3 studio/voice.py check
+      - name: plan (English film)
+        run: python3 studio/voice.py plan watchmaker
+      - name: render (measured RTF per line)
+        run: python3 studio/voice.py render watchmaker --force --no-download
+      - name: assemble the VO on the cut timeline
+        run: python3 studio/filmkit.py vo watchmaker || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: english-vo
+          path: |
+            films/watchmaker/audio/vo/*.mp3
+            films/watchmaker/audio/vo/vo_plan.json
+            films/watchmaker/audio/vo_timeline.mp3
+          if-no-files-found: warn
