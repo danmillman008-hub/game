@@ -86,7 +86,7 @@ jobs:
         run: |
           git config user.name "studio-bot"
           git config user.email "studio@local"
-          git add -f films/voice_probe/audio/vo studio/knowledge/measurements.json
+          git add -f films/voice_probe/audio/vo studio/knowledge/measurements.json studio/knowledge/measurements_history.json
           git commit -m "measure: TTS real-time factor + sizes on the runner ($(date -u +%H:%M))" || echo "no change"
           git pull --rebase -q origin "${GITHUB_REF_NAME}" || true
           git push || echo "push skipped"

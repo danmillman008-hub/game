@@ -70,6 +70,11 @@ def main() -> int:
                              "present_bytes": p.stat().st_size if p.exists() else None}
     total_mb = sum(m["present_bytes"] or 0 for m in models.values()) / 1e6
 
+    if total_mb == 0 and not os.environ.get("MEASURE_ALLOW_INHERITED"):
+        raise SystemExit("no model files on this machine — the rtf values in the plan\n"
+                         "were measured somewhere else. Refusing to relabel them as local.\n"
+                         "(set MEASURE_ALLOW_INHERITED=1 if that is really what you want)")
+
     rtfs = [r["rtf"] for r in rows if r.get("rtf")]
     out = {
         "measured_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -93,6 +98,31 @@ def main() -> int:
     }
     dst = Path(__file__).resolve().parent / "measurements.json"
     dst.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    # RTF moves ~50% between runs on a shared runner, so one number is not a fact.
+    # Keep every run: the spread is the finding.
+    hist_path = Path(__file__).resolve().parent / "measurements_history.json"
+    hist = json.loads(hist_path.read_text(encoding="utf-8")) if hist_path.exists() else {"runs": []}
+    by_engine: dict[str, list[float]] = {}
+    for r in rows:
+        if r.get("rtf"):
+            by_engine.setdefault(r["engine"], []).append(r["rtf"])
+    hist["runs"].append({
+        "measured_at": out["measured_at"], "cpu_count": os.cpu_count(),
+        "mean_rtf": out["summary"]["mean_rtf"], "worst_rtf": out["summary"]["worst_rtf"],
+        "per_engine": {k: {"mean": round(sum(v) / len(v), 2), "n": len(v),
+                           "min": round(min(v), 2), "max": round(max(v), 2)}
+                       for k, v in by_engine.items()},
+    })
+    hist["runs"] = hist["runs"][-20:]
+    if hist["runs"]:
+        seeds = {}
+        for k in {k for r in hist["runs"] for k in r["per_engine"]}:
+            vals = [r["per_engine"][k]["mean"] for r in hist["runs"] if k in r["per_engine"]]
+            seeds[k] = {"runs": len(vals), "min": min(vals), "max": max(vals),
+                        "median": sorted(vals)[len(vals) // 2]}
+        hist["across_runs"] = seeds
+    hist_path.write_text(json.dumps(hist, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(out["summary"], ensure_ascii=False))
     print(f"models on disk: {total_mb:.1f} MB")
     print(f"-> {dst.relative_to(ROOT)}")
