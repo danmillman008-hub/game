@@ -44,11 +44,13 @@ def sharpness(p: Path) -> float:
 
 # ------------------------------------------------------------------ engines ---
 def anime4k(src: Path, dst: Path, scale: int = 4) -> None:
+    """Anime4KCPP on the CPU. The model list is fixed and small:
+    acnet-hdn0 (denoise), acnet-lt (light), acnet, anime4k-hdn0, anime4k ..."""
     import pyanime4k
-    img = pyanime4k.upscale(scale, "cpu", str(src), str(dst))
-    if img is False or not dst.exists():
-        # older API: run() with explicit args
-        pyanime4k.run(scale, "cpu", str(src), str(dst))
+    proc = pyanime4k.Processor(processor_type="cpu", device=0, model="acnet-hdn0")
+    img = pyanime4k.imread(str(src))
+    out = proc(src=img, factor=float(scale))
+    pyanime4k.imwrite(str(dst), out)
 
 
 def realesrgan(src: Path, dst: Path, scale: int = 4) -> None:

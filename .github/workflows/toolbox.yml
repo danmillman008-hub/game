@@ -70,16 +70,17 @@ jobs:
           ls -la studio/toolbox/weights
       - name: upscale the character sheets (4x, CPU)
         run: |
-          python3 studio/toolbox/upscale.py compare --src films/anime_ten/refs/c1.png || true
-          python3 studio/toolbox/upscale.py refs --scale 4 --engine anime4k
-      - name: try realesrgan on the same sheet
-        continue-on-error: true
-        run: python3 studio/toolbox/upscale.py refs --scale 4 --engine realesrgan --force
+          mkdir -p probe_out
+          {
+            python3 studio/toolbox/upscale.py compare --src films/anime_ten/refs/c1.png || true
+            python3 studio/toolbox/upscale.py refs --scale 4 --engine anime4k || true
+            python3 studio/toolbox/upscale.py refs --scale 4 --engine realesrgan --force || true
+          } 2>&1 | tee probe_out/toolbox_log.txt
       - name: publish
         if: always()
         run: |
           git config user.name "studio-bot"; git config user.email "studio@local"
-          git add -f films/anime_ten/refs_hi probe_out/upscale 2>/dev/null || true
+          git add -f films/anime_ten/refs_hi probe_out/upscale probe_out/toolbox_log.txt 2>/dev/null || true
           git commit -m "toolbox: 4x anime upscale of the character sheets $(date -u +%H:%M)" || echo "no change"
           for i in 1 2 3; do
             git pull --rebase --autostash -q origin "${GITHUB_REF_NAME}" || true
