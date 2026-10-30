@@ -51,18 +51,17 @@ jobs:
           pip install -q torch torchvision --index-url https://download.pytorch.org/whl/cpu
           pip install -q basicsr==1.4.2 realesrgan || true
           python3 - <<'PY' || true
-          import torchvision, pathlib
-          # basicsr imports a module torchvision renamed in 0.17
-          try:
-              import torchvision.transforms.functional_tensor  # noqa
-          except Exception:
-              import torchvision.transforms.functional as F
-              import sys, types
-              m = types.ModuleType("torchvision.transforms.functional_tensor")
-              m.rgb_to_grayscale = F.rgb_to_grayscale
-              sys.modules["torchvision.transforms.functional_tensor"] = m
-              print("shim installed")
+          # basicsr 1.4.2 imports torchvision.transforms.functional_tensor, a module that
+          # torchvision >=0.17 removed. Write a real file into site-packages: a sys.modules
+          # patch does not survive into the next process.
+          import torchvision, os
+          d = os.path.join(os.path.dirname(torchvision.__file__), "transforms")
+          p = os.path.join(d, "functional_tensor.py")
+          if not os.path.exists(p):
+              open(p, "w").write("from torchvision.transforms.functional import *\n")
+              print("shim written to", p)
           PY
+          python3 -c "import basicsr, realesrgan; print('realesrgan importable')" || true
       - name: fetch anime weights
         continue-on-error: true
         run: |
