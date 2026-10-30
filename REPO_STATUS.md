@@ -1,6 +1,6 @@
 # وضعیت ریپو — ساخته‌شده با اجرا، نه با ادعا
 
-> خودکار از `python3 studio/verify.py` — 2026-10-30 20:56 UTC · پایتون 3.11.2 · sandbox
+> خودکار از `python3 studio/verify.py` — 2026-10-30 20:57 UTC · پایتون 3.11.2 · sandbox
 
 | ok | FAIL | skip | warn |
 |---|---|---|---|
