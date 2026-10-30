@@ -81,6 +81,18 @@ def main():
     a = ap.parse_args()
 
     jobs = json.loads(Path(a.jobs).read_text(encoding="utf-8"))["shots"]
+
+    # guard: never spend a generation on a prompt that breaks the motion rules
+    try:
+        sys.path.insert(0, str(ROOT / "studio"))
+        import motionbank
+        for j in jobs:
+            r = motionbank.lint(j.get("prompt", ""))
+            if not r["ok"]:
+                log(f"[{j['id']}] PROMPT WARN score={r['score']}: "
+                    + "; ".join(i["msg"] for i in r["issues"]))
+    except Exception as exc:  # noqa: BLE001
+        log(f"(prompt lint skipped: {exc})")
     outdir = ROOT / a.out
     outdir.mkdir(parents=True, exist_ok=True)
 

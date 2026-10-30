@@ -1,0 +1,120 @@
+{
+  "version": 1,
+  "updated": "2026-10-30",
+  "sources": {
+    "higgsfield-camera": "OSideMedia/higgsfield-ai-prompt-skill (MIT) — One-Move Rule, Reliable Phrasing Library, micro-move magnitudes",
+    "lanshu": "cclank/lanshu-awesome-ai-video-kit (MIT) — 05 运镜词典 (shot/сamera dictionary), 04 情绪外化表 (emotion→body)",
+    "ai-boost": "ai-boost/awesome-image-video-prompts (GPL-3.0) — block prompt structure, 940 real cases",
+    "wan-guide": "Zambav/ComfyUI-Agent-Toolkit — wan-2.2-prompting-guide (subject → action → camera → mood → temporal)",
+    "measurements": "our own: hug8 chain, 0.956 join SSIM; umbrella reversal defect"
+  },
+
+  "rules": {
+    "one_move": "Only ONE primary camera move per shot. Stacking moves causes jitter.",
+    "state_static": "If the camera must not move, say it explicitly: 'locked-off static camera, never moves'.",
+    "micro_magnitude": "Any small motion needs a number: centimetres and seconds. Never 'subtle' alone.",
+    "no_zoom_word": "Never use 'zoom' for a physical move — name dolly / push in / track.",
+    "one_beat": "One beat per 4-second clip. Several actions in one clip = all of them half-done.",
+    "emotion_to_body": "Never write an emotion; write the body that shows it.",
+    "end_state": "Anchor the last frame: 'by the last frame ...'.",
+    "environment": "Give one independent background motion (rain, steam, leaves) so the frame stays alive.",
+    "negative": "Always: no text, no subtitle, no camera movement, no warping, no morphing."
+  },
+
+  "camera": [
+    {"id": "static_locked", "kind": "static", "en": "locked-off static camera on a tripod, the camera never moves, no zoom, no pan, no handheld", "fa": "دوربین قفل روی سه‌پایه، هیچ حرکتی ندارد", "needs_magnitude": false, "best_for": "dialogue, embrace, any two-hander"},
+    {"id": "static_with_reframe", "kind": "move", "en": "static camera, then a single slow re-frame of {cm} cm toward the subject over the full {sec} seconds", "fa": "دوربین ثابت، سپس یک بازقاب‌بندی آرام", "needs_magnitude": true, "default": {"cm": "10-15", "sec": 4}},
+    {"id": "micro_push", "kind": "move", "en": "the camera pushes in only {cm} cm over the full {sec} seconds — slow enough to barely register, no zoom", "fa": "پوش‌این بسیار آرام", "needs_magnitude": true, "default": {"cm": "10-15", "sec": 4}},
+    {"id": "slow_dolly_in", "kind": "move", "en": "slow dolly push from medium shot to medium close-up over the full {sec} seconds", "fa": "دالی آرام به جلو", "needs_magnitude": true, "default": {"sec": 4}},
+    {"id": "dolly_out", "kind": "move", "en": "slow dolly out revealing the empty street, constant speed over {sec} seconds", "fa": "دالی آرام به عقب", "needs_magnitude": true, "default": {"sec": 4}},
+    {"id": "track_left", "kind": "move", "en": "steady lateral track left alongside the subject at walking pace", "fa": "ترک آرام به چپ", "needs_magnitude": true, "default": {"sec": 4}},
+    {"id": "track_right", "kind": "move", "en": "steady lateral track right alongside the subject at walking pace", "fa": "ترک آرام به راست", "needs_magnitude": true, "default": {"sec": 4}},
+    {"id": "tilt_up", "kind": "move", "en": "slow tilt up following the subject's upward gaze, one direction only", "fa": "تیلت آرام به بالا", "needs_magnitude": true, "default": {"sec": 4}},
+    {"id": "orbit_small", "kind": "move", "en": "smooth {deg}-degree orbit at eye level, constant distance, no speed change", "fa": "اوربیت کوچک", "needs_magnitude": true, "default": {"deg": 15}},
+    {"id": "handheld_drift", "kind": "move", "en": "handheld, barely perceptible drift, no shake, no reframing", "fa": "دوربین روی دست با لرزش نامحسوس", "needs_magnitude": false},
+    {"id": "follow_back", "kind": "move", "en": "camera follows from behind at a steady walking pace, keeping the same distance", "fa": "تعقیب از پشت", "needs_magnitude": true, "default": {"sec": 4}}
+  ],
+
+  "shot_size": [
+    {"id": "ews", "en": "extreme wide shot", "fa": "نمای خیلی باز"},
+    {"id": "ws", "en": "wide shot", "fa": "نمای باز"},
+    {"id": "ms", "en": "medium shot", "fa": "نمای متوسط"},
+    {"id": "mcu", "en": "medium close-up", "fa": "متوسط-نزدیک"},
+    {"id": "cu", "en": "close-up", "fa": "کلوزآپ"},
+    {"id": "ecu", "en": "extreme close-up", "fa": "کلوزآپ خیلی نزدیک"},
+    {"id": "ots", "en": "over-the-shoulder shot", "fa": "نمای روی شانه"},
+    {"id": "two_shot", "en": "two-shot with both faces in frame", "fa": "نمای دو نفره"}
+  ],
+
+  "subject": [
+    {"id": "rise_from_bench", "en": "she rises from the bench — weight shifts forward, hands push off the slat, coat falls straight", "fa": "از نیمکت بلند می‌شود", "beats": 1},
+    {"id": "walk_two_steps", "en": "she walks two steps toward him and stops with her weight on the front foot", "fa": "دو قدم به سمت او می‌رود و می‌ایستد", "beats": 1},
+    {"id": "embrace_and_hold", "en": "her arms come up around his shoulders and stay there; his free arm settles across her back and stays; from this moment neither moves their feet", "fa": "در آغوش می‌گیرد و همان‌جا می‌ماند", "beats": 1},
+    {"id": "head_turn_camera", "en": "she turns her head toward camera, eyes finding the lens, chin lifting slightly", "fa": "سر را به سمت دوربین می‌چرخاند", "beats": 1},
+    {"id": "lower_gaze", "en": "she lowers her gaze to the wet pavement and holds it", "fa": "نگاه را به زمین می‌دوزد", "beats": 1},
+    {"id": "look_up_lamp", "en": "he looks up at the streetlamp above them, then back at her", "fa": "به چراغ خیابان نگاه می‌کند", "beats": 1},
+    {"id": "exhale_slow", "en": "one long exhale: shoulders drop, chest falls, head lowers a few degrees", "fa": "یک بازدم بلند", "beats": 1},
+    {"id": "step_back", "en": "she takes one step back, hands sliding off his coat, and stops", "fa": "یک قدم عقب می‌رود", "beats": 1},
+    {"id": "lift_umbrella", "en": "he lifts the umbrella a few centimetres so it covers her shoulder too, then holds it still", "fa": "چتر را کمی بالا می‌آورد", "beats": 1},
+    {"id": "hand_umbrella", "en": "he tilts the umbrella toward her and lets go of the handle; her hand closes around it", "fa": "چتر را به او می‌دهد", "beats": 1},
+    {"id": "sit_down", "en": "she lowers herself onto the bench, hands finding the edge first", "fa": "روی نیمکت می‌نشیند", "beats": 1},
+    {"id": "reach_hand", "en": "he reaches one hand toward her, palm up, and waits without moving", "fa": "دستش را به سمت او دراز می‌کند", "beats": 1},
+    {"id": "wipe_face", "en": "she wipes rain from her cheek with the back of her hand, once", "fa": "باران را از صورتش پاک می‌کند", "beats": 1},
+    {"id": "turn_away_walk", "en": "she turns and walks away from camera at a steady pace, not looking back", "fa": "برمی‌گردد و دور می‌شود", "beats": 1},
+    {"id": "stand_still", "en": "both stand completely still, only breathing", "fa": "هر دو بی‌حرکت، فقط نفس", "beats": 1}
+  ],
+
+  "micro": [
+    {"id": "fingers_tighten", "en": "her fingers tighten once on the coat hem and release", "fa": "انگشتان یک بار مشت می‌شود"},
+    {"id": "jaw_clench", "en": "his jaw tightens once, then eases", "fa": "فک قفل می‌شود و باز می‌شود"},
+    {"id": "blink_slow", "en": "one slow blink, lashes wet", "fa": "یک پلک‌زدن آرام"},
+    {"id": "breath_visible", "en": "breath visible in the cold air, two slow breaths in the shot", "fa": "نفس در هوا دیده می‌شود"},
+    {"id": "hair_strand", "en": "one wet strand of hair moves across her cheek and stays", "fa": "یک تار مو روی گونه می‌افتد"},
+    {"id": "collar_shift", "en": "his collar shifts once as he turns his head, then settles", "fa": "یقه یک بار جابه‌جا می‌شود"},
+    {"id": "umbrella_settle", "en": "the umbrella tilts back no more than a few centimetres and settles", "fa": "چتر چند سانتی‌متر برمی‌گردد و آرام می‌گیرد"},
+    {"id": "drip_edge", "en": "water drips from the umbrella edge in irregular intervals", "fa": "آب از لبهٔ چتر می‌چکد"}
+  ],
+
+  "emotion": [
+    {"id": "calm", "fa": "آرامش", "body": ["shoulders down", "jaw loose", "breathing slow and even"]},
+    {"id": "grief", "fa": "غم", "body": ["gaze low", "heavy lids", "hands gathered without purpose", "throat moves once as she swallows"]},
+    {"id": "hesitation", "fa": "تردید", "body": ["mouth opens and closes", "eyes flick sideways", "weight shifts to one foot"]},
+    {"id": "surrender", "fa": "تسلیم", "body": ["shoulders drop", "weight leans into the other person", "arms come up and stay"]},
+    {"id": "tension", "fa": "تنش", "body": ["jaw locked", "short breaths", "fingers open and close"]},
+    {"id": "relief", "fa": "رهایی", "body": ["one long exhale", "shoulders release", "a small smile arrives late"]},
+    {"id": "fatigue", "fa": "خستگی", "body": ["eyelids low", "head a few degrees down", "movements slow"]}
+  ],
+
+  "environment": [
+    {"id": "rain_lamp", "en": "rain falling steadily through the cone of the streetlamp", "fa": "باران در نور چراغ"},
+    {"id": "bokeh_traffic", "en": "soft bokeh of passing traffic far behind them, out of focus", "fa": "بوکهٔ ترافیک دور"},
+    {"id": "wet_asphalt", "en": "wet asphalt holding long reflections of the lamp", "fa": "انعکاس روی آسفالت خیس"},
+    {"id": "steam_vent", "en": "a thin steam rising from a vent on the left, drifting slowly", "fa": "بخار آرام از دریچه"},
+    {"id": "wind_sign", "en": "a hanging sign sways slightly in the wind", "fa": "تابلو در باد تکان می‌خورد"},
+    {"id": "headlights", "en": "two headlights approach slowly from the far end of the street", "fa": "دو چراغ ماشین از دور نزدیک می‌شود"}
+  ],
+
+  "look": [
+    {"id": "cine_night", "en": "photorealistic, 35mm, shallow depth of field, warm practical lamp against teal shadows, film grain"},
+    {"id": "cu_night", "en": "photorealistic close-up, 85mm, very shallow depth of field, rim light on wet hair, film grain"},
+    {"id": "wide_night", "en": "photorealistic wide, 28mm, deep focus, wet street reflections, film grain"}
+  ],
+
+  "negative": {
+    "default": "no text, no subtitle, no watermark, no camera shake, no zoom, no warping, no morphing, no extra fingers, no deformed hands, no duplicated limbs, no frame reversal",
+    "static": "no camera movement at all, no drift, no reframing, no text, no subtitle"
+  },
+
+  "templates": {
+    "i2v_4s": [
+      "[shot] {shot_size}, {camera}",
+      "[subject] {subject}",
+      "[place] {place}",
+      "[motion] {micro}",
+      "[environment] {environment}",
+      "[end] by the last frame: {end_state}",
+      "[look] {look}",
+      "[negative] {negative}"
+    ]
+  }
+}

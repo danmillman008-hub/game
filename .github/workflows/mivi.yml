@@ -6,7 +6,10 @@ on:
     inputs:
       jobs:
         description: "job file"
-        default: "films/short16/gen_jobs_hug.json"
+        default: "films/short16/gen_jobs_bank.json"
+      spec:
+        description: "optional shot spec (composed through the motion bank first)"
+        default: ""
   push:
     branches: [arena/e3952d18-game]
     paths: ['.mivi-trigger']
@@ -30,8 +33,17 @@ jobs:
           done
       - name: deps
         run: pip install -q imageio-ffmpeg
+      - name: compose prompts from the motion bank (optional)
+        if: ${{ github.event.inputs.spec != '' }}
+        run: |
+          python3 studio/motionbank.py jobs "${{ github.event.inputs.spec }}" \
+                  --out films/short16/gen_jobs_auto.json
       - name: generate
-        run: python3 studio/mivi_shot.py films/short16/gen_jobs_hug.json --out films/short16/clips_gen
+        run: |
+          JOBS="films/short16/gen_jobs_bank.json"
+          if [ -f films/short16/gen_jobs_auto.json ]; then JOBS="films/short16/gen_jobs_auto.json"; fi
+          echo "jobs file: $JOBS"
+          python3 studio/mivi_shot.py "$JOBS" --out films/short16/clips_gen
       - name: publish clips
         if: always()
         run: |

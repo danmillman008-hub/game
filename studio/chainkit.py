@@ -254,7 +254,7 @@ def cmd_chain(a):
         "input_frame": str(src_frame) if src_frame else None,
         "input_origin": origin,
         "out_frame": str(out_frame),
-        "prompt": a.prompt or "",
+        "prompt": prompt,
         "seconds": probe(clip).get("duration_s"),
         "ts": time.strftime("%Y-%m-%dT%H:%M:%S"),
     })
@@ -305,11 +305,25 @@ def cmd_bridge(a):
     sub = argparse.Namespace(frame=str(in_frame), out=str(gdir), spec=str(cell / "in.guide.json"))
     cmd_guide(sub)
 
+    prompt = a.prompt or ""
+    if a.motion_spec:
+        sys.path.insert(0, str(ROOT / "studio"))
+        import motionbank
+        spec = json.loads(Path(a.motion_spec).read_text(encoding="utf-8"))
+        if isinstance(spec, list):
+            spec = spec[0]
+        spec.setdefault("end_state", "")
+        composed = motionbank.compose(spec)
+        prompt = composed["prompt"]
+        (cell / "prompt.lint.json").write_text(
+            json.dumps(composed["lint"], indent=2), encoding="utf-8")
+        print(f"prompt composed from bank (lint score {composed['lint']['score']})")
+
     job = {
         "link": n,
         "input_image": str(in_frame),
         "input_origin": origin,
-        "prompt": a.prompt or "",
+        "prompt": prompt,
         "duration_s": a.duration,
         "engine": a.engine,
         "aspect": a.aspect,
@@ -434,6 +448,7 @@ def main():
 
     p = sub.add_parser("bridge"); p.add_argument("dir")
     p.add_argument("--from-clip"); p.add_argument("--still"); p.add_argument("--prompt")
+    p.add_argument("--motion-spec", help="shot spec JSON; prompt comes from studio/motions/bank.json")
     p.add_argument("--spec"); p.add_argument("--duration", type=float, default=4.0)
     p.add_argument("--engine", default="wan-lora"); p.add_argument("--aspect", default="3:4")
     p.set_defaults(fn=cmd_bridge)
