@@ -1,3 +1,6 @@
+> WARN: historical. Its quality bar predates the Wan-prompt and anchor findings.
+> Replacement: ../workflow/
+
 # گردش کار «تولید ارزان، انتخاب گران»
 
 > فرض بنیادی: **تولید ویدیو هزینه‌ای ندارد.** پس گردش کار نباید «کمتر تولید کن» باشد؛

@@ -1,3 +1,6 @@
+> WARN: superseded. Old long-chain workflow, no anchors.
+> Replacement: ../workflow/WORKFLOW.md
+
 # گردش کار «پل فریم» — ساخت فیلم با زنجیرهٔ ffmpeg
 
 > فلسفه: **از صفر ویدیو نساز.** یک لینک ۴ ثانیه‌ای بساز، **آخرین فریمش** را بردار،

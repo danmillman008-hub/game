@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """shotplan.py — plan a scene the way the model actually behaves.
 
-Two rules came out of the measurements (studio/motions/CONSISTENCY_AND_SPEED.md):
+Two rules came out of the measurements (studio/knowledge/workflow/CONSISTENCY_AND_SPEED.md):
 
   1. **Anchor, don't chain.** Every extra link in a chain is a lossy re-encode of a
      character's face. Identity survives 2-3 links, not 15. So a scene is planned as

@@ -10,7 +10,7 @@ Two changes on 2026-10-30, both measured problems:
    only the parts of the graph that are actually dependent wait.
 
 2. **Anchor-first jobs.** A deep chain is where identity dies (see
-   studio/motions/CONSISTENCY_AND_SPEED.md). A job that names its own `still`
+   studio/knowledge/workflow/CONSISTENCY_AND_SPEED.md). A job that names its own `still`
    becomes parallel-safe; a job that names `still_from_clip` joins a chain. The
    tool reports the longest chain in the batch so the plan can be judged before
    anything is spent.

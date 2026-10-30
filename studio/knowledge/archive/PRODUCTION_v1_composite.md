@@ -1,3 +1,6 @@
+> WARN: superseded. This document describes the PIL compositing method that was
+> dropped. Correct method: ../method/ANIME_METHOD.md
+
 # THE ROAD THAT DOES NOT END — پروندهٔ تولید
 
 انیمهٔ صامت، ۱۰ دقیقه، ۸ سکانس، ۵ کاراکتر از شیت‌های خودت.

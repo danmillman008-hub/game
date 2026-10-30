@@ -1,0 +1,62 @@
+# game — Mivi film studio
+
+ساخت فیلم انیمه با مدل ویدیویی Mivi، از شیت کاراکتر تا فیلم تدوین‌شده. همه‌چیز
+روی گیت‌هاب اجرا می‌شود؛ سندباکس فقط کد می‌نویسد.
+
+**دانش پروژه، همه در یک جا: [`studio/knowledge/`](studio/knowledge/README.md)**
+(روش، پرامپت، خط تولید، بانک ۵۴ ریپو، اعداد اندازه‌گیری‌شده، تحویل‌ها)
+
+## نقشه
+
+```
+studio/                 ابزار تولید
+├── mivi_shot.py        تولید روی رانر: --parallel --dry-run --skip-existing
+├── shotplan.py         فایل صحنه → جاب‌فایل موازی (لنگر، زنجیره ≤۲)
+├── artgen.py           کانواس خالی → تصویر (بدون تصویرساز)
+├── wanprompt.py        ممیزی پرامپت طبق قرارداد رسمی Wan I2V
+├── motionbank.py       بانک حرکت + lint
+├── filmkit.py          تدوین: assemble / subtitle / …
+├── toolbox/upscale.py  آپ‌اسکیل انیمه (Anime4K / Real-ESRGAN، CPU)
+└── knowledge/          ← همهٔ دانش این‌جاست
+
+films/<name>/           یک پروژه: project.json منبع حقیقت
+films/anime_ten/        فیلم انیمه (refs، canvas، art، clips، deliver، qc)
+bridge/                 پل Mivi ↔ ابزارها (mivi_mcp.py، mivi_bridge.py)
+mivi_web/               مهندسی معکوس اپ: API_MAP.md (نقشهٔ ۶۱ اندپوینت)
+_inbox/                 فایل‌هایی که ربطی به خط تولید ندارند
+```
+
+## سه دستور که ۹۰٪ کار را می‌کنند
+
+```bash
+# ۱. صحنه را پلن کن — پرامپت ناقض و زنجیرهٔ عمیق را رد می‌کند
+python3 studio/shotplan.py plan studio/motions/scenes/gate.json \
+        --out films/short16/gen_jobs_gate.json --parallel 4
+
+# ۲. ببین چه چیزی خرج می‌شود (بدون تولید)
+python3 studio/mivi_shot.py films/short16/gen_jobs_gate.json --out out --dry-run
+
+# ۳. روی رانر تولید کن
+printf 'films/short16/gen_jobs_gate.json\n' > .mivi-trigger   # و push کن
+```
+
+تریگرها: `.mivi-trigger` (تولید) · `.toolbox-trigger` (آپ‌اسکیل) · `.photo-trigger`
+(پروب اندپوینت عکس) · `.render-trigger` (رندر). هر کدام نام فایل جاب را در خط اول
+می‌گیرند؛ ورک‌فلو همان را می‌خواند.
+
+## قواعد سختِ این ریپو
+
+1. **عدد، نه صفت.** هر ادعای کیفیت باید اندازه‌گیری شده باشد و مسیرش در
+   `studio/knowledge/` باشد.
+2. **کامپوزیت PIL ممنوع** برای ساخت کی‌فریم ویدیو. (دلیل: `knowledge/method/ANIME_METHOD.md`)
+3. **پرامپت Wan**: زیر ۱۰۰ کلمه، فقط حرکت، بدون توصیف چیزهایی که در فریم است.
+4. **زنجیره حداکثر ۲ حلقه**؛ بعد از آن لنگر جدید.
+5. **هیچ تولیدی بدون `--dry-run`**.
+
+## وضعیت
+
+| فیلم | وضعیت |
+|---|---|
+| `films/anime_ten` | صحنهٔ ۶۰ ثانیه‌ای، ۱۵ شات، نسخهٔ ۲ با پرامپت Wan — [لینک](studio/knowledge/delivery/DELIVERY.md) |
+| `films/short16` | کارگاه: آرت، زنجیره، بچ‌های آزمایشی |
+| `films/before_leaving` | پروژهٔ کامل قبلی (صدا + لب‌سینک) |

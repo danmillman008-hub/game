@@ -84,7 +84,7 @@ python3 studio/toolbox/upscale.py clean                                       # 
 
 ایدهٔ جایگزین و آزمون‌شده: **از خود مدل ویدیو برای تولید تصویر استفاده کن.**
 کانواس خالی بده، پرامپت کامل صحنه، و فریم ۰ را بردار. نتیجه در
-`studio/motions/ARTGEN.md` و `films/anime_ten/qc/artgen_pipeline.jpg`.
+`studio/knowledge/method/ARTGEN.md` و `films/anime_ten/qc/artgen_pipeline.jpg`.
 
 یعنی در بستهٔ «تصویرساز» باز شد؛ آنچه مانده فقط کیفیت چهرهٔ کلوزآپ است که با
 زنجیره از آرت موجود حل می‌شود، نه با تصویرساز.

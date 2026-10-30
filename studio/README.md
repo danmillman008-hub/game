@@ -11,7 +11,8 @@ studio/
 ├── filmkit.py           the CLI: one verb per capability, resumable per project
 ├── selftest.py          offline proof of the editing half (runs in CI)
 ├── voice.py  lipsync.py local TTS (fa/en) + lip-sync ladder, wired into filmkit
-├── knowledge/           the bank: 35 repos verified against GitHub, real TTS numbers
+├── knowledge/           <- ALL the knowledge: method, prompts, workflow, 54-repo bank,
+│                          measured numbers, deliveries. Start at knowledge/README.md
 └── openmontage/
     └── mivi_video.py    drop-in OpenMontage provider so its 12 pipelines can use Mivi
 

@@ -5,7 +5,7 @@
 - `studio/shotplan.py` — پلنر صحنه: لنگر + یک جمله دوربین + یک جمله حرکت؛ زنجیره ≤۲
 - `studio/mivi_shot.py --parallel 4 --dry-run --skip-existing` — تولید موازی
 - بچ ۸ شاتی: ۲۴ دقیقه سریالی → **~۹ دقیقه**
-- `studio/motions/WORKFLOW.md` — خط تولید · `CONSISTENCY_AND_SPEED.md` — پژوهش
+- `studio/knowledge/workflow/WORKFLOW.md` — خط تولید · `CONSISTENCY_AND_SPEED.md` — پژوهش
 
 
 ## ⭐ صحنهٔ ۶۰ ثانیه‌ای، نسخهٔ ۲ — پرامپت‌های Wan 2
@@ -15,7 +15,7 @@
 - `films/anime_ten/deliver/scene_min1_wan.mp4` — ۶۰.۴۶s · ۱۸MB
 - ۱۵ شات، پرامپت‌های ۱۷–۳۲ کلمه‌ای، صفر توصیف ثابت، صفر ناقض قرارداد Wan
 - لرزش فیلم ۲۱.۱ → ۱۵.۲ (همان حرکت، کمتر درهم‌برهم)
-- قاعده‌ها و A/B: `studio/motions/WAN_PROMPTS.md` · گزارش: `MIN1_REPORT.md`
+- قاعده‌ها و A/B: `studio/knowledge/prompting/WAN_PROMPTS.md` · گزارش: `MIN1_REPORT.md`
 
 
 ## ⭐ صحنهٔ ۶۰ ثانیه‌ای — «دروازه» (۱۵ شات، ۱۵ زاویه)

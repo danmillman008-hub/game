@@ -83,7 +83,7 @@
 | مدیوم‌کلوزآپ | قدیمی | ۳۳.۷ | **۲۲.۲** | ۱۱.۰ |
 | | **Wan** | ۱۲.۵ | **۷.۰** | ۷.۳ |
 
-تصویر: `qc/wanprompt_ab.jpg` · قاعده‌ها: `studio/motions/WAN_PROMPTS.md`
+تصویر: `qc/wanprompt_ab.jpg` · قاعده‌ها: `studio/knowledge/prompting/WAN_PROMPTS.md`
 
 ## ساختار جدید فیلم
 
