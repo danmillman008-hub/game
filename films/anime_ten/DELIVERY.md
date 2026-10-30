@@ -1,5 +1,15 @@
 # تحویل
 
+## ⭐ صحنهٔ ۶۰ ثانیه‌ای، نسخهٔ ۲ — پرامپت‌های Wan 2
+
+**https://drive.google.com/file/d/1bPl298n5rUc3xJdwCEFlFqJwu9Bpxtvp/view**
+
+- `films/anime_ten/deliver/scene_min1_wan.mp4` — ۶۰.۴۶s · ۱۸MB
+- ۱۵ شات، پرامپت‌های ۱۷–۳۲ کلمه‌ای، صفر توصیف ثابت، صفر ناقض قرارداد Wan
+- لرزش فیلم ۲۱.۱ → ۱۵.۲ (همان حرکت، کمتر درهم‌برهم)
+- قاعده‌ها و A/B: `studio/motions/WAN_PROMPTS.md` · گزارش: `MIN1_REPORT.md`
+
+
 ## ⭐ صحنهٔ ۶۰ ثانیه‌ای — «دروازه» (۱۵ شات، ۱۵ زاویه)
 
 **https://drive.google.com/file/d/1SJVv6DBc0rYNbNZVIgt3sQUft28AuCsH/view**
