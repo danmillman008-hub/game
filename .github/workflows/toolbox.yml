@@ -1,0 +1,88 @@
+name: toolbox
+
+# The workstation. Everything the sandbox cannot do lives here:
+#   - pip install real, current packages (the sandbox pins an old numpy/PIL set)
+#   - download model weights from GitHub releases and HuggingFace
+#   - run CPU inference for minutes at a time
+#
+# This job builds the missing tool for output quality: an anime upscaler.
+# The character sheets are 300x499; the model is asked to invent a film from
+# 300 px, so it invents a soft world. Upscale first, generate second.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [arena/e3952d18-game]
+    paths: ['studio/toolbox/**', '.toolbox-trigger']
+
+permissions:
+  contents: write
+
+jobs:
+  upscale:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - name: deps
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg libgl1
+          pip install -q pillow numpy
+          pip install -q pyanime4k || echo "pyanime4k failed"
+      - name: which engines actually work
+        run: |
+          python3 - <<'PY'
+          ok = []
+          try:
+              import pyanime4k; ok.append("anime4k")
+          except Exception as e: print("anime4k:", type(e).__name__, e)
+          try:
+              import torch, realesrgan, basicsr; ok.append(f"realesrgan (torch {torch.__version__})")
+          except Exception as e: print("realesrgan:", type(e).__name__, e)
+          print("WORKING:", ok)
+          PY
+      - name: install realesrgan (may need the functional_tensor shim)
+        continue-on-error: true
+        run: |
+          pip install -q torch --index-url https://download.pytorch.org/whl/cpu || pip install -q torch
+          pip install -q basicsr==1.4.2 realesrgan || true
+          python3 - <<'PY' || true
+          import torchvision, pathlib
+          # basicsr imports a module torchvision renamed in 0.17
+          try:
+              import torchvision.transforms.functional_tensor  # noqa
+          except Exception:
+              import torchvision.transforms.functional as F
+              import sys, types
+              m = types.ModuleType("torchvision.transforms.functional_tensor")
+              m.rgb_to_grayscale = F.rgb_to_grayscale
+              sys.modules["torchvision.transforms.functional_tensor"] = m
+              print("shim installed")
+          PY
+      - name: fetch anime weights
+        continue-on-error: true
+        run: |
+          mkdir -p studio/toolbox/weights
+          curl -fL --retry 3 -o studio/toolbox/weights/RealESRGAN_x4plus_anime_6B.pth \
+            https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth
+          ls -la studio/toolbox/weights
+      - name: upscale the character sheets (4x, CPU)
+        run: |
+          python3 studio/toolbox/upscale.py compare --src films/anime_ten/refs/c1.png || true
+          python3 studio/toolbox/upscale.py refs --scale 4 --engine anime4k
+      - name: try realesrgan on the same sheet
+        continue-on-error: true
+        run: python3 studio/toolbox/upscale.py refs --scale 4 --engine realesrgan --force
+      - name: publish
+        if: always()
+        run: |
+          git config user.name "studio-bot"; git config user.email "studio@local"
+          git add -f films/anime_ten/refs_hi probe_out/upscale 2>/dev/null || true
+          git commit -m "toolbox: 4x anime upscale of the character sheets $(date -u +%H:%M)" || echo "no change"
+          for i in 1 2 3; do
+            git pull --rebase --autostash -q origin "${GITHUB_REF_NAME}" || true
+            if git push origin "HEAD:${GITHUB_REF_NAME}"; then break; fi
+            sleep 8
+          done
