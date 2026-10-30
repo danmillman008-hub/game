@@ -31,7 +31,16 @@ jobs:
           pip install -q pillow numpy imageio-ffmpeg opencv-python-headless pyyaml
       - name: verify (strict)
         id: verify
-        run: python3 studio/verify.py --ci | tee verify_out.txt
+        # NOT `| tee`: a pipe returns tee's status, so a failing verify would still
+        # show a green build. That is exactly the false confidence this job exists
+        # to prevent.
+        run: |
+          set +e
+          python3 studio/verify.py --ci > verify_out.txt 2>&1
+          rc=$?
+          cat verify_out.txt
+          echo "verify exit code: $rc"
+          exit $rc
       - name: publish the status file
         if: always()
         run: |

@@ -56,6 +56,15 @@
    "ci": true
   },
   {
+   "path": ".github/workflows/verify.yml",
+   "role": "workflow",
+   "purpose": "strict verify on push (no skips allowed)",
+   "needs": [],
+   "bins": [],
+   "smoke": "yaml",
+   "ci": true
+  },
+  {
    "path": ".github/workflows/voice.yml",
    "role": "workflow",
    "purpose": "TTS measurement + bank tests",
@@ -449,6 +458,15 @@
    "smoke": "help",
    "bins": [],
    "ci": false
+  },
+  {
+   "path": "studio/verify.py",
+   "role": "check",
+   "purpose": "one command: inventory, data, triggers, deps, compile, smoke; writes REPO_STATUS.md",
+   "needs": [],
+   "bins": [],
+   "smoke": "help",
+   "ci": true
   },
   {
    "path": "studio/voice.py",

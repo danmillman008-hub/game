@@ -137,8 +137,23 @@ def declared_imports(path: str) -> set[str]:
             names |= {a.name.split(".")[0] for a in node.names}
         elif isinstance(node, ast.ImportFrom) and node.level == 0 and node.module:
             names.add(node.module.split(".")[0])
+    # `try: import yaml / except ImportError:` is an optional dependency on purpose,
+    # not an undeclared one
+    optional: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Try):
+            caught = any(
+                (isinstance(h.type, ast.Name) and h.type.id in ("ImportError", "ModuleNotFoundError",
+                                                               "Exception")) or h.type is None
+                for h in node.handlers)
+            if caught:
+                for sub in ast.walk(ast.Module(body=node.body, type_ignores=[])):
+                    if isinstance(sub, ast.Import):
+                        optional |= {a.name.split(".")[0] for a in sub.names}
+                    elif isinstance(sub, ast.ImportFrom) and sub.module:
+                        optional.add(sub.module.split(".")[0])
     std = set(sys.stdlib_module_names) | {"__future__"}
-    return {n for n in names if n not in std and n not in LOCAL}
+    return {n for n in names if n not in std and n not in LOCAL and n not in optional}
 
 
 def check_deps(entries: list[dict]) -> list[tuple[str, str, str]]:
@@ -153,8 +168,10 @@ def check_deps(entries: list[dict]) -> list[tuple[str, str, str]]:
         except SyntaxError:
             continue
         declared = set(e.get("needs", []))
+        text = (ROOT / e["path"]).read_text(encoding="utf-8")
         undeclared = real - declared
-        extra = declared - real
+        # a module imported inside a function or a try/except still counts as used
+        extra = {d for d in declared - real if d not in text}
         if undeclared:
             rows.append(("deps", FAIL, f"{e['path']}: imports not declared: {', '.join(sorted(undeclared))}"))
         elif extra:
