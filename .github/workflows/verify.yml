@@ -14,9 +14,6 @@ on:
     paths-ignore: ['films/**', 'probe_out/**', '_inbox/**']
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -47,15 +44,17 @@ jobs:
           exit $rc
       - name: publish the status file
         if: always()
+        # Written to the run summary instead of committed. A bot commit to the same
+        # file that every local run regenerates means a race on every push: the
+        # branch moves under you, and a stale red report can even keep the next run
+        # red on its own path names. The summary is authored by the runner, always
+        # current, and never conflicts.
         run: |
-          git config user.name "verify-bot"; git config user.email "verify@local"
-          git add -f REPO_STATUS.md 2>/dev/null || true
-          git commit -m "verify: status from run ${{ github.run_id }}" || echo "no change"
-          for i in 1 2 3; do
-            git pull --rebase --autostash -q origin "${GITHUB_REF_NAME}" || true
-            git push origin "HEAD:${GITHUB_REF_NAME}" && break
-            sleep 6
-          done
+          if [ -f REPO_STATUS.md ]; then
+            cat REPO_STATUS.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "_verify.py نوشت: هیچ گزارشی ساخته نشد_" >> "$GITHUB_STEP_SUMMARY"
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:

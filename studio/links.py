@@ -56,9 +56,15 @@ def tracked() -> set[str]:
         return {str(p.relative_to(ROOT)) for p in ROOT.rglob("*") if p.is_file()}
 
 
+# Generated, not written by hand: a status report quotes whichever paths were missing
+# at the time, so scanning it would turn one old failure into a permanent one (and in
+# CI the report is committed, so it would fail forever, feeding on itself).
+GENERATED = {"REPO_STATUS.md"}
+
+
 def check_md(files: set[str]) -> list[str]:
     bad = []
-    for rel in sorted(f for f in files if f.endswith(".md")):
+    for rel in sorted(f for f in files if f.endswith(".md") and f not in GENERATED):
         p = ROOT / rel
         try:
             text = p.read_text(encoding="utf-8")
@@ -78,7 +84,8 @@ def check_md(files: set[str]) -> list[str]:
 
 def check_code_paths(files: set[str]) -> list[str]:
     bad = []
-    for rel in sorted(f for f in files if f.endswith((".md", ".yml", ".py"))):
+    for rel in sorted(f for f in files
+                      if f.endswith((".md", ".yml", ".py")) and f not in GENERATED):
         p = ROOT / rel
         try:
             text = p.read_text(encoding="utf-8")
@@ -97,7 +104,7 @@ def check_code_paths(files: set[str]) -> list[str]:
 def check_moved(files: set[str]) -> list[str]:
     bad = []
     for rel in sorted(files):
-        if not rel.endswith((".md", ".yml", ".py", ".json")):
+        if not rel.endswith((".md", ".yml", ".py", ".json")) or rel in GENERATED:
             continue
         try:
             text = (ROOT / rel).read_text(encoding="utf-8")

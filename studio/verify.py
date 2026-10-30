@@ -10,6 +10,8 @@ It is deliberately boring and offline:
   4. **smoke**      `--help` on every CLI, `run` on every test/check, `.py` compile.
   5. **links**      every path named in a doc or a script still exists; nothing has
                     grown past the size guard (studio/links.py).
+  5b. **selftest**  each detector above is fed a defect on purpose and must fire —
+                    a check that cannot fail is worse than no check.
   6. **report**     writes REPO_STATUS.md from what actually happened.
 
 Entries whose dependencies are missing here are SKIPped with the reason — the same
@@ -217,8 +219,12 @@ def check_links() -> list[tuple[str, str, str]]:
     except Exception as exc:  # noqa: BLE001
         return [("links", FAIL, f"studio/links.py could not run: {type(exc).__name__}: {exc}")]
     rows = []
-    if d.get("breaks"):
-        rows.append(("links", FAIL, f"{d['breaks']} broken reference(s) — run studio/links.py"))
+    broken = (d.get("markdown_links", []) + d.get("code_paths", [])
+              + d.get("moved_paths", []) + d.get("python", []))
+    for b in broken[:6]:
+        rows.append(("links", FAIL, b))
+    if len(broken) > 6:
+        rows.append(("links", FAIL, f"… and {len(broken) - 6} more broken reference(s)"))
     for f in d.get("large_files", []):
         rows.append(("links", FAIL, f"{f} is over the 40 MB guard"))
     for f in d.get("large_files_warn", []):
@@ -269,13 +275,50 @@ def check_smoke(entries: list[dict], quick: bool, ci: bool = False) -> list[tupl
         r = run_script(e["path"]) if e["smoke"] == "run" else run_help(e["path"])
         rows.append(r)
     if ci:
-        # an entry that is supposed to run everywhere must not quietly skip
-        ran = {m.split(" ")[0] for g, st, m in rows if st == OK}
+        # an entry that is supposed to run everywhere must not quietly skip. An entry
+        # that ran and FAILED is already reported above — do not also claim its
+        # dependency is missing, which would be a different (untrue) story.
+        ran = {m.split(" ")[0] for g, st, m in rows if st in (OK, FAIL)}
         for e in entries:
             if e.get("ci") and e["smoke"] in ("help", "run") and e["path"] not in ran:
                 rows.append(("smoke", FAIL,
                              f"{e['path']} did not run (ci=true): needs "
                              f"{', '.join(gaps_for(e)) or 'unknown dependency'}"))
+    return rows
+
+
+def selftest(entries: list[dict]) -> list[tuple[str, str, str]]:
+    """Prove the detectors themselves still fire.
+
+    A checker that cannot fail is worse than no checker: this job was once piped
+    through `tee`, which returned tee's status, so a broken repository produced a
+    green build. Each case below is a defect injected on purpose; the check under
+    test must report FAIL, and the healthy control must report OK.
+    """
+    rows: list[tuple[str, str, str]] = []
+
+    def expect(name: str, got: list[tuple[str, str, str]], want: str) -> None:
+        seen = sorted({st for _, st, _ in got})
+        ok = want in seen
+        rows.append(("selftest", OK if ok else FAIL,
+                     f"{name} -> {want}" if ok else f"{name}: expected {want}, got {seen}"))
+
+    # built at runtime on purpose: a literal path here would itself read as a
+    # reference to a missing file, and studio/links.py caught exactly that
+    fake_listed = "studio/__" + "not_here__.py"
+    fake_phantom = "__" + "phantom__.py"
+    expect("inventory catches an unlisted file",
+           check_inventory(entries + [{"path": fake_listed, "role": "tool"}]), FAIL)
+    expect("inventory catches a phantom entry",
+           check_inventory(entries + [{"path": fake_phantom, "role": "tool"}]), FAIL)
+    expect("deps catches an undeclared import",
+           check_deps(entries + [{"path": "studio/motionlint.py", "role": "tool", "needs": []}]), FAIL)
+    expect("ci mode fails on a declared dependency that is missing",
+           check_smoke([{"path": "studio/links.py", "role": "check", "needs": ["__no_such_module__"],
+                         "smoke": "help", "ci": True}], quick=False, ci=True), FAIL)
+    expect("a healthy entry passes (control)",
+           check_smoke([{"path": "studio/links.py", "role": "check", "needs": [],
+                         "smoke": "help", "ci": True}], quick=False, ci=True), OK)
     return rows
 
 
@@ -339,6 +382,7 @@ def main() -> int:
     rows += check_triggers()
     rows += check_deps(entries)
     rows += check_links()
+    rows += selftest(entries)
     rows += check_compile()
     rows += check_smoke(entries, a.quick, a.ci)
 
