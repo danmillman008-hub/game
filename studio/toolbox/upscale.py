@@ -133,6 +133,34 @@ def cmd_compare(a) -> int:
     return 0
 
 
+def cmd_clean(a) -> int:
+    """Wipe the sheet artefacts that the model otherwise turns into props.
+
+    The earlier band wipe was a full-width strip — it cut the character at the waist,
+    which is why the pilot's legs looked detached. These are narrow rectangles placed
+    to the RIGHT of the body only, so the silhouette survives.
+    """
+    import json
+    chars = json.loads((ROOT / "films" / "anime_ten" / "characters.json")
+                       .read_text(encoding="utf-8"))["characters"]
+    src_dir = ROOT / "films" / "anime_ten" / a.src
+    out_dir = ROOT / "films" / "anime_ten" / a.out
+    out_dir.mkdir(parents=True, exist_ok=True)
+    from PIL import ImageDraw
+    for c in chars:
+        p = src_dir / f"{c['ref'].split('/')[-1]}"
+        if not p.exists():
+            continue
+        im = Image.open(p).convert("RGB")
+        d = ImageDraw.Draw(im)
+        for x0, y0, x1, y1 in c.get("erase_rects", []):
+            d.rectangle([im.width * x0, im.height * y0, im.width * x1, im.height * y1],
+                        fill=(24, 20, 26))
+        im.save(out_dir / p.name)
+        print(f"{p.name}: {len(c.get('erase_rects', []))} rect(s) wiped -> {out_dir.name}/")
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(prog="upscale", description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -140,6 +168,8 @@ def main() -> int:
     p = sub.add_parser("refs"); p.add_argument("--scale", type=int, default=4)
     p.add_argument("--engine", default="anime4k", choices=list(ENGINES))
     p.add_argument("--force", action="store_true"); p.set_defaults(fn=cmd_refs)
+    p = sub.add_parser("clean"); p.add_argument("--src", default="refs_hi")
+    p.add_argument("--out", default="refs_clean"); p.set_defaults(fn=cmd_clean)
     p = sub.add_parser("compare"); p.add_argument("--src", required=True)
     p.add_argument("--scale", type=int, default=4); p.set_defaults(fn=cmd_compare)
     a = ap.parse_args()
