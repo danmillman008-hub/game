@@ -1,14 +1,12 @@
 # وضعیت ریپو — ساخته‌شده با اجرا، نه با ادعا
 
-> خودکار از `python3 studio/verify.py` — 2026-10-30 20:50 UTC · پایتون 3.11.17 · runner
+> خودکار از `python3 studio/verify.py` — 2026-10-30 20:54 UTC · پایتون 3.11.2 · sandbox
 
 | ok | FAIL | skip | warn |
 |---|---|---|---|
-| 40 | 4 | 1 | 1 |
+| 47 | 0 | 1 | 1 |
 
-> ⚠️ 4 وابستگی نصب نیست؛ ردیف‌های وابسته `skip` شده‌اند، نه pass — روی رانر هم اجرا نشدند: basicsr, pyanime4k, realesrgan, torch
-
-> ⏭️ این 1 فایل روی رانر هم اجرا نشد: studio/toolbox/upscale.py
+> ⚠️ 4 وابستگی نصب نیست؛ ردیف‌های وابسته `skip` شده‌اند، نه pass — نسخهٔ رانر (verify.yml) این‌ها را نصب می‌کند، پس آنجا باید اجرا شوند: basicsr, pyanime4k, realesrgan, torch
 
 ## compile
 
@@ -29,9 +27,16 @@
 
 ## links
 
-- ❌ 1 broken reference(s) — run studio/links.py
 - ⚠️ films/anime_ten/deliver/scene_min1.mp4: 23 MB (over 20 MB, tracked in git)
-- ❌ 695 files · 1 breaks · 1 size warning(s)
+- ✅ 695 files · 0 breaks · 1 size warning(s)
+
+## selftest
+
+- ✅ inventory catches an unlisted file -> FAIL
+- ✅ inventory catches a phantom entry -> FAIL
+- ✅ deps catches an undeclared import -> FAIL
+- ✅ ci mode fails on a declared dependency that is missing -> FAIL
+- ✅ a healthy entry passes (control) -> ok
 
 ## smoke
 
@@ -39,7 +44,7 @@
 - ✅ mivi_web/make_catalog.py --help (0.0s)
 - ✅ mivi_web/re/annpaths.py --help (0.0s)
 - ✅ mivi_web/re/dexann.py --help (0.0s)
-- ✅ mivi_web/re/dumpclass.py --help (0.5s)
+- ✅ mivi_web/re/dumpclass.py --help (0.2s)
 - ✅ mivi_web/re/fields.py --help (0.2s)
 - ✅ mivi_web/re/m2.py --help (0.2s)
 - ✅ mivi_web/re/staticdump.py --help (0.2s)
@@ -51,7 +56,7 @@
 - ✅ studio/knowledge/bank.py --help (0.1s)
 - ✅ studio/knowledge/banktest.py -> ALL OK
 - ✅ studio/knowledge/measure.py --help (0.1s)
-- ❌ studio/links.py rc=1: 695 tracked files · 1 breaks · 1 size warnings
+- ✅ studio/links.py -> 695 tracked files · 0 breaks · 1 size warnings
 - ✅ studio/lipsync.py --help (0.0s)
 - ✅ studio/mivi_photo.py --help (0.1s)
 - ✅ studio/mivi_shot.py --help (0.1s)
@@ -59,16 +64,15 @@
 - ✅ studio/motionlint.py --help (0.1s)
 - ✅ studio/motions/ten_shots.py --help (0.0s)
 - ✅ studio/render_film.py --help (0.1s)
-- ✅ studio/scorer.py --help (0.2s)
+- ✅ studio/scorer.py --help (0.1s)
 - ✅ studio/selftest.py -> SELFTEST OK
 - ✅ studio/shotplan.py --help (0.0s)
 - ✅ studio/tests/test_mivi_shot.py -> PASS — success recorded, chain waited, refusal isolated
 - ⏭️ studio/toolbox/upscale.py needs basicsr, pyanime4k, realesrgan, torch — torch + realesrgan + basicsr ~2.5 GB and model weights; not installed on the runner
-- ✅ studio/verify.py --help (0.0s)
+- ✅ studio/verify.py --help (0.1s)
 - ✅ studio/voice.py --help (0.1s)
 - ✅ studio/voicetest.py -> ALL OK
 - ✅ studio/wanprompt.py --help (0.0s)
-- ❌ studio/links.py did not run (ci=true): needs unknown dependency
 
 ## triggers
 
