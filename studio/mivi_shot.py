@@ -21,6 +21,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -32,6 +33,16 @@ import mivi_mcp as M  # noqa: E402
 
 def log(msg):
     print(msg, flush=True)
+
+
+def last_frame(video: Path, out: Path) -> Path:
+    """Pull the final frame so the next link starts exactly where this one ended."""
+    import imageio_ffmpeg
+    ff = imageio_ffmpeg.get_ffmpeg_exe()
+    out.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run([ff, "-y", "-v", "error", "-sseof", "-0.4", "-i", str(video),
+                    "-update", "1", "-vsync", "0", str(out)], check=True)
+    return out
 
 
 def generate_one(job: dict, outdir: Path) -> list[dict]:
@@ -77,9 +88,22 @@ def main():
               "runner": os.environ.get("GITHUB_RUN_ID", "local"),
               "shots": []}
     t_all = time.time()
+    best_frame: dict[str, Path] = {}
     for job in jobs:
+        # chain: if this job asks to start from a previous job's last frame
+        if job.get("still_from"):
+            src = best_frame.get(job["still_from"])
+            if src is None:
+                log(f"[{job['id']}] still_from={job['still_from']} unavailable — using own still")
+            else:
+                job = {**job, "still": str(src)}
+                log(f"[{job['id']}] chained on last frame of {job['still_from']}: {src.name}")
         log(f"--- {job['id']}  still={job['still']}")
         res = generate_one(job, outdir)
+        ok_file = next((r["file"] for r in res if r["ok"]), None)
+        if ok_file:
+            best_frame[job["id"]] = last_frame(ROOT / ok_file,
+                                               outdir / f"{job['id']}_last.png")
         report["shots"].append({"id": job["id"], "still": job["still"],
                                 "prompt": job.get("prompt", ""), "attempts": res,
                                 "ok": any(r["ok"] for r in res)})

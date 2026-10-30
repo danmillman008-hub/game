@@ -6,7 +6,7 @@ on:
     inputs:
       jobs:
         description: "job file"
-        default: "films/short16/gen_jobs.json"
+        default: "films/short16/gen_jobs_hug.json"
   push:
     branches: [arena/e3952d18-game]
     paths: ['.mivi-trigger']
@@ -28,8 +28,10 @@ jobs:
           for h in https://cpi.ufotosoft.com https://algo-v1.wiseoel.com; do
             printf "%s -> " "$h"; curl -s -o /dev/null -w "%{http_code}\n" --max-time 15 "$h" || echo "unreachable"
           done
+      - name: deps
+        run: pip install -q imageio-ffmpeg
       - name: generate
-        run: python3 studio/mivi_shot.py films/short16/gen_jobs.json --out films/short16/clips_gen
+        run: python3 studio/mivi_shot.py films/short16/gen_jobs_hug.json --out films/short16/clips_gen
       - name: publish clips
         if: always()
         run: |
