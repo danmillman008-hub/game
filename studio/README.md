@@ -64,3 +64,20 @@ useful for checking motion and continuity, useless for judging look.
 
 4.03 s per shot · 960×1280 · no seed · no end frame · no audio · no text-to-video ·
 no working lip sync on Mivi · continuity good for ~2 chained hops.
+
+## chainkit.py — گردش کار «پل فریم»
+
+از صفر ویدیو نساز: still → تولید لینک ۴ثانیه‌ای → آخرین فریم → راهنما (edge/gray/annot) →
+لینک بعدی. تولید گران است، ffmpeg تقریباً رایگان (۲.۹ ثانیه برای چسباندن ۳۷ کلیپ با
+`-c copy` در برابر ۸۵ ثانیه انکود).
+
+```bash
+python3 studio/chainkit.py bridge out/film --still still.png --prompt "..." --duration 4
+python3 studio/chainkit.py chain  out/film links/L001/out.mp4 --prompt "..."
+python3 studio/chainkit.py audit  out/film --anchor still.png
+python3 studio/chainkit.py concat out/cut.mp4 links/L00*/out.mp4
+python3 studio/chainkit.py grab   clip.mp4 --mode last
+python3 studio/chainkit.py guide  frame.png --spec guide.json
+```
+
+جزئیات و دام‌ها: [`CHAIN_WORKFLOW.md`](CHAIN_WORKFLOW.md)

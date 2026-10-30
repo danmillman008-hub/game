@@ -341,52 +341,8 @@ def cmd_chain(a):
     print(f"chained shot {src['n']} -> shot {dst['n']} ({Path(r['saved']).name})")
 
 
-def cmd_assemble(a):
-    d, proj = load(a.name)
-    (d / "out").mkdir(parents=True, exist_ok=True)
-    clips = [(s["n"], resolve(d, s["clip"])) for s in proj["shots"] if s.get("clip")]
-    if len(clips) < 1:
-        raise SystemExit("no clips to assemble")
-    out = d / "out" / "final.mp4"
-    xf = float(a.crossfade if a.crossfade is not None else (proj.get("crossfade_s") or 0))
-    args = [FF, "-y", "-v", "error"]
-    for _, c in clips:
-        args += ["-i", c]
-    if xf > 0 and len(clips) > 1:
-        durs = [duration_of(c) for _, c in clips]
-        fc, prev, acc = [], "[0:v]", durs[0]
-        for i in range(1, len(clips)):
-            off = max(acc - xf, 0)
-            fc.append(f"{prev}[{i}:v]xfade=transition=fade:duration={xf}:offset={off:.3f}[v{i}]")
-            prev, acc = f"[v{i}]", acc + durs[i] - xf
-        args += ["-filter_complex", ";".join(fc), "-map", prev, "-c:v", "libx264",
-                 "-crf", "18", "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(out)]
-    elif len(clips) > 1:
-        (d / "out" / "concat.txt").write_text(
-            "".join(f"file '{c}'\n" for _, c in clips), encoding="utf-8")
-        args = [FF, "-y", "-v", "error", "-f", "concat", "-safe", "0",
-                "-i", str(d / "out" / "concat.txt"), "-c", "copy", str(out)]
-    else:
-        shutil.copyfile(clips[0][1], out)
-    run(args)
-    print(f"assembled {len(clips)} clips -> {out}")
-    print(json.dumps(probe(out)))
-
-    if a.subs:
-        _burn(d, out, Path(a.subs))
-    elif (d / "subs" / "final.srt").exists():
-        _burn(d, out, d / "subs" / "final.srt")
-
-    vo = Path(a.vo) if a.vo else next((p for p in (d / "audio" / "vo_timeline.mp3",
-                                                   d / "audio" / "vo.mp3") if p.exists()), None)
-    music = Path(a.music) if a.music else (d / "audio" / "bed.mp3" if (d / "audio" / "bed.mp3").exists() else None)
-    if vo or music:
-        cmd_mix(argparse.Namespace(name=a.name, vo=str(vo) if vo else None,
-                                   music=str(music) if music else None,
-                                   duck=a.duck, out=None))
-
-
 FONT = ROOT / "studio" / "fonts" / "Vazirmatn-Bold.ttf"
+FF_FONTS = str(ROOT / "studio" / "fonts")
 
 
 def _srt_cues(path: Path):
@@ -394,8 +350,7 @@ def _srt_cues(path: Path):
     txt = path.read_text(encoding="utf-8")
     out = []
     for block in re.split(r"\n\s*\n", txt.strip()):
-        lines = [l for l in block.splitlines() if l.strip()]
-        if len(lines) < 2 or "-->" not in block:
+        if "-->" not in block:
             continue
         m = re.search(r"(\d+):(\d+):([\d.,]+)\s*-->\s*(\d+):(\d+):([\d.,]+)", block)
         if not m:
@@ -403,85 +358,183 @@ def _srt_cues(path: Path):
         def sec(h, mi, se):
             return int(h) * 3600 + int(mi) * 60 + float(se.replace(",", "."))
         start, end = sec(*m.group(1, 2, 3)), sec(*m.group(4, 5, 6))
-        text = " ".join(lines[lines.index([l for l in lines if "-->" in l][0]) + 1:])
-        out.append((start, end, text.strip()))
+        lines = [l for l in block.splitlines() if l.strip()]
+        i = next(k for k, l in enumerate(lines) if "-->" in l)
+        out.append((start, end, " ".join(lines[i + 1:]).strip()))
     return out
 
 
-def _render_cue_png(text: str, path: Path, w: int, size: int = 44):
-    """Shaped Persian (or any RTL/LTR) text as a transparent PNG strip."""
-    from PIL import Image, ImageDraw, ImageFont
-    txt = text
-    try:
-        import arabic_reshaper
-        from bidi.algorithm import get_display
-        txt = get_display(arabic_reshaper.reshape(text))
-    except Exception:
-        pass
-    font = None
-    for cand in (FONT, Path("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf")):
-        if Path(cand).exists():
-            font = ImageFont.truetype(str(cand), size)
-            break
-    if font is None:
-        font = ImageFont.load_default()
-    # wrap to the safe width
-    max_w = int(w * 0.86)
-    words, lines, cur = txt.split(" "), [], ""
-    for word in words:
-        trial = (cur + " " + word).strip()
-        if font.getbbox(trial)[2] <= max_w or not cur:
-            cur = trial
-        else:
-            lines.append(cur); cur = word
-    if cur:
-        lines.append(cur)
-    lh = int(size * 1.45)
-    img = Image.new("RGBA", (w, lh * len(lines) + 24), (0, 0, 0, 0))
-    dr = ImageDraw.Draw(img)
-    for i, line in enumerate(lines):
-        tw = font.getbbox(line)[2]
-        x = (w - tw) // 2
-        y = 12 + i * lh
-        for dx, dy in ((-2, 0), (2, 0), (0, -2), (0, 2), (-2, -2), (2, 2)):
-            dr.text((x + dx, y + dy), line, font=font, fill=(0, 0, 0, 190))
-        dr.text((x, y), line, font=font, fill=(255, 255, 255, 255))
-    path.parent.mkdir(parents=True, exist_ok=True)
-    img.save(path)
+def _srt_to_ass(srt: Path, ass_out: Path, w: int, h: int, font_size: int = 52,
+                margin_v: int = 120):
+    """SRT -> ASS so libass does Arabic shaping + RTL in ONE pass (no per-cue PNGs)."""
+    cues = _srt_cues(srt)
+    header = f"""[Script Info]
+ScriptType: v4.00+
+PlayResX: {w}
+PlayResY: {h}
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Fa,Vazirmatn,{font_size},&H00FFFFFF,&H00FFFFFF,&H00000000,&H78000000,-1,0,0,0,100,100,0,0,1,3,0,2,60,60,{margin_v},1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+"""
+    def ts(t):
+        h_, m_ = int(t // 3600), int((t % 3600) // 60)
+        return f"{h_}:{m_:02d}:{t % 60:05.2f}"
+
+    lines = [header]
+    for start, end, text in cues:
+        safe = text.replace("\n", " ").replace("{", "(").replace("}", ")")
+        lines.append(f"Dialogue: 0,{ts(start)},{ts(end)},Fa,,0,0,0,,{safe}")
+    ass_out.parent.mkdir(parents=True, exist_ok=True)
+    ass_out.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return ass_out
+
+
+def _audio_graph(vo: Path | None, music: Path | None, base_idx: int, dur: float) -> tuple[list, str | None, int]:
+    """Build the mix filter for already-open inputs starting at base_idx."""
+    fc, labels, idx = [], [], base_idx
+    if vo:
+        fc.append(f"[{idx}:a]aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo,"
+                  f"volume=1.0[vo]")
+        labels.append("[vo]"); idx += 1
+    if music:
+        fc.append(f"[{idx}:a]aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo,"
+                  f"volume=0.18[bed]")
+        labels.append("[bed]"); idx += 1
+    if not labels:
+        return [], None, idx
+    if len(labels) > 1:
+        fc.append("".join(labels) + f"amix=inputs={len(labels)}:duration=longest:normalize=0[mix]")
+        labels = ["[mix]"]
+    fc.append(f"{labels[0]}apad=whole_dur={dur:.3f}[aout]")
+    return fc, "[aout]", idx
+
+
+def cmd_assemble(a):
+    """Cut the film. Hard cuts go through ONE ffmpeg pass (concat + ass + audio).
+
+    That is the speed fix: the old path re-encoded the whole film three times
+    (xfade -> subtitle overlays -> audio mix). One pass is ~5-8x faster.
+    """
+    d, proj = load(a.name)
+    d = d.resolve()
+    (d / "out").mkdir(parents=True, exist_ok=True)
+    clips = [(s["n"], resolve(d, s["clip"])) for s in proj["shots"] if s.get("clip")]
+    if not clips:
+        raise SystemExit("no clips to assemble")
+    out = d / "out" / "final.mp4"
+    xf = float(a.crossfade if getattr(a, "crossfade", None) is not None
+               else (proj.get("crossfade_s") or 0))
+    vo = Path(a.vo) if getattr(a, "vo", None) else next(
+        (p for p in (d / "audio" / "vo_timeline.mp3", d / "audio" / "vo.mp3") if p.exists()), None)
+    music = Path(a.music) if getattr(a, "music", None) else next(
+        (p for p in (d / "audio" / "bed.mp3", d / "audio" / "music.mp3") if p.exists()), None)
+    srt = Path(a.subs) if getattr(a, "subs", None) else (
+        d / "subs" / "final.srt" if (d / "subs" / "final.srt").exists() else None)
+
+    total = sum(duration_of(c) for _, c in clips) - max(0, len(clips) - 1) * xf
+
+    if xf <= 0 and getattr(a, "copy", False):
+        # ---- fastest path: stream copy the video, only encode the audio
+        lst = (d / "out" / "concat.txt").resolve()
+        lst.write_text("".join(f"file '{Path(c).resolve()}'\n" for _, c in clips), encoding="utf-8")
+        args = [FF, "-y", "-v", "error", "-f", "concat", "-safe", "0", "-i", str(lst)]
+        idx = 1
+        for extra in (vo, music):
+            if extra:
+                args += ["-i", str(extra)]
+                idx += 1
+        fc, alabel, _ = _audio_graph(vo, music, 1, total)
+        args += ["-map", "0:v"]
+        if alabel:
+            args += ["-filter_complex", ";".join(fc), "-map", alabel]
+        args += ["-c:v", "copy"]
+        if alabel:
+            args += ["-c:a", "aac", "-b:a", "192k"]
+        if srt:
+            args += ["-c:s", "mov_text", "-metadata:s:s:0", "language=fas"] if False else []
+        args += ["-movflags", "+faststart", str(out)]
+        t0 = time.time()
+        run(args)
+        print(f"assembled {len(clips)} clips by stream copy ({time.time()-t0:.1f}s) -> {out}")
+        print(json.dumps(probe(out)))
+        return
+
+    if xf <= 0:
+        # ---- fast path: one pass, no intermediate files
+        lst = (d / "out" / "concat.txt").resolve()
+        lst.write_text("".join(f"file '{Path(c).resolve()}'\n" for _, c in clips), encoding="utf-8")
+        inputs = ["-f", "concat", "-safe", "0", "-i", str(lst)]
+        args = [FF, "-y", "-v", "error", *inputs]
+        idx = 1
+        for extra in (vo, music):
+            if extra:
+                args += ["-i", str(extra)]
+                idx += 1
+        fc, alabel, _ = _audio_graph(vo, music, 1, total)
+        vlabel = "[0:v]"
+        if srt:
+            info = probe(clips[0][1])
+            ass = _srt_to_ass(srt, d / "subs" / "final.ass", int(info["width"]),
+                              int(info["height"]), font_size=max(30, int(info["height"] * 0.041)),
+                              margin_v=int(info["height"] * 0.094))
+            fc = [f"[0:v]ass={ass}:fontsdir={FF_FONTS}[vout]"] + fc
+            vlabel = "[vout]"
+        args += ["-filter_complex", ";".join(fc), "-map", vlabel]
+        if alabel:
+            args += ["-map", alabel]
+        args += ["-c:v", "libx264", "-preset", getattr(a, "preset", None) or "veryfast",
+                 "-crf", str(getattr(a, "crf", None) or 19), "-pix_fmt", "yuv420p"]
+        if alabel:
+            args += ["-c:a", "aac", "-b:a", "192k"]
+        args += ["-movflags", "+faststart", str(out)]
+        t0 = time.time()
+        run(args)
+        print(f"assembled {len(clips)} clips in one pass ({time.time()-t0:.0f}s) -> {out}")
+        print(json.dumps(probe(out)))
+        return
+
+    # ---- cinematic path: xfade chain (slower, re-encodes the whole film)
+    args = [FF, "-y", "-v", "error"]
+    for _, c in clips:
+        args += ["-i", c]
+    durs = [duration_of(c) for _, c in clips]
+    fc, prev, acc = [], "[0:v]", durs[0]
+    for i in range(1, len(clips)):
+        off = max(acc - xf, 0)
+        fc.append(f"{prev}[{i}:v]xfade=transition=fade:duration={xf}:offset={off:.3f}[v{i}]")
+        prev, acc = f"[v{i}]", acc + durs[i] - xf
+    args += ["-filter_complex", ";".join(fc), "-map", prev, "-c:v", "libx264", "-crf", "18",
+             "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(out)]
+    run(args)
+    print(f"assembled {len(clips)} clips with xfade {xf}s -> {out}")
+    print(json.dumps(probe(out)))
+    if srt:
+        _burn(d, out, srt)
+    if vo or music:
+        cmd_mix(argparse.Namespace(name=a.name, vo=str(vo) if vo else None,
+                                   music=str(music) if music else None,
+                                   duck=False, out=None))
 
 
 def _burn(d: Path, video: Path, srt: Path):
-    """Subtitle burn-in that survives Persian/Arabic shaping."""
-    try:
-        cues = _srt_cues(srt)
-        if not cues:
-            raise RuntimeError("no cues parsed")
-        info = probe(video)
-        w, h = int(info["width"]), int(info["height"])
-        args = [FF, "-y", "-v", "error", "-i", str(video)]
-        filters, last = [], "0:v"
-        for i, (start, end, text) in enumerate(cues, 1):
-            png = d / "subs" / f"cue{i:02d}.png"
-            _render_cue_png(text, png, w)
-            args += ["-i", str(png)]
-            y = h - int(h * 0.19)
-            filters.append(f"[{last}][{i}:v]overlay=0:{y}:"
-                           f"enable='between(t,{start:.3f},{end:.3f})'[o{i}]")
-            last = f"o{i}"
-        tmp = d / "out" / "_sub.mp4"
-        args += ["-filter_complex", ";".join(filters), "-map", f"[{last}]",
-                 "-map", "0:a?", "-c:v", "libx264", "-crf", "19", "-pix_fmt", "yuv420p",
-                 "-c:a", "copy", "-movflags", "+faststart", str(tmp)]
-        run(args)
-        shutil.move(str(tmp), str(video))
-        print(f"subtitles burned from {srt.name} ({len(cues)} cues, Pillow/Persian-shaped)")
-    except Exception as exc:
-        print(f"subtitle burn failed ({exc}); falling back to ffmpeg's subtitles filter")
-        tmp = d / "out" / "_sub.mp4"
-        run([FF, "-y", "-v", "error", "-i", str(video), "-vf",
-             f"subtitles={srt}:force_style='Fontsize=20,PrimaryColour=&H00FFFFFF'",
-             "-c:a", "copy", str(tmp)])
-        shutil.move(str(tmp), str(video))
+    """Burn subtitles with libass (Persian-safe, single pass)."""
+    info = probe(video)
+    w, h = int(info["width"]), int(info["height"])
+    ass = _srt_to_ass(srt, d / "subs" / "final.ass", w, h,
+                      font_size=max(30, int(h * 0.041)), margin_v=int(h * 0.094))
+    tmp = d / "out" / "_sub.mp4"
+    run([FF, "-y", "-v", "error", "-i", str(video), "-vf",
+         f"ass={ass}:fontsdir={FF_FONTS}", "-c:v", "libx264", "-preset", "veryfast",
+         "-crf", "19", "-pix_fmt", "yuv420p", "-c:a", "copy", "-movflags", "+faststart",
+         str(tmp)])
+    shutil.move(str(tmp), str(video))
+    print(f"subtitles burned with libass from {srt.name} (single pass)")
 
 
 def cmd_mix(a):
@@ -534,6 +587,84 @@ def _ts(t: float) -> str:
     t = max(0.0, t)
     h = int(t // 3600); m = int((t % 3600) // 60); sec = t % 60
     return f"{h:02d}:{m:02d}:{sec:06.3f}".replace(".", ",")
+
+
+SPEAKER_TAG = {"raha": "R", "arad": "A"}
+
+
+def _vo_plan(d: Path, proj: dict, crossfade: float):
+    """Audio-first placement: every line must sit inside ONE shot, never across a cut."""
+    step = SHOT_LEN - crossfade
+    vo_dir = d / "audio" / "vo"
+    clips = sorted(vo_dir.glob("*.mp3")) if vo_dir.exists() else []
+    plan, warnings = [], []
+    for f in clips:
+        n = int(f.name[1:3])
+        speaker = "raha" if "raha" in f.name else ("arad" if "arad" in f.name else "?")
+        dur = duration_of(f)
+        need_shots = max(1, -(-int((dur + 0.55) * 100) // int(step * 100)))  # ceil
+        shot_objs = [s for s in proj["shots"] if int(s["n"]) >= n][:need_shots]
+        avail = len(shot_objs) * step - 0.55
+        if dur > avail:
+            warnings.append(f"line at shot {n} is {dur:.1f}s but only {avail:.1f}s of picture "
+                            f"follows — trim 1 shot elsewhere or shorten the line")
+        at = (n - 1) * step + 0.35
+        end = at + dur
+        shot_end = (n - 1) * step + step
+        crosses = end > shot_end + 0.02
+        covered = [int(s_["n"]) for s_ in proj["shots"]
+                   if at < (int(s_["n"])) * step and end > (int(s_["n"]) - 1) * step]
+        plan.append({"shot": n, "file": f.name, "speaker": speaker, "dur": round(dur, 3),
+                     "shots_needed": need_shots, "at": round(at, 3), "ends": round(end, 3),
+                     "crosses_cut": crosses, "plays_over_shots": covered})
+    return plan, warnings, step
+
+
+def cmd_sync(a):
+    """Audio-first audit + subtitles that follow the REAL VO, not an estimate."""
+    d, proj = load(a.name)
+    xf = float(a.crossfade if a.crossfade is not None else (proj.get("crossfade_s") or 0))
+    plan, warnings, step = _vo_plan(d, proj, xf)
+    if not plan:
+        raise SystemExit("no VO clips — record them first")
+    (d / "audio").mkdir(exist_ok=True)
+    (d / "audio" / "vo_plan.json").write_text(json.dumps(plan, indent=2), encoding="utf-8")
+
+    # speaker / picture mismatch audit: who talks vs who is on screen
+    crossing = []
+    for row in plan:
+        if row["crosses_cut"]:
+            crossing.append(f"line at shot {row['shot']} ({row['dur']:.1f}s) runs past the cut and "
+                            f"plays over shots {row['plays_over_shots']} — split the take or move a cut")
+
+    mism = []
+    for row in plan:
+        s_ = shot(d, proj, row["shot"])
+        key = (s_.get("still_key") or "")
+        on_screen = "raha" if key.startswith("raha") else ("arad" if key.startswith("arad") else None)
+        if on_screen and row["speaker"] in SPEAKER_TAG and on_screen != row["speaker"]:
+            mism.append(f"shot {row['shot']}: {row['speaker']} speaks but {on_screen} is framed")
+
+    # subtitles straight from the audio durations
+    blocks = []
+    for i, row in enumerate(plan, 1):
+        txt = (shot(d, proj, row["shot"]).get("narration") or "").strip()
+        if not txt:
+            continue
+        start, end = row["at"], min(row["ends"] + 0.35, (row["shot"] + row["shots_needed"] - 1) * step + step - 0.05)
+        blocks.append(f"{i}\n{_ts(start)} --> {_ts(end)}\n{txt}\n")
+    out = d / "subs" / "final.srt"
+    (d / "subs").mkdir(parents=True, exist_ok=True)
+    out.write_text("\n".join(blocks), encoding="utf-8")
+
+    report = {"lines": len(plan), "timeline_step_s": round(step, 2),
+              "longest_line_s": max(r["dur"] for r in plan),
+              "warnings": warnings, "lines_crossing_a_cut": crossing,
+              "speaker_picture_mismatch": mism,
+              "subs": str(out.relative_to(d))}
+    (d / "audio" / "sync_report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(json.dumps(report, indent=2))
+    print("\nVoiced shots:", ", ".join(str(r["shot"]) for r in plan))
 
 
 def cmd_srt(a):
@@ -751,11 +882,19 @@ def main():
     p = sub.add_parser("assemble"); p.add_argument("name")
     p.add_argument("--crossfade", type=float); p.add_argument("--subs")
     p.add_argument("--vo"); p.add_argument("--music"); p.add_argument("--duck", action="store_true")
+    p.add_argument("--preset", help="x264 preset (veryfast by default)")
+    p.add_argument("--crf", type=int)
+    p.add_argument("--copy", action="store_true",
+                   help="stream-copy video (no subtitle burn, no re-encode)")
     p.set_defaults(fn=cmd_assemble)
 
     p = sub.add_parser("mix"); p.add_argument("name"); p.add_argument("--vo"); p.add_argument("--music")
     p.add_argument("--duck", action="store_true"); p.add_argument("--out")
     p.set_defaults(fn=cmd_mix)
+
+    p = sub.add_parser("sync"); p.add_argument("name")
+    p.add_argument("--crossfade", type=float)
+    p.set_defaults(fn=cmd_sync)
 
     p = sub.add_parser("srt"); p.add_argument("name")
     p.add_argument("--crossfade", type=float); p.add_argument("--cps", type=float)
