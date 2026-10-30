@@ -10,6 +10,7 @@ It is deliberately boring and offline:
   4. **smoke**      `--help` on every CLI, `run` on every test/check, `.py` compile.
   5. **links**      every path named in a doc or a script still exists; nothing has
                     grown past the size guard (studio/links.py).
+  5c. **make**      every declared make target actually resolves (`make -n`).
   5b. **selftest**  each detector above is fed a defect on purpose and must fire —
                     a check that cannot fail is worse than no check.
   6. **report**     writes REPO_STATUS.md from what actually happened.
@@ -207,6 +208,35 @@ def check_triggers() -> list[tuple[str, str, str]]:
     return rows
 
 
+def check_make() -> list[tuple[str, str, str]]:
+    """`make check` once pointed at a target that did not exist, so the whole gate
+    silently did nothing. Every declared target is dry-run here: a missing rule or a
+    mangled recipe line shows up in `make -n`."""
+    mk = ROOT / "Makefile"
+    if not mk.exists():
+        return [("make", FAIL, "no Makefile")]
+    text = mk.read_text(encoding="utf-8")
+    m = re.search(r"^\.PHONY:\s*(.+)$", text, re.M)
+    if not m:
+        return [("make", FAIL, "no .PHONY line — targets are undeclared")]
+    targets = m.group(1).split()
+    rows, bad = [], 0
+    for t in targets:
+        try:
+            p = subprocess.run(["make", "-n", t], cwd=ROOT, capture_output=True,
+                               text=True, timeout=60)
+        except Exception as exc:  # noqa: BLE001
+            bad += 1
+            rows.append(("make", FAIL, f"make -n {t}: {type(exc).__name__} {exc}"))
+            continue
+        if p.returncode != 0:
+            bad += 1
+            err = (p.stderr or p.stdout).strip().splitlines()
+            rows.append(("make", FAIL, f"make -n {t}: {err[-1][:110] if err else 'failed'}"))
+    rows.append(("make", OK if not bad else FAIL, f"{len(targets) - bad}/{len(targets)} targets resolve"))
+    return rows
+
+
 def check_links() -> list[tuple[str, str, str]]:
     """Every path mentioned in a doc or a script still exists, and nothing has
     silently grown past the size guard. This is what catches the damage after a
@@ -382,6 +412,7 @@ def main() -> int:
     rows += check_triggers()
     rows += check_deps(entries)
     rows += check_links()
+    rows += check_make()
     rows += selftest(entries)
     rows += check_compile()
     rows += check_smoke(entries, a.quick, a.ci)

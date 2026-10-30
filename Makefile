@@ -24,16 +24,12 @@ verify:
 	$(PY) studio/verify.py            # inventory, data, triggers, compile, smoke
 	@echo "verify: report -> REPO_STATUS.md"
 
+# `check` is the pre-batch gate: verify already compiles everything, checks every
+# reference and runs every test, so it is not repeated here.
 check:
-	$(PY) -m py_compile studio/*.py studio/toolbox/*.py studio/knowledge/*.py bridge/*.py
-	$(PY) studio/links.py                 # no dangling paths after a move
+	$(MAKE) --no-print-directory verify
 	$(PY) studio/knowledge/bank.py check
 	$(PY) studio/knowledge/banktest.py
-	@echo "verify:
-	$(PY) studio/verify.py            # inventory, data, triggers, compile, smoke
-	@echo "verify: report -> REPO_STATUS.md"
-
-check: ok"
 
 plan:
 	$(PY) studio/shotplan.py plan $(SCENE) --out $(JOBS) --parallel $(PAR)

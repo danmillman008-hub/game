@@ -1,10 +1,10 @@
 # وضعیت ریپو — ساخته‌شده با اجرا، نه با ادعا
 
-> خودکار از `python3 studio/verify.py` — 2026-10-30 20:54 UTC · پایتون 3.11.2 · sandbox
+> خودکار از `python3 studio/verify.py` — 2026-10-30 20:56 UTC · پایتون 3.11.2 · sandbox
 
 | ok | FAIL | skip | warn |
 |---|---|---|---|
-| 47 | 0 | 1 | 1 |
+| 48 | 0 | 1 | 1 |
 
 > ⚠️ 4 وابستگی نصب نیست؛ ردیف‌های وابسته `skip` شده‌اند، نه pass — نسخهٔ رانر (verify.yml) این‌ها را نصب می‌کند، پس آنجا باید اجرا شوند: basicsr, pyanime4k, realesrgan, torch
 
@@ -29,6 +29,10 @@
 
 - ⚠️ films/anime_ten/deliver/scene_min1.mp4: 23 MB (over 20 MB, tracked in git)
 - ✅ 695 files · 0 breaks · 1 size warning(s)
+
+## make
+
+- ✅ 11/11 targets resolve
 
 ## selftest
 
@@ -64,12 +68,12 @@
 - ✅ studio/motionlint.py --help (0.1s)
 - ✅ studio/motions/ten_shots.py --help (0.0s)
 - ✅ studio/render_film.py --help (0.1s)
-- ✅ studio/scorer.py --help (0.1s)
+- ✅ studio/scorer.py --help (0.2s)
 - ✅ studio/selftest.py -> SELFTEST OK
 - ✅ studio/shotplan.py --help (0.0s)
 - ✅ studio/tests/test_mivi_shot.py -> PASS — success recorded, chain waited, refusal isolated
 - ⏭️ studio/toolbox/upscale.py needs basicsr, pyanime4k, realesrgan, torch — torch + realesrgan + basicsr ~2.5 GB and model weights; not installed on the runner
-- ✅ studio/verify.py --help (0.1s)
+- ✅ studio/verify.py --help (0.0s)
 - ✅ studio/voice.py --help (0.1s)
 - ✅ studio/voicetest.py -> ALL OK
 - ✅ studio/wanprompt.py --help (0.0s)
