@@ -98,3 +98,7 @@ python3 studio/scorer.py pick  cands/*.mp4 --ref still.png --audio vo.mp3
 ## حافظهٔ پروژه
 
 [`REPORT.md`](REPORT.md) — چه ساخته شد، چه شکست خورد، چه سنجیده شد، و مشکل دسترسی به Mivi چطور با GitHub Actions حل شد.
+
+## نگارش پرامپت حرکت
+
+[`PROMPTS_MOTION.md`](PROMPTS_MOTION.md) — قواعد حرکت طبیعی (یک حرکت، مقدار دقیق، احساس→بدن) + بازنویسی پرامپت‌های خودمان + فهرست ریپوهای مرجع.
