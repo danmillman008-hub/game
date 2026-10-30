@@ -126,6 +126,12 @@ def main():
                 log(f"[{job['id']}] chained on {job['still_from_clip']}")
             else:
                 log(f"[{job['id']}] still_from_clip missing: {c}")
+        if not job.get("still") or Path(ROOT / job["still"]).is_dir():
+            log(f"[{job['id']}] NO STILL ({job.get('still')!r}) — skipping, would upload a directory")
+            report["shots"].append({"id": job["id"], "still": job.get("still"),
+                                    "attempts": [{"attempt": 0, "ok": False,
+                                                  "error": "missing still"}], "ok": False})
+            continue
         log(f"--- {job['id']}  still={job['still']}")
         res = generate_one(job, outdir)
         ok_file = next((r["file"] for r in res if r["ok"]), None)

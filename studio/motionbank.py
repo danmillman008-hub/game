@@ -244,6 +244,11 @@ def cmd_jobs(a):
     specs = json.loads(Path(a.spec).read_text(encoding="utf-8"))
     bank = load(getattr(a, "bank", None))
     jobs, rows = [], []
+    missing = [s["id"] for s in specs
+               if not s.get("still") and not s.get("still_from") and not s.get("still_from_clip")]
+    if missing:
+        raise SystemExit(f"no still for {missing} — an i2v job without an image fails on "
+                         f"the runner (IsADirectoryError). Set `still` or chain it.")
     for s in specs:
         r = compose(s, bank)
         jobs.append({"id": s["id"], "still": s.get("still", ""),
