@@ -37,6 +37,8 @@ jobs:
         run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
       - name: voice + lipsync offline tests
         run: python3 studio/voicetest.py
+      - name: knowledge bank tests
+        run: python3 studio/knowledge/banktest.py && python3 studio/knowledge/bank.py check
 
   measure:
     runs-on: ubuntu-latest

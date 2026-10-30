@@ -85,9 +85,10 @@ CATALOG = {
 FA_VOICES = ["fa_IR-amir", "fa_IR-ganji", "fa_IR-ganji_adabi", "fa_IR-gyro", "fa_IR-reza_ibrahim"]
 EN_VOICES = ["af_heart", "af_bella", "af_nicole", "am_michael", "am_fenrir", "bf_emma", "bm_george"]
 
-# speaking rate used only for planning (real duration is measured after render)
-WPS_EN = 2.6          # words per second, measured on Kokoro af_heart reads
-CPS_FA = 14.0         # characters per second, measured on Piper fa_IR medium
+# speaking rate, used to plan how long a line will be. Both constants were measured,
+# not guessed: see studio/knowledge/measurements.json, rendered on a 4-core runner.
+WPS_EN = 3.7          # 21 English words in 5.66 s of Kokoro af_heart audio
+CPS_FA = 13.3         # 57 Farsi chars in 4.30 s of Piper fa_IR-ganji-medium audio
 
 
 # ---------------------------------------------------------------- language ----

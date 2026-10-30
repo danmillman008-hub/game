@@ -1,0 +1,74 @@
+# BANK — ریپوهایی که بررسی کرده‌ایم
+
+> این فایل از `repos.json` ساخته می‌شود. دستی ویرایش نکن.
+> آخرین تأیید: **2026-10-30**
+
+## a-cut — دستور زبان برش
+
+| ریپو | ★ | لایسنس | آخرین کامیت | حکم | چرا |
+|---|---|---|---|---|---|
+| [`Vincentwei1021/video-shotcraft`](https://github.com/Vincentwei1021/video-shotcraft) | 14960 | Apache-2.0 | 2026-10-29 | ✅ بگیر | ۱۲۴ کارت شات، ۱۵۰ نمونه؛ مرجع دستور زبان برش و beat-sync عددی |
+| [`FireRedTeam/FireRed-OpenStoryline`](https://github.com/FireRedTeam/FireRed-OpenStoryline) | 3595 | Apache-2.0 | 2026-07-31 | 📖 مطالعه | rough cut با ASR؛ شات گذار از فریم آخر/اول |
+| [`AcademySoftwareFoundation/OpenTimelineIO`](https://github.com/AcademySoftwareFoundation/OpenTimelineIO) | 2046 | Apache-2.0 | 2026-10-28 | ✅ بگیر | فرمت استاندارد تایم‌لاین؛ EDL/AAF/CSV |
+| [`mitch7w/ai-video-editor`](https://github.com/mitch7w/ai-video-editor) | 54 | none | 2025-04-09 | ✕ نگیر | بدون لایسنس، رهاشده |
+| [`iluvcapra/pycmx`](https://github.com/iluvcapra/pycmx) | 31 | MIT | 2026-09-17 | ✅ بگیر | خواندن/نوشتن EDL (CMX3600) |
+
+## f-color — تطبیق رنگ بین شات‌ها
+
+| ریپو | ★ | لایسنس | آخرین کامیت | حکم | چرا |
+|---|---|---|---|---|---|
+| [`hahnec/color-matcher`](https://github.com/hahnec/color-matcher) | 678 | GPL-3.0 | 2026-02-24 | 📖 مطالعه | الگوریتم‌های انتقال رنگ؛ GPL → فقط الگوریتم |
+
+## g-sound — صدا، داکینگ، J/L-cut
+
+| ریپو | ★ | لایسنس | آخرین کامیت | حکم | چرا |
+|---|---|---|---|---|---|
+| [`librosa/librosa`](https://github.com/librosa/librosa) | 8724 | ISC | 2026-10-06 | ✅ بگیر | تحلیل ریتم و onset؛ پایهٔ beat-grid در music-beat-sync |
+| [`spotify/pedalboard`](https://github.com/spotify/pedalboard) | 6390 | GPL-3.0 | 2026-10-23 | 📖 مطالعه | افکت صوتی در پایتون؛ داکینگ دستی |
+
+## i-qc — کیفیت‌سنجی خودکار
+
+| ریپو | ★ | لایسنس | آخرین کامیت | حکم | چرا |
+|---|---|---|---|---|---|
+| [`VQAssessment/DOVER`](https://github.com/VQAssessment/DOVER) | 535 | NOASSERTION | 2024-08-12 | 📖 مطالعه | ارزیابی دو‌محوری ویدیو؛ GPU لازم |
+
+## j-frame — تصویر، اینترپولیشن، فرمت
+
+| ریپو | ★ | لایسنس | آخرین کامیت | حکم | چرا |
+|---|---|---|---|---|---|
+| [`guoyww/AnimateDiff`](https://github.com/guoyww/AnimateDiff) | 12280 | Apache-2.0 | 2024-07-31 | ✕ نگیر | برای کیفیت ما لازم نیست؛ مدل سنگین |
+| [`hzwer/ECCV2022-RIFE`](https://github.com/hzwer/ECCV2022-RIFE) | 5630 | MIT | 2025-09-10 | ✅ بگیر | درون‌یابی فریم؛ ابزار CLI برای ۲۴→۲۵fps |
+
+## k-continuity — دادهٔ تداوم
+
+| ریپو | ★ | لایسنس | آخرین کامیت | حکم | چرا |
+|---|---|---|---|---|---|
+| [`raccordhq/raccord`](https://github.com/raccordhq/raccord) | 1 | none | 2026-08-03 | 📖 مطالعه | موتور تداوم local-first + کامپایلر قطعی + ۷ بررسی؛ ۱★ ولی دقیقاً ایدهٔ ما |
+
+## lipsync — لب‌سینک و TTS
+
+| ریپو | ★ | لایسنس | آخرین کامیت | حکم | چرا |
+|---|---|---|---|---|---|
+| [`coqui-ai/TTS`](https://github.com/coqui-ai/TTS) | 46171 | MPL-2.0 | 2024-08-16 | ✕ نگیر | از ۲۰۲۴ رها شده، فارسی ندارد |
+| [`fishaudio/fish-speech`](https://github.com/fishaudio/fish-speech) | 33488 | NOASSERTION | 2026-10-29 | ✕ نگیر | حجیم، لایسنس نامشخص، فارسی تأیید نشده |
+| [`resemble-ai/chatterbox`](https://github.com/resemble-ai/chatterbox) | 27418 | MIT | 2026-07-21 | 📖 مطالعه | Nano 110M روی CPU ۳× realtime + تگ [laugh]/[sigh] |
+| [`k2-fsa/sherpa-onnx`](https://github.com/k2-fsa/sherpa-onnx) | 15620 | Apache-2.0 | 2026-10-29 | ✅ بگیر | ران‌تایم ONNX برای TTS/STT روی CPU و موبایل |
+| [`SWivid/F5-TTS`](https://github.com/SWivid/F5-TTS) | 15486 | MIT | 2026-10-23 | 📖 مطالعه | کلونینگ zero-shot؛ ۱.۳GB، روی CPU کند |
+| [`OpenTalker/SadTalker`](https://github.com/OpenTalker/SadTalker) | 14171 | NOASSERTION | 2024-06-26 | ✕ نگیر | رهاشده (۲۰۲۴-۰۶)؛ سر کامل نه فقط لب |
+| [`Rudrabha/Wav2Lip`](https://github.com/Rudrabha/Wav2Lip) | 13264 | none | 2025-06-22 | ✕ نگیر | بدون فایل لایسنس → استفادهٔ تجاری نه |
+| [`rhasspy/piper`](https://github.com/rhasspy/piper) | 11313 | MIT | 2025-08-26 | ✅ بگیر | ۵ صدای fa_IR + ۲۷ صدای en_US، ONNX تک‌فایل ~۶۳MB، CPU |
+| [`hexgrad/kokoro`](https://github.com/hexgrad/kokoro) | 9782 | Apache-2.0 | 2025-08-06 | ✅ بگیر | ۸۲M پارامتر Apache؛ en-US/en-GB؛ انتخاب انگلیسی ما |
+| [`MeiGen-AI/InfiniteTalk`](https://github.com/MeiGen-AI/InfiniteTalk) | 8200 | Apache-2.0 | 2026-05-22 | 📖 مطالعه | طول نامحدود، ~۱۲GB؛ تمیزترین مسیر بلندمدت |
+| [`myshell-ai/MeloTTS`](https://github.com/myshell-ai/MeloTTS) | 7687 | MIT | 2024-12-24 | ✕ نگیر | فارسی ندارد |
+| [`OpenTalker/video-retalking`](https://github.com/OpenTalker/video-retalking) | 7298 | Apache-2.0 | 2024-08-05 | 📖 مطالعه | Apache ولی رهاشده (۲۰۲۴-۰۸) |
+| [`TMElyralab/MuseTalk`](https://github.com/TMElyralab/MuseTalk) | 6838 | NOASSERTION | 2025-09-26 | ✅ بگیر | ۴GB VRAM، ~۵ دقیقه برای ۸ ثانیه fp16؛ ۲۵fps |
+| [`neuphonic/neutts`](https://github.com/neuphonic/neutts) | 6337 | NOASSERTION | 2026-07-30 | 📖 مطالعه | on-device، انگلیسی |
+| [`bytedance/LatentSync`](https://github.com/bytedance/LatentSync) | 6219 | Apache-2.0 | 2025-06-20 | ✅ بگیر | ۱۸GB برای ۱.۶ (۵۱۲²) / ۸GB برای ۱.۵؛ SyncNet ۹۴٪ |
+| [`OHF-Voice/piper1-gpl`](https://github.com/OHF-Voice/piper1-gpl) | 6089 | GPL-3.0 | 2026-10-25 | ✅ بگیر | جانشین رسمی piper؛ GPL-3.0 → فقط CLI، کد را وارد نکن |
+| [`jixiaozhong/Sonic`](https://github.com/jixiaozhong/Sonic) | 3274 | NOASSERTION | 2026-01-08 | ✕ نگیر | ۳۲GB VRAM، خارج از دسترس |
+| [`MeiGen-AI/MultiTalk`](https://github.com/MeiGen-AI/MultiTalk) | 3024 | Apache-2.0 | 2026-05-22 | 📖 مطالعه | تولید از عکس + صدا، ۸-۱۲GB |
+| [`thewh1teagle/kokoro-onnx`](https://github.com/thewh1teagle/kokoro-onnx) | 2830 | MIT | 2026-09-01 | ✅ بگیر | ONNX int8 ۱۱۴MB + صداها ۲۸MB؛ مسیر CPU |
+| [`karim23657/Persian-tts-coqui`](https://github.com/karim23657/Persian-tts-coqui) | 220 | MIT | 2025-02-15 | 📖 مطالعه | MIT، رسپی آموزش VITS فارسی |
+| [`nimaone/persian_tts`](https://github.com/nimaone/persian_tts) | 196 | none | 2026-09-20 | 📖 مطالعه | فارسی ONNX + کلونینگ از ۵ ثانیه، آفلاین CPU؛ بدون لایسنس |
+| [`instant-high/wav2lip-onnx-HQ`](https://github.com/instant-high/wav2lip-onnx-HQ) | 162 | none | 2025-06-10 | 📖 مطالعه | تنها مسیر CPU؛ دهان ۹۶×۹۶، نرم |
+| [`karim23657/awesome-Persian-Speech`](https://github.com/karim23657/awesome-Persian-Speech) | 100 | CC0-1.0 | 2024-12-09 | ✅ بگیر | فهرست مرجع صدا فارسی (CC0) |
