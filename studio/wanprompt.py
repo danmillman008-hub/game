@@ -57,7 +57,19 @@ ACTIONS = {
     "raises", "lowers", "lifts", "opens", "closes", "swings", "swaying", "sways",
     "breathes", "speaks", "smiles", "nods", "reaches", "grips", "tightens",
     "falls", "drips", "flickers", "drifts", "settles", "enters", "leaves",
+    "relax", "tighten", "swing", "splash", "lift", "stop", "blink", "shift",
 }
+
+
+def _hit(w: list[str], vocab: set[str]) -> list[str]:
+    """Match on a 4-character stem so 'tightens/tightened/tightening' all count."""
+    out = set()
+    for x in w:
+        for v in vocab:
+            if x == v or (len(x) > 4 and x.startswith(v[:4]) and v[:4] == x[:4]):
+                out.add(v)
+                break
+    return sorted(out)
 
 
 def words(p: str) -> list[str]:
@@ -69,9 +81,9 @@ def check(prompt: str) -> dict:
     p = prompt.strip()
     w = words(p)
     n = len(w)
-    static_hits = sorted({x for x in w if x in STATIC})
-    cam_hits = sorted({x for x in w if x in CAMERA})
-    act_hits = sorted({x for x in w if x in ACTIONS})
+    static_hits = _hit(w, STATIC)
+    cam_hits = _hit(w, CAMERA)
+    act_hits = _hit(w, ACTIONS)
     brackets = len(re.findall(r"\[[^\]]+\]", p))
     # static leak = share of the prompt spent re-describing the frame
     leak = round(100 * sum(w.count(x) for x in STATIC) / max(n, 1))
