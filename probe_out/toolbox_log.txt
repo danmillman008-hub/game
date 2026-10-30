@@ -1,10 +1,18 @@
 source films/anime_ten/refs/c1.png (300, 499) sharp 11.29
   anime4k    (1200, 1996) sharp 24.63 in 1s
-  realesrgan FAILED ModuleNotFoundError: No module named 'torchvision.transforms.functional_tensor'
+	Tile 1/4
+	Tile 2/4
+	Tile 3/4
+	Tile 4/4
+  realesrgan (1200, 1996) sharp 31.58 in 11s
   bicubic    (1200, 1996) sharp 11.32 in 0s
 source films/anime_ten/refs/c6.png (300, 456) sharp 16.27
   anime4k    (1200, 1824) sharp 31.89 in 0s
-  realesrgan FAILED ModuleNotFoundError: No module named 'torchvision.transforms.functional_tensor'
+	Tile 1/4
+	Tile 2/4
+	Tile 3/4
+	Tile 4/4
+  realesrgan (1200, 1824) sharp 37.41 in 11s
   bicubic    (1200, 1824) sharp 16.31 in 0s
   c1.png: exists, skip
   c2.png: exists, skip
@@ -22,13 +30,47 @@ c5.png            29.81       48.57   1.63
 c6.png            16.27       31.89   1.96
 
 mean gain 1.79x  (≈1.00 means no better than resizing)
-  c1.png: FAILED ModuleNotFoundError: No module named 'torchvision.transforms.functional_tensor'
-  c2.png: FAILED ModuleNotFoundError: No module named 'torchvision.transforms.functional_tensor'
-  c3.png: FAILED ModuleNotFoundError: No module named 'torchvision.transforms.functional_tensor'
-  c4.png: FAILED ModuleNotFoundError: No module named 'torchvision.transforms.functional_tensor'
-  c5.png: FAILED ModuleNotFoundError: No module named 'torchvision.transforms.functional_tensor'
-  c6.png: FAILED ModuleNotFoundError: No module named 'torchvision.transforms.functional_tensor'
+	Tile 1/4
+	Tile 2/4
+	Tile 3/4
+	Tile 4/4
+  c1.png: (300, 499) -> (1200, 1996) in 12s
+	Tile 1/6
+	Tile 2/6
+	Tile 3/6
+	Tile 4/6
+	Tile 5/6
+	Tile 6/6
+  c2.png: (330, 550) -> (1320, 2200) in 11s
+	Tile 1/4
+	Tile 2/4
+	Tile 3/4
+	Tile 4/4
+  c3.png: (500, 447) -> (2000, 1788) in 14s
+	Tile 1/6
+	Tile 2/6
+	Tile 3/6
+	Tile 4/6
+	Tile 5/6
+	Tile 6/6
+  c4.png: (330, 550) -> (1320, 2200) in 11s
+	Tile 1/4
+	Tile 2/4
+	Tile 3/4
+	Tile 4/4
+  c5.png: (360, 509) -> (1440, 2036) in 11s
+	Tile 1/4
+	Tile 2/4
+	Tile 3/4
+	Tile 4/4
+  c6.png: (300, 456) -> (1200, 1824) in 8s
 
 file        src(1000px)  4x(1000px)      x
+c1.png            11.29       31.58   2.80
+c2.png            25.16       44.67   1.78
+c3.png            54.55       72.33   1.33
+c4.png            15.07       36.16   2.40
+c5.png            29.81       52.86   1.77
+c6.png            16.27       37.41   2.30
 
-mean gain 0.00x  (≈1.00 means no better than resizing)
+mean gain 2.06x  (≈1.00 means no better than resizing)
