@@ -607,6 +607,22 @@ def cmd_vo(a):
     print("next: filmkit assemble <project>  (it picks up audio/vo.mp3 or --vo)")
 
 
+def cmd_loud(a):
+    """Normalise the finished mix to broadcast-ish loudness (-16 LUFS, -1.5 dBTP)."""
+    d, proj = load(a.name)
+    src = Path(a.out) if a.out else d / "out" / "final.mp4"
+    if not src.exists():
+        raise SystemExit(f"no {src}")
+    tmp = src.with_name("_loud.mp4")
+    run([FF, "-y", "-v", "error", "-i", str(src), "-c:v", "copy",
+         "-af", f"loudnorm=I={a.i}:TP={a.tp}:LRA=11", "-c:a", "aac", "-b:a", "192k",
+         "-movflags", "+faststart", str(tmp)])
+    shutil.move(str(tmp), str(src))
+    info = probe(src)
+    print(f"normalised {src.name}: {info['duration_s']}s, audio={info['has_audio']}, "
+          f"{info['bytes']//1024} KB")
+
+
 def cmd_qc(a):
     d, proj = load(a.name)
     (d / "qc").mkdir(parents=True, exist_ok=True)
@@ -747,6 +763,10 @@ def main():
 
     p = sub.add_parser("vo"); p.add_argument("name"); p.add_argument("--crossfade", type=float)
     p.set_defaults(fn=cmd_vo)
+
+    p = sub.add_parser("loud"); p.add_argument("name"); p.add_argument("--out")
+    p.add_argument("--i", type=float, default=-16.0); p.add_argument("--tp", type=float, default=-1.5)
+    p.set_defaults(fn=cmd_loud)
 
     p = sub.add_parser("qc"); p.add_argument("name"); p.set_defaults(fn=cmd_qc)
 

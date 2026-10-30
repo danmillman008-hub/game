@@ -150,6 +150,11 @@ def finish(d: Path, proj: dict):
     K.cmd_assemble(argparse.Namespace(name=str(d), crossfade=None,
                                       subs=str(d / "subs" / "final.srt"),
                                       vo=None, music=None, duck=False))
+    log("loudness normalisation")
+    try:
+        K.cmd_loud(argparse.Namespace(name=str(d), out=None, i=-16.0, tp=-1.5))
+    except Exception as exc:
+        log(f"  loudnorm skipped: {exc}")
     log("qc")
     K.cmd_qc(argparse.Namespace(name=str(d)))
 
