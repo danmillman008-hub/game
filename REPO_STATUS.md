@@ -1,10 +1,10 @@
 # وضعیت ریپو — ساخته‌شده با اجرا، نه با ادعا
 
-> خودکار از `python3 studio/verify.py` — 2026-10-30 20:49 UTC · پایتون 3.11.17 · runner
+> خودکار از `python3 studio/verify.py` — 2026-10-30 20:50 UTC · پایتون 3.11.17 · runner
 
 | ok | FAIL | skip | warn |
 |---|---|---|---|
-| 41 | 1 | 1 | 1 |
+| 40 | 4 | 1 | 1 |
 
 > ⚠️ 4 وابستگی نصب نیست؛ ردیف‌های وابسته `skip` شده‌اند، نه pass — روی رانر هم اجرا نشدند: basicsr, pyanime4k, realesrgan, torch
 
@@ -12,7 +12,7 @@
 
 ## compile
 
-- ✅ 41/41 compile
+- ✅ 40/40 compile
 
 ## data
 
@@ -25,12 +25,13 @@
 
 ## inventory
 
-- ❌ studio/zz_verify_probe.py is not in studio/inventory.json
+- ✅ 48 entries, every file accounted for
 
 ## links
 
+- ❌ 1 broken reference(s) — run studio/links.py
 - ⚠️ films/anime_ten/deliver/scene_min1.mp4: 23 MB (over 20 MB, tracked in git)
-- ✅ 696 files · 0 breaks · 1 size warning(s)
+- ❌ 695 files · 1 breaks · 1 size warning(s)
 
 ## smoke
 
@@ -50,7 +51,7 @@
 - ✅ studio/knowledge/bank.py --help (0.1s)
 - ✅ studio/knowledge/banktest.py -> ALL OK
 - ✅ studio/knowledge/measure.py --help (0.1s)
-- ✅ studio/links.py -> 696 tracked files · 0 breaks · 1 size warnings
+- ❌ studio/links.py rc=1: 695 tracked files · 1 breaks · 1 size warnings
 - ✅ studio/lipsync.py --help (0.0s)
 - ✅ studio/mivi_photo.py --help (0.1s)
 - ✅ studio/mivi_shot.py --help (0.1s)
@@ -67,6 +68,7 @@
 - ✅ studio/voice.py --help (0.1s)
 - ✅ studio/voicetest.py -> ALL OK
 - ✅ studio/wanprompt.py --help (0.0s)
+- ❌ studio/links.py did not run (ci=true): needs unknown dependency
 
 ## triggers
 
