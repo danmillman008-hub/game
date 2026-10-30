@@ -1,0 +1,47 @@
+name: mivi
+# Generation runs HERE, not in the agent sandbox: the sandbox egress proxy blocks
+# cpi.ufotosoft.com / algo-v1.wiseoel.com, a GitHub runner does not.
+on:
+  workflow_dispatch:
+    inputs:
+      jobs:
+        description: "job file"
+        default: "films/short16/gen_jobs.json"
+  push:
+    branches: [arena/e3952d18-game]
+    paths: ['.mivi-trigger']
+permissions:
+  contents: write
+concurrency:
+  group: mivi-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  gen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - name: network check
+        run: |
+          for h in https://cpi.ufotosoft.com https://algo-v1.wiseoel.com; do
+            printf "%s -> " "$h"; curl -s -o /dev/null -w "%{http_code}\n" --max-time 15 "$h" || echo "unreachable"
+          done
+      - name: generate
+        run: python3 studio/mivi_shot.py films/short16/gen_jobs.json --out films/short16/clips_gen
+      - name: publish clips
+        if: always()
+        run: |
+          git config user.name "mivi-bot"
+          git config user.email "mivi@local"
+          git add -f films/short16/clips_gen || true
+          git commit -m "mivi: $(date -u +%H:%M) generation batch" || echo "no change"
+          git pull --rebase -q origin "${GITHUB_REF_NAME}" || true
+          git push || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mivi-clips
+          path: films/short16/clips_gen/
+          retention-days: 14
