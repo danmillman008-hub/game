@@ -58,6 +58,7 @@ def main() -> int:
         rows.append({
             "shot": r["shot"], "lang": r["lang"], "engine": r["engine"], "voice": r["voice"],
             "text": r["text"], "audio_s": r.get("real_s"), "rtf": r.get("rtf"),
+            "synth_s": r.get("synth_s"), "post_s": r.get("post_s"),
             "bytes": b, "bytes_per_s": round(b / r["real_s"], 1) if r.get("real_s") else None,
             "sha256_16": sha256(mp3), "rendered": True,
         })
