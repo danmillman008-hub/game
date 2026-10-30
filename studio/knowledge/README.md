@@ -10,6 +10,7 @@
 |---|---|
 | مدل چطور پرامپت می‌خواهد (و چرا خروجی قبلی درهم بود) | [`prompting/WAN_PROMPTS.md`](prompting/WAN_PROMPTS.md) |
 | خط تولید: لنگر، پلنر، تولید موازی | [`workflow/WORKFLOW.md`](workflow/WORKFLOW.md) |
+| **چه شاتی درمی‌آید و چه شاتی نه — سبک خانه (۱۲ take)** | [`method/HOUSE_STYLE.md`](method/HOUSE_STYLE.md) |
 | چرا هویت می‌شکند و چطور سرعت را بردیم | [`workflow/CONSISTENCY_AND_SPEED.md`](workflow/CONSISTENCY_AND_SPEED.md) |
 | آیا API «فریم اول/آخر» را می‌فهمد؟ (**نه**) | [`workflow/FLF_PROBE.md`](workflow/FLF_PROBE.md) |
 | چطور بدون تصویرساز، تصویر بسازیم | [`method/ARTGEN.md`](method/ARTGEN.md) |
@@ -53,6 +54,7 @@
 | پرامپت ساخته‌شده با `compose` | ۱۰۹ کلمه، تگ‌دار، **ناقض** → حالا نثر ۲۵–۶۱ کلمه‌ای |
 | حجم `.git` | ۱.۲۵ GB (۴۷۰ MB آن پنج نسخه از یک فایل) |
 | هزینهٔ فیلم ۱۰ دقیقه‌ای | ~۳.۶ ساعت رانر (یک برداشت) |
+| نرخ برد در سبک خانه | **۴ از ۱۲ take** قبل از دروازه → هدف: ۰ دورریز |
 
 ## قواعد این پوشه
 

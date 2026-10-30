@@ -3,6 +3,7 @@
 #   make verify                # is the repo healthy? (writes REPO_STATUS.md)
 #   make check                 # everything that must pass before a batch
 #   make plan SCENE=...        # scene file -> job file (+ estimate, + lint)
+#   make shot JOBS=...         # housecheck -> dry-run -> dispatch (refuses a bad shot)
 #   make dry JOBS=...          # show the DAG and the wall-clock guess
 #   make film NAME=anime_ten   # assemble the cut
 #
@@ -15,7 +16,7 @@ OUT     ?= films/short16/clips_gen
 NAME    ?= anime_ten
 PAR     ?= 4
 
-.PHONY: help verify check plan dry gen audit film wiring clean trig
+.PHONY: help verify check plan dry gen audit film wiring clean trig shot style
 
 help:
 	@grep -E '^#   ' Makefile
@@ -39,6 +40,17 @@ dry:
 
 audit:
 	$(PY) studio/mivi_shot.py $(JOBS) --out $(OUT) --dry-run --parallel $(PAR) 2>&1 | grep -c WARN || true
+
+style:
+	@echo "studio/knowledge/method/HOUSE_STYLE.md"
+
+# The gate that stopped costing us takes: a shot that breaks the house style never
+# reaches the provider, because housecheck exits non-zero first.
+shot:
+	$(PY) studio/housecheck.py $(JOBS)
+	$(PY) studio/mivi_shot.py $(JOBS) --out $(OUT) --dry-run --parallel $(PAR)
+	@echo "$(JOBS)" > .mivi-trigger
+	@echo "trigger written — git add .mivi-trigger && commit && push"
 
 gen:
 	@echo "$(JOBS)" > .mivi-trigger
