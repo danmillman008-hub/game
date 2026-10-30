@@ -271,19 +271,27 @@ def cmd_render(a) -> None:
             rendered.append(mp3)
             continue
         wav = work / f"s{r['shot']:02d}.wav"
-        t0 = __import__("time").time()
+        # time the model and the ffmpeg post-process separately: folding them into one
+        # "rtf" hides which half you are paying for, and ffmpeg on a shared runner is
+        # exactly the half that moves.
+        import time as _t
+        t0 = _t.time()
         if r["engine"] == "kokoro":
             synth_kokoro(r["text"], r["voice"], wav, a.speed)
         elif r["engine"] == "piper":
             synth_piper(r["text"], r["voice"], wav, a.speed)
         else:
             raise SystemExit(f"unknown engine {r['engine']}")
+        t1 = _t.time()
         secs = finish(wav, mp3)
-        dt = __import__("time").time() - t0
-        r["real_s"], r["rtf"] = round(secs, 2), round(dt / max(secs, 1e-6), 2)
+        t2 = _t.time()
+        r["real_s"] = round(secs, 2)
+        r["synth_s"] = round(t1 - t0, 2)
+        r["post_s"] = round(t2 - t1, 2)
+        r["rtf"] = round((t1 - t0) / max(secs, 1e-6), 2)      # model only
         rendered.append(mp3)
         print(f"  s{r['shot']:02d} {r['lang']} {r['voice']:>22} {secs:5.1f}s  "
-              f"rtf {r['rtf']:.2f}  {mp3.name}")
+              f"rtf {r['rtf']:.2f} (synth {r['synth_s']}s + post {r['post_s']}s)  {mp3.name}")
 
     (vo / "vo_plan.json").write_text(json.dumps(plan, ensure_ascii=False, indent=2),
                                      encoding="utf-8")
