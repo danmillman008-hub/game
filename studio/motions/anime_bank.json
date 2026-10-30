@@ -15,7 +15,10 @@
     "one_move": "Only ONE camera move per shot (carried over from the live-action bank).",
     "end_state": "Anchor the last frame, same as live action: 'by the last frame ...'.",
     "draft_pass_first": "A model-rendered frame is stable as a key frame (4 s drift 5.4/255); a raw synthetic plate is not (49-76/255). Burn one draft clip, keep its last frame, chain every real shot from it.",
-    "camera_in_post": "The model repaints regardless of camera move — drift was the same for static and push-in. Do the push in ffmpeg on a held frame, not in the prompt."
+    "camera_in_post": "The model repaints regardless of camera move — drift was the same for static and push-in. Do the push in ffmpeg on a held frame, not in the prompt.",
+    "no_composite_input": "Never feed the model a pasted collage. A sheet is one flat drawing, so give the sheet itself; a composed plate of layers makes the model spend the clip repairing edges (legs detached, 15.9 -> 25.6 drift).",
+    "frame_with_words": "New shot size is asked for in the prompt on top of the last frame ('now a medium close-up of the same man, his face filling the left half') — that worked; cropping and pasting in PIL did not.",
+    "dutch_in_post": "A tilted key frame comes back upright. Bake the Dutch angle in the edit, not in the image."
   },
   "camera": [
     {
