@@ -39,7 +39,13 @@ def sha256(p: Path) -> str:
 
 
 def main() -> int:
-    name = sys.argv[1] if len(sys.argv) > 1 else "voice_probe"
+    import argparse
+    ap = argparse.ArgumentParser(
+        prog="measure", description="Turn a real TTS render into the numbers the bank holds.",
+        epilog="Needs films/<name>/audio/vo/vo_plan.json — run studio/voice.py first.")
+    ap.add_argument("name", nargs="?", default="voice_probe",
+                    help="film project under films/ (default: voice_probe)")
+    name = ap.parse_args().name
     proj_dir = ROOT / "films" / name
     plan_path = proj_dir / "audio" / "vo" / "vo_plan.json"
     if not plan_path.exists():

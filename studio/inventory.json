@@ -1,0 +1,488 @@
+{
+ "note": "every tracked .py and .yml must appear here; studio/verify.py fails otherwise",
+ "entries": [
+  {
+   "path": ".github/workflows/mivi.yml",
+   "role": "workflow",
+   "purpose": "generation (trigger: .mivi-trigger)",
+   "needs": [],
+   "smoke": "yaml",
+   "bins": [],
+   "ci": true
+  },
+  {
+   "path": ".github/workflows/photo.yml",
+   "role": "workflow",
+   "purpose": "picture-endpoint probe",
+   "needs": [],
+   "smoke": "yaml",
+   "bins": [],
+   "ci": true
+  },
+  {
+   "path": ".github/workflows/probe.yml",
+   "role": "workflow",
+   "purpose": "network probe of Mivi hosts",
+   "needs": [],
+   "smoke": "yaml",
+   "bins": [],
+   "ci": true
+  },
+  {
+   "path": ".github/workflows/render.yml",
+   "role": "workflow",
+   "purpose": "batch render (trigger: .render-trigger)",
+   "needs": [],
+   "smoke": "yaml",
+   "bins": [],
+   "ci": true
+  },
+  {
+   "path": ".github/workflows/studio.yml",
+   "role": "workflow",
+   "purpose": "selftest + filmkit checks",
+   "needs": [],
+   "smoke": "yaml",
+   "bins": [],
+   "ci": true
+  },
+  {
+   "path": ".github/workflows/toolbox.yml",
+   "role": "workflow",
+   "purpose": "anime upscaler on the sheets",
+   "needs": [],
+   "smoke": "yaml",
+   "bins": [],
+   "ci": true
+  },
+  {
+   "path": ".github/workflows/voice.yml",
+   "role": "workflow",
+   "purpose": "TTS measurement + bank tests",
+   "needs": [],
+   "smoke": "yaml",
+   "bins": [],
+   "ci": true
+  },
+  {
+   "path": ".probe/probe.py",
+   "role": "research",
+   "purpose": "one-off key-still probe",
+   "needs": [
+    "PIL"
+   ],
+   "smoke": "none",
+   "bins": [],
+   "ci": false
+  },
+  {
+   "path": "bridge/mivi_bridge.py",
+   "role": "bridge",
+   "purpose": "OpenAI-compatible HTTP server in front of Mivi",
+   "needs": [],
+   "smoke": "none",
+   "bins": [],
+   "ci": false
+  },
+  {
+   "path": "bridge/mivi_mcp.py",
+   "role": "bridge",
+   "purpose": "Mivi tool layer used by every script",
+   "needs": [
+    "imageio_ffmpeg"
+   ],
+   "smoke": "help",
+   "bins": [],
+   "ci": true
+  },
+  {
+   "path": "mivi_web/make_catalog.py",
+   "role": "tool",
+   "purpose": "rebuild the engine catalogue html",
+   "needs": [],
+   "smoke": "help",
+   "bins": [],
+   "ci": true
+  },
+  {
+   "path": "mivi_web/re/annpaths.py",
+   "role": "re",
+   "purpose": "APK reverse-engineering helper (needs androguard) — one-off, takes a dex path as argv",
+   "needs": [],
+   "smoke": "none",
+   "bins": [],
+   "ci": false
+  },
+  {
+   "path": "mivi_web/re/dexann.py",
+   "role": "re",
+   "purpose": "APK reverse-engineering helper (needs androguard) — one-off, takes a dex path as argv",
+   "needs": [],
+   "smoke": "none",
+   "bins": [],
+   "ci": false
+  },
+  {
+   "path": "mivi_web/re/dumpclass.py",
+   "role": "re",
+   "purpose": "APK reverse-engineering helper (needs androguard)",
+   "needs": [
+    "androguard"
+   ],
+   "smoke": "help",
+   "bins": [],
+   "ci": false
+  },
+  {
+   "path": "mivi_web/re/fields.py",
+   "role": "re",
+   "purpose": "APK reverse-engineering helper (needs androguard)",
+   "needs": [
+    "androguard"
+   ],
+   "smoke": "help",
+   "bins": [],
+   "ci": false
+  },
+  {
+   "path": "mivi_web/re/m2.py",
+   "role": "re",
+   "purpose": "APK reverse-engineering helper (needs androguard)",
+   "needs": [
+    "androguard"
+   ],
+   "smoke": "help",
+   "bins": [],
+   "ci": false
+  },
+  {
+   "path": "mivi_web/re/staticdump.py",
+   "role": "re",
+   "purpose": "APK reverse-engineering helper (needs androguard)",
+   "needs": [
+    "androguard"
+   ],
+   "smoke": "help",
+   "bins": [],
+   "ci": false
+  },
+  {
+   "path": "mivi_web/re/xref2.py",
+   "role": "re",
+   "purpose": "APK reverse-engineering helper (needs androguard)",
+   "needs": [
+    "androguard"
+   ],
+   "smoke": "help",
+   "bins": [],
+   "ci": false
+  },
+  {
+   "path": "studio/artgen.py",
+   "role": "pipeline",
+   "purpose": "blank canvas -> key frame",
+   "needs": [
+    "PIL"
+   ],
+   "smoke": "help",
+   "bins": [
+    "ffmpeg"
+   ],
+   "ci": true
+  },
+  {
+   "path": "studio/chainkit.py",
+   "role": "support",
+   "purpose": "frame-bridge chaining on ffmpeg",
+   "needs": [
+    "PIL",
+    "imageio_ffmpeg"
+   ],
+   "smoke": "help",
+   "bins": [],
+   "ci": true
+  },
+  {
+   "path": "studio/cutlist.py",
+   "role": "support",
+   "purpose": "audio-first assembly from a timeline",
+   "needs": [
+    "cv2",
+    "imageio_ffmpeg",
+    "numpy"
+   ],
+   "smoke": "help",
+   "bins": [],
+   "ci": true
+  },
+  {
+   "path": "studio/demo.py",
+   "role": "demo",
+   "purpose": "networked filmkit demo (runner only)",
+   "needs": [],
+   "smoke": "none",
+   "bins": [],
+   "ci": true
+  },
+  {
+   "path": "studio/filmkit.py",
+   "role": "pipeline",
+   "purpose": "edit + assemble + QC verbs",
+   "needs": [
+    "PIL",
+    "imageio_ffmpeg"
+   ],
+   "smoke": "help",
+   "bins": [],
+   "ci": true
+  },
+  {
+   "path": "studio/knowledge/bank.py",
+   "role": "check",
+   "purpose": "repo bank: check/verify/export",
+   "needs": [],
+   "smoke": "help",
+   "bins": [],
+   "ci": true
+  },
+  {
+   "path": "studio/knowledge/banktest.py",
+   "role": "test",
+   "purpose": "offline tests for the bank",
+   "needs": [],
+   "smoke": "run",
+   "bins": [],
+   "ci": true
+  },
+  {
+   "path": "studio/knowledge/measure.py",
+   "role": "check",
+   "purpose": "TTS render -> numbers",
+   "needs": [],
+   "smoke": "help",
+   "bins": [],
+   "ci": true
+  },
+  {
+   "path": "studio/links.py",
+   "role": "check",
+   "purpose": "dangling paths, sizes, compile",
+   "needs": [],
+   "smoke": "run",
+   "bins": [],
+   "ci": true
+  },
+  {
+   "path": "studio/lipsync.py",
+   "role": "support",
+   "purpose": "lip-sync ladder",
+   "needs": [],
+   "smoke": "help",
+   "bins": [
+    "ffmpeg"
+   ],
+   "ci": true
+  },
+  {
+   "path": "studio/mivi_photo.py",
+   "role": "research",
+   "purpose": "picture-endpoint probe (needs token)",
+   "needs": [],
+   "smoke": "help",
+   "bins": [],
+   "ci": true
+  },
+  {
+   "path": "studio/mivi_shot.py",
+   "role": "pipeline",
+   "purpose": "runner: batch generation, --parallel/--dry-run",
+   "needs": [
+    "imageio_ffmpeg"
+   ],
+   "smoke": "help",
+   "bins": [],
+   "ci": true
+  },
+  {
+   "path": "studio/motionbank.py",
+   "role": "pipeline",
+   "purpose": "motion bank + prose composer + lint",
+   "needs": [],
+   "smoke": "help",
+   "bins": [],
+   "ci": true
+  },
+  {
+   "path": "studio/motionlint.py",
+   "role": "support",
+   "purpose": "detect rewound motion",
+   "needs": [
+    "cv2",
+    "numpy"
+   ],
+   "smoke": "help",
+   "bins": [],
+   "ci": true
+  },
+  {
+   "path": "studio/motions/anime_plate.py",
+   "role": "research",
+   "purpose": "draw probe plates (superseded by artgen.py)",
+   "needs": [
+    "PIL"
+   ],
+   "smoke": "none",
+   "bins": [],
+   "ci": false
+  },
+  {
+   "path": "studio/motions/animeprobe.py",
+   "role": "research",
+   "purpose": "style-drift measurement on clips",
+   "needs": [
+    "PIL"
+   ],
+   "smoke": "none",
+   "bins": [
+    "ffmpeg"
+   ],
+   "ci": false
+  },
+  {
+   "path": "studio/motions/ten_shots.py",
+   "role": "research",
+   "purpose": "story beats -> 160 shot specs",
+   "needs": [],
+   "smoke": "help",
+   "bins": [],
+   "ci": false
+  },
+  {
+   "path": "studio/motions/ten_stills.py",
+   "role": "research",
+   "purpose": "superseded frame builder",
+   "needs": [
+    "PIL"
+   ],
+   "smoke": "none",
+   "bins": [],
+   "ci": false
+  },
+  {
+   "path": "studio/openmontage/mivi_video.py",
+   "role": "bridge",
+   "purpose": "drop-in OpenMontage provider",
+   "needs": [],
+   "smoke": "none",
+   "bins": [],
+   "ci": false
+  },
+  {
+   "path": "studio/render_film.py",
+   "role": "pipeline",
+   "purpose": "unattended batch renderer",
+   "needs": [
+    "PIL"
+   ],
+   "smoke": "help",
+   "bins": [
+    "ffmpeg"
+   ],
+   "ci": true
+  },
+  {
+   "path": "studio/scorer.py",
+   "role": "support",
+   "purpose": "objective best-of-N gates",
+   "needs": [
+    "cv2",
+    "imageio_ffmpeg",
+    "numpy"
+   ],
+   "smoke": "help",
+   "bins": [],
+   "ci": true
+  },
+  {
+   "path": "studio/selftest.py",
+   "role": "test",
+   "purpose": "offline proof of the editing half",
+   "needs": [],
+   "smoke": "run",
+   "bins": [
+    "ffmpeg"
+   ],
+   "ci": true
+  },
+  {
+   "path": "studio/shotplan.py",
+   "role": "pipeline",
+   "purpose": "scene file -> job file, enforces chain<=2",
+   "needs": [],
+   "smoke": "help",
+   "bins": [],
+   "ci": true
+  },
+  {
+   "path": "studio/tests/test_mivi_shot.py",
+   "role": "test",
+   "purpose": "scheduler: ok flag, chain, refusal",
+   "needs": [
+    "imageio_ffmpeg"
+   ],
+   "smoke": "run",
+   "bins": [],
+   "ci": true
+  },
+  {
+   "path": "studio/toolbox/upscale.py",
+   "role": "pipeline",
+   "purpose": "anime upscaler (Anime4K/Real-ESRGAN)",
+   "needs": [
+    "PIL",
+    "basicsr",
+    "numpy",
+    "pyanime4k",
+    "realesrgan",
+    "torch"
+   ],
+   "smoke": "help",
+   "bins": [],
+   "ci": false
+  },
+  {
+   "path": "studio/voice.py",
+   "role": "support",
+   "purpose": "CPU TTS (en/fa)",
+   "needs": [
+    "kokoro_onnx",
+    "soundfile"
+   ],
+   "smoke": "help",
+   "bins": [
+    "ffmpeg"
+   ],
+   "ci": false
+  },
+  {
+   "path": "studio/voicetest.py",
+   "role": "test",
+   "purpose": "offline tests for voice + lipsync",
+   "needs": [],
+   "smoke": "run",
+   "bins": [
+    "ffmpeg"
+   ],
+   "ci": true
+  },
+  {
+   "path": "studio/wanprompt.py",
+   "role": "pipeline",
+   "purpose": "Wan I2V prompt audit",
+   "needs": [],
+   "smoke": "help",
+   "bins": [],
+   "ci": true
+  }
+ ]
+}

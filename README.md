@@ -53,6 +53,17 @@ printf 'films/short16/gen_jobs_gate.json\n' > .mivi-trigger   # و push کن
 4. **زنجیره حداکثر ۲ حلقه**؛ بعد از آن لنگر جدید.
 5. **هیچ تولیدی بدون `--dry-run`**.
 
+## آیا ریپو سالم است؟
+
+```bash
+python3 studio/verify.py          # یا: make verify
+```
+
+یک پاس آفلاین: هر `.py` و `.yml` در `studio/inventory.json` ثبت شده باشد، هر JSON
+بپارس، هر `--help` کار کند، تست‌ها اجرا شوند، و **`REPO_STATUS.md` از نتیجهٔ واقعی
+ساخته شود** (نه دستی). روی گیت‌هاب `verify.yml` با `--ci` اجرا می‌شود: آنجا هیچ
+وابستگی‌ای اجازهٔ `skip` ندارد.
+
 ## وضعیت
 
 | فیلم | وضعیت |

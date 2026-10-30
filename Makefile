@@ -1,5 +1,6 @@
 # Makefile — the four verbs you actually say out loud.
 #
+#   make verify                # is the repo healthy? (writes REPO_STATUS.md)
 #   make check                 # everything that must pass before a batch
 #   make plan SCENE=...        # scene file -> job file (+ estimate, + lint)
 #   make dry JOBS=...          # show the DAG and the wall-clock guess
@@ -14,17 +15,25 @@ OUT     ?= films/short16/clips_gen
 NAME    ?= anime_ten
 PAR     ?= 4
 
-.PHONY: help check plan dry gen audit film wiring clean trig
+.PHONY: help verify check plan dry gen audit film wiring clean trig
 
 help:
 	@grep -E '^#   ' Makefile
+
+verify:
+	$(PY) studio/verify.py            # inventory, data, triggers, compile, smoke
+	@echo "verify: report -> REPO_STATUS.md"
 
 check:
 	$(PY) -m py_compile studio/*.py studio/toolbox/*.py studio/knowledge/*.py bridge/*.py
 	$(PY) studio/links.py                 # no dangling paths after a move
 	$(PY) studio/knowledge/bank.py check
 	$(PY) studio/knowledge/banktest.py
-	@echo "check: ok"
+	@echo "verify:
+	$(PY) studio/verify.py            # inventory, data, triggers, compile, smoke
+	@echo "verify: report -> REPO_STATUS.md"
+
+check: ok"
 
 plan:
 	$(PY) studio/shotplan.py plan $(SCENE) --out $(JOBS) --parallel $(PAR)

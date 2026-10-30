@@ -1,0 +1,52 @@
+name: verify
+
+# The whole repository, checked where the dependencies actually exist.
+#
+#   python3 studio/verify.py --ci
+#
+# `--ci` means an entry that is supposed to run here may not skip: a missing
+# dependency fails the build instead of showing up as a quiet "skip". That is the
+# difference between "the tests pass" and "the tests ran".
+
+on:
+  push:
+    branches: [arena/e3952d18-game]
+    paths-ignore: ['films/**', 'probe_out/**', '_inbox/**']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - name: deps
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          pip install -q pillow numpy imageio-ffmpeg opencv-python-headless pyyaml
+      - name: verify (strict)
+        id: verify
+        run: python3 studio/verify.py --ci | tee verify_out.txt
+      - name: publish the status file
+        if: always()
+        run: |
+          git config user.name "verify-bot"; git config user.email "verify@local"
+          git add -f REPO_STATUS.md 2>/dev/null || true
+          git commit -m "verify: status from run ${{ github.run_id }}" || echo "no change"
+          for i in 1 2 3; do
+            git pull --rebase --autostash -q origin "${GITHUB_REF_NAME}" || true
+            git push origin "HEAD:${GITHUB_REF_NAME}" && break
+            sleep 6
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: verify-report
+          path: |
+            verify_out.txt
+            REPO_STATUS.md

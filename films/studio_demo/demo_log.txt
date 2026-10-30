@@ -1,80 +1,13 @@
-$ filmkit new /home/runner/work/game/game/films/studio_demo --force  [0]
-created /home/runner/work/game/game/films/studio_demo
-next: add shots to project.json, then `filmkit status`
+$ filmkit new /home/user/game/films/studio_demo --force  [1]
 
-$ filmkit still /home/runner/work/game/game/films/studio_demo --shot 1 --from url:http://algo.ufotosoft.com/original/261029/f7cdc842-426b-4423-aa90-d50f38c95b91.jpeg  [0]
-shot 1: still -> /home/runner/work/game/game/films/studio_demo/stills/s01.jpg
+STDERR: ffmpeg not found: install ffmpeg or set FFMPEG=/path/to/ffmpeg
 
-$ filmkit shot /home/runner/work/game/game/films/studio_demo --shot 1 --quality 1 --takes 1  [0]
-shot 1 take 1: task 60014-1793303801-fe10df75-2c8f-4ed7-917f-a3befd8f9df3
-  take 1 ok 448x576 4.062s 952506B
-shot 1: clip -> /home/runner/work/game/game/films/studio_demo/clips/s01_t1.mp4
-
-$ filmkit chain /home/runner/work/game/game/films/studio_demo --from 1 --to 2  [0]
-chained shot 1 -> shot 2 (s02.jpg)
-
-$ filmkit shot /home/runner/work/game/game/films/studio_demo --shot 2 --quality 1 --takes 1  [0]
-shot 2 take 1: task 60014-1793303863-405683b9-389d-4d60-9d57-a1763e270115
-  take 1 ok 448x576 4.062s 632857B
-shot 2: clip -> /home/runner/work/game/game/films/studio_demo/clips/s02_t1.mp4
-
-$ filmkit assemble /home/runner/work/game/game/films/studio_demo --crossfade 0.4  [0]
-assembled 2 clips -> /home/runner/work/game/game/films/studio_demo/out/final.mp4
-{"path": "/home/runner/work/game/game/films/studio_demo/out/final.mp4", "width": 448, "height": 576, "fps": 16.0, "has_audio": false, "duration_s": 7.75, "bytes": 1503668}
-
-$ filmkit qc /home/runner/work/game/game/films/studio_demo  [0]
-{
-  "project": "studio_demo",
-  "shots": [
-    {
-      "n": 1,
-      "path": "/home/runner/work/game/game/films/studio_demo/clips/s01_t1.mp4",
-      "width": 448,
-      "height": 576,
-      "fps": 16.0,
-      "has_audio": false,
-      "duration_s": 4.062,
-      "bytes": 952506
-    },
-    {
-      "n": 2,
-      "path": "/home/runner/work/game/game/films/studio_demo/clips/s02_t1.mp4",
-      "width": 448,
-      "height": 576,
-      "fps": 16.0,
-      "has_audio": false,
-      "duration_s": 4.062,
-      "bytes": 632857
-    }
-  ],
-  "issues": [],
-  "final": {
-    "path": "/home/runner/work/game/game/films/studio_demo/out/final.mp4",
-    "width": 448,
-    "height": 576,
-    "fps": 16.0,
-    "has_audio": false,
-    "duration_s": 7.75,
-    "bytes": 1503668
-  },
-  "frames": [
-    "qc/frames/t00.39.jpg",
-    "qc/frames/t01.94.jpg",
-    "qc/frames/t03.88.jpg",
-    "qc/frames/t05.81.jpg",
-    "qc/frames/t07.36.jpg"
-  ],
-  "frame_delta": [
-    18.7,
-    10.1,
-    24.0,
-    20.8
-  ]
-}
-
-report: /home/runner/work/game/game/films/studio_demo/qc/report.json
-
-$ filmkit deliver /home/runner/work/game/game/films/studio_demo  [0]
-/home/runner/work/game/game/films/studio_demo/out/final.mp4  1.5 MB
-
-DEMO OK
+FAILED: filmkit new /home/user/game/films/studio_demo --force failed
+Traceback (most recent call last):
+  File "/home/user/game/studio/demo.py", line 65, in <module>
+    run_all()
+  File "/home/user/game/studio/demo.py", line 40, in run_all
+    kit("new", PROJ, "--force")
+  File "/home/user/game/studio/demo.py", line 35, in kit
+    raise RuntimeError(f"filmkit {' '.join(str(a) for a in args)} failed")
+RuntimeError: filmkit new /home/user/game/films/studio_demo --force failed
