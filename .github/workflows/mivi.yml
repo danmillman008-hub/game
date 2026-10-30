@@ -37,10 +37,14 @@ jobs:
         run: |
           git config user.name "mivi-bot"
           git config user.email "mivi@local"
-          git add -f films/short16/clips_gen || true
-          git commit -m "mivi: $(date -u +%H:%M) generation batch" || echo "no change"
-          git pull --rebase -q origin "${GITHUB_REF_NAME}" || true
-          git push || true
+          git add -f films/short16/clips_gen
+          git commit -m "mivi: $(date -u +%H:%M) batch" || echo "no change"
+          for i in 1 2 3; do
+            git pull --rebase --autostash -q origin "${GITHUB_REF_NAME}" || true
+            if git push origin "HEAD:${GITHUB_REF_NAME}"; then echo "pushed on try $i"; break; fi
+            sleep 8
+          done
+          git log --oneline -1
       - uses: actions/upload-artifact@v4
         if: always()
         with:
