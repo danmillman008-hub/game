@@ -43,7 +43,7 @@ def ffmpeg() -> str:
 
 # ------------------------------------------------------------------ canvases --
 def make_canvases() -> list[Path]:
-    """Three neutral fields. No shapes, no text — anything drawn here becomes a prop
+    """Four neutral fields. No shapes, no text — anything drawn here becomes a prop
     the model tries to explain (the white bar on c1 became a sword once)."""
     CANVAS.mkdir(parents=True, exist_ok=True)
     out: list[Path] = []
@@ -66,6 +66,19 @@ def make_canvases() -> list[Path]:
         night.putpixel(((i * 97) % W, (i * 233) % int(H * 0.5)), (120, 130, 150))
     night.save(CANVAS / "night.png")
     out.append(CANVAS / "night.png")
+
+    # Snow at night needs its own field: `night` (22,26,38) is a summer sky, and four
+    # winter anchors painted on it came back at mean luminance 24-29 — a black frame
+    # that reads as "the model did nothing". snow is dark enough for lanterns to read
+    # and light enough that the frame has an exposure.
+    snow = Image.new("RGB", (W, H))
+    ds = ImageDraw.Draw(snow)
+    for y in range(H):
+        t = y / H
+        c = (int(64 + 26 * t), int(74 + 26 * t), int(104 + 22 * t))
+        ds.line([(0, y), (W, y)], fill=c)
+    snow.filter(ImageFilter.GaussianBlur(3)).save(CANVAS / "snow.png")
+    out.append(CANVAS / "snow.png")
 
     paper = Image.new("RGB", (W, H), (238, 234, 226))
     paper.save(CANVAS / "paper.png")
@@ -107,6 +120,38 @@ def palette(p: Path) -> int:
     return len(ImageOps.posterize(im, 5).getcolors(1 << 20) or [])
 
 
+def cmd_frames(a) -> int:
+    """Frame 0 of every clip in a batch, written next to the clips.
+
+    The first frame is the anchor for the *next* batch — and it must be checked before
+    it is trusted. On 2026-10-31 four winter anchors came back as an almost black
+    field (the night canvas is dark, so mean luminance was the only thing that said
+    so) and every shot built on them would have been a shot of nothing.
+    """
+    batch = [x.strip() for x in a.ids.split(",")] if a.ids else []
+    clips = [CLIPS / f"{i}_a1.mp4" for i in batch] if batch else sorted(CLIPS.glob("art_*.mp4"))
+    rows = []
+    for clip in clips:
+        if not clip.exists():
+            print(f"missing {clip.name}")
+            continue
+        dst = clip.with_name(clip.stem.replace("_a1", "") + "_src.png")
+        subprocess.run([ffmpeg(), "-y", "-v", "error", "-ss", "0.15", "-i", str(clip),
+                        "-frames:v", "1", str(dst)], check=True)
+        im = Image.open(dst).convert("L")
+        mean = round(ImageStat.Stat(im).mean[0], 1)
+        rows.append((dst.name, mean, sharpness(dst)))
+    print(f"{'anchor':26s} {'mean':>6s} {'sharp':>7s}")
+    dark = 0
+    for n, m, sh in rows:
+        flag = "  <-- TOO DARK, do not use" if m < a.min_mean else ""
+        dark += bool(flag)
+        print(f"{n:26s} {m:>6.1f} {sh:>7.2f}{flag}")
+    if rows:
+        print(f"\n{len(rows)} anchors · {dark} too dark (min mean {a.min_mean})")
+    return 1 if dark else 0
+
+
 def cmd_extract(a) -> int:
     """Frame 0 is the artwork; frame -1 is the end of the shot. Both are kept."""
     ART.mkdir(parents=True, exist_ok=True)
@@ -134,6 +179,11 @@ def main() -> int:
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("canvas").set_defaults(fn=lambda a: (make_canvases(), 0)[1])
     p = sub.add_parser("jobs"); p.add_argument("file"); p.set_defaults(fn=cmd_jobs)
+    pf = sub.add_parser("frames", help="frame 0 of a batch -> *_src.png anchors")
+    pf.add_argument("--ids", default="", help="comma separated shot ids (default: every art_*.mp4)")
+    pf.add_argument("--min-mean", dest="min_mean", type=float, default=30.0,
+                    help="mean luminance below which an anchor is unusable")
+    pf.set_defaults(fn=cmd_frames)
     p = sub.add_parser("extract"); p.add_argument("--last-t", type=float, default=3.6)
     p.set_defaults(fn=cmd_extract)
     a = ap.parse_args()
