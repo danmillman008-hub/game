@@ -1,21 +1,21 @@
 # وضعیت ریپو — ساخته‌شده با اجرا، نه با ادعا
 
-> خودکار از `python3 studio/verify.py` — 2026-10-30 20:57 UTC · پایتون 3.11.2 · sandbox
+> خودکار از `python3 studio/verify.py` — 2026-10-31 17:53 UTC · پایتون 3.11.2 · sandbox
 
 | ok | FAIL | skip | warn |
 |---|---|---|---|
-| 48 | 0 | 1 | 1 |
+| 43 | 9 | 7 | 1 |
 
-> ⚠️ 4 وابستگی نصب نیست؛ ردیف‌های وابسته `skip` شده‌اند، نه pass — نسخهٔ رانر (verify.yml) این‌ها را نصب می‌کند، پس آنجا باید اجرا شوند: basicsr, pyanime4k, realesrgan, torch
+> ⚠️ 7 وابستگی نصب نیست؛ ردیف‌های وابسته `skip` شده‌اند، نه pass — نسخهٔ رانر (verify.yml) این‌ها را نصب می‌کند، پس آنجا باید اجرا شوند: androguard, basicsr, kokoro_onnx, pyanime4k, realesrgan, soundfile, torch
 
 ## compile
 
-- ✅ 40/40 compile
+- ✅ 43/43 compile
 
 ## data
 
-- ✅ 62 json files parse
-- ✅ 8 workflows parse
+- ✅ 74 json files parse
+- ✅ 8 workflows parse (structural check — pyyaml not installed here)
 
 ## deps
 
@@ -23,16 +23,17 @@
 
 ## inventory
 
-- ✅ 48 entries, every file accounted for
+- ✅ 51 entries, every file accounted for
 
 ## links
 
+- ❌ studio/knowledge/method/CONSISTENCY_PLAYBOOK.md: mentions missing file films/before_leaving/.probe/probe.py
 - ⚠️ films/anime_ten/deliver/scene_min1.mp4: 23 MB (over 20 MB, tracked in git)
-- ✅ 695 files · 0 breaks · 1 size warning(s)
+- ❌ 784 files · 1 breaks · 1 size warning(s)
 
 ## make
 
-- ✅ 11/11 targets resolve
+- ✅ 14/14 targets resolve
 
 ## selftest
 
@@ -48,20 +49,23 @@
 - ✅ mivi_web/make_catalog.py --help (0.0s)
 - ✅ mivi_web/re/annpaths.py --help (0.0s)
 - ✅ mivi_web/re/dexann.py --help (0.0s)
-- ✅ mivi_web/re/dumpclass.py --help (0.2s)
-- ✅ mivi_web/re/fields.py --help (0.2s)
-- ✅ mivi_web/re/m2.py --help (0.2s)
-- ✅ mivi_web/re/staticdump.py --help (0.2s)
-- ✅ mivi_web/re/xref2.py --help (0.2s)
-- ✅ studio/artgen.py --help (0.1s)
+- ⏭️ mivi_web/re/dumpclass.py needs androguard
+- ⏭️ mivi_web/re/fields.py needs androguard
+- ⏭️ mivi_web/re/m2.py needs androguard
+- ⏭️ mivi_web/re/staticdump.py needs androguard
+- ⏭️ mivi_web/re/xref2.py needs androguard
+- ✅ studio/artgen.py --help (0.0s)
+- ✅ studio/cast.py --help (0.1s)
 - ✅ studio/chainkit.py --help (0.1s)
 - ✅ studio/cutlist.py --help (0.1s)
 - ✅ studio/filmkit.py --help (0.1s)
+- ✅ studio/housecheck.py --help (0.0s)
 - ✅ studio/knowledge/bank.py --help (0.1s)
 - ✅ studio/knowledge/banktest.py -> ALL OK
 - ✅ studio/knowledge/measure.py --help (0.1s)
-- ✅ studio/links.py -> 695 tracked files · 0 breaks · 1 size warnings
+- ❌ studio/links.py rc=1: 784 tracked files · 1 breaks · 1 size warnings
 - ✅ studio/lipsync.py --help (0.0s)
+- ✅ studio/lumatch.py --help (0.0s)
 - ✅ studio/mivi_photo.py --help (0.1s)
 - ✅ studio/mivi_shot.py --help (0.1s)
 - ✅ studio/motionbank.py --help (0.0s)
@@ -74,13 +78,19 @@
 - ✅ studio/tests/test_mivi_shot.py -> PASS — success recorded, chain waited, refusal isolated
 - ⏭️ studio/toolbox/upscale.py needs basicsr, pyanime4k, realesrgan, torch — torch + realesrgan + basicsr ~2.5 GB and model weights; not installed on the runner
 - ✅ studio/verify.py --help (0.0s)
-- ✅ studio/voice.py --help (0.1s)
+- ⏭️ studio/voice.py needs kokoro_onnx, soundfile
 - ✅ studio/voicetest.py -> ALL OK
 - ✅ studio/wanprompt.py --help (0.0s)
+- ❌ mivi_web/re/dumpclass.py did not run (ci=true): needs androguard
+- ❌ mivi_web/re/fields.py did not run (ci=true): needs androguard
+- ❌ mivi_web/re/m2.py did not run (ci=true): needs androguard
+- ❌ mivi_web/re/staticdump.py did not run (ci=true): needs androguard
+- ❌ mivi_web/re/xref2.py did not run (ci=true): needs androguard
+- ❌ studio/voice.py did not run (ci=true): needs kokoro_onnx, soundfile
 
 ## triggers
 
-- ✅ .mivi-trigger -> films/short16/gen_jobs_empty.json
+- ✅ .mivi-trigger -> films/short16/gen_jobs_winter_b.json
 - ✅ .photo-trigger -> mode 'probe'
 - ✅ .render-trigger -> mode 'kick 9'
 - ✅ .toolbox-trigger -> mode 'upscale v4'

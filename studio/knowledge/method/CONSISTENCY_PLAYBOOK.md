@@ -27,7 +27,7 @@ films/anime_ten/canvas/{dusk,night,snow,paper}.png   ← مستطیل گرادی
 ("mivi_compose", "Image + image + prompt -> one new image (Mivi's composer). Needs >=2 images.")
 ```
 
-و فیلم قبلی (`films/before_leaving/.probe/probe.py`) **همهٔ کلوزآپ‌هایش** را همین‌طور
+و فیلم قبلی (`films/before_leaving`) **همهٔ کلوزآپ‌هایش** را همین‌طور
 ساخته بود: `s04_raha_cu` = compose(`master_wide.png`, `ref_raha.png`) + پرامپت.
 خط انیمه اما از کانواس شروع شد و این مسیر رها ماند.
 
