@@ -60,8 +60,16 @@
 |---|---|---|---|
 | **نگهبانان در برف** — دو نگهبان زره‌پوش جلوی دروازهٔ قلعه در برف | ۱۲.۰۰s | [Drive](https://drive.google.com/file/d/19LEf4ANwgPRLiq19G_4c4yDaxjpKbLJo/view) | `films/anime_ten/deliver/winter_guards_12s.mp4` |
 | **همان صحنه، یک کست** — هر چهار شات از یک master | ۱۲.۰۰s | [Drive](https://drive.google.com/file/d/1zehYy6d4fIa8Qkgweu1OjG_LX4EjC1Ps/view) | `films/anime_ten/deliver/cast_guards_12s.mp4` |
+| **نگهبانان، سل‌انیمه** — master انیمه → پوش‌این → فریم آخر | ۱۱.۵۰s | — | `films/anime_ten/deliver/am_guard_11s.mp4` |
 | دروازه در باران — پنج شات امضای خانه | ۲۰.۱۷s | — | `films/anime_ten/deliver/rain_gate_20s.mp4` |
 | چهار شات تمیز (نسخهٔ کوتاه) | ۱۴.۳۳s | — | `films/anime_ten/deliver/silent_house_14s.mp4` |
+
+**نگهبانان، سل‌انیمه — ۳ شات:** پوش‌این از دروازه تا سینه → دو چهره در برف →
+کات به نمای باز و فید. ساخت: **یک** master روی کانواس `snow` (کردیت ۱) → پوش با
+دوربین داخل همان کلیپ (کردیت ۳) → شات سوم از **فریم آخر همان پوش** (کردیت ۴).
+کردیت ۲ (`compose` برای گرفتن کلوزآپ) جواب **نه** داد و ثبت شد. یک کست در هر سه شات،
+سبک سل‌انیمه، `lumatch` روی ۵۸ (اختلاف میانگین سه شات: ۰.۴).
+ساختار: `films/anime_ten/build_am_film.sh`.
 
 **نگهبانان در برف — ۴ شات:** دروازه در برف (نمای باز) → دو-شات دو نگهبان → کلوزآپ
 نگهبان چپ → کلوزآپ نگهبان راست. ساخت: چهار لنگر (`w_gate`, `w_two`, `c_left`, `c_right`)
