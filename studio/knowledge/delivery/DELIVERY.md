@@ -65,6 +65,8 @@
 | **زن سوار بر اسب** — ۳ زاویه، رو به سپاه دشمن | ۱۲.۰۰s | [Drive](https://drive.google.com/file/d/1v4SAygmVcWBOEWkdcKspZxnU9dy8NndT/view) | `films/anime_ten/deliver/horse_charge_12s.mp4` |
 | **زن سوار بر اسب — پارت ۲** — شمشیر می‌کشد، خشمگین، به دل سپاه | ۱۲.۰۰s | [Drive](https://drive.google.com/file/d/156vRFxWM11ossWALM9fSLzUCFlSWaanj/view) | `films/anime_ten/deliver/horse_sword_12s.mp4` |
 | **زن سوار بر اسب — کامل** — دو پارت، کات در ۱۲.۰ | ۲۴.۰۰s | [Drive](https://drive.google.com/file/d/1XUlfYuFMOCggYnfuk4gJiZpaoU3IPHoC/view) | `films/anime_ten/deliver/horse_battle_24s.mp4` |
+| **زن سوار بر اسب — پارت ۳: جنگ** — از پشت خط، موج سواران، آخر حمله به دل سپاه | ۱۲.۰۰s | [Drive](https://drive.google.com/file/d/1vLLiI44HVRlfjYsLXbPouo7LDBsicBCx/view) | `films/anime_ten/deliver/horse_war_12s.mp4` |
+| **زن سوار بر اسب — کامل ۲۴s با وزن جنگ** — نزدیک‌شدن ۸ + شمشیر ۴ + جنگ ۱۲ | ۲۴.۰۰s | [Drive](https://drive.google.com/file/d/1P6LEkqzjS9D93FpuSyUOaurrZoeFYKtL/view) | `films/anime_ten/deliver/horse_battle_24s_war.mp4` |
 | دروازه در باران — پنج شات امضای خانه | ۲۰.۱۷s | — | `films/anime_ten/deliver/rain_gate_20s.mp4` |
 | چهار شات تمیز (نسخهٔ کوتاه) | ۱۴.۳۳s | — | `films/anime_ten/deliver/silent_house_14s.mp4` |
 
@@ -100,3 +102,13 @@
 برای هم‌ترازی روشنایی (اختلاف میانگین چهار شات: ۹.۱ از ۲۵۵).
 
 بازبینی: `studio/knowledge/method/HOUSE_STYLE.md` (take ۱۷–۲۹) · `winter_luma.json`
+
+**پارت ۳ — جنگ (۲۰۲۶-۱۰-۳۱).** دلیل شکست take‌های قبلی پیدا شد: مدل همیشه روی
+قوی‌ترین **چهرهٔ** کادر پوش می‌کند و «دوربین عقب می‌کشد» این پوش را لغو نمی‌کند
+(اندازه‌گیری: `hw_pull` دقیقاً مثل بقیه روی صورتش نشست). پس هر شات جنگ با یکی از دو
+شرط ساخته شد: کادری که چهرهٔ خوانا ندارد (همه از پشت / کلاه‌خود)، یا بریدن take قبل از
+رسیدن پوش. پنجرهٔ هر take با روشنایی فریم‌به‌فریم اندازه‌گیری شد — `hw_backs` و
+`hw_wall` از کانواس می‌آیند و ۱.۰/۱.۴ ثانیه اول محو از سیاه است، `hw_surge` و
+`hw_pull` و `hs_impact` از تصویر می‌آیند و محو ندارند. حرکت جمعیت در `hw_surge`
+اندازه‌گیری شد: اختلاف میانگین فریم‌ها ۲۷.۶ / ۳۱.۱ / ۴۷.۶ (شات‌های ایستادهٔ قبلی ۲–۶).
+ساخت: `films/anime_ten/build_horse_war.sh` — شمارش فریم دقیق، ۲۸۸ و ۵۷۶ فریم.
