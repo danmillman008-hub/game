@@ -82,7 +82,13 @@ def sentences(text: str) -> list[str]:
 # Rules a *probe* file is allowed to break on purpose: the file exists to find out
 # whether a shape we have never shot can hold. The verdict still gets printed, it just
 # does not stop the dispatch.
-PROBE_RULES = ("S5", "S6")
+#
+# S4 (camera move) joined this list on 2026-10-31 for exactly one question: a move is
+# the only way to change framing *inside* a clip, and inside a clip identity is
+# inherent (frame 200 is the continuation of frame 1, not a new generation). If the
+# move fails the answer is recorded in HOUSE_STYLE.md and S4 goes back to blocking
+# every job — a failure is never retried outside a probe.
+PROBE_RULES = ("S4", "S5", "S6")
 
 
 def check_shot(shot: dict, probe: bool = False) -> tuple[list[str], list[str]]:
