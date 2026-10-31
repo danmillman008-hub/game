@@ -79,11 +79,24 @@ def sentences(text: str) -> list[str]:
     return [s for s in re.split(r"(?<=[.!?])\s+", text.strip()) if s]
 
 
-def check_shot(shot: dict) -> tuple[list[str], list[str]]:
+# Rules a *probe* file is allowed to break on purpose: the file exists to find out
+# whether a shape we have never shot can hold. The verdict still gets printed, it just
+# does not stop the dispatch.
+PROBE_RULES = ("S5", "S6")
+
+
+def check_shot(shot: dict, probe: bool = False) -> tuple[list[str], list[str]]:
     """Return (errors, warnings) for one shot."""
     err: list[str] = []
     warn: list[str] = []
     path = shot.get("still") or ""
+
+    # A blank canvas is not a video prompt: artgen paints frame 0 and the description
+    # IS the job (knowledge/method/ARTGEN.md). Checked only for existence.
+    if "/canvas/" in path:
+        if not (ROOT / path).exists():
+            err.append(f"S2 canvas does not exist: {path}")
+        return err, warn
 
     if shot.get("still_from_clip"):
         err.append("S1 chained from a clip — identity dies after the first link; start "
@@ -135,6 +148,10 @@ def check_shot(shot: dict) -> tuple[list[str], list[str]]:
     if len(body) > 3:
         err.append(f"S5 {len(body)} sentences — one camera clause plus at most two motions")
 
+    if probe:
+        moved = [e for e in err if e.split(" ")[0] in PROBE_RULES]
+        err = [e for e in err if e.split(" ")[0] not in PROBE_RULES]
+        warn += ["probe: " + m for m in moved]
     return err, warn
 
 
@@ -157,13 +174,15 @@ def main() -> int:
     for f in a.jobs:
         data = json.loads(Path(f).read_text(encoding="utf-8"))
         shots = data["shots"]
+        probe = bool(data.get("probe"))
         file_errors = 0
         if a.json:
             results.append({"file": f, "shots": []})
         else:
-            print(f"\n{f} — {len(shots)} shot(s)")
+            tag = f" · probe: {data['probe']}" if probe else ""
+            print(f"\n{f} — {len(shots)} shot(s){tag}")
         for s in shots:
-            err, warn = check_shot(s)
+            err, warn = check_shot(s, probe=probe)
             file_errors += len(err)
             if a.json:
                 results[-1]["shots"].append({"id": s.get("id"), "errors": err, "warnings": warn})
