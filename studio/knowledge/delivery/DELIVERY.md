@@ -53,3 +53,18 @@
 
 ## آزمون‌های قبلی
 `films/short16/clips_gen/` — `a1_rain`, `a2_eye`, `a3_push`, `a4_chain`, `t1_seed`, `t2_cut`, `k3..k6`
+
+# تحویل‌های ۲۰۲۶-۱۰-۳۱
+
+| فیلم | مدت | لینک | فایل در ریپو |
+|---|---|---|---|
+| **نگهبانان در برف** — دو نگهبان زره‌پوش جلوی دروازهٔ قلعه در برف | ۱۲.۰۰s | [Drive](https://drive.google.com/file/d/19LEf4ANwgPRLiq19G_4c4yDaxjpKbLJo/view) | `films/anime_ten/deliver/winter_guards_12s.mp4` |
+| دروازه در باران — پنج شات امضای خانه | ۲۰.۱۷s | — | `films/anime_ten/deliver/rain_gate_20s.mp4` |
+| چهار شات تمیز (نسخهٔ کوتاه) | ۱۴.۳۳s | — | `films/anime_ten/deliver/silent_house_14s.mp4` |
+
+**نگهبانان در برف — ۴ شات:** دروازه در برف (نمای باز) → دو-شات دو نگهبان → کلوزآپ
+نگهبان چپ → کلوزآپ نگهبان راست. ساخت: چهار لنگر (`w_gate`, `w_two`, `c_left`, `c_right`)
+روی کانواس `snow`، بعد چهار شات با دوربین قفل و بدون تغییر ژست، بعد `lumatch.py`
+برای هم‌ترازی روشنایی (اختلاف میانگین چهار شات: ۹.۱ از ۲۵۵).
+
+بازبینی: `studio/knowledge/method/HOUSE_STYLE.md` (take ۱۷–۲۹) · `winter_luma.json`
