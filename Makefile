@@ -16,7 +16,7 @@ OUT     ?= films/short16/clips_gen
 NAME    ?= anime_ten
 PAR     ?= 4
 
-.PHONY: help verify check plan dry gen audit film wiring clean trig shot style
+.PHONY: help verify check plan dry gen audit film wiring clean trig shot style light
 
 help:
 	@grep -E '^#   ' Makefile
@@ -43,6 +43,11 @@ audit:
 
 style:
 	@echo "studio/knowledge/method/HOUSE_STYLE.md"
+
+# Every generated clip loses light across its four seconds (54 % on one take), so four
+# clips cut together pump. This measures it and normalises before the edit, not after.
+light:
+	$(PY) studio/lumatch.py measure $(CLIPS)
 
 # The gate that stopped costing us takes: a shot that breaks the house style never
 # reaches the provider, because housecheck exits non-zero first.

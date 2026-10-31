@@ -302,6 +302,20 @@
       "ci": true
     },
     {
+      "path": "studio/lumatch.py",
+      "role": "check",
+      "purpose": "brightness matching between shots: measures per-clip drift and normalises with a gamma curve",
+      "needs": [
+        "PIL"
+      ],
+      "bins": [
+        "ffmpeg"
+      ],
+      "smoke": "help",
+      "ci": false,
+      "why": "PIL only; skipped where pillow is absent"
+    },
+    {
       "path": "studio/mivi_photo.py",
       "role": "research",
       "purpose": "picture-endpoint probe (needs token)",
