@@ -10,8 +10,13 @@
 | [`Vincentwei1021/video-shotcraft`](https://github.com/Vincentwei1021/video-shotcraft) | 15119 | Apache-2.0 | 2026-10-29 | ✅ بگیر | ۱۲۴ کارت شات، ۱۵۰ نمونه؛ مرجع دستور زبان برش و beat-sync عددی |
 | [`FireRedTeam/FireRed-OpenStoryline`](https://github.com/FireRedTeam/FireRed-OpenStoryline) | 3595 | Apache-2.0 | 2026-07-31 | 📖 مطالعه | rough cut با ASR؛ شات گذار از فریم آخر/اول |
 | [`AcademySoftwareFoundation/OpenTimelineIO`](https://github.com/AcademySoftwareFoundation/OpenTimelineIO) | 2046 | Apache-2.0 | 2026-10-30 | ✅ بگیر | فرمت استاندارد تایم‌لاین؛ EDL/AAF/CSV |
+| [`cclank/lanshu-awesome-ai-video-kit`](https://github.com/cclank/lanshu-awesome-ai-video-kit) | 438 | MIT | 2026-10-07 | ✅ بگیر | ۲۱ مقالهٔ متدولوژی + ۷ skill شکل Claude + بانک پرامپت با فیلد source؛ ادعای ۶۰۴ پرامپت ولی README خودش ۵۹۴ می‌گوید |
 | [`mitch7w/ai-video-editor`](https://github.com/mitch7w/ai-video-editor) | 54 | none | 2025-04-09 | ✕ نگیر | بدون لایسنس، رهاشده |
 | [`iluvcapra/pycmx`](https://github.com/iluvcapra/pycmx) | 31 | MIT | 2026-09-17 | ✅ بگیر | خواندن/نوشتن EDL (CMX3600) |
+| [`YahyaLendani/motionbrief-claude-skills`](https://github.com/YahyaLendani/motionbrief-claude-skills) | 4 | MIT | 2026-10-29 | 📖 مطالعه | ★۴ ولی ۱۵ MB و به‌روز — الگوی brief.json معتبر پیش از رندر |
+| [`DruidCat237/kitty-open-studio`](https://github.com/DruidCat237/kitty-open-studio) | 2 | MIT | 2026-10-28 | ✕ نگیر | ★۲، آخرین کامیت با نام «Claude» — سلف‌هاست ComfyUI با GPU محلی؛ ما GPU نداریم |
+| [`manallen/awesome-ai-video-prompts`](https://github.com/manallen/awesome-ai-video-prompts) | 1 | MIT | 2026-10-20 | 📖 مطالعه | ★۱ و بدون fork — «۲۵۰۹ پرامپت از ۱۰ کالکشن» ادعاست نه اندازه‌گیری؛ فقط الگوی «یک صحنه در ۹ مدل» ارزش مطالعه دارد |
+| [`minhhoangho/idea-to-video-skill`](https://github.com/minhhoangho/idea-to-video-skill) | 1 | MIT | 2026-10-19 | 📖 مطالعه | ★۱ — ایده تا ویدیو با حلقهٔ render→inspect→fix؛ تنها بخش ارزشمندش همان حلقه است که ما داریم |
 
 ## f-color — تطبیق رنگ بین شات‌ها
 
@@ -93,3 +98,5 @@
 | [`nimaone/persian_tts`](https://github.com/nimaone/persian_tts) | 196 | none | 2026-09-20 | 📖 مطالعه | فارسی ONNX + کلونینگ از ۵ ثانیه، آفلاین CPU؛ بدون لایسنس |
 | [`instant-high/wav2lip-onnx-HQ`](https://github.com/instant-high/wav2lip-onnx-HQ) | 162 | none | 2025-06-10 | 📖 مطالعه | تنها مسیر CPU؛ دهان ۹۶×۹۶، نرم |
 | [`karim23657/awesome-Persian-Speech`](https://github.com/karim23657/awesome-Persian-Speech) | 100 | CC0-1.0 | 2024-12-09 | ✅ بگیر | فهرست مرجع صدا فارسی (CC0) |
+| [`felores/kie-cli-mcp`](https://github.com/felores/kie-cli-mcp) | 83 | MIT | 2026-10-28 | ✕ نگیر | ★۸۳ و زنده، ولی نیاز به کردیت Kie.ai دارد؛ ما روی Mivi هستیم و مهاجرت هزینهٔ دوباره است |
+| [`keugenek/krea-mcp`](https://github.com/keugenek/krea-mcp) | 11 | Apache-2.0 | 2026-03-29 | ✕ نگیر | ★۱۱، آخرین کامیت ۲۰۲۶-۰۳ (۷ ماه) — MCP بلااستفاده برای ما: کلید Krea نداریم |

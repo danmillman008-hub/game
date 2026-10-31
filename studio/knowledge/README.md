@@ -10,6 +10,7 @@
 |---|---|
 | مدل چطور پرامپت می‌خواهد (و چرا خروجی قبلی درهم بود) | [`prompting/WAN_PROMPTS.md`](prompting/WAN_PROMPTS.md) |
 | خط تولید: لنگر، پلنر، تولید موازی | [`workflow/WORKFLOW.md`](workflow/WORKFLOW.md) |
+| **چرا چهره‌ها عوض می‌شدند و مسیر درست هویت** | [`method/CONSISTENCY_PLAYBOOK.md`](method/CONSISTENCY_PLAYBOOK.md) |
 | **چه شاتی درمی‌آید و چه شاتی نه — سبک خانه (۱۲ take)** | [`method/HOUSE_STYLE.md`](method/HOUSE_STYLE.md) |
 | چرا هویت می‌شکند و چطور سرعت را بردیم | [`workflow/CONSISTENCY_AND_SPEED.md`](workflow/CONSISTENCY_AND_SPEED.md) |
 | لیپ‌سینک کدام مسیر؟ (و چرا Audio2Face-3D نه) | [`method/LIPSYNC_ROUTE.md`](method/LIPSYNC_ROUTE.md) |
