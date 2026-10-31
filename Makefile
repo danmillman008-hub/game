@@ -46,14 +46,18 @@ style:
 
 # The gate that stopped costing us takes: a shot that breaks the house style never
 # reaches the provider, because housecheck exits non-zero first.
+# The trigger's FIRST line is what mivi.yml reads. The second line is a stamp: the
+# workflow is triggered by a change to this file, so dispatching the same job file
+# twice needs the file to differ (on 2026-10-31 a corrected batch silently did not
+# run because only this file's *content* mattered and it had not changed).
 shot:
 	$(PY) studio/housecheck.py $(JOBS)
 	$(PY) studio/mivi_shot.py $(JOBS) --out $(OUT) --dry-run --parallel $(PAR)
-	@echo "$(JOBS)" > .mivi-trigger
+	@printf '%s\n# dispatched %s\n' "$(JOBS)" "$$(date -u +%Y-%m-%dT%H:%M:%SZ)" > .mivi-trigger
 	@echo "trigger written — git add .mivi-trigger && commit && push"
 
 gen:
-	@echo "$(JOBS)" > .mivi-trigger
+	@printf '%s\n# dispatched %s\n' "$(JOBS)" "$$(date -u +%Y-%m-%dT%H:%M:%SZ)" > .mivi-trigger
 	@echo "trigger written — now: git add .mivi-trigger && git commit && git push"
 
 film:
