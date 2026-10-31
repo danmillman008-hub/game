@@ -62,8 +62,15 @@
 | **همان صحنه، یک کست** — هر چهار شات از یک master | ۱۲.۰۰s | [Drive](https://drive.google.com/file/d/1zehYy6d4fIa8Qkgweu1OjG_LX4EjC1Ps/view) | `films/anime_ten/deliver/cast_guards_12s.mp4` |
 | **نگهبانان، سل‌انیمه** — master انیمه → پوش‌این → فریم آخر | ۱۱.۵۰s | [Drive](https://drive.google.com/file/d/1UUNNywblqd9madRLquSlWUCbEYmQ3DgZ/view) | `films/anime_ten/deliver/am_guard_11s.mp4` |
 | **یک take، سل‌انیمه** — ۲.۹ ثانیه پوش × ۴.۱۴، بدون هیچ کات | ۱۲.۰۰s | [Drive](https://drive.google.com/file/d/1nzpOc5m_rD6yTv8sArN8NuLPQc1AF4ph/view) | `films/anime_ten/deliver/am_push_12s.mp4` |
+| **زن سوار بر اسب** — ۳ زاویه، رو به سپاه دشمن | ۱۲.۰۰s | — | `films/anime_ten/deliver/horse_charge_12s.mp4` |
 | دروازه در باران — پنج شات امضای خانه | ۲۰.۱۷s | — | `films/anime_ten/deliver/rain_gate_20s.mp4` |
 | چهار شات تمیز (نسخهٔ کوتاه) | ۱۴.۳۳s | — | `films/anime_ten/deliver/silent_house_14s.mp4` |
+
+**زن سوار بر اسب — ۳ زاویه:** نمای باز از زاویهٔ کم (ارتش در ردیف، سوار کوچک و بریده با
+لبهٔ کادر) → سه‌چهارم روی او، ارتش پشت شانه‌اش → نزدیک از **فریم آخر** همان شات.
+۳ کردیت، ۳/۳ موفق. هر take از ۰.۸s تا ۴.۰s (S21)، جمع ۹.۶s، کشش ۱.۲۵× → ۱۲.۰۰s.
+روشنایی روی ۸۰ (روز، S23). ساخت: `films/anime_ten/build_horse12.sh`؛ طرح و محدودیت‌ها:
+`films/anime_ten/story_horse.md`.
 
 **یک take، سل‌انیمه — ۱۲ ثانیه، صفر کات:** پوش بی‌وقفه از دروازه تا دو چهره.
 سه take (ثابت/آرام/تند) از همان master گرفته شد؛ نتیجه: مدل روی نقاشی تخت **همیشه**
