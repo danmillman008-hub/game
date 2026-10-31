@@ -1,33 +1,49 @@
-"""Runner probe: does a compose-anchored close-up hold the character?
+"""Runner probe: restyle the cast anchors to cel anime WITHOUT losing the face.
 
-Called by .github/workflows/probe.yml on a push that touches .probe/** — the only
-place in this repo with network access to the Mivi API. Writes the result back.
+The composed two-shot gave us the real pair; these crops are one man each. Now the
+question is whether compose can convert a semi-real still into flat cel art and keep
+the same face — if yes, the anime line finally has cast-consistent anchors.
 """
-import subprocess, sys, pathlib
+import json, subprocess, sys, pathlib
 
-print("== cast ab-test", flush=True)
-rc = subprocess.run([sys.executable, "studio/cast.py", "ab-test"]).returncode
-print("rc:", rc, flush=True)
+STYLE = ("Convert this to 2D cel animation, anime key animation: flat colour fields, "
+         "hard-edged shadows, constant line width, clean line art, same man, same face, "
+         "same lamellar armour and helmet, same pose and framing. No photographic texture.")
 
-# side-by-side for the eye: the old blank-canvas anchor vs the composed one
-out = pathlib.Path("films/anime_ten/qc/ab_cast.jpg")
-out.parent.mkdir(parents=True, exist_ok=True)
+results = {}
+for side in ("left", "right"):
+    src = f"films/short16/clips_gen/cast_guard_{side}.png"
+    out = f"films/short16/clips_gen/cast_{side}_anime.png"
+    print(f"== {side} -> {out}", flush=True)
+    rc = subprocess.run([sys.executable, "studio/cast.py", "still", "--master", src,
+                         "--pose", src, "--prompt", STYLE, "--out", out]).returncode
+    results[side] = {"rc": rc, "out": out}
+    print("   rc:", rc, flush=True)
+
+pathlib.Path("films/short16/clips_gen/cast_restyle.json").write_text(
+    json.dumps(results, indent=2), encoding="utf-8")
+
+# contact sheet so the eye can judge, not the claim
 try:
     from PIL import Image, ImageDraw
-    left = Image.open("films/short16/clips_gen/c_left_src.png").convert("RGB")
-    right = Image.open("films/short16/clips_gen/ab_left_guard.png").convert("RGB")
-    w = 420
-    def fit(im):
-        h = int(im.height * w / im.width)
-        return im.resize((w, h), Image.LANCZOS)
-    left, right = fit(left), fit(right)
-    sheet = Image.new("RGB", (w * 2, max(left.height, right.height) + 22), "black")
-    sheet.paste(left, (0, 0)); sheet.paste(right, (w, 0))
+    rows = []
+    for side in ("left", "right"):
+        src = Image.open(f"films/short16/clips_gen/cast_guard_{side}.png").convert("RGB")
+        dst = Image.open(f"films/short16/clips_gen/cast_{side}_anime.png").convert("RGB")
+        w = 300
+        def fit(im):
+            h = int(im.height * w / im.width)
+            return im.resize((w, h), Image.LANCZOS)
+        rows.append((side, fit(src), fit(dst)))
+    H = max(max(a.height, b.height) for _, a, b in rows) + 20
+    sheet = Image.new("RGB", (w * 4, H * 2), "black")
     d = ImageDraw.Draw(sheet)
-    d.text((6, left.height + 5), "blank canvas (old): a different man", fill="white")
-    d.text((w + 6, left.height + 5), "compose master (new)", fill="white")
-    sheet.save(out, quality=90)
-    print("wrote", out, flush=True)
+    for r, (side, src, dst) in enumerate(rows):
+        sheet.paste(src, (0, r * H)); sheet.paste(dst, (w, r * H))
+        d.text((4, r * H + H - 16), f"{side}: cast (composed)", fill="white")
+        d.text((w + 4, r * H + H - 16), f"{side}: restyled anime", fill="white")
+    outp = pathlib.Path("films/anime_ten/qc/cast_restyle.jpg")
+    sheet.save(outp, quality=90)
+    print("wrote", outp, flush=True)
 except Exception as e:
-    print("side-by-side failed:", e, flush=True)
-raise SystemExit(rc)
+    print("sheet failed:", e, flush=True)
