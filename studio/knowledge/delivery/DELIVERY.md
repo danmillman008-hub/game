@@ -63,8 +63,17 @@
 | **نگهبانان، سل‌انیمه** — master انیمه → پوش‌این → فریم آخر | ۱۱.۵۰s | [Drive](https://drive.google.com/file/d/1UUNNywblqd9madRLquSlWUCbEYmQ3DgZ/view) | `films/anime_ten/deliver/am_guard_11s.mp4` |
 | **یک take، سل‌انیمه** — ۲.۹ ثانیه پوش × ۴.۱۴، بدون هیچ کات | ۱۲.۰۰s | [Drive](https://drive.google.com/file/d/1nzpOc5m_rD6yTv8sArN8NuLPQc1AF4ph/view) | `films/anime_ten/deliver/am_push_12s.mp4` |
 | **زن سوار بر اسب** — ۳ زاویه، رو به سپاه دشمن | ۱۲.۰۰s | [Drive](https://drive.google.com/file/d/1v4SAygmVcWBOEWkdcKspZxnU9dy8NndT/view) | `films/anime_ten/deliver/horse_charge_12s.mp4` |
+| **زن سوار بر اسب — پارت ۲** — شمشیر می‌کشد، خشمگین، به دل سپاه | ۱۲.۰۰s | [Drive](https://drive.google.com/file/d/156vRFxWM11ossWALM9fSLzUCFlSWaanj/view) | `films/anime_ten/deliver/horse_sword_12s.mp4` |
+| **زن سوار بر اسب — کامل** — دو پارت، کات در ۱۲.۰ | ۲۴.۰۰s | [Drive](https://drive.google.com/file/d/1XUlfYuFMOCggYnfuk4gJiZpaoU3IPHoC/view) | `films/anime_ten/deliver/horse_battle_24s.mp4` |
 | دروازه در باران — پنج شات امضای خانه | ۲۰.۱۷s | — | `films/anime_ten/deliver/rain_gate_20s.mp4` |
 | چهار شات تمیز (نسخهٔ کوتاه) | ۱۴.۳۳s | — | `films/anime_ten/deliver/silent_house_14s.mp4` |
+
+**زن سوار بر اسب — پارت ۲:** از فریم آخر پارت ۱. او شمشیر می‌کشد (`hs_sword`)، با
+چهرهٔ خشمگین اسب را جلو می‌برد (`hs_war`)، و کات به نمای باز که سواران به دل سپاه
+می‌روند (`hs_impact`). ۷ کردیت خرج شد، ۳ تا به فیلم رسید: `hs_clash` (کانواس خالی) پوستر
+دود شد، `hs_draw` نیزه به دستش داد، `hs_charge`/`hs_melee` سلاحشان با شات اول نمی‌خواند.
+نسخهٔ ۲۴ ثانیه‌ای همان دو پارت است با کاتِ ۱۲.۰ که دیده نمی‌شود (پارت ۲ از همان فریم
+شروع می‌شود). ساخت: `films/anime_ten/build_horse24.sh`.
 
 **زن سوار بر اسب — ۳ زاویه:** نمای باز از زاویهٔ کم (ارتش در ردیف، سوار کوچک و بریده با
 لبهٔ کادر) → سه‌چهارم روی او، ارتش پشت شانه‌اش → نزدیک از **فریم آخر** همان شات.

@@ -1,15 +1,20 @@
 #!/usr/bin/env bash
 # Part 2 — she draws the blade and rides into the army — and the joined 24 s film.
 #
-#   1  hs_draw    from hc_close_last.png, the LAST frame of part 1, so the face is a
-#                 continuation and the join is exact by construction (S17)
-#   2  hs_melee   from hs_draw's last frame: the same face, now furious
+#   1  hs_sword   from hc_close_last.png, the LAST frame of part 1, so the face is a
+#                 continuation and the join is exact by construction (S17). The draw
+#                 pulls a real steel blade — the first attempt (hs_draw) put a polearm
+#                 in her hand, and a polearm is not a sword.
+#   2  hs_war     from hs_sword's last frame: the same blade high, the horse surging,
+#                 the face furious
 #   3  hs_impact  from hw_wide_src.png, the field part 1 opened on: the riders go in
 #
 # What failed and is NOT in the film: `hs_clash`, a clash asked from a blank canvas —
 # it came back as a poster of white smoke and white horses, not a battle. A melee
 # between figures is still the shape this model cannot hold (S14, take 25): the
 # "enemy line crashes past her" prompt was ignored and the army stood still.
+# `hs_melee` and `hs_charge` are out for a second reason: they continue from the
+# polearm frame, so the weapon would not match shot 1.
 # What exists is the draw, the anger, and the ride into the mass.
 #
 # These three takes are anchored on stills, not on a canvas, so they have no blank
@@ -29,7 +34,7 @@ mkdir -p "$OUT"
 
 # ---- part 2 takes -----------------------------------------------------------
 i=1
-for id in hs_draw hs_melee hs_impact; do
+for id in hs_sword hs_war hs_impact; do
   "$FF" -y -v error -i "$SRC/${id}_a1.mp4" -t 4.0 \
         -vf "fps=24,setsar=1,scale=960:1280" -c:v libx264 -crf 16 -pix_fmt yuv420p -an \
         "$TMP/p2_$i.mp4"
