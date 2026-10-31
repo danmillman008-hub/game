@@ -1,6 +1,6 @@
 # وضعیت ریپو — ساخته‌شده با اجرا، نه با ادعا
 
-> خودکار از `python3 studio/verify.py` — 2026-10-31 20:21 UTC · پایتون 3.11.2 · sandbox
+> خودکار از `python3 studio/verify.py` — 2026-10-31 20:32 UTC · پایتون 3.11.2 · sandbox
 
 | ok | FAIL | skip | warn |
 |---|---|---|---|
@@ -14,7 +14,7 @@
 
 ## data
 
-- ✅ 92 json files parse
+- ✅ 93 json files parse
 - ✅ 8 workflows parse (structural check — pyyaml not installed here)
 
 ## deps
@@ -28,7 +28,7 @@
 ## links
 
 - ⚠️ films/anime_ten/deliver/scene_min1.mp4: 23 MB (over 20 MB, tracked in git)
-- ✅ 896 files · 0 breaks · 1 size warning(s)
+- ✅ 910 files · 0 breaks · 1 size warning(s)
 
 ## make
 
@@ -62,7 +62,7 @@
 - ✅ studio/knowledge/bank.py --help (0.1s)
 - ✅ studio/knowledge/banktest.py -> ALL OK
 - ✅ studio/knowledge/measure.py --help (0.1s)
-- ✅ studio/links.py -> 896 tracked files · 0 breaks · 1 size warnings
+- ✅ studio/links.py -> 910 tracked files · 0 breaks · 1 size warnings
 - ⏭️ studio/lipsync.py needs ffmpeg
 - ⏭️ studio/lumatch.py needs PIL, ffmpeg — PIL only; skipped where pillow is absent
 - ✅ studio/mivi_photo.py --help (0.1s)
@@ -83,7 +83,7 @@
 
 ## triggers
 
-- ✅ .mivi-trigger -> films/short16/gen_jobs_horse_k.json
+- ✅ .mivi-trigger -> films/short16/gen_jobs_horse_l.json
 - ✅ .photo-trigger -> mode 'probe'
 - ✅ .render-trigger -> mode 'kick 9'
 - ✅ .toolbox-trigger -> mode 'upscale v4'

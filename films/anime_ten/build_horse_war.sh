@@ -13,8 +13,14 @@
 #
 # Frame counts are exact: 24 fps, 288 frames = 12.00 s.
 #
-#   war   backs 2.58 | wall 1.58 | surge 2.67 | pull 1.58 | impact 3.58   = 12.00 s
+#   war   backs 2.83 | wall 1.67 | surge 2.67 | pull 1.67 | impact 3.17   = 12.00 s
 #   full  approach 8.00 | sword 4.00 | war 12.00                          = 24.00 s
+#
+# take 51 (`hw_clash`, anchored on impact's last frame) asked for the line to meet the
+# enemy. It came back as a slow walk across the field — 15-18 frame delta, below even
+# hw_backs' 29-32, and no collision anywhere. Crowd-melee is still silently softened.
+# So the film ends on the charge itself (impact, cut at 3.45, before the walk) and
+# fades on it. The credit is spent and recorded as a miss.
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 
@@ -33,11 +39,11 @@ take () {
         -vf "fps=24,setsar=1,scale=960:1280" -c:v libx264 -crf 16 -pix_fmt yuv420p -an \
         "$TMP/t$4.mp4"
 }
-take hw_backs  1.00 62 1
-take hw_wall   1.40 38 2
+take hw_backs  1.00 68 1
+take hw_wall   1.40 40 2
 take hw_surge  0.30 64 3
-take hw_pull   0.40 38 4
-take hs_impact 0.30 86 5
+take hw_pull   0.40 40 4
+take hs_impact 0.28 76 5
 
 "$PY" studio/lumatch.py match "$TMP"/t{1,2,3,4,5}.mp4 --out "$TMP/nw" --target $TARGET --trim 0
 printf "file '%s'\n" "$TMP/nw/t1_norm.mp4" "$TMP/nw/t2_norm.mp4" "$TMP/nw/t3_norm.mp4" \
