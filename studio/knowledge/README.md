@@ -12,6 +12,7 @@
 | خط تولید: لنگر، پلنر، تولید موازی | [`workflow/WORKFLOW.md`](workflow/WORKFLOW.md) |
 | **چه شاتی درمی‌آید و چه شاتی نه — سبک خانه (۱۲ take)** | [`method/HOUSE_STYLE.md`](method/HOUSE_STYLE.md) |
 | چرا هویت می‌شکند و چطور سرعت را بردیم | [`workflow/CONSISTENCY_AND_SPEED.md`](workflow/CONSISTENCY_AND_SPEED.md) |
+| لیپ‌سینک کدام مسیر؟ (و چرا Audio2Face-3D نه) | [`method/LIPSYNC_ROUTE.md`](method/LIPSYNC_ROUTE.md) |
 | آیا API «فریم اول/آخر» را می‌فهمد؟ (**نه**) | [`workflow/FLF_PROBE.md`](workflow/FLF_PROBE.md) |
 | چطور بدون تصویرساز، تصویر بسازیم | [`method/ARTGEN.md`](method/ARTGEN.md) |
 | روش کی‌فریم: کامپوزیت ممنوع، شیت + زنجیره | [`method/ANIME_METHOD.md`](method/ANIME_METHOD.md) |

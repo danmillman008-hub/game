@@ -23,6 +23,10 @@ Engine choice is a VRAM ladder, all numbers from the repos' own READMEs:
 Both are trained on English audiovisual data (LRS2 / VoxCeleb2 / HDTF), which is
 why English is the easier case and Persian accent is the harder one.
 
+NVIDIA Audio2Face-3D is NOT on this ladder on purpose: it outputs ARKit blendshape
+curves for a 3D mesh and needs CUDA 12.8+ / TensorRT 10.13+ / a GPU. The reasons
+are written down in knowledge/method/LIPSYNC_ROUTE.md.
+
     python3 studio/lipsync.py check
     python3 studio/lipsync.py plan    <project>
     python3 studio/lipsync.py prepare <project> --shots 3,7,12

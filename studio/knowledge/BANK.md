@@ -87,6 +87,8 @@
 | [`jixiaozhong/Sonic`](https://github.com/jixiaozhong/Sonic) | 3274 | NOASSERTION | 2026-01-08 | ✕ نگیر | ۳۲GB VRAM، خارج از دسترس |
 | [`MeiGen-AI/MultiTalk`](https://github.com/MeiGen-AI/MultiTalk) | 3025 | Apache-2.0 | 2026-05-22 | 📖 مطالعه | تولید از عکس + صدا، ۸-۱۲GB |
 | [`thewh1teagle/kokoro-onnx`](https://github.com/thewh1teagle/kokoro-onnx) | 2830 | MIT | 2026-09-01 | ✅ بگیر | ONNX int8 ۱۱۴MB + صداها ۲۸MB؛ مسیر CPU |
+| [`NVIDIA/Audio2Face-3D-Samples`](https://github.com/NVIDIA/Audio2Face-3D-Samples) | 335 | none | 2026-03-11 | ✕ نگیر | microservice gRPC؛ خروجی ARKit blendshape؛ NIM زیر لایسنس سازمانی NVIDIA |
+| [`NVIDIA/Audio2Face-3D-SDK`](https://github.com/NVIDIA/Audio2Face-3D-SDK) | 229 | MIT | 2025-08-28 | ✕ نگیر | بلندشِیپ روی mesh سه‌بعدی؛ CUDA 12.8 + TensorRT 10.13 + GPU لازم دارد — نه پیکسل |
 | [`karim23657/Persian-tts-coqui`](https://github.com/karim23657/Persian-tts-coqui) | 220 | MIT | 2025-02-15 | 📖 مطالعه | MIT، رسپی آموزش VITS فارسی |
 | [`nimaone/persian_tts`](https://github.com/nimaone/persian_tts) | 196 | none | 2026-09-20 | 📖 مطالعه | فارسی ONNX + کلونینگ از ۵ ثانیه، آفلاین CPU؛ بدون لایسنس |
 | [`instant-high/wav2lip-onnx-HQ`](https://github.com/instant-high/wav2lip-onnx-HQ) | 162 | none | 2025-06-10 | 📖 مطالعه | تنها مسیر CPU؛ دهان ۹۶×۹۶، نرم |
