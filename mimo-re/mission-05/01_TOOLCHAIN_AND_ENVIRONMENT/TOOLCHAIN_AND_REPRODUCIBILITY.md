@@ -42,6 +42,8 @@ decoding (`aapt2`) and for anything requiring the app to execute.
 | `tools/find_refs.py` | instruction-level xref: descriptor substrings **and** `const-string` literals → class/method/offset | deterministic ordering |
 | `tools/extract_annotations_v2.py` | corrected DEX annotation extractor (class/field/method/**parameter**) | sorted rows |
 | `tools/build_api_catalog_v2.py` | joins annotations + descriptors + signatures + parameter bindings into an API catalogue with verb evidence | sorted rows |
+| `tools/build_dto_catalog.py` | expands every referenced DTO into its field list | sorted rows |
+| `tools/build_report.py` | deterministic HTML index over the mission's documents and evidence | sorted, no timestamps |
 
 Defect fixed: mission-04's parameter-annotation pass fed an `annotation_set_ref_list` offset to the
 `annotation_set_item` reader, producing 162 garbage rows. `extract_annotations_v2.py` parses the
