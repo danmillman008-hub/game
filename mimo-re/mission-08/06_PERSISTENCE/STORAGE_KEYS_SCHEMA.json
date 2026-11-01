@@ -1,0 +1,52 @@
+{
+ "generated": "2026-11-01",
+ "scope": "app-owned stores only (SDK stores excluded by name)",
+ "shared_preferences": [
+  {
+   "file": "mimo_prefs",
+   "evidence": "const-string \"mimo_prefs\""
+  },
+  {
+   "file": "mimo_prefs_global",
+   "evidence": "const-string \"mimo_prefs_global\""
+  },
+  {
+   "file": "mimo_dev_prefs",
+   "evidence": "const-string \"mimo_dev_prefs\" (dev menu storage, sk/a)"
+  }
+ ],
+ "preference_keys": [
+  {
+   "key": "last_interacted_tutorial_id_<trackId>",
+   "type": "long",
+   "writer": "CompletionRepository.fetchTrackCompletion",
+   "reader": "t.m (continue-where-you-left-off)"
+  },
+  {
+   "key": "mimo_dev_prefs (file)",
+   "type": "file",
+   "writer": "DevMenuStorage",
+   "reader": "sk/a.e() gate in LessonProgressQueue.storeLessonProgress"
+  }
+ ],
+ "datastore": [
+  {
+   "class": "com.getmimo.data.local.a",
+   "ctor": "(Context, np/d)"
+  },
+  {
+   "note": "the app builds a DataStore-backed store next to the Room database in the same DI provider; file naming follows the Preferences DataStore convention"
+  }
+ ],
+ "workmanager": {
+  "db": "androidx.work.workdb",
+  "delegate_version": 24,
+  "note": "library-owned, not app data"
+ },
+ "excluded": [
+  "Firebase/Mixpanel/Adjust/Facebook/RevenueCat/GMS preference files (SDK-owned)"
+ ],
+ "limits": [
+  "per-key census inside mimo_prefs is not complete: keys are passed through a generic preference helper, so names beyond the two evidenced ones are not enumerable statically"
+ ]
+}

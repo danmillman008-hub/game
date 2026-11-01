@@ -20,8 +20,8 @@
 | 3 | `03_LESSON_ENGINE/` | **substantially complete** | 7 parsers mapped to their tag vocabularies; 6 `LessonModule` variants; grading + analytics methods recovered |
 | 4 | `04_INTERACTION_ENGINE/` | **substantially complete** | normaliser decrypted; three-way validated-input verdict; nine interaction types mapped; grading is client-side; C-14 |
 | 5 | `05_LEARNER_MODEL/` | **substantially complete** | tries=flag, attempts=session, key `(lesson_id,tutorial_id)`, in_queue outbox, completion is server-derived; C-15/C-16 |
-| 6 | `06_PERSISTENCE/` | next | — |
-| 7 | `07_NETWORKING/` | not started | — |
+| 6 | `06_PERSISTENCE/` | **substantially complete** | one DB `mimo.db` v2, 3 tables, no migrations, destructive fallback inferred, outbox only self-cleaning table |
+| 7 | `07_NETWORKING/` | next | — |
 | 8 | `08_AUTHENTICATION/` | substantially complete (Stage D) | token provider, interceptor, anonymous-first link |
 | rest | 9–24 | not started | — |
 

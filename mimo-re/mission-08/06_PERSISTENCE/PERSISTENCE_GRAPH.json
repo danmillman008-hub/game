@@ -1,0 +1,69 @@
+{
+ "generated": "2026-11-01",
+ "layers": [
+  {
+   "layer": "grading",
+   "writer": "base.c.V/W/X/U",
+   "store": "LessonProgress (in memory)"
+  },
+  {
+   "layer": "outbox",
+   "writer": "LessonProgressRepository.createLessonProgress -> addOrUpdateLessonProgressInQueue",
+   "store": "lesson_progress (in_queue=1)"
+  },
+  {
+   "layer": "transport",
+   "writer": "postUnsyncedLessonProgress",
+   "store": "network + DELETE"
+  },
+  {
+   "layer": "server cache",
+   "writer": "CompletionRepository.fetchTrackCompletion",
+   "store": "tutorial_completions, chapter_completions"
+  },
+  {
+   "layer": "ui model",
+   "writer": "attach* functions",
+   "store": "immutable copies of Track"
+  },
+  {
+   "layer": "pointer",
+   "writer": "SharedPreferences.putLong",
+   "store": "last_interacted_tutorial_id_<trackId>"
+  }
+ ],
+ "edges": [
+  [
+   "grading",
+   "outbox"
+  ],
+  [
+   "outbox",
+   "transport"
+  ],
+  [
+   "transport",
+   "server cache"
+  ],
+  [
+   "server cache",
+   "ui model"
+  ],
+  [
+   "server cache",
+   "pointer"
+  ]
+ ],
+ "properties": {
+  "durable_layers": [
+   "outbox",
+   "server cache",
+   "pointer"
+  ],
+  "lossy_layers": [
+   "outbox (cleared on chapter exit)"
+  ],
+  "single_writer_per_layer": true,
+  "no_cross_table_transaction": true
+ }
+}

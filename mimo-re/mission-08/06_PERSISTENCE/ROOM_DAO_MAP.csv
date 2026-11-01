@@ -1,0 +1,12 @@
+dao,table,operation,sql,caller
+cg/a,lesson_progress,insert (upsert),INSERT/UPDATE via Room upsert adapters,LessonProgressRepository.addOrUpdateLessonProgressInQueue
+cg/a,lesson_progress,select all,SELECT * FROM lesson_progress,postUnsyncedLessonProgress
+cg/a,lesson_progress,select pending,SELECT * FROM lesson_progress WHERE in_queue = 1,getAllLessonProgressInQueue
+cg/a,lesson_progress,update,UPDATE lesson_progress SET in_queue = 0 WHERE in_queue = 1,moveLessonProgressFromQueue
+cg/a,lesson_progress,delete pending,DELETE FROM lesson_progress WHERE in_queue = 1,clearLessonProgressQueue
+cg/a,lesson_progress,delete by ids,DELETE FROM lesson_progress WHERE lesson_id IN (…),postUnsyncedLessonProgress (after a 2xx)
+cg/a,lesson_progress,select by key,SELECT … WHERE lesson_id = ? AND tutorial_id = ?,update/insert fallback path
+leg/f,tutorial_completions,insert,INSERT OR REPLACE,CompletionRepository.fetchTrackCompletion
+leg/f,tutorial_completions,select by track,SELECT * FROM tutorial_completions WHERE track_id = ?,attachTutorialCompletionToTrack
+leg/c,chapter_completions,insert,INSERT OR REPLACE (pair insert),CompletionRepository.fetchTrackCompletion
+leg/c,chapter_completions,select by track,SELECT * FROM chapter_completions WHERE track_id = ?,attachTutorialAndChapterCompletionToTrack

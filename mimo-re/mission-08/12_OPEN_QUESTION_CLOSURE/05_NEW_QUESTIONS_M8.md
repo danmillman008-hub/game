@@ -63,3 +63,13 @@ None of these replaces an existing question; all are additive and cited by the p
 | B-6 | can `ChapterViewModel.clearOnExit` drop unsynced progress? | open |
 | B-7 | is the per-tutorial POST loop sequential? | open |
 | B-8 | does the server merge session `attempts`? | backend-only |
+
+## Questions raised by Stage 6 (persistence)
+
+| ID | Question | Status |
+|---|---|---|
+| B-9 | are the two Room `Builder` booleans destructive-fallback flags? | open (operands unreadable) |
+| B-10 | which key does `getLastInteractedTrackId` read? | open |
+| B-11 | full `mimo_prefs` / DataStore key set | open (generic helper) |
+| B-12 | does `com.getmimo.data.local.a` hold learner data? | open |
+| B-13 | any other writer of the completion tables? | open (negative limited to reachable code) |

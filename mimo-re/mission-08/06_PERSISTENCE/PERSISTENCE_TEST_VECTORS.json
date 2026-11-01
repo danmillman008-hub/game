@@ -1,0 +1,71 @@
+{
+ "generated": "2026-11-01",
+ "vectors": [
+  {
+   "id": "V1",
+   "claim": "mimo.db has exactly three tables",
+   "expect": [
+    "lesson_progress",
+    "tutorial_completions",
+    "chapter_completions"
+   ]
+  },
+  {
+   "id": "V2",
+   "claim": "schema version and identity hash",
+   "expect": {
+    "version": 2,
+    "hash": "2b8ab6d303d9a501bd8c8fb78d8352fc"
+   }
+  },
+  {
+   "id": "V3",
+   "claim": "no Migration objects are registered",
+   "expect": {
+    "migration_subclasses": 0,
+    "builder_migrations_list": "empty"
+   }
+  },
+  {
+   "id": "V4",
+   "claim": "lesson_progress is an outbox: a successful POST deletes the posted rows",
+   "expect": {
+    "rows_after_post": 0
+   }
+  },
+  {
+   "id": "V5",
+   "claim": "completion tables are never deleted by app code",
+   "expect": {
+    "delete_statements": 0
+   }
+  },
+  {
+   "id": "V6",
+   "claim": "completion cache lookups filter by track_id only",
+   "expect": {
+    "where": "track_id = ?"
+   }
+  },
+  {
+   "id": "V7",
+   "claim": "lesson progress lookups use both key columns",
+   "expect": {
+    "where": [
+     "lesson_id = ?",
+     "tutorial_id = ?"
+    ]
+   }
+  },
+  {
+   "id": "V8",
+   "claim": "only one app preference key is evidenced in the completion path",
+   "expect": "last_interacted_tutorial_id_"
+  },
+  {
+   "id": "V9",
+   "claim": "clearAllTables clears exactly the three app tables",
+   "expect": 3
+  }
+ ]
+}
