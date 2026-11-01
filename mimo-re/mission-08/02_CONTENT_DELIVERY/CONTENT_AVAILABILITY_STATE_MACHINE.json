@@ -1,0 +1,20 @@
+{
+  "generated": "2026-11-01",
+  "subject": "content availability as reachable from the recovered code",
+  "warning": "only the states marked evidenced are proven by code or data; the rest are candidate states that Phase 3 must confirm or delete",
+  "states": [
+    {"id": "BUNDLED_AVAILABLE", "evidenced": true, "evidence": "assets/lessons-<locale>/tracks/*.json present for 10 locales; ye.b builds the path"},
+    {"id": "LIVE_PREVIEW_AVAILABLE", "evidenced": true, "evidence": "ye.d reads /live_preview/tracks"},
+    {"id": "CACHED_IN_MEMORY", "evidenced": true, "evidence": "DefaultTracksRepository holds TracksJson + HashMap; ye.b holds LinkedHashMap"},
+    {"id": "TRACK_NOT_FOUND", "evidenced": true, "evidence": "string 'Track with id ... not found. Original track id: ...' and the web-development id 50 special case"},
+    {"id": "LESSON_PARSE_FAILED", "evidenced": false, "evidence": "no handler observed; A13"},
+    {"id": "LOCALE_MISSING", "evidenced": false, "evidence": "no fallback branch observed; A12"},
+    {"id": "REMOTE_CONTENT_REFRESH", "evidenced": false, "evidence": "no network path exists in this subsystem; recorded as a negative, not as a state"}
+  ],
+  "transitions": [
+    {"from": "BUNDLED_AVAILABLE", "to": "CACHED_IN_MEMORY", "trigger": "first getTracksJson / getTrackById", "evidenced": true},
+    {"from": "LIVE_PREVIEW_AVAILABLE", "to": "CACHED_IN_MEMORY", "trigger": "developer-preview load", "evidenced": false, "note": "provider selection logic not read"},
+    {"from": "CACHED_IN_MEMORY", "to": "TRACK_NOT_FOUND", "trigger": "id absent from HashMap/TracksJson", "evidenced": true},
+    {"from": "BUNDLED_AVAILABLE", "to": "LESSON_PARSE_FAILED", "trigger": "malformed JSON or DSL", "evidenced": false}
+  ]
+}

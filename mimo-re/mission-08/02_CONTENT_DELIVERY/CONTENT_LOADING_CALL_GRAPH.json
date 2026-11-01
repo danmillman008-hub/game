@@ -1,0 +1,112 @@
+{
+ "generated": "2026-11-01",
+ "note": "edges are recovered method relationships; each carries its own evidence field. 'caller_unknown' means the caller is reached through an interface and is not yet traced (Phase 3).",
+ "nodes": [
+  {
+   "id": "ye.b",
+   "name": "AssetContentProvider (recovered role)",
+   "kind": "provider",
+   "evidence": "implements ye.f; strings lessons-, /tracks, /tutorial-, .json"
+  },
+  {
+   "id": "ye.d",
+   "name": "LivePreviewContentProvider",
+   "kind": "provider",
+   "evidence": "strings /live_preview, /tracks, /tutorial-, .json"
+  },
+  {
+   "id": "tracks.b",
+   "name": "DefaultTrackLoader",
+   "kind": "loader",
+   "evidence": "lambdas DefaultTrackLoader$getTutorial$2; ctor (am.l, te.c, np.d, hb0.b)"
+  },
+  {
+   "id": "tracks.c",
+   "name": "DefaultTracksRepository",
+   "kind": "repository",
+   "evidence": "7-lambda family, share 0.875; fields TracksJson + HashMap"
+  },
+  {
+   "id": "tracks.a",
+   "name": "DefaultFavoriteTracksRepository",
+   "kind": "repository",
+   "evidence": "6-lambda family, share 1.0; DataStore keys"
+  },
+  {
+   "id": "te.c",
+   "name": "DSL parser dispatcher (mission-05/07)",
+   "kind": "parser",
+   "evidence": "field type in tracks.b ctor"
+  },
+  {
+   "id": "np.b",
+   "name": "profile/account flow holder (recovered role)",
+   "kind": "flow",
+   "evidence": "cast in tracks.b.b; field c: ya0.c"
+  },
+  {
+   "id": "hb0.b",
+   "name": "kotlinx.serialization Json",
+   "kind": "library",
+   "evidence": "ctor arg; parse call in tracks.b.a"
+  }
+ ],
+ "edges": [
+  {
+   "from": "tracks.c",
+   "to": "ye.b",
+   "via": "getTracksJson/getTutorial",
+   "kind": "virtual",
+   "confidence": "MEDIUM",
+   "evidence": "repository field a: ye.e; provider implements ye.f"
+  },
+  {
+   "from": "tracks.c",
+   "to": "ye.d",
+   "via": "same interface",
+   "kind": "virtual",
+   "confidence": "LOW",
+   "evidence": "second ye.f implementor; selection logic not read"
+  },
+  {
+   "from": "tracks.b",
+   "to": "ye.f",
+   "via": "d()/b(J)",
+   "kind": "interface",
+   "confidence": "HIGH",
+   "evidence": "instructions: invoke-interface ye.f->b(J)InputStream; ye.f->c()String"
+  },
+  {
+   "from": "tracks.b",
+   "to": "te.c",
+   "via": "lesson content parsing",
+   "kind": "callback",
+   "confidence": "LOW",
+   "evidence": "ctor injection; the parse site was not read in Phase 2"
+  },
+  {
+   "from": "tracks.b",
+   "to": "hb0.b",
+   "via": "JSON parse",
+   "kind": "virtual",
+   "confidence": "MEDIUM",
+   "evidence": "sget hb0/k; invoke hb0.b parse in tracks.b.a"
+  },
+  {
+   "from": "tracks.a",
+   "to": "<datastore>",
+   "via": "favorite_tracks keys",
+   "kind": "framework",
+   "confidence": "LOW",
+   "evidence": "string keys in methods a..f"
+  },
+  {
+   "from": "<caller_unknown>",
+   "to": "tracks.c",
+   "via": "getTracks/getTrackById/getTrackWithChapters",
+   "kind": "interface",
+   "confidence": "LOW",
+   "evidence": "repository is injected as an interface; UI caller not traced yet"
+  }
+ ]
+}

@@ -11,14 +11,16 @@
   {
    "phase": "1",
    "name": "symbol recovery (renamed classes, lambdas)",
-   "state": "just_started",
-   "path": "01_SYMBOL_RECOVERY/"
+   "state": "substantially_complete",
+   "path": "01_SYMBOL_RECOVERY/",
+   "deliverables": "01_SYMBOL_RECOVERY/ (8 files + 9 evidence files)"
   },
   {
    "phase": "2",
    "name": "content delivery",
-   "state": "not_started",
-   "path": "02_CONTENT_DELIVERY/"
+   "state": "substantially_complete",
+   "path": "02_CONTENT_DELIVERY/",
+   "deliverables": "02_CONTENT_DELIVERY/ (12 files + corpus stats)"
   },
   {
    "phase": "3",
@@ -154,23 +156,19 @@
   }
  ],
  "counts": {
-  "questions": 39,
-  "domains": 45,
-  "queue": 2178,
-  "edges": 85724,
-  "methods_registered": 637,
-  "classes_registered": 61,
-  "behaviour_reconstructed": 9,
-  "runtime_verified": 0,
-  "dex_files": 12,
-  "dex_real": 4,
-  "dex_stubs": 8,
-  "class_defs": 29454
+  "complete": 1,
+  "substantially_complete": 3,
+  "not_started": 17,
+  "blocked": 1,
+  "partial": 2,
+  "interim_only": 1
  },
  "blockers": [
   "no runtime (adb/emulator/ARM translation absent)",
   "single decompiler (DAD), 1,059 queue classes DEX-only",
   "8 locale content modules ship only BuildConfig+R in the base APK",
   "lesson-webview.js asset not yet decoded"
- ]
+ ],
+ "last_updated": "2026-11-01",
+ "last_commit": "stage 2 (content delivery)"
 }

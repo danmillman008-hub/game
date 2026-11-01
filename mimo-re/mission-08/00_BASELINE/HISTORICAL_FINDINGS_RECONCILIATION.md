@@ -227,6 +227,33 @@ correct itself.
 **By-product.** The same evidence refines R-05: the `ri.*` family is `ri.b` = authorization annotation,
 `ri.d` = network-state interface, `ri.a` = platform callback, `ri.c` = state value.
 
+## C-13 — "non-English content packs absent" is wrong as stated
+
+**Original finding (mission-07, Q-05):** the APK's non-English content lives in dynamic feature modules that are
+absent from the supplied APK, so non-English behaviour is `BLOCKED_BY_ENVIRONMENT`.
+
+**What the APK actually contains (measured, Stage 2):**
+
+| Locale | module dex | classes in base APK | lesson assets in base APK |
+|---|---|---|---|
+| ru, pt, id, it, pl, fr, tr, es | `classes4`–`classes11` (1,096 B each) | `…content.<locale>.BuildConfig`, `…R` only | present: `assets/lessons-<locale>` with 1,030–1,032 JSON |
+| en | base | base | present (1,030) |
+
+`assets/` holds **10,317** JSON documents across ten locale directories, each with
+`tutorial-<id>.json` files and a `tracks.json` carrying `publishSetVersion: 753` and 19 tracks. The bundle is read by
+`ye.b` (base path `lessons-<locale>/tracks`) through `ye.f`.
+
+**Why the earlier statement was wrong.** It conflated *module code* with *module content*. Only the code is stubbed;
+the content is shipped as assets in the base APK. The 1,096-byte dex files prove the module structure, not the
+absence of the content.
+
+**Effect on Q-05.** Q-05 is restated: *what the eight locale modules would have contributed in code is absent; their
+content is present and readable.* The question's status changes from a content-absence blocker to a code-absence
+limitation: non-English **content** is now `VERIFIED_STATIC`, while locale-specific **code** paths remain unread
+(nothing in those stubs but `R`/`BuildConfig`).
+
+**Preserved:** the original Q-05 text and the mission-07 evidence remain in the mission-07 directories, untouched.
+
 ## Summary of corrections carried into mission-8
 
 | ID | Kind | Effect on mission-8 |
@@ -242,3 +269,4 @@ correct itself.
 | R-09 | refinement | Rive: generic consumer vs per-asset binding vs missing composable |
 | R-10 | scope | WebView bridge enters Phase 3/4 with evidence |
 | R-11 | self-correction | central auth interceptor `fh.a` exists; `ri.*` family fully mapped |
+| C-13 | substantive | locale content **is** present as assets; only the module code is stubbed; Q-05 restated |

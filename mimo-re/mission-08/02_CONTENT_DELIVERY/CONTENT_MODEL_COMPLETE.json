@@ -1,0 +1,307 @@
+{
+ "generated": "2026-11-01",
+ "note": "field tables parsed from the decompiled sources; no content values",
+ "models": {
+  "com.getmimo.data.content.model.track.Tutorial": {
+   "class": "com.getmimo.data.content.model.track.Tutorial",
+   "source": "decompiled_java",
+   "fields": [
+    {
+     "type": "java.util.List",
+     "name": "chapters"
+    },
+    {
+     "type": "com.getmimo.data.content.model.track.CodeLanguage",
+     "name": "codeLanguage"
+    },
+    {
+     "type": "String",
+     "name": "iconBanner"
+    },
+    {
+     "type": "long",
+     "name": "id"
+    },
+    {
+     "type": "boolean",
+     "name": "isCompleted"
+    },
+    {
+     "type": "boolean",
+     "name": "showInTrack"
+    },
+    {
+     "type": "String",
+     "name": "title"
+    },
+    {
+     "type": "com.getmimo.data.content.model.track.TutorialType",
+     "name": "type"
+    },
+    {
+     "type": "int",
+     "name": "version"
+    }
+   ],
+   "superclass": "class Tutorial"
+  },
+  "com.getmimo.data.content.model.track.Track": {
+   "class": "com.getmimo.data.content.model.track.Track",
+   "source": "decompiled_java",
+   "fields": [
+    {
+     "type": "String",
+     "name": "descriptionContent"
+    },
+    {
+     "type": "String",
+     "name": "iconBanner"
+    },
+    {
+     "type": "long",
+     "name": "id"
+    },
+    {
+     "type": "boolean",
+     "name": "isHidden"
+    },
+    {
+     "type": "boolean",
+     "name": "isNew"
+    },
+    {
+     "type": "java.util.List",
+     "name": "sections"
+    },
+    {
+     "type": "String",
+     "name": "title"
+    },
+    {
+     "type": "long",
+     "name": "version"
+    }
+   ],
+   "superclass": "class Track"
+  },
+  "com.getmimo.data.content.model.track.Section": {
+   "class": "com.getmimo.data.content.model.track.Section",
+   "source": "decompiled_java",
+   "fields": [
+    {
+     "type": "String",
+     "name": "description"
+    },
+    {
+     "type": "int",
+     "name": "index"
+    },
+    {
+     "type": "String",
+     "name": "name"
+    },
+    {
+     "type": "java.util.List",
+     "name": "tutorials"
+    }
+   ],
+   "superclass": "class Section"
+  },
+  "com.getmimo.data.content.model.track.Chapter": {
+   "class": "com.getmimo.data.content.model.track.Chapter",
+   "source": "decompiled_java",
+   "fields": [
+    {
+     "type": "long",
+     "name": "id"
+    },
+    {
+     "type": "boolean",
+     "name": "isCompleted"
+    },
+    {
+     "type": "java.util.List",
+     "name": "lessons"
+    },
+    {
+     "type": "String",
+     "name": "title"
+    },
+    {
+     "type": "com.getmimo.data.content.model.track.ChapterType",
+     "name": "type"
+    }
+   ],
+   "superclass": "class Chapter implements android.os.Parcelable"
+  },
+  "com.getmimo.data.content.model.track.Lesson": {
+   "class": "com.getmimo.data.content.model.track.Lesson",
+   "source": "decompiled_java",
+   "fields": [
+    {
+     "type": "com.getmimo.data.content.model.track.LessonContentType",
+     "name": "contentType"
+    },
+    {
+     "type": "boolean",
+     "name": "hardModeSelected"
+    },
+    {
+     "type": "long",
+     "name": "id"
+    },
+    {
+     "type": "java.util.List",
+     "name": "images"
+    },
+    {
+     "type": "String",
+     "name": "title"
+    }
+   ],
+   "superclass": "class Lesson implements android.os.Parcelable"
+  },
+  "com.getmimo.data.content.model.track.LessonIdentifier": {
+   "class": "com.getmimo.data.content.model.track.LessonIdentifier",
+   "source": "decompiled_java",
+   "fields": [
+    {
+     "type": "long",
+     "name": "chapterId"
+    },
+    {
+     "type": "long",
+     "name": "lessonId"
+    },
+    {
+     "type": "long",
+     "name": "trackId"
+    },
+    {
+     "type": "long",
+     "name": "trackVersion"
+    },
+    {
+     "type": "long",
+     "name": "tutorialId"
+    }
+   ],
+   "superclass": "class LessonIdentifier implements android.os.Parcelable"
+  },
+  "com.getmimo.data.content.model.track.TracksJson": {
+   "class": "com.getmimo.data.content.model.track.TracksJson",
+   "source": "decompiled_java",
+   "fields": [
+    {
+     "type": "long",
+     "name": "publishSetVersion"
+    },
+    {
+     "type": "java.util.List",
+     "name": "tracks"
+    }
+   ],
+   "superclass": "class TracksJson"
+  },
+  "com.getmimo.data.content.model.track.LessonContent$Interactive": {
+   "class": "com.getmimo.data.content.model.track.LessonContent$Interactive",
+   "source": "decompiled_java",
+   "fields": [
+    {
+     "type": "java.util.List",
+     "name": "hardModeLessonModules"
+    },
+    {
+     "type": "java.util.List",
+     "name": "lessonModules"
+    }
+   ],
+   "superclass": "class LessonContent$Interactive implements com.getmimo.data.content.model.track.LessonContent"
+  },
+  "com.getmimo.data.content.model.track.LessonContent$Executable": {
+   "class": "com.getmimo.data.content.model.track.LessonContent$Executable",
+   "source": "decompiled_java",
+   "fields": [
+    {
+     "type": "java.util.List",
+     "name": "files"
+    },
+    {
+     "type": "String",
+     "name": "instructions"
+    },
+    {
+     "type": "int",
+     "name": "preselectedFileIndex"
+    }
+   ],
+   "superclass": "class LessonContent$Executable implements com.getmimo.data.content.model.track.LessonContent"
+  },
+  "com.getmimo.data.content.model.track.LessonContent$Executable$File": {
+   "class": "com.getmimo.data.content.model.track.LessonContent$Executable$File",
+   "source": "decompiled_java",
+   "fields": [
+    {
+     "type": "com.getmimo.data.content.model.track.CodeLanguage",
+     "name": "codeLanguage"
+    },
+    {
+     "type": "String",
+     "name": "content"
+    },
+    {
+     "type": "String",
+     "name": "name"
+    },
+    {
+     "type": "String",
+     "name": "solvedContent"
+    }
+   ],
+   "superclass": "class LessonContent$Executable$File implements android.os.Parcelable"
+  },
+  "com.getmimo.data.model.progress.Progress": {
+   "class": "com.getmimo.data.model.progress.Progress",
+   "source": "decompiled_java",
+   "fields": [
+    {
+     "type": "Integer",
+     "name": "attempts"
+    },
+    {
+     "type": "java.util.Date",
+     "name": "completedAt"
+    },
+    {
+     "type": "boolean",
+     "name": "isPracticeProgress"
+    },
+    {
+     "type": "long",
+     "name": "lessonId"
+    },
+    {
+     "type": "Long",
+     "name": "publishSetVersion"
+    },
+    {
+     "type": "java.util.Date",
+     "name": "startedAt"
+    },
+    {
+     "type": "Long",
+     "name": "trackId"
+    },
+    {
+     "type": "Integer",
+     "name": "tries"
+    },
+    {
+     "type": "Integer",
+     "name": "tutorialVersion"
+    }
+   ],
+   "superclass": "class Progress implements java.io.Serializable"
+  }
+ }
+}

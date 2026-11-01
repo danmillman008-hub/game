@@ -17,3 +17,12 @@ status rules of `01_CLOSURE_METHOD.md`.
 | A10 | Is `f9.j`'s tag-17 branch part of the app or library code? | `GENUINELY_UNKNOWN` | merged class; constants come from `m50.*` which are not app types | trace the constructor call site that passes tag 17 |
 
 None of these replaces an existing question; all are additive and cited by the phase that raised them.
+
+## Questions raised by Stage 2 (content delivery)
+
+| ID | Question | Status | Evidence so far |
+|---|---|---|---|
+| A11 | is `getPublishSetVersion` compared with a stored value anywhere? | open | repository accessor `tracks.c.c()J` reads the cached bundle; no comparison site found |
+| A12 | does a missing locale fall back to `en`? | open | `ye.b` derives the base from `"lessons-"` + locale with no observed branch |
+| A13 | are content stream/parse failures caught, and where? | open | no handler on the `ye.b` stream path in Phase 2 |
+| A14 | what are the two extra JSON documents in `id`, `it`, `pl`, `tr` (1,032 vs 1,030)? | open | corpus statistics only |

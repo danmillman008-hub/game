@@ -1,0 +1,14 @@
+stage,subject,evidence
+provider_interface,ye.f,"interface implemented by ye.b and ye.d; methods a(Tutorial), b(J)InputStream, c()String, d()InputStream"
+asset_provider,ye.b,AssetManager-backed; base 'lessons-<locale>/tracks'; icons 'file:///android_asset/lessons-common/icons'
+live_preview_provider,ye.d,filesystem-backed; '/live_preview' + '/tracks'
+loader,tracks.b,InputStream -> BufferedReader(8192) -> String -> kotlinx JSON
+repository,tracks.c,TracksJson + HashMap cache; getTrackById/getTrackWithChapters/loadTrackWithChapters
+favorites,tracks.a,"DataStore keys favorite_tracks, favorite_tracks_to_sync, favorite_tracks_to_remove"
+model,LessonIdentifier,"5 longs: trackId, trackVersion, tutorialId, chapterId, lessonId"
+model,Progress,"(trackId, lessonId) + publishSetVersion + attempts + tries + timestamps + isPracticeProgress"
+model,LessonContent.Interactive,"lessonModules: List, hardModeLessonModules: List"
+model,LessonContent.Executable,"files: List<File>, instructions: String, preselectedFileIndex: Int"
+asset_corpus,assets/lessons-<locale>/tracks,"10,317 JSON; tracks.json {publishSetVersion:753, tracks:19}"
+tutorial_structure,tutorial-<id>.json,"{tutorial:{id,version,type,isNew,codeLanguage,title,descriptionContent,shortDescriptionContent,showInTrack,iconBanner,chapters[]}}"
+lesson_structure,lesson node,"{title,id,contentType,images[],interactiveContent:String,hardModeSelected}"
