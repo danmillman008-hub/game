@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mimo-re/schemas/tutorial.schema.json",
+  "title": "Mimo tutorial-<id>.json",
+  "description": "VERIFIED STATIC structure over 1,029 files (EN). 1,947 chapters, 18,272 lessons. interactiveContent is an XML string (see lesson-dsl.schema.json).",
+  "type": "object",
+  "required": ["tutorial"],
+  "properties": {
+    "tutorial": {
+      "type": "object",
+      "required": ["id", "version", "type", "chapters"],
+      "properties": {
+        "id": { "type": "integer" },
+        "version": { "type": "integer", "minimum": 1, "maximum": 161 },
+        "type": { "type": "string", "enum": ["course", "practiceRequired", "practiceOptional", "guidedProject", "guidedProjectOptional", "challenges"] },
+        "codeLanguage": { "type": "string", "enum": ["javascript", "python", "css", "html", "sql", "node", "jsx", "swift", "typescript", "bash", "none"] },
+        "isNew": { "type": "boolean" },
+        "showInTrack": { "type": "boolean" },
+        "title": { "type": "string" },
+        "codeLanguageVersion": { "type": ["string", "null"] },
+        "chapters": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/chapter" } }
+      }
+    }
+  },
+  "$defs": {
+    "chapter": {
+      "type": "object",
+      "required": ["id", "type", "lessons"],
+      "properties": {
+        "id": { "type": "integer" },
+        "type": {
+          "type": "string",
+          "enum": ["practiceLevel1", "practiceLevel2", "practiceLevel3", "challengeLevel0", "challengeLevel1", "challengeLevel2"],
+          "description": "Authored difficulty label, not a learner rating. Lesson counts: 11373 / 2362 / 4096 / 45 / 14 / 382."
+        },
+        "lessons": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/lesson" } }
+      }
+    },
+    "lesson": {
+      "type": "object",
+      "required": ["id", "contentType"],
+      "properties": {
+        "id": { "type": "integer" },
+        "contentType": { "type": "string", "enum": ["interactive", "executableFiles"] },
+        "title": { "type": "string" },
+        "interactiveContent": { "type": "string", "description": "Lesson markup document; 14,248 in EN." },
+        "hardModeContent": { "type": "string", "description": "Parallel body for hard mode; present on 6,058 lessons, interactive only." },
+        "executableContent": { "$ref": "#/$defs/executable" }
+      },
+      "allOf": [
+        { "if": { "properties": { "contentType": { "const": "interactive" } } }, "then": { "required": ["interactiveContent"] } },
+        { "if": { "properties": { "contentType": { "const": "executableFiles" } } }, "then": { "required": ["executableContent"] } }
+      ]
+    },
+    "executable": {
+      "type": "object",
+      "properties": {
+        "preselectedFileIndex": { "type": "integer", "minimum": 0 },
+        "httpOptions": { "type": "object", "description": "Present on 85 lessons; shape UNKNOWN." },
+        "sourceDatabaseTables": { "type": "string", "description": "JSON-encoded seed tables; present on 269 SQL lessons." },
+        "solutionDatabaseTables": { "type": "string" },
+        "files": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+              "name": { "type": "string", "examples": ["index.html", "styles.css", "script.js"] },
+              "content": { "type": "string", "description": "Starter content; intentionally empty on 293 files." },
+              "solvedContent": { "type": "string", "description": "Reference solution; server grades against it. Absent on 42 lessons." }
+            }
+          }
+        }
+      }
+    }
+  }
+}

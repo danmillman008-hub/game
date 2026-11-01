@@ -1,0 +1,11 @@
+digraph module_deps {
+  rankdir=BT; node [shape=box, style=rounded];
+  ui [label="ui.* (1869)"];
+  interactors [label="interactors (155)"];
+  data [label="data.* (606)"];
+  core [label="core (22)"];
+  analytics [label="analytics (334)"];
+  network [label="network (6)"];
+  util [label="util/apputil (33)"];
+  ui -> interactors; ui -> analytics; interactors -> data; data -> core; data -> network; core -> util;
+}

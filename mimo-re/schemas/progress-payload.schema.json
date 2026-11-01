@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mimo-re/schemas/progress-payload.schema.json",
+  "title": "Lesson progress record (client-side model and outbox payload)",
+  "description": "Field list recovered from the Kotlin toString() template of com.getmimo.data.model.progress.Progress and the Room entity. Field ORDER is declaration order as emitted by toString; JSON envelope may nest a trackId object. Types inferred from SQLite affinity (INTEGER NOT NULL).",
+  "type": "object",
+  "required": ["lessonId", "completedAt", "startedAt", "tries", "tutorialVersion", "publishSetVersion", "attempts", "isPracticeProgress"],
+  "properties": {
+    "lessonId": { "type": "integer" },
+    "completedAt": { "type": "integer", "description": "epoch millis; 0/absent while incomplete" },
+    "startedAt": { "type": "integer", "description": "epoch millis" },
+    "tries": { "type": "integer", "minimum": 0, "description": "monotonic per lesson" },
+    "tutorialId": { "type": "integer" },
+    "tutorialVersion": { "type": "integer", "description": "content revision the attempt was made against" },
+    "trackId": { "type": "integer" },
+    "publishSetVersion": { "type": "integer", "description": "contract version, 753 in this build" },
+    "attempts": { "type": "integer", "minimum": 0, "description": "attempts within the current session/queue entry" },
+    "isPracticeProgress": { "type": "boolean", "description": "progress earned in the practice hub, not the main path" },
+    "inQueue": { "type": "boolean", "description": "local-only: row awaits sync (not sent to server)" }
+  }
+}

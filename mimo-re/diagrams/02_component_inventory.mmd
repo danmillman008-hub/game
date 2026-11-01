@@ -1,0 +1,23 @@
+graph LR
+  subgraph Presentation
+    ACT[61 Activities] --- FRG[22 Fragments]
+    FRG --- BS[87 BottomSheets]
+    BS --- DLG[44 Dialogs]
+    DLG --- CMP[Compose: AI tutor, coding keyboard]
+  end
+  subgraph Domain
+    INT[155 interactors]
+  end
+  subgraph Data
+    CONT[data.content + lessonparser]
+    RM[Room 3 tables]
+    REM[Retrofit 71 endpoints]
+  end
+  subgraph Core
+    CM[core.model streak/coins/keys]
+    AN[analytics 334 classes / 305 events]
+  end
+  ACT --> INT --> CONT
+  INT --> RM
+  INT --> REM
+  AN --- ACT

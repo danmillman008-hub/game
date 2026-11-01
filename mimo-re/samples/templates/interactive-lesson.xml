@@ -1,0 +1,26 @@
+<!DOCTYPE html ><html><body>
+<p>EXPLANATION TEXT. <code>&lt;placeholder&gt;</code> is shown inline.</p>
+<code version="1" codelang="html" name="index.html" visible-if="always">
+  <content>
+    <text value="line one" /><text type="break" />
+    <text value="line two" /><text type="break" />
+    <text value="ANSWER_TOKEN" />
+  </content>
+  <interactions>
+    <interaction type="fillTheGap" isDefault="true">
+      <options>
+        <option startIndex="22" endIndex="34" />
+        <option correct="false"><content><text value="DECOY_CHIP_TEXT" /></content></option>
+      </options>
+    </interaction>
+  </interactions>
+  <output><content><text value="EXPECTED_CONSOLE_TEXT" /></content></output>
+</code>
+<p visible-if="wrong">REMEDIATION TEXT shown only after a wrong check.</p>
+<p visible-if="correct">ESCALATION TEXT shown only after a correct check.</p>
+<selection multiple="multiple" iscode="true">
+  <item value="OPTION A" correct="false" />
+  <item value="OPTION B" correct="true" />
+  <item value="OPTION C" correct="false" />
+</selection>
+</body></html>

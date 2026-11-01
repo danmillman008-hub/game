@@ -1,0 +1,30 @@
+graph TB
+  subgraph Client
+    A1[Mode A LearnHarness: DSL player + offset grader]
+    A2[Mode B EPM: timer, negative marking, integrity]
+    A3[Mode C Plan cards: deadline + weakness model]
+    G[Gamification layer: XP, streak, credits]
+  end
+  subgraph Local
+    DB[(Room: question_attempt · bookmark · simulation_result\n+ progress outbox)]
+    PK[(signed content packs per subject/year)]
+    WK[WorkManager sync + visible queue]
+  end
+  subgraph Server Self-hosted
+    S1[Content service + blueprint]
+    S2[Question bank + answer keys server-side]
+    S3[Weakness/plan service]
+    S4[Simulation scoring + hash verify]
+    S5[Flags + experiments ONE plane]
+    S6[Analytics collector]
+  end
+  A1 --> DB
+  A2 --> DB
+  A3 --> DB
+  DB --> WK --> S1
+  A1 --> PK
+  A2 --> PK
+  A3 --> S3
+  S4 --- A2
+  S5 --- Client
+  S6 --- Client

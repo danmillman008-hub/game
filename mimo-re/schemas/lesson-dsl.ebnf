@@ -1,0 +1,53 @@
+(* Mimo interactive lesson DSL — derived grammar.
+   Verified against 18,272 lessons / 235,973 <text> nodes: 0 unknown tags,
+   0 unknown attributes, 0 XML errors. Frequency comments are measured counts. *)
+
+document       = doctype, "<html>", "<body>", { module }, "</body>", "</html>" , ws ;
+doctype        = '<!DOCTYPE html >' ;
+
+module         = paragraph | code_block | webview | database_block | selection_block | inline | text_escape ;
+paragraph      = "<p>", [ visible_if ], { inline | code_inline }, "</p>" ;              (* 29,193 *)
+code_block     = "<code", version, codelang, name, [ visible_if ], ">",
+                 "<content>", { text_run }, "</content>",
+                 [ interactions ], [ output_block ], "</code>" ;                      (* 58,806 *)
+blockversion   = 'version="' , digit, { digit }, '"' ;                                (* 14,469 *)
+codelang       = 'codelang="' , ( "html" | "css" | "javascript" | "python" | "sql" |
+                 "node" | "jsx" | "swift" | "typescript" | "bash" | "text" ), '"' ;
+name           = 'name="' , filename , '"' ;
+
+text_run       = '<text value="' , escaped_text , '"/>'                               (* 129,389 *)
+               | '<text type="break"/>' ;                                            (* 106,584 *)
+
+interactions   = "<interactions>", { interaction | option_set }, "</interactions>" ;  (* 8,276 *)
+interaction    = '<interaction type="fillTheGap" isDefault="true">' ,                 (* 6,504 *)
+                   [ "<options>", { gap_option | decoy_option }, "</options>" ] ,
+                 "</interaction>"
+               | '<interaction type="validatedInput" isDefault="true"' ,
+                   ' startIndex="' , int , '" endIndex="' , int , '"/>' ;              (* 1,772 *)
+gap_option     = '<option startIndex="' , int , '" endIndex="' , int , '"/>' ;        (* 17,526 *)
+decoy_option   = '<option correct="false">' , "<content>", { text_run }, "</content>" , "</option>" ; (* 4,939 *)
+output_block   = "<output>", "<content>", { text_run }, "</content>", "</output>" ;   (* 3,943 *)
+
+webview        = '<webview' , ' version="' , int , '"' , ' content="' , uri , '"' ,
+                 [ visible_if ] , [ ' style="' , ident , '"' ] ,
+                 [ ' interaction="' , ident , '"' ] , '/>' ;                           (* 841 *)
+database_block = '<database' , visible_if , ' bootstrapScript="' , sql , '"' , ">",
+                   "<tables>", { table }, "</tables>", "</database>" ;                 (* 574 *)
+table          = '<table name="' , ident , '">' , { row } , "</table>" ;               (* 1,287 *)
+row            = "<row>", cell, { cell }, "</row>" ;                                   (* 5,220 *)
+cell           = '<header content="' , escaped_text , '"/>'                            (* 3,168 *)
+               | '<data content="' , escaped_text , '"/>' ;                            (* 10,474 *)
+
+selection_block= '<selection multiple="multiple"' , [ ' iscode="true"' ] , ">",
+                   { item }, "</selection>" ;                                          (* 4,751 *)
+item           = '<item value="' , escaped_text , '" correct="true|false"/>' ;         (* 11,889 *)
+
+inline         = "<strong>" , text , "</strong>"                                      (* 1,096 *)
+               | "<em>" , text , "</em>"                                              (* 362 *)
+               | "<br/>"                                                              (* 188 *)
+               | '<img src="' , uri , '"' , [ visible_if ] , '/>'                     (* 139 *)
+               | '<a href="' , uri , '">' , text , "</a>" ;                            (* 2 *)
+code_inline    = "<code>" , text , "</code>" ;
+visible_if     = ' visible-if="' , ( "always" | "wrong" | "correct" ) , '"' ;
+               (* always 12,171 · wrong 13,043 · correct 143 *)
+int            = digit , { digit } ;

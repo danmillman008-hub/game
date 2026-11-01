@@ -1,0 +1,99 @@
+openapi: 3.0.3
+info:
+  title: Mimo API — reconstructed skeleton
+  version: 9.35-skeleton
+  description: |
+    Paths are VERIFIED STATIC (71 string literals in DEX annotation space; none has a
+    const-string reference). HTTP verbs are INFERRED from naming and usage; request bodies are
+    UNKNOWN unless a recovered data class exists. Base hosts: api.mimo.org, api-testing.mimo.org,
+    mimoauth.getmimo.com, images.getmimo.com.
+    This file deliberately contains no invented schemas.
+servers:
+  - url: https://api.mimo.org
+    description: production
+  - url: https://api-testing.mimo.org
+    description: testing host present in the release binary
+x-verb-confidence: inferred
+paths:
+  /auth/token:
+    post: { summary: token exchange, x-confidence: inferred }
+  /v1/account:
+    get: { summary: account summary, x-confidence: inferred }
+    delete: { summary: account deletion, x-confidence: inferred }
+  /v1/tutorials/{tutorialId}/progress:
+    post:
+      summary: progress write (outbox target)
+      x-confidence: inferred
+      parameters:
+        - { name: tutorialId, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        x-schema-source: evidence/data-contracts.json#Progress
+        description: Fields known from Progress(lessonId, completedAt, startedAt, tries, tutorialVersion, trackId, publishSetVersion, attempts, isPracticeProgress)
+  /v1/tracks/{trackId}/eta:
+    get:
+      summary: ETA model
+      x-confidence: inferred
+      responses:
+        "200":
+          description: TrackEtaResponse
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trackEstimatedCompletionAt: { type: integer }
+                  currentPaceMinutesPerDay: { type: integer }
+                  sections: { type: array, items: { type: object, properties: { sectionIndex: { type: integer } } } }
+  /v1/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/runFiles:
+    post:
+      summary: grade an executable lesson (server-side execution, internal service "MFEL")
+      x-confidence: inferred
+      responses:
+        "200":
+          description: ExecuteFilesResponse
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hasPassed: { type: boolean }
+                  hostedProjectUrl: { type: string, nullable: true }
+                  consoleOutput: { type: string, nullable: true }
+                  error: { type: string, nullable: true }
+                  tests:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        hasPassed: { type: boolean }
+                        description: { type: string }
+                        error: { type: string, nullable: true }
+  /v1/aiTutor/conversations:
+    post:
+      summary: start AI tutor conversation (SSE stream)
+      x-confidence: inferred
+      description: Client sends Accept text/event-stream; messages are AiTutorConversationMessage(conversationId, content, finishReason).
+  /v1/aiTutor/conversations/messages/count:
+    get: { summary: freemium quota counter, x-confidence: inferred }
+  /v1/user/keys:
+    get: { summary: key balance (UserKeys(currentKeys)), x-confidence: inferred }
+  /v1/user/keys/consume:
+    post: { summary: spend a key, x-confidence: inferred }
+  /v1/user/coins:
+    get: { summary: coin balance (Coins(coins)), x-confidence: inferred }
+  /v1/user/rewards/next:
+    get: { summary: next reward (Reward(id, description, rewardAmount, rewardId, rewardMultiplier)), x-confidence: inferred }
+  /v1/user/rewards/{rewardId}/confirm:
+    post: { summary: claim reward, x-confidence: inferred }
+  /v1/leaderboards/latest:
+    get: { summary: current league board (Leaderboard(...)), x-confidence: inferred }
+  /v1/leaderboards/friends:
+    get: { summary: friends board, x-confidence: inferred }
+  /v1/practice/statistics:
+    get: { summary: PracticeStatsResponse(duration, chaptersCompleted), x-confidence: inferred }
+  /v2/client-config:
+    get: { summary: client config bundle, x-confidence: inferred }
+  /v1/events:
+    post: { summary: analytics ingestion, x-confidence: inferred }
+  /v1/health/connectivity:
+    get: { summary: connectivity probe used by offline views, x-confidence: inferred }

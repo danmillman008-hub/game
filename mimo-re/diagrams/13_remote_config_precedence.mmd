@@ -1,0 +1,11 @@
+graph TD
+  A[App start] --> B[Firebase Remote Config fetch+activate]
+  A --> C[GET /v2/client-config]
+  A --> D[parse content experiment]
+  B --> E{precedence?}
+  C --> E
+  D --> E
+  E -->|resolved (ORDER UNKNOWN)| F[single boolean per feature]
+  E --> G[fallback last-known prefs abt_experiments_key]
+  F --> H[UI gates: tabs, hard mode, AI tutor, discounts]
+  X[DevMenu overrides] -.-> F

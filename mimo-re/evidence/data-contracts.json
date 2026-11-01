@@ -1,0 +1,2189 @@
+{
+ "com.getmimo.analytics.Analytics$ShowUpgradeDialog": {
+  "type": "ShowUpgradeDialog",
+  "fields": [
+   "upgradeDialogType",
+   "timesShown",
+   "continueToPurchaseScreen",
+   "trackId",
+   "tutorialId",
+   "lessonId",
+   "discountPercentage"
+  ]
+ },
+ "com.getmimo.analytics.model.ContentExperiment": {
+  "type": "ContentExperiment",
+  "fields": [
+   "originalTrackId",
+   "variantTrackId",
+   "useTheVariant"
+  ]
+ },
+ "com.getmimo.analytics.model.ContentExperimentState$Started": {
+  "type": "Started",
+  "fields": [
+   "contentExperiment"
+  ]
+ },
+ "com.getmimo.analytics.model.ParsedContentExperiment$Experiment": {
+  "type": "Experiment",
+  "fields": [
+   "originalTrackId",
+   "variantTrackId",
+   "visibilityPercentage"
+  ]
+ },
+ "com.getmimo.analytics.properties.PaywallTrackingSource$LastCall$Drawer": {
+  "type": "Drawer",
+  "fields": [
+   "hasPurchasedBefore"
+  ]
+ },
+ "com.getmimo.analytics.properties.PaywallTrackingSource$LastCall$PathBanner": {
+  "type": "PathBanner",
+  "fields": [
+   "hasPurchasedBefore"
+  ]
+ },
+ "com.getmimo.analytics.properties.upgrade.UpgradeSource$ProPaywall": {
+  "type": "ProPaywall",
+  "fields": [
+   "source"
+  ]
+ },
+ "com.getmimo.core.model.MimoUser": {
+  "type": "MimoUser",
+  "fields": [
+   "userId",
+   "email",
+   "firstName",
+   "lastName",
+   "createdAt",
+   "photoUrl",
+   "isAnonymous",
+   "providerId"
+  ]
+ },
+ "com.getmimo.core.model.coins.Coins": {
+  "type": "Coins",
+  "fields": [
+   "coins"
+  ]
+ },
+ "com.getmimo.core.model.inapp.DiscountedSubscription": {
+  "type": "DiscountedSubscription",
+  "fields": [
+   "withoutFreeTrial",
+   "with7DaysFreeTrial",
+   "with14DaysFreeTrial",
+   "discountPercent"
+  ]
+ },
+ "com.getmimo.core.model.inapp.FreeTrialSubscription": {
+  "type": "FreeTrialSubscription",
+  "fields": [
+   "subscription",
+   "freeTrialDuration"
+  ]
+ },
+ "com.getmimo.core.model.inapp.Subscription": {
+  "type": "Subscription",
+  "fields": [
+   "activeUntil",
+   "canceledAt",
+   "trialEndAt",
+   "isActive",
+   "source",
+   "interval",
+   "type"
+  ]
+ },
+ "com.getmimo.core.model.inapp.Subscriptions": {
+  "type": "Subscriptions",
+  "fields": [
+   "subscriptions"
+  ]
+ },
+ "com.getmimo.core.model.lesson.executable.ExecuteLessonBody": {
+  "type": "ExecuteLessonBody",
+  "fields": [
+   "code"
+  ]
+ },
+ "com.getmimo.core.model.lesson.executable.ExecuteLessonResponse$ExecuteLessonTestCase": {
+  "type": "ExecuteLessonTestCase",
+  "fields": [
+   "hasPassed",
+   "description"
+  ]
+ },
+ "com.getmimo.core.model.lesson.executable.ExecuteLessonResponse": {
+  "type": "ExecuteLessonResponse",
+  "fields": [
+   "hasPassed",
+   "output",
+   "error",
+   "tests"
+  ]
+ },
+ "com.getmimo.core.model.lesson.executablefiles.ExecutableFileRequestBody": {
+  "type": "ExecutableFileRequestBody",
+  "fields": [
+   "name",
+   "userContent"
+  ]
+ },
+ "com.getmimo.core.model.lesson.executablefiles.ExecuteFilesBody": {
+  "type": "ExecuteFilesBody",
+  "fields": [
+   "files"
+  ]
+ },
+ "com.getmimo.core.model.lesson.executablefiles.ExecuteFilesResponse$ExecuteLessonTestCase": {
+  "type": "ExecuteLessonTestCase",
+  "fields": [
+   "hasPassed",
+   "description",
+   "error"
+  ]
+ },
+ "com.getmimo.core.model.lesson.executablefiles.ExecuteFilesResponse": {
+  "type": "ExecuteFilesResponse",
+  "fields": [
+   "hasPassed",
+   "hostedProjectUrl",
+   "consoleOutput",
+   "error",
+   "tests"
+  ]
+ },
+ "com.getmimo.core.model.lesson.report.ReportLessonBody": {
+  "type": "ReportLessonBody",
+  "fields": [
+   "reportOption",
+   "reportText",
+   "tutorialVersion",
+   "interactionType"
+  ]
+ },
+ "com.getmimo.core.model.streak.Streak": {
+  "type": "Streak",
+  "fields": [
+   "start",
+   "end",
+   "length"
+  ]
+ },
+ "com.getmimo.core.model.streak.UserActivity": {
+  "type": "UserActivity",
+  "fields": [
+   "date",
+   "sparksGoal",
+   "sparksCount",
+   "streakType"
+  ]
+ },
+ "com.getmimo.core.model.streak.UserActivityResponse": {
+  "type": "UserActivityResponse",
+  "fields": [
+   "activeStreak",
+   "longestStreak",
+   "activity"
+  ]
+ },
+ "com.getmimo.data.content.lessonparser.interactive.model.CollapsibleLine": {
+  "type": "CollapsibleLine",
+  "fields": [
+   "startLineIndex",
+   "endLineIndex"
+  ]
+ },
+ "com.getmimo.data.content.lessonparser.interactive.model.Interaction$FillTheGap": {
+  "type": "FillTheGap",
+  "fields": [
+   "isDefault",
+   "options"
+  ]
+ },
+ "com.getmimo.data.content.lessonparser.interactive.model.Interaction$Selection": {
+  "type": "Selection",
+  "fields": [
+   "isDefault",
+   "startIndex",
+   "endIndex",
+   "options"
+  ]
+ },
+ "com.getmimo.data.content.lessonparser.interactive.model.Interaction$Spell": {
+  "type": "Spell",
+  "fields": [
+   "isDefault",
+   "startIndex",
+   "endIndex"
+  ]
+ },
+ "com.getmimo.data.content.lessonparser.interactive.model.Interaction$ValidatedInput": {
+  "type": "ValidatedInput",
+  "fields": [
+   "isDefault",
+   "startIndex",
+   "endIndex",
+   "correctInput",
+   "attributes"
+  ]
+ },
+ "com.getmimo.data.content.lessonparser.interactive.model.LessonModule$Code": {
+  "type": "Code",
+  "fields": [
+   "content",
+   "interactions",
+   "output",
+   "visibilty",
+   "language",
+   "name",
+   "collapsibleLines"
+  ]
+ },
+ "com.getmimo.data.content.lessonparser.interactive.model.LessonModule$Database": {
+  "type": "Database",
+  "fields": [
+   "tables",
+   "visibilty"
+  ]
+ },
+ "com.getmimo.data.content.lessonparser.interactive.model.LessonModule$Image": {
+  "type": "Image",
+  "fields": [
+   "imageSrc",
+   "visibilty"
+  ]
+ },
+ "com.getmimo.data.content.lessonparser.interactive.model.LessonModule$Paragraph": {
+  "type": "Paragraph",
+  "fields": [
+   "texts",
+   "visibilty"
+  ]
+ },
+ "com.getmimo.data.content.lessonparser.interactive.model.LessonModule$Selection": {
+  "type": "Selection",
+  "fields": [
+   "selectionItems"
+  ]
+ },
+ "com.getmimo.data.content.lessonparser.interactive.model.LessonModule$Webview": {
+  "type": "Webview",
+  "fields": [
+   "src",
+   "visibilty",
+   "type"
+  ]
+ },
+ "com.getmimo.data.content.lessonparser.interactive.model.Option": {
+  "type": "Option",
+  "fields": [
+   "correct",
+   "text",
+   "startIndex",
+   "endIndex"
+  ]
+ },
+ "com.getmimo.data.content.lessonparser.interactive.model.Output$ConsoleOutput": {
+  "type": "ConsoleOutput",
+  "fields": [
+   "content"
+  ]
+ },
+ "com.getmimo.data.content.lessonparser.interactive.model.Output$TableOutput": {
+  "type": "TableOutput",
+  "fields": [
+   "table"
+  ]
+ },
+ "com.getmimo.data.content.lessonparser.interactive.model.SelectionItem": {
+  "type": "SelectionItem",
+  "fields": [
+   "correct",
+   "text"
+  ]
+ },
+ "com.getmimo.data.content.lessonparser.interactive.model.Table$Row$Data": {
+  "type": "Data",
+  "fields": [
+   "cells"
+  ]
+ },
+ "com.getmimo.data.content.lessonparser.interactive.model.Table$Row$Header": {
+  "type": "Header",
+  "fields": [
+   "cells"
+  ]
+ },
+ "com.getmimo.data.content.lessonparser.interactive.model.Table": {
+  "type": "Table",
+  "fields": [
+   "name",
+   "rows"
+  ]
+ },
+ "com.getmimo.data.content.model.track.Chapter": {
+  "type": "Chapter",
+  "fields": [
+   "id",
+   "title",
+   "lessons",
+   "type",
+   "isCompleted"
+  ]
+ },
+ "com.getmimo.data.content.model.track.ChapterIdentifier": {
+  "type": "ChapterIdentifier",
+  "fields": [
+   "trackId",
+   "tutorialId",
+   "chapterId"
+  ]
+ },
+ "com.getmimo.data.content.model.track.FavoriteTracks": {
+  "type": "FavoriteTracks",
+  "fields": [
+   "favoriteTrackIds"
+  ]
+ },
+ "com.getmimo.data.content.model.track.Lesson": {
+  "type": "Lesson",
+  "fields": [
+   "id",
+   "title",
+   "images",
+   "contentType",
+   "hardModeSelected"
+  ]
+ },
+ "com.getmimo.data.content.model.track.LessonContent$Executable$File": {
+  "type": "File",
+  "fields": [
+   "name",
+   "codeLanguage",
+   "content",
+   "solvedContent"
+  ]
+ },
+ "com.getmimo.data.content.model.track.LessonContent$Executable": {
+  "type": "Executable",
+  "fields": [
+   "instructions",
+   "preselectedFileIndex",
+   "files"
+  ]
+ },
+ "com.getmimo.data.content.model.track.LessonContent$Interactive": {
+  "type": "Interactive",
+  "fields": [
+   "lessonModules",
+   "hardModeLessonModules"
+  ]
+ },
+ "com.getmimo.data.content.model.track.LessonIdentifier": {
+  "type": "LessonIdentifier",
+  "fields": [
+   "trackId",
+   "tutorialId",
+   "chapterId",
+   "lessonId",
+   "trackVersion"
+  ]
+ },
+ "com.getmimo.data.content.model.track.LessonImage": {
+  "type": "LessonImage",
+  "fields": [
+   "id"
+  ]
+ },
+ "com.getmimo.data.content.model.track.Section": {
+  "type": "Section",
+  "fields": [
+   "name",
+   "description",
+   "tutorials",
+   "index"
+  ]
+ },
+ "com.getmimo.data.content.model.track.SectionJson": {
+  "type": "SectionJson",
+  "fields": [
+   "name",
+   "description",
+   "startIndex",
+   "endIndex",
+   "tutorialIds"
+  ]
+ },
+ "com.getmimo.data.content.model.track.Track": {
+  "type": "Track",
+  "fields": [
+   "id",
+   "version",
+   "title",
+   "descriptionContent",
+   "isNew",
+   "isHidden",
+   "iconBanner",
+   "sections"
+  ]
+ },
+ "com.getmimo.data.content.model.track.TrackEta": {
+  "type": "TrackEta",
+  "fields": [
+   "currentPaceMinutesPerDay",
+   "trackEstimatedCompletionAt",
+   "sectionEstimatedCompletionByIndex"
+  ]
+ },
+ "com.getmimo.data.content.model.track.TrackIdentifier": {
+  "type": "TrackIdentifier",
+  "fields": [
+   "trackId",
+   "trackVersion"
+  ]
+ },
+ "com.getmimo.data.content.model.track.TrackJson": {
+  "type": "TrackJson",
+  "fields": [
+   "id",
+   "version",
+   "title",
+   "descriptionContent",
+   "isNew",
+   "isHidden",
+   "iconBanner",
+   "sections"
+  ]
+ },
+ "com.getmimo.data.content.model.track.TracksJson": {
+  "type": "TracksJson",
+  "fields": [
+   "publishSetVersion",
+   "tracks"
+  ]
+ },
+ "com.getmimo.data.content.model.track.Tutorial": {
+  "type": "Tutorial",
+  "fields": [
+   "id",
+   "version",
+   "type",
+   "codeLanguage",
+   "title",
+   "showInTrack",
+   "chapters",
+   "iconBanner",
+   "isCompleted"
+  ]
+ },
+ "com.getmimo.data.content.model.track.TutorialJson": {
+  "type": "TutorialJson",
+  "fields": [
+   "tutorial"
+  ]
+ },
+ "com.getmimo.data.model.AppName": {
+  "type": "AppName",
+  "fields": [
+   "appName"
+  ]
+ },
+ "com.getmimo.data.model.account.ChangeEmailErrorBody": {
+  "type": "ChangeEmailErrorBody",
+  "fields": [
+   "message"
+  ]
+ },
+ "com.getmimo.data.model.account.ChangeEmailRequestBody": {
+  "type": "ChangeEmailRequestBody",
+  "fields": [
+   "email"
+  ]
+ },
+ "com.getmimo.data.model.aitutor.AiTutorConversationMessage": {
+  "type": "AiTutorConversationMessage",
+  "fields": [
+   "conversationId",
+   "content",
+   "finishReason"
+  ]
+ },
+ "com.getmimo.data.model.aitutor.AiTutorialConversationMessageCount": {
+  "type": "AiTutorialConversationMessageCount",
+  "fields": [
+   "userMessageCount"
+  ]
+ },
+ "com.getmimo.data.model.aitutor.FollowupMessage": {
+  "type": "FollowupMessage",
+  "fields": [
+   "userMessage"
+  ]
+ },
+ "com.getmimo.data.model.aitutor.StartConversation": {
+  "type": "StartConversation",
+  "fields": [
+   "systemMessage",
+   "userMessage"
+  ]
+ },
+ "com.getmimo.data.model.analytics.DeviceToken": {
+  "type": "DeviceToken",
+  "fields": [
+   "type",
+   "token"
+  ]
+ },
+ "com.getmimo.data.model.analytics.PushNotificationDelivered": {
+  "type": "PushNotificationDelivered",
+  "fields": [
+   "delivery_id",
+   "event",
+   "device_id",
+   "timestamp"
+  ]
+ },
+ "com.getmimo.data.model.appicon.AppIcon": {
+  "type": "AppIcon",
+  "fields": [
+   "type",
+   "unlocked",
+   "enabled"
+  ]
+ },
+ "com.getmimo.data.model.challenges.UserTutorialStatistics": {
+  "type": "UserTutorialStatistics",
+  "fields": [
+   "solvedLessonCount",
+   "totalLessonCount",
+   "averageAttempts",
+   "totalTime"
+  ]
+ },
+ "com.getmimo.data.model.codeeditor.autocompletion.AutoCompletionResponse": {
+  "type": "AutoCompletionResponse",
+  "fields": [
+   "start",
+   "end",
+   "snippets"
+  ]
+ },
+ "com.getmimo.data.model.codeeditor.codingkeyboard.CodingKeyboardLayout": {
+  "type": "CodingKeyboardLayout",
+  "fields": [
+   "basicLayout",
+   "extendedLayout",
+   "codeLanguage"
+  ]
+ },
+ "com.getmimo.data.model.codeeditor.codingkeyboard.CodingKeyboardSnippet": {
+  "type": "CodingKeyboardSnippet",
+  "fields": [
+   "value",
+   "title",
+   "placeholderRange",
+   "priority"
+  ]
+ },
+ "com.getmimo.data.model.codeeditor.codingkeyboard.CodingKeyboardSnippetType$AutoCompleteExtendedSnippet": {
+  "type": "AutoCompleteExtendedSnippet",
+  "fields": [
+   "snippet",
+   "language",
+   "insertionRange"
+  ]
+ },
+ "com.getmimo.data.model.codeeditor.codingkeyboard.CodingKeyboardSnippetType$BasicSnippet": {
+  "type": "BasicSnippet",
+  "fields": [
+   "snippet",
+   "language"
+  ]
+ },
+ "com.getmimo.data.model.codeeditor.codingkeyboard.CodingKeyboardSnippetType$ExtendedSnippet": {
+  "type": "ExtendedSnippet",
+  "fields": [
+   "snippet",
+   "language"
+  ]
+ },
+ "com.getmimo.data.model.codeeditor.codingkeyboard.CodingKeyboardSnippetWrapper": {
+  "type": "CodingKeyboardSnippetWrapper",
+  "fields": [
+   "value",
+   "title",
+   "priority"
+  ]
+ },
+ "com.getmimo.data.model.codeeditor.codingkeyboard.CodingKeyboardWrapper": {
+  "type": "CodingKeyboardWrapper",
+  "fields": [
+   "simple",
+   "extended"
+  ]
+ },
+ "com.getmimo.data.model.codeexecution.CodePlaygroundExecutionBody": {
+  "type": "CodePlaygroundExecutionBody",
+  "fields": [
+   "files"
+  ]
+ },
+ "com.getmimo.data.model.codeexecution.CodePlaygroundExecutionResponse": {
+  "type": "CodePlaygroundExecutionResponse",
+  "fields": [
+   "hostedFilesUrl",
+   "consoleOutput",
+   "consoleOutputIsError"
+  ]
+ },
+ "com.getmimo.data.model.codeexecution.RunCodeEvent$Error": {
+  "type": "Error",
+  "fields": [
+   "text"
+  ]
+ },
+ "com.getmimo.data.model.codeexecution.RunCodeEvent$Exit": {
+  "type": "Exit",
+  "fields": [
+   "exitCode",
+   "isSuccess"
+  ]
+ },
+ "com.getmimo.data.model.codeexecution.RunCodeEvent$Failure": {
+  "type": "Failure",
+  "fields": [
+   "message"
+  ]
+ },
+ "com.getmimo.data.model.codeexecution.RunCodeEvent$Output": {
+  "type": "Output",
+  "fields": [
+   "text"
+  ]
+ },
+ "com.getmimo.data.model.customerio.CustomerIoData": {
+  "type": "CustomerIoData",
+  "fields": [
+   "timezone",
+   "country",
+   "firstName",
+   "lastName"
+  ]
+ },
+ "com.getmimo.data.model.discount.LocalDiscountTheme": {
+  "type": "LocalDiscountTheme",
+  "fields": [
+   "start_date",
+   "title",
+   "copy",
+   "image_url",
+   "image_url_dark",
+   "path_banner_title"
+  ]
+ },
+ "com.getmimo.data.model.discount.LocalDiscountThemeDto": {
+  "type": "LocalDiscountThemeDto",
+  "fields": [
+   "title",
+   "description",
+   "image"
+  ]
+ },
+ "com.getmimo.data.model.discount.RemoteConfigDiscount": {
+  "type": "RemoteConfigDiscount",
+  "fields": [
+   "start_date",
+   "days_running",
+   "rive_animation_url",
+   "image_url",
+   "image_url_dark",
+   "title",
+   "body",
+   "activation_info",
+   "show_timer",
+   "call_to_action",
+   "skip_button_cta",
+   "banner_info"
+  ]
+ },
+ "com.getmimo.data.model.discount.RemoteConfigDiscountActivationInfo": {
+  "type": "RemoteConfigDiscountActivationInfo",
+  "fields": [
+   "title",
+   "body"
+  ]
+ },
+ "com.getmimo.data.model.discount.RemoteConfigDiscountBannerInfo": {
+  "type": "RemoteConfigDiscountBannerInfo",
+  "fields": [
+   "title",
+   "cta"
+  ]
+ },
+ "com.getmimo.data.model.execution.CodeFile": {
+  "type": "CodeFile",
+  "fields": [
+   "name",
+   "content",
+   "codeLanguage"
+  ]
+ },
+ "com.getmimo.data.model.friends.Friend": {
+  "type": "Friend",
+  "fields": [
+   "id",
+   "username",
+   "avatar",
+   "sparks",
+   "rank",
+   "activeStreakLength"
+  ]
+ },
+ "com.getmimo.data.model.friends.Friends": {
+  "type": "Friends",
+  "fields": [
+   "users",
+   "currentUserIndex"
+  ]
+ },
+ "com.getmimo.data.model.friends.InvitationsOverview": {
+  "type": "InvitationsOverview",
+  "fields": [
+   "invitationUrl",
+   "acceptedInvitationsCount",
+   "maximumInvitationRewardCount",
+   "invitationSubscriptionRewardDays",
+   "unconfirmedInvitations",
+   "unconfirmedOwnInvitation"
+  ]
+ },
+ "com.getmimo.data.model.friends.UnconfirmedInvitation": {
+  "type": "UnconfirmedInvitation",
+  "fields": [
+   "id"
+  ]
+ },
+ "com.getmimo.data.model.keys.UserKeys": {
+  "type": "UserKeys",
+  "fields": [
+   "currentKeys"
+  ]
+ },
+ "com.getmimo.data.model.leaderboard.Leaderboard": {
+  "type": "Leaderboard",
+  "fields": [
+   "leaderboardId",
+   "startDate",
+   "endDate",
+   "isInProgress",
+   "hasActiveLeagueFreeze",
+   "currentUserIndex",
+   "promotionThreshold",
+   "demotionThreshold",
+   "users",
+   "league"
+  ]
+ },
+ "com.getmimo.data.model.leaderboard.LeaderboardLeague": {
+  "type": "LeaderboardLeague",
+  "fields": [
+   "name",
+   "shortName",
+   "iconRes"
+  ]
+ },
+ "com.getmimo.data.model.leaderboard.LeaderboardRank": {
+  "type": "LeaderboardRank",
+  "fields": [
+   "id",
+   "username",
+   "avatar",
+   "rank",
+   "sparks"
+  ]
+ },
+ "com.getmimo.data.model.leaderboard.LeaderboardUserResult": {
+  "type": "LeaderboardUserResult",
+  "fields": [
+   "leaderboardId",
+   "startDate",
+   "endDate",
+   "isInProgress",
+   "usedLeagueFreeze",
+   "usersCount",
+   "username",
+   "avatar",
+   "rank",
+   "sparks",
+   "league",
+   "newLeague"
+  ]
+ },
+ "com.getmimo.data.model.leaderboard.RemoteLeaderboardState$Active": {
+  "type": "Active",
+  "fields": [
+   "leaderboard"
+  ]
+ },
+ "com.getmimo.data.model.leaderboard.RemoteLeaderboardState$Error": {
+  "type": "Error",
+  "fields": [
+   "reason"
+  ]
+ },
+ "com.getmimo.data.model.leaderboard.RemoteLeaderboardState$Result": {
+  "type": "Result",
+  "fields": [
+   "leaderboardUserResult",
+   "hasFetchedLeaderboardAlready"
+  ]
+ },
+ "com.getmimo.data.model.lesson.File": {
+  "type": "File",
+  "fields": [
+   "name",
+   "content"
+  ]
+ },
+ "com.getmimo.data.model.lesson.SaveFile": {
+  "type": "SaveFile",
+  "fields": [
+   "userContent",
+   "name"
+  ]
+ },
+ "com.getmimo.data.model.lesson.SaveLessonFilesBody": {
+  "type": "SaveLessonFilesBody",
+  "fields": [
+   "files"
+  ]
+ },
+ "com.getmimo.data.model.lesson.SavedFiles": {
+  "type": "SavedFiles",
+  "fields": [
+   "lessonId",
+   "files"
+  ]
+ },
+ "com.getmimo.data.model.lesson.SavedLessonFilesBody": {
+  "type": "SavedLessonFilesBody",
+  "fields": [
+   "savedFiles"
+  ]
+ },
+ "com.getmimo.data.model.playground.CodePlaygroundTemplate": {
+  "type": "CodePlaygroundTemplate",
+  "fields": [
+   "nameResId",
+   "descriptionResId",
+   "imageRes",
+   "files",
+   "templateId"
+  ]
+ },
+ "com.getmimo.data.model.practice.PracticeContentResponse": {
+  "type": "PracticeContentResponse",
+  "fields": [
+   "chapterId",
+   "trackId",
+   "tutorialId"
+  ]
+ },
+ "com.getmimo.data.model.practice.PracticeStatsResponse": {
+  "type": "PracticeStatsResponse",
+  "fields": [
+   "duration",
+   "chaptersCompleted"
+  ]
+ },
+ "com.getmimo.data.model.profile.BiographyState$BioPresent": {
+  "type": "BioPresent",
+  "fields": [
+   "biography"
+  ]
+ },
+ "com.getmimo.data.model.profile.BiographyState$PublicProfileBioAbsent": {
+  "type": "PublicProfileBioAbsent",
+  "fields": [
+   "username"
+  ]
+ },
+ "com.getmimo.data.model.progress.LastInteractedTrackResponse": {
+  "type": "LastInteractedTrackResponse",
+  "fields": [
+   "lastInteractedTrackId"
+  ]
+ },
+ "com.getmimo.data.model.progress.PostProgressRequestBody": {
+  "type": "PostProgressRequestBody",
+  "fields": [
+   "progressList"
+  ]
+ },
+ "com.getmimo.data.model.progress.PostProgressResponse": {
+  "type": "PostProgressResponse",
+  "fields": [
+   "reachedGoal",
+   "dailyGoalCoinReward"
+  ]
+ },
+ "com.getmimo.data.model.progress.Progress": {
+  "type": "Progress",
+  "fields": [
+   "lessonId",
+   "completedAt",
+   "startedAt",
+   "tries",
+   "tutorialVersion",
+   "trackId",
+   "publishSetVersion",
+   "attempts",
+   "isPracticeProgress"
+  ]
+ },
+ "com.getmimo.data.model.progress.SectionEta": {
+  "type": "SectionEta",
+  "fields": [
+   "sectionIndex",
+   "estimatedCompletionAt"
+  ]
+ },
+ "com.getmimo.data.model.progress.TrackCompletionResponse": {
+  "type": "TrackCompletionResponse",
+  "fields": [
+   "tutorials",
+   "lastInteractedTutorialId"
+  ]
+ },
+ "com.getmimo.data.model.progress.TrackEtaResponse": {
+  "type": "TrackEtaResponse",
+  "fields": [
+   "trackEstimatedCompletionAt",
+   "currentPaceMinutesPerDay",
+   "sections"
+  ]
+ },
+ "com.getmimo.data.model.progress.TutorialCompletion": {
+  "type": "TutorialCompletion",
+  "fields": [
+   "tutorialId",
+   "isCompleted",
+   "completedChapters"
+  ]
+ },
+ "com.getmimo.data.model.progress.TutorialProgress": {
+  "type": "TutorialProgress",
+  "fields": [
+   "tutorialId",
+   "postProgressRequestBody"
+  ]
+ },
+ "com.getmimo.data.model.publicprofile.ProfileLeaderboardInfo": {
+  "type": "ProfileLeaderboardInfo",
+  "fields": [
+   "currentLeague",
+   "trophies"
+  ]
+ },
+ "com.getmimo.data.model.publicprofile.ProfileProgress": {
+  "type": "ProfileProgress",
+  "fields": [
+   "trackId",
+   "trackTitle",
+   "isCompleted"
+  ]
+ },
+ "com.getmimo.data.model.publicprofile.ProfileTrophiesState$Loaded": {
+  "type": "Loaded",
+  "fields": [
+   "trophies"
+  ]
+ },
+ "com.getmimo.data.model.publicprofile.ProfileTrophy": {
+  "type": "ProfileTrophy",
+  "fields": [
+   "league",
+   "firstPlaceCount",
+   "secondPlaceCount",
+   "thirdPlaceCount"
+  ]
+ },
+ "com.getmimo.data.model.publicprofile.PublicAward": {
+  "type": "PublicAward",
+  "fields": [
+   "label",
+   "iconRes"
+  ]
+ },
+ "com.getmimo.data.model.publicprofile.PublicSavedCode": {
+  "type": "PublicSavedCode",
+  "fields": [
+   "name",
+   "hostedFilesUrl",
+   "codeLanguages",
+   "id"
+  ]
+ },
+ "com.getmimo.data.model.publicprofile.PublicUser": {
+  "type": "PublicUser",
+  "fields": [
+   "name",
+   "biography",
+   "avatarUrl",
+   "isPremium",
+   "sparks",
+   "activeStreakLength",
+   "longestStreakLength",
+   "leaderboardFirstPlaceCount",
+   "leaderboardSecondPlaceCount",
+   "leaderboardThirdPlaceCount",
+   "isFollowedByMe",
+   "leaderboardInfo",
+   "progress",
+   "subscriptionType"
+  ]
+ },
+ "com.getmimo.data.model.publicprofile.PublicUserCode": {
+  "type": "PublicUserCode",
+  "fields": [
+   "code"
+  ]
+ },
+ "com.getmimo.data.model.pusher.PusherAwesomeModeResponse": {
+  "type": "PusherAwesomeModeResponse",
+  "fields": [
+   "lessonDraftId",
+   "lessonDraftIds",
+   "chapterDraftId",
+   "tutorialDraftId",
+   "trackId"
+  ]
+ },
+ "com.getmimo.data.model.pusher.PusherChannelResponse": {
+  "type": "PusherChannelResponse",
+  "fields": [
+   "channelName"
+  ]
+ },
+ "com.getmimo.data.model.reward.Reward": {
+  "type": "Reward",
+  "fields": [
+   "id",
+   "description",
+   "rewardAmount",
+   "rewardId",
+   "rewardMultiplier"
+  ]
+ },
+ "com.getmimo.data.model.reward.Rewards": {
+  "type": "Rewards",
+  "fields": [
+   "rewards"
+  ]
+ },
+ "com.getmimo.data.model.room.ChapterCompletion": {
+  "type": "ChapterCompletion",
+  "fields": [
+   "chapterId",
+   "createdAt",
+   "trackId",
+   "tutorialId"
+  ]
+ },
+ "com.getmimo.data.model.room.LessonProgress": {
+  "type": "LessonProgress",
+  "fields": [
+   "lessonId",
+   "completedAt",
+   "startedAt",
+   "tries",
+   "tutorialId",
+   "tutorialVersion",
+   "trackId",
+   "publishSetVersion",
+   "attempts",
+   "isPracticeProgress",
+   "inQueue"
+  ]
+ },
+ "com.getmimo.data.model.room.TutorialCompletion": {
+  "type": "TutorialCompletion",
+  "fields": [
+   "tutorialId",
+   "isCompleted",
+   "updatedAt",
+   "trackId"
+  ]
+ },
+ "com.getmimo.data.model.savedcode.RemixCodeRequestBody": {
+  "type": "RemixCodeRequestBody",
+  "fields": [
+   "name",
+   "isPrivate"
+  ]
+ },
+ "com.getmimo.data.model.savedcode.SaveCodeRequestBody": {
+  "type": "SaveCodeRequestBody",
+  "fields": [
+   "name",
+   "files",
+   "isPrivate",
+   "sourceTutorialId",
+   "sourceTutorialVersion"
+  ]
+ },
+ "com.getmimo.data.model.savedcode.SavedCode": {
+  "type": "SavedCode",
+  "fields": [
+   "id",
+   "name",
+   "hostedFilesUrl",
+   "files",
+   "modifiedAt",
+   "isPrivate",
+   "hackathonId"
+  ]
+ },
+ "com.getmimo.data.model.store.ProductTypeBody": {
+  "type": "ProductTypeBody",
+  "fields": [
+   "productType"
+  ]
+ },
+ "com.getmimo.data.model.store.Products": {
+  "type": "Products",
+  "fields": [
+   "purchasedProducts",
+   "productsAvailableForPurchase"
+  ]
+ },
+ "com.getmimo.data.model.store.PurchasedProduct": {
+  "type": "PurchasedProduct",
+  "fields": [
+   "id",
+   "productType",
+   "coinPrice",
+   "boughtAt"
+  ]
+ },
+ "com.getmimo.data.model.store.RawProducts": {
+  "type": "RawProducts",
+  "fields": [
+   "purchasedProducts",
+   "productsAvailableForPurchase"
+  ]
+ },
+ "com.getmimo.data.model.store.RawPurchasedProduct": {
+  "type": "RawPurchasedProduct",
+  "fields": [
+   "id",
+   "productType",
+   "coinPrice",
+   "boughtAt"
+  ]
+ },
+ "com.getmimo.data.model.store.RawStoreProduct": {
+  "type": "RawStoreProduct",
+  "fields": [
+   "productType",
+   "coinPrice"
+  ]
+ },
+ "com.getmimo.data.model.store.StoreProduct": {
+  "type": "StoreProduct",
+  "fields": [
+   "productType",
+   "coinPrice"
+  ]
+ },
+ "com.getmimo.data.notification.NotificationData$LocalNotificationData": {
+  "type": "LocalNotificationData",
+  "fields": [
+   "id",
+   "url",
+   "notificationType"
+  ]
+ },
+ "com.getmimo.data.notification.NotificationData$RemoteNotificationData": {
+  "type": "RemoteNotificationData",
+  "fields": [
+   "id",
+   "title",
+   "message",
+   "url",
+   "imageUrl"
+  ]
+ },
+ "com.getmimo.data.settings.model.AvatarUpdateResponse": {
+  "type": "AvatarUpdateResponse",
+  "fields": [
+   "uploadId",
+   "uploadUrl"
+  ]
+ },
+ "com.getmimo.data.settings.model.CertificateSettings": {
+  "type": "CertificateSettings",
+  "fields": [
+   "name",
+   "email"
+  ]
+ },
+ "com.getmimo.data.settings.model.ConfirmAvatarUploadBody": {
+  "type": "ConfirmAvatarUploadBody",
+  "fields": [
+   "contentType"
+  ]
+ },
+ "com.getmimo.data.settings.model.NameSettings": {
+  "type": "NameSettings",
+  "fields": [
+   "name",
+   "biography"
+  ]
+ },
+ "com.getmimo.data.settings.model.Settings$NotificationSettings": {
+  "type": "NotificationSettings",
+  "fields": [
+   "key",
+   "isDisabled"
+  ]
+ },
+ "com.getmimo.data.settings.model.Settings": {
+  "type": "Settings",
+  "fields": [
+   "dailySparksGoal",
+   "hasProgrammingExperience",
+   "dailyReminderTime",
+   "notificationSettings",
+   "name",
+   "biography",
+   "userId",
+   "hadFreeProTrial",
+   "hadFreeMaxTrial"
+  ]
+ },
+ "com.getmimo.data.source.local.aitutor.SystemMessage$Executable": {
+  "type": "Executable",
+  "fields": [
+   "pathName",
+   "instructions",
+   "expectedAnswer"
+  ]
+ },
+ "com.getmimo.data.source.local.aitutor.SystemMessage$Interactive": {
+  "type": "Interactive",
+  "fields": [
+   "pathName",
+   "lessonContext"
+  ]
+ },
+ "com.getmimo.data.source.local.aitutor.UserMessage$Executable": {
+  "type": "Executable",
+  "fields": [
+   "codeFiles"
+  ]
+ },
+ "com.getmimo.data.source.local.aitutor.UserMessage$InstantPrompt$ExplainError": {
+  "type": "ExplainError",
+  "fields": [
+   "codeFiles",
+   "error"
+  ]
+ },
+ "com.getmimo.data.source.local.aitutor.UserMessage$InstantPrompt$ExplainInteractiveMistake": {
+  "type": "ExplainInteractiveMistake",
+  "fields": [
+   "codeFiles",
+   "wrongAnswer"
+  ]
+ },
+ "com.getmimo.data.source.local.iap.RemoteDiscountContent": {
+  "type": "RemoteDiscountContent",
+  "fields": [
+   "title",
+   "body",
+   "callToAction",
+   "skipButtonCta",
+   "showTimer",
+   "riveAnimationUrl",
+   "imageUrl",
+   "imageUrlDark",
+   "bannerTitle",
+   "bannerCta"
+  ]
+ },
+ "com.getmimo.data.source.remote.authentication.AuthenticationException": {
+  "type": "AuthenticationException",
+  "fields": [
+   "messageText"
+  ]
+ },
+ "com.getmimo.data.source.remote.authentication.AuthenticationUserCollisionException": {
+  "type": "AuthenticationUserCollisionException",
+  "fields": [
+   "messageText"
+  ]
+ },
+ "com.getmimo.data.source.remote.awesome.LessonDraftResponse": {
+  "type": "LessonDraftResponse",
+  "fields": [
+   "content",
+   "executableFilesContent"
+  ]
+ },
+ "com.getmimo.data.source.remote.iap.inventory.PriceReduction$CurrentDiscount": {
+  "type": "CurrentDiscount",
+  "fields": [
+   "reductionApplied",
+   "fullPriceAmount"
+  ]
+ },
+ "com.getmimo.data.source.remote.iap.inventory.PriceReduction$SaveComparedToMonthly": {
+  "type": "SaveComparedToMonthly",
+  "fields": [
+   "reductionApplied"
+  ]
+ },
+ "com.getmimo.data.source.remote.progress.AnswersInChapter": {
+  "type": "AnswersInChapter",
+  "fields": [
+   "answeredCorrectly",
+   "answeredTotal"
+  ]
+ },
+ "com.getmimo.interactors.chapterend.ChapterEndProgressWithEtaScreenData": {
+  "type": "ChapterEndProgressWithEtaScreenData",
+  "fields": [
+   "variant",
+   "sectionTitle",
+   "currentSectionEstimatedCompletionAt",
+   "currentPaceMinutesPerDay"
+  ]
+ },
+ "com.getmimo.interactors.inappmessaging.CardMessageData": {
+  "type": "CardMessageData",
+  "fields": [
+   "title",
+   "body",
+   "imageUrl",
+   "campaignName",
+   "primaryButtonAction",
+   "primaryButtonActionUrl",
+   "secondaryButtonAction",
+   "secondaryButtonActionUrl",
+   "isBodyTextStartAligned"
+  ]
+ },
+ "com.getmimo.interactors.path.OnboardingTrackItem": {
+  "type": "OnboardingTrackItem",
+  "fields": [
+   "trackId",
+   "trackTitle",
+   "longDescription",
+   "trackBanner",
+   "type",
+   "showAsLargeCard",
+   "codeLanguages"
+  ]
+ },
+ "com.getmimo.ui.aitutor.AiTutorViewModel$AiTutorInfo": {
+  "type": "AiTutorInfo",
+  "fields": [
+   "lessonBundle",
+   "systemMessage",
+   "userMessage",
+   "source"
+  ]
+ },
+ "com.getmimo.ui.aitutor.AiTutorViewModel$State": {
+  "type": "State",
+  "fields": [
+   "messages",
+   "nextHint",
+   "isPro",
+   "usedMessages",
+   "isAiTutorEnabled",
+   "isMessageLoading",
+   "isFeatureDisabled",
+   "aiTutorInfo",
+   "loading",
+   "blockingError",
+   "offline"
+  ]
+ },
+ "com.getmimo.ui.aitutor.ChatMessage": {
+  "type": "ChatMessage",
+  "fields": [
+   "text",
+   "textResId",
+   "id",
+   "isUserMessage"
+  ]
+ },
+ "com.getmimo.ui.aitutor.b": {
+  "type": "Initialize",
+  "fields": [
+   "aiTutorInfo",
+   "resources"
+  ]
+ },
+ "com.getmimo.ui.authentication.AuthenticationScreenType$Login$Activity": {
+  "type": "Activity",
+  "fields": [
+   "authenticationLocation"
+  ]
+ },
+ "com.getmimo.ui.authentication.AuthenticationScreenType$Login$Leaderboard": {
+  "type": "Leaderboard",
+  "fields": [
+   "authenticationLocation"
+  ]
+ },
+ "com.getmimo.ui.authentication.AuthenticationScreenType$Login$Onboarding": {
+  "type": "Onboarding",
+  "fields": [
+   "authenticationLocation"
+  ]
+ },
+ "com.getmimo.ui.authentication.AuthenticationScreenType$Login$Practice": {
+  "type": "Practice",
+  "fields": [
+   "authenticationLocation"
+  ]
+ },
+ "com.getmimo.ui.authentication.AuthenticationScreenType$Login$Profile": {
+  "type": "Profile",
+  "fields": [
+   "authenticationLocation"
+  ]
+ },
+ "com.getmimo.ui.authentication.AuthenticationScreenType$Login$Settings": {
+  "type": "Settings",
+  "fields": [
+   "authenticationLocation"
+  ]
+ },
+ "com.getmimo.ui.authentication.AuthenticationScreenType$Signup$Prompt$SignupActivity": {
+  "type": "SignupActivity",
+  "fields": [
+   "headline",
+   "authenticationLocation",
+   "isForEmail"
+  ]
+ },
+ "com.getmimo.ui.authentication.AuthenticationScreenType$Signup$Prompt$SignupAfterOnboardingPurchase": {
+  "type": "SignupAfterOnboardingPurchase",
+  "fields": [
+   "headline",
+   "authenticationLocation"
+  ]
+ },
+ "com.getmimo.ui.authentication.AuthenticationScreenType$Signup$Prompt$SignupAfterPurchase": {
+  "type": "SignupAfterPurchase",
+  "fields": [
+   "headline",
+   "authenticationLocation"
+  ]
+ },
+ "com.getmimo.ui.authentication.AuthenticationScreenType$Signup$Prompt$SignupAtProfile": {
+  "type": "SignupAtProfile",
+  "fields": [
+   "headline",
+   "authenticationLocation",
+   "isForEmail"
+  ]
+ },
+ "com.getmimo.ui.authentication.AuthenticationScreenType$Signup$Prompt$SignupAtSettings": {
+  "type": "SignupAtSettings",
+  "fields": [
+   "headline",
+   "authenticationLocation"
+  ]
+ },
+ "com.getmimo.ui.authentication.AuthenticationScreenType$Signup$Prompt$SignupBeforeOpenChapter": {
+  "type": "SignupBeforeOpenChapter",
+  "fields": [
+   "trackId",
+   "headline",
+   "authenticationLocation"
+  ]
+ },
+ "com.getmimo.ui.authentication.AuthenticationScreenType$Signup$Prompt$SignupChapterEnd": {
+  "type": "SignupChapterEnd",
+  "fields": [
+   "headline",
+   "authenticationLocation",
+   "isForEmail"
+  ]
+ },
+ "com.getmimo.ui.authentication.AuthenticationScreenType$Signup$Prompt$SignupLeaderBoards": {
+  "type": "SignupLeaderBoards",
+  "fields": [
+   "headline",
+   "authenticationLocation",
+   "isForEmail"
+  ]
+ },
+ "com.getmimo.ui.authentication.AuthenticationScreenType$Signup$Prompt$SignupPracticeTab": {
+  "type": "SignupPracticeTab",
+  "fields": [
+   "headline",
+   "authenticationLocation",
+   "isForEmail"
+  ]
+ },
+ "com.getmimo.ui.certificates.CertificateBundle": {
+  "type": "CertificateBundle",
+  "fields": [
+   "trackId",
+   "userFullName",
+   "trackVersion",
+   "source"
+  ]
+ },
+ "com.getmimo.ui.chapter.ChapterBundle": {
+  "type": "ChapterBundle",
+  "fields": [
+   "chapter",
+   "chapterIndex",
+   "tutorialId",
+   "tutorialTitle",
+   "tutorialVersion",
+   "tutorialIndex",
+   "trackId",
+   "trackVersion",
+   "tutorialType",
+   "tutorialLanguage",
+   "lessonIdx",
+   "sectionIndex",
+   "sectionTitle",
+   "chapterIndexInSection",
+   "isLastChapterInTutorial",
+   "previousGuidedProjectLessonIdentifier",
+   "isLastGuidedProjectInSection",
+   "startWithHardModeEnabled",
+   "originalChapter",
+   "isFirstChapterOfFirstMainPathTutorial"
+  ]
+ },
+ "com.getmimo.ui.chapter.chapterendview.streak.ChapterFinishedShareStreakFragment$Companion$ChapterFinishedShareData": {
+  "type": "ChapterFinishedShareData",
+  "fields": [
+   "currentStreak",
+   "profilePictureUrl"
+  ]
+ },
+ "com.getmimo.ui.codeeditor.models.BeautifyFormattedCode": {
+  "type": "BeautifyFormattedCode",
+  "fields": [
+   "result"
+  ]
+ },
+ "com.getmimo.ui.codeeditor.models.HighlightJsResponse": {
+  "type": "HighlightJsResponse",
+  "fields": [
+   "value"
+  ]
+ },
+ "com.getmimo.ui.codeeditor.models.TypedWord$Word": {
+  "type": "Word",
+  "fields": [
+   "word"
+  ]
+ },
+ "com.getmimo.ui.codeplayground.CodePlaygroundBundle$FromBlankState": {
+  "type": "FromBlankState",
+  "fields": [
+   "blankName",
+   "savedCode",
+   "templateId",
+   "playgroundVisibilitySetting",
+   "codeFiles",
+   "preSelectedIndex",
+   "viewState",
+   "codePlaygroundSource"
+  ]
+ },
+ "com.getmimo.ui.codeplayground.CodePlaygroundBundle$FromLesson": {
+  "type": "FromLesson",
+  "fields": [
+   "lessonIdentifier",
+   "codeFiles",
+   "preSelectedIndex",
+   "viewState",
+   "codePlaygroundSource"
+  ]
+ },
+ "com.getmimo.ui.codeplayground.CodePlaygroundBundle$FromRemix": {
+  "type": "FromRemix",
+  "fields": [
+   "codeFiles",
+   "preSelectedIndex",
+   "viewState",
+   "codePlaygroundSource",
+   "hostedFilesUrl",
+   "remixSource"
+  ]
+ },
+ "com.getmimo.ui.codeplayground.CodePlaygroundBundle$FromSavedCode": {
+  "type": "FromSavedCode",
+  "fields": [
+   "savedCode",
+   "codeFiles",
+   "preSelectedIndex",
+   "viewState",
+   "codePlaygroundSource"
+  ]
+ },
+ "com.getmimo.ui.codeplayground.CodePlaygroundBundle$RemixSource$PublicProfile": {
+  "type": "PublicProfile",
+  "fields": [
+   "remixPlaygroundName",
+   "remixPlaygroundId"
+  ]
+ },
+ "com.getmimo.ui.codeplayground.CodePlaygroundRunResult$Browser": {
+  "type": "Browser",
+  "fields": [
+   "hostedFilesUrl"
+  ]
+ },
+ "com.getmimo.ui.codeplayground.CodePlaygroundRunResult$HasOutput$CompileError": {
+  "type": "CompileError",
+  "fields": [
+   "error"
+  ]
+ },
+ "com.getmimo.ui.codeplayground.CodePlaygroundRunResult$HasOutput$Console": {
+  "type": "Console",
+  "fields": [
+   "consoleOutput"
+  ]
+ },
+ "com.getmimo.ui.codeplayground.NameCodePlaygroundFragment$Companion$NamePlaygroundBundle": {
+  "type": "NamePlaygroundBundle",
+  "fields": [
+   "previousName",
+   "askForCloseConfirmation",
+   "headerStringRes",
+   "playgroundVisibilitySetting"
+  ]
+ },
+ "com.getmimo.ui.codeplayground.PlaygroundVisibilitySetting": {
+  "type": "PlaygroundVisibilitySetting",
+  "fields": [
+   "isVisibilityChangeable",
+   "defaultVisibility"
+  ]
+ },
+ "com.getmimo.ui.codeplayground.model.CodePlaygroundViewState$BlankSavedCode": {
+  "type": "BlankSavedCode",
+  "fields": [
+   "title",
+   "actionButtonState"
+  ]
+ },
+ "com.getmimo.ui.codeplayground.model.CodePlaygroundViewState$Lesson": {
+  "type": "Lesson",
+  "fields": [
+   "title",
+   "actionButtonState"
+  ]
+ },
+ "com.getmimo.ui.codeplayground.model.CodePlaygroundViewState$Remix": {
+  "type": "Remix",
+  "fields": [
+   "title",
+   "actionButtonState"
+  ]
+ },
+ "com.getmimo.ui.codeplayground.model.CodePlaygroundViewState$SavedCode": {
+  "type": "SavedCode",
+  "fields": [
+   "title",
+   "actionButtonState"
+  ]
+ },
+ "com.getmimo.ui.codeplayground.model.CodePlaygroundViewState$SavedLesson": {
+  "type": "SavedLesson",
+  "fields": [
+   "title",
+   "actionButtonState"
+  ]
+ },
+ "com.getmimo.ui.common.AskForNameFragment$AskForNameBundle": {
+  "type": "AskForNameBundle",
+  "fields": [
+   "title",
+   "maxAllowedCharacters",
+   "hint",
+   "preEnteredText",
+   "buttonText",
+   "buttonIcon"
+  ]
+ },
+ "com.getmimo.ui.common.CutoutBackgroundView$CutoutPosition$PositionBased": {
+  "type": "PositionBased",
+  "fields": [
+   "positionX",
+   "positionY",
+   "radius"
+  ]
+ },
+ "com.getmimo.ui.common.CutoutBackgroundView$CutoutPosition$ViewBased": {
+  "type": "ViewBased",
+  "fields": [
+   "anchorViewId",
+   "radius",
+   "statusBarHeight"
+  ]
+ },
+ "com.getmimo.ui.compose.animation.rive.RiveAnimationProperties": {
+  "type": "RiveAnimationProperties",
+  "fields": [
+   "autoplay",
+   "fit",
+   "alignment",
+   "loop"
+  ]
+ },
+ "com.getmimo.ui.content.ImageContent$Drawable": {
+  "type": "Drawable",
+  "fields": [
+   "content"
+  ]
+ },
+ "com.getmimo.ui.content.ImageContent$ImageLink": {
+  "type": "ImageLink",
+  "fields": [
+   "url"
+  ]
+ },
+ "com.getmimo.ui.content.ImageContent$Lottie": {
+  "type": "Lottie",
+  "fields": [
+   "animation"
+  ]
+ },
+ "com.getmimo.ui.content.ImageContent$Mipmap": {
+  "type": "Mipmap",
+  "fields": [
+   "content"
+  ]
+ },
+ "com.getmimo.ui.content.ImageContent$Rive": {
+  "type": "Rive",
+  "fields": [
+   "resId",
+   "stateMachine",
+   "stateInputValue",
+   "stateInputName",
+   "initialBooleanStates",
+   "riveAnimationProperties"
+  ]
+ },
+ "com.getmimo.ui.content.TextContent$PluralsResource": {
+  "type": "PluralsResource",
+  "fields": [
+   "resId",
+   "quantity",
+   "parameters"
+  ]
+ },
+ "com.getmimo.ui.content.TextContent$StringResource": {
+  "type": "StringResource",
+  "fields": [
+   "resId",
+   "parameters"
+  ]
+ },
+ "com.getmimo.ui.content.TextContent$Text": {
+  "type": "Text",
+  "fields": [
+   "text"
+  ]
+ },
+ "com.getmimo.ui.extendedupsell.ExtendedUpsellFlowType$GuidedProjectProUpsell": {
+  "type": "GuidedProjectProUpsell",
+  "fields": [
+   "data"
+  ]
+ },
+ "com.getmimo.ui.extendedupsell.upsells.GuidedProjectProUpsellFlowData": {
+  "type": "GuidedProjectProUpsellFlowData",
+  "fields": [
+   "isProUser",
+   "trackId",
+   "sectionIndex",
+   "projectTitle"
+  ]
+ },
+ "com.getmimo.ui.iap.modal.UpgradeModalPageData$CertificateOtherPage": {
+  "type": "CertificateOtherPage",
+  "fields": [
+   "trackName"
+  ]
+ },
+ "com.getmimo.ui.iap.modal.UpgradeModalPageData$LocalDiscountPage": {
+  "type": "LocalDiscountPage",
+  "fields": [
+   "theme"
+  ]
+ },
+ "com.getmimo.ui.iap.modal.UpgradeModalPageData$RemoteDiscountPage": {
+  "type": "RemoteDiscountPage",
+  "fields": [
+   "content",
+   "isDarkMode"
+  ]
+ },
+ "com.getmimo.ui.introduction.BasicModalResult": {
+  "type": "BasicModalResult",
+  "fields": [
+   "type",
+   "data"
+  ]
+ },
+ "com.getmimo.ui.introduction.FeatureIntroductionModalData$RemixPlayground": {
+  "type": "RemixPlayground",
+  "fields": [
+   "title",
+   "description",
+   "icon"
+  ]
+ },
+ "com.getmimo.ui.introduction.ModalData$FriendsAcceptedInviteNoPro": {
+  "type": "FriendsAcceptedInviteNoPro",
+  "fields": [
+   "acceptedInvites"
+  ]
+ },
+ "com.getmimo.ui.introduction.ModalData$StreakChallengeSuccess": {
+  "type": "StreakChallengeSuccess",
+  "fields": [
+   "streakChallengeReward"
+  ]
+ },
+ "com.getmimo.ui.leaderboard.LeaderboardResultItemState$DemotionResultItem": {
+  "type": "DemotionResultItem",
+  "fields": [
+   "leaderboardId",
+   "sparks",
+   "rank",
+   "participants",
+   "runningTime",
+   "currentLeague",
+   "demotedLeague",
+   "mainImageRes",
+   "headerRes"
+  ]
+ },
+ "com.getmimo.ui.leaderboard.LeaderboardResultItemState$LeagueProtectedResultItem": {
+  "type": "LeagueProtectedResultItem",
+  "fields": [
+   "leaderboardId",
+   "sparks",
+   "rank",
+   "participants",
+   "runningTime",
+   "currentLeague",
+   "mainImageRes",
+   "headerRes"
+  ]
+ },
+ "com.getmimo.ui.leaderboard.LeaderboardResultItemState$NeutralPlaceResultItem": {
+  "type": "NeutralPlaceResultItem",
+  "fields": [
+   "leaderboardId",
+   "sparks",
+   "rank",
+   "participants",
+   "runningTime",
+   "currentLeague",
+   "headerRes",
+   "mainImageRes",
+   "nextLeague"
+  ]
+ },
+ "com.getmimo.ui.leaderboard.LeaderboardResultItemState$PodiumPromotionResultItem": {
+  "type": "PodiumPromotionResultItem",
+  "fields": [
+   "leaderboardId",
+   "sparks",
+   "rank",
+   "participants",
+   "runningTime",
+   "currentLeague",
+   "headerRes",
+   "mainImageRes",
+   "nextLeague"
+  ]
+ },
+ "com.getmimo.ui.leaderboard.LeaderboardResultItemState$StandardPromotionResultItem": {
+  "type": "StandardPromotionResultItem",
+  "fields": [
+   "leaderboardId",
+   "sparks",
+   "rank",
+   "participants",
+   "runningTime",
+   "currentLeague",
+   "headerRes",
+   "mainImageRes",
+   "nextLeague"
+  ]
+ },
+ "com.getmimo.ui.leaderboard.LeaderboardResultItemState$TopLeagueNeutralPlaceResultItem": {
+  "type": "TopLeagueNeutralPlaceResultItem",
+  "fields": [
+   "leaderboardId",
+   "sparks",
+   "rank",
+   "participants",
+   "runningTime",
+   "currentLeague",
+   "headerRes",
+   "mainImageRes"
+  ]
+ },
+ "com.getmimo.ui.leaderboard.LeaderboardResultItemState$TopLeaguePodiumResultItem": {
+  "type": "TopLeaguePodiumResultItem",
+  "fields": [
+   "leaderboardId",
+   "sparks",
+   "rank",
+   "participants",
+   "runningTime",
+   "currentLeague",
+   "headerRes",
+   "mainImageRes"
+  ]
+ },
+ "com.getmimo.ui.lesson.executable.model.ExecutableLessonBundle$AwesomeMode": {
+  "type": "AwesomeMode",
+  "fields": [
+   "lessonBundle",
+   "executableLessonContent"
+  ]
+ },
+ "com.getmimo.ui.lesson.executable.model.ExecutableLessonBundle$Standard": {
+  "type": "Standard",
+  "fields": [
+   "lessonBundle"
+  ]
+ },
+ "com.getmimo.ui.lesson.interactive.InteractiveLessonBundle$AwesomeMode": {
+  "type": "AwesomeMode",
+  "fields": [
+   "lessonBundle",
+   "interactiveLessonContent"
+  ]
+ },
+ "com.getmimo.ui.lesson.interactive.InteractiveLessonBundle$Standard": {
+  "type": "Standard",
+  "fields": [
+   "lessonBundle"
+  ]
+ },
+ "com.getmimo.ui.lesson.interactive.LessonBundle": {
+  "type": "LessonBundle",
+  "fields": [
+   "lessonId",
+   "lessonIndex",
+   "chapterIndex",
+   "chapterId",
+   "tutorialId",
+   "trackId",
+   "trackVersion",
+   "tutorialVersion",
+   "tutorialIndex",
+   "tutorialType",
+   "chapterType",
+   "isChapterAlreadyCompleted",
+   "isLastLesson",
+   "isPracticeRedo",
+   "isChallengeRedo",
+   "sectionIndex",
+   "tutorialTitle",
+   "previousGuidedProjectLessonIdentifier",
+   "isLastGuidedProjectInSection",
+   "originalContentLessonIndex"
+  ]
+ },
+ "com.getmimo.ui.lesson.interactive.model.LessonInteractionType$FillTheGap": {
+  "type": "FillTheGap",
+  "fields": [
+   "interactionTypeName"
+  ]
+ },
+ "com.getmimo.ui.lesson.interactive.model.LessonInteractionType$InteractiveWebView": {
+  "type": "InteractiveWebView",
+  "fields": [
+   "interactionTypeName"
+  ]
+ },
+ "com.getmimo.ui.lesson.interactive.model.LessonInteractionType$MultipleChoice": {
+  "type": "MultipleChoice",
+  "fields": [
+   "interactionTypeName"
+  ]
+ },
+ "com.getmimo.ui.lesson.interactive.model.LessonInteractionType$None": {
+  "type": "None",
+  "fields": [
+   "interactionTypeName"
+  ]
+ },
+ "com.getmimo.ui.lesson.interactive.model.LessonInteractionType$Reveal": {
+  "type": "Reveal",
+  "fields": [
+   "interactionTypeName"
+  ]
+ },
+ "com.getmimo.ui.lesson.interactive.model.LessonInteractionType$Selection": {
+  "type": "Selection",
+  "fields": [
+   "interactionTypeName"
+  ]
+ },
+ "com.getmimo.ui.lesson.interactive.model.LessonInteractionType$SingleChoice": {
+  "type": "SingleChoice",
+  "fields": [
+   "interactionTypeName"
+  ]
+ },
+ "com.getmimo.ui.lesson.interactive.model.LessonInteractionType$Spell": {
+  "type": "Spell",
+  "fields": [
+   "interactionTypeName"
+  ]
+ },
+ "com.getmimo.ui.lesson.interactive.model.LessonInteractionType$ValidatedInput": {
+  "type": "ValidatedInput",
+  "fields": [
+   "interactionTypeName"
+  ]
+ },
+ "com.getmimo.ui.lesson.report.ReportLessonBundle": {
+  "type": "ReportLessonBundle",
+  "fields": [
+   "tutorialId",
+   "trackId",
+   "sectionIndex",
+   "tutorialVersion",
+   "lessonId",
+   "interactionTypeName",
+   "isHardModeEnabled"
+  ]
+ },
+ "com.getmimo.ui.onboarding.selectpath.pickapath.OnboardingPickAPathViewModel$State": {
+  "type": "State",
+  "fields": [
+   "paths",
+   "currentScreen",
+   "preference",
+   "interest",
+   "recommendedPath",
+   "selectedPath",
+   "isAdaptedOnboarding",
+   "offline",
+   "blockingError"
+  ]
+ },
+ "com.getmimo.ui.profile.share.ProfileSharableData": {
+  "type": "ProfileSharableData",
+  "fields": [
+   "profilePictureUrl",
+   "streak",
+   "xp",
+   "leagueIndex",
+   "longestStreak"
+  ]
+ },
+ "com.getmimo.ui.publicprofile.PublicProfileBundle": {
+  "type": "PublicProfileBundle",
+  "fields": [
+   "userId",
+   "userName",
+   "isCurrentUser"
+  ]
+ },
+ "com.getmimo.ui.upgrade.UpgradeModalContent$CertificateLearnToCode": {
+  "type": "CertificateLearnToCode",
+  "fields": [
+   "upgradeSource",
+   "showUpgradeDialog",
+   "upgradeModalPageData",
+   "showDiscountedSlide"
+  ]
+ },
+ "com.getmimo.ui.upgrade.UpgradeModalContent$CertificateOther": {
+  "type": "CertificateOther",
+  "fields": [
+   "upgradeSource",
+   "trackName",
+   "showUpgradeDialog",
+   "upgradeModalPageData",
+   "showDiscountedSlide"
+  ]
+ },
+ "com.getmimo.ui.upgrade.UpgradeModalContent$ExecutableLessonAiTutor": {
+  "type": "ExecutableLessonAiTutor",
+  "fields": [
+   "upgradeSource",
+   "showUpgradeDialog",
+   "upgradeModalPageData",
+   "showDiscountedSlide"
+  ]
+ },
+ "com.getmimo.ui.upgrade.UpgradeModalContent$Profile": {
+  "type": "Profile",
+  "fields": [
+   "upgradeSource",
+   "showUpgradeDialog",
+   "upgradeModalPageData",
+   "showDiscountedSlide"
+  ]
+ },
+ "com.getmimo.ui.upgrade.UpgradeModalContent$Settings": {
+  "type": "Settings",
+  "fields": [
+   "upgradeSource",
+   "showUpgradeDialog",
+   "upgradeModalPageData",
+   "showDiscountedSlide"
+  ]
+ },
+ "com.getmimo.ui.upgrade.UpgradeModalContent$Store": {
+  "type": "Store",
+  "fields": [
+   "upgradeSource",
+   "showUpgradeDialog",
+   "upgradeModalPageData",
+   "showDiscountedSlide"
+  ]
+ },
+ "com.getmimo.ui.upgrade.UpgradeModalContent$TrackOverviewButton": {
+  "type": "TrackOverviewButton",
+  "fields": [
+   "upgradeSource",
+   "showUpgradeDialog",
+   "upgradeModalPageData",
+   "showDiscountedSlide"
+  ]
+ },
+ "com.getmimo.ui.upgrade.UpgradeModalContent$UnlimitedPlayground": {
+  "type": "UnlimitedPlayground",
+  "fields": [
+   "upgradeSource",
+   "showUpgradeDialog",
+   "upgradeModalPageData",
+   "showDiscountedSlide"
+  ]
+ }
+}

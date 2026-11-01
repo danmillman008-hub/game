@@ -1,0 +1,13 @@
+digraph konkur_target {
+  rankdir=LR; node [shape=box, style=rounded];
+  subgraph cluster_client { label="Android client";
+    A [label="Mode A\nLearnHarness"]; B [label="Mode B\nEPM"]; C [label="Mode C\nPlan cards"]; G [label="Gamification"];
+  }
+  subgraph cluster_local { label="Device storage";
+    DB [label="Room\nquestion_attempt + outbox"]; PK [label="signed packs"];
+  }
+  subgraph cluster_server { label="Self-hosted backend";
+    S1 [label="content+blueprint"]; S2 [label="question bank\nkeys server-side"]; S3 [label="plan/weakness"]; S5 [label="flags (one plane)"]; S6 [label="analytics"];
+  }
+  A -> DB; B -> DB; C -> DB; DB -> S1; A -> PK; B -> PK; C -> S3; B -> S2; G -> DB;
+}

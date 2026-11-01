@@ -1,0 +1,12 @@
+graph LR
+  A[CMS authoring UNKNOWN vendor] --> B[lesson markup + JSON]
+  B --> C[validator: schema + offsets + refs]
+  C --> D{publish set 753}
+  D --> E[bundle → assets/lessons-<lang>]
+  D --> F[server pack]
+  E --> G[APK release]
+  F --> H[draft render endpoint]
+  F --> I[Pusher live deploy]
+  I --> J[DeveloperMenu download+unzip unpublished]
+  H --> K[device preview]
+  J --> K

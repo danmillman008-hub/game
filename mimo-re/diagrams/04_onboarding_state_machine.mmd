@@ -1,0 +1,21 @@
+stateDiagram-v2
+  [*] --> IntroSlides
+  IntroSlides --> Motive
+  Motive --> Occupation
+  Occupation --> WorkFunction: occupation branch
+  Occupation --> Experience: default
+  WorkFunction --> Experience
+  Experience --> SelectPath
+  SelectPath --> PathReassurance
+  PathReassurance --> DevicePreference
+  DevicePreference --> DeviceReassurance
+  DeviceReassurance --> MotiveReassurance
+  MotiveReassurance --> SkillPreference
+  SkillPreference --> DailyGoal
+  DailyGoal --> PreparingCurriculum: server composes plan
+  PreparingCurriculum --> PathCompletionEstimation
+  PathCompletionEstimation --> ReminderTime
+  ReminderTime --> NameAndPlayground
+  NameAndPlayground --> [*]: MainActivity
+  PreparingCurriculum --> Offline: no network
+  Offline --> PreparingCurriculum: retry

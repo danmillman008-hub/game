@@ -1,0 +1,16 @@
+flowchart TD
+  A[module with <interaction> or <selection>] --> B{type}
+  B -->|fillTheGap| C[flat = concat text, break→\\n]
+  C --> D[for each gap: expected = flat[start:end]]
+  D --> F[compare placed chip text]
+  B -->|validatedInput| G[expected = flat[start:end]]
+  G --> H[compare typed text, normalise]
+  B -->|selection| I[correct = items where correct=true]
+  I --> J[set(chosen) == correct]
+  F --> K{pass?}
+  H --> K
+  J --> K
+  K -->|yes| L[show visible-if=correct blocks]
+  K -->|no| M[show visible-if=wrong blocks\nhints, see_solution]
+  L --> N[write progress]
+  M --> O[retry with attempts++]

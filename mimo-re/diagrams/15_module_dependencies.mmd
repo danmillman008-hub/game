@@ -1,0 +1,11 @@
+graph BT
+  UI[ui.* 1869] --> INT[interactors 155]
+  INT --> DATA[data.* 606]
+  DATA --> CORE[core 22]
+  UI --> AN[analytics 334]
+  DATA --> NET[network 6]
+  INT --> APPU[apputil 30]
+  CORE --> UTIL[util 3]
+  DATA --> LIB[(Room · Retrofit · kotlinx.serialization)]
+  UI --> LIB2[(Orbit · Redux-Kotlin · Compose · Rive · Glance)]
+  AN --> LIB3[(Mixpanel · Adjust · Customer.io · Firebase)]

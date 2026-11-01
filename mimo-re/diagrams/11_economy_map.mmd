@@ -1,0 +1,17 @@
+graph TD
+  L[Lesson correct] --> SP[Sparks/XP]
+  SP --> DG{Daily goal reached}
+  DG -->|yes| CO[Coins]
+  CO --> STORE[Mimo Store: icons, freeze, rewards]
+  L --> STREAK[Streak day]
+  STREAK --> CH{Streak challenge accepted?}
+  CH -->|win| CO
+  CH -->|lose| LOSS[Lose challenge streak]
+  LOSS --> REPAIR[StreakRepair / Freeze purchase]
+  SP --> LB[Weekly league]
+  LB --> PROM{Promotion threshold}
+  PROM -->|up| LEAGUE[Next league 1..5]
+  KEYS[Keys daily refill] --> GATE{Unlock lesson}
+  PRO[Pro entitlement] --> KEYS
+  PRO --> UNL[Unlimited keys]
+  PRO --> AIT[Unlimited AI tutor]

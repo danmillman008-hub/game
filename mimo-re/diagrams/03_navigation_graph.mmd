@@ -1,0 +1,20 @@
+graph TD
+  S[SplashActivity exported] -->|no session| A[AuthenticationActivity]
+  S -->|session, no onboarding| O[OnboardingActivity]
+  S -->|session + onboarding| M[MainActivity]
+  O -->|12 steps + plan| M
+  M --> T1[Tab: learn]
+  M --> T2[Tab: practice]
+  M --> T3[Tab: profile]
+  T1 --> C[ChapterActivity]
+  C --> L1[Interactive player]
+  C --> L2[Executable player]
+  C --> CE[Chapter end + reward]
+  CE --> SP[Smart practice]
+  M --> ST[Paywall / AllPlans / Store]
+  M --> PF[ProfileFragment] --> PP[PublicProfileActivity]
+  PF --> CERT[CertificateActivity]
+  L1 --> AI[AI tutor sheet]
+  L2 --> AI
+  L2 --> PG[CodePlaygroundActivity]
+  M -.hidden.-> DM[DeveloperMenu 55 classes]

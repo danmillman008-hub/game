@@ -1,0 +1,17 @@
+sequenceDiagram
+  participant U as Learner
+  participant CA as ChapterActivity
+  participant VM as LessonViewModel (Orbit)
+  participant P as lessonparser
+  participant R as Room
+  participant W as WorkManager
+  U->>CA: open chapter
+  CA->>P: read assets/lessons-<lang>/tutorial-<id>.json
+  P-->>VM: chapters[] → lessons[]
+  VM-->>U: render modules (p lazy, code interactive)
+  U->>VM: answer / run
+  VM->>R: upsert lesson_progress(in_queue=1)
+  R->>W: enqueue sync
+  VM-->>U: feedback via visible-if wrong/correct
+  W->>W: POST /v1/tutorials/{id}/progress
+  W->>R: DELETE synced rows

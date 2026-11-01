@@ -1,0 +1,17 @@
+erDiagram
+  PUBLISH_SET ||--o{ TRACK : contains
+  TRACK ||--o{ SECTION : "sections[]"
+  SECTION ||--o{ TUTORIAL : "tutorialIds[]"
+  TUTORIAL ||--o{ CHAPTER : "chapters[]"
+  CHAPTER ||--o{ LESSON : "lessons[]"
+  LESSON ||--o| INTERACTIVE_BODY : "interactiveContent"
+  LESSON ||--o| EXECUTABLE_BODY : "executableContent"
+  INTERACTIVE_BODY ||--o{ MODULE : "DSL document"
+  EXECUTABLE_BODY ||--o{ FILE : "files[]"
+  PUBLISH_SET { int publishSetVersion "753" }
+  TRACK { int id int version string onboardingCategory }
+  SECTION { string name int startIndex int endIndex }
+  TUTORIAL { int id int version string type string codeLanguage }
+  CHAPTER { int id string type }
+  LESSON { int id string contentType }
+  FILE { string name string content string solvedContent }

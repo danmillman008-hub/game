@@ -1,0 +1,18 @@
+graph LR
+  subgraph Lesson context
+    LC[lessonContext: full interactive lesson]
+    IN[instructions]
+    EA[expectedAnswer]
+    PN[pathName / file names]
+    CF[codeFiles from editor]
+  end
+  SM1[SystemMessage.Interactive] -->|{{{ lessonContext }}}| P[assembled prompt]
+  SM2[SystemMessage.Executable] -->|{{{ instructions + expectedAnswer }}}| P
+  UM1[UserMessage.Executable(codeFiles)] --> P
+  UM2[InstantPrompt.ExplainError(codeFiles,error)] --> P
+  UM3[InstantPrompt.ExplainInteractiveMistake(codeFiles,wrongAnswer)] --> P
+  P --> API[POST /v1/aiTutor/conversations]
+  API -->|SSE text/event-stream| ST[Messages + finishReason Stop|Length]
+  ST --> Q{quota used >= 5?}
+  Q -->|no| UI[chat]
+  Q -->|yes| UP[UpgradeModalPageData.UnlimitedAiTutor]

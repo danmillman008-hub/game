@@ -1,0 +1,11 @@
+stateDiagram-v2
+  [*] --> Pending: grade lesson
+  Pending --> Queued: in_queue=1
+  Queued --> Syncing: WorkManager job
+  Syncing --> Deleted: 2xx → DELETE row
+  Syncing --> Queued: error → retry
+  Deleted --> [*]
+  note right of Queued
+    chapter_completions / tutorial_completions
+    have no sync flag (local read model)
+  end note

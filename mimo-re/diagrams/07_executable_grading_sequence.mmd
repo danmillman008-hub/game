@@ -1,0 +1,20 @@
+sequenceDiagram
+  participant U as Learner
+  participant VM as ExecutableLessonViewModel
+  participant API as api.mimo.org
+  participant E as MFEL sandbox
+  U->>VM: Run
+  VM->>API: POST /v1/tracks/{t}/tutorials/{tu}/chapters/{c}/lessons/{l}/runFiles (files)
+  API->>E: execute files + evaluate generated tests
+  E-->>API: tests[]
+  API-->>VM: ExecuteFilesResponse(hasPassed, hostedProjectUrl, consoleOutput, error, tests[])
+  alt hasPassed
+    VM-->>U: TestsPassed + n/n checks passed
+    VM->>VM: executeLessonAndStoreProgress
+  else failed
+    VM-->>U: TestsFailed + Condition i
+  else compiler error
+    VM-->>U: CompilerError state
+  else offline
+    VM-->>U: ConnectivityError + connection warning
+  end

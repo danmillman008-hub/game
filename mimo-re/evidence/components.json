@@ -1,0 +1,1677 @@
+{
+ "package": "com.getmimo",
+ "activities": [
+  {
+   "name": "com.getmimo.ui.learningcompanions.LearningCompanionsIntroActivity",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.SplashActivity",
+   "exported": "true",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501B6",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": [
+    {
+     "actions": [
+      "android.intent.action.VIEW"
+     ],
+     "categories": [
+      "android.intent.category.DEFAULT",
+      "android.intent.category.BROWSABLE"
+     ],
+     "data": [
+      {
+       "android:scheme": "https",
+       "android:host": "getmimo.com",
+       "android:path": "/login"
+      },
+      {
+       "android:scheme": "https",
+       "android:host": "getmimo.com",
+       "android:path": "/register"
+      },
+      {
+       "android:scheme": "https",
+       "android:host": "getmimo.com",
+       "android:path": "/onboarding/experience"
+      },
+      {
+       "android:scheme": "https",
+       "android:host": "getmimo.com",
+       "android:path": "/onboarding/goal"
+      },
+      {
+       "android:scheme": "https",
+       "android:host": "getmimo.com",
+       "android:path": "/resetpassword"
+      }
+     ],
+     "priority": null
+    },
+    {
+     "actions": [
+      "android.intent.action.VIEW"
+     ],
+     "categories": [
+      "android.intent.category.DEFAULT",
+      "android.intent.category.BROWSABLE"
+     ],
+     "data": [
+      {
+       "android:scheme": "mimo",
+       "android:host": "getmimo.com",
+       "android:path": "/login"
+      },
+      {
+       "android:scheme": "mimo",
+       "android:host": "getmimo.com",
+       "android:path": "/register"
+      },
+      {
+       "android:scheme": "mimo",
+       "android:host": "getmimo.com",
+       "android:path": "/onboarding/experience"
+      },
+      {
+       "android:scheme": "mimo",
+       "android:host": "getmimo.com",
+       "android:path": "/onboarding/goal"
+      },
+      {
+       "android:scheme": "mimo",
+       "android:host": "getmimo.com",
+       "android:path": "/resetpassword"
+      }
+     ],
+     "priority": null
+    },
+    {
+     "actions": [
+      "android.intent.action.VIEW"
+     ],
+     "categories": [
+      "android.intent.category.DEFAULT",
+      "android.intent.category.BROWSABLE"
+     ],
+     "data": [
+      {
+       "android:scheme": "mimo",
+       "android:host": "getmimo.com",
+       "android:path": "/deeplink/continuelearning"
+      },
+      {
+       "android:scheme": "mimo",
+       "android:host": "getmimo.com",
+       "android:path": "/deeplink/support"
+      },
+      {
+       "android:scheme": "mimo",
+       "android:host": "getmimo.com",
+       "android:path": "/deeplink/practiceshortcut"
+      }
+     ],
+     "priority": null
+    }
+   ]
+  },
+  {
+   "name": "com.getmimo.ui.authentication.AuthenticationActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501B0",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.facebook.FacebookActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501B0",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.facebook.CustomTabActivity",
+   "exported": "true",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501B0",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": [
+    {
+     "actions": [
+      "android.intent.action.VIEW"
+     ],
+     "categories": [
+      "android.intent.category.DEFAULT",
+      "android.intent.category.BROWSABLE"
+     ],
+     "data": [
+      {
+       "android:scheme": "@7F1401E2"
+      }
+     ],
+     "priority": null
+    },
+    {
+     "actions": [
+      "android.intent.action.VIEW"
+     ],
+     "categories": [
+      "android.intent.category.DEFAULT",
+      "android.intent.category.BROWSABLE"
+     ],
+     "data": [
+      {
+       "android:scheme": "fbconnect",
+       "android:host": "cct.com.getmimo"
+      }
+     ],
+     "priority": null
+    }
+   ]
+  },
+  {
+   "name": "com.getmimo.ui.main.MainActivity",
+   "exported": "true",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501AE",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": [
+    {
+     "actions": [
+      "com.getmimo.STARTUP_ACTIVITY"
+     ],
+     "categories": [
+      "android.intent.category.DEFAULT"
+     ],
+     "data": [],
+     "priority": null
+    },
+    {
+     "actions": [
+      "android.intent.action.VIEW"
+     ],
+     "categories": [
+      "android.intent.category.DEFAULT",
+      "android.intent.category.BROWSABLE"
+     ],
+     "data": [
+      {
+       "android:scheme": "https",
+       "android:host": "getmimo.com",
+       "android:path": "/profile"
+      },
+      {
+       "android:scheme": "https",
+       "android:host": "getmimo.com",
+       "android:pathPattern": "/learn/.*"
+      },
+      {
+       "android:scheme": "https",
+       "android:host": "getmimo.com",
+       "android:path": "/learn"
+      },
+      {
+       "android:scheme": "https",
+       "android:host": "getmimo.com",
+       "android:pathPattern": "/explore/.*"
+      },
+      {
+       "android:scheme": "https",
+       "android:host": "getmimo.com",
+       "android:path": "/deeplink/practicetab"
+      },
+      {
+       "android:scheme": "https",
+       "android:host": "getmimo.com",
+       "android:pathPattern": "/leaderboard/.*"
+      },
+      {
+       "android:scheme": "https",
+       "android:host": "getmimo.com",
+       "android:pathPattern": "/invite/.*"
+      },
+      {
+       "android:scheme": "https",
+       "android:host": "getmimo.com",
+       "android:path": "/leaderboard"
+      },
+      {
+       "android:scheme": "https",
+       "android:host": "getmimo.com",
+       "android:pathPattern": "/allplans"
+      },
+      {
+       "android:scheme": "https",
+       "android:host": "getmimo.com",
+       "android:pathPattern": "/upgradeapp"
+      },
+      {
+       "android:scheme": "https",
+       "android:host": "getmimo.com",
+       "android:path": "/deeplink/upgradepaywall"
+      },
+      {
+       "android:scheme": "https",
+       "android:host": "getmimo.com",
+       "android:pathPattern": "/deeplink/upgradepaywall/.*"
+      }
+     ],
+     "priority": null
+    },
+    {
+     "actions": [
+      "android.intent.action.VIEW"
+     ],
+     "categories": [
+      "android.intent.category.DEFAULT",
+      "android.intent.category.BROWSABLE"
+     ],
+     "data": [
+      {
+       "android:scheme": "mimo",
+       "android:host": "getmimo.com",
+       "android:path": "/profile"
+      },
+      {
+       "android:scheme": "mimo",
+       "android:host": "getmimo.com",
+       "android:pathPattern": "/learn/.*"
+      },
+      {
+       "android:scheme": "mimo",
+       "android:host": "getmimo.com",
+       "android:path": "/learn"
+      },
+      {
+       "android:scheme": "mimo",
+       "android:host": "getmimo.com",
+       "android:pathPattern": "/explore/.*"
+      },
+      {
+       "android:scheme": "mimo",
+       "android:host": "getmimo.com",
+       "android:path": "/deeplink/practicetab"
+      },
+      {
+       "android:scheme": "mimo",
+       "android:host": "getmimo.com",
+       "android:pathPattern": "/leaderboard/.*"
+      },
+      {
+       "android:scheme": "mimo",
+       "android:host": "getmimo.com",
+       "android:pathPattern": "/invite/.*"
+      },
+      {
+       "android:scheme": "mimo",
+       "android:host": "getmimo.com",
+       "android:path": "/leaderboard"
+      },
+      {
+       "android:scheme": "mimo",
+       "android:host": "getmimo.com",
+       "android:pathPattern": "/allplans"
+      },
+      {
+       "android:scheme": "mimo",
+       "android:host": "getmimo.com",
+       "android:pathPattern": "/upgradeapp"
+      },
+      {
+       "android:scheme": "mimo",
+       "android:host": "getmimo.com",
+       "android:path": "/deeplink/upgradepaywall"
+      },
+      {
+       "android:scheme": "mimo",
+       "android:host": "getmimo.com",
+       "android:pathPattern": "/deeplink/upgradepaywall/.*"
+      }
+     ],
+     "priority": null
+    }
+   ]
+  },
+  {
+   "name": "com.getmimo.ui.chapter.ChapterActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501AD",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.iap.allplans.AllPlansActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F150002",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.profile.SetDailyGoalActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501AE",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.onboarding.intro.IntroSlidesActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501AE",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.onboarding.OnboardingActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501AE",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.settings.SettingsActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501AD",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.settings.appearance.ChangeAppearanceActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501AD",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.settings.appicons.ChangeAppIconActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501AD",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.settings.email.ChangeEmailActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501AD",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.certificates.ProfessionalCertificateActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501AD",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.developermenu.DeveloperMenuActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501AD",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.developermenu.modaldialog.ModalDialogTestActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501AD",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.inputconsole.InputConsoleActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501AD",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.developermenu.remoteconfig.DevMenuRemoteConfigActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501AD",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.developermenu.viewcomponents.customviews.CustomViewsActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501AD",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.developermenu.abtest.ABTestConfigActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.developermenu.contentexperiment.DevelopersMenuContentExperimentActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.developermenu.campaign.DeveloperMenuCampaignActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.developermenu.discount.DeveloperMenuDiscountActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.extendedupsell.ExtendedUpsellFlowActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501AE",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.integratedwebview.IntegratedWebViewActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.certificates.CertificateActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501AE",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.codeplayground.CodePlaygroundActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501AD",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.upgrade.UpgradeModalActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F150143",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.iap.paywall.PaywallActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501AD",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.apputil.crop.CustomImageCropActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501D7",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.publicprofile.PublicProfileActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501AE",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.awesome.AwesomeModeActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501AD",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.certificateupgrade.CertificateUpgradeActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501AD",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.upgradecompleted.UpgradeCompletedActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501B0",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.reactivation.ReactivationActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501AE",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.base.WrapperFragmentActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F1501AD",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.canhub.cropper.CropImageActivity",
+   "exported": "true",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "io.customer.messaginginapp.gist.presentation.GistModalActivity",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F150152",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.google.firebase.auth.internal.GenericIdpActivity",
+   "exported": "true",
+   "enabled": null,
+   "launchMode": "2",
+   "screenOrientation": null,
+   "theme": "@android:01030010",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": [
+    {
+     "actions": [
+      "android.intent.action.VIEW"
+     ],
+     "categories": [
+      "android.intent.category.DEFAULT",
+      "android.intent.category.BROWSABLE"
+     ],
+     "data": [
+      {
+       "android:scheme": "genericidp",
+       "android:host": "firebase.auth",
+       "android:path": "/"
+      }
+     ],
+     "priority": null
+    }
+   ]
+  },
+  {
+   "name": "com.google.firebase.auth.internal.RecaptchaActivity",
+   "exported": "true",
+   "enabled": null,
+   "launchMode": "2",
+   "screenOrientation": null,
+   "theme": "@android:01030010",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": [
+    {
+     "actions": [
+      "android.intent.action.VIEW"
+     ],
+     "categories": [
+      "android.intent.category.DEFAULT",
+      "android.intent.category.BROWSABLE"
+     ],
+     "data": [
+      {
+       "android:scheme": "recaptcha",
+       "android:host": "firebase.auth",
+       "android:path": "/"
+      }
+     ],
+     "priority": null
+    }
+   ]
+  },
+  {
+   "name": "androidx.credentials.playservices.controllers.identityauth.HiddenActivity",
+   "exported": "false",
+   "enabled": "true",
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F150369",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "androidx.credentials.playservices.controllers.identitycredentials.IdentityCredentialApiHiddenActivity",
+   "exported": "false",
+   "enabled": "true",
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F150369",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.revenuecat.purchases.ui.revenuecatui.activity.PaywallActivity",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.revenuecat.purchases.ui.revenuecatui.customercenter.CustomerCenterActivity",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@android:01030006",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.revenuecat.purchases.amazon.purchasing.ProxyAmazonBillingActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@android:01030010",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.revenuecat.purchases.SimulatedStoreErrorDialogActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@android:01030226",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.android.billingclient.api.ProxyBillingActivity",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@android:01030010",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.android.billingclient.api.ProxyBillingActivityV2",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@android:01030010",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "androidx.glance.appwidget.action.ActionTrampolineActivity",
+   "exported": "false",
+   "enabled": "true",
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@android:01030055",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "androidx.glance.appwidget.action.InvisibleActionTrampolineActivity",
+   "exported": "false",
+   "enabled": "true",
+   "launchMode": "3",
+   "screenOrientation": null,
+   "theme": "@7F15050D",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.google.android.gms.ads.AdActivity",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@android:0103000F",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.google.android.gms.ads.OutOfContextTestingActivity",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.google.android.gms.ads.NotificationHandlerActivity",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": "2",
+   "screenOrientation": null,
+   "theme": "@android:01030010",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "saschpe.android.customtabs.WebViewActivity",
+   "exported": "true",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.facebook.CustomTabMainActivity",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.google.android.gms.auth.api.signin.internal.SignInHubActivity",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@android:01030010",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.google.android.gms.common.api.GoogleApiActivity",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@android:01030010",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "androidx.compose.ui.tooling.PreviewActivity",
+   "exported": "true",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.google.android.play.core.common.PlayCoreDialogWrapperActivity",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": "@7F15040E",
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  }
+ ],
+ "services": [
+  {
+   "name": "com.getmimo.data.notification.MimoFirebaseMessagingService",
+   "exported": "true",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": [
+    {
+     "actions": [
+      "com.google.firebase.MESSAGING_EVENT"
+     ],
+     "categories": [],
+     "data": [],
+     "priority": null
+    }
+   ]
+  },
+  {
+   "name": "com.getmimo.apputil.notification.NotPremiumNotificationService",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": "android.permission.BIND_JOB_SERVICE",
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.data.source.remote.savedcode.AutoSaveCodeService",
+   "exported": "true",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": "android.permission.BIND_JOB_SERVICE",
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.google.android.gms.metadata.ModuleDependencies",
+   "exported": "false",
+   "enabled": "false",
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": [
+    {
+     "actions": [
+      "com.google.android.gms.metadata.MODULE_DEPENDENCIES"
+     ],
+     "categories": [],
+     "data": [],
+     "priority": null
+    }
+   ]
+  },
+  {
+   "name": "com.google.firebase.components.ComponentDiscoveryService",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "androidx.credentials.playservices.CredentialProviderMetadataHolder",
+   "exported": "false",
+   "enabled": "true",
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.google.firebase.messaging.FirebaseMessagingService",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": [
+    {
+     "actions": [
+      "com.google.firebase.MESSAGING_EVENT"
+     ],
+     "categories": [],
+     "data": [],
+     "priority": "-500"
+    }
+   ]
+  },
+  {
+   "name": "com.google.firebase.sessions.SessionLifecycleService",
+   "exported": "false",
+   "enabled": "false",
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.google.android.datatransport.runtime.backends.TransportBackendDiscovery",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "androidx.glance.appwidget.GlanceRemoteViewsService",
+   "exported": "true",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": "android.permission.BIND_REMOTEVIEWS",
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.google.android.gms.ads.AdService",
+   "exported": "false",
+   "enabled": "true",
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "androidx.work.impl.background.systemjob.SystemJobService",
+   "exported": "true",
+   "enabled": "@7F050004",
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": "android.permission.BIND_JOB_SERVICE",
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "androidx.work.impl.foreground.SystemForegroundService",
+   "exported": "false",
+   "enabled": "@7F050003",
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.google.android.gms.auth.api.signin.RevocationBoundService",
+   "exported": "true",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": "com.google.android.gms.auth.api.signin.permission.REVOCATION_NOTIFICATION",
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.google.android.gms.measurement.AppMeasurementService",
+   "exported": "false",
+   "enabled": "true",
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.google.android.gms.measurement.AppMeasurementJobService",
+   "exported": "false",
+   "enabled": "true",
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": "android.permission.BIND_JOB_SERVICE",
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "androidx.core.widget.RemoteViewsCompatService",
+   "exported": null,
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": "android.permission.BIND_REMOTEVIEWS",
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "androidx.room.MultiInstanceInvalidationService",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": "android.permission.BIND_JOB_SERVICE",
+   "authorities": null,
+   "intentFilters": []
+  }
+ ],
+ "receivers": [
+  {
+   "name": "com.getmimo.apputil.notification.NotificationPublisher",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.apputil.share.CodePlaygroundShareReceiver",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.apputil.share.SharePromoLinkReceiver",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.apputil.share.InviteFriendsShareReceiver",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.apputil.share.ShareToStoryReceiver",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.getmimo.ui.widget.MimoStreakSmallWidgetReceiver",
+   "exported": "true",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": [
+    {
+     "actions": [
+      "android.appwidget.action.APPWIDGET_UPDATE"
+     ],
+     "categories": [],
+     "data": [],
+     "priority": null
+    }
+   ]
+  },
+  {
+   "name": "com.getmimo.ui.widget.MimoStreakMediumWidgetReceiver",
+   "exported": "true",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": [
+    {
+     "actions": [
+      "android.appwidget.action.APPWIDGET_UPDATE"
+     ],
+     "categories": [],
+     "data": [],
+     "priority": null
+    }
+   ]
+  },
+  {
+   "name": "com.getmimo.ui.widget.MimoStreakLargeWidgetReceiver",
+   "exported": "true",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": [
+    {
+     "actions": [
+      "android.appwidget.action.APPWIDGET_UPDATE"
+     ],
+     "categories": [],
+     "data": [],
+     "priority": null
+    }
+   ]
+  },
+  {
+   "name": "com.google.firebase.iid.FirebaseInstanceIdReceiver",
+   "exported": "true",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": "com.google.android.c2dm.permission.SEND",
+   "authorities": null,
+   "intentFilters": [
+    {
+     "actions": [
+      "com.google.android.c2dm.intent.RECEIVE"
+     ],
+     "categories": [],
+     "data": [],
+     "priority": null
+    }
+   ]
+  },
+  {
+   "name": "androidx.glance.appwidget.action.ActionCallbackBroadcastReceiver",
+   "exported": "false",
+   "enabled": "true",
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "androidx.glance.appwidget.UnmanagedSessionReceiver",
+   "exported": "false",
+   "enabled": "true",
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "androidx.glance.appwidget.MyPackageReplacedReceiver",
+   "exported": "false",
+   "enabled": "true",
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": [
+    {
+     "actions": [
+      "android.intent.action.MY_PACKAGE_REPLACED"
+     ],
+     "categories": [],
+     "data": [],
+     "priority": null
+    }
+   ]
+  },
+  {
+   "name": "androidx.work.impl.utils.ForceStopRunnable$BroadcastReceiver",
+   "exported": "false",
+   "enabled": "true",
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "androidx.work.impl.background.systemalarm.RescheduleReceiver",
+   "exported": "false",
+   "enabled": "false",
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": [
+    {
+     "actions": [
+      "android.intent.action.BOOT_COMPLETED"
+     ],
+     "categories": [],
+     "data": [],
+     "priority": null
+    }
+   ]
+  },
+  {
+   "name": "androidx.work.impl.diagnostics.DiagnosticsReceiver",
+   "exported": "true",
+   "enabled": "true",
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": "android.permission.DUMP",
+   "authorities": null,
+   "intentFilters": [
+    {
+     "actions": [
+      "androidx.work.diagnostics.REQUEST_DIAGNOSTICS"
+     ],
+     "categories": [],
+     "data": [],
+     "priority": null
+    }
+   ]
+  },
+  {
+   "name": "com.google.android.gms.measurement.AppMeasurementReceiver",
+   "exported": "false",
+   "enabled": "true",
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  },
+  {
+   "name": "com.facebook.CurrentAccessTokenExpirationBroadcastReceiver",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": [
+    {
+     "actions": [
+      "com.facebook.sdk.ACTION_CURRENT_ACCESS_TOKEN_CHANGED"
+     ],
+     "categories": [],
+     "data": [],
+     "priority": null
+    }
+   ]
+  },
+  {
+   "name": "com.facebook.AuthenticationTokenManager$CurrentAuthenticationTokenChangedBroadcastReceiver",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": [
+    {
+     "actions": [
+      "com.facebook.sdk.ACTION_CURRENT_AUTHENTICATION_TOKEN_CHANGED"
+     ],
+     "categories": [],
+     "data": [],
+     "priority": null
+    }
+   ]
+  },
+  {
+   "name": "androidx.profileinstaller.ProfileInstallReceiver",
+   "exported": "true",
+   "enabled": "true",
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": "android.permission.DUMP",
+   "authorities": null,
+   "intentFilters": [
+    {
+     "actions": [
+      "androidx.profileinstaller.action.INSTALL_PROFILE"
+     ],
+     "categories": [],
+     "data": [],
+     "priority": null
+    },
+    {
+     "actions": [
+      "androidx.profileinstaller.action.SKIP_FILE"
+     ],
+     "categories": [],
+     "data": [],
+     "priority": null
+    },
+    {
+     "actions": [
+      "androidx.profileinstaller.action.SAVE_PROFILE"
+     ],
+     "categories": [],
+     "data": [],
+     "priority": null
+    },
+    {
+     "actions": [
+      "androidx.profileinstaller.action.BENCHMARK_OPERATION"
+     ],
+     "categories": [],
+     "data": [],
+     "priority": null
+    }
+   ]
+  },
+  {
+   "name": "com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": null,
+   "intentFilters": []
+  }
+ ],
+ "providers": [
+  {
+   "name": "androidx.core.content.FileProvider",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": "com.getmimo.fileprovider",
+   "intentFilters": []
+  },
+  {
+   "name": "androidx.startup.InitializationProvider",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": "com.getmimo.androidx-startup",
+   "intentFilters": []
+  },
+  {
+   "name": "com.canhub.cropper.CropFileProvider",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": "com.getmimo.cropper.fileprovider",
+   "intentFilters": []
+  },
+  {
+   "name": "com.google.android.gms.ads.MobileAdsInitProvider",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": "com.getmimo.mobileadsinitprovider",
+   "intentFilters": []
+  },
+  {
+   "name": "com.google.firebase.provider.FirebaseInitProvider",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": "com.getmimo.firebaseinitprovider",
+   "intentFilters": []
+  },
+  {
+   "name": "com.facebook.internal.FacebookInitProvider",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": "com.getmimo.FacebookInitProvider",
+   "intentFilters": []
+  },
+  {
+   "name": "org.jetbrains.compose.resources.AndroidContextProvider",
+   "exported": "false",
+   "enabled": "true",
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": "com.getmimo.resources.AndroidContextProvider",
+   "intentFilters": []
+  },
+  {
+   "name": "com.adjust.sdk.SystemLifecycleContentProvider",
+   "exported": "false",
+   "enabled": null,
+   "launchMode": null,
+   "screenOrientation": null,
+   "theme": null,
+   "permission": null,
+   "authorities": "com.getmimo.adjust-lifecycle-provider",
+   "intentFilters": []
+  }
+ ],
+ "application_attrs": {
+  "android:theme": "@7F1501AD",
+  "android:label": "@7F140057",
+  "android:icon": "@7F100000",
+  "android:name": "com.getmimo.App",
+  "android:hasCode": "true",
+  "android:allowBackup": "false",
+  "android:supportsRtl": "false",
+  "android:roundIcon": "@7F100009",
+  "android:appComponentFactory": "androidx.core.app.CoreComponentFactory",
+  "android:requestLegacyExternalStorage": "true"
+ }
+}
