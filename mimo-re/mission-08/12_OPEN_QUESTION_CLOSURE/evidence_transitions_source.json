@@ -1,0 +1,18 @@
+{
+ "note": "hand-authored after the Phase 5 investigation; every record cites evidence that exists on disk",
+ "transitions": {
+  "Q-121": {
+   "previous_status": "NOT_RECOVERED",
+   "new_status": "CLOSED_STATIC",
+   "evidence": [
+    "evidence/DEX_ku.a_access_token_provider.json",
+    "05_AUTHENTICATION_CLOSURE/01_TOKEN_PROVIDER_AND_LIFECYCLE.md",
+    "05_AUTHENTICATION_CLOSURE/02_INTERCEPTOR_CHAIN.md",
+    "05_AUTHENTICATION_CLOSURE/evidence/DEX_auth_interceptors_and_repository.json"
+   ],
+   "reproduction": "cd mimo-re/mission-08 && /tmp/venv/bin/python tools/dex_inspect.py --dex-dir /tmp/x --class ku.a --instructions --out /tmp/ku.json",
+   "rationale": "ku.a.d(Z)Ljava/lang/String; reads FirebaseAuth.currentUser, calls FirebaseAuth.c(user,false), inspects the JWT exp claim against DateTime, forces one refresh when expired, returns the token, and throws AccessTokenUnavailableException otherwise; no app-owned token store exists; the header is attached centrally by fh.a for @ri.b-annotated Retrofit methods and manually at four sites.",
+   "residual": "the persistence format inside the Firebase SDK is library behaviour and out of scope"
+  }
+ }
+}
