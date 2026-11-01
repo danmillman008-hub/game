@@ -26,3 +26,14 @@ None of these replaces an existing question; all are additive and cited by the p
 | A12 | does a missing locale fall back to `en`? | open | `ye.b` derives the base from `"lessons-"` + locale with no observed branch |
 | A13 | are content stream/parse failures caught, and where? | open | no handler on the `ye.b` stream path in Phase 2 |
 | A14 | what are the two extra JSON documents in `id`, `it`, `pl`, `tr` (1,032 vs 1,030)? | open | corpus statistics only |
+
+## Questions raised by Stage 3 (lesson engine)
+
+| ID | Question | Status | Blocker |
+|---|---|---|---|
+| A15 | which module owns `<output>` | open | variant field names obfuscated |
+| A16 | does a chapter auto-complete on its last lesson? | open | needs `U`/`V` bodies |
+| A17 | meaning of the five boolean flags in `InteractiveLessonBaseViewModel` | open | needs `O` (616 insns) read |
+| A18 | is `base.c.K` `initialiseCodeBlocks` or `storeLessonProgressInMemory`? | open | two families, one method |
+| A19 | recovered name of `base.c.O` | open | no lambda family maps to it |
+| A20 | is `hardModeLessonModules` parsed from the same document? | open | one grammar only in parser pools |

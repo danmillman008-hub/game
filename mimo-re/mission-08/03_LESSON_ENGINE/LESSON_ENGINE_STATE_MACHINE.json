@@ -1,0 +1,154 @@
+{
+ "generated": "2026-11-01",
+ "subject": "InteractiveLessonBaseViewModel (recovered from com.getmimo.ui.lesson.interactive.base.c)",
+ "confidence_basis": "method bodies located in DEX; transitions are inferred from method names + the strings each method contains",
+ "fields_observed": [
+  "LessonBundle",
+  "CodePlaygroundBundle$FromLesson",
+  "List<LessonModule>",
+  "Instant",
+  "Boolean flags x5",
+  "m0 x3"
+ ],
+ "methods": [
+  {
+   "id": "c.e0",
+   "recovered": "initialiseViewModel",
+   "insns": 39,
+   "evidence": "takes LessonProgress; HIGH confidence mapping"
+  },
+  {
+   "id": "c.O",
+   "recovered": "unknown (largest, 616 insns)",
+   "insns": 616,
+   "evidence": "takes LessonContent (interactive)",
+   "state": "UNRESOLVED_NAME"
+  },
+  {
+   "id": "c.K",
+   "recovered": "initialiseCodeBlocks / storeLessonProgressInMemory",
+   "insns": 39,
+   "evidence": "two families resolve to the same method \u2014 genuine ambiguity"
+  },
+  {
+   "id": "c.V",
+   "recovered": "lessonSolvedCorrectly (also proposed: onLessonRun, onValidatedInputExecuted)",
+   "insns": 162,
+   "evidence": "string solutionFeedbackCorrect"
+  },
+  {
+   "id": "c.W",
+   "recovered": "lessonSolvedCorrectlyWithPartialMatch",
+   "insns": 202,
+   "evidence": "strings validated_input_execution_correct_partial_match, user_input"
+  },
+  {
+   "id": "c.X",
+   "recovered": "lessonSolvedIncorrectly",
+   "insns": 130,
+   "evidence": "HIGH mapping"
+  },
+  {
+   "id": "c.d0",
+   "recovered": "showWrongFeedbackBlock",
+   "insns": 148,
+   "evidence": "string solutionFeedbackWrong"
+  },
+  {
+   "id": "c.U",
+   "recovered": "lessonSolvedAndProceedToNextLesson",
+   "insns": 130,
+   "evidence": "HIGH mapping"
+  },
+  {
+   "id": "c.i0",
+   "recovered": "updateTabbedCodeViewWithBrowserOutput",
+   "insns": 215,
+   "evidence": "string browserOutputDeferred"
+  },
+  {
+   "id": "c.P",
+   "recovered": "isAiTutorUnlimited",
+   "insns": 91,
+   "evidence": "string 'Error while resolving AI Tutor usage state for interactive lesson feedback'"
+  },
+  {
+   "id": "c.G",
+   "recovered": "createInteractiveAiTutorInfo",
+   "insns": 283,
+   "evidence": "HIGH mapping"
+  },
+  {
+   "id": "c.g0",
+   "recovered": "unknown",
+   "insns": 140,
+   "evidence": "strings lesson_interaction_delete, lesson_id, tutorial_id"
+  },
+  {
+   "id": "c.a0",
+   "recovered": "unknown",
+   "insns": 104,
+   "evidence": "string lesson_reset"
+  }
+ ],
+ "states_named_by_events": [
+  "lesson open",
+  "lesson reset (lesson_reset)",
+  "answer submitted correct",
+  "answer submitted partial match",
+  "answer submitted incorrect",
+  "feedback shown (solutionFeedbackCorrect/Wrong)",
+  "browser output deferred",
+  "interaction deleted (lesson_interaction_delete)"
+ ],
+ "transitions": [
+  {
+   "from": "lesson open",
+   "to": "modules initialised",
+   "trigger": "initialiseViewModel + module init + initialiseCodeBlocks",
+   "evidenced": true
+  },
+  {
+   "from": "modules initialised",
+   "to": "answer correct",
+   "trigger": "lessonSolvedCorrectly",
+   "evidenced": true
+  },
+  {
+   "from": "modules initialised",
+   "to": "answer partial",
+   "trigger": "lessonSolvedCorrectlyWithPartialMatch",
+   "evidenced": true
+  },
+  {
+   "from": "modules initialised",
+   "to": "answer incorrect",
+   "trigger": "lessonSolvedIncorrectly",
+   "evidenced": true
+  },
+  {
+   "from": "answer incorrect",
+   "to": "wrong feedback",
+   "trigger": "showWrongFeedbackBlock",
+   "evidenced": true
+  },
+  {
+   "from": "answer correct",
+   "to": "next lesson",
+   "trigger": "lessonSolvedAndProceedToNextLesson",
+   "evidenced": true
+  },
+  {
+   "from": "any",
+   "to": "lesson open",
+   "trigger": "lesson_reset",
+   "evidenced": true
+  },
+  {
+   "from": "code run requested",
+   "to": "browser output",
+   "trigger": "updateTabbedCodeViewWithBrowserOutput (browserOutputDeferred)",
+   "evidenced": true
+  }
+ ]
+}

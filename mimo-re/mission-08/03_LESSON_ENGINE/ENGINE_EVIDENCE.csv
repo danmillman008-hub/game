@@ -1,0 +1,20 @@
+layer,subject,evidence
+parser,te.a,"tag code; attrs version, codelang, name, visible-if, content, interactions"
+parser,te.b,"tags database, tables, table; attr visible-if"
+parser,te.c,"tags p, img, code, selection; attrs src, visible-if; string xml_parse_error_module"
+parser,te.d,"tags p, span, strong, br; inline text formatting"
+parser,te.e,"tags selection, item; attrs iscode, correct; inline bold/strong/normal/br"
+parser,te.f,"tags table, row, header, content, data; attr name"
+parser,te.g,"tags webview, interaction; attrs version, style, unlock, embedded, visible-if"
+model,LessonModule,"abstract Parcelable; 6 variants Code, Database, Image, Paragraph, Selection, Webview"
+model,ModuleVisibility,"referenced by Code, Database, Image, Paragraph, Webview"
+corpus,assets/lessons-en/tracks,"18,272 lessons; contentType interactive 14,248 / executableFiles 4,024"
+tag_census,interactiveContent,"text 235,973; code 58,806; p 29,193; content 22,810; option 22,465; html/body 14,249 each"
+viewmodel,base.c.e0,initialiseViewModel(LessonProgress)
+viewmodel,base.c.V,solutionFeedbackCorrect
+viewmodel,base.c.W,"validated_input_execution_correct_partial_match, user_input"
+viewmodel,base.c.d0,solutionFeedbackWrong
+viewmodel,base.c.g0,"lesson_interaction_delete, lesson_id, tutorial_id"
+viewmodel,base.c.a0,lesson_reset
+viewmodel,base.c.i0,browserOutputDeferred
+viewmodel,base.c.P,'Error while resolving AI Tutor usage state for interactive lesson feedback'

@@ -1,0 +1,146 @@
+{
+ "generated": "2026-11-01",
+ "note": "field names of the model classes are partially obfuscated (c,d,e,f,g,v); types and declaring variant are exact. No content values are stored.",
+ "base_class": "com.getmimo.data.content.lessonparser.interactive.model.LessonModule (abstract, Parcelable)",
+ "variants": [
+  {
+   "variant": "Code",
+   "fields": [
+    {
+     "name": "c",
+     "type": "CharSequence"
+    },
+    {
+     "name": "d",
+     "type": "List"
+    },
+    {
+     "name": "e",
+     "type": "Output"
+    },
+    {
+     "name": "f",
+     "type": "ModuleVisibility"
+    },
+    {
+     "name": "g",
+     "type": "com.getmimo.data.content.model.track.CodeLanguage"
+    },
+    {
+     "name": "v",
+     "type": "String"
+    }
+   ],
+   "parser": "te.a",
+   "tags": [
+    "code",
+    "content",
+    "interactions"
+   ],
+   "confidence": "HIGH"
+  },
+  {
+   "variant": "Database",
+   "fields": [
+    {
+     "name": "c",
+     "type": "ArrayList"
+    },
+    {
+     "name": "d",
+     "type": "ModuleVisibility"
+    }
+   ],
+   "parser": "te.b or te.f",
+   "tags": [
+    "database",
+    "tables",
+    "table"
+   ],
+   "confidence": "MEDIUM",
+   "note": "two parsers emit table-like structures; which one builds Database was not read"
+  },
+  {
+   "variant": "Image",
+   "fields": [
+    {
+     "name": "c",
+     "type": "String"
+    },
+    {
+     "name": "d",
+     "type": "ModuleVisibility"
+    }
+   ],
+   "parser": "te.c",
+   "tags": [
+    "img"
+   ],
+   "confidence": "HIGH"
+  },
+  {
+   "variant": "Paragraph",
+   "fields": [
+    {
+     "name": "c",
+     "type": "ArrayList"
+    },
+    {
+     "name": "d",
+     "type": "ModuleVisibility"
+    }
+   ],
+   "parser": "te.d",
+   "tags": [
+    "p",
+    "strong",
+    "span",
+    "br"
+   ],
+   "confidence": "HIGH"
+  },
+  {
+   "variant": "Selection",
+   "fields": [
+    {
+     "name": "c",
+     "type": "ArrayList"
+    }
+   ],
+   "parser": "te.e",
+   "tags": [
+    "selection",
+    "item"
+   ],
+   "confidence": "HIGH"
+  },
+  {
+   "variant": "Webview",
+   "fields": [
+    {
+     "name": "c",
+     "type": "String"
+    },
+    {
+     "name": "d",
+     "type": "ModuleVisibility"
+    },
+    {
+     "name": "e",
+     "type": "WebviewType"
+    }
+   ],
+   "parser": "te.g",
+   "tags": [
+    "webview"
+   ],
+   "confidence": "HIGH"
+  }
+ ],
+ "supporting_types": [
+  "ModuleVisibility",
+  "Output",
+  "WebviewType",
+  "CodeLanguage"
+ ]
+}

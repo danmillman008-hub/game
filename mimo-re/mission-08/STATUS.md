@@ -9,6 +9,22 @@
 > This file is the honest state of the mission. A phase listed as *not started* has no artefacts, and no later
 > document may imply otherwise.
 
+
+## Continuation stages (brief §30)
+
+| Stage | Deliverable | State | Headline result |
+|---|---|---|---|
+| 0 | `00_BASELINE/` | **complete** | checkpoint verified; dex layout: real classes in 1/2/3/12, eight 1,096-byte locale stubs |
+| 1 | `01_SYMBOL_RECOVERY/` | **complete** | 1,275 orphan lambdas → 265 owners (HIGH 76), 436 method mappings, 12 clusters |
+| 2 | `02_CONTENT_DELIVERY/` | **complete** | provider→loader→repository traced; 10,317 asset docs; 5-part identity vs 2-part progress; C-13 |
+| 3 | `03_LESSON_ENGINE/` | **substantially complete** | 7 parsers mapped to their tag vocabularies; 6 `LessonModule` variants; grading + analytics methods recovered |
+| 4 | `04_INTERACTION_ENGINE/` | next | — |
+| 5 | `05_LEARNER_MODEL/` | not started | — |
+| 6 | `06_PERSISTENCE/` | not started | — |
+| 7 | `07_NETWORKING/` | not started | — |
+| 8 | `08_AUTHENTICATION/` | substantially complete (Stage D) | token provider, interceptor, anonymous-first link |
+| rest | 9–24 | not started | — |
+
 ## Phase table
 
 | Phase | Directory | State | Notes |
