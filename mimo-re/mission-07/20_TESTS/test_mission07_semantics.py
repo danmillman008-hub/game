@@ -14,9 +14,10 @@ def test_design_tokens_have_values():
     assert any(isinstance(v,str) and v.startswith("#") for v in vals), "no hex colours decoded"
 
 def test_arsc_type_counts_are_consistent():
-    d = L("evidence/ARSC_DUMP_INDEX.json")["resources"]
-    assert set(d) >= {"color","dimen","string","style","layout"}
-    assert len(d["color"]) >= len(L("evidence/DESIGN_TOKENS_VALUES.json")["resources"]["color"]) * 0  # sanity
+    d = L("evidence/ARSC_SUMMARY.json")
+    assert set(d["type_counts"]) >= {"color","dimen","string","style","layout"}
+    assert d["type_counts"]["color"] >= 1000 and d["type_counts"]["dimen"] >= 1000
+    assert d["global_strings"] == 33341
 
 def test_di_catalog_matches_mission06_graph():
     di = L("../mission-06/evidence/DI_GRAPH.json")
