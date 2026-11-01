@@ -9,7 +9,10 @@ producer and consumer. Each flow below names its evidence.
 |---|---|
 | producer: `FirebaseAuth.c(user, forceRefresh)` → `GetTokenResult.a: String` | `ku.a.d(Z)` instruction stream |
 | transform: `"Bearer ".concat(token)` | `com.getmimo.data.source.remote.account.a.c()` decompiled line 45; the same literal appears in `RemoteCertificateRepository$downloadCertificate$2`, `PusherConnectionManager$initializePusher$1`, `AiTutorRepository$sendMessage$2`, `AccountRepository$deleteAccount$2` |
-| consumer: request header / WorkManager input / socket auth | header construction is inside the request builders; socket auth via `pg.a → ku.a.d` edge |
+| consumer 1: central `Authorization` header | `fh.a.intercept` — adds `"Bearer " + ku.a.d(false)` when the request has no header and the Retrofit method carries the `ri.b` annotation |
+| consumer 2: manual headers | `AiTutorRepository$sendMessage$2` (SSE), `RemoteCertificateRepository$downloadCertificate$2`, `pusher.a`, `pg.a` (WebSocket) |
+| consumer 3: WorkManager input | `account.a.c()` (`ARGS_ACCESS_TOKEN`) |
+| **correction** | an earlier version of this file said headers are built only inside request builders. That was wrong: a central interceptor exists. See `05_AUTHENTICATION_CLOSURE/02_INTERCEPTOR_CHAIN.md` §1 and R-11. |
 
 **Sensitivity.** The token *value* is never printed, stored or copied by mission-08. Only the transport shape is
 recorded. The token is additionally written into WorkManager `Data` (see DF-02), which persists it via the

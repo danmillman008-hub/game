@@ -192,6 +192,24 @@ Reference: `evidence/DEX_rive_webview.json`. Full treatment belongs to Phase 3 (
 
 ---
 
+## R-11 — A mission-08 statement that was wrong and is corrected here
+
+**Original claim (mission-08, Phase 2 data flow):** "header construction is inside the request builders" — i.e. the
+app attaches `Authorization` per request and has no central mechanism.
+
+**Evidence that invalidates it.** `fh.a` implements `okhttp3.Interceptor` and, when a request carries no
+`Authorization` header *and* its Retrofit method is annotated with `ri.b`, adds
+`"Authorization: Bearer " + ku.a.d(false)` (`05_AUTHENTICATION_CLOSURE/02_INTERCEPTOR_CHAIN.md`,
+`05_AUTHENTICATION_CLOSURE/evidence/DEX_auth_interceptors_and_repository.json`). The manual `"Bearer "` sites are
+the *exception* (streaming, certificate download, Pusher auth, WebSocket handshake), not the rule.
+
+**Both records.** `02_METHOD_RELATIONSHIPS/05_DATA_FLOW.md` (DF-01) now states the correct three-consumer model and
+keeps an explicit correction note. This entry exists because a mission that corrects history must also be able to
+correct itself.
+
+**By-product.** The same evidence refines R-05: the `ri.*` family is `ri.b` = authorization annotation,
+`ri.d` = network-state interface, `ri.a` = platform callback, `ri.c` = state value.
+
 ## Summary of corrections carried into mission-8
 
 | ID | Kind | Effect on mission-8 |
@@ -206,3 +224,4 @@ Reference: `evidence/DEX_rive_webview.json`. Full treatment belongs to Phase 3 (
 | R-08 | documentation | correct suite path |
 | R-09 | refinement | Rive: generic consumer vs per-asset binding vs missing composable |
 | R-10 | scope | WebView bridge enters Phase 3/4 with evidence |
+| R-11 | self-correction | central auth interceptor `fh.a` exists; `ri.*` family fully mapped |
