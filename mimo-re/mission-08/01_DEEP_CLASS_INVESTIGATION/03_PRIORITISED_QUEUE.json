@@ -1,0 +1,110 @@
+{
+ "generated": "2026-11-01",
+ "queue_rows": 2178,
+ "priority_distribution": {
+  "P0": 45,
+  "P1": 84,
+  "P2": 212,
+  "P3": 1837
+ },
+ "category_distribution": {
+  "androidx/library": 663,
+  "app-owned": 1117,
+  "obfuscated": 398
+ },
+ "source_basis": {
+  "decompiled_java+dex": 1119,
+  "dex_only": 1059
+ },
+ "priority_rules": [
+  [
+   "P0",
+   "app-owned class in a mission-8 closure domain (auth, token, learner/progress, lesson engine/grading, AI tutor, SSE/WS/Pusher/FCM, DI root, navigation root)"
+  ],
+  [
+   "P1",
+   "app-owned class that implements/persists/transmits state used by a P0 flow"
+  ],
+  [
+   "P2",
+   "app-owned class with no observed cross-domain effect (UI helper, formatting, adapter)"
+  ],
+  [
+   "P3",
+   "anonymous/synthetic/lambda class, or library class retained in the queue"
+  ]
+ ],
+ "domain_distribution": {
+  "ai": 25,
+  "analytics": 70,
+  "auth": 50,
+  "content": 17,
+  "di": 7,
+  "learner": 1,
+  "lesson": 41,
+  "network": 4,
+  "other": 93,
+  "push": 11,
+  "realtime": 1,
+  "storage": 6,
+  "subscription": 15
+ },
+ "domain_distribution_scope": "app-owned, non-anonymous classes only",
+ "role_distribution": {
+  "component": 3,
+  "enum": 53,
+  "lambda": 1464,
+  "logic": 378,
+  "value": 280
+ },
+ "p0_classes": [
+  "com.getmimo.ui.lesson.interactive.LessonBundle",
+  "com.getmimo.ui.lesson.interactive.PartiallyEditableEditText",
+  "com.getmimo.ui.lesson.interactive.base.b",
+  "com.getmimo.ui.lesson.interactive.base.c",
+  "com.getmimo.ui.lesson.interactive.c",
+  "com.getmimo.ui.lesson.interactive.d",
+  "com.getmimo.ui.lesson.interactive.fillthegap.a",
+  "com.getmimo.ui.lesson.interactive.nointeraction.a",
+  "com.getmimo.ui.lesson.interactive.selection.a",
+  "com.getmimo.ui.lesson.interactive.spell.a",
+  "com.getmimo.ui.lesson.interactive.validatedinput.a",
+  "com.getmimo.ui.lesson.interactive.validatedinput.b",
+  "com.getmimo.ui.lesson.interactive.webview.WebViewLessonScrollView",
+  "com.getmimo.ui.lesson.interactive.webview.a",
+  "com.getmimo.ui.lesson.interactive.webview.b",
+  "com.getmimo.ui.lesson.interactive.webview.c",
+  "com.getmimo.data.source.local.aitutor.UserMessage",
+  "com.getmimo.ui.aitutor.AiTutorViewModel",
+  "com.getmimo.ui.aitutor.ChatMessage",
+  "com.getmimo.ui.aitutor.c",
+  "com.getmimo.ui.aitutor.d",
+  "com.getmimo.ui.aitutor.e",
+  "com.getmimo.ui.aitutor.f",
+  "com.getmimo.data.model.room.LessonProgress",
+  "com.getmimo.data.source.remote.authentication.PostVisitWorker",
+  "com.getmimo.data.source.remote.authentication.a",
+  "com.getmimo.ui.authentication.AuthenticationActivity",
+  "com.getmimo.ui.authentication.a",
+  "com.getmimo.ui.authentication.b",
+  "com.getmimo.ui.authentication.logout.a",
+  "com.getmimo.ui.authentication.logout.b",
+  "com.getmimo.ui.authentication.r",
+  "com.getmimo.ui.authentication.t",
+  "com.getmimo.ui.authentication.u",
+  "com.getmimo.ui.authentication.v",
+  "com.getmimo.ui.authentication.w",
+  "com.getmimo.ui.authentication.x",
+  "com.getmimo.ui.authentication.y",
+  "com.getmimo.data.model.discount.RemoteConfigDiscount",
+  "com.getmimo.ui.widget.StreakWidgetRefreshWorker",
+  "com.getmimo.apputil.notification.NotPremiumNotificationService",
+  "com.getmimo.apputil.notification.NotificationPublisher",
+  "com.getmimo.data.notification.MimoFirebaseMessagingService",
+  "com.getmimo.data.content.model.track.Lesson",
+  "com.getmimo.ui.components.common.MimoWebView"
+ ],
+ "p0_count": 45,
+ "p1_count": 84,
+ "dex_only_p0": []
+}
