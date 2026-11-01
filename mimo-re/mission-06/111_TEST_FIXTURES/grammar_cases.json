@@ -1,0 +1,77 @@
+{
+ "source": "03_DSL_AND_RUNTIME/16_DSL_FULL_GRAMMAR.md + evidence/PARSER_GRAMMAR.json",
+ "cases": [
+  {
+   "name": "paragraph",
+   "xml": "<p>Hello</p>",
+   "produces": "LessonModule$Paragraph",
+   "tags": [
+    "paragraph"
+   ]
+  },
+  {
+   "name": "code with interaction",
+   "xml": "<code codelang=\"kotlin\"><interactions><interaction type=\"FILL_THE_GAP\" isDefault=\"true\" startIndex=\"6\" endIndex=\"11\"><options><option correct=\"true\">print</option></options></interaction></interactions><content>fun main() {}</content></code>",
+   "produces": "LessonModule$Code",
+   "tags": [
+    "code",
+    "interactions",
+    "interaction",
+    "options",
+    "option",
+    "content"
+   ]
+  },
+  {
+   "name": "selection",
+   "xml": "<selection visible-if=\"always\"><item correct=\"true\" iscode=\"true\">val</item></selection>",
+   "produces": "LessonModule$Selection",
+   "tags": [
+    "selection",
+    "item"
+   ]
+  },
+  {
+   "name": "table output",
+   "xml": "<code><content>x</content><output><table name=\"t\"><header><data>a</data></header><row><data>1</data></row></table></output></code>",
+   "produces": "LessonModule$Code",
+   "tags": [
+    "code",
+    "content",
+    "output",
+    "table",
+    "header",
+    "data",
+    "row"
+   ]
+  },
+  {
+   "name": "database",
+   "xml": "<database visible-if=\"always\"><tables><table name=\"t\"><row><data>1</data></row></table></tables></database>",
+   "produces": "LessonModule$Database",
+   "tags": [
+    "database",
+    "tables",
+    "table",
+    "row",
+    "data"
+   ]
+  },
+  {
+   "name": "webview",
+   "xml": "<webview version=\"1\" style=\"s\" interaction=\"i\" content=\"c\"/>",
+   "produces": "LessonModule$Webview",
+   "tags": [
+    "webview"
+   ]
+  },
+  {
+   "name": "image",
+   "xml": "<img src=\"a.png\"/>",
+   "produces": "LessonModule$Image",
+   "tags": [
+    "image"
+   ]
+  }
+ ]
+}

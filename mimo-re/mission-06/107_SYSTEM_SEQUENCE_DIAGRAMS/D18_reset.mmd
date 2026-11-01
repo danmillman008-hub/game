@@ -1,0 +1,9 @@
+sequenceDiagram
+  participant U as Learner
+  participant VM as base.c
+  participant A as analytics
+  participant R as Room
+  U->>VM: restart lesson
+  VM->>A: lesson_reset
+  VM->>VM: clear exercise state
+  VM->>R: progress row effect UNKNOWN (Q-08)

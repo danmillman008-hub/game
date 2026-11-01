@@ -1,0 +1,32 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "mimo.purchased_product.json",
+ "title": "RawPurchasedProduct (reconstructed)",
+ "description": "Field set extracted from the DEX (names are Kotlin-declared). Types inferred from Kotlin types; optionality unknown.",
+ "type": "object",
+ "properties": {
+  "boughtAt": {
+   "type": "string"
+  },
+  "coinPrice": {
+   "type": "integer"
+  },
+  "id": {
+   "type": "integer"
+  },
+  "productType": {
+   "type": "string"
+  }
+ },
+ "required": [
+  "boughtAt",
+  "coinPrice",
+  "id",
+  "productType"
+ ],
+ "x-evidence": {
+  "source": "evidence/DTO_FIELDS.json",
+  "class": "com.getmimo.data.model.store.RawPurchasedProduct",
+  "label": "VERIFIED_STATIC (field names)"
+ }
+}

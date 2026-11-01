@@ -1,0 +1,32 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "mimo.report_lesson_request.json",
+ "title": "ReportLessonBody (reconstructed)",
+ "description": "Field set extracted from the DEX (names are Kotlin-declared). Types inferred from Kotlin types; optionality unknown.",
+ "type": "object",
+ "properties": {
+  "interactionType": {
+   "type": "string"
+  },
+  "reportOption": {
+   "type": "string"
+  },
+  "reportText": {
+   "type": "string"
+  },
+  "tutorialVersion": {
+   "type": "integer"
+  }
+ },
+ "required": [
+  "interactionType",
+  "reportOption",
+  "reportText",
+  "tutorialVersion"
+ ],
+ "x-evidence": {
+  "source": "evidence/DTO_FIELDS.json",
+  "class": "com.getmimo.core.model.lesson.report.ReportLessonBody",
+  "label": "VERIFIED_STATIC (field names)"
+ }
+}

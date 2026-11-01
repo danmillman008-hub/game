@@ -1,0 +1,40 @@
+{
+ "note": "curated call edges with explicit evidence; not an exhaustive call graph",
+ "edges": [
+  {
+   "from": "com.getmimo.ui.lesson.interactive.base.c",
+   "to": "com.getmimo.data.source.remote.progress.LessonProgressRepository",
+   "method": "createLessonProgress",
+   "evidence": "base.c H(...) -> repo.createLessonProgress(bundle,startedAt,tries,attempts)",
+   "label": "VERIFIED_STATIC"
+  },
+  {
+   "from": "InteractiveLessonValidatedInputFragment$setupViews$2",
+   "to": "qm.i.a",
+   "method": "normalise",
+   "evidence": "normalise(user).equals(normalise(expected))",
+   "label": "VERIFIED_STATIC"
+  },
+  {
+   "from": "InteractiveLessonValidatedInputFragment$setupViews$2",
+   "to": "qm.e/qm.f/qm.g",
+   "method": "verdict",
+   "evidence": "three-way branch on exact/normalised equality",
+   "label": "VERIFIED_STATIC"
+  },
+  {
+   "from": "LessonProgressQueue",
+   "to": "POST /v1/tutorials/{tutorialId}/progress",
+   "method": "postProgress",
+   "evidence": "queue batches Progress list",
+   "label": "VERIFIED_STATIC"
+  },
+  {
+   "from": "pg.a",
+   "to": "wss://api.mimo.org/v1/run/socket",
+   "method": "newWebSocket",
+   "evidence": "Sec-WebSocket-Protocol: authorization.bearer.<token>",
+   "label": "VERIFIED_STATIC"
+  }
+ ]
+}

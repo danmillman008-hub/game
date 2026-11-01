@@ -1,0 +1,24 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "mimo.progress_push_response.json",
+ "title": "PostProgressResponse (reconstructed)",
+ "description": "Field set extracted from the DEX (names are Kotlin-declared). Types inferred from Kotlin types; optionality unknown.",
+ "type": "object",
+ "properties": {
+  "dailyGoalCoinReward": {
+   "type": "integer"
+  },
+  "reachedGoal": {
+   "type": "boolean"
+  }
+ },
+ "required": [
+  "dailyGoalCoinReward",
+  "reachedGoal"
+ ],
+ "x-evidence": {
+  "source": "evidence/DTO_FIELDS.json",
+  "class": "com.getmimo.data.model.progress.PostProgressResponse",
+  "label": "VERIFIED_STATIC (field names)"
+ }
+}

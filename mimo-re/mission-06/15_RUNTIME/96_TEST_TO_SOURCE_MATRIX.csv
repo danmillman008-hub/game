@@ -1,0 +1,16 @@
+test_id,area,test_intent,source_derived_expectation,evidence_ref,label,prerequisite
+T-01,grading,wrong then correct,row tries=1 attempts=2; first_try=false,03_DSL_AND_RUNTIME/21_LESSON_RUNTIME.md,BLOCKED,P1+P2+P4
+T-02,grading,case+quote variance accepted,verdict CORRECT via phase-2 normalisation,04_INTERACTION_AND_GRADING/30_ANSWER_NORMALIZATION.md,BLOCKED,P1+P2
+T-03,grading,underscore removed,my_var == myvar accepted,04_INTERACTION_AND_GRADING/30_ANSWER_NORMALIZATION.md,BLOCKED,P1+P2
+T-04,progress,abandoned lesson,row exists tries=0 attempts=0,03_DSL_AND_RUNTIME/21_LESSON_RUNTIME.md,BLOCKED,P1+P2
+T-05,sync,offline completion,row retained in_queue=1,06_PERSISTENCE_AND_SYNC/46_OFFLINE_BEHAVIOUR.md,BLOCKED,P1+P2
+T-06,sync,reconnect push,rows deleted after 2xx,06_PERSISTENCE_AND_SYNC/44_SYNC_ENGINE.md,BLOCKED,P1+P2+P3
+T-07,executable,offline run,fails; no local interpreter,03_DSL_AND_RUNTIME/23_EXECUTABLE_LESSON_FLOW.md,BLOCKED,P1+P2
+T-08,ai_tutor,stream reply,SSE until finishReason=Stop,08_AI_TUTOR/57_AI_TUTOR_TRANSPORT.md,BLOCKED,P1+P2+P3
+T-09,dsl,webview module render,webview module present; allowlist unknown,14_SECURITY/90_SECURITY_THREAT_MODEL.md,BLOCKED,P1
+T-10,state,restart lesson,lesson_reset emitted; row effect unknown,04_INTERACTION_AND_GRADING/28_HINTS_AND_RETRIES.md,BLOCKED,P1+P2
+T-11,design,dark mode,unknown (tokens blocked),10_DESIGN_SYSTEM/74_THEME_AND_DARK_MODE.md,BLOCKED,P1
+T-12,navigation,deep link route,routes via MainActivity; grammar unknown,09_NAVIGATION_AND_UI/65_ROUTING_AND_DEEPLINKS.md,BLOCKED,P1+P4
+T-13,content,locale switch,fetches locale content module; progress retained,02_CONTENT_SYSTEM/13_LOCALE_AND_PUBLISHSET_ANALYSIS.md,BLOCKED,P1+P2+P3
+T-14,gamification,keys consumption,no client decrement path found,05_LEARNER_MODEL/36_STREAKS_HEARTS_XP.md,BLOCKED,P1+P2+P3
+T-15,security,token storage,inspect EncryptedSharedPreferences vs plain,14_SECURITY/92_DATA_HANDLING_AND_PRIVACY.md,BLOCKED,P1

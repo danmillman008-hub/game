@@ -1,0 +1,11 @@
+sequenceDiagram
+  participant U as Learner
+  participant Pay as Paywall (ui.paywall/iap)
+  participant RC as RevenueCat SDK
+  participant Store as Play Billing
+  U->>Pay: choose plan
+  Pay->>RC: purchase
+  RC->>Store: billing flow
+  Store-->>RC: receipt
+  RC-->>Pay: CustomerInfo -> isPremium
+  Pay->>Pay: unlock surfaces (ai tutor upsell etc.)

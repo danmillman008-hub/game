@@ -1,0 +1,16 @@
+{
+ "note": "Client-side endpoint graph: which feature calls which endpoint. Derived from API_CATALOG_V2.csv + feature packages. No invented server behaviour.",
+ "base_url": {"production": "https://api.mimo.org", "testing": "api-testing.mimo.org", "ws": "wss://api.mimo.org/v1/run/socket", "label": "VERIFIED_STATIC"},
+ "groups": {
+  "auth_bootstrap": {"endpoints": ["/v1/… (auth, unauthorised subset of 9)"], "label": "INFERRED_HIGH"},
+  "content": {"endpoints": ["/v1/package/preview", "/v1/tracks/{id}/completion", "/v1/tracks/{id}/eta"], "label": "VERIFIED_STATIC"},
+  "progress": {"endpoints": ["POST /v1/tutorials/{tutorialId}/progress"], "label": "VERIFIED_STATIC"},
+  "learner": {"endpoints": ["/v1/user/activity", "keys", "coins", "last interacted track"], "label": "VERIFIED_STATIC"},
+  "social": {"endpoints": ["/v1/leaderboards/friends", "/v1/leaderboards/latest", "+1"], "label": "VERIFIED_STATIC"},
+  "code": {"endpoints": ["POST /v1/code/runfiles", "PATCH /v1/code/{savedCodeId}", "POST /v1/code", "/v1/code/{id}/runfiles", "remix"], "label": "VERIFIED_STATIC"},
+  "ai_tutor": {"endpoints": ["POST /v1/aiTutor/conversations", "POST /v1/aiTutor/conversations/{id}", "GET /v1/aiTutor/…/messages/count"], "label": "VERIFIED_STATIC"},
+  "subscription": {"endpoints": ["RevenueCat SDK (no mimo endpoint recovered)"], "label": "VERIFIED_STATIC"}
+ },
+ "unresolved": ["Q-80 login exchange", "Q-88 pagination", "Q-89 pusher role"],
+ "source": "mimo-re/mission-05/evidence/API_CATALOG_V2.csv"
+}

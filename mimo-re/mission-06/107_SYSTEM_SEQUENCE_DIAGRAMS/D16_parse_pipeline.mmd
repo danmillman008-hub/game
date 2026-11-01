@@ -1,0 +1,15 @@
+sequenceDiagram
+  participant Loader
+  participant XPP as XmlPullParser
+  participant D as te.c.b (dispatch)
+  participant M as te.a|d|e|f|g|b
+  Loader->>XPP: lesson XML
+  XPP->>D: START_TAG name
+  alt p -> te.d.a
+  else code -> te.a.a
+  else selection -> te.e.a
+  else img -> te.c.a
+  else webview -> te.g.a
+  else database -> te.b.a (tables -> te.f.a)
+  end
+  M-->>Loader: LessonModule

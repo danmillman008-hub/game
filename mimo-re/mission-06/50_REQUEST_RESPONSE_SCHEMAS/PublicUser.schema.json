@@ -1,0 +1,73 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "mimo.public_user.json",
+ "title": "PublicUser (reconstructed)",
+ "description": "Field set extracted from the DEX (names are Kotlin-declared). Types inferred from Kotlin types; optionality unknown.",
+ "type": "object",
+ "properties": {
+  "activeStreakLength": {
+   "type": "integer"
+  },
+  "avatarUrl": {
+   "type": "string"
+  },
+  "biography": {
+   "type": "string"
+  },
+  "isFollowedByMe": {
+   "type": "boolean"
+  },
+  "isPremium": {
+   "type": "boolean"
+  },
+  "leaderboardFirstPlaceCount": {
+   "type": "integer"
+  },
+  "leaderboardInfo": {
+   "type": "object"
+  },
+  "leaderboardSecondPlaceCount": {
+   "type": "integer"
+  },
+  "leaderboardThirdPlaceCount": {
+   "type": "integer"
+  },
+  "longestStreakLength": {
+   "type": "integer"
+  },
+  "name": {
+   "type": "string"
+  },
+  "progress": {
+   "type": "array",
+   "items": {}
+  },
+  "sparks": {
+   "type": "integer"
+  },
+  "subscriptionType": {
+   "type": "object"
+  }
+ },
+ "required": [
+  "activeStreakLength",
+  "avatarUrl",
+  "biography",
+  "isFollowedByMe",
+  "isPremium",
+  "leaderboardFirstPlaceCount",
+  "leaderboardInfo",
+  "leaderboardSecondPlaceCount",
+  "leaderboardThirdPlaceCount",
+  "longestStreakLength",
+  "name",
+  "progress",
+  "sparks",
+  "subscriptionType"
+ ],
+ "x-evidence": {
+  "source": "evidence/DTO_FIELDS.json",
+  "class": "com.getmimo.data.model.publicprofile.PublicUser",
+  "label": "VERIFIED_STATIC (field names)"
+ }
+}

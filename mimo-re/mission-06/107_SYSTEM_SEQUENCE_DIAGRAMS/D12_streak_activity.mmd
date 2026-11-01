@@ -1,0 +1,6 @@
+sequenceDiagram
+  participant App
+  participant API as api.mimo.org
+  App->>API: GET user activity
+  API-->>App: {activeStreak, longestStreak, activity[]}
+  Note over App: display only; no local streak computation

@@ -1,0 +1,31 @@
+{
+ "note": "Exercise-level machine (Phase 3.22) plus persistence-level machine, both transcribed from code. No percentage or score states exist.",
+ "exercise_machine": {
+  "states": ["IDLE", "AWAITING", "CORRECT", "PARTIAL", "INCORRECT", "SOLVED", "RESET"],
+  "initial": "IDLE",
+  "transitions": [
+   {"from": "IDLE", "event": "submit", "to": "AWAITING", "guard": "validated input", "effect": "delay 300ms then verdict"},
+   {"from": "IDLE", "event": "submit", "to": "CORRECT|INCORRECT", "guard": "option kinds", "effect": "immediate verdict"},
+   {"from": "AWAITING", "event": "verdict_exact", "to": "CORRECT", "effect": "qm.e"},
+   {"from": "AWAITING", "event": "verdict_normalised", "to": "PARTIAL", "effect": "qm.f + input overwrite"},
+   {"from": "AWAITING", "event": "verdict_wrong", "to": "INCORRECT", "effect": "qm.g"},
+   {"from": "INCORRECT", "event": "submit", "to": "AWAITING", "effect": "attempts++"},
+   {"from": "CORRECT", "event": "proceed", "to": "SOLVED", "effect": "tries=1, progress write"},
+   {"from": "PARTIAL", "event": "proceed", "to": "SOLVED", "effect": "tries=1, progress write"},
+   {"from": "INCORRECT", "event": "proceed", "to": "SOLVED", "effect": "tries=0, progress write"},
+   {"from": "SOLVED", "event": "reset", "to": "RESET", "effect": "lesson_reset analytics"}
+  ],
+  "invariants": ["attempts increments on every submit", "solved = verdict in {CORRECT, PARTIAL}", "no pass threshold"]
+ },
+ "persistence_machine": {
+  "states": ["NO_ROW", "QUEUED", "PUSHED"],
+  "transitions": [
+   {"from": "NO_ROW", "event": "lesson_opened", "to": "QUEUED", "effect": "insert in_queue=1 (tries=0, attempts=0)"},
+   {"from": "NO_ROW", "event": "lesson_completed", "to": "QUEUED", "effect": "insert in_queue=1 with counters"},
+   {"from": "QUEUED", "event": "batch_push_ok", "to": "PUSHED", "effect": "row deleted after 2xx"},
+   {"from": "QUEUED", "event": "offline", "to": "QUEUED", "effect": "NoConnectionException, row retained"}
+  ],
+  "evidence": ["base.c H()", "LessonProgressRepository.createLessonProgress", "hg.e offline interceptor", "POST /v1/tutorials/{id}/progress"],
+  "unresolved": ["behaviour of RESET on an existing QUEUED row (Q-08)"]
+ }
+}

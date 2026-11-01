@@ -1,0 +1,13 @@
+sequenceDiagram
+  participant U as Learner
+  participant VM as AiTutorViewModel
+  participant Repo as AiTutorRepository
+  participant API as api.mimo.org
+  U->>VM: send message
+  VM->>Repo: sendMessage(systemMessage, userMessage)
+  Repo->>API: POST /v1/aiTutor/conversations (Accept: text/event-stream)
+  loop SSE events
+    API-->>Repo: AiTutorConversationMessage{content, conversationId, finishReason}
+    Repo-->>VM: append content
+  end
+  API-->>Repo: finishReason=Stop

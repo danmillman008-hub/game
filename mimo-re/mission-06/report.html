@@ -1,0 +1,273 @@
+<!DOCTYPE html><html lang="fa" dir="rtl"><meta charset="utf-8">
+<title>MISSION 6 — بازسازی کامل معماری Mimo 9.35</title>
+<style>
+body{font-family:system-ui,Tahoma,sans-serif;max-width:1100px;margin:2rem auto;padding:0 1rem;line-height:1.9;background:#0f1115;color:#e6e6e6}
+h1,h2{color:#7cc4ff} table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.9rem}
+td,th{border:1px solid #2a2f3a;padding:.35rem .5rem;text-align:right} code{direction:ltr;unicode-bidi:embed;color:#9fe8a0}
+.badge{display:inline-block;padding:.1rem .5rem;border-radius:6px;background:#1d2a3a;color:#8fd0ff;font-size:.8rem}
+.en{direction:ltr;text-align:left}
+</style>
+<h1>MISSION 6 — بازسازی کامل سیستم Mimo 9.35</h1>
+<p>این گزارش خروجی مرحلهٔ مهندسی معکوس روی همان فایل APK موجود در محیط است؛ <b>هیچ بخشی از آن اجرا نشده</b> و
+هیچ ادعایی بر پایهٔ رفتار زمان اجرا یا رفتار سرور ساخته نشده است. تمام استنادها با شناسهٔ دقیق کلاس/متد و
+فایل شاهد قابل بازتولید هستند.</p>
+
+<h2>هویت مصنوع مورد بررسی</h2>
+<table><tr><th>مورد</th><th>مقدار</th></tr>
+<tr><td>حجم</td><td>142,353,499 بایت</td></tr>
+<tr><td>SHA-256</td><td class="en"><code>48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a</code></td></tr>
+<tr><td>MD5</td><td class="en"><code>f9cef2d8029e59da3668ec1c18e21566</code></td></tr>
+<tr><td>تعداد ورودی zip / dex</td><td>14,398 / 12</td></tr>
+<tr><td>امضا</td><td>بازامضاشدهٔ شخص ثالث (<code>META-INF/YOUAREFINISHED.RSA</code>)</td></tr>
+</table>
+<p class="badge">هشدار: این APK اصلی نیست؛ هر ادعا دربارهٔ «یکپارچگی» یا کد تزریقی (<code>bin.ghost</code>,
+<code>libyrf.so</code>) به Mimo نسبت داده نمی‌شود — <code>00_BASELINE/INTEGRITY_CAVEAT.md</code></p>
+
+<h2>یافته‌های کلیدی</h2>
+<ul>
+<li>سلسله‌مراتب محتوا: Track → Section → Tutorial(شناسه) → Chapter → Lesson → LessonContent؛ کلید درس
+<code>LessonIdentifier{trackId,trackVersion,tutorialId,chapterId,lessonId}</code>.</li>
+<li>DSL با ۲۹ تگ و هفت پارسر (<code>te.a</code>…<code>te.g</code>)؛ گرامر کامل در
+<code>03_DSL_AND_RUNTIME/16_DSL_FULL_GRAMMAR.md</code>.</li>
+<li>ارزیابی دو مرحله‌ای: تطابق دقیق، سپس نرمال‌سازی با فیلتر <code>[a-z0-9&lt;.]</code>؛ پاسخ درست =
+زیررشتهٔ ماژول کد (بدون فهرست پاسخ).</li>
+<li>ماشین حالت تمرین: <code>IDLE→AWAITING→CORRECT|PARTIAL|INCORRECT→SOLVED</code> و <code>RESET</code>.</li>
+<li>Room فقط سه جدول دارد (صف ارسال + تکمیل)؛ محتوا در پایگاه‌داده ذخیره نمی‌شود.</li>
+<li>شبکه: <code>https://api.mimo.org</code>، احراز هویت Bearer، ۶۲ اندپوینت (۲۸ GET/۲۴ POST/۴ PATCH/۴ DELETE/۲ PUT).</li>
+<li>مربی هوش مصنوعی: <code>POST /v1/aiTutor/conversations</code> با SSE و <code>FinishReason</code>.</li>
+<li>بازی‌وارسازی: سکه، کلید، استریک، لیگ (<code>sparks</code>/<code>leagueFreeze</code>) و جدول رده‌بندی؛
+<b>مدل XP وجود ندارد</b>.</li>
+</ul>
+
+<h2>وضعیت برچسب‌گذاری شواهد</h2>
+<table><tr><th>برچسب</th><th>وضعیت</th></tr>
+<tr><td>VERIFIED_STATIC</td><td>غالب — هر ادعا با فایل/متد و فرمان بازتولید</td></tr>
+<tr><td>VERIFIED_RUNTIME</td><td><b>صفر</b> — اجرا ممکن نبود</td></tr>
+<tr><td>VERIFIED_EXPERIMENTAL</td><td><b>صفر</b></td></tr>
+<tr><td>INFERRED / UNKNOWN / NOT_RECOVERED / BLOCKED</td><td>در <code>16_INDEX_AND_EVIDENCE/100_OPEN_QUESTIONS.md</code> فهرست شده‌اند</td></tr>
+</table>
+
+<h2>آزمون‌ها</h2>
+<p>۲۱ آزمون معنایی مأموریت ۶ (همه موفق)، ۲۳ آزمون مأموریت ۴ و ۴۴ آزمون مأموریت ۵ (بدون تغییر، همه موفق).</p>
+
+<h2>توزیع فایل‌ها بر اساس دایرکتوری</h2>
+<table><tr><th>دایرکتوری</th><th>تعداد فایل</th></tr><tr><td><code>00_BASELINE</code></td><td>9</td></tr>
+<tr><td><code>01_APK_AND_ARCHITECTURE</code></td><td>8</td></tr>
+<tr><td><code>02_CONTENT_SYSTEM</code></td><td>7</td></tr>
+<tr><td><code>03_DSL_AND_RUNTIME</code></td><td>9</td></tr>
+<tr><td><code>04_INTERACTION_AND_GRADING</code></td><td>7</td></tr>
+<tr><td><code>05_LEARNER_MODEL</code></td><td>8</td></tr>
+<tr><td><code>06_PERSISTENCE_AND_SYNC</code></td><td>7</td></tr>
+<tr><td><code>07_NETWORK</code></td><td>9</td></tr>
+<tr><td><code>08_AI_TUTOR</code></td><td>7</td></tr>
+<tr><td><code>09_NAVIGATION_AND_UI</code></td><td>7</td></tr>
+<tr><td><code>107_SYSTEM_SEQUENCE_DIAGRAMS</code></td><td>21</td></tr>
+<tr><td><code>10_DESIGN_SYSTEM</code></td><td>5</td></tr>
+<tr><td><code>111_TEST_FIXTURES</code></td><td>2</td></tr>
+<tr><td><code>11_AUTH_SUBSCRIPTION_CONFIG</code></td><td>7</td></tr>
+<tr><td><code>12_ANALYTICS</code></td><td>4</td></tr>
+<tr><td><code>13_NATIVE_AND_SDKS</code></td><td>4</td></tr>
+<tr><td><code>14_SECURITY</code></td><td>4</td></tr>
+<tr><td><code>15_RUNTIME</code></td><td>4</td></tr>
+<tr><td><code>16_INDEX_AND_EVIDENCE</code></td><td>4</td></tr>
+<tr><td><code>17_INDEPENDENT_SPECS</code></td><td>15</td></tr>
+<tr><td><code>17_TOOLS</code></td><td>1</td></tr>
+<tr><td><code>19_TESTS</code></td><td>2</td></tr>
+<tr><td><code>20_FINAL_AUDIT</code></td><td>3</td></tr>
+<tr><td><code>50_REQUEST_RESPONSE_SCHEMAS</code></td><td>16</td></tr>
+<tr><td><code>evidence</code></td><td>10</td></tr>
+<tr><td><code>root</code></td><td>1</td></tr>
+<tr><td><code>tools</code></td><td>7</td></tr></table>
+
+<h2>فهرست کامل فایل‌ها (188)</h2>
+<table><tr><th>مسیر</th><th>بایت</th><th>sha256[:12]</th></tr><tr><td>00_BASELINE/APK_MANIFEST.json</td><td>593</td><td><code>6deb3cb55a96</code></td></tr>
+<tr><td>00_BASELINE/BASELINE_REPORT.md</td><td>5,289</td><td><code>71fb2787d488</code></td></tr>
+<tr><td>00_BASELINE/DECOMPILATION_STATUS.json</td><td>621</td><td><code>3f7e5178129d</code></td></tr>
+<tr><td>00_BASELINE/DEX_HASHES.json</td><td>1,728</td><td><code>8f0d6f0642f1</code></td></tr>
+<tr><td>00_BASELINE/ENVIRONMENT_INVENTORY.json</td><td>1,970</td><td><code>f0d3136f5b21</code></td></tr>
+<tr><td>00_BASELINE/EXISTING_TEST_RESULTS.md</td><td>1,150</td><td><code>c11fb9de01b2</code></td></tr>
+<tr><td>00_BASELINE/INTEGRITY_CAVEAT.md</td><td>1,714</td><td><code>29fe8b37cf8b</code></td></tr>
+<tr><td>00_BASELINE/PREVIOUS_MISSIONS_INTEGRITY.json</td><td>324</td><td><code>52cb5ce0a79f</code></td></tr>
+<tr><td>00_BASELINE/SOURCE_INVENTORY.json</td><td>2,335</td><td><code>db00b1503649</code></td></tr>
+<tr><td>01_APK_AND_ARCHITECTURE/01_APK_STRUCTURE.md</td><td>3,593</td><td><code>b2a44c0b5560</code></td></tr>
+<tr><td>01_APK_AND_ARCHITECTURE/02_PACKAGE_AND_MODULE_MAP.md</td><td>3,854</td><td><code>c8a6be761da6</code></td></tr>
+<tr><td>01_APK_AND_ARCHITECTURE/03_APPLICATION_STARTUP.md</td><td>3,815</td><td><code>f56d8c9d9e7a</code></td></tr>
+<tr><td>01_APK_AND_ARCHITECTURE/04_ARCHITECTURE_OVERVIEW.md</td><td>3,775</td><td><code>d08495249ac9</code></td></tr>
+<tr><td>01_APK_AND_ARCHITECTURE/05_OBFUSCATION_MAP.json</td><td>7,963</td><td><code>00eb48b9a5ac</code></td></tr>
+<tr><td>01_APK_AND_ARCHITECTURE/06_CLASS_METHOD_INVENTORY.csv</td><td>2,538,069</td><td><code>d1571090cf7d</code></td></tr>
+<tr><td>01_APK_AND_ARCHITECTURE/07_DEPENDENCY_GRAPH.json</td><td>6,560</td><td><code>b36d4bfe7941</code></td></tr>
+<tr><td>01_APK_AND_ARCHITECTURE/08_CALL_GRAPH.json</td><td>1,241</td><td><code>d089716e2c7b</code></td></tr>
+<tr><td>02_CONTENT_SYSTEM/09_CONTENT_ARCHITECTURE.md</td><td>3,958</td><td><code>2ae6be6c61b2</code></td></tr>
+<tr><td>02_CONTENT_SYSTEM/10_CONTENT_DATA_MODEL.md</td><td>3,457</td><td><code>aa3da4ab1fbf</code></td></tr>
+<tr><td>02_CONTENT_SYSTEM/11_CONTENT_DELIVERY_AND_CACHING.md</td><td>2,682</td><td><code>37303d93a3ca</code></td></tr>
+<tr><td>02_CONTENT_SYSTEM/12_CONTENT_VERSIONING.md</td><td>2,167</td><td><code>803d551f2f1e</code></td></tr>
+<tr><td>02_CONTENT_SYSTEM/13_LOCALE_AND_PUBLISHSET_ANALYSIS.md</td><td>1,901</td><td><code>d2dc87495ded</code></td></tr>
+<tr><td>02_CONTENT_SYSTEM/14_CONTENT_COVERAGE.json</td><td>1,225</td><td><code>ef2ae58d52df</code></td></tr>
+<tr><td>02_CONTENT_SYSTEM/15_CONTENT_RELATIONSHIPS.json</td><td>1,959</td><td><code>c965b19753e5</code></td></tr>
+<tr><td>03_DSL_AND_RUNTIME/16_DSL_FULL_GRAMMAR.md</td><td>4,564</td><td><code>8e86d1566f3b</code></td></tr>
+<tr><td>03_DSL_AND_RUNTIME/17_TAG_SEMANTICS.md</td><td>4,001</td><td><code>d7e55dbe055e</code></td></tr>
+<tr><td>03_DSL_AND_RUNTIME/18_PARSER_ARCHITECTURE.md</td><td>3,290</td><td><code>05e98992fa78</code></td></tr>
+<tr><td>03_DSL_AND_RUNTIME/19_AST_SCHEMA.json</td><td>4,829</td><td><code>c14ba50644b0</code></td></tr>
+<tr><td>03_DSL_AND_RUNTIME/20_LESSON_RENDERING_ARCHITECTURE.md</td><td>2,808</td><td><code>05782ef8b15b</code></td></tr>
+<tr><td>03_DSL_AND_RUNTIME/21_LESSON_RUNTIME.md</td><td>2,833</td><td><code>2e26ad710760</code></td></tr>
+<tr><td>03_DSL_AND_RUNTIME/22_LESSON_STATE_MACHINE.md</td><td>2,382</td><td><code>5fe0acf0fc95</code></td></tr>
+<tr><td>03_DSL_AND_RUNTIME/23_EXECUTABLE_LESSON_FLOW.md</td><td>2,624</td><td><code>24ac1f22f151</code></td></tr>
+<tr><td>03_DSL_AND_RUNTIME/24_DSL_TAG_MAPPING.csv</td><td>2,350</td><td><code>dc7257e987eb</code></td></tr>
+<tr><td>04_INTERACTION_AND_GRADING/25_INTERACTION_TAXONOMY.md</td><td>1,914</td><td><code>9c1eea1750cf</code></td></tr>
+<tr><td>04_INTERACTION_AND_GRADING/26_GRADING_PIPELINE.md</td><td>1,994</td><td><code>a44831e8b05e</code></td></tr>
+<tr><td>04_INTERACTION_AND_GRADING/27_FEEDBACK_ENGINE.md</td><td>1,793</td><td><code>323c38bfdfde</code></td></tr>
+<tr><td>04_INTERACTION_AND_GRADING/28_HINTS_AND_RETRIES.md</td><td>1,293</td><td><code>377f95d02e5d</code></td></tr>
+<tr><td>04_INTERACTION_AND_GRADING/29_CORRECTNESS_MODEL.md</td><td>1,618</td><td><code>f4870c910c1c</code></td></tr>
+<tr><td>04_INTERACTION_AND_GRADING/30_ANSWER_NORMALIZATION.md</td><td>1,538</td><td><code>5bcb8bb55893</code></td></tr>
+<tr><td>04_INTERACTION_AND_GRADING/31_ALTERNATIVE_ANSWERS.md</td><td>1,553</td><td><code>da5374662b0d</code></td></tr>
+<tr><td>05_LEARNER_MODEL/32_LEARNER_MODEL.md</td><td>2,008</td><td><code>12f128d5f6ae</code></td></tr>
+<tr><td>05_LEARNER_MODEL/33_PROGRESS_MODEL.md</td><td>1,784</td><td><code>02a53f35757f</code></td></tr>
+<tr><td>05_LEARNER_MODEL/34_MASTERY_AND_SPACED_REPETITION.md</td><td>1,852</td><td><code>fd6337e27548</code></td></tr>
+<tr><td>05_LEARNER_MODEL/35_GAMIFICATION.md</td><td>2,184</td><td><code>64c421ecb040</code></td></tr>
+<tr><td>05_LEARNER_MODEL/36_STREAKS_HEARTS_XP.md</td><td>1,639</td><td><code>5aeb68dde814</code></td></tr>
+<tr><td>05_LEARNER_MODEL/37_LEADERBOARD.md</td><td>1,393</td><td><code>9abf9c9cd5a9</code></td></tr>
+<tr><td>05_LEARNER_MODEL/38_PROGRESS_STATE_TRANSITIONS.json</td><td>2,179</td><td><code>3ba2d029167e</code></td></tr>
+<tr><td>05_LEARNER_MODEL/39_LEARNER_ENDPOINT_INVENTORY.csv</td><td>2,420</td><td><code>85c4a7adc96a</code></td></tr>
+<tr><td>06_PERSISTENCE_AND_SYNC/40_ROOM_SCHEMA.md</td><td>1,477</td><td><code>e89c82897c28</code></td></tr>
+<tr><td>06_PERSISTENCE_AND_SYNC/41_DAO_AND_QUERIES.md</td><td>1,161</td><td><code>80e00acc805e</code></td></tr>
+<tr><td>06_PERSISTENCE_AND_SYNC/42_LOCAL_STATE.md</td><td>1,253</td><td><code>1f6468bb1142</code></td></tr>
+<tr><td>06_PERSISTENCE_AND_SYNC/43_DIRTY_TRACKING.md</td><td>955</td><td><code>53d9443826ee</code></td></tr>
+<tr><td>06_PERSISTENCE_AND_SYNC/44_SYNC_ENGINE.md</td><td>1,507</td><td><code>d27ca7ba7038</code></td></tr>
+<tr><td>06_PERSISTENCE_AND_SYNC/45_CONFLICT_RESOLUTION.md</td><td>1,257</td><td><code>b3f24dcd11ed</code></td></tr>
+<tr><td>06_PERSISTENCE_AND_SYNC/46_OFFLINE_BEHAVIOUR.md</td><td>1,200</td><td><code>a03228b8162c</code></td></tr>
+<tr><td>07_NETWORK/47_BASE_URL_AND_ENVIRONMENTS.md</td><td>1,538</td><td><code>c53fec1738ee</code></td></tr>
+<tr><td>07_NETWORK/48_HTTP_STACK.md</td><td>1,429</td><td><code>477df516cc84</code></td></tr>
+<tr><td>07_NETWORK/49_AUTHENTICATION.md</td><td>1,287</td><td><code>26a47e44149a</code></td></tr>
+<tr><td>07_NETWORK/50_REQUEST_DTO_CATALOG.md</td><td>1,478</td><td><code>039dd0041751</code></td></tr>
+<tr><td>07_NETWORK/51_ERROR_MODEL.md</td><td>1,073</td><td><code>3002d2674b7e</code></td></tr>
+<tr><td>07_NETWORK/52_ENDPOINT_BINDING.md</td><td>1,372</td><td><code>d62aee97dbe1</code></td></tr>
+<tr><td>07_NETWORK/53_RESPONSE_DTO_CATALOG.md</td><td>1,490</td><td><code>e608db061d8c</code></td></tr>
+<tr><td>07_NETWORK/54_PUSH_AND_REALTIME.md</td><td>1,050</td><td><code>d82e285b9ee9</code></td></tr>
+<tr><td>07_NETWORK/55_ENDPOINT_GRAPH.json</td><td>1,503</td><td><code>39c1a5ca4a99</code></td></tr>
+<tr><td>08_AI_TUTOR/56_AI_TUTOR_OVERVIEW.md</td><td>1,526</td><td><code>2963683cda5b</code></td></tr>
+<tr><td>08_AI_TUTOR/57_AI_TUTOR_TRANSPORT.md</td><td>1,334</td><td><code>4825267298b7</code></td></tr>
+<tr><td>08_AI_TUTOR/58_AI_TUTOR_CONTEXT_AND_PROMPTS.md</td><td>1,327</td><td><code>da1d13cd7ea3</code></td></tr>
+<tr><td>08_AI_TUTOR/59_AI_TUTOR_STATE_AND_STREAMING.md</td><td>1,043</td><td><code>8ebad6ce0b1e</code></td></tr>
+<tr><td>08_AI_TUTOR/60_AI_TUTOR_QUOTA_AND_LIMITS.md</td><td>1,058</td><td><code>498c26cfff45</code></td></tr>
+<tr><td>08_AI_TUTOR/61_AI_TUTOR_PERSISTENCE.md</td><td>876</td><td><code>7861f03a1453</code></td></tr>
+<tr><td>08_AI_TUTOR/62_AI_TUTOR_FAILURE_MODES.json</td><td>1,441</td><td><code>ace1faf7d91b</code></td></tr>
+<tr><td>09_NAVIGATION_AND_UI/63_NAVIGATION_GRAPH.md</td><td>1,622</td><td><code>02fa0b7cbc66</code></td></tr>
+<tr><td>09_NAVIGATION_AND_UI/64_SCREEN_INVENTORY.md</td><td>1,515</td><td><code>e24708731d55</code></td></tr>
+<tr><td>09_NAVIGATION_AND_UI/65_ROUTING_AND_DEEPLINKS.md</td><td>1,015</td><td><code>ff7941215c08</code></td></tr>
+<tr><td>09_NAVIGATION_AND_UI/66_UI_STATE_MANAGEMENT.md</td><td>1,065</td><td><code>71aefd3b967a</code></td></tr>
+<tr><td>09_NAVIGATION_AND_UI/67_ACCESSIBILITY_AND_LOCALISATION.md</td><td>1,453</td><td><code>c1307195a9de</code></td></tr>
+<tr><td>09_NAVIGATION_AND_UI/68_ANIMATION_AND_FEEDBACK.md</td><td>1,073</td><td><code>fdd6128a97f0</code></td></tr>
+<tr><td>09_NAVIGATION_AND_UI/69_NETWORK_UI_GRAPH.json</td><td>1,819</td><td><code>875afb65492e</code></td></tr>
+<tr><td>107_SYSTEM_SEQUENCE_DIAGRAMS/D01_lesson_open.mmd</td><td>454</td><td><code>15cb46642709</code></td></tr>
+<tr><td>107_SYSTEM_SEQUENCE_DIAGRAMS/D02_interaction_submit.mmd</td><td>369</td><td><code>8903b0802e62</code></td></tr>
+<tr><td>107_SYSTEM_SEQUENCE_DIAGRAMS/D03_progress_write.mmd</td><td>359</td><td><code>525a8a0fc935</code></td></tr>
+<tr><td>107_SYSTEM_SEQUENCE_DIAGRAMS/D04_progress_push.mmd</td><td>386</td><td><code>9412759cfedc</code></td></tr>
+<tr><td>107_SYSTEM_SEQUENCE_DIAGRAMS/D05_offline_guard.mmd</td><td>254</td><td><code>07607303f185</code></td></tr>
+<tr><td>107_SYSTEM_SEQUENCE_DIAGRAMS/D06_auth_header.mmd</td><td>229</td><td><code>f9bd1929fa63</code></td></tr>
+<tr><td>107_SYSTEM_SEQUENCE_DIAGRAMS/D07_content_bootstrap.mmd</td><td>368</td><td><code>4cb70dc7cc3b</code></td></tr>
+<tr><td>107_SYSTEM_SEQUENCE_DIAGRAMS/D08_ai_tutor.mmd</td><td>474</td><td><code>b02006d62432</code></td></tr>
+<tr><td>107_SYSTEM_SEQUENCE_DIAGRAMS/D09_ai_quota.mmd</td><td>235</td><td><code>bdee1418eef3</code></td></tr>
+<tr><td>107_SYSTEM_SEQUENCE_DIAGRAMS/D10_executable_run.mmd</td><td>442</td><td><code>347252c0f3b9</code></td></tr>
+<tr><td>107_SYSTEM_SEQUENCE_DIAGRAMS/D11_leaderboard.mmd</td><td>338</td><td><code>6a922fb0bed4</code></td></tr>
+<tr><td>107_SYSTEM_SEQUENCE_DIAGRAMS/D12_streak_activity.mmd</td><td>214</td><td><code>8a2af034b148</code></td></tr>
+<tr><td>107_SYSTEM_SEQUENCE_DIAGRAMS/D13_subscription.mmd</td><td>345</td><td><code>27c3cf0e2935</code></td></tr>
+<tr><td>107_SYSTEM_SEQUENCE_DIAGRAMS/D14_discount_offer.mmd</td><td>272</td><td><code>901590e0bed1</code></td></tr>
+<tr><td>107_SYSTEM_SEQUENCE_DIAGRAMS/D15_onboarding.mmd</td><td>323</td><td><code>715d9a9c944b</code></td></tr>
+<tr><td>107_SYSTEM_SEQUENCE_DIAGRAMS/D16_parse_pipeline.mmd</td><td>388</td><td><code>ef6a3ba5104d</code></td></tr>
+<tr><td>107_SYSTEM_SEQUENCE_DIAGRAMS/D17_feedback.mmd</td><td>281</td><td><code>dda1463f5ec2</code></td></tr>
+<tr><td>107_SYSTEM_SEQUENCE_DIAGRAMS/D18_reset.mmd</td><td>248</td><td><code>e32c63ffbcba</code></td></tr>
+<tr><td>107_SYSTEM_SEQUENCE_DIAGRAMS/D19_deeplink.mmd</td><td>249</td><td><code>66ed2fc8a325</code></td></tr>
+<tr><td>107_SYSTEM_SEQUENCE_DIAGRAMS/D20_webview_module.mmd</td><td>276</td><td><code>8ab0a05ca7ff</code></td></tr>
+<tr><td>107_SYSTEM_SEQUENCE_DIAGRAMS/README.md</td><td>706</td><td><code>cafe053f14c4</code></td></tr>
+<tr><td>10_DESIGN_SYSTEM/70_DESIGN_SYSTEM_OVERVIEW.md</td><td>913</td><td><code>6e822ed65cad</code></td></tr>
+<tr><td>10_DESIGN_SYSTEM/71_DESIGN_TOKENS.md</td><td>2,761</td><td><code>6c72c290f0b6</code></td></tr>
+<tr><td>10_DESIGN_SYSTEM/72_TYPOGRAPHY.md</td><td>939</td><td><code>84190278d13d</code></td></tr>
+<tr><td>10_DESIGN_SYSTEM/73_COMPONENT_LIBRARY.md</td><td>1,207</td><td><code>68cae69d5c3b</code></td></tr>
+<tr><td>10_DESIGN_SYSTEM/74_THEME_AND_DARK_MODE.md</td><td>867</td><td><code>ea382d58be4f</code></td></tr>
+<tr><td>111_TEST_FIXTURES/grading_vectors.json</td><td>2,399</td><td><code>92aa7178bcbb</code></td></tr>
+<tr><td>111_TEST_FIXTURES/grammar_cases.json</td><td>1,846</td><td><code>5fc9d8e774b3</code></td></tr>
+<tr><td>11_AUTH_SUBSCRIPTION_CONFIG/75_AUTH_FLOWS.md</td><td>1,277</td><td><code>eb89fed22673</code></td></tr>
+<tr><td>11_AUTH_SUBSCRIPTION_CONFIG/76_SUBSCRIPTION_AND_ENTITLEMENTS.md</td><td>1,434</td><td><code>716acb08ffad</code></td></tr>
+<tr><td>11_AUTH_SUBSCRIPTION_CONFIG/77_REMOTE_CONFIG.md</td><td>995</td><td><code>fda7cb243d6d</code></td></tr>
+<tr><td>11_AUTH_SUBSCRIPTION_CONFIG/78_SECURITY_CONFIGURATION.md</td><td>1,546</td><td><code>092a22ca5876</code></td></tr>
+<tr><td>11_AUTH_SUBSCRIPTION_CONFIG/79_ACCOUNT_LIFECYCLE.md</td><td>931</td><td><code>2f419df701b4</code></td></tr>
+<tr><td>11_AUTH_SUBSCRIPTION_CONFIG/80_BUSINESS_LOGIC_AND_MONETISATION.md</td><td>1,210</td><td><code>e916d648b01f</code></td></tr>
+<tr><td>11_AUTH_SUBSCRIPTION_CONFIG/81_AUTH_ENDPOINT_MAP.json</td><td>1,352</td><td><code>100935a39ace</code></td></tr>
+<tr><td>12_ANALYTICS/82_ANALYTICS_INVENTORY.md</td><td>1,541</td><td><code>b332a268370b</code></td></tr>
+<tr><td>12_ANALYTICS/83_EVENT_TAXONOMY.md</td><td>1,211</td><td><code>a489b44cc600</code></td></tr>
+<tr><td>12_ANALYTICS/84_USER_PROPERTIES.md</td><td>830</td><td><code>dca6280f0921</code></td></tr>
+<tr><td>12_ANALYTICS/85_EXPERIMENTATION.md</td><td>743</td><td><code>77123bc14009</code></td></tr>
+<tr><td>13_NATIVE_AND_SDKS/86_NATIVE_LIBRARIES.md</td><td>1,238</td><td><code>8eef84962e2c</code></td></tr>
+<tr><td>13_NATIVE_AND_SDKS/87_THIRD_PARTY_SDKS.md</td><td>1,323</td><td><code>e807c8ed24b7</code></td></tr>
+<tr><td>13_NATIVE_AND_SDKS/88_BINARY_ANALYSIS.md</td><td>972</td><td><code>7578da6942b6</code></td></tr>
+<tr><td>13_NATIVE_AND_SDKS/89_PROVIDER_MAP.json</td><td>1,498</td><td><code>9d5d48809d53</code></td></tr>
+<tr><td>14_SECURITY/90_SECURITY_THREAT_MODEL.md</td><td>1,799</td><td><code>6a6949f2606e</code></td></tr>
+<tr><td>14_SECURITY/91_INTEGRITY_AND_TAMPERING.md</td><td>1,274</td><td><code>7c7202929c49</code></td></tr>
+<tr><td>14_SECURITY/92_DATA_HANDLING_AND_PRIVACY.md</td><td>1,035</td><td><code>acd3a107157f</code></td></tr>
+<tr><td>14_SECURITY/93_PROTECTION_MECHANISMS.md</td><td>1,211</td><td><code>94b33b7b1fdb</code></td></tr>
+<tr><td>15_RUNTIME/94_RUNTIME_TEST_PLAN.md</td><td>2,649</td><td><code>b9c5cbcfcb81</code></td></tr>
+<tr><td>15_RUNTIME/95_RUNTIME_PREREQUISITES.md</td><td>1,404</td><td><code>d3e5061547b2</code></td></tr>
+<tr><td>15_RUNTIME/96_TEST_TO_SOURCE_MATRIX.csv</td><td>1,946</td><td><code>09cd4821af5e</code></td></tr>
+<tr><td>15_RUNTIME/97_RUNTIME_RESULTS.md</td><td>1,304</td><td><code>8d144fa383ef</code></td></tr>
+<tr><td>16_INDEX_AND_EVIDENCE/100_OPEN_QUESTIONS.md</td><td>3,122</td><td><code>d05b408f8b65</code></td></tr>
+<tr><td>16_INDEX_AND_EVIDENCE/101_COVERAGE_MATRIX.md</td><td>3,684</td><td><code>4739e17b3ac7</code></td></tr>
+<tr><td>16_INDEX_AND_EVIDENCE/98_ARTIFACT_INDEX.md</td><td>15,798</td><td><code>9246ab4c676d</code></td></tr>
+<tr><td>16_INDEX_AND_EVIDENCE/99_EVIDENCE_DB.json</td><td>2,659</td><td><code>f20f556904ff</code></td></tr>
+<tr><td>17_INDEPENDENT_SPECS/102_SPEC_CONTENT_SYSTEM.md</td><td>1,082</td><td><code>c830c4e014b3</code></td></tr>
+<tr><td>17_INDEPENDENT_SPECS/103_SPEC_INTERACTIVE_LESSON_DSL.md</td><td>1,209</td><td><code>1bc669e96484</code></td></tr>
+<tr><td>17_INDEPENDENT_SPECS/104_SPEC_GRADING_AND_FEEDBACK.md</td><td>1,004</td><td><code>b75a256a22bd</code></td></tr>
+<tr><td>17_INDEPENDENT_SPECS/105_SPEC_PROGRESS_AND_SYNC.md</td><td>778</td><td><code>de0f61cf59f1</code></td></tr>
+<tr><td>17_INDEPENDENT_SPECS/106_SPEC_LEARNER_AND_GAMIFICATION.md</td><td>721</td><td><code>af8a6a3b9be4</code></td></tr>
+<tr><td>17_INDEPENDENT_SPECS/107_SPEC_API_CLIENT.md</td><td>864</td><td><code>8c703d1b0f24</code></td></tr>
+<tr><td>17_INDEPENDENT_SPECS/108_SPEC_AI_TUTOR.md</td><td>663</td><td><code>ff81257d9971</code></td></tr>
+<tr><td>17_INDEPENDENT_SPECS/109_SPEC_NAVIGATION.md</td><td>584</td><td><code>5f22775c143e</code></td></tr>
+<tr><td>17_INDEPENDENT_SPECS/110_SPEC_DESIGN_SYSTEM.md</td><td>446</td><td><code>1106fb3e37a5</code></td></tr>
+<tr><td>17_INDEPENDENT_SPECS/111_SPEC_AUTH_SUBSCRIPTION.md</td><td>543</td><td><code>9657bdf838dd</code></td></tr>
+<tr><td>17_INDEPENDENT_SPECS/112_SPEC_ANALYTICS.md</td><td>498</td><td><code>f2b1a5649ce8</code></td></tr>
+<tr><td>17_INDEPENDENT_SPECS/113_SPEC_SECURITY_POSTURE.md</td><td>593</td><td><code>a92a7089afa7</code></td></tr>
+<tr><td>17_INDEPENDENT_SPECS/114_SPEC_EXECUTABLE_LESSONS.md</td><td>667</td><td><code>f6100aafcb93</code></td></tr>
+<tr><td>17_INDEPENDENT_SPECS/115_SPEC_ERROR_AND_OFFLINE.md</td><td>449</td><td><code>0c324f3b8499</code></td></tr>
+<tr><td>17_INDEPENDENT_SPECS/116_SPEC_IMPLEMENTATION_CHECKLIST.md</td><td>1,211</td><td><code>32f6e33773f6</code></td></tr>
+<tr><td>17_TOOLS/117_TOOLS.md</td><td>2,889</td><td><code>63acc8c824ac</code></td></tr>
+<tr><td>19_TESTS/__pycache__/test_mission06_semantics.cpython-311-pytest-9.2.0.pyc</td><td>51,508</td><td><code>b27fcbcdb71c</code></td></tr>
+<tr><td>19_TESTS/test_mission06_semantics.py</td><td>8,858</td><td><code>b464309ff2ba</code></td></tr>
+<tr><td>20_FINAL_AUDIT/118_UNRESOLVED_CLAIMS.md</td><td>3,423</td><td><code>fb098bcf66e9</code></td></tr>
+<tr><td>20_FINAL_AUDIT/119_FINAL_REPRODUCIBILITY_REPORT.md</td><td>3,191</td><td><code>af6903474a58</code></td></tr>
+<tr><td>20_FINAL_AUDIT/AUDIT_TWO_DIMENSIONS.md</td><td>2,464</td><td><code>e26973d0ca28</code></td></tr>
+<tr><td>50_REQUEST_RESPONSE_SCHEMAS/AiTutorialConversationMessageCount.schema.json</td><td>619</td><td><code>252a2cf1f315</code></td></tr>
+<tr><td>50_REQUEST_RESPONSE_SCHEMAS/Coins.schema.json</td><td>520</td><td><code>a958c755fa14</code></td></tr>
+<tr><td>50_REQUEST_RESPONSE_SCHEMAS/ExecuteFilesBody.schema.json</td><td>589</td><td><code>aa6d1c4a050a</code></td></tr>
+<tr><td>50_REQUEST_RESPONSE_SCHEMAS/ExecuteFilesResponse.schema.json</td><td>841</td><td><code>a157f316ef94</code></td></tr>
+<tr><td>50_REQUEST_RESPONSE_SCHEMAS/LastInteractedTrackResponse.schema.json</td><td>615</td><td><code>4e823d1e3720</code></td></tr>
+<tr><td>50_REQUEST_RESPONSE_SCHEMAS/LeaderboardUserResult.schema.json</td><td>1,208</td><td><code>3d8fc1039e10</code></td></tr>
+<tr><td>50_REQUEST_RESPONSE_SCHEMAS/PostProgressRequestBody.schema.json</td><td>603</td><td><code>d853a5f32e98</code></td></tr>
+<tr><td>50_REQUEST_RESPONSE_SCHEMAS/PostProgressResponse.schema.json</td><td>660</td><td><code>860b3db16eb0</code></td></tr>
+<tr><td>50_REQUEST_RESPONSE_SCHEMAS/PublicUser.schema.json</td><td>1,475</td><td><code>e169d417e76c</code></td></tr>
+<tr><td>50_REQUEST_RESPONSE_SCHEMAS/RawPurchasedProduct.schema.json</td><td>728</td><td><code>8a44f00b14e5</code></td></tr>
+<tr><td>50_REQUEST_RESPONSE_SCHEMAS/ReportLessonBody.schema.json</td><td>777</td><td><code>01ecd45f975a</code></td></tr>
+<tr><td>50_REQUEST_RESPONSE_SCHEMAS/Rewards.schema.json</td><td>545</td><td><code>e375f33e1a36</code></td></tr>
+<tr><td>50_REQUEST_RESPONSE_SCHEMAS/TrackCompletionResponse.schema.json</td><td>680</td><td><code>307140f4ee08</code></td></tr>
+<tr><td>50_REQUEST_RESPONSE_SCHEMAS/TrackEtaResponse.schema.json</td><td>748</td><td><code>2ee26ba2e0ea</code></td></tr>
+<tr><td>50_REQUEST_RESPONSE_SCHEMAS/UserActivityResponse.schema.json</td><td>707</td><td><code>8eceeea723d9</code></td></tr>
+<tr><td>50_REQUEST_RESPONSE_SCHEMAS/UserKeys.schema.json</td><td>541</td><td><code>1dfc30a484ed</code></td></tr>
+<tr><td>MISSION_06_REPORT.md</td><td>11,694</td><td><code>271335ff7722</code></td></tr>
+<tr><td>evidence/CLASS_INVENTORY_NETWORK.csv</td><td>382</td><td><code>d06043aaa2a2</code></td></tr>
+<tr><td>evidence/CONTENT_MODEL_FIELDS.json</td><td>10,934</td><td><code>bc83d50ba707</code></td></tr>
+<tr><td>evidence/DECOMPILE_MANIFEST_NETWORK.json</td><td>2,385</td><td><code>6b039e1f09d8</code></td></tr>
+<tr><td>evidence/DESIGN_TOKENS_NAMES.json</td><td>722</td><td><code>d3feed98a1cc</code></td></tr>
+<tr><td>evidence/DI_GRAPH.json</td><td>71,497</td><td><code>e64680f740b9</code></td></tr>
+<tr><td>evidence/DTO_FIELDS.json</td><td>15,295</td><td><code>1a1e5672b512</code></td></tr>
+<tr><td>evidence/EVENT_CANDIDATES.csv</td><td>73,273</td><td><code>acf2d00ee7fe</code></td></tr>
+<tr><td>evidence/EVENT_CANDIDATES_SUMMARY.json</td><td>941</td><td><code>379790e0c005</code></td></tr>
+<tr><td>evidence/PARSER_GRAMMAR.json</td><td>7,468</td><td><code>75f27adbb055</code></td></tr>
+<tr><td>evidence/RESOURCES.json</td><td>9,500</td><td><code>c7f8c427c99a</code></td></tr>
+<tr><td>tools/build_baseline.py</td><td>6,390</td><td><code>441065f31219</code></td></tr>
+<tr><td>tools/build_class_inventory.py</td><td>10,741</td><td><code>8c32afce4adc</code></td></tr>
+<tr><td>tools/extract_class_fields.py</td><td>2,328</td><td><code>89207aba64fe</code></td></tr>
+<tr><td>tools/extract_di_graph.py</td><td>3,039</td><td><code>19b861524255</code></td></tr>
+<tr><td>tools/extract_event_candidates.py</td><td>3,455</td><td><code>67611c0c8dd4</code></td></tr>
+<tr><td>tools/extract_parser_grammar.py</td><td>3,428</td><td><code>d3db91d26fff</code></td></tr>
+<tr><td>tools/extract_resources.py</td><td>4,376</td><td><code>adb7907e57b7</code></td></tr></table>
+<p>گزارش اصلی: <code>MISSION_06_REPORT.md</code> — ممیزی: <code>20_FINAL_AUDIT/</code> —
+بازتولید: <code>20_FINAL_AUDIT/119_FINAL_REPRODUCIBILITY_REPORT.md</code></p>
+</html>

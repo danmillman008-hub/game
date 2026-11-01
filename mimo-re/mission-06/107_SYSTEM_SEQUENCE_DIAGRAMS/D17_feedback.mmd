@@ -1,0 +1,9 @@
+sequenceDiagram
+  participant VM as base.c
+  participant C as content (paragraphs)
+  VM->>C: find visible-if=correct / wrong paragraphs
+  alt verdict correct
+    VM-->>VM: show correct paragraph
+  else verdict wrong
+    VM-->>VM: show wrong paragraph (answer never revealed)
+  end

@@ -1,0 +1,6 @@
+sequenceDiagram
+  participant VM as AiTutorViewModel
+  participant API as api.mimo.org
+  VM->>API: GET /v1/aiTutor/.../messages/count
+  API-->>VM: {userMessageCount}
+  Note over VM: no client-side limit value; threshold is server-side

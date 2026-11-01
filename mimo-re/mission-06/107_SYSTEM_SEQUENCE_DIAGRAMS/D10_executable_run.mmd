@@ -1,0 +1,13 @@
+sequenceDiagram
+  participant U as Learner
+  participant VM as ExecutableLessonVM
+  participant API as api.mimo.org
+  participant WS as wss://api.mimo.org/v1/run/socket
+  U->>VM: run
+  alt REST
+    VM->>API: POST /v1/code/runfiles {files}
+    API-->>VM: {consoleOutput, error, hasPassed, hostedProjectUrl, tests}
+  else WebSocket
+    VM->>WS: connect (Sec-WebSocket-Protocol: authorization.bearer.<token>)
+    WS-->>VM: streamed output
+  end

@@ -1,0 +1,21 @@
+{
+ "note": "Auth/subscription/config surfaces. Only endpoints actually present in API_CATALOG_V2.csv are named with paths; the rest are marked as unresolved rather than invented.",
+ "auth": {
+  "scheme": "Bearer token in Authorization header (fh.a), token from ri.b",
+  "unauthenticated_endpoints": {"count": 9, "label": "VERIFIED_STATIC", "detail": "catalogue rows without authorization requirement"},
+  "login_exchange": {"label": "NOT_RECOVERED", "open_question": "Q-80"},
+  "refresh": {"label": "NOT_RECOVERED", "open_question": "Q-81"},
+  "ws_auth": {"header": "Sec-WebSocket-Protocol: authorization.bearer.<token>", "label": "VERIFIED_STATIC"},
+  "pusher_auth": {"class": "f9.j", "label": "VERIFIED_STATIC"}
+ },
+ "subscription": {
+  "provider": "RevenueCat + libsigner.so (Adjust)",
+  "entitlement_flag": "PublicUser.isPremium",
+  "tiers_seen": ["Free", "Pro", "Max"],
+  "coin_products": "RawPurchasedProduct{coinPrice, productType}",
+  "discounts": "LocalDiscountTheme via remote repository",
+  "label": "VERIFIED_STATIC"
+ },
+ "remote_config": {"provider": "Firebase Remote Config", "default_flags": 3, "file": "res/xml/remote_config_defaults.xml", "label": "VERIFIED_STATIC"},
+ "security": {"allowBackup": false, "requestLegacyExternalStorage": true, "pinning": "none found", "network_security_config": "present", "label": "VERIFIED_STATIC"}
+}

@@ -1,0 +1,63 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "mimo.interactive.lesson.ast.json",
+ "title": "Mimo interactive lesson AST (reconstructed, evidence-based)",
+ "description": "Normalised AST recovered from the seven te/* parsers and the 41 model classes. This is a reconstruction target for a reader, not a Mimo serialisation format.",
+ "type": "object",
+ "required": ["modules"],
+ "properties": {"modules": {"type": "array", "items": {"$ref": "#/$defs/Module"}}},
+ "$defs": {
+  "Visibility": {"enum": ["ALWAYS", "CORRECT", "WRONG"]},
+  "Module": {"oneOf": [
+    {"$ref": "#/$defs/Paragraph"}, {"$ref": "#/$defs/Code"}, {"$ref": "#/$defs/Selection"},
+    {"$ref": "#/$defs/Image"}, {"$ref": "#/$defs/Webview"}, {"$ref": "#/$defs/Database"}]},
+  "Common": {"type": "object", "required": ["name", "visibility"],
+    "properties": {"name": {"type": "string"}, "visibility": {"$ref": "#/$defs/Visibility"}}},
+  "Paragraph": {"allOf": [{"$ref": "#/$defs/Common"}], "properties": {
+    "kind": {"const": "PARAGRAPH"},
+    "inlines": {"type": "array", "items": {"$ref": "#/$defs/Inline"}}}},
+  "Inline": {"oneOf": [
+    {"type": "object", "properties": {"kind": {"const": "TEXT"}, "value": {"type": "string"}}},
+    {"type": "object", "properties": {"kind": {"const": "BR"}}},
+    {"type": "object", "properties": {"kind": {"const": "EM"}}, "required": ["kind"]},
+    {"type": "object", "properties": {"kind": {"const": "STRONG"}}},
+    {"type": "object", "properties": {"kind": {"const": "SPAN"}, "children": {"type": "array", "items": {"$ref": "#/$defs/Inline"}}}},
+    {"type": "object", "properties": {"kind": {"const": "A"}, "href": {"type": "string"}}},
+    {"type": "object", "properties": {"kind": {"const": "CODE"}, "value": {"type": "string"}}}]},
+  "Code": {"allOf": [{"$ref": "#/$defs/Common"}], "required": ["content", "interactions"], "properties": {
+    "kind": {"const": "CODE"},
+    "codelang": {"type": "string", "description": "CodeLanguage.fromString, default none"},
+    "content": {"type": "string", "description": "index space for all interaction offsets"},
+    "interactions": {"type": "array", "items": {"$ref": "#/$defs/Interaction"}},
+    "output": {"$ref": "#/$defs/Output"},
+    "collapsibleLines": {"type": "array", "items": {"type": "object", "required": ["startLineIndex", "endLineIndex"],
+      "properties": {"startLineIndex": {"type": "integer"}, "endLineIndex": {"type": "integer"}}}}}},
+  "Interaction": {"type": "object", "required": ["type", "startIndex", "endIndex"], "properties": {
+    "type": {"enum": ["FILL_THE_GAP", "SELECTION", "SPELL", "VALIDATED_INPUT"]},
+    "isDefault": {"type": "boolean", "default": false},
+    "startIndex": {"type": "integer", "minimum": 0, "description": "character offset into Code.content"},
+    "endIndex": {"type": "integer", "minimum": 0},
+    "options": {"type": "array", "items": {"$ref": "#/$defs/Option"}},
+    "expected": {"type": "string", "description": "VALIDATED_INPUT expected text = content.slice(start, end)"}}},
+  "Option": {"type": "object", "required": ["isCorrect", "label"], "properties": {
+    "isCorrect": {"type": "boolean"}, "label": {"type": "string"},
+    "spanStart": {"type": "integer", "description": "Option.c — styled-text start, NOT a gap bound"},
+    "spanEnd": {"type": "integer", "description": "Option.d"}}},
+  "Output": {"oneOf": [
+    {"type": "object", "required": ["kind", "text"], "properties": {"kind": {"const": "CONSOLE"}, "text": {"type": "string"}}},
+    {"type": "object", "required": ["kind", "table"], "properties": {"kind": {"const": "TABLE"}, "table": {"$ref": "#/$defs/Table"}}}]},
+  "Table": {"type": "object", "properties": {"name": {"type": "string"}, "content": {"type": "string"},
+    "rows": {"type": "array", "items": {"$ref": "#/$defs/Row"}}}},
+  "Row": {"type": "object", "required": ["kind", "cells"], "properties": {
+    "kind": {"enum": ["HEADER", "DATA"]}, "cells": {"type": "array", "items": {"type": "string"}}}},
+  "Selection": {"allOf": [{"$ref": "#/$defs/Common"}], "properties": {"kind": {"const": "SELECTION"},
+    "items": {"type": "array", "items": {"type": "object", "properties": {
+      "isCorrect": {"type": "boolean"}, "isCode": {"type": "boolean"}, "label": {"type": "string"}}}}}},
+  "Image": {"allOf": [{"$ref": "#/$defs/Common"}], "properties": {"kind": {"const": "IMAGE"}, "src": {"type": "string"}}},
+  "Webview": {"allOf": [{"$ref": "#/$defs/Common"}], "properties": {"kind": {"const": "WEBVIEW"},
+    "version": {"type": "string"}, "style": {"type": "string"}, "interaction": {"type": "string"},
+    "webviewType": {"enum": ["BROWSER", "EMBEDDED", "INTERACTIVE", "UNLOCK"]}}},
+  "Database": {"allOf": [{"$ref": "#/$defs/Common"}], "properties": {"kind": {"const": "DATABASE"},
+    "tables": {"type": "array", "items": {"$ref": "#/$defs/Table"}}}}
+ }
+}

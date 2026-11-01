@@ -1,0 +1,8 @@
+sequenceDiagram
+  participant C as Retrofit client
+  participant A as fh.a
+  participant T as token store (ri.b)
+  participant API as api.mimo.org
+  C->>A: intercept
+  A->>T: token = d(0)
+  A->>API: Authorization: Bearer <token>

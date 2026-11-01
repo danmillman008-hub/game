@@ -1,0 +1,11 @@
+sequenceDiagram
+  participant App as App lifecycle
+  participant Repo as ProgressRepository
+  participant R as Room
+  participant API as api.mimo.org
+  App->>Repo: trigger push
+  Repo->>R: select WHERE in_queue=1
+  R-->>Repo: rows
+  Repo->>API: POST /v1/tutorials/{tutorialId}/progress {progressList}
+  API-->>Repo: 200 {reachedGoal, dailyGoalCoinReward}
+  Repo->>R: delete pushed rows

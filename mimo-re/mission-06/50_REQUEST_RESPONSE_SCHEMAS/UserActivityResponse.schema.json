@@ -1,0 +1,29 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "mimo.user_activity.json",
+ "title": "UserActivityResponse (reconstructed)",
+ "description": "Field set extracted from the DEX (names are Kotlin-declared). Types inferred from Kotlin types; optionality unknown.",
+ "type": "object",
+ "properties": {
+  "activeStreak": {
+   "type": "object"
+  },
+  "activity": {
+   "type": "array",
+   "items": {}
+  },
+  "longestStreak": {
+   "type": "object"
+  }
+ },
+ "required": [
+  "activeStreak",
+  "activity",
+  "longestStreak"
+ ],
+ "x-evidence": {
+  "source": "evidence/DTO_FIELDS.json",
+  "class": "com.getmimo.core.model.streak.UserActivityResponse",
+  "label": "VERIFIED_STATIC (field names)"
+ }
+}

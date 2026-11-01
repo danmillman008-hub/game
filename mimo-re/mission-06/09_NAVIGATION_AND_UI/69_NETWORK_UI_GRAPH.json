@@ -1,0 +1,18 @@
+{
+ "note": "Screen → data dependency graph as recovered from view models, repositories and the endpoint graph. Direction: screen consumes endpoint.",
+ "screens": [
+  {"screen": "onboarding", "data": ["local prefs", "remote config defaults"], "endpoints": [], "label": "INFERRED_HIGH"},
+  {"screen": "tracks/tutorials list", "data": ["bundled TracksJson", "TrackCompletionResponse"], "endpoints": ["/v1/tracks/{id}/completion", "/v1/tracks/{id}/eta", "last interacted track"], "label": "VERIFIED_STATIC"},
+  {"screen": "interactive lesson", "data": ["bundled lesson AST", "local progress rows"], "endpoints": ["POST /v1/tutorials/{tutorialId}/progress"], "label": "VERIFIED_STATIC"},
+  {"screen": "executable lesson", "data": ["executable payload", "saved code"], "endpoints": ["POST /v1/code/runfiles", "wss://api.mimo.org/v1/run/socket", "PATCH /v1/code/{id}"], "label": "VERIFIED_STATIC"},
+  {"screen": "ai tutor", "data": ["conversation id (server)"], "endpoints": ["POST /v1/aiTutor/conversations", "/v1/aiTutor/…/messages/count"], "label": "VERIFIED_STATIC"},
+  {"screen": "leaderboard", "data": ["Leaderboard"], "endpoints": ["/v1/leaderboards/friends", "/v1/leaderboards/latest"], "label": "VERIFIED_STATIC"},
+  {"screen": "streak/activity", "data": ["UserActivityResponse"], "endpoints": ["user activity"], "label": "INFERRED_HIGH"},
+  {"screen": "upgrade/paywall", "data": ["RevenueCat CustomerInfo", "discount themes"], "endpoints": ["localDiscountThemes (remote)"], "label": "INFERRED_HIGH"},
+  {"screen": "profile", "data": ["PublicUser"], "endpoints": ["public user"], "label": "INFERRED_HIGH"}
+ ],
+ "ambient": [
+  {"mechanism": "Pusher", "affects": "unknown screens", "label": "UNKNOWN"},
+  {"mechanism": "FCM notifications", "affects": "deep link into MainActivity", "label": "VERIFIED_STATIC"}
+ ]
+}

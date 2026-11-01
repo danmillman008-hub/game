@@ -1,0 +1,11 @@
+sequenceDiagram
+  participant U as Learner
+  participant F as Fragment
+  participant VM as base.c
+  participant G as Grader (qm.i)
+  U->>F: input / tap
+  F->>VM: submit
+  VM->>G: verdict(input, expected)
+  Note over G: phase1 exact -> qm.e<br/>phase2 normalised -> qm.f<br/>else -> qm.g
+  G-->>VM: CORRECT | CORRECT_NORMALISED | INCORRECT
+  VM->>VM: H(tries, attempts)

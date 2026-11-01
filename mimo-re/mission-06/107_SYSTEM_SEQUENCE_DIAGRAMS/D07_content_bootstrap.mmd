@@ -1,0 +1,9 @@
+sequenceDiagram
+  participant App
+  participant Assets as assets/lessons-en/tracks
+  participant Mod as Play dynamic module
+  participant API as api.mimo.org
+  App->>Assets: read TracksJson (publishSetVersion, tracks)
+  App->>Mod: ensure content_<locale> module installed
+  App->>API: GET /v1/tracks/{id}/completion
+  API-->>App: {lastInteractedTutorialId, tutorials}

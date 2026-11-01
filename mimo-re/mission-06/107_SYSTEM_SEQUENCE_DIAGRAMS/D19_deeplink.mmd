@@ -1,0 +1,7 @@
+sequenceDiagram
+  participant OS as Android
+  participant MA as MainActivity (12 filters)
+  participant Router
+  OS->>MA: https://getmimo.com/<path> | mimo://<path>
+  MA->>Router: parse uri (grammar NOT_RECOVERED)
+  Router-->>OS: destination screen

@@ -1,0 +1,8 @@
+sequenceDiagram
+  participant Pay as Paywall
+  participant Repo as LocalDiscountThemeRepository
+  participant API as api.mimo.org
+  Pay->>Repo: fetch
+  Repo->>API: discount themes request
+  API-->>Repo: LocalDiscountThemeDto[]
+  Repo-->>Pay: themed offer rendered locally

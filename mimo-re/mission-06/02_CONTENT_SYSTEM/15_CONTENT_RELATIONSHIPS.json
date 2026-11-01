@@ -1,0 +1,20 @@
+{
+ "note": "Entity relationship model as recovered from field types. JSON is the schema of the reconstruction, not a Mimo serialisation format.",
+ "entities": {
+  "Track": {"fields_known": false, "children": ["Section"], "identity": "trackId + trackVersion (from LessonIdentifier)"},
+  "Section": {"fields": ["index", "name", "description", "tutorials", "hasProgress"], "delta_form": "SectionJson{name, description, startIndex, endIndex, tutorialIds}"},
+  "Tutorial": {"fields_known": false, "identity": "tutorialId", "parent": "Section"},
+  "Chapter": {"fields": ["id", "title", "type", "isCompleted", "lessons"], "identity": "chapterId", "parent": "Tutorial"},
+  "Lesson": {"fields": ["id", "title", "contentType", "images", "hardModeSelected"], "identity": "LessonIdentifier(trackId, trackVersion, tutorialId, chapterId, lessonId)", "parent": "Chapter"},
+  "LessonContent": {"variants": ["Interactive{lessonModules, hardModeLessonModules}", "Executable{instructions, preselectedFileIndex, files}"], "owner": "Lesson"},
+  "ExecutableFile": {"fields": ["name", "content", "solvedContent", "codeLanguage"], "owner": "LessonContent$Executable"}
+ },
+ "relationships": [
+  {"from": "Track", "to": "Section", "cardinality": "1..n", "evidence": "TracksJson.tracks -> Section.tutorials nesting; SectionJson index bounds"},
+  {"from": "Section", "to": "Tutorial", "cardinality": "n", "evidence": "SectionJson.tutorialIds[]", "label": "INFERRED_HIGH"},
+  {"from": "Tutorial", "to": "Chapter", "cardinality": "n", "evidence": "LessonIdentifier.tutorialId + chapterId co-occur; Chapter has no tutorialId field", "label": "INFERRED_HIGH"},
+  {"from": "Chapter", "to": "Lesson", "cardinality": "1..n", "evidence": "Chapter.lessons"},
+  {"from": "Lesson", "to": "LessonContent", "cardinality": "1", "evidence": "LessonContentType discriminator"}
+ ],
+ "unresolved": ["Track/Tutorial field sets (Q-15)", "whether chapter ordering is index-based or server-ordered (Q-27)"]
+}

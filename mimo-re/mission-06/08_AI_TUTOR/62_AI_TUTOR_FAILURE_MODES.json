@@ -1,0 +1,12 @@
+{
+ "note": "Failure modes derivable from client code. No runtime failures were induced (no device).",
+ "modes": [
+  {"id": "F-1", "trigger": "no connectivity", "detected_by": "hg.e interceptor", "client_effect": "NoConnectionException before request", "label": "VERIFIED_STATIC", "recovery": "manual retry"},
+  {"id": "F-2", "trigger": "HTTP 4xx/5xx on start", "detected_by": "d70.b failure envelope", "client_effect": "message not added / error state", "label": "INFERRED_HIGH", "recovery": "manual retry"},
+  {"id": "F-3", "trigger": "stream ends with finishReason=Length", "detected_by": "FinishReason enum", "client_effect": "truncated message shown", "label": "VERIFIED_STATIC", "recovery": "new user message"},
+  {"id": "F-4", "trigger": "stream drops mid-reply", "detected_by": "EventSourceListener.onFailure", "client_effect": "partial message retained (Q-97)", "label": "UNKNOWN", "recovery": "manual"},
+  {"id": "F-5", "trigger": "quota exhausted", "detected_by": "server response only (no client limit)", "client_effect": "unknown; upgrade upsell referenced from aiTutor ui", "label": "UNKNOWN", "recovery": "upgrade"},
+  {"id": "F-6", "trigger": "auth expired", "detected_by": "401", "client_effect": "no refresh interceptor recovered (Q-81)", "label": "UNKNOWN", "recovery": "blocked"}
+ ],
+ "blocked_runtime_tests": ["T-AI-01 start conversation", "T-AI-02 stream completion", "T-AI-03 quota boundary", "T-AI-04 offline open"]
+}

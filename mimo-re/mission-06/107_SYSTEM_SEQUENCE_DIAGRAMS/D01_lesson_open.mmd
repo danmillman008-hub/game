@@ -1,0 +1,12 @@
+sequenceDiagram
+  participant U as Learner
+  participant N as Nav (MainActivity)
+  participant VM as InteractiveLessonVM (base.c)
+  participant P as Parser (te.c.b)
+  participant R as Room
+  U->>N: tap lesson
+  N->>P: parse bundled lesson XML
+  P-->>VM: modules[] (LessonModule.*)
+  VM->>R: createLessonProgress(tries=0, attempts=0, in_queue=1)
+  VM->>VM: pick CORRECT/WRONG paragraphs, select isDefault interaction
+  VM-->>U: render code blocks + slots

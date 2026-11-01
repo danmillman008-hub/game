@@ -1,0 +1,7 @@
+sequenceDiagram
+  participant P as te.g.a
+  participant VM as LessonVM
+  participant WV as WebView
+  P-->>VM: LessonModule$Webview{version, style, interaction, content}
+  VM->>WV: load content (allowlist UNKNOWN, Q-140)
+  WV-->>VM: interaction callback (schema NOT_RECOVERED)

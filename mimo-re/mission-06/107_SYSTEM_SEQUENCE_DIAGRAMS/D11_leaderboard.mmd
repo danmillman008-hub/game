@@ -1,0 +1,8 @@
+sequenceDiagram
+  participant U as Learner
+  participant VM as LeaderboardVM
+  participant API as api.mimo.org
+  U->>VM: open board
+  VM->>API: GET /v1/leaderboards/latest | /v1/leaderboards/friends
+  API-->>VM: LeaderboardUserResult[]{rank, sparks, league, newLeague, usedLeagueFreeze}
+  VM-->>U: render server order (no client sorting)

@@ -1,0 +1,16 @@
+{
+ "note": "Provider matrix for privacy/architecture review. Presence is verified; data flows are NOT verified (no runtime).",
+ "providers": [
+  {"name": "Firebase Analytics", "category": "analytics", "client_evidence": "classes + gradle-time SDK", "label": "VERIFIED_STATIC"},
+  {"name": "Adjust", "category": "attribution", "client_evidence": "libsigner.so + classes", "label": "VERIFIED_STATIC"},
+  {"name": "Sentry", "category": "crash", "client_evidence": "io.sentry classes", "label": "VERIFIED_STATIC"},
+  {"name": "RevenueCat", "category": "subscriptions", "client_evidence": "purchase classes", "label": "VERIFIED_STATIC"},
+  {"name": "Pusher", "category": "realtime", "client_evidence": "f9.j reads API host", "label": "VERIFIED_STATIC"},
+  {"name": "Rive", "category": "animation", "client_evidence": "librive-android.so", "label": "VERIFIED_STATIC"},
+  {"name": "Google Play Billing/Delivery", "category": "commerce", "client_evidence": "manifest + meta-data", "label": "VERIFIED_STATIC"},
+  {"name": "Google reCAPTCHA", "category": "abuse protection", "client_evidence": "recaptcha classes", "label": "VERIFIED_STATIC"},
+  {"name": "Facebook/Apple/Google Sign-In", "category": "identity", "client_evidence": "manifest providers", "label": "INFERRED_HIGH"},
+  {"name": "Mimo first-party API", "category": "core", "client_evidence": "api.mimo.org", "label": "VERIFIED_STATIC"}
+ ],
+ "unknowns": ["which analytics events go to which provider (Q-131)", "consent/opt-out surface (Q-134)"]
+}

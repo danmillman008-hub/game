@@ -1,0 +1,9 @@
+sequenceDiagram
+  participant U as Learner
+  participant Nav as onboarding nav graph (17 fragments)
+  participant Prefs
+  participant API as api.mimo.org
+  U->>Nav: first launch
+  Nav->>Prefs: read onboarding flags
+  Nav->>API: (auth/bootstrap, payload NOT_RECOVERED)
+  Nav-->>U: goal/language/difficulty selection -> main

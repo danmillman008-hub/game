@@ -1,0 +1,10 @@
+sequenceDiagram
+  participant Repo as any repository
+  participant H as hg.e interceptor
+  participant S as socket
+  Repo->>H: request
+  alt offline
+    H-->>Repo: throw NoConnectionException
+  else online
+    H->>S: proceed (fh.b UA, fh.a Bearer)
+  end

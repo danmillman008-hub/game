@@ -1,0 +1,8 @@
+sequenceDiagram
+  participant VM as base.c
+  participant Repo as LessonProgressRepository
+  participant DAO as Room DAO
+  VM->>Repo: createLessonProgress(lessonId, tutorialId, tries, attempts, publishSetVersion, tutorialVersion)
+  Repo->>DAO: insert/upsert in_queue=1
+  DAO-->>Repo: row id
+  Note over Repo: no update-in-place; key = (lesson_id, tutorial_id)

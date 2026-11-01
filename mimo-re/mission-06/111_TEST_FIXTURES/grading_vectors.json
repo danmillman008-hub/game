@@ -1,0 +1,97 @@
+{
+ "source": "04_INTERACTION_AND_GRADING/30_ANSWER_NORMALIZATION.md + qm.i",
+ "filter": "[^a-z0-9<.] removed after lower()",
+ "vectors": [
+  {
+   "raw": "print('Hello, World!')",
+   "expected": "print(hello world)",
+   "exact": false,
+   "normalised": true,
+   "why": "quotes/spaces/punctuation dropped",
+   "normalised_raw": "printhelloworld",
+   "normalised_expected": "printhelloworld"
+  },
+  {
+   "raw": "Print(\"hi\")",
+   "expected": "print('hi')",
+   "exact": false,
+   "normalised": true,
+   "why": "case + quote style",
+   "normalised_raw": "printhi",
+   "normalised_expected": "printhi"
+  },
+  {
+   "raw": "my_var",
+   "expected": "myvar",
+   "exact": false,
+   "normalised": true,
+   "why": "underscore dropped (false positive hazard)",
+   "normalised_raw": "myvar",
+   "normalised_expected": "myvar"
+  },
+  {
+   "raw": "a+b",
+   "expected": "ab",
+   "exact": false,
+   "normalised": true,
+   "why": "operator dropped (false positive hazard)",
+   "normalised_raw": "ab",
+   "normalised_expected": "ab"
+  },
+  {
+   "raw": "1.5",
+   "expected": "1.5",
+   "exact": true,
+   "normalised": true,
+   "why": "dot kept",
+   "normalised_raw": "1.5",
+   "normalised_expected": "1.5"
+  },
+  {
+   "raw": "a < b",
+   "expected": "a<b",
+   "exact": false,
+   "normalised": true,
+   "why": "space dropped, '<' kept",
+   "normalised_raw": "a<b",
+   "normalised_expected": "a<b"
+  },
+  {
+   "raw": "print(x)",
+   "expected": "println(x)",
+   "exact": false,
+   "normalised": false,
+   "why": "ln survives the filter",
+   "normalised_raw": "printx",
+   "normalised_expected": "printlnx"
+  },
+  {
+   "raw": "\u00c7a marche",
+   "expected": "\u00e7a marche",
+   "exact": false,
+   "normalised": true,
+   "why": "both sides drop the accented letter identically -> still equal",
+   "normalised_raw": "amarche",
+   "normalised_expected": "amarche"
+  },
+  {
+   "raw": "\u0410\u0411\u0412",
+   "expected": "abc",
+   "exact": false,
+   "normalised": false,
+   "why": "cyrillic drops to empty -> never equal to latin text",
+   "normalised_raw": "",
+   "normalised_expected": "abc"
+  },
+  {
+   "raw": "Caf\u00e9",
+   "expected": "Cafe",
+   "exact": false,
+   "normalised": false,
+   "why": "accent dropped on one side only -> mismatch",
+   "normalised_raw": "caf",
+   "normalised_expected": "cafe"
+  }
+ ],
+ "note": "Expectations are computed from the documented filter; a test failure means doc and code disagree."
+}
