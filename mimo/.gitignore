@@ -1,0 +1,22 @@
+# Engines are cloned at pinned commits by tools/bootstrap_engines.sh — never vendored here.
+engines/src/
+
+# Runtime data and logs (user progress, SQLite databases, dev output)
+.runtime/
+*.log
+
+# Node
+node_modules/
+dist/
+dist-preview/
+
+# Localisation audit output produced at runtime by the overlay
+docs/i18n-missing.json
+
+# Screenshots are added by the operator on a machine with a browser
+docs/screenshots/*.png
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/

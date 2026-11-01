@@ -1,0 +1,22 @@
+{
+  "note": "Engines are cloned at these exact commits by tools/bootstrap_engines.sh. Nothing is vendored into this repository; the engines keep their own licences (EPM GPL-3.0-only, LearnHarness AGPL-3.0-only) and their own data.",
+  "epm": {
+    "product": "EPM — 墨题 / English Practice Machine",
+    "repo": "https://github.com/mo9652962-ai/english-multiple-choice-practice-machine.git",
+    "commit": "14c1b27",
+    "commit_full": "14c1b276297258e51d05281bdc1dfaf750a2b564",
+    "license": "GPL-3.0-only",
+    "stack": "FastAPI (Python 3.11) + Vue 3 / Vite 8",
+    "run": "uvicorn backend/standalone_main.py with EPM_FRONTEND_DIST + EPM_DATA_DIR",
+    "integration": "reverse-proxied at /practice (prefix stripped); the Vite build uses base=/practice/ and VITE_API_ROOT=/practice/api"
+  },
+  "learnharness": {
+    "product": "LearnHarness",
+    "repo": "https://github.com/amosblomqvist/learnharness.git",
+    "commit": "e69e85269c064c6c9c49a8b06ae78c06e79c4a63",
+    "license": "AGPL-3.0-only",
+    "stack": "Next.js 16 (React 19) + its own Node server",
+    "run": "next dev --port 3000 with LH_DATA_DIR + LH_AUTH_FILE isolated",
+    "integration": "basePath=/max and reverse-proxied at /max (prefix kept)"
+  }
+}

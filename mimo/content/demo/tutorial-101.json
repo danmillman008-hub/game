@@ -1,0 +1,67 @@
+{
+  "id": 101,
+  "version": 1,
+  "type": "course",
+  "title": "مجموعه و اعضای آن",
+  "summary": "از نمادگذاری مجموعه تا تساوی و زیرمجموعه — با تمرین‌های تعاملی.",
+  "chapters": [
+    {
+      "id": 1011,
+      "title": "۱. آشنایی با مجموعه",
+      "type": "lesson-group",
+      "lessons": [
+        {
+          "id": 9001,
+          "contentType": "interactive",
+          "title": "مجموعه چیست؟",
+          "objectives": [
+            "معنی مجموعه و اعضای آن را توضیح دهید",
+            "نمادهای ∈ و ∉ و ∅ را به کار ببرید",
+            "مجموعهٔ تهی را تشخیص دهید"
+          ],
+          "body": "<p>در ریاضیات، <strong>مجموعه</strong> گردایه‌ای از اشیاء متمایز است. اعضای یک مجموعه معمولاً داخل آکولاد نوشته می‌شوند؛ مثلاً مجموعهٔ اعداد طبیعی کوچک‌تر از ۵ به این شکل است: {۱، ۲، ۳، ۴}.</p>\n<h2>عضویت و نمادها</h2>\n<p>اگر <em>a</em> عضوی از مجموعهٔ <em>A</em> باشد، می‌نویسیم a <interaction type=\"fillTheGap\" answer=\"∈\" label=\"نماد عضویت\" width=\"3\"/> A. اگر عضو نباشد، از نماد ∉ استفاده می‌کنیم. برای شمردن اعضا از نماد n(A) استفاده می‌شود.</p>\n<p>مجموعه‌ای که هیچ عضوی ندارد، <strong>مجموعهٔ تهی</strong> نام دارد و با نماد ∅ نمایش داده می‌شود.</p>\n<h2>تمرین ۱</h2>\n<selection question=\"کدام گزینه یک مجموعهٔ تهی را نشان می‌دهد؟\">\n  <item value=\"1\" correct=\"false\">{۰}</item>\n  <item value=\"2\" correct=\"true\">∅</item>\n  <item value=\"3\" correct=\"false\">{∅}</item>\n  <item value=\"4\" correct=\"false\">n(∅) = 1</item>\n</selection>\n<p visible-if=\"wrong\">دقت کنید: مجموعه‌ای که تنها عضو آن صفر است، تهی نیست. نماد ∅ به‌تنهایی مجموعهٔ تهی است.</p>\n<p visible-if=\"correct\">درست بود. مرحلهٔ بعد را ادامه دهید.</p>",
+          "feedback": [
+            "هر پاسخ چند بار قابل بازبینی است؛ تلاش‌ها محلی ذخیره می‌شوند."
+          ]
+        },
+        {
+          "id": 9002,
+          "contentType": "interactive",
+          "title": "تساوی مجموعه‌ها",
+          "objectives": [
+            "شرط تساوی دو مجموعه را بیان کنید",
+            "در پرسش چندگزینه‌ای همهٔ گزینه‌های درست را برگزینید"
+          ],
+          "body": "<p>دو مجموعه را <strong>مساوی</strong> می‌گوییم هرگاه اعضای آن‌ها دقیقاً یکسان باشند؛ ترتیب نوشتن اعضا در تساوی مجموعه‌ها اهمیتی ندارد.</p>\n<p>مجموعهٔ {۱، ۲، ۳} با مجموعهٔ {۳، ۲، ۱} مساوی است، اما با مجموعهٔ {۱، ۲} مساوی نیست.</p>\n<h2>تمرین ۲ — چند گزینه درست است؟</h2>\n<selection multiple=\"multiple\" question=\"کدام موارد با مجموعهٔ {۲، ۴، ۶} مساوی‌اند؟\">\n  <item value=\"1\" correct=\"true\">{۶، ۴، ۲}</item>\n  <item value=\"2\" correct=\"false\">{۲، ۴}</item>\n  <item value=\"3\" correct=\"true\">{۴، ۶، ۲}</item>\n  <item value=\"4\" correct=\"false\">{۲، ۴، ۶، ۸}</item>\n</selection>\n<p visible-if=\"wrong\">در پرسش چندگزینه‌ای همهٔ گزینه‌های درست باید انتخاب شوند؛ یک گزینهٔ نادرست کل پاسخ را نادرست می‌کند.</p>\n<p visible-if=\"correct\">عالی! تساوی مجموعه‌ها فقط به اعضا وابسته است، نه ترتیب.</p>"
+        },
+        {
+          "id": 9004,
+          "contentType": "interactive",
+          "title": "اشتراک و اجتماع",
+          "objectives": [
+            "اشتراک دو مجموعه را بیابید",
+            "اجتماع را از اشتراک تشخیص دهید"
+          ],
+          "body": "<p>در این فصل اشتراک (∩) و اجتماع (∪) دو مجموعه را بررسی می‌کنیم.</p>\n<p>اشتراک دو مجموعه، مجموعهٔ اعضای مشترک آن‌هاست و اجتماع، مجموعهٔ همهٔ اعضای هر دو مجموعه.</p>\n<h2>تمرین ۴</h2>\n<selection question=\"اگر A = {۱، ۲، ۳} و B = {۳، ۴}، آنگاه A ∩ B چیست؟\">\n  <item value=\"1\" correct=\"false\">{۱، ۲، ۳، ۴}</item>\n  <item value=\"2\" correct=\"true\">{۳}</item>\n  <item value=\"3\" correct=\"false\">{۱، ۲}</item>\n  <item value=\"4\" correct=\"false\">∅</item>\n</selection>\n<p visible-if=\"wrong\">اشتراک یعنی اعضای مشترک؛ به دنبال عنصری بگردید که در هر دو مجموعه آمده است.</p>\n<p visible-if=\"correct\">درست است: تنها عضو مشترک ۳ است.</p>"
+        }
+      ]
+    },
+    {
+      "id": 1012,
+      "title": "۲. زیرمجموعه",
+      "type": "lesson-group",
+      "lessons": [
+        {
+          "id": 9003,
+          "contentType": "interactive",
+          "title": "زیرمجموعه و شمارش",
+          "objectives": [
+            "رابطهٔ زیرمجموعه را تشخیص دهید",
+            "تعداد زیرمجموعه‌ها را محاسبه کنید"
+          ],
+          "body": "<p>زیرمجموعه‌ها را با نماد ⊆ نشان می‌دهیم. اگر هر عضو A عضو B هم باشد، A زیرمجموعهٔ B است.</p>\n<p>تعداد زیرمجموعه‌های یک مجموعهٔ n عضوی برابر ۲ به توان n است. برای مجموعهٔ سه‌عضوی، تعداد زیرمجموعه‌ها <interaction type=\"validatedInput\" answer=\"8\" label=\"تعداد زیرمجموعه‌ها\" width=\"4\"/> است.</p>\n<h2>تست حساب</h2>\n<p>در عبارت روبه‌رو، مقدار متغیر را کامل کنید:</p>\n<code codelang=\"javascript\" version=\"2\" name=\"زیرمجموعه‌ها.js\"><content><text class=\"plain\">let n = 3;\nlet subsets = 1;\nfor (let i = 0; i &lt; n; i += 1) {\n  subsets *= 2;\n}</text></content><interactions><interaction type=\"validatedInput\" startIndex=\"51\" endIndex=\"57\" isDefault=\"true\"/></interactions></code>\n<p visible-if=\"wrong\">راهنما: در هر تکرار حلقه، مقدار subsets دو برابر می‌شود؛ شرط حلقه باید شمارنده را یک واحد افزایش دهد.</p>\n<p visible-if=\"correct\">آفرین. عدد ۸ همان ۲ به توان ۳ است.</p>"
+        }
+      ]
+    }
+  ]
+}

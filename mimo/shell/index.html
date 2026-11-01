@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f3d2e" />
+  <title>میمو — یادگیری برنامه‌نویسی و ریاضی</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="app" class="app" data-tab="learn">
+    <header class="topbar" id="topbar">
+      <div class="topbar__brand">
+        <span class="mark" aria-hidden="true">M</span>
+        <span class="topbar__title" id="topbar-title">یادگیری</span>
+      </div>
+      <div class="topbar__actions">
+        <span class="demo-badge" id="demo-badge" title="محتوای نمایشی است">نمایشی</span>
+        <button class="icon-btn" id="btn-reload-learn" title="بارگذاری دوبارهٔ محتوا" aria-label="بارگذاری دوبارهٔ محتوا">⟳</button>
+      </div>
+    </header>
+
+    <main class="viewport" id="viewport">
+      <!-- Learn is rendered here -->
+      <section class="screen" id="screen-learn" data-screen="learn">
+        <div class="loading" id="learn-loading">در حال بارگذاری بستهٔ محتوایی…</div>
+        <div class="error-box" id="learn-error" hidden></div>
+        <div id="learn-root" class="learn-root"></div>
+      </section>
+
+      <!-- Practice hosts the real EPM application -->
+      <section class="screen screen--engine" id="screen-practice" data-screen="practice" hidden>
+        <div class="engine-shell">
+          <div class="engine-bar">
+            <div class="engine-bar__text">
+              <strong>تمرین و آزمون</strong>
+              <span>موتور مستقل EPM — داده و پایگاه‌دادهٔ جداگانه</span>
+            </div>
+            <div class="engine-bar__actions">
+              <a class="ghost-btn" id="practice-open" href="/practice/" target="_blank" rel="noopener">باز کردن در تب جدید</a>
+              <span class="engine-status" id="practice-status">در حال بررسی…</span>
+            </div>
+          </div>
+          <iframe class="engine-frame" id="practice-frame" title="موتور تمرین و آزمون (EPM)"></iframe>
+        </div>
+      </section>
+
+      <!-- Max hosts the real LearnHarness application -->
+      <section class="screen screen--engine" id="screen-max" data-screen="max" hidden>
+        <div class="engine-shell">
+          <div class="engine-bar">
+            <div class="engine-bar__text">
+              <strong>مکس — معلم هوش مصنوعی</strong>
+              <span>موتور مستقل LearnHarness — گراف دانش و تمرین</span>
+            </div>
+            <div class="engine-bar__actions">
+              <a class="ghost-btn" id="max-open" href="/max/" target="_blank" rel="noopener">باز کردن در تب جدید</a>
+              <span class="engine-status" id="max-status">در حال بررسی…</span>
+            </div>
+          </div>
+          <div class="engine-offline" id="max-offline" hidden>
+            <h2>مکس در دسترس نیست</h2>
+            <p id="max-offline-text">سرور LearnHarness بالا نیست. اسکریپت <code>start-preview</code> هر دو موتور را اجرا می‌کند.</p>
+          </div>
+          <iframe class="engine-frame" id="max-frame" title="موتور معلم هوش مصنوعی (LearnHarness)"></iframe>
+        </div>
+      </section>
+
+      <!-- Leaderboard (Mimo experience, computed locally) -->
+      <section class="screen" id="screen-leaderboard" data-screen="leaderboard" hidden></section>
+
+      <!-- Profile (Mimo experience) -->
+      <section class="screen" id="screen-profile" data-screen="profile" hidden></section>
+    </main>
+
+    <nav class="tabbar" id="tabbar" aria-label="ناوبری اصلی">
+      <button class="tab" data-tab="learn" aria-current="page">
+        <span class="tab__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M8 7h8M8 11h6"/></svg>
+        </span>
+        <span class="tab__label">یادگیری</span>
+      </button>
+      <button class="tab" data-tab="practice">
+        <span class="tab__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2.5"/><path d="M8 8h8M8 12h5M8 16h3"/></svg>
+        </span>
+        <span class="tab__label">تمرین و آزمون</span>
+      </button>
+      <button class="tab" data-tab="max">
+        <span class="tab__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3.4"/></svg>
+        </span>
+        <span class="tab__label">مکس</span>
+      </button>
+      <button class="tab" data-tab="leaderboard">
+        <span class="tab__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 21h8M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg>
+        </span>
+        <span class="tab__label">رتبه‌بندی</span>
+      </button>
+      <button class="tab" data-tab="profile">
+        <span class="tab__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg>
+        </span>
+        <span class="tab__label">پروفایل</span>
+      </button>
+    </nav>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
