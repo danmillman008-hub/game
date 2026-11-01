@@ -1,0 +1,380 @@
+{
+ "mission": "mission-05",
+ "nodes": [
+  {
+   "id": "ui.lesson",
+   "label": "Lesson fragment / view",
+   "kind": "ui",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "vm.base",
+   "label": "InteractiveLessonBaseViewModel (base.c)",
+   "kind": "viewmodel",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "vm.fillthegap",
+   "label": "FillTheGap VM (fillthegap.a)",
+   "kind": "viewmodel",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "vm.selection",
+   "label": "Selection VM (selection.a)",
+   "kind": "viewmodel",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "vm.spell",
+   "label": "Spell VM (spell.a)",
+   "kind": "viewmodel",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "vm.validated",
+   "label": "ValidatedInput VM (qm.d)",
+   "kind": "viewmodel",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "grade.verdict",
+   "label": "Verdict sealed set (qm.e/qm.f/qm.g)",
+   "kind": "grading",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "grade.normalizer",
+   "label": "Normaliser (qm.i.a)",
+   "kind": "grading",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "parser.tie",
+   "label": "Lesson XML parser (te.a-te.g)",
+   "kind": "parser",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "model.ast",
+   "label": "AST models (lessonparser.interactive.model)",
+   "kind": "model",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "content.repo",
+   "label": "Tracks/content repository",
+   "kind": "repository",
+   "evidence": "INFERRED_HIGH"
+  },
+  {
+   "id": "prog.repo",
+   "label": "LessonProgressRepository",
+   "kind": "repository",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "prog.queue",
+   "label": "LessonProgressQueue",
+   "kind": "sync",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "db.room",
+   "label": "Room Database_Impl",
+   "kind": "persistence",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "db.lp",
+   "label": "lesson_progress",
+   "kind": "table",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "db.cc",
+   "label": "chapter_completions",
+   "kind": "table",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "db.tc",
+   "label": "tutorial_completions",
+   "kind": "table",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "api.progress",
+   "label": "POST /v1/tutorials/{tutorialId}/progress",
+   "kind": "api",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "api.aitutor.count",
+   "label": "GET /v1/aiTutor/conversations/messages/count",
+   "kind": "api",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "api.aitutor.post",
+   "label": "POST /v1/aiTutor/conversations",
+   "kind": "api",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "api.activity",
+   "label": "GET /v1/user/activity",
+   "kind": "api",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "api.coins",
+   "label": "GET /v1/user/coins",
+   "kind": "api",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "api.keys",
+   "label": "GET /v1/user/keys",
+   "kind": "api",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "api.rewards",
+   "label": "GET /v1/user/rewards/next",
+   "kind": "api",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "api.package",
+   "label": "GET /v1/package/preview",
+   "kind": "api",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "api.code.run",
+   "label": "POST /v1/code/runfiles",
+   "kind": "api",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "aitutor.repo",
+   "label": "AiTutorRepository",
+   "kind": "repository",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "analytics.facade",
+   "label": "com.getmimo.analytics.a",
+   "kind": "analytics",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "analytics.firebase",
+   "label": "FirebaseAnalytics",
+   "kind": "sdk",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "analytics.adjust",
+   "label": "Adjust SDK",
+   "kind": "sdk",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "native.rive",
+   "label": "librive-android.so (Rive)",
+   "kind": "native",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "native.signer",
+   "label": "libsigner.so (Adjust signer)",
+   "kind": "native",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "native.yrf",
+   "label": "libyrf.so + bin.ghost.YRF",
+   "kind": "native",
+   "evidence": "INFERRED_MEDIUM"
+  },
+  {
+   "id": "rc.clientconfig",
+   "label": "/v2/client-config -> RemoteConfig",
+   "kind": "config",
+   "evidence": "VERIFIED_STATIC"
+  }
+ ],
+ "edges": [
+  {
+   "from": "ui.lesson",
+   "to": "vm.base",
+   "rel": "binds",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "from": "vm.base",
+   "to": "vm.fillthegap",
+   "rel": "specialised-by",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "from": "vm.base",
+   "to": "vm.selection",
+   "rel": "specialised-by",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "from": "vm.base",
+   "to": "vm.spell",
+   "rel": "specialised-by",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "from": "vm.base",
+   "to": "vm.validated",
+   "rel": "specialised-by",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "from": "vm.validated",
+   "to": "grade.verdict",
+   "rel": "produces",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "from": "grade.verdict",
+   "to": "grade.normalizer",
+   "rel": "uses",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "from": "parser.tie",
+   "to": "model.ast",
+   "rel": "constructs",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "from": "content.repo",
+   "to": "parser.tie",
+   "rel": "feeds",
+   "evidence": "INFERRED_HIGH"
+  },
+  {
+   "from": "vm.base",
+   "to": "prog.repo",
+   "rel": "writes-progress",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "from": "prog.repo",
+   "to": "db.room",
+   "rel": "uses",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "from": "db.room",
+   "to": "db.lp",
+   "rel": "contains",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "from": "db.room",
+   "to": "db.cc",
+   "rel": "contains",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "from": "db.room",
+   "to": "db.tc",
+   "rel": "contains",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "from": "prog.repo",
+   "to": "prog.queue",
+   "rel": "enqueues",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "from": "prog.queue",
+   "to": "api.progress",
+   "rel": "posts",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "from": "prog.queue",
+   "to": "db.lp",
+   "rel": "deletes-after-ack",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "from": "vm.base",
+   "to": "analytics.facade",
+   "rel": "emits",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "from": "analytics.facade",
+   "to": "analytics.firebase",
+   "rel": "forwards",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "from": "analytics.facade",
+   "to": "analytics.adjust",
+   "rel": "forwards",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "from": "aitutor.repo",
+   "to": "api.aitutor.post",
+   "rel": "posts",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "from": "aitutor.repo",
+   "to": "api.aitutor.count",
+   "rel": "queries-quota",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "from": "api.package",
+   "to": "content.repo",
+   "rel": "delivers-packs",
+   "evidence": "INFERRED_HIGH"
+  },
+  {
+   "from": "api.code.run",
+   "to": "vm.base",
+   "rel": "exec-verdict",
+   "evidence": "INFERRED_HIGH"
+  },
+  {
+   "from": "native.rive",
+   "to": "ui.lesson",
+   "rel": "renders-animation",
+   "evidence": "VERIFIED_STATIC"
+  },
+  {
+   "from": "native.signer",
+   "to": "analytics.adjust",
+   "rel": "signs-requests",
+   "evidence": "INFERRED_HIGH"
+  },
+  {
+   "from": "native.yrf",
+   "to": "ui.lesson",
+   "rel": "blocking-dialog",
+   "evidence": "INFERRED_LOW"
+  },
+  {
+   "from": "rc.clientconfig",
+   "to": "analytics.facade",
+   "rel": "gates-events",
+   "evidence": "INFERRED_LOW"
+  }
+ ],
+ "note": "Curated dependency graph. Every edge carries its own evidence label; INFERRED edges are hypotheses, not facts."
+}

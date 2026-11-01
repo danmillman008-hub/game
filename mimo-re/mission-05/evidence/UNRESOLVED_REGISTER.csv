@@ -1,0 +1,27 @@
+id,topic,domain,why_unresolved,what_would_resolve_it,blocked_by
+U-01,Full line-by-line read of te.b–te.g (paragraph/selection/image/webview/database parsers),04_CONTENT_AND_DSL,Only te.a (code module) was read in full; the other six parsers were identified and their models verified,Read the six methods end to end,effort
+U-02,Role of the plural <tables> tag,04_CONTENT_AND_DSL,Tag exists (ordinal 9) but no corpus document exercises it at top level,"Craft a synthetic document and trace, or finish U-01",effort
+U-03,DatabaseModule payload (schema/seed),04_CONTENT_AND_DSL,Class exists and 574 database modules are in the corpus; payload fields not read,Finish U-01,effort
+U-04,Smali-level confirmation of DAD readings,02_ANDROID_STATIC_ANALYSIS,No JDK → baksmali unavailable; DAD pseudo-Java reuses locals and drops modifiers,"Install a JDK, run baksmali on the same dex",toolchain
+U-05,Existence of a lesson 'skip' path that bypasses grading,05_LESSON_RUNTIME,One call site suggests a skip but its guard could not be resolved,Targeted read of the caller's guard chain,effort
+U-06,Retry policy: does a wrong answer replay the same interaction instance?,05_LESSON_RUNTIME,Content-driven; not traced end to end,Trace one lesson's interaction lifecycle with synthetic content,effort
+U-07,Spell interaction: is there any dictionary/edit-distance check beyond Option.a?,06_ASSESSMENT_AND_EVALUATION,No dictionary resource and no distance code in the traced path (negative evidence only),Finish U-01 for the spell parser + exhaust Spell VM,effort
+U-08,Does `attempts` reset on lesson restart?,09_PROGRESS_AND_GAMIFICATION,lesson_reset is emitted with an `attempts` property; the counter's reset point was not read,Read a0()/restart path fully,effort
+U-09,"Streak algorithm (window, repair, timezone)",09_PROGRESS_AND_GAMIFICATION,Client only reacts to a stored row; authoritative value is server-side (UserActivityResponse),Server observation or product documentation,access
+U-10,Does the server recompute tries/attempts?,09_PROGRESS_AND_GAMIFICATION,Backend not observable,Authorised account + controlled requests,access
+U-11,Multi-device conflict policy for the same lesson,11_LOCAL_DATA_AND_SYNC,Requires two clients against the same account,Authorised experiment,access
+U-12,AI tutor conversation persistence,12_AI_TUTOR,Repository is named 'local' but no Room table for conversations exists,Finish reading AiTutorRepository (class not emitted by DAD),effort
+U-13,CREATE TABLE DDL / column affinities,11_LOCAL_DATA_AND_SYNC,Database_Impl delegates creation to a base class DAD did not emit,Read the base class via a different decompiler,toolchain
+U-14,Whether the queued flag is cleared without deletion,11_LOCAL_DATA_AND_SYNC,Only the delete path was read,Runtime observation,blocked
+U-15,AI tutor streaming protocol (SSE vs chunked),12_AI_TUTOR,"sendMessage lambda recovered, repository class not emitted",Finish reading the repository,effort
+U-16,Free AI-tutor message allowance,12_AI_TUTOR,Quota is server-side; no client constant,Controlled account use,access
+U-17,AI tutor conversation retention across restarts,12_AI_TUTOR,No local store found,Runtime observation,blocked
+U-18,Trigger conditions for bin.ghost.YRF / libyrf.so,16_NATIVE_AND_EXECUTION,Symbols stripped; trigger is native and deliberately not probed (RULE 5),Authorised environment manipulation is out of scope,legal
+U-19,Whether Adjust signature verification is enforced client- or server-side,16_NATIVE_AND_EXECUTION,"libsigner.so proves the signing capability, not the enforcement point",Vendor documentation,external
+U-20,Authoritative analytics event list,15_ANALYTICS,Event names are runtime Strings; the Analytics assembler class is absent from the DEX under that name,Runtime capture via a debug build/proxy,blocked
+U-21,"Identity of the four obfuscated analytics SDK handles (np/h, be/d, be/y3, oy/t)",15_ANALYTICS,Types are obfuscated; only Firebase and Adjust are named,Dependency-tree/maven inspection or runtime network capture,effort
+U-22,API base URL resolution,10_NETWORK_AND_API,No hard-coded host in decompiled classes (only CDN/web/sentinel hosts),Read resources/BuildConfig (needs aapt2) or observe traffic,toolchain
+U-23,PATCH vs PUT disambiguation for Lie0/n and Lie0/p,10_NETWORK_AND_API,Both permit a body; Retrofit cannot distinguish them statically,Runtime capture of one request per verb,blocked
+U-24,Server error/retry contract,10_NETWORK_AND_API,Only response wrapper shapes recovered,Authorised requests,access
+U-25,Serialised JSON field names per DTO,10_NETWORK_AND_API,"Field annotations not extracted (tool supports it, run not performed)",Extend field-scope extraction,effort
+U-26,"Auth, purchase flow and navigation absent from the system graph",18_SYSTEM_GRAPH,Out of scope for this phase,Phase 8 of the mission plan,effort

@@ -1,0 +1,139 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>Mimo — Mission 5 reverse engineering</title>
+<style>
+ :root{--fg:#111;--muted:#555;--line:#ddd;--accent:#0b6}
+ body{font:15px/1.55 -apple-system,Segoe UI,Roboto,sans-serif;color:var(--fg);margin:0;padding:2rem;max-width:1100px}
+ h1{font-size:1.6rem;margin:0 0 .3rem} h2{margin-top:2rem;border-bottom:1px solid var(--line);padding-bottom:.3rem}
+ .meta{color:var(--muted);font-size:.9rem} .cards{display:flex;flex-wrap:wrap;gap:.75rem;margin:1rem 0}
+ .card{border:1px solid var(--line);border-radius:8px;padding:.6rem .9rem;min-width:150px}
+ .card b{display:block;font-size:1.35rem} code{background:#f6f6f6;padding:.05rem .3rem;border-radius:4px}
+ table{border-collapse:collapse;width:100%} td,th{border-bottom:1px solid var(--line);padding:.35rem .4rem;text-align:left;vertical-align:top}
+ a{color:#0a58ca;text-decoration:none} a:hover{text-decoration:underline}
+ .lbl{font-size:.75rem;border:1px solid var(--line);border-radius:10px;padding:.05rem .45rem;color:var(--muted)}
+</style></head><body>
+<h1>Mimo — Mission 5 reverse engineering</h1>
+<p class="meta"><code>com.getmimo</code> 9.35 · versionCode 1792759685 · specification only · <b>no runtime evidence</b> (no device/emulator/adb) · branch <code>arena/ecb8af07-game</code></p>
+<div class="cards">
+<div class="card"><b>62</b>endpoints</div>
+<div class="card"><b>0</b>annotation rows</div>
+<div class="card"><b>50</b>DTO types</div>
+<div class="card"><b>3,133</b>app classes</div>
+<div class="card"><b>34</b>graph nodes</div>
+<div class="card"><b>26</b>open items</div>
+</div>
+<h2>Headline findings</h2><table><tr><th>Finding</th><th>Report</th></tr>
+<tr><td>The lesson parser is obfuscated <code>te.a</code>–<code>te.g</code>, outside <code>com.getmimo</code></td><td><a href="04_CONTENT_AND_DSL/DSL_GRAMMAR.md">04_CONTENT_AND_DSL/DSL_GRAMMAR.md</a></td></tr>
+<tr><td>The DSL is HTML-shaped with 29 tags (Tag ordinals 0–28)</td><td><a href="04_CONTENT_AND_DSL/AST_AND_MODELS.md">04_CONTENT_AND_DSL/AST_AND_MODELS.md</a></td></tr>
+<tr><td>Validated-input grading normalises (lowercase; keep letters/digits/&lt;/. ) and has a partial-match outcome after a 300 ms delay</td><td><a href="06_ASSESSMENT_AND_EVALUATION/ASSESSMENT_SPEC.md">06_ASSESSMENT_AND_EVALUATION/ASSESSMENT_SPEC.md</a></td></tr>
+<tr><td><code>tries</code> is a 0/1 correctness flag, not a counter — <code>isSolvedCorrectly() { tries &gt;= 1 }</code></td><td><a href="09_PROGRESS_AND_GAMIFICATION/PROGRESS_MODEL.md">09_PROGRESS_AND_GAMIFICATION/PROGRESS_MODEL.md</a></td></tr>
+<tr><td>The local database is a transmit buffer (3 tables, no migrations, delete after ack)</td><td><a href="11_LOCAL_DATA_AND_SYNC/DB_SCHEMA_AND_DATAFLOW.md">11_LOCAL_DATA_AND_SYNC/DB_SCHEMA_AND_DATAFLOW.md</a></td></tr>
+<tr><td>62 endpoints · 85 parameter bindings · 34 response DTOs recovered</td><td><a href="10_NETWORK_AND_API/API_CATALOG.md">10_NETWORK_AND_API/API_CATALOG.md</a></td></tr>
+<tr><td>Native payload identified; <code>libyrf.so</code> drives an obfuscated <code>bin.ghost</code> blocking dialog</td><td><a href="16_NATIVE_AND_EXECUTION/NATIVE_REPORT.md">16_NATIVE_AND_EXECUTION/NATIVE_REPORT.md</a></td></tr>
+</table>
+<h2>Start here</h2><p><a href="MISSION_05_REPORT.md">MISSION_05_REPORT.md</a> · <a href="22_FINAL_AUDIT/FINAL_AUDIT.md">FINAL_AUDIT.md</a> · <a href="19_INDEPENDENT_SPECIFICATIONS/README.md">E1/E2/E5 specs</a> · <a href="MISSION_05_REPORT_FA.md">گزارش فارسی</a></p>
+<p class="meta">Evidence labels: VERIFIED_STATIC · VERIFIED_RUNTIME · VERIFIED_EXPERIMENTAL · INFERRED_HIGH · INFERRED_MEDIUM · INFERRED_LOW · UNKNOWN · BLOCKED · NOT_APPLICABLE</p>
+<h2>(root)</h2><table><tr><th>File</th><th>Type</th></tr>
+<tr><td><a href="MISSION_05_REPORT.md">MISSION_05_REPORT.md</a></td><td class="lbl">md</td></tr>
+<tr><td><a href="MISSION_05_REPORT_FA.md">MISSION_05_REPORT_FA.md</a></td><td class="lbl">md</td></tr>
+<tr><td><a href="README.md">README.md</a></td><td class="lbl">md</td></tr>
+</table>
+<h2>00_BASELINE_AUDIT</h2><table><tr><th>File</th><th>Type</th></tr>
+<tr><td><a href="00_BASELINE_AUDIT/BASELINE_AUDIT.md">BASELINE_AUDIT.md</a></td><td class="lbl">md</td></tr>
+</table>
+<h2>01_TOOLCHAIN_AND_ENVIRONMENT</h2><table><tr><th>File</th><th>Type</th></tr>
+<tr><td><a href="01_TOOLCHAIN_AND_ENVIRONMENT/TOOLCHAIN_AND_REPRODUCIBILITY.md">TOOLCHAIN_AND_REPRODUCIBILITY.md</a></td><td class="lbl">md</td></tr>
+</table>
+<h2>02_ANDROID_STATIC_ANALYSIS</h2><table><tr><th>File</th><th>Type</th></tr>
+<tr><td><a href="02_ANDROID_STATIC_ANALYSIS/DECOMPILATION_COVERAGE.md">DECOMPILATION_COVERAGE.md</a></td><td class="lbl">md</td></tr>
+</table>
+<h2>03_APPLICATION_ARCHITECTURE</h2><table><tr><th>File</th><th>Type</th></tr>
+<tr><td><a href="03_APPLICATION_ARCHITECTURE/STATUS.md">STATUS.md</a></td><td class="lbl">md</td></tr>
+</table>
+<h2>04_CONTENT_AND_DSL</h2><table><tr><th>File</th><th>Type</th></tr>
+<tr><td><a href="04_CONTENT_AND_DSL/AST_AND_MODELS.md">AST_AND_MODELS.md</a></td><td class="lbl">md</td></tr>
+<tr><td><a href="04_CONTENT_AND_DSL/DSL_GRAMMAR.md">DSL_GRAMMAR.md</a></td><td class="lbl">md</td></tr>
+</table>
+<h2>05_LESSON_RUNTIME</h2><table><tr><th>File</th><th>Type</th></tr>
+<tr><td><a href="05_LESSON_RUNTIME/RUNTIME_SPEC.md">RUNTIME_SPEC.md</a></td><td class="lbl">md</td></tr>
+</table>
+<h2>06_ASSESSMENT_AND_EVALUATION</h2><table><tr><th>File</th><th>Type</th></tr>
+<tr><td><a href="06_ASSESSMENT_AND_EVALUATION/ASSESSMENT_SPEC.md">ASSESSMENT_SPEC.md</a></td><td class="lbl">md</td></tr>
+</table>
+<h2>07_LEARNER_MODEL_AND_PEDAGOGY</h2><table><tr><th>File</th><th>Type</th></tr>
+<tr><td><a href="07_LEARNER_MODEL_AND_PEDAGOGY/STATUS.md">STATUS.md</a></td><td class="lbl">md</td></tr>
+</table>
+<h2>08_UI_AND_INTERACTION</h2><table><tr><th>File</th><th>Type</th></tr>
+<tr><td><a href="08_UI_AND_INTERACTION/STATUS.md">STATUS.md</a></td><td class="lbl">md</td></tr>
+</table>
+<h2>09_PROGRESS_AND_GAMIFICATION</h2><table><tr><th>File</th><th>Type</th></tr>
+<tr><td><a href="09_PROGRESS_AND_GAMIFICATION/PROGRESS_MODEL.md">PROGRESS_MODEL.md</a></td><td class="lbl">md</td></tr>
+</table>
+<h2>10_NETWORK_AND_API</h2><table><tr><th>File</th><th>Type</th></tr>
+<tr><td><a href="10_NETWORK_AND_API/API_CATALOG.md">API_CATALOG.md</a></td><td class="lbl">md</td></tr>
+<tr><td><a href="10_NETWORK_AND_API/API_ENDPOINTS_TABLE.md">API_ENDPOINTS_TABLE.md</a></td><td class="lbl">md</td></tr>
+<tr><td><a href="10_NETWORK_AND_API/DTO_CATALOG.md">DTO_CATALOG.md</a></td><td class="lbl">md</td></tr>
+</table>
+<h2>11_LOCAL_DATA_AND_SYNC</h2><table><tr><th>File</th><th>Type</th></tr>
+<tr><td><a href="11_LOCAL_DATA_AND_SYNC/DB_SCHEMA_AND_DATAFLOW.md">DB_SCHEMA_AND_DATAFLOW.md</a></td><td class="lbl">md</td></tr>
+</table>
+<h2>12_AI_TUTOR</h2><table><tr><th>File</th><th>Type</th></tr>
+<tr><td><a href="12_AI_TUTOR/AI_TUTOR.md">AI_TUTOR.md</a></td><td class="lbl">md</td></tr>
+</table>
+<h2>13_AUTH_AND_SUBSCRIPTIONS</h2><table><tr><th>File</th><th>Type</th></tr>
+<tr><td><a href="13_AUTH_AND_SUBSCRIPTIONS/STATUS.md">STATUS.md</a></td><td class="lbl">md</td></tr>
+</table>
+<h2>14_REMOTE_CONFIG</h2><table><tr><th>File</th><th>Type</th></tr>
+<tr><td><a href="14_REMOTE_CONFIG/STATUS.md">STATUS.md</a></td><td class="lbl">md</td></tr>
+</table>
+<h2>15_ANALYTICS</h2><table><tr><th>File</th><th>Type</th></tr>
+<tr><td><a href="15_ANALYTICS/ANALYTICS_REGISTRY.md">ANALYTICS_REGISTRY.md</a></td><td class="lbl">md</td></tr>
+</table>
+<h2>16_NATIVE_AND_EXECUTION</h2><table><tr><th>File</th><th>Type</th></tr>
+<tr><td><a href="16_NATIVE_AND_EXECUTION/NATIVE_REPORT.md">NATIVE_REPORT.md</a></td><td class="lbl">md</td></tr>
+</table>
+<h2>17_RUNTIME_VALIDATION</h2><table><tr><th>File</th><th>Type</th></tr>
+<tr><td><a href="17_RUNTIME_VALIDATION/STATUS.md">STATUS.md</a></td><td class="lbl">md</td></tr>
+</table>
+<h2>18_SYSTEM_GRAPH</h2><table><tr><th>File</th><th>Type</th></tr>
+<tr><td><a href="18_SYSTEM_GRAPH/SYSTEM_GRAPH.md">SYSTEM_GRAPH.md</a></td><td class="lbl">md</td></tr>
+<tr><td><a href="18_SYSTEM_GRAPH/system_graph.json">system_graph.json</a></td><td class="lbl">json</td></tr>
+</table>
+<h2>19_INDEPENDENT_SPECIFICATIONS</h2><table><tr><th>File</th><th>Type</th></tr>
+<tr><td><a href="19_INDEPENDENT_SPECIFICATIONS/E1_CONTENT_FORMAT_SPEC.md">E1_CONTENT_FORMAT_SPEC.md</a></td><td class="lbl">md</td></tr>
+<tr><td><a href="19_INDEPENDENT_SPECIFICATIONS/E2_LESSON_RUNTIME_AND_ASSESSMENT_SPEC.md">E2_LESSON_RUNTIME_AND_ASSESSMENT_SPEC.md</a></td><td class="lbl">md</td></tr>
+<tr><td><a href="19_INDEPENDENT_SPECIFICATIONS/E5_PROGRESS_AND_SYNC_SPEC.md">E5_PROGRESS_AND_SYNC_SPEC.md</a></td><td class="lbl">md</td></tr>
+<tr><td><a href="19_INDEPENDENT_SPECIFICATIONS/README.md">README.md</a></td><td class="lbl">md</td></tr>
+</table>
+<h2>20_VERSION_AND_LOCALE_DIFFS</h2><table><tr><th>File</th><th>Type</th></tr>
+<tr><td><a href="20_VERSION_AND_LOCALE_DIFFS/STATUS.md">STATUS.md</a></td><td class="lbl">md</td></tr>
+</table>
+<h2>21_AUTOMATED_VALIDATION</h2><table><tr><th>File</th><th>Type</th></tr>
+<tr><td><a href="21_AUTOMATED_VALIDATION/VALIDATION_RESULTS.md">VALIDATION_RESULTS.md</a></td><td class="lbl">md</td></tr>
+<tr><td><a href="21_AUTOMATED_VALIDATION/test_mission05_artifacts.py">test_mission05_artifacts.py</a></td><td class="lbl">py</td></tr>
+</table>
+<h2>22_FINAL_AUDIT</h2><table><tr><th>File</th><th>Type</th></tr>
+<tr><td><a href="22_FINAL_AUDIT/FINAL_AUDIT.md">FINAL_AUDIT.md</a></td><td class="lbl">md</td></tr>
+</table>
+<h2>evidence</h2><table><tr><th>File</th><th>Type</th></tr>
+<tr><td><a href="evidence/ANNOTATIONS_V2.json">ANNOTATIONS_V2.json</a></td><td class="lbl">json</td></tr>
+<tr><td><a href="evidence/API_CATALOG_V2.csv">API_CATALOG_V2.csv</a></td><td class="lbl">csv</td></tr>
+<tr><td><a href="evidence/API_CATALOG_V2.json">API_CATALOG_V2.json</a></td><td class="lbl">json</td></tr>
+<tr><td><a href="evidence/CLASS_INVENTORY_ANALYTICS.csv">CLASS_INVENTORY_ANALYTICS.csv</a></td><td class="lbl">csv</td></tr>
+<tr><td><a href="evidence/CLASS_INVENTORY_APP.csv">CLASS_INVENTORY_APP.csv</a></td><td class="lbl">csv</td></tr>
+<tr><td><a href="evidence/CLASS_INVENTORY_GHOST_SDK.csv">CLASS_INVENTORY_GHOST_SDK.csv</a></td><td class="lbl">csv</td></tr>
+<tr><td><a href="evidence/CLASS_INVENTORY_OBFUSCATED_BATCH1.csv">CLASS_INVENTORY_OBFUSCATED_BATCH1.csv</a></td><td class="lbl">csv</td></tr>
+<tr><td><a href="evidence/CLASS_INVENTORY_OBFUSCATED_BATCH2.csv">CLASS_INVENTORY_OBFUSCATED_BATCH2.csv</a></td><td class="lbl">csv</td></tr>
+<tr><td><a href="evidence/DECOMPILE_MANIFEST_ANALYTICS.json">DECOMPILE_MANIFEST_ANALYTICS.json</a></td><td class="lbl">json</td></tr>
+<tr><td><a href="evidence/DECOMPILE_MANIFEST_APP.json">DECOMPILE_MANIFEST_APP.json</a></td><td class="lbl">json</td></tr>
+<tr><td><a href="evidence/DECOMPILE_MANIFEST_BATCH1.json">DECOMPILE_MANIFEST_BATCH1.json</a></td><td class="lbl">json</td></tr>
+<tr><td><a href="evidence/DECOMPILE_MANIFEST_BATCH2.json">DECOMPILE_MANIFEST_BATCH2.json</a></td><td class="lbl">json</td></tr>
+<tr><td><a href="evidence/DECOMPILE_MANIFEST_GHOST_SDK.json">DECOMPILE_MANIFEST_GHOST_SDK.json</a></td><td class="lbl">json</td></tr>
+<tr><td><a href="evidence/DTO_CATALOG.csv">DTO_CATALOG.csv</a></td><td class="lbl">csv</td></tr>
+<tr><td><a href="evidence/MODULE_VISIBILITY.json">MODULE_VISIBILITY.json</a></td><td class="lbl">json</td></tr>
+<tr><td><a href="evidence/README.md">README.md</a></td><td class="lbl">md</td></tr>
+<tr><td><a href="evidence/ROOM_SQL_LITERALS.csv">ROOM_SQL_LITERALS.csv</a></td><td class="lbl">csv</td></tr>
+<tr><td><a href="evidence/TAG_ENUM.json">TAG_ENUM.json</a></td><td class="lbl">json</td></tr>
+<tr><td><a href="evidence/UNRESOLVED_REGISTER.csv">UNRESOLVED_REGISTER.csv</a></td><td class="lbl">csv</td></tr>
+</table>
+<p class="meta">Generated by <code>tools/build_report.py</code> — deterministic, no timestamps.</p>
+</body></html>

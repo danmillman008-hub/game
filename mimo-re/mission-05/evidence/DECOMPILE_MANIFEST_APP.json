@@ -1,0 +1,90 @@
+{
+ "mission": "mission-05",
+ "tool": "tools/decompile_apk.py",
+ "engine": "androguard DAD (DecompilerDAD / DvClass)",
+ "androguard_version": "4.1.4",
+ "python_version": "3.11.2",
+ "dex_inputs": [
+  {
+   "file": "classes.dex",
+   "sha256": "2f2c0c618f89c6d6cadf7acf93f48eb9572c66f6b68d7dba03a36c0487f6a115",
+   "bytes": 16237920
+  },
+  {
+   "file": "classes10.dex",
+   "sha256": "2b8810c85d76874be03cb7b07a5cde8cb7bae717344b58f2e49974869dd7cd77",
+   "bytes": 1096
+  },
+  {
+   "file": "classes11.dex",
+   "sha256": "a0f326ef8504d9ae7b4ea8862315e5438e6d5dada08a0e73b6638eb4fb1efd9f",
+   "bytes": 1096
+  },
+  {
+   "file": "classes12.dex",
+   "sha256": "4123a7bfea455141df39e4141ee42b0be797d36da488ce876ca99815f7deb5c0",
+   "bytes": 19520
+  },
+  {
+   "file": "classes2.dex",
+   "sha256": "1e0e36c027fd5900c25e32f6b20465d0cb5573176de1a51689a261736a395f80",
+   "bytes": 9766936
+  },
+  {
+   "file": "classes3.dex",
+   "sha256": "0f198b6b589074e7face41b83557376d147162762a11fc3f82d1b6a026279064",
+   "bytes": 2802944
+  },
+  {
+   "file": "classes4.dex",
+   "sha256": "77bd11e1852f69c4c2009271198e61f9aaba271b2696dbd01bcc92af3dfc136b",
+   "bytes": 1096
+  },
+  {
+   "file": "classes5.dex",
+   "sha256": "4fe54888c761fb2b36346bad70faf85af841acce76afa115125dbf8358d97e19",
+   "bytes": 1096
+  },
+  {
+   "file": "classes6.dex",
+   "sha256": "5e9b150984b175167e993988c75a0d50e434af57254154af0183a3cce9f990a5",
+   "bytes": 1096
+  },
+  {
+   "file": "classes7.dex",
+   "sha256": "3986fee5000d043af770a3c55d4a8a47210d84d633b2492c183dc8d044694c4e",
+   "bytes": 1096
+  },
+  {
+   "file": "classes8.dex",
+   "sha256": "6b99bc71deaf1ef63a01b2be82e2ef2229bb980506073c74fc97cd3089f832e3",
+   "bytes": 1096
+  },
+  {
+   "file": "classes9.dex",
+   "sha256": "122c63fe06abfe6f7fb86c75d21b2c803f55749e6719fc78db7686482ece57fd",
+   "bytes": 1096
+  }
+ ],
+ "selection": {
+  "filter": "Lcom/getmimo",
+  "regex": null,
+  "classes_file": null,
+  "limit": 0
+ },
+ "classes_decompiled": 3133,
+ "classes_with_source": 3133,
+ "classes_without_source": 0,
+ "methods_total": 12851,
+ "source_bytes_total": 8121129,
+ "timings_s": {
+  "load": 4.7,
+  "xref_ready": 36.2,
+  "decompile": 15.5,
+  "total": 51.7
+ },
+ "peak_rss_mb": 2752,
+ "output_dir": "/tmp/dad",
+ "note": "Pseudo-Java. DAD mis-renders some constructs (e.g. 'v0_1 = ;'). Cross-check critical logic against smali/instruction dumps.",
+ "generated_at_utc": "2026-11-01T13:14:48Z"
+}

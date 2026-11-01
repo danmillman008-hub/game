@@ -1,0 +1,10 @@
+file,line,sql
+com.getmimo.data.source.remote.progress.LessonProgressRepository$postUnsyncedLessonProgress$2.java,97,DELETE FROM lesson_progress WHERE lesson_id IN (
+com.getmimo.interactors.path.ObservePathSwitcherState$invoke$$inlined$flatMapLatest$2.java,79,SELECT * FROM tutorial_completions WHERE track_id = ? AND tutorial_id in (
+com.getmimo.interactors.path.d.java,156,SELECT * FROM chapter_completions WHERE track_id = ? AND tutorial_id in (
+cg.b.java,189,"INSERT INTO `lesson_progress` (`lesson_id`,`completed_at`,`started_at`,`tries`,`tutorial_id`,`tutorial_version`,`track_id`,`publish_set_version`,`attempts`,`is_practice_progress`,`in_queue`) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
+cg.b.java,191,"INSERT INTO `chapter_completions` (`chapter_id`,`created_at`,`track_id`,`tutorial_id`) VALUES (?,?,?,?)"
+cg.b.java,193,"INSERT INTO `tutorial_completions` (`tutorial_id`,`is_completed`,`updated_at`,`track_id`) VALUES (?,?,?,?)"
+cg.c.java,160,"UPDATE `lesson_progress` SET `lesson_id` = ?,`completed_at` = ?,`started_at` = ?,`tries` = ?,`tutorial_id` = ?,`tutorial_version` = ?,`track_id` = ?,`publish_set_version` = ?,`attempts` = ?,`is_practice_progress` = ?,`in_queue` = ? WHERE `lesson_id` = ? AND `tutorial_id` = ?"
+cg.c.java,162,"UPDATE `chapter_completions` SET `chapter_id` = ?,`created_at` = ?,`track_id` = ?,`tutorial_id` = ? WHERE `chapter_id` = ? AND `track_id` = ?"
+cg.c.java,164,"UPDATE `tutorial_completions` SET `tutorial_id` = ?,`is_completed` = ?,`updated_at` = ?,`track_id` = ? WHERE `tutorial_id` = ? AND `track_id` = ?"
