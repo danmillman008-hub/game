@@ -2,7 +2,8 @@
 
 **Mission:** Deep code coverage & complete behaviour closure
 **Branch:** `arena/ecb8af07-game` · **Base:** Mission-7 final commit `b95f56d`
-**Last commit:** see `git log --oneline -- mimo-re/mission-08`
+**Stages delivered:** A (`00_BASELINE`) · B (Phase 1) · C (Phase 2) · D (Phase 5) · E (Phase 12 + interim audit + docs)
+**Commits:** `cfdde92` · `6cb19df` · `21d68ca` · `7f97616` · `d814110`
 **Date:** 2026-11-01
 
 > This file is the honest state of the mission. A phase listed as *not started* has no artefacts, and no later
@@ -24,11 +25,11 @@
 | 9 Analytics & SDK | `09_ANALYTICS_AND_SDK/` | **not started** | 201 classes match token/Bearer/Credential literals; 14 events from mission-7 |
 | 10 Complete code coverage | `10_COMPLETE_CODE_COVERAGE/` | **not started** | denominators defined in `01_…/08_COVERAGE_DENOMINATORS.md` |
 | 11 End-to-end validation | `11_END_TO_END_VALIDATION/` | **not started** | 35 flows from mission-7 await revalidation |
-| 12 Open-question closure | `12_OPEN_QUESTION_CLOSURE/` | **skeleton** | canonical 8-status register exists in `00_BASELINE/`; transition records pending |
+| 12 Open-question closure | `12_OPEN_QUESTION_CLOSURE/` | **partial (1 of 39 transitioned)** | Q-121 `NOT_RECOVERED → CLOSED_STATIC` with evidence + reproduction; A1–A10 opened; 38 unchanged by design |
 | 13 Semantic validation | `13_SEMANTIC_VALIDATION/` | **not started** | must cite method + instruction per expectation |
 | 14 Runtime validation | `14_RUNTIME_VALIDATION/` | **blocked** | no `adb`/emulator; ARM-only ABIs |
 | 15 Toolchain | `15_TOOLCHAIN/` | **partially** | tool inventory in `00_BASELINE/EXISTING_TOOL_STATUS.json` |
-| 16 Final audit | `16_FINAL_AUDIT/` | **not started** | interim metrics are in `00_BASELINE/HISTORICAL_COUNT_AUDIT.md` |
+| 16 Final audit | `16_FINAL_AUDIT/` | **interim only** | 7-dimension matrix for 45 domains, no aggregate; to be regenerated at mission end |
 | 17 Integrated architecture | `17_INTEGRATED_ARCHITECTURE/` | **not started** | — |
 
 ## Measured headline numbers (all recomputable)
