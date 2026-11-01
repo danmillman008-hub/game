@@ -95,7 +95,8 @@ def main() -> int:
             if not ok and not args.no_engines and engine in ("practice", "max"):
                 failures.append(f"engine {engine} reports not ok")
 
-    print()
+    checks = 20 if not args.no_engines else 16
+    print(f"\n   {checks - len(failures)}/{checks} بررسی موفق")
     if failures:
         print(f"❌ {len(failures)} مشکل:")
         for item in failures:

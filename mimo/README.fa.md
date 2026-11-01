@@ -126,7 +126,7 @@ python3 tools/import_bank.py example-bank/sample-bank.esq --profile 6
 bash mimo/tools/run-tests.sh
 ```
 
-شمارش واقعی و نتیجهٔ هر مجموعه: `docs/TEST_REPORT.md` (۵۱ آزمون + ۲۲ بررسی دود این مرحله + ۵۴ آزمون قرارداد HANDOFF).
+شمارش واقعی و نتیجهٔ هر مجموعه: `docs/TEST_REPORT.md` (۵۱ آزمون + ۲۰ بررسی دود این مرحله + ۵۴ آزمون قرارداد HANDOFF).
 
 بررسی سریع یک پیش‌نمایش در حال اجرا:
 
