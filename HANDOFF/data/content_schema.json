@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mimo-content-model",
+  "title": "Mimo content domain (aggregate schema)",
+  "description": "Consolidated schema: pack manifest + tutorial file + version triple. Derived from 10 packs; VERIFIED_STATIC for structure.",
+  "$defs": {
+    "publishSet": {
+      "type": "object",
+      "required": ["publishSetVersion", "tracks"],
+      "properties": {
+        "publishSetVersion": { "type": "integer" },
+        "tracks": { "type": "array", "items": { "$ref": "#/$defs/track" } }
+      }
+    },
+    "track": {
+      "type": "object",
+      "required": ["id", "sections"],
+      "properties": {
+        "id": { "type": "integer" },
+        "title": { "type": "string" },
+        "version": { "type": "integer" },
+        "isNew": { "type": "boolean" },
+        "onboardingCategory": { "enum": ["build", "none"] },
+        "sections": { "type": "array", "items": { "$ref": "#/$defs/section" } }
+      }
+    },
+    "section": {
+      "type": "object",
+      "required": ["tutorialIds"],
+      "properties": {
+        "name": { "type": "string" },
+        "startIndex": { "type": "integer" },
+        "endIndex": { "type": "integer" },
+        "tutorialIds": { "type": "array", "items": { "type": "integer" } }
+      }
+    },
+    "tutorial": {
+      "type": "object",
+      "required": ["id", "version", "type", "chapters"],
+      "properties": {
+        "id": { "type": "integer" },
+        "version": { "type": "integer", "maximum": 161 },
+        "type": { "enum": ["course", "practiceRequired", "practiceOptional", "guidedProject", "guidedProjectOptional", "challenges"] },
+        "codeLanguage": { "enum": ["javascript", "python", "css", "html", "sql", "node", "jsx", "swift", "typescript", "bash", "none"] },
+        "chapters": { "type": "array", "items": { "$ref": "#/$defs/chapter" } }
+      }
+    },
+    "chapter": {
+      "type": "object",
+      "required": ["id", "type", "lessons"],
+      "properties": {
+        "id": { "type": "integer" },
+        "type": { "enum": ["practiceLevel1", "practiceLevel2", "practiceLevel3", "challengeLevel0", "challengeLevel1", "challengeLevel2"] },
+        "lessons": { "type": "array", "items": { "$ref": "#/$defs/lesson" } }
+      }
+    },
+    "lesson": {
+      "type": "object",
+      "required": ["id", "contentType"],
+      "properties": {
+        "id": { "type": "integer" },
+        "contentType": { "enum": ["interactive", "executableFiles"] },
+        "title": { "type": "string" },
+        "interactiveContent": { "type": "string" },
+        "hardModeContent": { "type": "string" },
+        "executableContent": { "type": "object" }
+      }
+    },
+    "versionTriple": {
+      "type": "object",
+      "description": "Identity of a progress record against content revisions",
+      "required": ["lessonId", "tutorialId", "tutorialVersion", "publishSetVersion"],
+      "properties": {
+        "lessonId": { "type": "integer" },
+        "tutorialId": { "type": "integer" },
+        "tutorialVersion": { "type": "integer" },
+        "publishSetVersion": { "type": "integer" }
+      }
+    }
+  }
+}

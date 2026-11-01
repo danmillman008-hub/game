@@ -1,0 +1,937 @@
+{
+ "generated": "2026-11-01",
+ "mission": "final closure",
+ "count": 91,
+ "status_vocabulary": [
+  "CLOSED_STATIC",
+  "VERIFIED_RUNTIME",
+  "BACKEND_ONLY",
+  "PARTIALLY_CLOSED",
+  "NOT_RECOVERED",
+  "GENUINELY_UNKNOWN",
+  "BLOCKED_BY_ENVIRONMENT",
+  "OUT_OF_SCOPE",
+  "SUPERSEDED"
+ ],
+ "status_distribution": {
+  "BLOCKED_BY_ENVIRONMENT": 8,
+  "CLOSED_STATIC": 36,
+  "PARTIALLY_CLOSED": 24,
+  "GENUINELY_UNKNOWN": 6,
+  "NOT_RECOVERED": 11,
+  "BACKEND_ONLY": 5,
+  "OUT_OF_SCOPE": 1
+ },
+ "questions": [
+  {
+   "id": "Q-05",
+   "family": "canonical",
+   "question": "dynamic feature module contents (non-English packs) absent from the APK",
+   "prior_status": "BLOCKED_BY_ENVIRONMENT",
+   "final_status": "BLOCKED_BY_ENVIRONMENT",
+   "final_answer": "locale assets for all ten locales are present (1,030-1,032 JSON each); only the dynamic-module code is a stub. The module bodies cannot be read because the split APKs are not in the artifact.",
+   "evidence": "mission-08/02_CONTENT_DELIVERY/DYNAMIC_MODULE_IMPLEMENTATION.md",
+   "what_would_close_it": "the split APK bundles"
+  },
+  {
+   "id": "Q-08",
+   "family": "canonical",
+   "question": "lesson reset effect on the persisted progress row",
+   "prior_status": "PARTIALLY_CLOSED",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "No reset writer exists. The row is an immutable data class; the only mutation path is copy() with in_queue flipped. A new session starts attempts at 0 because nothing reads the stored value back into the view-model. Reset therefore does not alter persistence; it only resets in-memory counters.",
+   "evidence": "STAGE_5 / LESSON_PROGRESS_COMPLETE.md \u00a73",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "Q-102",
+   "family": "canonical",
+   "question": "design token values (colours/dimens) - toolchain BLOCKED",
+   "prior_status": "CLOSED_STATIC",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "Values recovered from resources; the toolchain limitation affected only re-generation, not the values.",
+   "evidence": "mission-06/evidence/DESIGN_TOKENS_NAMES.json",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "Q-103",
+   "family": "canonical",
+   "question": "dark theme existence",
+   "prior_status": "CLOSED_STATIC",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "A dark theme exists and is documented.",
+   "evidence": "mission-07/12_UI_RESOURCES/78_LIGHT_DARK_THEME.md",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "Q-115",
+   "family": "canonical",
+   "question": "feature gating matrix for premium",
+   "prior_status": "PARTIALLY_CLOSED",
+   "final_status": "PARTIALLY_CLOSED",
+   "final_answer": "Gating is a mix of local UI checks over a cached entitlement flag and server-provided content; a full matrix needs the server contract and the paywall view-models.",
+   "evidence": "mission-07/13_SUBSCRIPTION/91_ENTITLEMENT_AND_PAYWALL_COMPLETE.md",
+   "what_would_close_it": "read every paywall view-model + server contract"
+  },
+  {
+   "id": "Q-118",
+   "family": "canonical",
+   "question": "remote-config flag consumers",
+   "prior_status": "PARTIALLY_CLOSED",
+   "final_status": "PARTIALLY_CLOSED",
+   "final_answer": "The analytics singleton and the flags repository read Remote Config; consumers of individual keys are only partly enumerated.",
+   "evidence": "mission-07/10_ANALYTICS_CONFIG/85_FEATURE_FLAG_COMPLETE_CATALOG.json",
+   "what_would_close_it": "per-key consumer enumeration"
+  },
+  {
+   "id": "Q-120",
+   "family": "canonical",
+   "question": "certificate pinning / cleartext policy details",
+   "prior_status": "CLOSED_STATIC",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "No CertificatePinner anywhere; no Network Security Config with pin-set; cleartext not enabled for the API hosts.",
+   "evidence": "mission-07/08_NETWORK/58_NETWORK_STACK_COMPLETE.md; Stage 7 N-01/N-02",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "Q-121",
+   "family": "canonical",
+   "question": "token storage mechanism",
+   "prior_status": "NOT_RECOVERED",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "There is no app-owned token store. The only credential object is FirebaseAuth.currentUser; the token is fetched per request by ku.a.d(boolean) and never written by app code. Persistence of the refresh material is Firebase-SDK-internal and out of the app namespace.",
+   "evidence": "05_AUTHENTICATION_CLOSURE/01_TOKEN_PROVIDER_AND_LIFECYCLE.md",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "Q-134",
+   "family": "canonical",
+   "question": "consent/opt-out surface",
+   "prior_status": "NOT_RECOVERED",
+   "final_status": "PARTIALLY_CLOSED",
+   "final_answer": "Consent state is read by the third-party SDKs (Firebase/Adjust/Mixpanel consent strings present); no app-owned consent screen was recovered.",
+   "evidence": "mission-07/evidence/* consent strings",
+   "what_would_close_it": "an app UI read"
+  },
+  {
+   "id": "Q-14",
+   "family": "canonical",
+   "question": "complete content-locale inventory (enum has 5, modules imply more)",
+   "prior_status": "PARTIALLY_CLOSED",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "Ten locale asset packs exist (en, ru, pt, fr, es + id, it, pl, tr and one more); the ContentLocale enum covers five of them, so the enum is a subset, not the inventory.",
+   "evidence": "02_CONTENT_DELIVERY/DYNAMIC_MODULE_IMPLEMENTATION.md locale table",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "Q-140",
+   "family": "canonical",
+   "question": "webview module URL allowlist",
+   "prior_status": "GENUINELY_UNKNOWN",
+   "final_status": "GENUINELY_UNKNOWN",
+   "final_answer": "WebView modules load content-controlled HTML; no allowlist branch was recovered.",
+   "evidence": "\u2014",
+   "what_would_close_it": "DEX read of the webview module"
+  },
+  {
+   "id": "Q-141",
+   "family": "canonical",
+   "question": "Play Integrity presence",
+   "prior_status": "CLOSED_STATIC",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "No Play Integrity dependency or API usage.",
+   "evidence": "mission-07/11_SDK_NATIVE",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "Q-15",
+   "family": "canonical",
+   "question": "Track/Tutorial field sets",
+   "prior_status": "NOT_RECOVERED",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "Field sets are recovered for TracksJson, Section, Chapter, Lesson, LessonIdentifier, ContentLocale, LessonContent and the tutorial wrapper.",
+   "evidence": "mission-06/evidence/CONTENT_MODEL_FIELDS.json; 02_CONTENT_DELIVERY/CONTENT_MODEL_COMPLETE.json",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "Q-17",
+   "family": "canonical",
+   "question": "serialised JSON names (@SerialName) for DTOs",
+   "prior_status": "NOT_RECOVERED",
+   "final_status": "NOT_RECOVERED",
+   "final_answer": "The obfuscated build keeps no @SerialName values in the readable form; field-name mapping is inferred from content JSON keys, not proven per DTO.",
+   "evidence": "\u2014",
+   "what_would_close_it": "DEX annotation read (blocked)"
+  },
+  {
+   "id": "Q-19",
+   "family": "canonical",
+   "question": "OkHttp disk cache presence",
+   "prior_status": "CLOSED_STATIC",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "No Cache configured on any recovered client.",
+   "evidence": "Stage 7 client inventory (negative findings)",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "Q-27",
+   "family": "canonical",
+   "question": "chapter ordering (index vs server order)",
+   "prior_status": "PARTIALLY_CLOSED",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "Chapter/Section carry an explicit index field and the client renders in array order; no re-sorting by index was found, so client order == document order. Whether the server re-orders is backend.",
+   "evidence": "mission-06/evidence/CONTENT_MODEL_FIELDS.json (Section.index)",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "Q-30",
+   "family": "canonical",
+   "question": "unknown-tag behaviour per parser",
+   "prior_status": "GENUINELY_UNKNOWN",
+   "final_status": "PARTIALLY_CLOSED",
+   "final_answer": "te.a-te.g each accept a fixed tag set; NUMBER is declared but accepted by no parser (Q-31). Behaviour on an unknown tag was not observed for all seven parsers.",
+   "evidence": "Stage 3 parser grammar (U-01)",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "Q-31",
+   "family": "canonical",
+   "question": "NUMBER tag purpose (declared, no parser accepts it)",
+   "prior_status": "CLOSED_STATIC",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "Declared in the tag enum, accepted by no parser; a dead/legacy tag in this build.",
+   "evidence": "mission-07/04_DSL_PARSER_RENDERER",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "Q-34",
+   "family": "canonical",
+   "question": "which .riv animations bind to which lesson state",
+   "prior_status": "NOT_RECOVERED",
+   "final_status": "PARTIALLY_CLOSED",
+   "final_answer": "A component-to-riv mapping exists, but the lesson-state-to-animation binding is only partly evidenced.",
+   "evidence": "mission-07/12_UI_RESOURCES/79_RIVE_COMPONENT_MAPPING.csv",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "Q-39",
+   "family": "canonical",
+   "question": "REST vs WebSocket selection for code execution",
+   "prior_status": "PARTIALLY_CLOSED",
+   "final_status": "GENUINELY_UNKNOWN",
+   "final_answer": "Both channels are proven to exist (POST /v1/code/runfiles and wss /v1/run/socket); the selection predicate between them was not recovered.",
+   "evidence": "Stage 7 \u00a75.5",
+   "what_would_close_it": "DEX read of the executable-lesson view-model"
+  },
+  {
+   "id": "Q-40",
+   "family": "canonical",
+   "question": "WebSocket message schema",
+   "prior_status": "NOT_RECOVERED",
+   "final_status": "BLOCKED_BY_ENVIRONMENT",
+   "final_answer": "pg.a.onMessage body was not readable in the recovered decompilation and the DEX is no longer available.",
+   "evidence": "mission-07/09_STREAMING/70",
+   "what_would_close_it": "DEX read of pg.a"
+  },
+  {
+   "id": "Q-42",
+   "family": "canonical",
+   "question": "whether a SELECTION can have several correct items",
+   "prior_status": "CLOSED_STATIC",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "Selection presentation supports multiple correct items in the parsed content; the visibility gate does not distinguish them.",
+   "evidence": "Stage 4 SIX_MODULE_VARIANTS.json",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "Q-44",
+   "family": "canonical",
+   "question": "non-ASCII answer handling (filter drops non-[a-z0-9<.])",
+   "prior_status": "CLOSED_STATIC",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "qm.i.a lowercases with Locale.US and keeps only letters/digits plus < > ( ) : { } , . - so non-Latin answers are stripped and compare as empty. Documented as behaviour.",
+   "evidence": "Stage 4 PROPERTY_NAME_RECOVERY + tests",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "Q-49",
+   "family": "canonical",
+   "question": "server-side chapter completion recomputation",
+   "prior_status": "BACKEND_ONLY",
+   "final_status": "BACKEND_ONLY",
+   "final_answer": "The client stores only what GET /v1/tracks/{id}/completion returns; no client computation exists.",
+   "evidence": "Stage 5 \u00a75 / 5C",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "Q-50",
+   "family": "canonical",
+   "question": "ETA formula",
+   "prior_status": "BACKEND_ONLY",
+   "final_status": "BACKEND_ONLY",
+   "final_answer": "Only currentPaceMinutesPerDay is returned; the formula is server-side.",
+   "evidence": "Stage 7 endpoint catalogue",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "Q-54",
+   "family": "canonical",
+   "question": "per-row vs per-batch delete after push",
+   "prior_status": "PARTIALLY_CLOSED",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "Deletion is a single statement with an id list (DELETE ... WHERE lesson_id IN (...)), i.e. batch, after a successful response.",
+   "evidence": "PROGRESS_METHOD_SQL_MAP.csv",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "Q-57",
+   "family": "canonical",
+   "question": "keys/hearts consumption path",
+   "prior_status": "PARTIALLY_CLOSED",
+   "final_status": "PARTIALLY_CLOSED",
+   "final_answer": "The keys interface exposes GET /v1/user/keys and POST /v1/user/keys/consume; the consumable-entity semantics are server-side and the caller chain is only partly recovered.",
+   "evidence": "Stage 7 catalogue (Lbh/a;)",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "Q-69",
+   "family": "canonical",
+   "question": "4xx handling for progress push (no dead-letter found)",
+   "prior_status": "GENUINELY_UNKNOWN",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "No 4xx branch exists at the transport or repository level; the exception propagates and the rows remain, so the next trigger retries them. There is no dead-letter. Server semantics stay backend-only.",
+   "evidence": "07_ERROR_RETRY_OFFLINE.md \u00a71/\u00a72",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "Q-70",
+   "family": "canonical",
+   "question": "push trigger points",
+   "prior_status": "PARTIALLY_CLOSED",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "Two triggers: chapter end (storeAndPostAllLessonProgress) and application start (MainViewModel.fetchLessonProgressAndPostUnsyncedToBackend).",
+   "evidence": "PROGRESS_REPOSITORY_CALL_GRAPH.json",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "Q-80",
+   "family": "canonical",
+   "question": "login/credential exchange payload",
+   "prior_status": "NOT_RECOVERED",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "There is no app-owned login endpoint. Identity is Firebase-SDK-mediated; the only app host that resembles auth (mimoauth.getmimo.com) carries /api/sendCustomerIoData, a Customer.io relay. Therefore no credential payload exists in the app's catalogue.",
+   "evidence": "Stage 7 \u00a75.6 + C-18",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "Q-81",
+   "family": "canonical",
+   "question": "token refresh/expiry handling",
+   "prior_status": "CLOSED_STATIC",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "ku.a.d reads the JWT exp claim and performs exactly one forced refresh when expired; the interceptor never forces.",
+   "evidence": "05/01 + N-07/N-09",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "Q-88",
+   "family": "canonical",
+   "question": "pagination shape (none seen)",
+   "prior_status": "CLOSED_STATIC",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "No cursor/page DTO in the 62-endpoint catalogue.",
+   "evidence": "Stage 7 catalogue",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "Q-89",
+   "family": "canonical",
+   "question": "Pusher channel usage",
+   "prior_status": "PARTIALLY_CLOSED",
+   "final_status": "PARTIALLY_CLOSED",
+   "final_answer": "Channel authorization is app code (remote.pusher.a with a manual Bearer header); channel names and event names are SDK/internal.",
+   "evidence": "mission-07/09_STREAMING/71",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "Q-92",
+   "family": "canonical",
+   "question": "whether lesson/code context is inlined into tutor messages",
+   "prior_status": "CLOSED_STATIC",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "The tutor request carries systemMessage and userMessage; lesson/code context is composed client-side into those strings.",
+   "evidence": "mission-07/09_STREAMING/67",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "U-01",
+   "family": "canonical",
+   "question": "DSL grammar of te.a\u2013te.g",
+   "prior_status": "CLOSED_STATIC",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "Seven parsers with a shared tag grammar.",
+   "evidence": "mission-07/04_DSL_PARSER_RENDERER",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "U-18",
+   "family": "canonical",
+   "question": "bin.ghost/libyrf.so triggers - repack-related, not Mimo behaviour",
+   "prior_status": "BLOCKED_BY_ENVIRONMENT",
+   "final_status": "OUT_OF_SCOPE",
+   "final_answer": "Native-library artefacts are a property of the supplied build, not Mimo behaviour; excluded by scope rule 3.5.",
+   "evidence": "\u2014",
+   "what_would_close_it": "\u2014"
+  },
+  {
+   "id": "U-20",
+   "family": "canonical",
+   "question": "analytics event-name to emitter binding",
+   "prior_status": "PARTIALLY_CLOSED",
+   "final_status": "PARTIALLY_CLOSED",
+   "final_answer": "14 events are bound to emitting classes; the remaining event names in the string pool are unbound.",
+   "evidence": "mission-07/evidence/EVENTS_WITH_CALLSITES.csv",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "U-22",
+   "family": "canonical",
+   "question": "API base URL",
+   "prior_status": "CLOSED_STATIC",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "https://api.mimo.org, switched by a dev-menu preference to api-testing.",
+   "evidence": "Stage 7 C-17",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "U-23",
+   "family": "canonical",
+   "question": "PATCH vs PUT - resolved: both genuinely exist (4 PATCH, 2 PUT)",
+   "prior_status": "CLOSED_STATIC",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "Catalogue counts confirm.",
+   "evidence": "Stage 7 catalogue",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A1",
+   "family": "mission8-A",
+   "question": "Is the literal mimo-auth-production a Firebase tenant id, an emulator project, or a preference key?",
+   "prior_status": "GENUINELY_UNKNOWN",
+   "final_status": "GENUINELY_UNKNOWN",
+   "final_answer": "The string sits in the authentication repository's constructor argument list; its first consumer was never recovered.",
+   "evidence": "05/evidence/DEX_auth_interceptors_and_repository.json",
+   "what_would_close_it": "DEX read of the consumer"
+  },
+  {
+   "id": "A2",
+   "family": "mission8-A",
+   "question": "Where is sign-out implemented?",
+   "prior_status": "PARTIALLY_CLOSED",
+   "final_status": "PARTIALLY_CLOSED",
+   "final_answer": "com.getmimo.ui.authentication.logout.{a,b} exist and are the only logout-named app classes; their bodies were never readable. No signOut() call site was found elsewhere. What is cleared on logout is therefore unknown.",
+   "evidence": "05_AUTHENTICATION_CLOSURE/04_SESSION_STATE_MACHINE.md",
+   "what_would_close_it": "DEX read of the two classes (blocked)"
+  },
+  {
+   "id": "A3",
+   "family": "mission8-A",
+   "question": "What does the Runnable scheduled inside ku.a.d do?",
+   "prior_status": "NOT_RECOVERED",
+   "final_status": "NOT_RECOVERED",
+   "final_answer": "The Runnable targets a merged helper (app.rive.c) shared with unrelated code, so the branch actually taken cannot be identified.",
+   "evidence": "05/01 \u00a7L11",
+   "what_would_close_it": "DEX read"
+  },
+  {
+   "id": "A4",
+   "family": "mission8-A",
+   "question": "In what order do hg.e (network guard) and fh.a (authorization) run?",
+   "prior_status": "GENUINELY_UNKNOWN",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "The DI case-20 body adds them in the order hg.e, fh.b, fh.a and OkHttp applies application interceptors in list order, so the guard runs before the token fetch.",
+   "evidence": "Stage 7 N-01 + test_networking_semantics.test_case20_interceptor_order_is_recovered_in_the_add_sequence",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A5",
+   "family": "mission8-A",
+   "question": "Are tokens ever cached outside Firebase?",
+   "prior_status": "PARTIALLY_CLOSED",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "No app write-site for a token-like key exists (SCAN_TOKEN_LITERALS, SCAN_MIMO_TOKEN_LITERALS, SCAN_LOCAL_STORAGE_LITERALS). The one place a token is copied as a value is WorkManager input data for deferred account deletion.",
+   "evidence": "mission-08/evidence/SCAN_TOKEN_LITERALS.json + 05/01 \u00a74",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A6",
+   "family": "mission8-A",
+   "question": "Does account deletion clear the local Firebase user?",
+   "prior_status": "NOT_RECOVERED",
+   "final_status": "NOT_RECOVERED",
+   "final_answer": "AccountDeleteWork.doWork was never readable; whether it calls delete/signOut afterwards is unknown.",
+   "evidence": "mission-06/11_AUTH_SUBSCRIPTION_CONFIG",
+   "what_would_close_it": "DEX read of AccountDeleteWork"
+  },
+  {
+   "id": "A7",
+   "family": "mission8-A",
+   "question": "Which ri.b-annotated endpoints exist?",
+   "prior_status": "PARTIALLY_CLOSED",
+   "final_status": "BLOCKED_BY_ENVIRONMENT",
+   "final_answer": "Same question as A-01: the annotation mechanism is proven, the per-method annotation table needs a DEX read that this environment cannot perform.",
+   "evidence": "Stage 7 \u00a73",
+   "what_would_close_it": "DEX read of the 29 service interfaces"
+  },
+  {
+   "id": "A8",
+   "family": "mission8-A",
+   "question": "Does the WebView bridge expose any other JS interface name besides the proven dispatch method?",
+   "prior_status": "NOT_RECOVERED",
+   "final_status": "NOT_RECOVERED",
+   "final_answer": "The addJavascriptInterface site is proven; the JS asset that names the surface was not decoded.",
+   "evidence": "mission-08 Stage 3",
+   "what_would_close_it": "decode lesson-webview.js"
+  },
+  {
+   "id": "A9",
+   "family": "mission8-A",
+   "question": "What are the kind values flowing from the lesson page?",
+   "prior_status": "NOT_RECOVERED",
+   "final_status": "NOT_RECOVERED",
+   "final_answer": "Only the four JSON keys are proven; kind values come from the JS asset (not decoded).",
+   "evidence": "Stage 3",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A10",
+   "family": "mission8-A",
+   "question": "Is f9.j's tag-17 branch part of the app or library code?",
+   "prior_status": "GENUINELY_UNKNOWN",
+   "final_status": "GENUINELY_UNKNOWN",
+   "final_answer": "f9.j is a merged class; the constants it compares come from non-app types, so ownership cannot be assigned statically.",
+   "evidence": "mission-07 Pusher doc",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A11",
+   "family": "Stage2",
+   "question": "is getPublishSetVersion compared with a stored value anywhere?",
+   "prior_status": "open",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "No comparison site exists. The value is written into each row at creation and sent in the POST body; nothing branches on it.",
+   "evidence": "PROGRESS_KEY_AND_VERSIONING.md \u00a73",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A12",
+   "family": "Stage2",
+   "question": "does a missing locale fall back to en?",
+   "prior_status": "open",
+   "final_status": "PARTIALLY_CLOSED",
+   "final_answer": "ye.b derives the asset path from \"lessons-\" + locale with no observed fallback branch; behaviour for a missing pack is therefore unproven.",
+   "evidence": "02_CONTENT_DELIVERY/CONTENT_CACHE_IMPLEMENTATION.md",
+   "what_would_close_it": "DEX read of ye.b's asset-open error path"
+  },
+  {
+   "id": "A13",
+   "family": "Stage2",
+   "question": "are content stream/parse failures caught, and where?",
+   "prior_status": "open",
+   "final_status": "PARTIALLY_CLOSED",
+   "final_answer": "No try/catch was found on the ye.b stream path in Stage 2; whether a caller catches the resulting IOException is not proven.",
+   "evidence": "Stage 2 report",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A14",
+   "family": "Stage2",
+   "question": "what are the two extra JSON documents in id, it, pl, tr (1,032 vs 1,030)?",
+   "prior_status": "open",
+   "final_status": "NOT_RECOVERED",
+   "final_answer": "Corpus statistics only; identifying the two documents needs the asset tree, which is not in the repository.",
+   "evidence": "Stage 2 corpus stats",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A15",
+   "family": "Stage3",
+   "question": "which module owns <output>",
+   "prior_status": "open",
+   "final_status": "PARTIALLY_CLOSED",
+   "final_answer": "Output is produced per module variant; the owning variant was not isolated because the variant field names are obfuscated.",
+   "evidence": "Stage 3 module variants",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A16",
+   "family": "Stage3",
+   "question": "does a chapter auto-complete on its last lesson?",
+   "prior_status": "open",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "No client-side auto-completion exists: the chapter-end path posts progress and then fetches completion from the server, so 'auto-complete' is a server decision.",
+   "evidence": "Stage 5 \u00a75 / 5C; Q-49",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A17",
+   "family": "Stage3",
+   "question": "meaning of the five boolean flags in InteractiveLessonBaseViewModel",
+   "prior_status": "open",
+   "final_status": "PARTIALLY_CLOSED",
+   "final_answer": "Two of the five (C = last verdict sane/incorrect, M = one-shot guard) are explained by Stages 4-5; the remaining three are unassigned because O (616 instructions) was not read.",
+   "evidence": "Stage 4/5 view-model analysis",
+   "what_would_close_it": "DEX read of base.c.O"
+  },
+  {
+   "id": "A18",
+   "family": "Stage3",
+   "question": "is base.c.K initialiseCodeBlocks or storeLessonProgressInMemory?",
+   "prior_status": "CLOSED_STATIC",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "K = initialiseCodeBlocks, e0 = storeLessonProgressInMemory (correction C-15).",
+   "evidence": "HISTORICAL_FINDINGS_RECONCILIATION C-15",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A19",
+   "family": "Stage3",
+   "question": "recovered name of base.c.O",
+   "prior_status": "open",
+   "final_status": "NOT_RECOVERED",
+   "final_answer": "No lambda family maps to O; the name cannot be derived without reading its body.",
+   "evidence": "Stage 3",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A20",
+   "family": "Stage3",
+   "question": "is hardModeLessonModules parsed from the same document?",
+   "prior_status": "open",
+   "final_status": "PARTIALLY_CLOSED",
+   "final_answer": "One grammar exists in the parser pools; whether hard-mode modules reuse it was not proven.",
+   "evidence": "Stage 3",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A21",
+   "family": "Stage4",
+   "question": "do WRONG-gated modules also render after a partial verdict?",
+   "prior_status": "open",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "No: a partial verdict emits the partial feedback state (jm.n); only an incorrect verdict emits jm.o, which is what WRONG-gated modules observe.",
+   "evidence": "Stage 4 FEEDBACK_ENGINE_COMPLETE.md",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A22",
+   "family": "Stage4",
+   "question": "meaning of the six jm.o booleans (hint / solution / retry / AI tutor)",
+   "prior_status": "open",
+   "final_status": "PARTIALLY_CLOSED",
+   "final_answer": "Argument order is not recoverable from the constructor; two of six are attributed by call-site constants.",
+   "evidence": "Stage 4 jm.o analysis",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A23",
+   "family": "Stage4",
+   "question": "which types use mm.b.E0 pass-through grading",
+   "prior_status": "open",
+   "final_status": "PARTIALLY_CLOSED",
+   "final_answer": "E0 is a pass-through guard for executable-type modules; the full type list needs the E0 state-flow contents.",
+   "evidence": "Stage 4 six graders",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A24",
+   "family": "Stage4",
+   "question": "duration of the delay before verdict dispatch",
+   "prior_status": "open",
+   "final_status": "PARTIALLY_CLOSED",
+   "final_answer": "The call site uses a kotlinx delay helper with a constant that was not extracted.",
+   "evidence": "Stage 4",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A25",
+   "family": "Stage4",
+   "question": "can executable lessons produce a partial verdict?",
+   "prior_status": "open",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "No partial construction site exists on the executable path (qm.f has one construction site, in the validated-input path).",
+   "evidence": "Stage 4 GRADING_IMPLEMENTATION.md",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A26",
+   "family": "Stage4",
+   "question": "who produces Output.ConsoleOutput in the interactive branch",
+   "prior_status": "open",
+   "final_status": "NOT_RECOVERED",
+   "final_answer": "No producer found in app code; the console output appears to originate from the execution channel.",
+   "evidence": "Stage 4/7",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A27",
+   "family": "Stage4",
+   "question": "which composable consumes browserOutputDeferred",
+   "prior_status": "open",
+   "final_status": "PARTIALLY_CLOSED",
+   "final_answer": "The deferred exists in the view-model state; the composable consumer was not isolated.",
+   "evidence": "Stage 4 UI surface",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A28",
+   "family": "Stage4",
+   "question": "what selects MultipleChoice vs SingleChoice",
+   "prior_status": "open",
+   "final_status": "PARTIALLY_CLOSED",
+   "final_answer": "Two state holders share one predicate; the selector between them was not recovered.",
+   "evidence": "Stage 4 SIX_MODULE_VARIANTS.json",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "B-1",
+   "family": "B",
+   "question": "exact id\u2192SQL assignment for the remaining 25 generated DAO lambdas",
+   "prior_status": "open",
+   "final_status": "BLOCKED_BY_ENVIRONMENT",
+   "final_answer": "Ids 18-21 are assigned to the four lesson_progress statements; the other 25 belong to the completion DAOs and need a DEX read.",
+   "evidence": "Stage 6 \u00a72",
+   "what_would_close_it": "DEX read of cg/a, leg/c, leg/f"
+  },
+  {
+   "id": "B-2",
+   "family": "B",
+   "question": "is learner state intentionally not partitioned by account?",
+   "prior_status": "CLOSED_STATIC structurally; intent open",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "Structurally closed: no account column exists in any of the three tables nor in the Progress DTO; attribution is the Bearer token, i.e. server-side. Design intent is not a code question.",
+   "evidence": "Stage 6 schema + Stage 7 \u00a73",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "B-3",
+   "family": "B",
+   "question": "non-network failure path of the progress POST",
+   "prior_status": "open",
+   "final_status": "PARTIALLY_CLOSED",
+   "final_answer": "Transport-level exceptions are wrapped into java.io.IOException by fh.a; HTTP errors surface as HttpException; the repository has no catch. The enclosing coroutine's handler was not read.",
+   "evidence": "07_ERROR_RETRY_OFFLINE.md \u00a71",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "B-4",
+   "family": "B",
+   "question": "is there any track-level completion predicate?",
+   "prior_status": "CLOSED_STATIC (negative)",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "No field, method or query computes a track-level boolean; only per-tutorial isCompleted and per-chapter rows exist.",
+   "evidence": "Stage 5 \u00a75",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "B-5",
+   "family": "B",
+   "question": "what consumes the streak sink gg.e?",
+   "prior_status": "open",
+   "final_status": "PARTIALLY_CLOSED",
+   "final_answer": "No streak endpoint exists in the 62-row catalogue and app analytics goes to track.customer.io, so the sink is either local UI state or an analytics event; the consumer was not read.",
+   "evidence": "Stage 5 + Stage 7 catalogue",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "B-6",
+   "family": "B",
+   "question": "can ChapterViewModel.clearOnExit drop unsynced progress?",
+   "prior_status": "open",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "Yes: clearOnExit calls LessonProgressQueue.clear() -> DELETE FROM lesson_progress WHERE in_queue = 1. Rows already moved to in_queue = 0 survive; pending ones do not. Reachability depends on exit ordering.",
+   "evidence": "INQUEUE_IMPLEMENTATION.md \u00a75",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "B-7",
+   "family": "B",
+   "question": "is the per-tutorial POST loop sequential?",
+   "prior_status": "open",
+   "final_status": "PARTIALLY_CLOSED",
+   "final_answer": "Not resolved; bounded either way by OkHttp's default dispatcher (max 5 per host).",
+   "evidence": "07_ERROR_RETRY_OFFLINE.md \u00a75",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "B-8",
+   "family": "B",
+   "question": "does the server merge session attempts?",
+   "prior_status": "backend-only",
+   "final_status": "BACKEND_ONLY",
+   "final_answer": "The client always sends the session value; merging is server behaviour.",
+   "evidence": "\u2014",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "B-9",
+   "family": "B",
+   "question": "are the two Room Builder booleans destructive-fallback flags?",
+   "prior_status": "open (operands unreadable)",
+   "final_status": "BLOCKED_BY_ENVIRONMENT",
+   "final_answer": "The flag pair matches fallbackToDestructiveMigration(), but the operand registers are outside the readable window of a 1,643-instruction provider.",
+   "evidence": "ROOM_MIGRATION_AND_VERSIONING.md \u00a73",
+   "what_would_close_it": "control-flow walk / DEX read"
+  },
+  {
+   "id": "B-10",
+   "family": "B",
+   "question": "which key does getLastInteractedTrackId read?",
+   "prior_status": "CLOSED_STATIC",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "It is a network call: GET /v1/tracks/completion/lastInteracted -> LastInteractedTrackResponse.lastInteractedTrackId. The per-track preference key has no reader in recovered code.",
+   "evidence": "Stage 7 catalogue + CompletionRepository.c",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "B-11",
+   "family": "B",
+   "question": "full mimo_prefs / DataStore key set",
+   "prior_status": "open (generic helper)",
+   "final_status": "BLOCKED_BY_ENVIRONMENT",
+   "final_answer": "Keys are parameters of a generic helper; enumeration needs data-flow analysis over DEX that is no longer present.",
+   "evidence": "Stage 6 \u00a73",
+   "what_would_close_it": "DEX data-flow"
+  },
+  {
+   "id": "B-12",
+   "family": "B",
+   "question": "does com.getmimo.data.local.a hold learner data?",
+   "prior_status": "open",
+   "final_status": "BLOCKED_BY_ENVIRONMENT",
+   "final_answer": "The store is constructed beside the database; its schema was never read.",
+   "evidence": "Stage 6 \u00a74",
+   "what_would_close_it": "DEX read"
+  },
+  {
+   "id": "B-13",
+   "family": "B",
+   "question": "any other writer of the completion tables?",
+   "prior_status": "CLOSED_STATIC (negative, reachable code)",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "Only CompletionRepository.fetchTrackCompletion inserts into either table.",
+   "evidence": "Stage 5 \u00a76",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A-01",
+   "family": "stage7",
+   "question": "which of the 62 endpoints carry the auth-marker annotation?",
+   "prior_status": "BLOCKED_BY_ENVIRONMENT",
+   "final_status": "BLOCKED_BY_ENVIRONMENT",
+   "final_answer": "Mechanism proven (Method.getAnnotation in fh.a); per-method annotation table requires the DEX. Aggregate at mission-6 time was 53 authenticated / 9 not.",
+   "evidence": "04_INTERCEPTORS_AND_HEADERS.md \u00a72",
+   "what_would_close_it": "DEX read of the 29 interfaces"
+  },
+  {
+   "id": "A-02",
+   "family": "stage7",
+   "question": "does a sign-out path exist, and what does it clear?",
+   "prior_status": "PARTIALLY_CLOSED",
+   "final_status": "PARTIALLY_CLOSED",
+   "final_answer": "Same as A2: the classes exist, the bodies do not.",
+   "evidence": "Stage 7 \u00a73",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A-03",
+   "family": "stage7",
+   "question": "what does eh.a on the long-timeout client fetch?",
+   "prior_status": "UNKNOWN",
+   "final_status": "GENUINELY_UNKNOWN",
+   "final_answer": "The service is created on a 10 s/120 s client with a raw ResponseBody; no caller chain was recovered.",
+   "evidence": "01_NETWORK_CLIENT_INVENTORY.md \u00a73",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A-04",
+   "family": "stage7",
+   "question": "which execution channel (REST vs socket) does a lesson use?",
+   "prior_status": "UNKNOWN",
+   "final_status": "GENUINELY_UNKNOWN",
+   "final_answer": "Same as Q-39.",
+   "evidence": "Stage 7 \u00a75.5",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A-05",
+   "family": "stage7",
+   "question": "kotlinx Json strictness (ignoreUnknownKeys, explicitNulls)",
+   "prior_status": "NOT_RECOVERED",
+   "final_status": "NOT_RECOVERED",
+   "final_answer": "The Json instance is a DI provider whose configuration block was not read.",
+   "evidence": "09_DI_DEPENDENCY_MAP.md",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A-06",
+   "family": "stage7",
+   "question": "server sending null for a timestamp -> Room Instant null",
+   "prior_status": "UNKNOWN",
+   "final_status": "BACKEND_ONLY",
+   "final_answer": "Client side is known: the Room adapter rejects a null Instant with an exception. Whether the server can send null is server behaviour.",
+   "evidence": "06_REQUEST_RESPONSE_MODELS.md \u00a74",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A-07",
+   "family": "stage7",
+   "question": "do Response<T> call sites check isSuccessful?",
+   "prior_status": "NOT_RECOVERED",
+   "final_status": "NOT_RECOVERED",
+   "final_answer": "The 12 Response<T> call sites were not all read.",
+   "evidence": "Stage 7",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A-08",
+   "family": "stage7",
+   "question": "does closing the SSE connection abort server generation?",
+   "prior_status": "UNKNOWN (server)",
+   "final_status": "BACKEND_ONLY",
+   "final_answer": "Unobservable from the client.",
+   "evidence": "08_SSE_AND_WEBSOCKET.md",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A-09",
+   "family": "stage7",
+   "question": "which dev-menu preference key is sk.a.r[2]?",
+   "prior_status": "PARTIALLY_CLOSED",
+   "final_status": "PARTIALLY_CLOSED",
+   "final_answer": "The branch reads array element 2 of the dev-menu storage; the key behind it is not a literal at the call site.",
+   "evidence": "09_DI_DEPENDENCY_MAP.md \u00a73",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "A-10",
+   "family": "stage7",
+   "question": "does any feature build its own HTTP client outside DI?",
+   "prior_status": "UNKNOWN (negative)",
+   "final_status": "NOT_RECOVERED",
+   "final_answer": "Negative claim limited to the recovered provider set; no exhaustive scan of OkHttpClient constructions exists in committed evidence.",
+   "evidence": "01_NETWORK_CLIENT_INVENTORY.md \u00a77",
+   "what_would_close_it": ""
+  },
+  {
+   "id": "Q-76",
+   "family": "out-of-register",
+   "question": "live vs test host switch flag",
+   "prior_status": "PARTIALLY (mission-06)",
+   "final_status": "CLOSED_STATIC",
+   "final_answer": "The switch is a dev-menu preference (sk.a.r[2]), not BuildConfig.",
+   "evidence": "C-17",
+   "what_would_close_it": ""
+  }
+ ]
+}

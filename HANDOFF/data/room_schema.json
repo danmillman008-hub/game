@@ -1,0 +1,96 @@
+{
+ "generated": "2026-11-01",
+ "database": "mimo.db",
+ "class": "com.getmimo.data.source.local.room.Database",
+ "impl": "com.getmimo.data.source.local.room.Database_Impl",
+ "version": 2,
+ "identity_hash": "2b8ab6d303d9a501bd8c8fb78d8352fc",
+ "delegate_class": "leg/e (RoomOpenHelper.Delegate; also hosts the WorkDatabase delegate with version 24 / hash 08b926448d86528e697981ddd30459f7)",
+ "evidence": [
+  "Database_Impl.<init> (3 DAO providers)",
+  "Database_Impl.f() (invalidation tracker over the 3 tables)",
+  "Database_Impl.j() returns an empty set (no auto-migration specs)",
+  "Database_Impl.d() clears the 3 tables",
+  "m;.a() -> Room builder: const-string \"mimo.db\"",
+  "leg/e.<init>(Database_Impl) -> const/16 2 + identity hash"
+ ],
+ "tables": [
+  {
+   "name": "lesson_progress",
+   "columns": [
+    "lesson_id",
+    "completed_at",
+    "started_at",
+    "tries",
+    "tutorial_id",
+    "tutorial_version",
+    "track_id",
+    "publish_set_version",
+    "attempts",
+    "is_practice_progress",
+    "in_queue"
+   ],
+   "pk": [
+    "lesson_id",
+    "tutorial_id"
+   ],
+   "dao": "cg/a",
+   "statements": 4,
+   "lifetime": "outbox (rows deleted after a successful POST)"
+  },
+  {
+   "name": "tutorial_completions",
+   "columns": [
+    "tutorial_id",
+    "is_completed",
+    "updated_at",
+    "track_id"
+   ],
+   "pk": [
+    "tutorial_id",
+    "track_id"
+   ],
+   "dao": "leg/f",
+   "statements": 5,
+   "lifetime": "cumulative cache of server state"
+  },
+  {
+   "name": "chapter_completions",
+   "columns": [
+    "chapter_id",
+    "created_at",
+    "track_id",
+    "tutorial_id"
+   ],
+   "pk": [
+    "chapter_id",
+    "track_id"
+   ],
+   "dao": "leg/c",
+   "statements": 6,
+   "lifetime": "cumulative cache of server state"
+  }
+ ],
+ "daos": [
+  {
+   "interface": "cg/a",
+   "subject": "lesson progress",
+   "provider": "Database_Impl.v()"
+  },
+  {
+   "interface": "leg/c",
+   "subject": "chapter completions",
+   "provider": "Database_Impl.u()"
+  },
+  {
+   "interface": "leg/f",
+   "subject": "tutorial completions",
+   "provider": "Database_Impl.w()"
+  }
+ ],
+ "notes": [
+  "only three tables exist; there is no user, lesson-content, analytics or settings table in mimo.db",
+  "no indices are declared in the schema (only composite primary keys)",
+  "clearAllTables (Database_Impl.d) clears all three tables in one transaction wrapper"
+ ]
+}

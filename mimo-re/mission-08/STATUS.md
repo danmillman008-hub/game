@@ -97,3 +97,19 @@ The final mission consolidated every domain, question and correction into
   partial with a named gap.
 
 There is no successor stage. Read `99_FINAL_CLOSURE/00_FINAL_EXECUTIVE_SUMMARY.md` first.
+
+---
+
+## Handoff package (post-closure, non-normative for the closure)
+
+The closure above is unchanged. For anyone who must **build** from this repository, `HANDOFF/` at the repository
+root is the entry point: `HANDOFF/START_HERE.md` → specs `01`–`09` → build plan `10` → acceptance `11` →
+`12_DELTA_REGISTER.md` / `13_KNOWN_UNKNOWNS.md` / `14_TRACEABILITY.md`.
+
+```bash
+python3 HANDOFF/tools/verify_handoff.py     # 10/10 integrity checks, stdlib only
+python3 -m pytest -q HANDOFF/tests          # 54 vector-reproduction tests
+```
+
+`HANDOFF/` copies 14 machine-readable artifacts with pinned sha256 (`HANDOFF/data/MANIFEST.json`) and points back to
+the mission artifacts; it adds no new claim about the app and does not raise the runtime-verified count above zero.

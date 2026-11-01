@@ -1,0 +1,187 @@
+{
+ "generated": "2026-11-01",
+ "entity": "LessonProgress",
+ "table": "lesson_progress",
+ "primary_key": [
+  "lesson_id",
+  "tutorial_id"
+ ],
+ "constructor_order": [
+  "lessonId",
+  "completedAt",
+  "startedAt",
+  "tries",
+  "tutorialId",
+  "tutorialVersion",
+  "trackId",
+  "publishSetVersion",
+  "attempts",
+  "isPracticeProgress",
+  "inQueue"
+ ],
+ "fields": [
+  {
+   "name": "lessonId",
+   "type": "J (long)",
+   "role": "PK part 1",
+   "initial_value": "bundle.a",
+   "persistence": "lesson_progress.lesson_id",
+   "meaning": "lesson identity",
+   "confidence": "VERIFIED_STATIC"
+  },
+  {
+   "name": "tutorialId",
+   "type": "J (long)",
+   "role": "PK part 2",
+   "initial_value": "bundle.e",
+   "persistence": "lesson_progress.tutorial_id",
+   "meaning": "content grouping for sync",
+   "confidence": "VERIFIED_STATIC"
+  },
+  {
+   "name": "tutorialVersion",
+   "type": "I (int)",
+   "role": "payload",
+   "initial_value": "bundle.v",
+   "persistence": "lesson_progress.tutorial_version",
+   "meaning": "content version of the tutorial",
+   "confidence": "VERIFIED_STATIC"
+  },
+  {
+   "name": "trackId",
+   "type": "J (long)",
+   "role": "payload (not key)",
+   "initial_value": "bundle.f",
+   "persistence": "lesson_progress.track_id",
+   "meaning": "track attribution",
+   "confidence": "VERIFIED_STATIC"
+  },
+  {
+   "name": "publishSetVersion",
+   "type": "J (long)",
+   "role": "payload",
+   "initial_value": "tracksRepository.getPublishSetVersion() (reads tracks.json: 753)",
+   "persistence": "lesson_progress.publish_set_version",
+   "meaning": "content baseline",
+   "confidence": "VERIFIED_STATIC"
+  },
+  {
+   "name": "tries",
+   "type": "I (int)",
+   "role": "solved flag 0/1",
+   "initial_value": "H(): V passes !(C==TRUE); X passes 0; U passes (C==TRUE)",
+   "persistence": "lesson_progress.tries",
+   "meaning": "solved-correctly indicator; isSolvedCorrectly() = tries>=1",
+   "confidence": "VERIFIED_STATIC"
+  },
+  {
+   "name": "attempts",
+   "type": "I (int)",
+   "role": "session counter",
+   "initial_value": "H(): V/X/U pass field d after +1",
+   "persistence": "lesson_progress.attempts",
+   "meaning": "count of submissions in this session",
+   "confidence": "VERIFIED_STATIC"
+  },
+  {
+   "name": "startedAt",
+   "type": "joda Instant",
+   "role": "opening time",
+   "initial_value": "field I set when the lesson opened",
+   "persistence": "lesson_progress.started_at",
+   "meaning": "duration source",
+   "confidence": "VERIFIED_STATIC"
+  },
+  {
+   "name": "completedAt",
+   "type": "joda Instant",
+   "role": "creation time",
+   "initial_value": "new Instant() inside createLessonProgress",
+   "persistence": "lesson_progress.completed_at",
+   "meaning": "ordering/robustness check",
+   "confidence": "VERIFIED_STATIC"
+  },
+  {
+   "name": "isPracticeProgress",
+   "type": "Z (boolean)",
+   "role": "practice marker",
+   "initial_value": "bundle.B",
+   "persistence": "lesson_progress.is_practice_progress",
+   "meaning": "distinguishes practice runs",
+   "confidence": "VERIFIED_STATIC"
+  },
+  {
+   "name": "inQueue",
+   "type": "Z (boolean)",
+   "role": "1 at creation",
+   "initial_value": "literal 1 in createLessonProgress",
+   "persistence": "lesson_progress.in_queue",
+   "meaning": "local pending flag for the sync queue",
+   "confidence": "VERIFIED_STATIC"
+  }
+ ],
+ "tables": [
+  {
+   "name": "lesson_progress",
+   "columns": [
+    "lesson_id",
+    "completed_at",
+    "started_at",
+    "tries",
+    "tutorial_id",
+    "tutorial_version",
+    "track_id",
+    "publish_set_version",
+    "attempts",
+    "is_practice_progress",
+    "in_queue"
+   ],
+   "pk": [
+    "lesson_id",
+    "tutorial_id"
+   ],
+   "dao": "cg/a",
+   "statements": 4,
+   "lifetime": "outbox (rows deleted after a successful POST)"
+  },
+  {
+   "name": "tutorial_completions",
+   "columns": [
+    "tutorial_id",
+    "is_completed",
+    "updated_at",
+    "track_id"
+   ],
+   "pk": [
+    "tutorial_id",
+    "track_id"
+   ],
+   "dao": "leg/f",
+   "statements": 5,
+   "lifetime": "cumulative cache of server state"
+  },
+  {
+   "name": "chapter_completions",
+   "columns": [
+    "chapter_id",
+    "created_at",
+    "track_id",
+    "tutorial_id"
+   ],
+   "pk": [
+    "chapter_id",
+    "track_id"
+   ],
+   "dao": "leg/c",
+   "statements": 6,
+   "lifetime": "cumulative cache of server state"
+  }
+ ],
+ "rules": {
+  "tries": "solved flag, 0 or 1; V passes !(C==TRUE), X passes 0, U passes (C==TRUE)",
+  "attempts": "session counter from view-model field d; +1 on every submission; never restored from storage",
+  "isSolvedCorrectly": "tries >= 1",
+  "outbox": "in_queue=1 on insert; move sets 0; successful POST deletes posted ids; clear deletes pending",
+  "completion": "server-derived only (GET /v1/tracks/{id}/completion)"
+ }
+}

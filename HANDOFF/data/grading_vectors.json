@@ -1,0 +1,255 @@
+{
+ "generated": "2026-11-01",
+ "note": "Expected values are derived from the recovered bodies (qm.i.a, setupViews$2, E0 graders, LessonProgress.isSolvedCorrectly). They are NOT runtime observations.",
+ "normaliser": {
+  "class": "qm.i",
+  "method": "a(String)String",
+  "rules": [
+   "toLowerCase(Locale.US)",
+   "keep Character.isLetterOrDigit",
+   "keep any of < > ( ) : { } , .",
+   "drop everything else (including whitespace, quotes, semicolons, '=')"
+  ],
+  "vectors": [
+   {
+    "input": "Hello World",
+    "expected": "helloworld"
+   },
+   {
+    "input": "  HELLO   World  ",
+    "expected": "helloworld"
+   },
+   {
+    "input": "a = b;",
+    "expected": "ab"
+   },
+   {
+    "input": "print(\"Hi\")",
+    "expected": "print(hi)"
+   },
+   {
+    "input": "{}[](),.:;",
+    "expected": "{}(),.:"
+   },
+   {
+    "input": "Caf\u00e9!",
+    "expected": "caf\u00e9"
+   }
+  ]
+ },
+ "validated_input_verdict": {
+  "rule": [
+   "if norm(user) != norm(expected) \u2192 INCORRECT (qm.g)",
+   "else if user == expected \u2192 CORRECT (qm.e)",
+   "else \u2192 PARTIAL (qm.f(user, expected))"
+  ],
+  "vectors": [
+   {
+    "user": "hello world",
+    "expected": "Hello World",
+    "verdict": "PARTIAL"
+   },
+   {
+    "user": "Hello World",
+    "expected": "Hello World",
+    "verdict": "CORRECT"
+   },
+   {
+    "user": "hello world",
+    "expected": "hello world",
+    "verdict": "CORRECT"
+   },
+   {
+    "user": "hello",
+    "expected": "Hello World",
+    "verdict": "INCORRECT"
+   },
+   {
+    "user": "hello  world",
+    "expected": "Hello World",
+    "verdict": "PARTIAL"
+   },
+   {
+    "user": "",
+    "expected": "Hello",
+    "verdict": "INCORRECT"
+   }
+  ]
+ },
+ "selection_verdict": {
+  "rule": [
+   "selected set must match correct set",
+   "count equality checked first; then per item selected==correct"
+  ],
+  "vectors": [
+   {
+    "items": [
+     {
+      "text": "a",
+      "correct": true,
+      "selected": true
+     },
+     {
+      "text": "b",
+      "correct": false,
+      "selected": false
+     }
+    ],
+    "verdict": "CORRECT"
+   },
+   {
+    "items": [
+     {
+      "text": "a",
+      "correct": true,
+      "selected": false
+     },
+     {
+      "text": "b",
+      "correct": false,
+      "selected": false
+     }
+    ],
+    "verdict": "INCORRECT"
+   },
+   {
+    "items": [
+     {
+      "text": "a",
+      "correct": true,
+      "selected": true
+     },
+     {
+      "text": "b",
+      "correct": false,
+      "selected": true
+     }
+    ],
+    "verdict": "INCORRECT"
+   },
+   {
+    "items": [],
+    "verdict": "INCORRECT (empty guard)"
+   }
+  ]
+ },
+ "fill_the_gap_verdict": {
+  "rule": [
+   "selected option count must equal expected count",
+   "index-wise text equality"
+  ],
+  "vectors": [
+   {
+    "selected": [
+     "<p>"
+    ],
+    "expected": [
+     "<p>"
+    ],
+    "verdict": "CORRECT"
+   },
+   {
+    "selected": [
+     "<p>"
+    ],
+    "expected": [
+     "<div>"
+    ],
+    "verdict": "INCORRECT"
+   },
+   {
+    "selected": [],
+    "expected": [
+     "<p>"
+    ],
+    "verdict": "INCORRECT"
+   }
+  ]
+ },
+ "spell_verdict": {
+  "rule": "identical to fill-the-gap but answer text is joined with '' instead of ' '",
+  "vectors": [
+   {
+    "selected": [
+     "c",
+     "a",
+     "t"
+    ],
+    "expected": [
+     "c",
+     "a",
+     "t"
+    ],
+    "verdict": "CORRECT"
+   }
+  ]
+ },
+ "module_visibility": {
+  "rule": "ALWAYS renders; CORRECT renders after a correct verdict; WRONG renders after an incorrect verdict",
+  "vectors": [
+   {
+    "visibility": "ALWAYS",
+    "verdict": "INCORRECT",
+    "rendered": true
+   },
+   {
+    "visibility": "CORRECT",
+    "verdict": "INCORRECT",
+    "rendered": false
+   },
+   {
+    "visibility": "CORRECT",
+    "verdict": "CORRECT",
+    "rendered": true
+   },
+   {
+    "visibility": "WRONG",
+    "verdict": "CORRECT",
+    "rendered": false
+   },
+   {
+    "visibility": "WRONG",
+    "verdict": "INCORRECT",
+    "rendered": true
+   }
+  ]
+ },
+ "progress_completion": {
+  "rule": "isSolvedCorrectly() == (tries >= 1)",
+  "vectors": [
+   {
+    "tries": 0,
+    "solved": false
+   },
+   {
+    "tries": 1,
+    "solved": true
+   },
+   {
+    "tries": 5,
+    "solved": true
+   }
+  ]
+ },
+ "output_parsing": {
+  "rule": "ConsoleOutput holds a CharSequence verbatim; TableOutput wraps a Table(name, rows[Header|Data])",
+  "vectors": [
+   {
+    "variant": "ConsoleOutput",
+    "content": "hello",
+    "parsed": "hello"
+   },
+   {
+    "variant": "TableOutput",
+    "table": {
+     "name": "users",
+     "rows": [
+      "header",
+      "data"
+     ]
+    },
+    "parsed": "table"
+   }
+  ]
+ }
+}

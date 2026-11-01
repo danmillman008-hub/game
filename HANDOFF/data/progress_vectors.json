@@ -1,0 +1,310 @@
+{
+ "generated": "2026-11-01",
+ "note": "Expected values are derived from recovered bodies (createLessonProgress, V/W/X/U, isSolvedCorrectly, the four DAO statements). They are reference-model expectations, not runtime observations.",
+ "identity": {
+  "lesson_identifier_parts": 5,
+  "progress_pk": [
+   "lesson_id",
+   "tutorial_id"
+  ],
+  "vectors": [
+   {
+    "identifier": {
+     "trackId": 12,
+     "trackVersion": 5,
+     "tutorialId": 1001,
+     "chapterId": 77,
+     "lessonId": 9001
+    },
+    "row_key": {
+     "lessonId": 9001,
+     "tutorialId": 1001
+    },
+    "chapter_stored": false
+   },
+   {
+    "identifier": {
+     "trackId": 12,
+     "trackVersion": 5,
+     "tutorialId": 1001,
+     "chapterId": 78,
+     "lessonId": 9001
+    },
+    "row_key": {
+     "lessonId": 9001,
+     "tutorialId": 1001
+    },
+    "chapter_stored": false,
+    "consequence": "same key -> the two different chapters produce one row"
+   }
+  ]
+ },
+ "new_progress": {
+  "rule": "createLessonProgress sets completedAt=now, publishSetVersion=current bundle value, inQueue=1",
+  "vectors": [
+   {
+    "startedAt": "T0",
+    "now": "T1",
+    "tries": 0,
+    "attempts": 0,
+    "expected": {
+     "inQueue": true,
+     "publishSetVersion": 753
+    }
+   }
+  ]
+ },
+ "ordering_guard": {
+  "rule": "if now < startedAt -> RuntimeException reported and discarded, entity still built",
+  "vectors": [
+   {
+    "startedAt": "T1",
+    "now": "T0",
+    "entity_built": true,
+    "reported": true
+   }
+  ]
+ },
+ "counter_update": {
+  "rule": "V/W: d=d+1; tries=!(C==TRUE). X: d=d+1; tries=0. U: d=d+1; tries=(C==TRUE)",
+  "vectors": [
+   {
+    "verdict": "CORRECT",
+    "C_before": "null",
+    "d_before": 0,
+    "expected": {
+     "tries": 1,
+     "attempts": 1,
+     "C_after": false
+    }
+   },
+   {
+    "verdict": "CORRECT",
+    "C_before": false,
+    "d_before": 3,
+    "expected": {
+     "tries": 1,
+     "attempts": 4,
+     "C_after": false
+    }
+   },
+   {
+    "verdict": "CORRECT",
+    "C_before": true,
+    "d_before": 3,
+    "expected": {
+     "tries": 0,
+     "attempts": 4,
+     "C_after": false
+    }
+   },
+   {
+    "verdict": "PARTIAL",
+    "C_before": false,
+    "d_before": 1,
+    "expected": {
+     "tries": 1,
+     "attempts": 2,
+     "C_after": false
+    }
+   },
+   {
+    "verdict": "INCORRECT",
+    "C_before": false,
+    "d_before": 1,
+    "expected": {
+     "tries": 0,
+     "attempts": 2,
+     "C_after": true
+    }
+   },
+   {
+    "verdict": "PROCEED",
+    "C_before": true,
+    "d_before": 2,
+    "expected": {
+     "tries": 1,
+     "attempts": 3
+    }
+   }
+  ]
+ },
+ "completion_flag": {
+  "rule": "isSolvedCorrectly() == tries >= 1",
+  "vectors": [
+   {
+    "tries": 0,
+    "solved": false
+   },
+   {
+    "tries": 1,
+    "solved": true
+   },
+   {
+    "tries": 2,
+    "solved": true
+   }
+  ]
+ },
+ "queue": {
+  "rule": [
+   "store -> row with in_queue = 1",
+   "move -> in_queue = 0",
+   "post -> posts all rows, deletes posted ids",
+   "clear -> deletes rows with in_queue = 1"
+  ],
+  "vectors": [
+   {
+    "op": "store",
+    "rows_before": [],
+    "rows_after": [
+     {
+      "id": 1,
+      "in_queue": 1
+     }
+    ]
+   },
+   {
+    "op": "move",
+    "rows_before": [
+     {
+      "id": 1,
+      "in_queue": 1
+     }
+    ],
+    "rows_after": [
+     {
+      "id": 1,
+      "in_queue": 0
+     }
+    ]
+   },
+   {
+    "op": "post",
+    "rows_before": [
+     {
+      "id": 1,
+      "in_queue": 0
+     },
+     {
+      "id": 2,
+      "in_queue": 1
+     }
+    ],
+    "rows_after": [],
+    "posted": [
+     1,
+     2
+    ]
+   },
+   {
+    "op": "clear",
+    "rows_before": [
+     {
+      "id": 3,
+      "in_queue": 1
+     },
+     {
+      "id": 4,
+      "in_queue": 0
+     }
+    ],
+    "rows_after": [
+     {
+      "id": 4,
+      "in_queue": 0
+     }
+    ]
+   }
+  ]
+ },
+ "retrieval": {
+  "rule": "getAllLessonProgressInQueue selects only in_queue = 1",
+  "vectors": [
+   {
+    "rows": [
+     {
+      "id": 1,
+      "in_queue": 1
+     },
+     {
+      "id": 2,
+      "in_queue": 0
+     }
+    ],
+    "visible": [
+     1
+    ]
+   }
+  ]
+ },
+ "answers_in_chapter": {
+  "rule": "AnswersInChapter(correct, total) over the pending rows",
+  "vectors": [
+   {
+    "rows": [
+     {
+      "tries": 1
+     },
+     {
+      "tries": 0
+     },
+     {
+      "tries": 1
+     }
+    ],
+    "expected": {
+     "answeredCorrectly": 2,
+     "answeredTotal": 3
+    }
+   }
+  ]
+ },
+ "first_try_count": {
+  "rule": "solved && attempts == 1",
+  "vectors": [
+   {
+    "rows": [
+     {
+      "tries": 1,
+      "attempts": 1
+     },
+     {
+      "tries": 1,
+      "attempts": 3
+     },
+     {
+      "tries": 0,
+      "attempts": 1
+     }
+    ],
+    "expected": 1
+   }
+  ]
+ },
+ "version_change": {
+  "rule": "no client comparison of publishSetVersion; stored rows keep their value",
+  "vectors": [
+   {
+    "row_publishSetVersion": 753,
+    "bundle_publishSetVersion": 760,
+    "row_unchanged": true,
+    "resent_value": 753
+   }
+  ]
+ },
+ "wire_mapping": {
+  "rule": "toProgressList maps 9 fields into the Progress DTO",
+  "dto_fields": [
+   "lessonId",
+   "completedAt",
+   "startedAt",
+   "tries",
+   "tutorialVersion",
+   "trackId",
+   "publishSetVersion",
+   "attempts",
+   "isPracticeProgress"
+  ]
+ }
+}

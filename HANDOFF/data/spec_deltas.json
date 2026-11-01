@@ -1,0 +1,428 @@
+{
+  "generated": "2026-11-01",
+  "purpose": "what the independent mimo/ engine keeps, changes, adds or drops relative to the recovered application",
+  "decision_vocabulary": [
+    "KEEP",
+    "KEEP_WITH_CHANGES",
+    "ADD_RULE",
+    "DROP"
+  ],
+  "domain_decisions": [
+    {
+      "domain_id": "D-01",
+      "domain": "APK/packaging",
+      "decision": "DROP",
+      "rationale": "packaging is Mimo-specific (13 dex, split modules)",
+      "source_status": "COMPLETE",
+      "evidence_anchor": "mission-06/01_APK_AND_ARCHITECTURE"
+    },
+    {
+      "domain_id": "D-02",
+      "domain": "startup/DI",
+      "decision": "KEEP_WITH_CHANGES",
+      "rationale": "single DI component is worth keeping; replace Hilt with plain construction for a small engine",
+      "source_status": "COMPLETE",
+      "evidence_anchor": "mission-06/evidence/DI_GRAPH.json"
+    },
+    {
+      "domain_id": "D-03",
+      "domain": "content hierarchy",
+      "decision": "KEEP",
+      "rationale": "content hierarchy (track/section/tutorial/chapter/lesson) is the engine's backbone",
+      "source_status": "COMPLETE",
+      "evidence_anchor": "02_CONTENT_DELIVERY/CONTENT_MODEL_COMPLETE.json"
+    },
+    {
+      "domain_id": "D-04",
+      "domain": "dynamic modules",
+      "decision": "DROP",
+      "rationale": "dynamic feature modules are stubs; deliver locales as directories",
+      "source_status": "PARTIALLY_COMPLETE",
+      "evidence_anchor": "02_CONTENT_DELIVERY/DYNAMIC_MODULE_IMPLEMENTATION.md"
+    },
+    {
+      "domain_id": "D-05",
+      "domain": "DSL grammar",
+      "decision": "KEEP",
+      "rationale": "DSL grammar is the content contract",
+      "source_status": "COMPLETE",
+      "evidence_anchor": "mission-07/04_DSL_PARSER_RENDERER"
+    },
+    {
+      "domain_id": "D-06",
+      "domain": "parser",
+      "decision": "KEEP",
+      "rationale": "keep the grammar; one generic parser suffices instead of seven",
+      "source_status": "COMPLETE",
+      "evidence_anchor": "mission-07/04_DSL_PARSER_RENDERER"
+    },
+    {
+      "domain_id": "D-07",
+      "domain": "AST",
+      "decision": "KEEP",
+      "rationale": "AST shape is reusable",
+      "source_status": "COMPLETE",
+      "evidence_anchor": "mission-07/04_DSL_PARSER_RENDERER"
+    },
+    {
+      "domain_id": "D-08",
+      "domain": "rendering",
+      "decision": "KEEP_WITH_CHANGES",
+      "rationale": "renderer contract reusable; replace the WebView plumbing with an embedded HTML host",
+      "source_status": "SUBSTANTIALLY_COMPLETE",
+      "evidence_anchor": "mission-07/12_UI_RESOURCES/75"
+    },
+    {
+      "domain_id": "D-09",
+      "domain": "lesson runtime",
+      "decision": "KEEP",
+      "rationale": "lesson lifecycle K/e0/U/V/W/X maps to open/store/next",
+      "source_status": "COMPLETE",
+      "evidence_anchor": "03_LESSON_ENGINE"
+    },
+    {
+      "domain_id": "D-10",
+      "domain": "interactions",
+      "decision": "KEEP",
+      "rationale": "nine interaction types",
+      "source_status": "COMPLETE",
+      "evidence_anchor": "04_INTERACTION_ENGINE/SIX_MODULE_VARIANTS.json"
+    },
+    {
+      "domain_id": "D-11",
+      "domain": "grading",
+      "decision": "KEEP",
+      "rationale": "grading predicates incl. the three-way verdict",
+      "source_status": "COMPLETE",
+      "evidence_anchor": "04_INTERACTION_ENGINE/GRADING_IMPLEMENTATION.md"
+    },
+    {
+      "domain_id": "D-12",
+      "domain": "feedback/retry",
+      "decision": "KEEP",
+      "rationale": "three feedback states plus visibility gating",
+      "source_status": "COMPLETE",
+      "evidence_anchor": "04_INTERACTION_ENGINE/FEEDBACK_ENGINE_COMPLETE.md"
+    },
+    {
+      "domain_id": "D-13",
+      "domain": "executable lessons",
+      "decision": "DROP",
+      "rationale": "executable lessons need a backend sandbox",
+      "source_status": "SUBSTANTIALLY_COMPLETE",
+      "evidence_anchor": "mission-06/03_DSL_AND_RUNTIME/23"
+    },
+    {
+      "domain_id": "D-14",
+      "domain": "learner model",
+      "decision": "KEEP_WITH_CHANGES",
+      "rationale": "keep entity shape; add user key, lifetime attempts and monotonic history",
+      "source_status": "COMPLETE",
+      "evidence_anchor": "05_LEARNER_MODEL"
+    },
+    {
+      "domain_id": "D-15",
+      "domain": "progression",
+      "decision": "ADD_RULE",
+      "rationale": "completion must become a local rule; Mimo delegates it to the server",
+      "source_status": "COMPLETE",
+      "evidence_anchor": "05_LEARNER_MODEL/PROGRESSION_IMPLEMENTATION.md"
+    },
+    {
+      "domain_id": "D-16",
+      "domain": "gamification",
+      "decision": "DROP",
+      "rationale": "coins/streaks are a server economy",
+      "source_status": "COMPLETE",
+      "evidence_anchor": "mission-07/07_STORAGE_AND_SYNC/49_GAMIFICATION_COMPLETE.md"
+    },
+    {
+      "domain_id": "D-17",
+      "domain": "room/persistence",
+      "decision": "KEEP_WITH_CHANGES",
+      "rationale": "Room design reusable; add a migration path",
+      "source_status": "COMPLETE",
+      "evidence_anchor": "06_PERSISTENCE/ROOM_SCHEMA.json"
+    },
+    {
+      "domain_id": "D-18",
+      "domain": "sync/outbox",
+      "decision": "KEEP_WITH_CHANGES",
+      "rationale": "outbox lifecycle reusable; add idempotency key and retry policy",
+      "source_status": "COMPLETE",
+      "evidence_anchor": "05_LEARNER_MODEL/INQUEUE_IMPLEMENTATION.md"
+    },
+    {
+      "domain_id": "D-19",
+      "domain": "network stack",
+      "decision": "DROP",
+      "rationale": "no network client is needed for the offline engine",
+      "source_status": "COMPLETE",
+      "evidence_anchor": "07_NETWORKING/01_NETWORK_CLIENT_INVENTORY.md"
+    },
+    {
+      "domain_id": "D-20",
+      "domain": "endpoints",
+      "decision": "DROP",
+      "rationale": "keep the catalogue only for optional sync",
+      "source_status": "COMPLETE",
+      "evidence_anchor": "07_NETWORKING/02_ENDPOINT_CATALOG.json"
+    },
+    {
+      "domain_id": "D-21",
+      "domain": "AI tutor",
+      "decision": "DROP",
+      "rationale": "AI tutor belongs to the tutor engine",
+      "source_status": "SUBSTANTIALLY_COMPLETE",
+      "evidence_anchor": "mission-07/09_STREAMING/66"
+    },
+    {
+      "domain_id": "D-22",
+      "domain": "SSE",
+      "decision": "DROP",
+      "rationale": "SSE belongs to the tutor engine",
+      "source_status": "COMPLETE",
+      "evidence_anchor": "07_NETWORKING/08_SSE_AND_WEBSOCKET.md"
+    },
+    {
+      "domain_id": "D-23",
+      "domain": "execution socket",
+      "decision": "DROP",
+      "rationale": "execution socket out of scope",
+      "source_status": "PARTIALLY_COMPLETE",
+      "evidence_anchor": "07_NETWORKING/08_SSE_AND_WEBSOCKET.md"
+    },
+    {
+      "domain_id": "D-24",
+      "domain": "Pusher",
+      "decision": "DROP",
+      "rationale": "Pusher out of scope",
+      "source_status": "PARTIALLY_COMPLETE",
+      "evidence_anchor": "mission-07/09_STREAMING/71"
+    },
+    {
+      "domain_id": "D-25",
+      "domain": "push notifications",
+      "decision": "DROP",
+      "rationale": "push notifications out of scope",
+      "source_status": "PARTIALLY_COMPLETE",
+      "evidence_anchor": "mission-07/09_STREAMING/72"
+    },
+    {
+      "domain_id": "D-26",
+      "domain": "navigation",
+      "decision": "KEEP_WITH_CHANGES",
+      "rationale": "navigation model reusable; routes rebuilt for new content",
+      "source_status": "SUBSTANTIALLY_COMPLETE",
+      "evidence_anchor": "mission-07/12_UI_RESOURCES/73"
+    },
+    {
+      "domain_id": "D-27",
+      "domain": "screens",
+      "decision": "KEEP_WITH_CHANGES",
+      "rationale": "screen catalogue informs the new UI surface",
+      "source_status": "SUBSTANTIALLY_COMPLETE",
+      "evidence_anchor": "mission-07/12_UI_RESOURCES/74"
+    },
+    {
+      "domain_id": "D-28",
+      "domain": "resources",
+      "decision": "DROP",
+      "rationale": "Mimo resources are content assets",
+      "source_status": "COMPLETE",
+      "evidence_anchor": "mission-07/12_UI_RESOURCES/76"
+    },
+    {
+      "domain_id": "D-29",
+      "domain": "design system",
+      "decision": "KEEP_WITH_CHANGES",
+      "rationale": "reuse token structure, not Mimo branding",
+      "source_status": "COMPLETE",
+      "evidence_anchor": "mission-07/12_UI_RESOURCES/77"
+    },
+    {
+      "domain_id": "D-30",
+      "domain": "Rive",
+      "decision": "DROP",
+      "rationale": "Rive animations are Mimo branding",
+      "source_status": "SUBSTANTIALLY_COMPLETE",
+      "evidence_anchor": "mission-07/12_UI_RESOURCES/80"
+    },
+    {
+      "domain_id": "D-31",
+      "domain": "localization",
+      "decision": "KEEP_WITH_CHANGES",
+      "rationale": "locale-pack pattern reusable; add explicit fallback",
+      "source_status": "SUBSTANTIALLY_COMPLETE",
+      "evidence_anchor": "02_CONTENT_DELIVERY + mission-07/14"
+    },
+    {
+      "domain_id": "D-32",
+      "domain": "accessibility",
+      "decision": "KEEP",
+      "rationale": "accessibility practices reusable",
+      "source_status": "SUBSTANTIALLY_COMPLETE",
+      "evidence_anchor": "mission-07/12_UI_RESOURCES/81"
+    },
+    {
+      "domain_id": "D-33",
+      "domain": "analytics",
+      "decision": "KEEP_WITH_CHANGES",
+      "rationale": "event taxonomy reusable; no Mimo sink",
+      "source_status": "SUBSTANTIALLY_COMPLETE",
+      "evidence_anchor": "mission-07/10_ANALYTICS_CONFIG/82"
+    },
+    {
+      "domain_id": "D-34",
+      "domain": "remote config",
+      "decision": "DROP",
+      "rationale": "Remote Config is Mimo infrastructure",
+      "source_status": "SUBSTANTIALLY_COMPLETE",
+      "evidence_anchor": "mission-07/10_ANALYTICS_CONFIG/84"
+    },
+    {
+      "domain_id": "D-35",
+      "domain": "background jobs",
+      "decision": "DROP",
+      "rationale": "WorkManager jobs are Mimo-specific",
+      "source_status": "COMPLETE",
+      "evidence_anchor": "mission-07/10_ANALYTICS_CONFIG/86"
+    },
+    {
+      "domain_id": "D-36",
+      "domain": "subscriptions",
+      "decision": "DROP",
+      "rationale": "subscriptions belong to the product shell",
+      "source_status": "SUBSTANTIALLY_COMPLETE",
+      "evidence_anchor": "mission-07/13_SUBSCRIPTION/90_SUBSCRIPTION_COMPLETE.md"
+    },
+    {
+      "domain_id": "D-37",
+      "domain": "native",
+      "decision": "DROP",
+      "rationale": "native libs are Mimo/SDK artefacts",
+      "source_status": "SUBSTANTIALLY_COMPLETE",
+      "evidence_anchor": "mission-06/13_NATIVE_AND_SDKS"
+    },
+    {
+      "domain_id": "D-38",
+      "domain": "SDKs",
+      "decision": "DROP",
+      "rationale": "third-party SDKs out of scope",
+      "source_status": "COMPLETE",
+      "evidence_anchor": "mission-06/13_NATIVE_AND_SDKS/87"
+    },
+    {
+      "domain_id": "D-39",
+      "domain": "security posture",
+      "decision": "KEEP_WITH_CHANGES",
+      "rationale": "informs but does not constrain the offline engine",
+      "source_status": "COMPLETE",
+      "evidence_anchor": "mission-07/08_NETWORK + mission-06/14_SECURITY"
+    },
+    {
+      "domain_id": "D-40",
+      "domain": "offline/failure",
+      "decision": "KEEP",
+      "rationale": "the offline boundary definition is essential",
+      "source_status": "COMPLETE",
+      "evidence_anchor": "mission-08/99_FINAL_CLOSURE/08_OFFLINE_CAPABILITY_MATRIX.csv"
+    },
+    {
+      "domain_id": "D-41",
+      "domain": "deep-links/URI-routing",
+      "decision": "DROP",
+      "rationale": "deep links are product features",
+      "source_status": "SUBSTANTIALLY_COMPLETE",
+      "evidence_anchor": "mission-06/09_NAVIGATION_AND_UI/63"
+    },
+    {
+      "domain_id": "D-42",
+      "domain": "Compose UI layer",
+      "decision": "KEEP_WITH_CHANGES",
+      "rationale": "Compose patterns reusable",
+      "source_status": "SUBSTANTIALLY_COMPLETE",
+      "evidence_anchor": "mission-07/12_UI_RESOURCES/75"
+    },
+    {
+      "domain_id": "D-43",
+      "domain": "auth token lifecycle",
+      "decision": "DROP",
+      "rationale": "auth belongs to the app shell",
+      "source_status": "COMPLETE",
+      "evidence_anchor": "05_AUTHENTICATION_CLOSURE + 07_NETWORKING/03"
+    },
+    {
+      "domain_id": "D-44",
+      "domain": "privacy/consent & tracking SDKs",
+      "decision": "DROP",
+      "rationale": "consent is SDK-driven",
+      "source_status": "PARTIALLY_COMPLETE",
+      "evidence_anchor": "mission-07/11_SDK_NATIVE + Q-134"
+    },
+    {
+      "domain_id": "D-45",
+      "domain": "crash/observability",
+      "decision": "KEEP_WITH_CHANGES",
+      "rationale": "crash/observability useful, different sink",
+      "source_status": "SUBSTANTIALLY_COMPLETE",
+      "evidence_anchor": "mission-07/10_ANALYTICS_CONFIG/87"
+    }
+  ],
+  "additions": [
+    {
+      "id": "ADD-01",
+      "title": "lesson/question binding",
+      "why": "Mimo binds a question to a lesson position; the exam engine needs a question bank independent of lessons",
+      "source": "mimo-re/complete-extraction/17_BUILD_READY_SPEC/DATA_MODEL_TARGET.md"
+    },
+    {
+      "id": "ADD-02",
+      "title": "concept graph + prerequisites",
+      "why": "not present in Mimo",
+      "source": "same"
+    },
+    {
+      "id": "ADD-03",
+      "title": "error taxonomy per option",
+      "why": "distractor-level diagnosis; Mimo grades only correctness",
+      "source": "same"
+    },
+    {
+      "id": "ADD-04",
+      "title": "local completion rule",
+      "why": "Mimo completion is server-side (D-15)",
+      "source": "mimo-re/mission-08/05_LEARNER_MODEL/PROGRESSION_IMPLEMENTATION.md"
+    },
+    {
+      "id": "ADD-05",
+      "title": "idempotent sync key",
+      "why": "Mimo has no idempotency key",
+      "source": "mimo-re/mission-08/07_NETWORKING/07_ERROR_RETRY_OFFLINE.md"
+    },
+    {
+      "id": "ADD-06",
+      "title": "schema migration policy",
+      "why": "Mimo has zero migrations and an inferred destructive fallback",
+      "source": "mimo-re/mission-08/06_PERSISTENCE/ROOM_MIGRATION_AND_VERSIONING.md"
+    },
+    {
+      "id": "ADD-07",
+      "title": "explicit locale fallback chain",
+      "why": "Mimo fallback never observed (A12)",
+      "source": "mimo-re/mission-08/02_CONTENT_DELIVERY/CONTENT_CACHE_IMPLEMENTATION.md"
+    },
+    {
+      "id": "ADD-08",
+      "title": "per-user data partitioning",
+      "why": "Mimo tables have no account column (B-2)",
+      "source": "mimo-re/mission-08/06_PERSISTENCE/STORAGE_KEYS_SCHEMA.json"
+    }
+  ],
+  "counts": {
+    "KEEP": 10,
+    "KEEP_WITH_CHANGES": 13,
+    "ADD_RULE": 1,
+    "DROP": 21
+  }
+}

@@ -1,0 +1,134 @@
+{
+ "generated": "2026-11-01",
+ "mission": 8,
+ "phase": 7,
+ "method": "each client read from the DI provider body in mission-06/evidence/DI_GRAPH.json (DAD pseudo-Java of the component switch)",
+ "clients": [
+  {
+   "id": "C1_authenticated_okhttp",
+   "class": "okhttp3.OkHttpClient",
+   "di_case": 20,
+   "interceptors": [
+    {
+     "order": 1,
+     "class": "hg.e",
+     "role": "connectivity gate",
+     "ctor_arg": "ri.d"
+    },
+    {
+     "order": 2,
+     "class": "fh.b",
+     "role": "User-Agent"
+    },
+    {
+     "order": 3,
+     "class": "fh.a",
+     "role": "Bearer authorization",
+     "ctor_arg": "ku.a via component method b()"
+    }
+   ],
+   "connect_timeout_s": 20,
+   "read_timeout_s": 30,
+   "retry_on_connection_failure": "explicit true (builder field f = 1)",
+   "consumers": [
+    "shared Retrofit (case 19)",
+    "Customer.io service (53)",
+    "AI tutor repository (81)",
+    "mimo-auth service (87)",
+    "email service (117)",
+    "execution socket wrapper (113)"
+   ],
+   "confidence": "VERIFIED_STATIC",
+   "evidence": "DI_GRAPH.json case 20"
+  },
+  {
+   "id": "C2_shared_retrofit",
+   "class": "retrofit2.Retrofit",
+   "di_case": 19,
+   "base_url_source": "String provider w -> case 22",
+   "client": "C1",
+   "converter": "he0.a.c(jx.d) kotlinx.serialization",
+   "consumers": [
+    "52 of 62 endpoints, 25 interfaces"
+   ],
+   "confidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "C3_long_timeout_client",
+   "class": "okhttp3.OkHttpClient",
+   "di_case": 108,
+   "interceptors": [
+    {
+     "order": 1,
+     "class": "fh.b"
+    },
+    {
+     "order": 2,
+     "class": "fh.a"
+    }
+   ],
+   "connect_timeout_s": 10,
+   "read_timeout_s": 120,
+   "retry_on_connection_failure": "explicit true",
+   "note": "no connectivity gate",
+   "service": "eh.a",
+   "confidence": "VERIFIED_STATIC"
+  },
+  {
+   "id": "C4_customerio_retrofit",
+   "di_case": 53,
+   "base_url": "https://track.customer.io",
+   "client": "C1",
+   "service": "hg.d"
+  },
+  {
+   "id": "C5_mimo_auth_retrofit",
+   "di_case": 87,
+   "base_url": "https://mimoauth.getmimo.com/",
+   "client": "C1",
+   "service": "hg.b"
+  },
+  {
+   "id": "C6_email_retrofit",
+   "di_case": 117,
+   "base_url": "https://email.getmimo.com",
+   "client": "C1",
+   "service": "ph.b"
+  },
+  {
+   "id": "C7_ai_tutor_repository",
+   "class": "com.getmimo.data.source.local.aitutor.a",
+   "di_case": 81,
+   "ctor": [
+    "jx.d",
+    "okhttp3.OkHttpClient (C1)",
+    "String (w)",
+    "ku.a"
+   ],
+   "protocol": "SSE",
+   "auth": "manual Authorization header"
+  },
+  {
+   "id": "C8_execution_socket",
+   "class": "pg.a",
+   "di_case": 113,
+   "ctor": [
+    "okhttp3.OkHttpClient (C1)",
+    "hb0.b",
+    "ku.a"
+   ],
+   "protocol": "WebSocket",
+   "auth": "Sec-WebSocket-Protocol: authorization.bearer.<token>"
+  }
+ ],
+ "negative_findings": [
+  "no okhttp3.Authenticator",
+  "no logging interceptor",
+  "no CertificatePinner",
+  "no okhttp3.Cache",
+  "no DNS override",
+  "no proxy configuration",
+  "no per-host retry policy",
+  "no request tagging for deduplication"
+ ]
+}

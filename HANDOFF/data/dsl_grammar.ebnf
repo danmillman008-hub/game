@@ -1,0 +1,88 @@
+(* Mimo lesson DSL — reconstructed grammar (EBNF)
+   Derived from 20,306 documents / 1,034,686 tag occurrences.
+   Elements not seen in the corpus are marked NEW (extension points for the target product). *)
+
+document        = doc_type , html_open , body , { block } , body_close , html_close ;
+doc_type        = "<!DOCTYPE html" , [ ws ] , ">" ;
+
+html_open       = "<html" , ">" ;            (* head/style appear in 3 docs only *)
+head_block      = "<head>" , { style_block } , "</head>" ;
+style_block     = "<style>" , text , "</style>" ;
+
+block           = paragraph | code_block | selection_block | webview_block
+                | database_block | inline_strong | inline_em | br | image | anchor ;
+
+paragraph       = "<p" , [ visible_if ] , ">" , rich_text , "</p>" ;
+rich_text       = { text | inline_strong | inline_em | code_inline | br } ;
+code_inline     = "<code>" , text , "</code>" ;              (* inline, escaped *)
+
+inline_strong   = "<strong>" , rich_text , "</strong>" ;
+inline_em       = "<em>" , rich_text , "</em>" ;
+br              = "<br>" | "<br/>" | "<br />" ;
+image           = "<img" , attr_src , [ visible_if ] , [ "/" ] , ">" ;
+anchor          = "<a" , attr_href , ">" , rich_text , "</a>" ;
+
+code_block      = "<code" , attr_version , attr_codelang , attr_name , [ visible_if ] , ">"
+                    , content , [ interactions ] , "</code>" ;
+attr_version    = ws , "version" , "=" , q , "2" , q ;
+attr_codelang   = ws , "codelang" , "=" , q , language , q ;
+attr_name       = ws , "name" , "=" , q , file_path , q ;
+language        = "html" | "javascript" | "python" | "css" | "sql" | "jsx" | "swift"
+                | "typescript" | "bash" | "none" | "text" ;
+
+content         = "<content>" , { token } , "</content>" ;
+token           = text_token | break_token ;
+text_token      = "<text" , [ attr_class ] , attr_value , "/>" ;
+break_token     = "<text" , ws , "type" , "=" , q , "break" , q , "/>" ;
+attr_class      = ws , "class" , "=" , q , token_class , q ;
+token_class     = "string" | "keyword" | "name" | "number" | "built_in" | "attr"
+                | "attribute" | "selector-class" | "literal" | "meta" | "selector-tag" ;
+
+interactions    = "<interactions>" , { interaction } , "</interactions>" ;
+interaction     = gap_interaction | validated_interaction ;
+gap_interaction = "<interaction" , ws , "type" , "=" , q , "fillTheGap" , q
+                    , [ attr_is_default ] , ">"
+                    , "<options>" , { correct_range | distractor } , "</options>"
+                    , "</interaction>" ;
+correct_range   = "<option" , attr_start , attr_end , "/>" ;
+distractor      = "<option" , ws , "correct" , "=" , q , "false" , q , ">"
+                    , content , "</option>" ;
+validated_interaction = "<interaction" , ws , "type" , "=" , q , "validatedInput" , q
+                    , [ attr_is_default ] , attr_start , attr_end , "/>" ;
+attr_is_default = ws , "isDefault" , "=" , q , "true" , q ;
+attr_start      = ws , "startIndex" , "=" , q , integer , q ;
+attr_end        = ws , "endIndex" , "=" , q , integer , q ;
+
+selection_block = "<selection" , [ attr_iscode ] , [ attr_multiple ] , ">"
+                    , { item } , "</selection>" ;
+item            = "<item" , attr_item_value , attr_correct , ">" , rich_text , "</item>" ;
+attr_iscode     = ws , "iscode" , "=" , q , ( "true" | "false" ) , q ;
+attr_multiple   = ws , "multiple" , "=" , q , "multiple" , q ;
+attr_item_value = ws , "value" , "=" , q , integer , q ;
+attr_correct    = ws , "correct" , "=" , q , ( "true" | "false" ) , q ;
+
+webview_block   = "<webview" , attr_version , [ attr_style ] , [ visible_if ]
+                    , [ attr_interaction ] , attr_content , "/>" ;
+attr_style      = ws , "style" , "=" , q , "embedded" , q ;
+attr_interaction= ws , "interaction" , "=" , q , ( "feedback" | "unlock" ) , q ;
+attr_content    = ws , "content" , "=" , q , escaped_html , q ;
+
+database_block  = "<database" , [ visible_if ] , attr_bootstrap , ">"
+                    , tables_block , [ output_block ] , "</database>" ;
+attr_bootstrap  = ws , "bootstrapScript" , "=" , q , sql_script , q ;
+tables_block    = "<tables>" , { table_block } , "</tables>" ;
+table_block     = "<table" , ws , "name" , "=" , q , identifier , q , ">"
+                    , { header_cell | row } , "</table>" ;
+header_cell     = "<header" , ws , "content" , "=" , q , cell_text , q , "/>" ;
+row             = "<row>" , { data_cell } , "</row>" ;
+data_cell       = "<data" , ws , "content" , "=" , q , cell_text , q , "/>" ;
+output_block    = "<output>" , text , "</output>" ;
+
+visible_if      = ws , "visible-if" , "=" , q , ( "always" | "wrong" | "correct" ) , q ;
+attr_src        = ws , "src" , "=" , q , resource_ref , q ;
+attr_href       = ws , "href" , "=" , q , uri , q ;
+
+(* NEW — permitted extensions for the target product, absent in Mimo *)
+new_block       = math_block | diagram_block | grammar_block | audio_block ;
+math_block      = "<math" , [ visible_if ] , ">" , latex , "</math>" ;
+grammar_block   = "<grammar" , attr_lang , ">" , text , "</grammar>" ;
