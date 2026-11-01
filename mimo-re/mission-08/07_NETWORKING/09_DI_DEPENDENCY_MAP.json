@@ -1,0 +1,27 @@
+{
+ "generated": "2026-11-01",
+ "phase": 7,
+ "component": "component switch of 127 provider cases",
+ "tokens": {
+  "v": "okhttp3.OkHttpClient -> case 20",
+  "w": "String -> case 22 (api host or api-testing host)",
+  "u": "ri.d connectivity provider",
+  "e": "jx.d kotlinx converter factory",
+  "b()": "ku.a token provider"
+ },
+ "why": {
+  "v": "only cases 20 and 108 build a client; 108 builds it inline without storing, so the provider every other case reads (v) is case 20",
+  "w": "the only provider returning an API host is case 22",
+  "u": "case 20 passes the u value into hg.e, whose constructor takes ri.d",
+  "e": "every Retrofit builder calls he0.a.c(x) with the jx.d instance read from e"
+ },
+ "chain": "w + v + e -> Retrofit.Builder -> build() -> create(interface)",
+ "host_switch": {
+  "code": "ze.a -> (sk.a) -> sk.a.e.g(this, sk.a.r[2]).booleanValue()",
+  "meaning": "dev-menu preference decides between the two hosts",
+  "production": "https://api.mimo.org",
+  "testing": "https://api-testing.mimo.org",
+  "label": "VERIFIED_STATIC for branch and literals; the preference key behind index 2 is not recovered"
+ },
+ "token_provider": "ku.a (component method b()), single source for fh.a, C3, C7, C8"
+}

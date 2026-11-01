@@ -21,7 +21,7 @@
 | 4 | `04_INTERACTION_ENGINE/` | **substantially complete** | normaliser decrypted; three-way validated-input verdict; nine interaction types mapped; grading is client-side; C-14 |
 | 5 | `05_LEARNER_MODEL/` | **substantially complete** | tries=flag, attempts=session, key `(lesson_id,tutorial_id)`, in_queue outbox, completion is server-derived; C-15/C-16 |
 | 6 | `06_PERSISTENCE/` | **substantially complete** | one DB `mimo.db` v2, 3 tables, no migrations, destructive fallback inferred, outbox only self-cleaning table |
-| 7 | `07_NETWORKING/` | next | — |
+| 7 | `07_NETWORKING/` | **substantially complete** | 6 clients, interceptor order proven, 62 endpoints/29 interfaces, dev-menu host switch, annotation auth, C-17…C-20; per-endpoint auth BLOCKED (no APK) |
 | 8 | `08_AUTHENTICATION/` | substantially complete (Stage D) | token provider, interceptor, anonymous-first link |
 | rest | 9–24 | not started | — |
 

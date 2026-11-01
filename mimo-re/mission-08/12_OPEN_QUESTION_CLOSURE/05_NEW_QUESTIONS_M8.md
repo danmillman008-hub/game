@@ -56,9 +56,9 @@ None of these replaces an existing question; all are additive and cited by the p
 | ID | Question | Status |
 |---|---|---|
 | B-1 | exact id→SQL assignment for the remaining 25 generated DAO lambdas | open |
-| B-2 | is learner state intentionally not partitioned by account? | open (no account column anywhere) |
+| B-2 | is learner state intentionally not partitioned by account? | CLOSED_STATIC structurally; intent open |
 | B-3 | non-network failure path of the progress POST | open |
-| B-4 | is there any track-level completion predicate? | open |
+| B-4 | is there any track-level completion predicate? | **CLOSED_STATIC** (negative) |
 | B-5 | what consumes the streak sink `gg.e`? | open |
 | B-6 | can `ChapterViewModel.clearOnExit` drop unsynced progress? | open |
 | B-7 | is the per-tutorial POST loop sequential? | open |
@@ -69,7 +69,22 @@ None of these replaces an existing question; all are additive and cited by the p
 | ID | Question | Status |
 |---|---|---|
 | B-9 | are the two Room `Builder` booleans destructive-fallback flags? | open (operands unreadable) |
-| B-10 | which key does `getLastInteractedTrackId` read? | open |
+| B-10 | which key does `getLastInteractedTrackId` read? | **CLOSED_STATIC** (Stage 7: network call `GET /v1/tracks/completion/lastInteracted`) |
 | B-11 | full `mimo_prefs` / DataStore key set | open (generic helper) |
 | B-12 | does `com.getmimo.data.local.a` hold learner data? | open |
-| B-13 | any other writer of the completion tables? | open (negative limited to reachable code) |
+| B-13 | any other writer of the completion tables? | **CLOSED_STATIC** (negative, reachable code) |
+
+## Questions raised by Stage 7 (networking and authentication)
+
+| ID | Question | Status |
+|---|---|---|
+| A-01 | which of the 62 endpoints carry the auth-marker annotation? | BLOCKED_BY_ENVIRONMENT (no APK/DEX) |
+| A-02 | does a sign-out path exist, and what does it clear? | PARTIALLY_CLOSED |
+| A-03 | what does `eh.a` on the long-timeout client fetch? | UNKNOWN |
+| A-04 | which execution channel (REST vs socket) does a lesson use? | UNKNOWN |
+| A-05 | kotlinx `Json` strictness (`ignoreUnknownKeys`, `explicitNulls`) | NOT_RECOVERED |
+| A-06 | server sending `null` for a timestamp → Room `Instant` null | UNKNOWN |
+| A-07 | do `Response<T>` call sites check `isSuccessful`? | NOT_RECOVERED |
+| A-08 | does closing the SSE connection abort server generation? | UNKNOWN (server) |
+| A-09 | which dev-menu preference key is `sk.a.r[2]`? | PARTIALLY_CLOSED |
+| A-10 | does any feature build its own HTTP client outside DI? | UNKNOWN (negative) |

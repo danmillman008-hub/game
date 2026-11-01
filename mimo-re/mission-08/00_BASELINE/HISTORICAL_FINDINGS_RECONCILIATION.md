@@ -302,6 +302,54 @@ at all.
 **Effect.** Stage 5's key/versioning analysis supersedes the earlier phrasing; the earlier documents are preserved
 unchanged.
 
+## C-17 — the API host switch is a dev-menu preference (closes mission-06 Q-76)
+
+**Original finding (mission-06, `47_BASE_URL_AND_ENVIRONMENTS.md`):** the host comes from "a `when` over an enum of
+~127 dependencies whose case 22 returns the `HttpUrl`", with the flag described as a "build/debug flag"
+(**INFERRED_HIGH**); `Q-76` asked *which* flag controls case 22.
+
+**What case 22 actually reads:** `ze.a → (sk.a) → sk.a.e.g(this, sk.a.r[2]).booleanValue()`. `sk.a` is the same
+**dev-menu storage** that gates `LessonProgressQueue.storeLessonProgress`, and `r[2]` is an element of its preference
+array. There is no `BuildConfig` reference in the body.
+
+**Effect.** `Q-76` is closed as a dev-menu preference; the "build flag" wording is withdrawn. The preference key behind
+index 2 remains unrecovered (A-09).
+
+## C-18 — `fh.a` is annotation-conditional; the token provider is `ku.a`, not `ri.b`
+
+**Original findings (mission-06 `49_AUTHENTICATION.md`, mission-07 `62_AUTH_INTERCEPTOR_COMPLETE.md`):** token from
+`ri.b.d(0)`; "`fh.a` has no path check, so **every** request on that client carries the header".
+
+**What the interceptor body does:** checks for an existing `Authorization` header, reads the Retrofit `Method` from the
+request tag (`Tags.a(KClass)` → `Class.cast`), and only adds the header when `Method.getAnnotation(marker)` is
+non-null. The token comes from `ku.a.d(false)` (phase 5's provider). `ri.b` is therefore an **annotation type**, and
+`ri.b.d(0)` does not exist; the `ri.*` family resolves to `ri.a` network callback, `ri.b` annotation, `ri.c` state
+value, `ri.d` state provider.
+
+**Effect.** "Every request carries the header" is refuted; the per-endpoint property is a method annotation. The
+per-row annotation list was not recoverable in Stage 7 (A-01).
+
+## C-19 — the offline gate throws `java.io.IOException`, not `NoConnectionException`
+
+**Original finding (mission-08 phase 5.2):** `hg.e` throws `NoConnectionException("No network while trying to call …")`.
+
+**What the bytecode targets:** `new java.io.IOException(StringBuilder("No network while trying to call " + url))`.
+`NoConnectionException` does exist and is thrown by the **repository** layer (`postUnsyncedLessonProgress`), i.e. a
+different site.
+
+**Effect.** Two distinct offline signals; the interceptor one is a plain `IOException`.
+
+## C-20 — there is no application `Result` envelope; `d70.b` is `kotlin.coroutines.Continuation`
+
+**Original findings (mission-06 `51_ERROR_MODEL.md`, `48_HTTP_STACK.md`; mission-07 `58_NETWORK_STACK_COMPLETE.md`):**
+"every call returns `d70.b<T>` — a `Result`-like envelope with success/failure".
+
+**What mission-06's own obfuscation map says:** `d70.b` = "kotlin.coroutines.Continuation (generic carries the suspend
+return type)". The envelope claim contradicts the map in the same mission.
+
+**Effect.** Errors propagate as exceptions (`HttpException` for direct-body suspend calls; status inspection for
+`Response<T>` call sites). Any "error envelope" wording must be withdrawn.
+
 ## Summary of corrections carried into mission-8
 
 | ID | Kind | Effect on mission-8 |
@@ -321,3 +369,7 @@ unchanged.
 | C-14 | self-correction | two "analytics events" are Kotlin property names; new naming channel documented |
 | C-15 | self-correction | `e0` = storeLessonProgressInMemory; A18 closed; initialiseViewModel unidentified |
 | C-16 | correction | progress key is `(lesson_id, tutorial_id)`, not `(trackId, lessonId)` |
+| C-17 | correction | API host switch is a dev-menu preference; mission-06 Q-76 closed |
+| C-18 | correction | `fh.a` is annotation-conditional; token from `ku.a.d(Z)`, `ri.b` is an annotation |
+| C-19 | correction | offline gate throws `java.io.IOException`, not `NoConnectionException` |
+| C-20 | correction | `d70.b` is `Continuation`; no `Result` envelope exists |
