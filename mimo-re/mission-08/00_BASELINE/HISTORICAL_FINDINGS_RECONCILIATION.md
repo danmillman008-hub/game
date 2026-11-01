@@ -192,6 +192,23 @@ Reference: `evidence/DEX_rive_webview.json`. Full treatment belongs to Phase 3 (
 
 ---
 
+## C-12 — Q-05 refined: eight locale content modules exist as feature modules with stub-only presence
+
+**Original claim (Mission 7, Q-05).** "dynamic feature module contents (non-English packs) absent from the APK" —
+status `BLOCKED_BY_ENVIRONMENT`.
+
+**New evidence (mission-08 checkpoint pass).** Eight of the twelve dex files are 1,096-byte stubs that contain
+exactly two classes each: `com.getmimo.data.content.<locale>.BuildConfig` and `…R`, for **ru, pt, id, it, pl, fr,
+tr, es**. The substantive code is confined to `classes.dex` (12,944 classes), `classes2.dex` (13,155),
+`classes3.dex` (3,318) and `classes12.dex` (21 `bin.ghost` classes).
+
+**What changes.** The *existence and names* of the modules is now proven (`VERIFIED_STATIC`), and so is the fact
+that their payloads are not in the base APK. The **contents** remain absent, so Q-05 stays
+`BLOCKED_BY_ENVIRONMENT` — the blocker is now precise: the module payloads are delivered by Play Feature Delivery
+and are not present in the supplied artifact.
+
+**Both records.** Mission-7's `03_CONTENT_AND_MODULES/16_DYNAMIC_MODULE_ARCHITECTURE.md` is unchanged.
+
 ## R-11 — A mission-08 statement that was wrong and is corrected here
 
 **Original claim (mission-08, Phase 2 data flow):** "header construction is inside the request builders" — i.e. the

@@ -42,3 +42,15 @@ for d in complete-extraction/16_AUTOMATED_TESTS mission-05/21_AUTOMATED_VALIDATI
   /tmp/venv/bin/python -m pytest "$d" -q | tail -1
 done
 ```
+
+## Re-entry re-run (checkpoint `f78dccb`, 2026-11-01)
+
+| Suite | Result |
+|---|---|
+| `complete-extraction/16_AUTOMATED_TESTS` | 23 passed |
+| `mission-05/21_AUTOMATED_VALIDATION` | 44 passed |
+| `mission-06/19_TESTS` | 21 passed |
+| `mission-07/20_TESTS` | 15 passed |
+
+Same commands as above, no test modified. Mission-08 still ships no test of its own in this pass; Phase 19 owns
+that work.

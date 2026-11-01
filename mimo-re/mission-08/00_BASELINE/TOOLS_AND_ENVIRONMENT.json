@@ -1,0 +1,107 @@
+{
+ "generated": "2026-11-01",
+ "environment": {
+  "python": "3.11.2",
+  "androguard": "4.1.4",
+  "pytest": "9.2.0",
+  "networkx": "3.6.1",
+  "absent": [
+   "java",
+   "jadx",
+   "apktool",
+   "aapt2",
+   "readelf",
+   "objdump",
+   "dot",
+   "mmdc",
+   "adb",
+   "emulator"
+  ],
+  "consequence": "single decompiler (DAD); no diagram rendering; no runtime execution"
+ },
+ "inputs": {
+  "apk": "/tmp/apk/Mimo_9.35 (1).apk (hash in INPUT_HASHES.json)",
+  "dex_dir": "/tmp/x (12 dex: 4 real, 8 locale-module stubs)",
+  "decompiled_java": "/tmp/dad (3,284 files)",
+  "resources": "/tmp/res (25 MB)",
+  "derived": "/tmp/arsc_full.json, /tmp/strings_by_id.json, /tmp/manifest.xml"
+ },
+ "tools": [
+  {
+   "id": "T-01",
+   "path": "../mission-05/tools/decompile_apk.py",
+   "status": "verified",
+   "last_run": "stage A",
+   "purpose": "DAD decompile of selected classes"
+  },
+  {
+   "id": "T-02",
+   "path": "../mission-07/tools/parse_arsc.py",
+   "status": "present_not_rerun",
+   "purpose": "manual ARSC decode"
+  },
+  {
+   "id": "T-03",
+   "path": "../mission-07/tools/build_m7_inventory.py",
+   "status": "present_not_rerun",
+   "purpose": "class/method inventory"
+  },
+  {
+   "id": "T-04",
+   "path": "tools/dex_inspect.py",
+   "status": "verified",
+   "last_run": "stage A",
+   "purpose": "DEX per-class/method/instruction inspection, literal and method-name scans, queue coverage"
+  },
+  {
+   "id": "T-05",
+   "path": "tools/build_canonical_registers.py",
+   "status": "verified",
+   "last_run": "stage A",
+   "purpose": "rebuild all registers and the count audit"
+  },
+  {
+   "id": "T-06",
+   "path": "tools/build_m8_class_investigation.py",
+   "status": "verified",
+   "last_run": "stage B",
+   "purpose": "role/priority categorisation of the 2,178 queue"
+  },
+  {
+   "id": "T-07",
+   "path": "tools/build_renamed_app_register.py",
+   "status": "verified",
+   "last_run": "stage B",
+   "purpose": "find app classes outside the com.getmimo namespace"
+  },
+  {
+   "id": "T-08",
+   "path": "tools/build_method_status_register.py",
+   "status": "verified",
+   "last_run": "stage B",
+   "purpose": "11-value method status with caller attributes"
+  },
+  {
+   "id": "T-09",
+   "path": "tools/build_call_graph.py",
+   "status": "verified",
+   "last_run": "stage C",
+   "purpose": "typed call graph with confidence"
+  },
+  {
+   "id": "T-10",
+   "path": "tools/recover_method_names.py",
+   "status": "verified",
+   "last_run": "stage D",
+   "purpose": "recover original method names from orphan lambda binary names (auth package only so far)"
+  },
+  {
+   "id": "T-11",
+   "path": "tools/build_closure_records.py",
+   "status": "verified",
+   "last_run": "stage E",
+   "purpose": "question transition records with evidence checks"
+  }
+ ],
+ "determinism": "all tools are deterministic given the same dex set; no network, no timestamps in outputs"
+}
