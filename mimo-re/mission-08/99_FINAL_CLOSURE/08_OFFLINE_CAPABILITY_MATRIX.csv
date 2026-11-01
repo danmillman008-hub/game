@@ -1,0 +1,19 @@
+feature,offline_start,offline_interaction,offline_persistence,reconnection_dependency,evidence
+cold start,yes,n/a,local,none,DI + content from assets; no network call in the startup path (Stage 7 §5.1)
+browse track catalogue,yes,yes,read-only,none,"tracks.json in assets, 19 tracks (Stage 2)"
+open a lesson,yes,yes,none until solved,none,parser + renderer are local (Stages 3-4)
+render all module types,yes,yes,n/a,none,"6 module variants, HTML custom elements (Stage 3)"
+submit answers / grading,yes,yes,no,none,grading is client-side (Stage 4)
+feedback + retry,yes,yes,no,none,jm.m/n/o feedback state (Stage 4)
+next lesson navigation,yes,yes,no,none,lesson identifier navigation (Stage 3)
+persist progress,yes,yes,YES (Room),none,lesson_progress row written locally (Stage 5)
+restart and restore progress,yes,yes,from Room,none,in_queue rows survive; completion flags from Room (Stages 5-6)
+see completion / next chapter unlocked,no,no,cache only,GET /v1/tracks/{id}/completion,completion is server-derived (Stage 5 §5)
+progress upload,no,deferred,outbox,POST /v1/tutorials/{id}/progress,queue flush at chapter end / app start (Stage 5)
+streak / daily goal / coins,no,no,no,server payload,reachedGoal + dailyGoalCoinReward only (Stage 5)
+leaderboards / profile / social,no,no,no,"/v1/leaderboards, /v1/users/*",remote only
+AI tutor,no,no,no,SSE /v1/aiTutor/conversations,remote only (Stage 7 §5.4)
+code execution,no,no,no,/v1/code/runfiles + wss /v1/run/socket,remote only
+subscription / entitlements,no,cache,RevenueCat cache,RevenueCat SDK,no offline purchase path
+settings that only write prefs,yes,yes,SharedPreferences,none,mimo_prefs (Stage 6)
+account deletion / e-mail change,no,no,no,/v1/account*,remote only

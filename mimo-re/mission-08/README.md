@@ -66,3 +66,7 @@ their regeneration commands are in `../mission-05/21_AUTOMATED_VALIDATION` and
 * merged classes (`47`) are only discussed per method/branch;
 * renamed classes (`1,148`) are treated as app code when their code references app types;
 * no token, credential or PII value is recorded anywhere.
+
+## Final closure
+
+The terminal dossier is `99_FINAL_CLOSURE/` — start at `00_FINAL_EXECUTIVE_SUMMARY.md`. Mission status: `CLOSED_WITH_DECLARED_LIMITATIONS`.

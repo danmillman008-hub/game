@@ -79,3 +79,21 @@
 2. Phase 6 (AI/SSE/WS/Pusher/FCM) — the four transports are distinct in code and must stay distinct in text.
 3. Phase 12 transition records once Phases 3–11 have produced their findings.
 4. Phase 16 audit last, so its dimensions reflect finished work.
+
+---
+
+## TERMINAL STATUS — mission closed
+
+**`CLOSED_WITH_DECLARED_LIMITATIONS`** (2026-11-01)
+
+The final mission consolidated every domain, question and correction into
+`99_FINAL_CLOSURE/` (21 documents, 5 machine-readable registers, 22 semantic tests):
+
+* 45/45 domains assigned a terminal status (25 COMPLETE, 15 SUBSTANTIALLY_COMPLETE, 5 PARTIALLY_COMPLETE);
+* 91 open questions closed with terminal statuses across five families;
+* 23 consolidated evidence records, each resolving to a committed artifact;
+* 16 planned runtime tests, **0 executed** — no APK, no emulator; `VERIFIED_RUNTIME` claims: **0**;
+* 8 questions remain `BLOCKED_BY_ENVIRONMENT` (artifact absent), the rest are closed, backend-only, or explicitly
+  partial with a named gap.
+
+There is no successor stage. Read `99_FINAL_CLOSURE/00_FINAL_EXECUTIVE_SUMMARY.md` first.

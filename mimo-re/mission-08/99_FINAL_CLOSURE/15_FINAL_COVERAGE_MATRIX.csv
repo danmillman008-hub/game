@@ -1,0 +1,46 @@
+domain_id,domain,terminal_status,evidence_anchor,note
+D-01,APK/packaging,COMPLETE,mission-06/01_APK_AND_ARCHITECTURE,"APK identity, manifest, 13 dex, assets"
+D-02,startup/DI,COMPLETE,mission-06/evidence/DI_GRAPH.json,"127 provider cases, single component"
+D-03,content hierarchy,COMPLETE,02_CONTENT_DELIVERY/CONTENT_MODEL_COMPLETE.json,"19 tracks / 1,029 tutorials / 1,947 chapters / 18,272 lessons"
+D-04,dynamic modules,PARTIALLY_COMPLETE,02_CONTENT_DELIVERY/DYNAMIC_MODULE_IMPLEMENTATION.md,assets present for 10 locales; module code is a stub (Q-05)
+D-05,DSL grammar,COMPLETE,mission-07/04_DSL_PARSER_RENDERER,te.a-te.g grammar
+D-06,parser,COMPLETE,mission-07/04_DSL_PARSER_RENDERER,"seven parsers, dispatch rules"
+D-07,AST,COMPLETE,mission-07/04_DSL_PARSER_RENDERER,AST node families
+D-08,rendering,SUBSTANTIALLY_COMPLETE,mission-07/12_UI_RESOURCES/75,renderer + custom elements; some composable consumers open (A-27)
+D-09,lesson runtime,COMPLETE,03_LESSON_ENGINE,"lesson lifecycle, K/e0/U/V/W/X"
+D-10,interactions,COMPLETE,04_INTERACTION_ENGINE/SIX_MODULE_VARIANTS.json,"9 UI interaction types, 6 module variants"
+D-11,grading,COMPLETE,04_INTERACTION_ENGINE/GRADING_IMPLEMENTATION.md,"six E0 graders, qm.i normaliser"
+D-12,feedback/retry,COMPLETE,04_INTERACTION_ENGINE/FEEDBACK_ENGINE_COMPLETE.md,"jm.m/n/o states, ModuleVisibility"
+D-13,executable lessons,SUBSTANTIALLY_COMPLETE,mission-06/03_DSL_AND_RUNTIME/23,executable lessons; channel selection open (Q-39)
+D-14,learner model,COMPLETE,05_LEARNER_MODEL,"tries flag, attempts session-local, key (lesson_id,tutorial_id)"
+D-15,progression,COMPLETE,05_LEARNER_MODEL/PROGRESSION_IMPLEMENTATION.md,effect-by-effect; server owns completion
+D-16,gamification,COMPLETE,mission-07/09_PROGRESS_GAMIFICATION,coins/keys/streak call sites
+D-17,room/persistence,COMPLETE,06_PERSISTENCE/ROOM_SCHEMA.json,"mimo.db v2, 3 tables, 3 DAOs"
+D-18,sync/outbox,COMPLETE,05_LEARNER_MODEL/INQUEUE_IMPLEMENTATION.md,outbox lifecycle + triggers
+D-19,network stack,COMPLETE,07_NETWORKING/01_NETWORK_CLIENT_INVENTORY.md,"6 client objects, proven interceptor order"
+D-20,endpoints,COMPLETE,07_NETWORKING/02_ENDPOINT_CATALOG.json,62 endpoints / 29 interfaces / 5 hosts
+D-21,AI tutor,SUBSTANTIALLY_COMPLETE,mission-07/09_STREAMING/66,eligibility + protocol; prompt text partial
+D-22,SSE,COMPLETE,07_NETWORKING/08_SSE_AND_WEBSOCKET.md,"SSE frames, finishReason"
+D-23,execution socket,PARTIALLY_COMPLETE,07_NETWORKING/08_SSE_AND_WEBSOCKET.md,handshake proven; frame schema BLOCKED (Q-40)
+D-24,Pusher,PARTIALLY_COMPLETE,mission-07/09_STREAMING/71,channel auth app-side; names unknown (Q-89)
+D-25,push notifications,PARTIALLY_COMPLETE,mission-07/09_STREAMING/72,FCM receive path; send side is backend
+D-26,navigation,SUBSTANTIALLY_COMPLETE,mission-07/12_UI_RESOURCES/73,navigation graph; some routes open
+D-27,screens,SUBSTANTIALLY_COMPLETE,mission-07/12_UI_RESOURCES/74,screen catalogue
+D-28,resources,COMPLETE,mission-07/12_UI_RESOURCES/76,resource catalogue
+D-29,design system,COMPLETE,mission-07/12_UI_RESOURCES/77,design tokens
+D-30,Rive,SUBSTANTIALLY_COMPLETE,mission-07/12_UI_RESOURCES/80,rive runtime; state bindings partial (Q-34)
+D-31,localization,SUBSTANTIALLY_COMPLETE,02_CONTENT_DELIVERY + mission-07/14,"10 locale packs; fallback unproven (A12, Q-14)"
+D-32,accessibility,SUBSTANTIALLY_COMPLETE,mission-07/12_UI_RESOURCES/81,"content descriptions, semantics"
+D-33,analytics,SUBSTANTIALLY_COMPLETE,mission-07/10_ANALYTICS_CONFIG/82,14 verified events + dispatcher
+D-34,remote config,SUBSTANTIALLY_COMPLETE,mission-07/10_ANALYTICS_CONFIG/84,flags catalogued; per-key consumers partial (Q-118)
+D-35,background jobs,COMPLETE,mission-07/10_ANALYTICS_CONFIG/86,WorkManager jobs
+D-36,subscriptions,SUBSTANTIALLY_COMPLETE,mission-07/13_SUBSCRIPTION/90-91,RevenueCat + entitlement flag; gating matrix partial (Q-115)
+D-37,native,SUBSTANTIALLY_COMPLETE,mission-06/13_NATIVE_AND_SDKS,native libs listed; U-18 out of scope
+D-38,SDKs,COMPLETE,mission-06/13_NATIVE_AND_SDKS/87,third-party SDK inventory
+D-39,security posture,COMPLETE,mission-07/08_NETWORK + mission-06/14_SECURITY,"no pinning, no cleartext, no SQLCipher, no app token store"
+D-40,offline/failure,COMPLETE,08_OFFLINE_CAPABILITY_MATRIX.csv,"offline matrix: content yes, progression no"
+D-41,deep-links/URI-routing,SUBSTANTIALLY_COMPLETE,mission-06/09_NAVIGATION_AND_UI/63,12 intent filters + mimo:// scheme
+D-42,Compose UI layer,SUBSTANTIALLY_COMPLETE,mission-07/12_UI_RESOURCES/75,Compose UI structure; not every composable read
+D-43,auth token lifecycle,COMPLETE,05_AUTHENTICATION_CLOSURE + 07_NETWORKING/03,"ku.a lifecycle, annotation auth, 4 manual sites"
+D-44,privacy/consent & tracking SDKs,PARTIALLY_COMPLETE,mission-07/11_SDK_NATIVE + Q-134,SDK consent state; no app consent screen
+D-45,crash/observability,SUBSTANTIALLY_COMPLETE,mission-07/10_ANALYTICS_CONFIG/87,Sentry + crash reporting surface

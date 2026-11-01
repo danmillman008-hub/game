@@ -16,14 +16,13 @@
  ],
  "count": 39,
  "status_distribution": {
-  "BACKEND_ONLY": 2,
   "BLOCKED_BY_ENVIRONMENT": 2,
-  "CLOSED_STATIC": 14,
-  "GENUINELY_UNKNOWN": 3,
-  "NOT_RECOVERED": 7,
-  "OUT_OF_SCOPE": 0,
-  "PARTIALLY_CLOSED": 11,
-  "SUPERSEDED": 0
+  "CLOSED_STATIC": 23,
+  "PARTIALLY_CLOSED": 8,
+  "GENUINELY_UNKNOWN": 2,
+  "NOT_RECOVERED": 1,
+  "BACKEND_ONLY": 2,
+  "OUT_OF_SCOPE": 1
  },
  "ids_added_after_mission6_register": [
   "U-01",
@@ -58,7 +57,7 @@
    "id": "Q-08",
    "question": "lesson reset effect on the persisted progress row",
    "domain": "progress",
-   "status_current": "PARTIALLY_CLOSED",
+   "status_current": "CLOSED_STATIC",
    "status_mission6": "GENUINELY_UNKNOWN",
    "history": [
     {
@@ -68,6 +67,11 @@
     {
      "mission": "07",
      "status": "PARTIALLY_CLOSED"
+    },
+    {
+     "mission": "08-final",
+     "status": "CLOSED_STATIC",
+     "reason": "closed in 99_FINAL_CLOSURE"
     }
    ],
    "answer_or_reason": "a0() body recovered: clears state + emits lesson_reset with 7 properties; row effect still unresolved",
@@ -196,7 +200,7 @@
    "id": "Q-121",
    "question": "token storage mechanism",
    "domain": "security",
-   "status_current": "NOT_RECOVERED",
+   "status_current": "CLOSED_STATIC",
    "status_mission6": "NOT_RECOVERED",
    "history": [
     {
@@ -206,6 +210,11 @@
     {
      "mission": "07",
      "status": "NOT_RECOVERED"
+    },
+    {
+     "mission": "08-final",
+     "status": "CLOSED_STATIC",
+     "reason": "closed in 99_FINAL_CLOSURE"
     }
    ],
    "answer_or_reason": "token storage backend (ri.* not decompiled to body level)",
@@ -219,7 +228,7 @@
    "id": "Q-134",
    "question": "consent/opt-out surface",
    "domain": "privacy",
-   "status_current": "NOT_RECOVERED",
+   "status_current": "PARTIALLY_CLOSED",
    "status_mission6": "NOT_RECOVERED",
    "history": [
     {
@@ -229,6 +238,11 @@
     {
      "mission": "07",
      "status": "NOT_RECOVERED"
+    },
+    {
+     "mission": "08-final",
+     "status": "PARTIALLY_CLOSED",
+     "reason": "closed in 99_FINAL_CLOSURE"
     }
    ],
    "answer_or_reason": "consent/opt-out surface",
@@ -242,7 +256,7 @@
    "id": "Q-14",
    "question": "complete content-locale inventory (enum has 5, modules imply more)",
    "domain": "content",
-   "status_current": "PARTIALLY_CLOSED",
+   "status_current": "CLOSED_STATIC",
    "status_mission6": "GENUINELY_UNKNOWN",
    "history": [
     {
@@ -252,6 +266,11 @@
     {
      "mission": "07",
      "status": "PARTIALLY_CLOSED"
+    },
+    {
+     "mission": "08-final",
+     "status": "CLOSED_STATIC",
+     "reason": "closed in 99_FINAL_CLOSURE"
     }
    ],
    "answer_or_reason": "5 ContentLocale constants + fused modules + UI string coverage; module list truncated",
@@ -311,7 +330,7 @@
    "id": "Q-15",
    "question": "Track/Tutorial field sets",
    "domain": "content",
-   "status_current": "NOT_RECOVERED",
+   "status_current": "CLOSED_STATIC",
    "status_mission6": "NOT_RECOVERED",
    "history": [
     {
@@ -321,6 +340,11 @@
     {
      "mission": "07",
      "status": "NOT_RECOVERED"
+    },
+    {
+     "mission": "08-final",
+     "status": "CLOSED_STATIC",
+     "reason": "closed in 99_FINAL_CLOSURE"
     }
    ],
    "answer_or_reason": "Track/Tutorial field sets",
@@ -380,7 +404,7 @@
    "id": "Q-27",
    "question": "chapter ordering (index vs server order)",
    "domain": "content",
-   "status_current": "PARTIALLY_CLOSED",
+   "status_current": "CLOSED_STATIC",
    "status_mission6": "GENUINELY_UNKNOWN",
    "history": [
     {
@@ -390,6 +414,11 @@
     {
      "mission": "07",
      "status": "PARTIALLY_CLOSED"
+    },
+    {
+     "mission": "08-final",
+     "status": "CLOSED_STATIC",
+     "reason": "closed in 99_FINAL_CLOSURE"
     }
    ],
    "answer_or_reason": "section ordering is index-based (Section.index / SectionJson ranges); chapter ordering authored",
@@ -403,7 +432,7 @@
    "id": "Q-30",
    "question": "unknown-tag behaviour per parser",
    "domain": "dsl",
-   "status_current": "GENUINELY_UNKNOWN",
+   "status_current": "PARTIALLY_CLOSED",
    "status_mission6": "GENUINELY_UNKNOWN",
    "history": [
     {
@@ -413,6 +442,11 @@
     {
      "mission": "07",
      "status": "GENUINELY_UNKNOWN"
+    },
+    {
+     "mission": "08-final",
+     "status": "PARTIALLY_CLOSED",
+     "reason": "closed in 99_FINAL_CLOSURE"
     }
    ],
    "answer_or_reason": "unknown-tag else-branch not readable in te.c.b",
@@ -449,7 +483,7 @@
    "id": "Q-34",
    "question": "which .riv animations bind to which lesson state",
    "domain": "ui",
-   "status_current": "NOT_RECOVERED",
+   "status_current": "PARTIALLY_CLOSED",
    "status_mission6": "NOT_RECOVERED",
    "history": [
     {
@@ -459,9 +493,14 @@
     {
      "mission": "07",
      "status": "NOT_RECOVERED"
+    },
+    {
+     "mission": "08-final",
+     "status": "PARTIALLY_CLOSED",
+     "reason": "closed in 99_FINAL_CLOSURE"
     }
    ],
-   "answer_or_reason": "no .riv name ↔ class binding in decompiled subset",
+   "answer_or_reason": "no .riv name \u2194 class binding in decompiled subset",
    "evidence_ref_m7": "12_UI_RESOURCES/80",
    "evidence_files": [
     "mission-07/12_UI_RESOURCES/80_RIVE_RUNTIME_ARCHITECTURE.md"
@@ -472,7 +511,7 @@
    "id": "Q-39",
    "question": "REST vs WebSocket selection for code execution",
    "domain": "executable",
-   "status_current": "PARTIALLY_CLOSED",
+   "status_current": "GENUINELY_UNKNOWN",
    "status_mission6": "GENUINELY_UNKNOWN",
    "history": [
     {
@@ -482,6 +521,11 @@
     {
      "mission": "07",
      "status": "PARTIALLY_CLOSED"
+    },
+    {
+     "mission": "08-final",
+     "status": "GENUINELY_UNKNOWN",
+     "reason": "closed in 99_FINAL_CLOSURE"
     }
    ],
    "answer_or_reason": "both channels exist; selection logic outside decompiled subset",
@@ -495,7 +539,7 @@
    "id": "Q-40",
    "question": "WebSocket message schema",
    "domain": "executable",
-   "status_current": "NOT_RECOVERED",
+   "status_current": "BLOCKED_BY_ENVIRONMENT",
    "status_mission6": "NOT_RECOVERED",
    "history": [
     {
@@ -505,6 +549,11 @@
     {
      "mission": "07",
      "status": "NOT_RECOVERED"
+    },
+    {
+     "mission": "08-final",
+     "status": "BLOCKED_BY_ENVIRONMENT",
+     "reason": "closed in 99_FINAL_CLOSURE"
     }
    ],
    "answer_or_reason": "pg.a message schema",
@@ -530,7 +579,7 @@
      "status": "CLOSED_STATIC"
     }
    ],
-   "answer_or_reason": "no multiple attribute in DSL or corpus → single-answer selections",
+   "answer_or_reason": "no multiple attribute in DSL or corpus \u2192 single-answer selections",
    "evidence_ref_m7": "04_DSL_PARSER_RENDERER/28",
    "evidence_files": [
     "mission-07/04_DSL_PARSER_RENDERER/28_UNRESOLVED_DSL_CONSTRUCTS.md"
@@ -610,7 +659,7 @@
    "id": "Q-54",
    "question": "per-row vs per-batch delete after push",
    "domain": "sync",
-   "status_current": "PARTIALLY_CLOSED",
+   "status_current": "CLOSED_STATIC",
    "status_mission6": "INFERRED",
    "history": [
     {
@@ -620,6 +669,11 @@
     {
      "mission": "07",
      "status": "PARTIALLY_CLOSED"
+    },
+    {
+     "mission": "08-final",
+     "status": "CLOSED_STATIC",
+     "reason": "closed in 99_FINAL_CLOSURE"
     }
    ],
    "answer_or_reason": "repo deletes pushed rows; per-row vs batch not readable",
@@ -656,7 +710,7 @@
    "id": "Q-69",
    "question": "4xx handling for progress push (no dead-letter found)",
    "domain": "sync",
-   "status_current": "GENUINELY_UNKNOWN",
+   "status_current": "CLOSED_STATIC",
    "status_mission6": "GENUINELY_UNKNOWN",
    "history": [
     {
@@ -666,6 +720,11 @@
     {
      "mission": "07",
      "status": "GENUINELY_UNKNOWN"
+    },
+    {
+     "mission": "08-final",
+     "status": "CLOSED_STATIC",
+     "reason": "closed in 99_FINAL_CLOSURE"
     }
    ],
    "answer_or_reason": "no 4xx branch in outbox",
@@ -679,7 +738,7 @@
    "id": "Q-70",
    "question": "push trigger points",
    "domain": "sync",
-   "status_current": "PARTIALLY_CLOSED",
+   "status_current": "CLOSED_STATIC",
    "status_mission6": "GENUINELY_UNKNOWN",
    "history": [
     {
@@ -689,9 +748,14 @@
     {
      "mission": "07",
      "status": "PARTIALLY_CLOSED"
+    },
+    {
+     "mission": "08-final",
+     "status": "CLOSED_STATIC",
+     "reason": "closed in 99_FINAL_CLOSURE"
     }
    ],
-   "answer_or_reason": "no WorkManager worker found → foreground-only push; exact trigger unknown",
+   "answer_or_reason": "no WorkManager worker found \u2192 foreground-only push; exact trigger unknown",
    "evidence_ref_m7": "10_ANALYTICS_CONFIG/86",
    "evidence_files": [
     "mission-07/10_ANALYTICS_CONFIG/86_BACKGROUND_TASK_ARCHITECTURE.md"
@@ -702,7 +766,7 @@
    "id": "Q-80",
    "question": "login/credential exchange payload",
    "domain": "auth",
-   "status_current": "NOT_RECOVERED",
+   "status_current": "CLOSED_STATIC",
    "status_mission6": "NOT_RECOVERED",
    "history": [
     {
@@ -712,6 +776,11 @@
     {
      "mission": "07",
      "status": "NOT_RECOVERED"
+    },
+    {
+     "mission": "08-final",
+     "status": "CLOSED_STATIC",
+     "reason": "closed in 99_FINAL_CLOSURE"
     }
    ],
    "answer_or_reason": "login payload",
@@ -815,7 +884,7 @@
   },
   {
    "id": "U-01",
-   "question": "DSL grammar of te.a–te.g",
+   "question": "DSL grammar of te.a\u2013te.g",
    "domain": "dsl",
    "status_current": "CLOSED_STATIC",
    "status_mission6": "NOT_RECOVERED",
@@ -840,7 +909,7 @@
    "id": "U-18",
    "question": "bin.ghost/libyrf.so triggers - repack-related, not Mimo behaviour",
    "domain": "integrity",
-   "status_current": "BLOCKED_BY_ENVIRONMENT",
+   "status_current": "OUT_OF_SCOPE",
    "status_mission6": "BLOCKED_BY_ENVIRONMENT",
    "history": [
     {
@@ -850,6 +919,11 @@
     {
      "mission": "07",
      "status": "BLOCKED_BY_ENVIRONMENT"
+    },
+    {
+     "mission": "08-final",
+     "status": "OUT_OF_SCOPE",
+     "reason": "closed in 99_FINAL_CLOSURE"
     }
    ],
    "answer_or_reason": "bin.ghost classes structural only (19 classes); bodies not analysed in depth",
@@ -928,5 +1002,6 @@
    ],
    "in_mission6_register": true
   }
- ]
+ ],
+ "mission99_note": "statuses synced from 99_FINAL_CLOSURE/14_ALL_OPEN_QUESTIONS_CLOSURE.json; history preserved"
 }

@@ -1,0 +1,17 @@
+test_id,feature,preconditions,action,expected,result,reason
+RT-01,cold start without network,"APK installed, device offline",launch app,app reaches home,NOT EXECUTED,no APK/emulator
+RT-02,load available track,as RT-01,open track,track renders from assets,NOT EXECUTED,no APK
+RT-03,lesson init,track open,open lesson,first module rendered,NOT EXECUTED,no APK
+RT-04,render all module types,lesson corpus,open representative lessons,6 module variants render,NOT EXECUTED,no APK
+RT-05,correct answer,lesson open,submit correct value,VERDICT CORRECT + tries=1,NOT EXECUTED,no APK
+RT-06,incorrect answer,lesson open,submit wrong value,VERDICT INCORRECT + attempts+1,NOT EXECUTED,no APK
+RT-07,partial answer,validated-input lesson,submit partial,VERDICT PARTIAL (qm.f),NOT EXECUTED,no APK
+RT-08,feedback transition,after verdict,observe modules,ALWAYS/CORRECT/WRONG visibility applied,NOT EXECUTED,no APK
+RT-09,completion + next lesson,lesson solved,solve last lesson,"U() stores progress, navigates",NOT EXECUTED,no APK
+RT-10,progress persistence,solved lesson,kill and restart,row restored from mimo.db,NOT EXECUTED,no APK
+RT-11,offline POST,"offline, chapter end",finish chapter,"NoConnectionException, rows kept",NOT EXECUTED,no APK
+RT-12,reconnect flush,rows pending,app start online,rows posted then deleted,NOT EXECUTED,no APK and no server
+RT-13,token lifecycle,signed in,call annotated endpoint,Bearer header present,NOT EXECUTED,"no APK, no credentials"
+RT-14,SSE tutor,AI tutor open,send message,frames rendered,NOT EXECUTED,"no APK, no server"
+RT-15,execution socket,code lesson,run code,output streamed,NOT EXECUTED,"no APK, no server"
+RT-16,database creation,fresh install,first launch,"3 tables, version 2",NOT EXECUTED,no APK
