@@ -1,0 +1,63 @@
+{
+ "source": "corpus + PARSER_GRAMMAR.json",
+ "attributes": {
+  "visible-if": {
+   "values": [
+    "always",
+    "correct",
+    "wrong"
+   ],
+   "default": "always",
+   "on": "all modules"
+  },
+  "codelang": {
+   "values": "CodeLanguage enum (24 members)",
+   "default": "none",
+   "on": "code"
+  },
+  "type": {
+   "values": "FILL_THE_GAP|SELECTION|SPELL|VALIDATED_INPUT",
+   "on": "interaction"
+  },
+  "isDefault": {
+   "values": "boolean",
+   "default": false,
+   "on": "interaction"
+  },
+  "startIndex/endIndex": {
+   "type": "int (character offsets)",
+   "on": "interaction"
+  },
+  "correct": {
+   "type": "boolean",
+   "on": "option,item"
+  },
+  "iscode": {
+   "type": "boolean",
+   "on": "item"
+  },
+  "collapseAt": {
+   "attrs": [
+    "startLineIndex",
+    "endLineIndex"
+   ],
+   "on": "collapsibleLines"
+  },
+  "src": {
+   "on": "img"
+  },
+  "version/style/interaction/content": {
+   "on": "webview"
+  },
+  "name/content": {
+   "on": "table"
+  },
+  "href": {
+   "on": "a"
+  },
+  "value/type": {
+   "on": "text"
+  }
+ },
+ "label": "VERIFIED_STATIC"
+}

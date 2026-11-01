@@ -1,0 +1,12 @@
+sequenceDiagram
+  participant U as Learner
+  participant I as interactor
+  participant R as AiTutorRepository
+  participant API as api.mimo.org
+  U->>I: ask
+  I->>R: SystemMessage + UserMessage
+  R->>API: POST /v1/aiTutor/conversations (Accept: text/event-stream)
+  loop SSE
+    API-->>R: {content, conversationId, finishReason}
+    R-->>U: append text
+  end

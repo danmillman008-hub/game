@@ -1,0 +1,9 @@
+sequenceDiagram
+  participant UI as fragment
+  participant P as te.c.b
+  participant VM as base.c
+  participant DB as Room
+  UI->>P: parse lesson document
+  P-->>VM: modules[]
+  VM->>DB: H(0,0) insert in_queue=1
+  VM-->>UI: first render

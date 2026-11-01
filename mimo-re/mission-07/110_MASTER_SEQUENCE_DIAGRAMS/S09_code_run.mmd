@@ -1,0 +1,9 @@
+sequenceDiagram
+  participant U as Learner
+  participant VM as executable VM
+  participant API as api.mimo.org
+  participant WS as run socket
+  U->>VM: run
+  VM->>API: POST /v1/code/runfiles
+  API-->>VM: {consoleOutput,error,hasPassed,hostedProjectUrl,tests}
+  VM-->>U: console + verdict

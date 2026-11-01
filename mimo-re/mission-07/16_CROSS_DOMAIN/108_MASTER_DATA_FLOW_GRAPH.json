@@ -1,0 +1,82 @@
+{
+ "note": "Data-flow edges with payload shapes.",
+ "flows": [
+  {
+   "data": "lesson document",
+   "from": "assets/module",
+   "to": "te.*",
+   "shape": "XML DSL",
+   "evidence": "PARSER_GRAMMAR.json"
+  },
+  {
+   "data": "LessonModule[]",
+   "from": "te.*",
+   "to": "base.c",
+   "shape": "Parcelable models",
+   "evidence": "models"
+  },
+  {
+   "data": "verdict",
+   "from": "qm.d",
+   "to": "base.c",
+   "shape": "CORRECT|PARTIAL|INCORRECT",
+   "evidence": "qm.e/f/g"
+  },
+  {
+   "data": "LessonProgress",
+   "from": "base.c.H",
+   "to": "Room",
+   "shape": "11 columns",
+   "evidence": "entity"
+  },
+  {
+   "data": "PostProgressRequestBody",
+   "from": "ProgressRepo",
+   "to": "API",
+   "shape": "{progressList[]}",
+   "evidence": "DTO"
+  },
+  {
+   "data": "PostProgressResponse",
+   "from": "API",
+   "to": "UI",
+   "shape": "{reachedGoal,dailyGoalCoinReward}",
+   "evidence": "DTO"
+  },
+  {
+   "data": "StartConversation",
+   "from": "interactor",
+   "to": "API",
+   "shape": "{systemMessage,userMessage}",
+   "evidence": "DTO"
+  },
+  {
+   "data": "AiTutorConversationMessage",
+   "from": "API",
+   "to": "VM",
+   "shape": "SSE frames",
+   "evidence": "repository"
+  },
+  {
+   "data": "ExecuteFilesBody/Response",
+   "from": "editor",
+   "to": "API",
+   "shape": "{files[]} / {consoleOutput,\u2026}",
+   "evidence": "DTO"
+  },
+  {
+   "data": "token",
+   "from": "ri.*",
+   "to": "fh.a/pg.a/f9.j",
+   "shape": "bearer string",
+   "evidence": "interceptors"
+  },
+  {
+   "data": "AB groups",
+   "from": "RemoteConfig",
+   "to": "analytics singleton",
+   "shape": "map",
+   "evidence": "log strings"
+  }
+ ]
+}

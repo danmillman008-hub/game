@@ -1,0 +1,177 @@
+{
+ "nodes": [
+  {
+   "id": "App",
+   "type": "application",
+   "evidence": "bin.ghost.YRF \u2192 com.getmimo.App"
+  },
+  {
+   "id": "DI",
+   "type": "graph",
+   "evidence": "ae.m 127 arms"
+  },
+  {
+   "id": "Analytics",
+   "type": "singleton",
+   "evidence": "com.getmimo.analytics.a"
+  },
+  {
+   "id": "OkHttp",
+   "type": "network",
+   "evidence": "case 20"
+  },
+  {
+   "id": "Room",
+   "type": "storage",
+   "evidence": "3 tables"
+  },
+  {
+   "id": "Parser",
+   "type": "content",
+   "evidence": "te.a\u2013te.g"
+  },
+  {
+   "id": "LessonVM",
+   "type": "state",
+   "evidence": "base.c"
+  },
+  {
+   "id": "Grader",
+   "type": "logic",
+   "evidence": "qm.i"
+  },
+  {
+   "id": "Renderer",
+   "type": "ui",
+   "evidence": "4 fragments + spans"
+  },
+  {
+   "id": "ProgressRepo",
+   "type": "data",
+   "evidence": "outbox"
+  },
+  {
+   "id": "TutorRepo",
+   "type": "network",
+   "evidence": "AiTutorRepository"
+  },
+  {
+   "id": "CodeRunner",
+   "type": "network",
+   "evidence": "pg.a + runfiles"
+  },
+  {
+   "id": "RevenueCat",
+   "type": "sdk",
+   "evidence": "purchase"
+  },
+  {
+   "id": "Pusher",
+   "type": "sdk",
+   "evidence": "f9.j"
+  },
+  {
+   "id": "FCM",
+   "type": "sdk",
+   "evidence": "messaging"
+  },
+  {
+   "id": "Navigation",
+   "type": "ui",
+   "evidence": "MainActivity + nav xml"
+  }
+ ],
+ "edges": [
+  {
+   "from": "App",
+   "to": "DI",
+   "trigger": "onCreate"
+  },
+  {
+   "from": "DI",
+   "to": "Analytics",
+   "trigger": "case 1"
+  },
+  {
+   "from": "DI",
+   "to": "OkHttp",
+   "trigger": "case 20"
+  },
+  {
+   "from": "DI",
+   "to": "Room",
+   "trigger": "provider"
+  },
+  {
+   "from": "Navigation",
+   "to": "Parser",
+   "trigger": "open lesson"
+  },
+  {
+   "from": "Parser",
+   "to": "LessonVM",
+   "trigger": "AST"
+  },
+  {
+   "from": "LessonVM",
+   "to": "Grader",
+   "trigger": "submit"
+  },
+  {
+   "from": "Grader",
+   "to": "LessonVM",
+   "trigger": "verdict"
+  },
+  {
+   "from": "LessonVM",
+   "to": "Renderer",
+   "trigger": "state change"
+  },
+  {
+   "from": "LessonVM",
+   "to": "ProgressRepo",
+   "trigger": "H()"
+  },
+  {
+   "from": "ProgressRepo",
+   "to": "Room",
+   "trigger": "insert in_queue=1"
+  },
+  {
+   "from": "ProgressRepo",
+   "to": "OkHttp",
+   "trigger": "batch push"
+  },
+  {
+   "from": "LessonVM",
+   "to": "Analytics",
+   "trigger": "f0/a0"
+  },
+  {
+   "from": "LessonVM",
+   "to": "TutorRepo",
+   "trigger": "ask AI"
+  },
+  {
+   "from": "LessonVM",
+   "to": "CodeRunner",
+   "trigger": "run"
+  },
+  {
+   "from": "Navigation",
+   "to": "RevenueCat",
+   "trigger": "paywall"
+  },
+  {
+   "from": "App",
+   "to": "Pusher",
+   "trigger": "init"
+  },
+  {
+   "from": "FCM",
+   "to": "Navigation",
+   "trigger": "notification tap"
+  }
+ ],
+ "note": "Edge list is the curated cross-domain set; per-method edges are in 01_CLASS_UNIVERSE/06_METHOD_CALL_GRAPH.json"
+}

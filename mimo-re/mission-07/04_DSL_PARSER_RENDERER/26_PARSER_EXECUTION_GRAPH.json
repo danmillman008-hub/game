@@ -1,0 +1,79 @@
+{
+ "nodes": [
+  "te.c.b",
+  "te.c.a",
+  "te.d.a",
+  "te.d.b",
+  "te.d.c",
+  "te.d.e",
+  "te.a.a",
+  "te.a.b",
+  "te.e.a",
+  "te.f.a",
+  "te.b.a",
+  "te.g.a"
+ ],
+ "edges": [
+  {
+   "from": "te.c.b",
+   "to": "te.c.a",
+   "guard": "tag==img"
+  },
+  {
+   "from": "te.c.b",
+   "to": "te.d.a",
+   "guard": "tag==p"
+  },
+  {
+   "from": "te.c.b",
+   "to": "te.a.a",
+   "guard": "tag==code"
+  },
+  {
+   "from": "te.c.b",
+   "to": "te.e.a",
+   "guard": "tag==selection"
+  },
+  {
+   "from": "te.c.b",
+   "to": "te.g.a",
+   "guard": "tag==webview"
+  },
+  {
+   "from": "te.c.b",
+   "to": "te.b.a",
+   "guard": "tag==database"
+  },
+  {
+   "from": "te.b.a",
+   "to": "te.f.a",
+   "guard": "tag==table"
+  },
+  {
+   "from": "te.a.a",
+   "to": "te.f.a",
+   "guard": "tag==table inside output"
+  },
+  {
+   "from": "te.a.a",
+   "to": "te.a.b",
+   "guard": "tag==content"
+  },
+  {
+   "from": "te.d.a",
+   "to": "te.d.b",
+   "guard": "tag==br"
+  },
+  {
+   "from": "te.d.a",
+   "to": "te.d.c",
+   "guard": "tag==code"
+  },
+  {
+   "from": "te.d.a",
+   "to": "te.d.e",
+   "guard": "tag==span"
+  }
+ ],
+ "label": "VERIFIED_STATIC (guard names from require()/getName() literals)"
+}

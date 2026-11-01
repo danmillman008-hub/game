@@ -1,0 +1,70 @@
+{
+ "tools": [
+  {
+   "name": "parse_arsc.py",
+   "version": "1.0",
+   "inputs": [
+    "resources.arsc"
+   ],
+   "outputs": [
+    "JSON (types\u2192keys\u2192records with config+value)"
+   ],
+   "deterministic": true,
+   "network": false,
+   "limitations": [
+    "no bag/complex entry expansion",
+    "no style resolution chain"
+   ],
+   "tests": [
+    "ordinal/type counts asserted in mission-07 suite"
+   ]
+  },
+  {
+   "name": "build_m7_inventory.py",
+   "version": "1.0",
+   "inputs": [
+    "dex dir",
+    "decompiled tree"
+   ],
+   "outputs": [
+    "class inventory csv",
+    "method inventory csv",
+    "investigation queue csv",
+    "symbol map json"
+   ],
+   "deterministic": true,
+   "network": false,
+   "limitations": [
+    "method regex is signature-level, not body-level",
+    "obfuscated-vs-library split is heuristic"
+   ]
+  },
+  {
+   "name": "(inherited) decompile_apk.py",
+   "version": "mission-05",
+   "inputs": [
+    "apk",
+    "dex-dir",
+    "classes-file"
+   ],
+   "outputs": [
+    "java sources"
+   ],
+   "deterministic": "mostly (DAD version dependent)"
+  },
+  {
+   "name": "(inherited) extract_parser_grammar.py",
+   "version": "mission-06",
+   "inputs": [
+    "te/* sources"
+   ],
+   "outputs": [
+    "PARSER_GRAMMAR.json"
+   ]
+  }
+ ],
+ "counts": {
+  "new": 2,
+  "inherited_used": 9
+ }
+}

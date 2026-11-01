@@ -1,0 +1,29 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "mimo.track_eta.json",
+ "title": "TrackEtaResponse (reconstructed)",
+ "description": "Field set extracted from the DEX (names are Kotlin-declared). Types inferred from Kotlin types; optionality unknown.",
+ "type": "object",
+ "properties": {
+  "currentPaceMinutesPerDay": {
+   "type": "integer"
+  },
+  "sections": {
+   "type": "array",
+   "items": {}
+  },
+  "trackEstimatedCompletionAt": {
+   "type": "string"
+  }
+ },
+ "required": [
+  "currentPaceMinutesPerDay",
+  "sections",
+  "trackEstimatedCompletionAt"
+ ],
+ "x-evidence": {
+  "source": "evidence/DTO_FIELDS.json",
+  "class": "com.getmimo.data.model.progress.TrackEtaResponse",
+  "label": "VERIFIED_STATIC (field names)"
+ }
+}

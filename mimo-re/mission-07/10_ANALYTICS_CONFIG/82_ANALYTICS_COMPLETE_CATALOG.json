@@ -1,0 +1,46 @@
+{
+ "dispatcher": "com.getmimo.analytics.a",
+ "event_object": "ge.j(name,index)",
+ "property_types": [
+  "NumberProperty",
+  "StringProperty",
+  "BaseProperty[]",
+  "PeopleProperty"
+ ],
+ "destinations": [
+  "FirebaseAnalytics.logEvent (via e(String,Map))",
+  "Adjust (attribution/adid; not per-event)",
+  "Sentry (crashes, not events)"
+ ],
+ "verified_events": null,
+ "verified_event_names": [
+  "exit_free_trial_screen",
+  "facebook_like",
+  "finish_lesson",
+  "finish_track",
+  "finish_tutorial",
+  "get_help",
+  "launch",
+  "lesson_interaction_delete",
+  "lesson_reset",
+  "login",
+  "login_manual_enter_password",
+  "onboarding_work_function_picked",
+  "open_lesson",
+  "open_privacy_policy"
+ ],
+ "example_full_payload": {
+  "event": "lesson_reset",
+  "properties": [
+   "lesson_id",
+   "tutorial_id",
+   "tutorial_version",
+   "track_id",
+   "attempts",
+   "duration"
+  ]
+ },
+ "naming_convention": "snake_case, verb_noun (launch, open_lesson, finish_lesson, lesson_reset, login\u2026)",
+ "coverage": "14 events verified; 252 candidate literals from mission-06 remain INFERRED",
+ "label": "VERIFIED_STATIC for the 14; INFERRED for the rest"
+}

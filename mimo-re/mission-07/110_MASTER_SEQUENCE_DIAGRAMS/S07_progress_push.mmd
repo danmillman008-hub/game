@@ -1,0 +1,8 @@
+sequenceDiagram
+  participant VM as ProgressRepo
+  participant DB as Room
+  participant API as api.mimo.org
+  VM->>DB: SELECT in_queue=1
+  VM->>API: POST /v1/tutorials/{id}/progress {progressList}
+  API-->>VM: {reachedGoal, dailyGoalCoinReward}
+  VM->>DB: DELETE pushed

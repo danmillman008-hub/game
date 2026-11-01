@@ -1,0 +1,248 @@
+<!DOCTYPE html><html lang="fa" dir="rtl"><meta charset="utf-8">
+<title>MISSION 7 — ساختار کامل داخلی Mimo</title>
+<style>body{font-family:system-ui,Tahoma,sans-serif;max-width:1100px;margin:2rem auto;padding:0 1rem;line-height:1.9;background:#0e1116;color:#e8e8e8}
+h1,h2{color:#84ccff} table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.88rem} td,th{border:1px solid #2a2f3a;padding:.3rem .5rem;text-align:right}
+code{direction:ltr;unicode-bidi:embed;color:#a7f3a0} .en{direction:ltr;text-align:left} .b{display:inline-block;padding:.1rem .5rem;border-radius:6px;background:#1b2a3c;color:#8fd0ff;font-size:.8rem}</style>
+<h1>MISSION 7 — ساختار کامل داخلی Mimo 9.35</h1>
+<p>ادامهٔ مأموریت ۶ روی همان APK. هیچ اجرایی انجام نشد؛ <span class="b">VERIFIED_RUNTIME = 0</span>
+<span class="b">mission-07 tests: 15 passed</span> <span class="b">mission-06: 21</span>
+<span class="b">mission-05: 44</span> <span class="b">mission-04: 23</span></p>
+
+<h2>دستاوردهای کلیدی</h2>
+<ul>
+<li>توکن‌های طراحی: <b>۱٬۱۹۸ رنگ</b> و <b>۱٬۴۰۱ dimens</b> با مقادیر (تجزیه‌گر دستی ARSC).</li>
+<li>تحلیل: <code>com.getmimo.analytics.a</code> → Firebase/Adjust/FCM/RemoteConfig؛ رویداد
+<code>ge.j(name,index)</code>؛ <b>۱۴ رویداد</b> با محل فراخوانی.</li>
+<li>بار کامل <code>lesson_reset</code>: lesson_id، tutorial_id، tutorial_version، track_id، attempts، duration.</li>
+<li>مدل بافت مربی: <code>SystemMessage{Interactive,Executable}</code>، <code>UserMessage{…InstantPrompt}</code>.</li>
+<li>پرچم‌ها = گروه‌های AB تست Remote Config؛ کلیدها با <code>consumeUserKey</code> مصرف می‌شوند.</li>
+<li>DSL: <code>NUMBER</code> مرده؛ انتخاب‌ها تک‌پاسخی (شاهد پیکره‌ای، ۱٬۰۳۰ سند).</li>
+</ul>
+
+<h2>وضعیت بستن پرسش‌ها (۳۹ مورد ارثی)</h2>
+<table><tr><th>وضعیت</th><th>تعداد</th></tr>
+<tr><td>CLOSED_STATIC</td><td>17</td></tr><tr><td>PARTIALLY_CLOSED</td><td>12</td></tr>
+<tr><td>BACKEND_ONLY</td><td>4</td></tr><tr><td>BLOCKED_BY_ENVIRONMENT</td><td>3</td></tr>
+<tr><td>NOT_RECOVERED</td><td>3</td></tr><tr><td>GENUINELY_UNKNOWN</td><td>2</td></tr></table>
+
+<h2>توزیع فایل‌ها</h2>
+<table><tr><th>دایرکتوری</th><th>تعداد</th></tr><tr><td class='en'>00_BASELINE</td><td>7</td></tr>
+<tr><td class='en'>01_CLASS_UNIVERSE</td><td>8</td></tr>
+<tr><td class='en'>02_ARCHITECTURE_AND_DI</td><td>6</td></tr>
+<tr><td class='en'>03_CONTENT_AND_MODULES</td><td>6</td></tr>
+<tr><td class='en'>04_DSL_PARSER_RENDERER</td><td>8</td></tr>
+<tr><td class='en'>05_RUNTIME_AND_GRADING</td><td>7</td></tr>
+<tr><td class='en'>06_LEARNER_AND_GRADING</td><td>8</td></tr>
+<tr><td class='en'>07_STORAGE_AND_SYNC</td><td>14</td></tr>
+<tr><td class='en'>08_NETWORK</td><td>24</td></tr>
+<tr><td class='en'>09_STREAMING</td><td>7</td></tr>
+<tr><td class='en'>10_ANALYTICS_CONFIG</td><td>6</td></tr>
+<tr><td class='en'>110_MASTER_SEQUENCE_DIAGRAMS</td><td>21</td></tr>
+<tr><td class='en'>11_SDK_NATIVE</td><td>5</td></tr>
+<tr><td class='en'>12_UI_RESOURCES</td><td>9</td></tr>
+<tr><td class='en'>13_SUBSCRIPTION</td><td>5</td></tr>
+<tr><td class='en'>14_LOCALIZATION</td><td>4</td></tr>
+<tr><td class='en'>15_FAILURE</td><td>3</td></tr>
+<tr><td class='en'>16_CROSS_DOMAIN</td><td>7</td></tr>
+<tr><td class='en'>17_END_TO_END</td><td>3</td></tr>
+<tr><td class='en'>18_CLOSURE</td><td>4</td></tr>
+<tr><td class='en'>19_TOOLS</td><td>4</td></tr>
+<tr><td class='en'>20_TESTS</td><td>6</td></tr>
+<tr><td class='en'>21_AUDIT</td><td>7</td></tr>
+<tr><td class='en'>evidence</td><td>5</td></tr>
+<tr><td class='en'>root</td><td>3</td></tr>
+<tr><td class='en'>tools</td><td>2</td></tr></table>
+
+<h2>ایندکس کامل (189 فایل)</h2>
+<table><tr><th>مسیر</th><th>بایت</th><th>sha256[:12]</th></tr><tr><td class='en'>00_BASELINE/CURRENT_WORKSPACE_STATUS.md</td><td>1,760</td><td class='en'><code>e215c254b494</code></td></tr>
+<tr><td class='en'>00_BASELINE/MASTER_DOMAIN_MATRIX.csv</td><td>3,625</td><td class='en'><code>056e8d154b73</code></td></tr>
+<tr><td class='en'>00_BASELINE/MASTER_FINDINGS_INDEX.json</td><td>3,938</td><td class='en'><code>1a816975e4a5</code></td></tr>
+<tr><td class='en'>00_BASELINE/MASTER_OPEN_QUESTIONS.json</td><td>5,357</td><td class='en'><code>ca1797136221</code></td></tr>
+<tr><td class='en'>00_BASELINE/MISSION_04_05_06_RECONCILIATION.md</td><td>2,748</td><td class='en'><code>096ae2f37483</code></td></tr>
+<tr><td class='en'>00_BASELINE/PREVIOUS_EVIDENCE_INDEX.json</td><td>3,269</td><td class='en'><code>85068ef852e6</code></td></tr>
+<tr><td class='en'>00_BASELINE/PREVIOUS_TOOL_INVENTORY.json</td><td>383</td><td class='en'><code>fcc0b0f07bcf</code></td></tr>
+<tr><td class='en'>01_CLASS_UNIVERSE/01_CLASS_UNIVERSE.md</td><td>1,534</td><td class='en'><code>6c154c966a63</code></td></tr>
+<tr><td class='en'>01_CLASS_UNIVERSE/02_COMPLETE_CLASS_INVENTORY.csv</td><td>2,802,859</td><td class='en'><code>e92bddd43f7b</code></td></tr>
+<tr><td class='en'>01_CLASS_UNIVERSE/03_METHOD_INVENTORY.csv</td><td>2,992,620</td><td class='en'><code>a512e67a82c7</code></td></tr>
+<tr><td class='en'>01_CLASS_UNIVERSE/04_DEEP_INVESTIGATION_QUEUE.csv</td><td>234,556</td><td class='en'><code>a9362de4b357</code></td></tr>
+<tr><td class='en'>01_CLASS_UNIVERSE/05_OBFUSCATED_SYMBOL_MAP.json</td><td>2,714</td><td class='en'><code>ee0d76f76d47</code></td></tr>
+<tr><td class='en'>01_CLASS_UNIVERSE/06_METHOD_CALL_GRAPH.json</td><td>1,558</td><td class='en'><code>3422fd0c5229</code></td></tr>
+<tr><td class='en'>01_CLASS_UNIVERSE/07_COMPONENT_OWNERSHIP_MAP.json</td><td>1,666</td><td class='en'><code>eb57d73ad21f</code></td></tr>
+<tr><td class='en'>01_CLASS_UNIVERSE/08_CLASSES_NOT_YET_UNDERSTOOD.md</td><td>1,686</td><td class='en'><code>6c0f0d639601</code></td></tr>
+<tr><td class='en'>02_ARCHITECTURE_AND_DI/09_COMPLETE_DI_GRAPH.json</td><td>27,255</td><td class='en'><code>b6498ce0a531</code></td></tr>
+<tr><td class='en'>02_ARCHITECTURE_AND_DI/10_DI_PROVIDER_CATALOG.csv</td><td>7,864</td><td class='en'><code>89ae1d187900</code></td></tr>
+<tr><td class='en'>02_ARCHITECTURE_AND_DI/11_DEPENDENCY_LIFECYCLE.md</td><td>1,331</td><td class='en'><code>053cbcc79629</code></td></tr>
+<tr><td class='en'>02_ARCHITECTURE_AND_DI/12_APPLICATION_INITIALIZATION.md</td><td>1,186</td><td class='en'><code>8fbb82d21919</code></td></tr>
+<tr><td class='en'>02_ARCHITECTURE_AND_DI/13_RUNTIME_COMPONENT_OWNERSHIP.md</td><td>913</td><td class='en'><code>95ccdb633e5c</code></td></tr>
+<tr><td class='en'>02_ARCHITECTURE_AND_DI/14_APPLICATION_ARCHITECTURE_COMPLETE.md</td><td>1,465</td><td class='en'><code>b72734f00f84</code></td></tr>
+<tr><td class='en'>03_CONTENT_AND_MODULES/15_DYNAMIC_MODULE_INVENTORY.json</td><td>484</td><td class='en'><code>f358f4391e8c</code></td></tr>
+<tr><td class='en'>03_CONTENT_AND_MODULES/16_DYNAMIC_MODULE_ARCHITECTURE.md</td><td>1,119</td><td class='en'><code>0478a8d851b0</code></td></tr>
+<tr><td class='en'>03_CONTENT_AND_MODULES/17_CONTENT_DELIVERY_COMPLETE.md</td><td>972</td><td class='en'><code>7af02af3cbb9</code></td></tr>
+<tr><td class='en'>03_CONTENT_AND_MODULES/18_CONTENT_HIERARCHY_COMPLETE.json</td><td>1,453</td><td class='en'><code>5ea2570dcc62</code></td></tr>
+<tr><td class='en'>03_CONTENT_AND_MODULES/19_CONTENT_IDENTITY_AND_VERSIONING.md</td><td>1,102</td><td class='en'><code>bfcc3093f658</code></td></tr>
+<tr><td class='en'>03_CONTENT_AND_MODULES/20_CONTENT_MODULE_RELATIONSHIPS.csv</td><td>773</td><td class='en'><code>de4a6642feef</code></td></tr>
+<tr><td class='en'>04_DSL_PARSER_RENDERER/21_COMPLETE_DSL_GRAMMAR.md</td><td>3,468</td><td class='en'><code>b9451aa3b336</code></td></tr>
+<tr><td class='en'>04_DSL_PARSER_RENDERER/22_ALL_TAG_SEMANTICS.csv</td><td>1,730</td><td class='en'><code>adb6d82d6780</code></td></tr>
+<tr><td class='en'>04_DSL_PARSER_RENDERER/23_PARSER_INTERNAL_ARCHITECTURE.md</td><td>1,784</td><td class='en'><code>e4aef35ef26b</code></td></tr>
+<tr><td class='en'>04_DSL_PARSER_RENDERER/24_AST_COMPLETE_SCHEMA.json</td><td>6,655</td><td class='en'><code>3e604774ada7</code></td></tr>
+<tr><td class='en'>04_DSL_PARSER_RENDERER/25_TAG_ATTRIBUTE_SCHEMA.json</td><td>1,057</td><td class='en'><code>5f2663aac0d1</code></td></tr>
+<tr><td class='en'>04_DSL_PARSER_RENDERER/26_PARSER_EXECUTION_GRAPH.json</td><td>1,154</td><td class='en'><code>4e6f5bb30f62</code></td></tr>
+<tr><td class='en'>04_DSL_PARSER_RENDERER/27_PARSER_TEST_CORPUS.json</td><td>1,916</td><td class='en'><code>74523db8b1ef</code></td></tr>
+<tr><td class='en'>04_DSL_PARSER_RENDERER/28_UNRESOLVED_DSL_CONSTRUCTS.md</td><td>1,434</td><td class='en'><code>b22aa89f2158</code></td></tr>
+<tr><td class='en'>05_RUNTIME_AND_GRADING/29_LESSON_RENDERER_ARCHITECTURE.md</td><td>1,328</td><td class='en'><code>711aa40bbbad</code></td></tr>
+<tr><td class='en'>05_RUNTIME_AND_GRADING/30_DSL_TO_UI_MAPPING.json</td><td>1,454</td><td class='en'><code>c4e9d953d202</code></td></tr>
+<tr><td class='en'>05_RUNTIME_AND_GRADING/31_LESSON_RUNTIME_COMPLETE.md</td><td>1,390</td><td class='en'><code>62d2ef4fc743</code></td></tr>
+<tr><td class='en'>05_RUNTIME_AND_GRADING/32_LESSON_LIFECYCLE_STATE_MACHINE.json</td><td>1,728</td><td class='en'><code>df906eeed950</code></td></tr>
+<tr><td class='en'>05_RUNTIME_AND_GRADING/33_EXERCISE_NAVIGATION.md</td><td>1,159</td><td class='en'><code>bb600423e30e</code></td></tr>
+<tr><td class='en'>05_RUNTIME_AND_GRADING/34_EXECUTABLE_LESSON_COMPLETE.md</td><td>1,526</td><td class='en'><code>b863bcb4838a</code></td></tr>
+<tr><td class='en'>05_RUNTIME_AND_GRADING/35_LESSON_RUNTIME_UNKNOWN_BEHAVIORS.md</td><td>1,033</td><td class='en'><code>2dd84a896781</code></td></tr>
+<tr><td class='en'>06_LEARNER_AND_GRADING/36_INTERACTION_COMPLETE_TAXONOMY.md</td><td>1,205</td><td class='en'><code>76fb19072f48</code></td></tr>
+<tr><td class='en'>06_LEARNER_AND_GRADING/37_GRADING_OWNERSHIP_MATRIX.csv</td><td>544</td><td class='en'><code>1674651e6f17</code></td></tr>
+<tr><td class='en'>06_LEARNER_AND_GRADING/38_GRADING_ALGORITHMS_COMPLETE.md</td><td>1,269</td><td class='en'><code>5af231a927fe</code></td></tr>
+<tr><td class='en'>06_LEARNER_AND_GRADING/39_NORMALIZATION_SPECIFICATION.md</td><td>1,357</td><td class='en'><code>b915a8028c1f</code></td></tr>
+<tr><td class='en'>06_LEARNER_AND_GRADING/40_PARTIAL_CREDIT_SPECIFICATION.md</td><td>872</td><td class='en'><code>7042e8a3a740</code></td></tr>
+<tr><td class='en'>06_LEARNER_AND_GRADING/41_ANSWER_STATE_MODEL.json</td><td>737</td><td class='en'><code>21902e4b1265</code></td></tr>
+<tr><td class='en'>06_LEARNER_AND_GRADING/42_FEEDBACK_AND_RETRY_COMPLETE.md</td><td>1,127</td><td class='en'><code>3443b3fd1847</code></td></tr>
+<tr><td class='en'>06_LEARNER_AND_GRADING/43_GRADING_TEST_VECTORS.json</td><td>2,645</td><td class='en'><code>0d5f07905dfc</code></td></tr>
+<tr><td class='en'>07_STORAGE_AND_SYNC/44_LEARNER_MODEL_COMPLETE.md</td><td>1,229</td><td class='en'><code>9b363ca4ea45</code></td></tr>
+<tr><td class='en'>07_STORAGE_AND_SYNC/45_PROGRESS_MODEL_COMPLETE.json</td><td>1,229</td><td class='en'><code>d078959e7a76</code></td></tr>
+<tr><td class='en'>07_STORAGE_AND_SYNC/46_LEARNING_PATH_AND_ADAPTATION.md</td><td>1,229</td><td class='en'><code>c89052b7f127</code></td></tr>
+<tr><td class='en'>07_STORAGE_AND_SYNC/47_COMPLETION_AND_UNLOCK_RULES.md</td><td>1,091</td><td class='en'><code>66892e96c1d0</code></td></tr>
+<tr><td class='en'>07_STORAGE_AND_SYNC/48_MASTERY_AND_REVIEW_SYSTEM.md</td><td>842</td><td class='en'><code>af9673caf05e</code></td></tr>
+<tr><td class='en'>07_STORAGE_AND_SYNC/49_GAMIFICATION_COMPLETE.md</td><td>1,351</td><td class='en'><code>f741e774da78</code></td></tr>
+<tr><td class='en'>07_STORAGE_AND_SYNC/50_RESET_AND_REPLAY_SEMANTICS.md</td><td>944</td><td class='en'><code>02c2cc339202</code></td></tr>
+<tr><td class='en'>07_STORAGE_AND_SYNC/51_COMPLETE_STORAGE_MAP.md</td><td>1,148</td><td class='en'><code>5ece0c9f954d</code></td></tr>
+<tr><td class='en'>07_STORAGE_AND_SYNC/52_COMPLETE_ROOM_SCHEMA.json</td><td>826</td><td class='en'><code>fe983b6dd6d3</code></td></tr>
+<tr><td class='en'>07_STORAGE_AND_SYNC/53_COMPLETE_LOCAL_PERSISTENCE.md</td><td>767</td><td class='en'><code>73b6cf7f21d0</code></td></tr>
+<tr><td class='en'>07_STORAGE_AND_SYNC/54_TOKEN_LIFECYCLE.md</td><td>1,010</td><td class='en'><code>c25150a5bddf</code></td></tr>
+<tr><td class='en'>07_STORAGE_AND_SYNC/55_OUTBOX_AND_SYNC_COMPLETE.md</td><td>1,224</td><td class='en'><code>95a6224012f9</code></td></tr>
+<tr><td class='en'>07_STORAGE_AND_SYNC/56_CONFLICT_AND_RETRY_RULES.md</td><td>966</td><td class='en'><code>b779d4bec7fc</code></td></tr>
+<tr><td class='en'>07_STORAGE_AND_SYNC/57_DATA_RETENTION_AND_RESET.md</td><td>836</td><td class='en'><code>0857ff33d22c</code></td></tr>
+<tr><td class='en'>08_NETWORK/58_NETWORK_STACK_COMPLETE.md</td><td>1,069</td><td class='en'><code>e1a8d101f1be</code></td></tr>
+<tr><td class='en'>08_NETWORK/59_ENDPOINT_CATALOG_COMPLETE.json</td><td>15,927</td><td class='en'><code>5dbdab861133</code></td></tr>
+<tr><td class='en'>08_NETWORK/60_ENDPOINT_TO_CALLER_GRAPH.json</td><td>1,557</td><td class='en'><code>9f889bc0516e</code></td></tr>
+<tr><td class='en'>08_NETWORK/61_REQUEST_RESPONSE_COMPLETE_SCHEMAS/AiTutorialConversationMessageCount.schema.json</td><td>619</td><td class='en'><code>252a2cf1f315</code></td></tr>
+<tr><td class='en'>08_NETWORK/61_REQUEST_RESPONSE_COMPLETE_SCHEMAS/Coins.schema.json</td><td>520</td><td class='en'><code>a958c755fa14</code></td></tr>
+<tr><td class='en'>08_NETWORK/61_REQUEST_RESPONSE_COMPLETE_SCHEMAS/ExecuteFilesBody.schema.json</td><td>589</td><td class='en'><code>aa6d1c4a050a</code></td></tr>
+<tr><td class='en'>08_NETWORK/61_REQUEST_RESPONSE_COMPLETE_SCHEMAS/ExecuteFilesResponse.schema.json</td><td>841</td><td class='en'><code>a157f316ef94</code></td></tr>
+<tr><td class='en'>08_NETWORK/61_REQUEST_RESPONSE_COMPLETE_SCHEMAS/LastInteractedTrackResponse.schema.json</td><td>615</td><td class='en'><code>4e823d1e3720</code></td></tr>
+<tr><td class='en'>08_NETWORK/61_REQUEST_RESPONSE_COMPLETE_SCHEMAS/LeaderboardUserResult.schema.json</td><td>1,208</td><td class='en'><code>3d8fc1039e10</code></td></tr>
+<tr><td class='en'>08_NETWORK/61_REQUEST_RESPONSE_COMPLETE_SCHEMAS/PostProgressRequestBody.schema.json</td><td>603</td><td class='en'><code>d853a5f32e98</code></td></tr>
+<tr><td class='en'>08_NETWORK/61_REQUEST_RESPONSE_COMPLETE_SCHEMAS/PostProgressResponse.schema.json</td><td>660</td><td class='en'><code>860b3db16eb0</code></td></tr>
+<tr><td class='en'>08_NETWORK/61_REQUEST_RESPONSE_COMPLETE_SCHEMAS/PublicUser.schema.json</td><td>1,475</td><td class='en'><code>e169d417e76c</code></td></tr>
+<tr><td class='en'>08_NETWORK/61_REQUEST_RESPONSE_COMPLETE_SCHEMAS/RawPurchasedProduct.schema.json</td><td>728</td><td class='en'><code>8a44f00b14e5</code></td></tr>
+<tr><td class='en'>08_NETWORK/61_REQUEST_RESPONSE_COMPLETE_SCHEMAS/ReportLessonBody.schema.json</td><td>777</td><td class='en'><code>01ecd45f975a</code></td></tr>
+<tr><td class='en'>08_NETWORK/61_REQUEST_RESPONSE_COMPLETE_SCHEMAS/Rewards.schema.json</td><td>545</td><td class='en'><code>e375f33e1a36</code></td></tr>
+<tr><td class='en'>08_NETWORK/61_REQUEST_RESPONSE_COMPLETE_SCHEMAS/TrackCompletionResponse.schema.json</td><td>680</td><td class='en'><code>307140f4ee08</code></td></tr>
+<tr><td class='en'>08_NETWORK/61_REQUEST_RESPONSE_COMPLETE_SCHEMAS/TrackEtaResponse.schema.json</td><td>748</td><td class='en'><code>2ee26ba2e0ea</code></td></tr>
+<tr><td class='en'>08_NETWORK/61_REQUEST_RESPONSE_COMPLETE_SCHEMAS/UserActivityResponse.schema.json</td><td>707</td><td class='en'><code>8eceeea723d9</code></td></tr>
+<tr><td class='en'>08_NETWORK/61_REQUEST_RESPONSE_COMPLETE_SCHEMAS/UserKeys.schema.json</td><td>541</td><td class='en'><code>1dfc30a484ed</code></td></tr>
+<tr><td class='en'>08_NETWORK/61_REQUEST_RESPONSE_COMPLETE_SCHEMAS/_manifest.json</td><td>311</td><td class='en'><code>c0ed3f5b5558</code></td></tr>
+<tr><td class='en'>08_NETWORK/62_AUTH_INTERCEPTOR_COMPLETE.md</td><td>1,034</td><td class='en'><code>2f9bf58e5054</code></td></tr>
+<tr><td class='en'>08_NETWORK/63_ALL_NETWORK_PROTOCOLS.md</td><td>1,021</td><td class='en'><code>7be1e437d030</code></td></tr>
+<tr><td class='en'>08_NETWORK/64_BACKEND_CONTRACT_BOUNDARIES.md</td><td>1,169</td><td class='en'><code>da8334d334d7</code></td></tr>
+<tr><td class='en'>08_NETWORK/65_API_UNKNOWN_BEHAVIOR.md</td><td>855</td><td class='en'><code>85e0a6a38d70</code></td></tr>
+<tr><td class='en'>09_STREAMING/66_AI_TUTOR_COMPLETE.md</td><td>1,595</td><td class='en'><code>96a970a673f0</code></td></tr>
+<tr><td class='en'>09_STREAMING/67_AI_TUTOR_PROMPT_AND_CONTEXT.md</td><td>1,337</td><td class='en'><code>2d652cdc57c6</code></td></tr>
+<tr><td class='en'>09_STREAMING/68_AI_TUTOR_QUOTA_COMPLETE.md</td><td>801</td><td class='en'><code>a4ee1fffaba9</code></td></tr>
+<tr><td class='en'>09_STREAMING/69_SSE_PROTOCOL_COMPLETE.md</td><td>966</td><td class='en'><code>627f210922c7</code></td></tr>
+<tr><td class='en'>09_STREAMING/70_EXECUTION_WEBSOCKET_PROTOCOL.md</td><td>873</td><td class='en'><code>929f45797ed7</code></td></tr>
+<tr><td class='en'>09_STREAMING/71_PUSHER_ARCHITECTURE.md</td><td>890</td><td class='en'><code>71a903162567</code></td></tr>
+<tr><td class='en'>09_STREAMING/72_PUSH_NOTIFICATION_ARCHITECTURE.md</td><td>807</td><td class='en'><code>d43fe03821fc</code></td></tr>
+<tr><td class='en'>10_ANALYTICS_CONFIG/82_ANALYTICS_COMPLETE_CATALOG.json</td><td>1,144</td><td class='en'><code>be95a509b9c1</code></td></tr>
+<tr><td class='en'>10_ANALYTICS_CONFIG/83_ANALYTICS_CALLSITE_GRAPH.json</td><td>2,422</td><td class='en'><code>e706a948a95d</code></td></tr>
+<tr><td class='en'>10_ANALYTICS_CONFIG/84_REMOTE_CONFIG_COMPLETE.md</td><td>1,085</td><td class='en'><code>3e4945947ac9</code></td></tr>
+<tr><td class='en'>10_ANALYTICS_CONFIG/85_FEATURE_FLAG_COMPLETE_CATALOG.json</td><td>703</td><td class='en'><code>b02f4bf09724</code></td></tr>
+<tr><td class='en'>10_ANALYTICS_CONFIG/86_BACKGROUND_TASK_ARCHITECTURE.md</td><td>981</td><td class='en'><code>7642a2cb743c</code></td></tr>
+<tr><td class='en'>10_ANALYTICS_CONFIG/87_ERROR_AND_CRASH_REPORTING.md</td><td>767</td><td class='en'><code>c60e63ed50e6</code></td></tr>
+<tr><td class='en'>110_MASTER_SEQUENCE_DIAGRAMS/README.md</td><td>94</td><td class='en'><code>8cd3abdace0b</code></td></tr>
+<tr><td class='en'>110_MASTER_SEQUENCE_DIAGRAMS/S01_startup.mmd</td><td>479</td><td class='en'><code>c3a88a51b2ce</code></td></tr>
+<tr><td class='en'>110_MASTER_SEQUENCE_DIAGRAMS/S02_login.mmd</td><td>406</td><td class='en'><code>2e0b16d0b821</code></td></tr>
+<tr><td class='en'>110_MASTER_SEQUENCE_DIAGRAMS/S03_home_load.mmd</td><td>286</td><td class='en'><code>5073f7737ffa</code></td></tr>
+<tr><td class='en'>110_MASTER_SEQUENCE_DIAGRAMS/S04_module_install.mmd</td><td>243</td><td class='en'><code>0271166a5a01</code></td></tr>
+<tr><td class='en'>110_MASTER_SEQUENCE_DIAGRAMS/S05_lesson_open.mmd</td><td>237</td><td class='en'><code>7616df0ed157</code></td></tr>
+<tr><td class='en'>110_MASTER_SEQUENCE_DIAGRAMS/S06_interactive_verdict.mmd</td><td>237</td><td class='en'><code>e33a122da0dc</code></td></tr>
+<tr><td class='en'>110_MASTER_SEQUENCE_DIAGRAMS/S07_progress_push.mmd</td><td>270</td><td class='en'><code>52e2c20ffc12</code></td></tr>
+<tr><td class='en'>110_MASTER_SEQUENCE_DIAGRAMS/S08_tutor.mmd</td><td>359</td><td class='en'><code>69c4a2506838</code></td></tr>
+<tr><td class='en'>110_MASTER_SEQUENCE_DIAGRAMS/S09_code_run.mmd</td><td>288</td><td class='en'><code>6481434651ff</code></td></tr>
+<tr><td class='en'>110_MASTER_SEQUENCE_DIAGRAMS/S10_subscription.mmd</td><td>252</td><td class='en'><code>b7a185995b75</code></td></tr>
+<tr><td class='en'>110_MASTER_SEQUENCE_DIAGRAMS/S11_keys.mmd</td><td>226</td><td class='en'><code>af914b1be7d6</code></td></tr>
+<tr><td class='en'>110_MASTER_SEQUENCE_DIAGRAMS/S12_leaderboard.mmd</td><td>284</td><td class='en'><code>7071f842cf65</code></td></tr>
+<tr><td class='en'>110_MASTER_SEQUENCE_DIAGRAMS/S13_streak.mmd</td><td>154</td><td class='en'><code>3831a6597b7a</code></td></tr>
+<tr><td class='en'>110_MASTER_SEQUENCE_DIAGRAMS/S14_analytics.mmd</td><td>293</td><td class='en'><code>a4aec32e64e6</code></td></tr>
+<tr><td class='en'>110_MASTER_SEQUENCE_DIAGRAMS/S15_deeplink.mmd</td><td>191</td><td class='en'><code>ddb32e2c1bee</code></td></tr>
+<tr><td class='en'>110_MASTER_SEQUENCE_DIAGRAMS/S16_push.mmd</td><td>186</td><td class='en'><code>89129f8fad55</code></td></tr>
+<tr><td class='en'>110_MASTER_SEQUENCE_DIAGRAMS/S17_failure_offline.mmd</td><td>168</td><td class='en'><code>9c3e8ae086f5</code></td></tr>
+<tr><td class='en'>110_MASTER_SEQUENCE_DIAGRAMS/S18_process_death.mmd</td><td>230</td><td class='en'><code>ad444e824ee0</code></td></tr>
+<tr><td class='en'>110_MASTER_SEQUENCE_DIAGRAMS/S19_content_update.mmd</td><td>173</td><td class='en'><code>802f77292ae1</code></td></tr>
+<tr><td class='en'>110_MASTER_SEQUENCE_DIAGRAMS/S20_reset.mmd</td><td>250</td><td class='en'><code>57a905cff11e</code></td></tr>
+<tr><td class='en'>11_SDK_NATIVE/93_NATIVE_CODE_COMPLETE_INVENTORY.json</td><td>955</td><td class='en'><code>0056c161181b</code></td></tr>
+<tr><td class='en'>11_SDK_NATIVE/94_JNI_CALL_GRAPH.json</td><td>728</td><td class='en'><code>bc391dc4b21a</code></td></tr>
+<tr><td class='en'>11_SDK_NATIVE/95_NATIVE_ARCHITECTURE.md</td><td>774</td><td class='en'><code>eea7f313607f</code></td></tr>
+<tr><td class='en'>11_SDK_NATIVE/96_EXTERNAL_SDK_COMPLETE_CATALOG.md</td><td>1,351</td><td class='en'><code>6c50733c92ab</code></td></tr>
+<tr><td class='en'>11_SDK_NATIVE/97_BIN_GHOST_APPLICATION_ARCHITECTURE.md</td><td>1,097</td><td class='en'><code>fc5e0dca4c01</code></td></tr>
+<tr><td class='en'>12_UI_RESOURCES/73_COMPLETE_NAVIGATION_GRAPH.json</td><td>766</td><td class='en'><code>0558b3299f0a</code></td></tr>
+<tr><td class='en'>12_UI_RESOURCES/74_SCREEN_AND_COMPONENT_CATALOG.csv</td><td>1,100</td><td class='en'><code>a3f4f99674bc</code></td></tr>
+<tr><td class='en'>12_UI_RESOURCES/75_UI_ARCHITECTURE_COMPLETE.md</td><td>1,112</td><td class='en'><code>9c19c0daa1c3</code></td></tr>
+<tr><td class='en'>12_UI_RESOURCES/76_RESOURCE_CATALOG_COMPLETE.json</td><td>2,854</td><td class='en'><code>0c8f38054eef</code></td></tr>
+<tr><td class='en'>12_UI_RESOURCES/77_DESIGN_SYSTEM_COMPLETE.md</td><td>3,551</td><td class='en'><code>71b8b2f79aa8</code></td></tr>
+<tr><td class='en'>12_UI_RESOURCES/78_LIGHT_DARK_THEME.md</td><td>1,059</td><td class='en'><code>9494614e4b6e</code></td></tr>
+<tr><td class='en'>12_UI_RESOURCES/79_RIVE_COMPONENT_MAPPING.csv</td><td>3,098</td><td class='en'><code>f9eccabc04ea</code></td></tr>
+<tr><td class='en'>12_UI_RESOURCES/80_RIVE_RUNTIME_ARCHITECTURE.md</td><td>1,359</td><td class='en'><code>b93f1fcedcee</code></td></tr>
+<tr><td class='en'>12_UI_RESOURCES/81_ACCESSIBILITY_IMPLEMENTATION.md</td><td>1,296</td><td class='en'><code>6d28b229bc98</code></td></tr>
+<tr><td class='en'>13_SUBSCRIPTION/88_ACCOUNT_ARCHITECTURE_COMPLETE.md</td><td>652</td><td class='en'><code>3d8aa13c8c78</code></td></tr>
+<tr><td class='en'>13_SUBSCRIPTION/89_AUTHENTICATION_COMPLETE.md</td><td>1,083</td><td class='en'><code>3afff53c6464</code></td></tr>
+<tr><td class='en'>13_SUBSCRIPTION/90_SUBSCRIPTION_COMPLETE.md</td><td>914</td><td class='en'><code>32ad5c0d5cf0</code></td></tr>
+<tr><td class='en'>13_SUBSCRIPTION/91_ENTITLEMENT_AND_PAYWALL_COMPLETE.md</td><td>925</td><td class='en'><code>e85f29293485</code></td></tr>
+<tr><td class='en'>13_SUBSCRIPTION/92_PURCHASE_CLIENT_FLOW.md</td><td>813</td><td class='en'><code>a21fe80b8af9</code></td></tr>
+<tr><td class='en'>14_LOCALIZATION/100_LOCALE_CONTENT_DIFFERENCES.md</td><td>822</td><td class='en'><code>9ed92775158f</code></td></tr>
+<tr><td class='en'>14_LOCALIZATION/101_VERSION_COMPATIBILITY.md</td><td>904</td><td class='en'><code>316eb89d8a1b</code></td></tr>
+<tr><td class='en'>14_LOCALIZATION/98_LOCALIZATION_ARCHITECTURE.md</td><td>912</td><td class='en'><code>22e58e38030c</code></td></tr>
+<tr><td class='en'>14_LOCALIZATION/99_LOCALE_MODULE_MATRIX.csv</td><td>1,050</td><td class='en'><code>81bf30e56dd9</code></td></tr>
+<tr><td class='en'>15_FAILURE/102_OFFLINE_BEHAVIOR_COMPLETE.md</td><td>1,011</td><td class='en'><code>fe3c021f45fb</code></td></tr>
+<tr><td class='en'>15_FAILURE/103_FAILURE_HANDLING_MATRIX.csv</td><td>1,638</td><td class='en'><code>44553bcda849</code></td></tr>
+<tr><td class='en'>15_FAILURE/104_RECOVERY_AND_RETRY_ARCHITECTURE.md</td><td>1,234</td><td class='en'><code>c4aaee1b56ae</code></td></tr>
+<tr><td class='en'>16_CROSS_DOMAIN/105_COMPLETE_MIMO_ARCHITECTURE.md</td><td>3,413</td><td class='en'><code>c247367cbd7b</code></td></tr>
+<tr><td class='en'>16_CROSS_DOMAIN/106_MASTER_COMPONENT_GRAPH.json</td><td>2,808</td><td class='en'><code>ba8360795ebb</code></td></tr>
+<tr><td class='en'>16_CROSS_DOMAIN/107_MASTER_METHOD_CALL_GRAPH.json</td><td>1,133</td><td class='en'><code>0bced6ca4a85</code></td></tr>
+<tr><td class='en'>16_CROSS_DOMAIN/108_MASTER_DATA_FLOW_GRAPH.json</td><td>1,611</td><td class='en'><code>aadc17808693</code></td></tr>
+<tr><td class='en'>16_CROSS_DOMAIN/109_MASTER_STATE_MACHINE.json</td><td>1,073</td><td class='en'><code>bb29a0706186</code></td></tr>
+<tr><td class='en'>16_CROSS_DOMAIN/111_COMPONENT_DEPENDENCY_MATRIX.csv</td><td>766</td><td class='en'><code>60d3efc4d31b</code></td></tr>
+<tr><td class='en'>16_CROSS_DOMAIN/112_END_TO_END_EXECUTION_PATHS.md</td><td>1,133</td><td class='en'><code>1b64c579322a</code></td></tr>
+<tr><td class='en'>17_END_TO_END/113_END_TO_END_BEHAVIORAL_RECONSTRUCTION.md</td><td>4,422</td><td class='en'><code>b2eb630ece51</code></td></tr>
+<tr><td class='en'>17_END_TO_END/114_END_TO_END_FLOW_CATALOG.json</td><td>3,255</td><td class='en'><code>a85150b7dbfa</code></td></tr>
+<tr><td class='en'>17_END_TO_END/115_CRITICAL_PATH_EVIDENCE.csv</td><td>795</td><td class='en'><code>938b4ec5f7b4</code></td></tr>
+<tr><td class='en'>18_CLOSURE/116_MASTER_OPEN_QUESTION_CLOSURE.csv</td><td>6,225</td><td class='en'><code>67e3eada698b</code></td></tr>
+<tr><td class='en'>18_CLOSURE/117_CLOSED_FINDINGS.md</td><td>2,005</td><td class='en'><code>99cc09c04cc7</code></td></tr>
+<tr><td class='en'>18_CLOSURE/118_REMAINING_UNKNOWN_BEHAVIORS.md</td><td>1,354</td><td class='en'><code>bfd5d3b31c52</code></td></tr>
+<tr><td class='en'>18_CLOSURE/119_BLOCKED_INVESTIGATIONS.md</td><td>1,242</td><td class='en'><code>ce254fb369e5</code></td></tr>
+<tr><td class='en'>19_TOOLS/120_EXTRACTION_TOOLCHAIN.md</td><td>1,129</td><td class='en'><code>20f8ced38bd4</code></td></tr>
+<tr><td class='en'>19_TOOLS/121_TOOL_INVENTORY.json</td><td>1,311</td><td class='en'><code>babc2b587e77</code></td></tr>
+<tr><td class='en'>19_TOOLS/122_TOOL_TEST_RESULTS.md</td><td>1,136</td><td class='en'><code>b4d34abcf507</code></td></tr>
+<tr><td class='en'>19_TOOLS/123_REPRODUCIBILITY_COMMANDS.md</td><td>1,353</td><td class='en'><code>4a16259912e7</code></td></tr>
+<tr><td class='en'>20_TESTS/124_SEMANTIC_TEST_STRATEGY.md</td><td>1,618</td><td class='en'><code>f8b23a647ab5</code></td></tr>
+<tr><td class='en'>20_TESTS/126_TEST_RESULTS.md</td><td>1,073</td><td class='en'><code>0259ed759206</code></td></tr>
+<tr><td class='en'>20_TESTS/127_COVERAGE_VALIDATION.json</td><td>1,973</td><td class='en'><code>0fc5e8a96a8f</code></td></tr>
+<tr><td class='en'>20_TESTS/128_EVIDENCE_INTEGRITY_REPORT.json</td><td>94</td><td class='en'><code>fce6aa4f9a21</code></td></tr>
+<tr><td class='en'>20_TESTS/__pycache__/test_mission07_semantics.cpython-311-pytest-9.2.0.pyc</td><td>41,599</td><td class='en'><code>4e3f59f6ccff</code></td></tr>
+<tr><td class='en'>20_TESTS/test_mission07_semantics.py</td><td>5,188</td><td class='en'><code>c5d2d0c6dac5</code></td></tr>
+<tr><td class='en'>21_AUDIT/129_FINAL_DOMAIN_AUDIT.md</td><td>3,633</td><td class='en'><code>e2d20ebc49fc</code></td></tr>
+<tr><td class='en'>21_AUDIT/130_CLASS_INVESTIGATION_COVERAGE.csv</td><td>427</td><td class='en'><code>435cfbcb97ca</code></td></tr>
+<tr><td class='en'>21_AUDIT/131_METHOD_INVESTIGATION_COVERAGE.csv</td><td>325</td><td class='en'><code>841688dad899</code></td></tr>
+<tr><td class='en'>21_AUDIT/132_BEHAVIOR_RECONSTRUCTION_MATRIX.csv</td><td>490</td><td class='en'><code>1d8af28bdf86</code></td></tr>
+<tr><td class='en'>21_AUDIT/133_EVIDENCE_COVERAGE_MATRIX.csv</td><td>288</td><td class='en'><code>fdc21c270422</code></td></tr>
+<tr><td class='en'>21_AUDIT/134_FINAL_UNKNOWN_REGISTER.csv</td><td>3,967</td><td class='en'><code>f0ee9caeae11</code></td></tr>
+<tr><td class='en'>21_AUDIT/135_FINAL_COMPLETENESS_REPORT.md</td><td>2,297</td><td class='en'><code>e2ba2a4c8bef</code></td></tr>
+<tr><td class='en'>MISSION_07_FINAL_REPORT.md</td><td>9,350</td><td class='en'><code>6745b06f25e5</code></td></tr>
+<tr><td class='en'>MISSION_07_FINAL_REPORT_FA.md</td><td>2,692</td><td class='en'><code>88ebfc207ca4</code></td></tr>
+<tr><td class='en'>README.md</td><td>1,421</td><td class='en'><code>c455ca11f70d</code></td></tr>
+<tr><td class='en'>evidence/ANALYTICS_DISPATCH.json</td><td>1,056</td><td class='en'><code>a439dba6901d</code></td></tr>
+<tr><td class='en'>evidence/ARSC_DUMP_INDEX.json</td><td>10,494,108</td><td class='en'><code>80015e307f2b</code></td></tr>
+<tr><td class='en'>evidence/CORPUS_TAG_STATISTICS.json</td><td>93,524</td><td class='en'><code>65c925cd93ea</code></td></tr>
+<tr><td class='en'>evidence/DESIGN_TOKENS_VALUES.json</td><td>689,442</td><td class='en'><code>25d45c2e2c06</code></td></tr>
+<tr><td class='en'>evidence/EVENTS_WITH_CALLSITES.csv</td><td>1,437</td><td class='en'><code>c74a9edb07db</code></td></tr>
+<tr><td class='en'>tools/build_m7_inventory.py</td><td>7,321</td><td class='en'><code>37052e9ec3a9</code></td></tr>
+<tr><td class='en'>tools/parse_arsc.py</td><td>8,410</td><td class='en'><code>acf40400cfd9</code></td></tr></table>
+<p>گزارش اصلی: <code>MISSION_07_FINAL_REPORT.md</code> · ممیزی: <code>21_AUDIT/</code> ·
+بستن پرسش‌ها: <code>18_CLOSURE/</code> · بازتولید: <code>19_TOOLS/123_REPRODUCIBILITY_COMMANDS.md</code></p>
+</html>

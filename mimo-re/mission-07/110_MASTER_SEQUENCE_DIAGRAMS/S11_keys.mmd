@@ -1,0 +1,8 @@
+sequenceDiagram
+  participant VM as feature
+  participant K as DefaultKeysRepository
+  participant API as api.mimo.org
+  VM->>K: consumeUserKey
+  K->>API: keys endpoint
+  API-->>K: UserKeys{currentKeys}
+  K-->>VM: flow update

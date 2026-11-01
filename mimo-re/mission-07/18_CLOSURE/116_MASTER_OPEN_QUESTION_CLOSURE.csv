@@ -1,0 +1,40 @@
+id,question,domain,status_mission6,status_mission7,answer_or_reason,evidence
+Q-05,dynamic feature module contents (non-English packs) absent from the APK,content,NOT_RECOVERED,BLOCKED_BY_ENVIRONMENT,locale modules not shipped in the base APK,03_CONTENT_AND_MODULES/16
+Q-08,lesson reset effect on the persisted progress row,progress,UNKNOWN,PARTIALLY_CLOSED,a0() body recovered: clears state + emits lesson_reset with 7 properties; row effect still unresolved,17_END_TO_END/113
+Q-102,design token values (colours/dimens) - toolchain BLOCKED,design,BLOCKED,CLOSED_STATIC,"manual ARSC decode: 1,198 colour keys + 1,401 dimen keys with values",12_UI_RESOURCES/77
+Q-103,dark theme existence,design,NOT_RECOVERED,CLOSED_STATIC,resource configuration variants decoded; night-qualified entries counted,12_UI_RESOURCES/78
+Q-115,feature gating matrix for premium,business,INFERRED,PARTIALLY_CLOSED,isPremium is the only flag; paywall surfaces enumerated; gating matrix unrecovered,13_SUBSCRIPTION/91
+Q-118,remote-config flag consumers,config,UNKNOWN,PARTIALLY_CLOSED,AB-test groups fetched at analytics init; consumers unknown,10_ANALYTICS_CONFIG/84
+Q-120,certificate pinning / cleartext policy details,security,NOT_RECOVERED,CLOSED_STATIC,no CertificatePinner; network_security_config present; cleartext not in API hosts,08_NETWORK/58
+Q-121,token storage mechanism,security,NOT_RECOVERED,NOT_RECOVERED,token storage backend (ri.* not decompiled to body level),07_STORAGE_AND_SYNC/54
+Q-134,consent/opt-out surface,privacy,NOT_RECOVERED,NOT_RECOVERED,consent/opt-out surface,10_ANALYTICS_CONFIG/84
+Q-14,"complete content-locale inventory (enum has 5, modules imply more)",content,UNKNOWN,PARTIALLY_CLOSED,5 ContentLocale constants + fused modules + UI string coverage; module list truncated,03_CONTENT_AND_MODULES/15
+Q-140,webview module URL allowlist,security,UNKNOWN,GENUINELY_UNKNOWN,webview URL allowlist,15_FAILURE/102
+Q-141,Play Integrity presence,security,NOT_RECOVERED,CLOSED_STATIC,no Play Integrity/SafetyNet classes in inventory,11_SDK_NATIVE/96
+Q-15,Track/Tutorial field sets,content,NOT_RECOVERED,NOT_RECOVERED,Track/Tutorial field sets,03_CONTENT_AND_MODULES/18
+Q-17,serialised JSON names (@SerialName) for DTOs,network,NOT_RECOVERED,NOT_RECOVERED,@SerialName overrides,08_NETWORK/59
+Q-19,OkHttp disk cache presence,content,UNKNOWN,CLOSED_STATIC,no Cache configured on the OkHttp builder in case 20,08_NETWORK/58
+Q-27,chapter ordering (index vs server order),content,UNKNOWN,PARTIALLY_CLOSED,section ordering is index-based (Section.index / SectionJson ranges); chapter ordering authored,03_CONTENT_AND_MODULES/19
+Q-30,unknown-tag behaviour per parser,dsl,UNKNOWN,GENUINELY_UNKNOWN,unknown-tag else-branch not readable in te.c.b,04_DSL_PARSER_RENDERER/28
+Q-31,"NUMBER tag purpose (declared, no parser accepts it)",dsl,UNKNOWN,CLOSED_STATIC,NUMBER is dead vocabulary; corpus <number> hits are prose,04_DSL_PARSER_RENDERER/28
+Q-34,which .riv animations bind to which lesson state,ui,NOT_RECOVERED,NOT_RECOVERED,no .riv name ↔ class binding in decompiled subset,12_UI_RESOURCES/80
+Q-39,REST vs WebSocket selection for code execution,executable,UNKNOWN,PARTIALLY_CLOSED,both channels exist; selection logic outside decompiled subset,09_STREAMING/70
+Q-40,WebSocket message schema,executable,NOT_RECOVERED,NOT_RECOVERED,pg.a message schema,09_STREAMING/70
+Q-42,whether a SELECTION can have several correct items,grading,UNKNOWN,CLOSED_STATIC,no multiple attribute in DSL or corpus → single-answer selections,04_DSL_PARSER_RENDERER/28
+Q-44,non-ASCII answer handling (filter drops non-[a-z0-9<.]),grading,INFERRED,CLOSED_STATIC,normaliser is ASCII-only and locale-blind; non-Latin answers cannot match,06_LEARNER_AND_GRADING/39
+Q-49,server-side chapter completion recomputation,progress,UNKNOWN,BACKEND_ONLY,server recomputation invisible,07_STORAGE_AND_SYNC/45
+Q-50,ETA formula,progress,UNKNOWN,BACKEND_ONLY,ETA formula server-side,07_STORAGE_AND_SYNC/45
+Q-54,per-row vs per-batch delete after push,sync,INFERRED,PARTIALLY_CLOSED,repo deletes pushed rows; per-row vs batch not readable,07_STORAGE_AND_SYNC/55
+Q-57,keys/hearts consumption path,gamification,UNKNOWN,PARTIALLY_CLOSED,consumeUserKey exists in DefaultKeysRepository; calling UI not recovered,13_SUBSCRIPTION/91
+Q-69,4xx handling for progress push (no dead-letter found),sync,UNKNOWN,GENUINELY_UNKNOWN,no 4xx branch in outbox,07_STORAGE_AND_SYNC/56
+Q-70,push trigger points,sync,UNKNOWN,PARTIALLY_CLOSED,no WorkManager worker found → foreground-only push; exact trigger unknown,10_ANALYTICS_CONFIG/86
+Q-80,login/credential exchange payload,auth,NOT_RECOVERED,NOT_RECOVERED,login payload,13_SUBSCRIPTION/89
+Q-81,token refresh/expiry handling,auth,NOT_RECOVERED,CLOSED_STATIC,"no Authenticator, no refresh interceptor, no 401 branch",08_NETWORK/62
+Q-88,pagination shape (none seen),network,UNKNOWN,CLOSED_STATIC,no pagination field in any recovered response DTO,08_NETWORK/59
+Q-89,Pusher channel usage,realtime,UNKNOWN,PARTIALLY_CLOSED,Pusher client + auth path found; channel/event names not recovered,09_STREAMING/71
+Q-92,whether lesson/code context is inlined into tutor messages,ai,UNKNOWN,CLOSED_STATIC,context is typed message objects (SystemMessage/UserMessage variants); no lesson ids in the DTO,09_STREAMING/67
+U-01,DSL grammar of te.a–te.g,dsl,NOT_RECOVERED,CLOSED_STATIC,"full grammar + attributes, corpus-verified",04_DSL_PARSER_RENDERER/21
+U-18,"bin.ghost/libyrf.so triggers - repack-related, not Mimo behaviour",integrity,BLOCKED,BLOCKED_BY_ENVIRONMENT,bin.ghost classes structural only (19 classes); bodies not analysed in depth,11_SDK_NATIVE/97
+U-20,analytics event-name to emitter binding,analytics,NOT_RECOVERED,PARTIALLY_CLOSED,"dispatcher com.getmimo.analytics.a.e(String,Map) identified; 14 events verified at call sites; remaining names in undecompiled classes",10_ANALYTICS_CONFIG/82
+U-22,API base URL,network,NOT_RECOVERED,CLOSED_STATIC,api.mimo.org / api-testing.mimo.org via DI case 22,02_ARCHITECTURE_AND_DI/09
+U-23,"PATCH vs PUT - resolved: both genuinely exist (4 PATCH, 2 PUT)",network,VERIFIED_STATIC,CLOSED_STATIC,4 PATCH + 2 PUT genuinely coexist; no conflicting annotations,08_NETWORK/59

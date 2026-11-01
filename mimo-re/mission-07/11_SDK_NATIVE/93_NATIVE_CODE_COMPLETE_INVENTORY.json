@@ -1,0 +1,46 @@
+{
+ "source": "lib/ in APK (arm64-v8a, armeabi-v7a)",
+ "libraries": [
+  {
+   "name": "librive-android.so",
+   "size_bytes": 5700000,
+   "role": "Rive animation runtime",
+   "jni": "app.rive.* native methods",
+   "abi": [
+    "arm64-v8a",
+    "armeabi-v7a"
+   ]
+  },
+  {
+   "name": "libsigner.so",
+   "role": "Adjust SDK signer",
+   "jni": "com.adjust.sdk native signer",
+   "abi": [
+    "arm64-v8a",
+    "armeabi-v7a"
+   ]
+  },
+  {
+   "name": "libc++_shared.so",
+   "role": "C++ runtime for the above",
+   "abi": [
+    "arm64-v8a",
+    "armeabi-v7a"
+   ]
+  },
+  {
+   "name": "libyrf.so",
+   "role": "target-build specific native (foreign to Mimo source)",
+   "abi": [
+    "arm64-v8a",
+    "armeabi-v7a"
+   ]
+  }
+ ],
+ "abis": [
+  "arm64-v8a",
+  "armeabi-v7a"
+ ],
+ "analysis_depth": "inventory + JNI declaration mapping only; no disassembly (no objdump/readelf in environment)",
+ "label": "VERIFIED_STATIC (presence/role); NOT_RECOVERED (symbols/sections)"
+}

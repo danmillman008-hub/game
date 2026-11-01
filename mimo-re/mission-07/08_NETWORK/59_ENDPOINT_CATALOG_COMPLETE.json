@@ -1,0 +1,580 @@
+{
+ "source": "mission-05/evidence/API_CATALOG_V2.csv (re-verified)",
+ "endpoint_count": 62,
+ "by_verb": {
+  "GET": 28,
+  "POST": 24,
+  "PATCH": 4,
+  "PUT": 2,
+  "DELETE": 4
+ },
+ "by_binding": {
+  "path": 0,
+  "body": 20,
+  "query": 0,
+  "header": 48
+ },
+ "auth_required_estimate": 53,
+ "note": "53/62 rows carry an authorization requirement marker",
+ "endpoints": [
+  {
+   "interface": "Lhg/b;",
+   "method": "a",
+   "verb": "POST",
+   "path": "/api/sendCustomerIoData",
+   "request": "Lcom/getmimo/data/model/customerio/CustomerIoData;",
+   "response": "Lz60/q;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lio/customer/messaginginapp/inbox/data/InboxService;",
+   "method": "fetchBranding",
+   "verb": "GET",
+   "path": "/api/v1/branding",
+   "request": "",
+   "response": "Lge0/o0<Ljx/i;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lio/customer/messaginginapp/gist/data/listeners/GistQueueService;",
+   "method": "logMessageView",
+   "verb": "POST",
+   "path": "/api/v1/logs/message/{messageId}",
+   "request": "",
+   "response": "Lz60/q;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lio/customer/messaginginapp/gist/data/listeners/GistQueueService;",
+   "method": "logUserMessageView",
+   "verb": "POST",
+   "path": "/api/v1/logs/queue/{queueId}",
+   "request": "",
+   "response": "Lz60/q;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lio/customer/messaginginapp/gist/data/listeners/GistQueueService;",
+   "method": "logInboxMessageOpened",
+   "verb": "PATCH",
+   "path": "/api/v1/messages/{queueId}",
+   "request": "Ljava/util/Map;",
+   "response": "Lz60/q;",
+   "confidence": "INFERRED_MEDIUM"
+  },
+  {
+   "interface": "Lio/customer/messaginginapp/inbox/data/InboxService;",
+   "method": "fetchTemplates",
+   "verb": "GET",
+   "path": "/api/v1/templates",
+   "request": "",
+   "response": "Lge0/o0<Ljx/i;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lio/customer/messaginginapp/gist/data/listeners/GistQueueService;",
+   "method": "fetchMessagesForUser",
+   "verb": "POST",
+   "path": "/api/v4/users",
+   "request": "Ljava/lang/Object;",
+   "response": "Lge0/o0<Lio/customer/messaginginapp/gist/data/model/response/QueueMessagesResponse;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lph/b;",
+   "method": "a",
+   "verb": "POST",
+   "path": "/click/{linkId}",
+   "request": "",
+   "response": "Lz60/q;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lhg/d;",
+   "method": "a",
+   "verb": "POST",
+   "path": "/push/events",
+   "request": "Lcom/getmimo/data/model/analytics/PushNotificationDelivered;",
+   "response": "Lz60/q;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lhg/a;",
+   "method": "e",
+   "verb": "DELETE",
+   "path": "/v1/account",
+   "request": "",
+   "response": "Lge0/o0<Lz60/q;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lhg/a;",
+   "method": "d",
+   "verb": "PATCH",
+   "path": "/v1/account/email",
+   "request": "Lcom/getmimo/data/model/account/ChangeEmailRequestBody;",
+   "response": "Lge0/o0<Lz60/q;",
+   "confidence": "INFERRED_MEDIUM"
+  },
+  {
+   "interface": "Ljg/a;",
+   "method": "a",
+   "verb": "GET",
+   "path": "/v1/aiTutor/conversations/messages/count",
+   "request": "",
+   "response": "Lcom/getmimo/data/model/aitutor/AiTutorialConversationMessageCount;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lmh/c;",
+   "method": "c",
+   "verb": "GET",
+   "path": "/v1/code",
+   "request": "",
+   "response": "Ljava/util/List<Lcom/getmimo/data/model/savedcode/SavedCode;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lmh/c;",
+   "method": "d",
+   "verb": "POST",
+   "path": "/v1/code",
+   "request": "Lcom/getmimo/data/model/savedcode/SaveCodeRequestBody;",
+   "response": "Lcom/getmimo/data/model/savedcode/SavedCode;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lhg/c;",
+   "method": "c",
+   "verb": "POST",
+   "path": "/v1/code/runfiles",
+   "request": "Lcom/getmimo/data/model/codeexecution/CodePlaygroundExecutionBody;",
+   "response": "Lcom/getmimo/data/model/codeexecution/CodePlaygroundExecutionResponse;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lmh/c;",
+   "method": "e",
+   "verb": "DELETE",
+   "path": "/v1/code/{savedCodeId}",
+   "request": "",
+   "response": "Lz60/q;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lmh/c;",
+   "method": "a",
+   "verb": "PATCH",
+   "path": "/v1/code/{savedCodeId}",
+   "request": "Lcom/getmimo/data/model/savedcode/SaveCodeRequestBody;",
+   "response": "Lcom/getmimo/data/model/savedcode/SavedCode;",
+   "confidence": "INFERRED_MEDIUM"
+  },
+  {
+   "interface": "Lmh/c;",
+   "method": "b",
+   "verb": "POST",
+   "path": "/v1/code/{savedCodeId}/remixes",
+   "request": "Lcom/getmimo/data/model/savedcode/RemixCodeRequestBody;",
+   "response": "Lcom/getmimo/data/model/savedcode/SavedCode;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lhg/c;",
+   "method": "d",
+   "verb": "POST",
+   "path": "/v1/code/{savedCodeId}/runfiles",
+   "request": "Lcom/getmimo/data/model/codeexecution/CodePlaygroundExecutionBody;",
+   "response": "Lcom/getmimo/data/model/codeexecution/CodePlaygroundExecutionResponse;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lug/a;",
+   "method": "d",
+   "verb": "POST",
+   "path": "/v1/invitations/{code}",
+   "request": "",
+   "response": "Lz60/q;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lug/a;",
+   "method": "c",
+   "verb": "GET",
+   "path": "/v1/leaderboards/friends",
+   "request": "",
+   "response": "Lcom/getmimo/data/model/friends/Friends;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lch/a;",
+   "method": "a",
+   "verb": "GET",
+   "path": "/v1/leaderboards/latest",
+   "request": "",
+   "response": "Lge0/o0<Lcom/getmimo/data/model/leaderboard/Leaderboard;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lch/a;",
+   "method": "b",
+   "verb": "GET",
+   "path": "/v1/leaderboards/{leaderboardId}/userrank",
+   "request": "",
+   "response": "Lcom/getmimo/data/model/leaderboard/LeaderboardUserResult;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Leh/a;",
+   "method": "a",
+   "verb": "GET",
+   "path": "/v1/package/preview",
+   "request": "",
+   "response": "Lge0/o0<Lokhttp3/ResponseBody;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lhh/a;",
+   "method": "a",
+   "verb": "GET",
+   "path": "/v1/practice/statistics",
+   "request": "",
+   "response": "Lcom/getmimo/data/model/practice/PracticeStatsResponse;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lhg/c;",
+   "method": "a",
+   "verb": "POST",
+   "path": "/v1/preview/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/runFiles",
+   "request": "Lcom/getmimo/core/model/lesson/executablefiles/ExecuteFilesBody;",
+   "response": "Lcom/getmimo/core/model/lesson/executablefiles/ExecuteFilesResponse;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lnh/c;",
+   "method": "b",
+   "verb": "GET",
+   "path": "/v1/products/user",
+   "request": "",
+   "response": "Lcom/getmimo/data/model/store/RawProducts;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lnh/c;",
+   "method": "a",
+   "verb": "POST",
+   "path": "/v1/products/user",
+   "request": "Lcom/getmimo/data/model/store/ProductTypeBody;",
+   "response": "Lcom/getmimo/data/model/store/RawPurchasedProduct;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lcom/getmimo/data/source/remote/progress/CompletionApi;",
+   "method": "getLastInteractedTrack",
+   "verb": "GET",
+   "path": "/v1/tracks/completion/lastInteracted",
+   "request": "",
+   "response": "Lcom/getmimo/data/model/progress/LastInteractedTrackResponse;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Log/a;",
+   "method": "b",
+   "verb": "GET",
+   "path": "/v1/tracks/{trackId}/certificates",
+   "request": "",
+   "response": "Lge0/o0<Lokhttp3/ResponseBody;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lcom/getmimo/data/source/remote/progress/CompletionApi;",
+   "method": "getTrackCompletion",
+   "verb": "GET",
+   "path": "/v1/tracks/{trackId}/completion",
+   "request": "",
+   "response": "Lcom/getmimo/data/model/progress/TrackCompletionResponse;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lcom/getmimo/data/source/remote/progress/TrackEtaApi;",
+   "method": "getTrackEta",
+   "verb": "GET",
+   "path": "/v1/tracks/{trackId}/eta",
+   "request": "",
+   "response": "Lcom/getmimo/data/model/progress/TrackEtaResponse;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lhg/c;",
+   "method": "b",
+   "verb": "POST",
+   "path": "/v1/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/runFiles",
+   "request": "Lcom/getmimo/core/model/lesson/executablefiles/ExecuteFilesBody;",
+   "response": "Lcom/getmimo/core/model/lesson/executablefiles/ExecuteFilesResponse;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Ldh/a;",
+   "method": "b",
+   "verb": "POST",
+   "path": "/v1/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/savefiles",
+   "request": "Lcom/getmimo/data/model/lesson/SaveLessonFilesBody;",
+   "response": "Lz60/q;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Ldh/a;",
+   "method": "a",
+   "verb": "GET",
+   "path": "/v1/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/savedFiles",
+   "request": "",
+   "response": "Lcom/getmimo/data/model/lesson/SavedLessonFilesBody;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lng/a;",
+   "method": "a",
+   "verb": "GET",
+   "path": "/v1/tutorials/drafts/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/render",
+   "request": "",
+   "response": "Lcom/getmimo/data/source/remote/awesome/LessonDraftResponse;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lkh/a;",
+   "method": "a",
+   "verb": "POST",
+   "path": "/v1/tutorials/{tutorialId}/lessons/{lessonIdentityId}/report",
+   "request": "Lcom/getmimo/core/model/lesson/report/ReportLessonBody;",
+   "response": "Lz60/q;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lcom/getmimo/data/source/remote/progress/LessonProgressApi;",
+   "method": "postProgress",
+   "verb": "POST",
+   "path": "/v1/tutorials/{tutorialId}/progress",
+   "request": "Lcom/getmimo/data/model/progress/PostProgressRequestBody;",
+   "response": "Lcom/getmimo/data/model/progress/PostProgressResponse;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lsh/h;",
+   "method": "a",
+   "verb": "GET",
+   "path": "/v1/user/activity",
+   "request": "",
+   "response": "Lcom/getmimo/core/model/streak/UserActivityResponse;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lqg/a;",
+   "method": "a",
+   "verb": "GET",
+   "path": "/v1/user/coins",
+   "request": "",
+   "response": "Lcom/getmimo/core/model/coins/Coins;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lhg/a;",
+   "method": "c",
+   "verb": "POST",
+   "path": "/v1/user/deviceTokens",
+   "request": "Lcom/getmimo/data/model/analytics/DeviceToken;",
+   "response": "Lz60/q;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lhg/a;",
+   "method": "b",
+   "verb": "GET",
+   "path": "/v1/user/events/subscribe",
+   "request": "",
+   "response": "Lcom/getmimo/data/model/pusher/PusherChannelResponse;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lxe/a;",
+   "method": "a",
+   "verb": "GET",
+   "path": "/v1/user/favorites/tracks",
+   "request": "",
+   "response": "Lcom/getmimo/data/content/model/track/FavoriteTracks;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lxe/a;",
+   "method": "c",
+   "verb": "DELETE",
+   "path": "/v1/user/favorites/tracks/{trackId}",
+   "request": "",
+   "response": "Lcom/getmimo/data/content/model/track/FavoriteTracks;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lxe/a;",
+   "method": "b",
+   "verb": "POST",
+   "path": "/v1/user/favorites/tracks/{trackId}",
+   "request": "",
+   "response": "Lcom/getmimo/data/content/model/track/FavoriteTracks;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lih/a;",
+   "method": "a",
+   "verb": "DELETE",
+   "path": "/v1/user/following/{userId}",
+   "request": "",
+   "response": "Lge0/o0<Lz60/q;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lih/a;",
+   "method": "f",
+   "verb": "PUT",
+   "path": "/v1/user/following/{userId}",
+   "request": "",
+   "response": "Lge0/o0<Lz60/q;",
+   "confidence": "INFERRED_MEDIUM"
+  },
+  {
+   "interface": "Lug/a;",
+   "method": "a",
+   "verb": "GET",
+   "path": "/v1/user/invitations",
+   "request": "",
+   "response": "Lcom/getmimo/data/model/friends/InvitationsOverview;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lbh/a;",
+   "method": "b",
+   "verb": "GET",
+   "path": "/v1/user/keys",
+   "request": "",
+   "response": "Lcom/getmimo/data/model/keys/UserKeys;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lbh/a;",
+   "method": "a",
+   "verb": "POST",
+   "path": "/v1/user/keys/consume",
+   "request": "",
+   "response": "Lcom/getmimo/data/model/keys/UserKeys;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Llh/a;",
+   "method": "b",
+   "verb": "GET",
+   "path": "/v1/user/rewards/next",
+   "request": "",
+   "response": "Lcom/getmimo/data/model/reward/Rewards;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Llh/a;",
+   "method": "a",
+   "verb": "POST",
+   "path": "/v1/user/rewards/{rewardId}/confirm",
+   "request": "",
+   "response": "Lz60/q;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lkf/a;",
+   "method": "c",
+   "verb": "GET",
+   "path": "/v1/user/settings",
+   "request": "",
+   "response": "Lcom/getmimo/data/settings/model/Settings;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lkf/a;",
+   "method": "a",
+   "verb": "PATCH",
+   "path": "/v1/user/settings",
+   "request": "Lcom/getmimo/data/settings/model/Settings;",
+   "response": "Lcom/getmimo/data/settings/model/Settings;",
+   "confidence": "INFERRED_MEDIUM"
+  },
+  {
+   "interface": "Lkf/a;",
+   "method": "e",
+   "verb": "POST",
+   "path": "/v1/user/settings/avatar",
+   "request": "",
+   "response": "Lcom/getmimo/data/settings/model/AvatarUpdateResponse;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lkf/a;",
+   "method": "d",
+   "verb": "PUT",
+   "path": "/v1/user/settings/avatar/{uploadId}",
+   "request": "Lcom/getmimo/data/settings/model/ConfirmAvatarUploadBody;",
+   "response": "Lz60/q;",
+   "confidence": "INFERRED_MEDIUM"
+  },
+  {
+   "interface": "Lhg/a;",
+   "method": "a",
+   "verb": "POST",
+   "path": "/v1/user/visits",
+   "request": "Lcom/getmimo/data/model/AppName;",
+   "response": "Lz60/q;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lih/a;",
+   "method": "b",
+   "verb": "GET",
+   "path": "/v1/users/{userId}/code",
+   "request": "",
+   "response": "Lcom/getmimo/data/model/publicprofile/PublicUserCode;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lih/a;",
+   "method": "c",
+   "verb": "GET",
+   "path": "/v1/users/{userId}/code/{savedCodeId}",
+   "request": "",
+   "response": "Lcom/getmimo/data/model/savedcode/SavedCode;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lih/a;",
+   "method": "d",
+   "verb": "GET",
+   "path": "/v1/users/{userId}/profile",
+   "request": "",
+   "response": "Lcom/getmimo/data/model/publicprofile/PublicUser;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Lih/a;",
+   "method": "e",
+   "verb": "POST",
+   "path": "/v1/users/{userId}/report",
+   "request": "",
+   "response": "Lge0/o0<Lz60/q;",
+   "confidence": "INFERRED_HIGH"
+  },
+  {
+   "interface": "Llg/a;",
+   "method": "a",
+   "verb": "GET",
+   "path": "/v2/client-config",
+   "request": "",
+   "response": "Llg/d;",
+   "confidence": "INFERRED_HIGH"
+  }
+ ],
+ "label": "VERIFIED_STATIC per row where verb_confidence=VERIFIED"
+}

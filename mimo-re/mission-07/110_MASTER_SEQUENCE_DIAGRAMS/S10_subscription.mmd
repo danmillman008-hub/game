@@ -1,0 +1,11 @@
+sequenceDiagram
+  participant U as Learner
+  participant P as paywall
+  participant RC as RevenueCat
+  participant S as Play
+  U->>P: choose plan
+  P->>RC: purchase
+  RC->>S: billing
+  S-->>RC: receipt
+  RC-->>P: CustomerInfo
+  P->>P: isPremium = true

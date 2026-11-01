@@ -1,0 +1,25 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "mimo.track_completion.json",
+ "title": "TrackCompletionResponse (reconstructed)",
+ "description": "Field set extracted from the DEX (names are Kotlin-declared). Types inferred from Kotlin types; optionality unknown.",
+ "type": "object",
+ "properties": {
+  "lastInteractedTutorialId": {
+   "type": "integer"
+  },
+  "tutorials": {
+   "type": "array",
+   "items": {}
+  }
+ },
+ "required": [
+  "lastInteractedTutorialId",
+  "tutorials"
+ ],
+ "x-evidence": {
+  "source": "evidence/DTO_FIELDS.json",
+  "class": "com.getmimo.data.model.progress.TrackCompletionResponse",
+  "label": "VERIFIED_STATIC (field names)"
+ }
+}

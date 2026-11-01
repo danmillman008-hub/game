@@ -1,0 +1,11 @@
+from,to,relationship,evidence,label
+app,content_<locale>,Play dynamic module install,manifest meta-data,VERIFIED_STATIC
+content_<locale>,lesson documents,supplies data for that locale,naming + base layout,INFERRED_HIGH
+TracksJson,Track,contains,CONTENT_MODEL_FIELDS.json,VERIFIED_STATIC
+Track,Section,contains,model nesting,VERIFIED_STATIC
+Section,tutorialIds,declares index ranges,SectionJson,VERIFIED_STATIC
+Tutorial,Chapter,groups,LessonIdentifier ids coexist,INFERRED_HIGH
+Chapter,Lesson,contains,Chapter.lessons,VERIFIED_STATIC
+Lesson,LessonContent,discriminated by contentType,LessonContentType,VERIFIED_STATIC
+LessonContent,Module,composed of,LessonModule.*,VERIFIED_STATIC
+Module,Interaction,contains (code/selection),PARSER_GRAMMAR.json,VERIFIED_STATIC

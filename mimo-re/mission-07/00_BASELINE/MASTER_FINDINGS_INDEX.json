@@ -1,0 +1,124 @@
+{
+ "generated": "mission-07",
+ "findings": [
+  {
+   "id": "F-001",
+   "domain": "content",
+   "claim": "Content hierarchy Track\u2192Section\u2192Tutorial(ids)\u2192Chapter\u2192Lesson\u2192LessonContent",
+   "label": "VERIFIED_STATIC",
+   "source": "mission-06/02_CONTENT_SYSTEM/09"
+  },
+  {
+   "id": "F-002",
+   "domain": "content",
+   "claim": "LessonIdentifier is a 5-part key incl. trackVersion",
+   "label": "VERIFIED_STATIC",
+   "source": "mission-06/evidence/CONTENT_MODEL_FIELDS.json"
+  },
+  {
+   "id": "F-003",
+   "domain": "dsl",
+   "claim": "29-tag XML DSL, 7 parser classes te.a\u2013te.g",
+   "label": "VERIFIED_STATIC",
+   "source": "mission-06/evidence/PARSER_GRAMMAR.json"
+  },
+  {
+   "id": "F-004",
+   "domain": "grading",
+   "claim": "Two-phase grading: exact then normalised [a-z0-9<.] filter",
+   "label": "VERIFIED_STATIC",
+   "source": "mission-06/04_INTERACTION_AND_GRADING/26,30"
+  },
+  {
+   "id": "F-005",
+   "domain": "runtime",
+   "claim": "Exercise states IDLE/AWAITING/CORRECT/PARTIAL/INCORRECT/SOLVED/RESET",
+   "label": "VERIFIED_STATIC",
+   "source": "mission-06/05_LEARNER_MODEL/38"
+  },
+  {
+   "id": "F-006",
+   "domain": "progress",
+   "claim": "LessonProgress keyed (lesson_id,tutorial_id); write-through outbox with in_queue",
+   "label": "VERIFIED_STATIC",
+   "source": "mission-06/06_PERSISTENCE_AND_SYNC/40-44"
+  },
+  {
+   "id": "F-007",
+   "domain": "network",
+   "claim": "api.mimo.org base URL produced by 127-case DI switch (case 22)",
+   "label": "VERIFIED_STATIC",
+   "source": "mission-06/evidence/DI_GRAPH.json"
+  },
+  {
+   "id": "F-008",
+   "domain": "network",
+   "claim": "62 endpoints; 53 require auth; verbs 28/24/4/2/4",
+   "label": "VERIFIED_STATIC",
+   "source": "mission-05/evidence/API_CATALOG_V2.csv"
+  },
+  {
+   "id": "F-009",
+   "domain": "ai",
+   "claim": "AI tutor uses POST + Accept: text/event-stream (SSE), FinishReason{Length,Stop}",
+   "label": "VERIFIED_STATIC",
+   "source": "mission-06/08_AI_TUTOR/57"
+  },
+  {
+   "id": "F-010",
+   "domain": "executable",
+   "claim": "Code execution via POST /v1/code/runfiles and wss://\u2026/v1/run/socket",
+   "label": "VERIFIED_STATIC",
+   "source": "mission-06/03_DSL_AND_RUNTIME/23"
+  },
+  {
+   "id": "F-011",
+   "domain": "gamification",
+   "claim": "Coins/keys/streaks/leagues are server-authoritative; no XP model",
+   "label": "VERIFIED_STATIC",
+   "source": "mission-06/05_LEARNER_MODEL/35,36"
+  },
+  {
+   "id": "M7-F-01",
+   "domain": "design",
+   "claim": "ARSC decoded manually: 1,198 colour keys, 1,401 dimen keys, 1,721 string keys, 1,728 styles, 1,531 layouts",
+   "label": "VERIFIED_STATIC",
+   "source": "mission-07/evidence/DESIGN_TOKENS_VALUES.json"
+  },
+  {
+   "id": "M7-F-02",
+   "domain": "analytics",
+   "claim": "Analytics singleton com.getmimo.analytics.a holds FirebaseAnalytics + Adjust + FirebaseMessaging and logs via e(String,Map)",
+   "label": "VERIFIED_STATIC",
+   "source": "mission-07/evidence/ANALYTICS_DISPATCH.json"
+  },
+  {
+   "id": "M7-F-03",
+   "domain": "analytics",
+   "claim": "Events are value objects ge.j(name,index) plus typed properties NumberProperty/StringProperty",
+   "label": "VERIFIED_STATIC",
+   "source": "mission-07/evidence/ANALYTICS_DISPATCH.json"
+  },
+  {
+   "id": "M7-F-04",
+   "domain": "analytics",
+   "claim": "14 event names verified at call sites in the decompiled subset",
+   "label": "VERIFIED_STATIC",
+   "source": "mission-07/evidence/EVENTS_WITH_CALLSITES.csv"
+  },
+  {
+   "id": "M7-F-05",
+   "domain": "config",
+   "claim": "Feature flags are Firebase Remote Config AB-test user groups fetched in com.getmimo.analytics.a",
+   "label": "VERIFIED_STATIC",
+   "source": "mission-07/evidence/ANALYTICS_DISPATCH.json"
+  },
+  {
+   "id": "M7-F-06",
+   "domain": "gamification",
+   "claim": "Keys are consumable: DefaultKeysRepository.consumeUserKey exists",
+   "label": "VERIFIED_STATIC",
+   "source": "mission-07/03_CONTENT_AND_MODULES/\u2026 see Phase 7"
+  }
+ ]
+}

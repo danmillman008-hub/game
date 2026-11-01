@@ -1,0 +1,71 @@
+{
+ "ui": {
+  "classes": [
+   "com.getmimo.ui.* (views, fragments, compose)",
+   "ui.lesson.interactive.* (4 fragments + base VM)",
+   "ui.aitutor.* (7)",
+   "ui.codeeditor.*"
+  ],
+  "state_owner": "ViewModel (Flow/StateFlow + imperative fields)"
+ },
+ "navigation": {
+  "classes": [
+   "MainActivity (12 deep-link filters)",
+   "res/navigation/*.xml (onboarding: 17 fragments)"
+  ],
+  "state_owner": "NavController / activity"
+ },
+ "domain": {
+  "classes": [
+   "com.getmimo.interactors.*",
+   "qm.* (assessment)",
+   "te.* (parsing)"
+  ],
+  "state_owner": "stateless + lesson VM"
+ },
+ "data": {
+  "classes": [
+   "com.getmimo.data.repository.*",
+   "com.getmimo.data.source.{local,remote}.*",
+   "Room (3 tables)"
+  ],
+  "state_owner": "repositories (singletons from DI)"
+ },
+ "network": {
+  "classes": [
+   "ae.m (client construction)",
+   "Retrofit interfaces (29)",
+   "hg.e/fh.a/fh.b (interceptors)",
+   "pg.a (WebSocket)",
+   "AiTutorRepository (SSE)"
+  ],
+  "state_owner": "OkHttp clients"
+ },
+ "analytics": {
+  "classes": [
+   "com.getmimo.analytics.a (singleton)",
+   "ge.j (event)",
+   "properties.* (typed props)"
+  ],
+  "state_owner": "singleton"
+ },
+ "sdk": {
+  "classes": [
+   "Adjust",
+   "Firebase (Analytics/Messaging/RemoteConfig)",
+   "RevenueCat",
+   "Pusher",
+   "Rive",
+   "Sentry"
+  ],
+  "state_owner": "SDK singletons"
+ },
+ "background": {
+  "classes": [
+   "no app Worker recovered",
+   "FCM service (com.google.firebase.messaging.FirebaseMessagingService subclass)"
+  ],
+  "state_owner": "system"
+ },
+ "note": "Ownership derived from package structure + DI constructor graph; boundaries are INFERRED where obfuscation hides the interface."
+}

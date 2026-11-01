@@ -1,0 +1,52 @@
+{
+ "note": "Edge = repository/class that uses an endpoint. Only edges with a recovered call site are listed; the rest of the catalogue is mapped by feature package (INFERRED).",
+ "verified_edges": [
+  {
+   "endpoint": "POST /v1/tutorials/{tutorialId}/progress",
+   "caller": "ProgressRepository (outbox push)",
+   "evidence": "PostProgressRequestBody usage"
+  },
+  {
+   "endpoint": "POST /v1/aiTutor/conversations",
+   "caller": "AiTutorRepository.sendMessage",
+   "evidence": "sendMessage$2"
+  },
+  {
+   "endpoint": "GET /v1/aiTutor/\u2026/messages/count",
+   "caller": "AiTutorRepository/VM",
+   "evidence": "quota model"
+  },
+  {
+   "endpoint": "POST /v1/code/runfiles",
+   "caller": "executable lesson VM/repository",
+   "evidence": "ExecuteFilesBody/Response"
+  },
+  {
+   "endpoint": "wss://api.mimo.org/v1/run/socket",
+   "caller": "pg.a",
+   "evidence": "listener class"
+  },
+  {
+   "endpoint": "GET /v1/tracks/{id}/completion | /eta",
+   "caller": "track/tutorial list repositories",
+   "evidence": "DTO usage"
+  },
+  {
+   "endpoint": "GET /v1/leaderboards/{friends,latest}",
+   "caller": "leaderboard repository",
+   "evidence": "DTO usage"
+  },
+  {
+   "endpoint": "keys endpoints",
+   "caller": "DefaultKeysRepository (consumeUserKey)",
+   "evidence": "keys remote source"
+  },
+  {
+   "endpoint": "user activity / coins / last-track",
+   "caller": "profile & home repositories",
+   "evidence": "DTO usage",
+   "label": "INFERRED_HIGH"
+  }
+ ],
+ "unmapped": "remaining catalogue rows are known by interface+path but no caller class was decompiled"
+}

@@ -1,0 +1,9 @@
+sequenceDiagram
+  participant VM as feature VM
+  participant E as ge.j
+  participant A as com.getmimo.analytics.a
+  participant FB as FirebaseAnalytics
+  VM->>E: new ge.j("lesson_reset", 0)
+  VM->>A: e(name, map)
+  A->>FB: logEvent
+  Note over A: Adjust attribution handled separately at init

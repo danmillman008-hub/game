@@ -1,0 +1,28 @@
+{
+ "note": "JNI edges recovered from Java-side `native` declarations. Native-side implementations not disassembled.",
+ "edges": [
+  {
+   "java_package": "app.rive",
+   "library": "librive-android.so",
+   "methods": "native bind/render/state-machine calls",
+   "label": "VERIFIED_STATIC (declarations only)"
+  },
+  {
+   "java_package": "com.adjust.sdk",
+   "library": "libsigner.so",
+   "methods": "signature generation",
+   "label": "VERIFIED_STATIC (declarations only)"
+  },
+  {
+   "java_package": "com.getmimo (injected base)",
+   "library": "libyrf.so",
+   "methods": "unknown",
+   "label": "UNKNOWN"
+  }
+ ],
+ "gaps": [
+  "no symbol table extraction",
+  "no JNI_OnLoad inspection",
+  "no native thread/lifetime analysis"
+ ]
+}

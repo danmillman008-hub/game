@@ -1,0 +1,42 @@
+{
+ "database": "Room",
+ "entities": {
+  "lesson_progress": {
+   "columns": [
+    "id (PK)",
+    "lesson_id",
+    "tutorial_id",
+    "publish_set_version",
+    "tutorial_version",
+    "tries",
+    "attempts",
+    "in_queue",
+    "created_at",
+    "updated_at",
+    "(1 reserved/unspecified)"
+   ],
+   "unique": [
+    "lesson_id",
+    "tutorial_id"
+   ],
+   "indexes": "see SQL literals"
+  },
+  "chapter_completions": {
+   "columns": [
+    "chapter_id",
+    "completed_at\u2026"
+   ],
+   "note": "marker table"
+  },
+  "tutorial_completions": {
+   "columns": [
+    "tutorial_id",
+    "completed_at\u2026"
+   ],
+   "note": "marker table"
+  }
+ },
+ "migrations": "none registered -> destructive recreate (INFERRED_HIGH)",
+ "version": "NOT_RECOVERED",
+ "evidence": "mission-06/06_PERSISTENCE_AND_SYNC/40,41 + ROOM_SQL_LITERALS.csv"
+}

@@ -1,0 +1,7 @@
+sequenceDiagram
+  participant R as repository
+  participant H as hg.e
+  participant U as UI
+  R->>H: request
+  H-->>R: NoConnectionException
+  R-->>U: failure envelope

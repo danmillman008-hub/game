@@ -1,0 +1,67 @@
+{
+ "machines": {
+  "exercise": {
+   "states": [
+    "IDLE",
+    "AWAITING",
+    "CORRECT",
+    "PARTIAL",
+    "INCORRECT",
+    "SOLVED",
+    "RESET"
+   ],
+   "source": "05_RUNTIME_AND_GRADING/32"
+  },
+  "persistence": {
+   "states": [
+    "NO_ROW",
+    "QUEUED",
+    "PUSHED"
+   ],
+   "source": "07_STORAGE_AND_SYNC/55"
+  },
+  "tutor": {
+   "states": [
+    "IDLE",
+    "SENDING",
+    "STREAMING",
+    "DONE",
+    "TRUNCATED",
+    "FAILED"
+   ],
+   "source": "09_STREAMING/66"
+  },
+  "session": {
+   "states": [
+    "ANONYMOUS",
+    "AUTHENTICATED",
+    "EXPIRED"
+   ],
+   "source": "13_SUBSCRIPTION/89",
+   "note": "no refresh path exists"
+  },
+  "content": {
+   "states": [
+    "BUNDLED",
+    "MODULE_MISSING",
+    "MODULE_INSTALLED"
+   ],
+   "source": "03_CONTENT_AND_MODULES/16"
+  },
+  "sync": {
+   "states": [
+    "CLEAN",
+    "DIRTY",
+    "IN_FLIGHT",
+    "FAILED"
+   ],
+   "source": "07_STORAGE_AND_SYNC/56"
+  }
+ },
+ "global_invariants": [
+  "attempts monotonic within a lesson",
+  "tries \u2208 {0,1}",
+  "no score anywhere",
+  "token never refreshed by client"
+ ]
+}

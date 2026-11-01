@@ -1,0 +1,9 @@
+sequenceDiagram
+  participant U as Learner
+  participant VM as base.c
+  participant G as qm.i
+  participant DB as Room
+  U->>VM: submit
+  VM->>G: compare(input, expected)
+  G-->>VM: CORRECT|PARTIAL|INCORRECT
+  VM->>DB: H(tries,attempts)

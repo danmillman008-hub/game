@@ -1,0 +1,56 @@
+{
+ "source": "corpus scan of 1,030 documents",
+ "cases": [
+  {
+   "id": "C-01",
+   "input": "<p>Hello</p>",
+   "expect": "Paragraph[Text('Hello')]",
+   "evidence": "te.d.a",
+   "label": "VERIFIED_STATIC"
+  },
+  {
+   "id": "C-02",
+   "input": "<p visible-if=\"wrong\">x</p>",
+   "expect": "Paragraph(visibility=WRONG)",
+   "evidence": "te.d.a + visibility mapping"
+  },
+  {
+   "id": "C-03",
+   "input": "<code codelang=\"python\"><interactions><interaction type=\"VALIDATED_INPUT\" startIndex=\"0\" endIndex=\"4\"><options><option correct=\"true\">print</option></options></interaction></interactions><content>print(1)</content></code>",
+   "expect": "Code(expected='prin')",
+   "evidence": "te.a.a + qm.i expected slice",
+   "label": "VERIFIED_STATIC"
+  },
+  {
+   "id": "C-04",
+   "input": "<selection visible-if=\"always\"><item iscode=\"true\" correct=\"true\">val</item></selection>",
+   "expect": "Selection[item(isCode,isCorrect)]",
+   "evidence": "te.e.a"
+  },
+  {
+   "id": "C-05",
+   "input": "<webview version=\"1\" style=\"s\" interaction=\"i\" content=\"&lt;h1&gt;x&lt;/h1&gt;\"/>",
+   "expect": "Webview(content='<h1>x</h1>')",
+   "evidence": "te.g.a + corpus evidence that HTML lives in content"
+  },
+  {
+   "id": "C-06",
+   "input": "<database><tables><table name=\"t\"><row><data>1</data></row></table></tables></database>",
+   "expect": "Database[Table[name=t]]",
+   "evidence": "te.b.a\u2192te.f.a"
+  },
+  {
+   "id": "C-07",
+   "input": "<database><tables></tables></database>",
+   "expect": "Database with zero tables (soft)",
+   "evidence": "loop exit on non-table tag"
+  },
+  {
+   "id": "C-08",
+   "input": "<code><interactions></interactions><content>x</content><output><table><header><data>a</data></header></table></output></code>",
+   "expect": "Code + TableOutput",
+   "evidence": "te.a.a"
+  }
+ ],
+ "note": "inputs are synthetic structures matching corpus shapes; no lesson text reproduced"
+}

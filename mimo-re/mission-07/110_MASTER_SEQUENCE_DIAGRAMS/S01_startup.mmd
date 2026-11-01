@@ -1,0 +1,14 @@
+sequenceDiagram
+  participant Z as Zygote/Process
+  participant B as bin.ghost.YRF
+  participant A as com.getmimo.App
+  participant D as ae.m (DI)
+  participant AN as analytics singleton
+  participant M as MainActivity
+  Z->>B: Application created
+  B->>A: super chain
+  A->>D: build graph (127 arms)
+  D->>AN: case 1 (Firebase/Adjust/FCM/AB groups)
+  D->>D: case 20 OkHttp, case 22 HttpUrl, Room
+  A->>M: launch (12 deep-link filters)
+  M->>M: onboarding (17 fragments) or home

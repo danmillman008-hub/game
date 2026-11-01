@@ -1,0 +1,8 @@
+sequenceDiagram
+  participant U as Learner
+  participant VM as base.c
+  participant AN as analytics
+  U->>VM: restart lesson
+  VM->>AN: ge.j("lesson_reset") + 7 properties
+  VM->>VM: clear d/C/S
+  Note over VM: persisted row effect unresolved (Q-08)

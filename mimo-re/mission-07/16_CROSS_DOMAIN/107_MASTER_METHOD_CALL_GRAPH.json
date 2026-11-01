@@ -1,0 +1,44 @@
+{
+ "note": "Master call graph = curated cross-domain edges + the method-level graph from Mission 7 Phase 1. Full 29k-class edge extraction is not attempted (see 01_CLASS_UNIVERSE/06).",
+ "sources": [
+  "01_CLASS_UNIVERSE/06_METHOD_CALL_GRAPH.json",
+  "16_CROSS_DOMAIN/106_MASTER_COMPONENT_GRAPH.json"
+ ],
+ "curated_method_edges": [
+  {
+   "from": "com.getmimo.ui.lesson.interactive.base.c.H",
+   "to": "LessonProgressRepository.createLessonProgress",
+   "data": "tries,attempts,versions"
+  },
+  {
+   "from": "com.getmimo.ui.lesson.interactive.base.c.a0",
+   "to": "com.getmimo.analytics.a",
+   "data": "ge.j('lesson_reset')"
+  },
+  {
+   "from": "qm.d.a",
+   "to": "qm.i",
+   "data": "input,expected"
+  },
+  {
+   "from": "te.c.b",
+   "to": "te.a.a|te.b.a|te.d.a|te.e.a|te.g.a",
+   "data": "cursor"
+  },
+  {
+   "from": "com.getmimo.data.source.remote.keys.a",
+   "to": "keys endpoint",
+   "data": "consumeUserKey"
+  },
+  {
+   "from": "AiTutorRepository.sendMessage$2",
+   "to": "POST /v1/aiTutor/conversations",
+   "data": "StartConversation"
+  },
+  {
+   "from": "pg.a.onMessage",
+   "to": "executable VM",
+   "data": "frames"
+  }
+ ]
+}

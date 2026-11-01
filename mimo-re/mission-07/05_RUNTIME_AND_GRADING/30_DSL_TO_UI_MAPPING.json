@@ -1,0 +1,62 @@
+{
+ "mapping": [
+  {
+   "tag": "p",
+   "ast": "Paragraph",
+   "renderer": "TextView with inline spans",
+   "state": "paragraphModules + visibility",
+   "handler": "none"
+  },
+  {
+   "tag": "code",
+   "ast": "Code",
+   "renderer": "ym.j / ym.n block list + SpannableStringBuilder",
+   "state": "content, interactions, gap slots",
+   "handler": "submit \u2192 Z"
+  },
+  {
+   "tag": "selection",
+   "ast": "Selection",
+   "renderer": "option list (nm.e segments + slots)",
+   "state": "selection prefix/suffix",
+   "handler": "tap \u2192 Z"
+  },
+  {
+   "tag": "img",
+   "ast": "Image",
+   "renderer": "image view by src",
+   "state": "static",
+   "handler": "none"
+  },
+  {
+   "tag": "webview",
+   "ast": "Webview",
+   "renderer": "WebView.loadData/loadUrl",
+   "state": "interaction attr",
+   "handler": "web callback (unknown)"
+  },
+  {
+   "tag": "database",
+   "ast": "Database",
+   "renderer": "table view from Table rows",
+   "state": "static",
+   "handler": "none"
+  },
+  {
+   "tag": "output",
+   "ast": "Console|Table",
+   "renderer": "console block or table",
+   "state": "static per lesson",
+   "handler": "none"
+  },
+  {
+   "tag": "collapsibleLines",
+   "ast": "line ranges",
+   "renderer": "collapsed code ranges",
+   "state": "expansion flags",
+   "handler": "expand/collapse"
+  }
+ ],
+ "evidence": "mission-06/03_DSL_AND_RUNTIME/20 + /tmp/dad/ui.lesson.interactive.*",
+ "label": "VERIFIED_STATIC for renderers; INFERRED for the adapter absence"
+}

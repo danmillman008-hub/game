@@ -1,0 +1,8 @@
+sequenceDiagram
+  participant VM as lesson VM
+  participant DB as Room
+  participant U as Learner
+  VM->>DB: initial row (0,0)
+  Note over VM: process killed -> in-memory state lost
+  U->>VM: reopen lesson
+  VM->>DB: H(0,0) again

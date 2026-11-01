@@ -1,0 +1,16 @@
+trigger,detector,exception/response,state_transition,user_visible,recovery,persistence_effect,label
+no network,hg.e,NoConnectionException,request fails before dial,error surface,retry by user,none,VERIFIED_STATIC
+DNS failure,OkHttp,IOException,envelope failure,error surface,retry,none,VERIFIED_STATIC
+TLS failure,OkHttp,SSLException,envelope failure,error surface,none,none,VERIFIED_STATIC
+timeout,OkHttp (20s/30s),SocketTimeoutException,envelope failure,error surface,retry,none,VERIFIED_STATIC
+API 4xx,repository,failure envelope,caller-specific,unknown mapping,none,rows untouched,INFERRED_HIGH
+API 5xx,repository,failure envelope,caller-specific,error surface,retry,rows untouched,INFERRED_HIGH
+expired token,none,request fails,no refresh,error surface,re-login (unknown),none,NOT_RECOVERED
+invalid lesson content,te.*,XmlPullParserException,lesson does not open,unknown,none,no progress row,VERIFIED_STATIC
+missing locale module,Play,SplitInstall error,locale lessons unavailable,unknown,download,none,INFERRED
+DB failure,Room,SQLiteException,progress write fails,unknown,none,lost event,INFERRED
+process death mid-lesson,Android,n/a,state lost except initial row,resume at lesson,re-open,queued row persists,INFERRED_HIGH
+WebSocket disconnect,pg.a,onFailure,run aborted,unknown,manual retry,none,INFERRED
+SSE interrupted,EventSourceListener,onFailure,partial message,partial text shown,manual,none,UNKNOWN
+failed push,repository,failure envelope,rows stay queued,invisible,next cycle,rows retained,VERIFIED_STATIC
+remote config failure,analytics init,logged,defaults used,invisible,next launch,none,VERIFIED_STATIC

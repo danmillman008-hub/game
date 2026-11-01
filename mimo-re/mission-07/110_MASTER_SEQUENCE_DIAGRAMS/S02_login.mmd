@@ -1,0 +1,12 @@
+sequenceDiagram
+  participant U as Learner
+  participant UI as auth UI
+  participant R as auth repository (NOT_RECOVERED)
+  participant T as ri.* token holder
+  participant API as api.mimo.org
+  U->>UI: credentials
+  UI->>R: login request (payload NOT_RECOVERED)
+  R->>API: POST (endpoint among 9 unauthenticated)
+  API-->>R: token
+  R->>T: store token
+  Note over T: fh.a reads token for every later call

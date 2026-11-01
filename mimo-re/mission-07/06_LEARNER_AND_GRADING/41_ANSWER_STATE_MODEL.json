@@ -1,0 +1,25 @@
+{
+ "state_model": {
+  "fields": {
+   "d": "attempts (increments per submit)",
+   "C": "lastVerdictCorrect (Boolean)",
+   "h": "solved flag",
+   "S": "current input text"
+  },
+  "derived": {
+   "tries": "lastVerdictCorrect ? 1 : 0",
+   "firstTry": "solved && attempts==1"
+  },
+  "transitions": [
+   "solved := verdict in {CORRECT, PARTIAL}",
+   "progress row written on every verdict (H)",
+   "proceed (U) marks solved and writes final counters"
+  ],
+  "reset": "a0() clears d/C/S, emits lesson_reset; persisted row effect unresolved (Q-08)"
+ },
+ "evidence": [
+  "/tmp/dad/com.getmimo.ui.lesson.interactive.base.c.java (H,U,V,W,X,Z,a0)",
+  "mission-06/05_LEARNER_MODEL/38_PROGRESS_STATE_TRANSITIONS.json"
+ ],
+ "label": "VERIFIED_STATIC"
+}

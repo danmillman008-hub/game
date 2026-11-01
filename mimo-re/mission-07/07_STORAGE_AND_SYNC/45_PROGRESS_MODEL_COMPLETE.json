@@ -1,0 +1,57 @@
+{
+ "note": "Progress model at field level; relationships to content identity included.",
+ "entities": {
+  "LessonProgress": {
+   "key": [
+    "lesson_id",
+    "tutorial_id"
+   ],
+   "fields": [
+    "publish_set_version",
+    "tutorial_version",
+    "tries",
+    "attempts",
+    "in_queue",
+    "created_at",
+    "updated_at",
+    "\u2026(11 total)"
+   ],
+   "source_of_truth": "client computes, server accumulates",
+   "reset": "UNKNOWN (Q-08)"
+  },
+  "ChapterCompletion": {
+   "key": [
+    "chapter_id"
+   ],
+   "source_of_truth": "client writes marker"
+  },
+  "TutorialCompletion": {
+   "key": [
+    "tutorial_id"
+   ],
+   "source_of_truth": "client writes marker + POST progress"
+  },
+  "TrackCompletion": {
+   "source_of_truth": "server (GET /v1/tracks/{id}/completion)",
+   "fields": [
+    "lastInteractedTutorialId",
+    "tutorials[]"
+   ]
+  },
+  "TrackEta": {
+   "source_of_truth": "server",
+   "fields": [
+    "currentPaceMinutesPerDay",
+    "trackEstimatedCompletionAt",
+    "sections[]"
+   ]
+  }
+ },
+ "aggregation": {
+  "lesson": "tries/attempts",
+  "chapter": "isCompleted + marker",
+  "tutorial": "marker + push",
+  "track": "server"
+ },
+ "evidence": "mission-06/06_PERSISTENCE_AND_SYNC/40,44 + 05_LEARNER_MODEL/33"
+}

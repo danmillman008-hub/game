@@ -1,0 +1,111 @@
+{
+ "mission6": {
+  "evidence_db": {
+   "ev-01": {
+    "kind": "baseline",
+    "path": "00_BASELINE/APK_MANIFEST.json",
+    "claim": "APK identity (sha256 48ce1740..., md5 f9cef2d8..., 14,398 entries, 12 dex)",
+    "label": "VERIFIED_STATIC"
+   },
+   "ev-02": {
+    "kind": "manifest",
+    "path": "00_BASELINE/DEX_HASHES.json",
+    "claim": "12 dex files with per-file sha256 (12 dex, 14,398 zip entries in APK_MANIFEST.json)",
+    "label": "VERIFIED_STATIC"
+   },
+   "ev-03": {
+    "kind": "parser",
+    "path": "evidence/PARSER_GRAMMAR.json",
+    "claim": "grammar of all 7 te/* parser classes",
+    "label": "VERIFIED_STATIC"
+   },
+   "ev-04": {
+    "kind": "model",
+    "path": "evidence/CONTENT_MODEL_FIELDS.json",
+    "claim": "content entity field sets incl. 5-part LessonIdentifier and File.solvedContent",
+    "label": "VERIFIED_STATIC"
+   },
+   "ev-05": {
+    "kind": "dto",
+    "path": "evidence/DTO_FIELDS.json",
+    "claim": "39/50 DTO field sets",
+    "label": "VERIFIED_STATIC"
+   },
+   "ev-06": {
+    "kind": "di",
+    "path": "evidence/DI_GRAPH.json",
+    "claim": "127-case DI switch incl. case 20 OkHttp and case 22 api-testing host",
+    "label": "VERIFIED_STATIC"
+   },
+   "ev-07": {
+    "kind": "network",
+    "path": "07_NETWORK/48_HTTP_STACK.md",
+    "claim": "interceptor order, UA, Bearer, timeouts 20s/30s",
+    "label": "VERIFIED_STATIC"
+   },
+   "ev-08": {
+    "kind": "ai",
+    "path": "08_AI_TUTOR/57_AI_TUTOR_TRANSPORT.md",
+    "claim": "SSE transport, start/continue, FinishReason",
+    "label": "VERIFIED_STATIC"
+   },
+   "ev-09": {
+    "kind": "grading",
+    "path": "04_INTERACTION_AND_GRADING/30_ANSWER_NORMALIZATION.md",
+    "claim": "normalisation filter + two-phase compare",
+    "label": "VERIFIED_STATIC"
+   },
+   "ev-10": {
+    "kind": "state",
+    "path": "05_LEARNER_MODEL/38_PROGRESS_STATE_TRANSITIONS.json",
+    "claim": "exercise + persistence state machines",
+    "label": "VERIFIED_STATIC"
+   },
+   "ev-11": {
+    "kind": "event",
+    "path": "evidence/EVENT_CANDIDATES.csv",
+    "claim": "252 analytics-context literals (hypothesis list)",
+    "label": "INFERRED"
+   },
+   "ev-12": {
+    "kind": "integrity",
+    "path": "00_BASELINE/INTEGRITY_CAVEAT.md",
+    "claim": "third-party re-signature, 11,543 watermark strings, foreign bin.ghost",
+    "label": "VERIFIED_STATIC"
+   },
+   "ev-13": {
+    "kind": "design",
+    "path": "evidence/DESIGN_TOKENS_NAMES.json",
+    "claim": "15 font assets; colour values BLOCKED",
+    "label": "VERIFIED_STATIC"
+   },
+   "ev-14": {
+    "kind": "runtime",
+    "path": "15_RUNTIME/97_RUNTIME_RESULTS.md",
+    "claim": "0 runtime tests executed; 15 planned BLOCKED",
+    "label": "BLOCKED"
+   },
+   "ev-15": {
+    "kind": "api",
+    "path": "../mission-05/evidence/API_CATALOG_V2.csv",
+    "claim": "62 endpoints / 29 interfaces / verb distribution",
+    "label": "VERIFIED_STATIC"
+   }
+  },
+  "tools": "mission-06/17_TOOLS/117_TOOLS.md",
+  "suites": {
+   "m4": 23,
+   "m5": 44,
+   "m6": 21
+  }
+ },
+ "mission5": {
+  "api": "mission-05/evidence/API_CATALOG_V2.csv",
+  "dto": "mission-05/evidence/DTO_CATALOG.csv",
+  "tags": "mission-05/evidence/TAG_ENUM.json",
+  "annotations": "mission-05/evidence/ANNOTATIONS_V2.csv.gz"
+ },
+ "mission4": {
+  "census": "mission-04 content census"
+ }
+}

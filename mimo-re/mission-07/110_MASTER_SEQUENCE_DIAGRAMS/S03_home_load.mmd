@@ -1,0 +1,9 @@
+sequenceDiagram
+  participant UI as home
+  participant C as content repo
+  participant API as api.mimo.org
+  UI->>C: get tracks
+  C->>C: read TracksJson (assets/module)
+  C->>API: GET /v1/tracks/{id}/completion
+  API-->>C: {lastInteractedTutorialId, tutorials[]}
+  C-->>UI: render path

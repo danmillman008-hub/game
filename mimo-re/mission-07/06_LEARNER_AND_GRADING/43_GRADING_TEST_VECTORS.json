@@ -1,0 +1,117 @@
+{
+ "source": "qm.i semantics + option identity rules",
+ "normaliser": "remove chars not in [a-z0-9<.] after lower()",
+ "vectors": [
+  {
+   "kind": "VALIDATED_INPUT",
+   "input": "print('Hello, World!')",
+   "expected": "print(hello world)",
+   "norm_input": "printhelloworld",
+   "norm_expected": "printhelloworld",
+   "exact": false,
+   "normalised_match": true,
+   "verdict": "CORRECT_NORMALISED"
+  },
+  {
+   "kind": "VALIDATED_INPUT",
+   "input": "Print(\"hi\")",
+   "expected": "print('hi')",
+   "norm_input": "printhi",
+   "norm_expected": "printhi",
+   "exact": false,
+   "normalised_match": true,
+   "verdict": "CORRECT_NORMALISED"
+  },
+  {
+   "kind": "VALIDATED_INPUT",
+   "input": "my_var",
+   "expected": "myvar",
+   "norm_input": "myvar",
+   "norm_expected": "myvar",
+   "exact": false,
+   "normalised_match": true,
+   "verdict": "CORRECT_NORMALISED"
+  },
+  {
+   "kind": "VALIDATED_INPUT",
+   "input": "a+b",
+   "expected": "ab",
+   "norm_input": "ab",
+   "norm_expected": "ab",
+   "exact": false,
+   "normalised_match": true,
+   "verdict": "CORRECT_NORMALISED"
+  },
+  {
+   "kind": "VALIDATED_INPUT",
+   "input": "1.5",
+   "expected": "1.5",
+   "norm_input": "1.5",
+   "norm_expected": "1.5",
+   "exact": true,
+   "normalised_match": true,
+   "verdict": "CORRECT"
+  },
+  {
+   "kind": "VALIDATED_INPUT",
+   "input": "a < b",
+   "expected": "a<b",
+   "norm_input": "a<b",
+   "norm_expected": "a<b",
+   "exact": false,
+   "normalised_match": true,
+   "verdict": "CORRECT_NORMALISED"
+  },
+  {
+   "kind": "VALIDATED_INPUT",
+   "input": "print(x)",
+   "expected": "println(x)",
+   "norm_input": "printx",
+   "norm_expected": "printlnx",
+   "exact": false,
+   "normalised_match": false,
+   "verdict": "INCORRECT"
+  },
+  {
+   "kind": "VALIDATED_INPUT",
+   "input": "Caf\u00e9",
+   "expected": "Cafe",
+   "norm_input": "caf",
+   "norm_expected": "cafe",
+   "exact": false,
+   "normalised_match": false,
+   "verdict": "INCORRECT"
+  },
+  {
+   "kind": "VALIDATED_INPUT",
+   "input": "\u0410\u0411\u0412",
+   "expected": "abc",
+   "norm_input": "",
+   "norm_expected": "abc",
+   "exact": false,
+   "normalised_match": false,
+   "verdict": "INCORRECT"
+  },
+  {
+   "kind": "FILL_THE_GAP",
+   "input": "option#2",
+   "expected": "option#1(correct)",
+   "verdict": "INCORRECT",
+   "note": "graded by option identity, not text"
+  },
+  {
+   "kind": "SELECTION",
+   "input": "item:val",
+   "expected": "item:val(correct=true)",
+   "verdict": "CORRECT",
+   "note": "item flag"
+  },
+  {
+   "kind": "SPELL",
+   "input": "letters p-r-i-n-t",
+   "expected": "option correct",
+   "verdict": "CORRECT"
+  }
+ ],
+ "label": "source-derived (not runtime-observed)"
+}

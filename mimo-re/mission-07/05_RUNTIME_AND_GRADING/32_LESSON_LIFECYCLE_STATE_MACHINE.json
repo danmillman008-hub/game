@@ -1,0 +1,89 @@
+{
+ "note": "Exercise-level machine extended with the persistence and analytics side effects recovered in Mission 7.",
+ "states": [
+  "IDLE",
+  "AWAITING",
+  "CORRECT",
+  "PARTIAL",
+  "INCORRECT",
+  "SOLVED",
+  "RESET"
+ ],
+ "transitions": [
+  {
+   "from": "IDLE",
+   "event": "visible",
+   "to": "IDLE",
+   "effect": "H(0,0): empty progress row"
+  },
+  {
+   "from": "IDLE",
+   "event": "submit",
+   "to": "AWAITING",
+   "guard": "VALIDATED_INPUT",
+   "effect": "delay 300ms"
+  },
+  {
+   "from": "IDLE",
+   "event": "submit",
+   "to": "CORRECT|INCORRECT",
+   "guard": "option kinds"
+  },
+  {
+   "from": "AWAITING",
+   "event": "exact",
+   "to": "CORRECT",
+   "effect": "qm.e"
+  },
+  {
+   "from": "AWAITING",
+   "event": "normalised",
+   "to": "PARTIAL",
+   "effect": "qm.f + overwrite input"
+  },
+  {
+   "from": "AWAITING",
+   "event": "wrong",
+   "to": "INCORRECT",
+   "effect": "qm.g"
+  },
+  {
+   "from": "INCORRECT",
+   "event": "submit",
+   "to": "AWAITING",
+   "effect": "attempts++"
+  },
+  {
+   "from": "CORRECT|PARTIAL",
+   "event": "proceed",
+   "to": "SOLVED",
+   "effect": "tries=1, progress write"
+  },
+  {
+   "from": "INCORRECT",
+   "event": "proceed",
+   "to": "SOLVED",
+   "effect": "tries=0, progress write"
+  },
+  {
+   "from": "SOLVED",
+   "event": "restart",
+   "to": "RESET",
+   "effect": "a0(): ge.j('lesson_reset') + state clear"
+  },
+  {
+   "from": "RESET",
+   "event": "re-init",
+   "to": "IDLE",
+   "effect": "re-run init (progress row effect unresolved for the existing row)"
+  }
+ ],
+ "side_effects": {
+  "analytics": "f0(interactionType,solved) per verdict; a0 lesson_reset",
+  "persistence": "H() upsert with in_queue=1",
+  "network": "batch push"
+ },
+ "unresolved": [
+  "Q-08 (row effect of reset)"
+ ]
+}

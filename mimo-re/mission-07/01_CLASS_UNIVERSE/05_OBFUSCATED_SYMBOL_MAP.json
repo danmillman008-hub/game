@@ -1,0 +1,147 @@
+{
+ "ae.m": {
+  "responsibility": "dependency-injection switch (127 cases), builds OkHttp/Retrofit/DB/analytics graph",
+  "methods": [
+   "<init>"
+  ],
+  "evidence": "mission-06/evidence/DI_GRAPH.json"
+ },
+ "te.a": {
+  "responsibility": "parser for <code> module incl. interactions/output/collapsibleLines",
+  "methods": [
+   "a",
+   "b"
+  ]
+ },
+ "te.b": {
+  "responsibility": "parser for <database>/<tables>",
+  "methods": [
+   "a"
+  ]
+ },
+ "te.c": {
+  "responsibility": "module dispatcher + <img> parser",
+  "methods": [
+   "a",
+   "b"
+  ]
+ },
+ "te.d": {
+  "responsibility": "<p> paragraph + inline HTML (a,br,span,em,strong,code)",
+  "methods": [
+   "a",
+   "b",
+   "c",
+   "e"
+  ]
+ },
+ "te.e": {
+  "responsibility": "<selection>/<item> parser",
+  "methods": [
+   "a"
+  ]
+ },
+ "te.f": {
+  "responsibility": "<table>/<row>/<header>/<data> parser",
+  "methods": [
+   "a"
+  ]
+ },
+ "te.g": {
+  "responsibility": "<webview> parser",
+  "methods": [
+   "a"
+  ]
+ },
+ "qm.i": {
+  "responsibility": "grader: exact then normalised comparison",
+  "methods": [
+   "<init>",
+   "a"
+  ]
+ },
+ "qm.d": {
+  "responsibility": "verdict visitor over interaction kinds",
+  "methods": [
+   "a"
+  ]
+ },
+ "base.c": {
+  "responsibility": "interactive lesson base ViewModel: state, verdicts, progress writes",
+  "methods": [
+   "H",
+   "U",
+   "V",
+   "W",
+   "X",
+   "Z",
+   "a0",
+   "f0",
+   "g0"
+  ]
+ },
+ "hg.e": {
+  "responsibility": "connectivity interceptor -> NoConnectionException",
+  "methods": [
+   "intercept"
+  ]
+ },
+ "fh.a": {
+  "responsibility": "Authorization: Bearer interceptor",
+  "methods": [
+   "intercept"
+  ]
+ },
+ "fh.b": {
+  "responsibility": "User-Agent interceptor (Mimo/9.35 Android/<release>)",
+  "methods": [
+   "intercept"
+  ]
+ },
+ "pg.a": {
+  "responsibility": "WebSocket listener for wss://api.mimo.org/v1/run/socket",
+  "methods": [
+   "onOpen",
+   "onMessage",
+   "onFailure",
+   "onClosed"
+  ]
+ },
+ "f9.j": {
+  "responsibility": "Pusher client/auth using API host",
+  "methods": [
+   "<init>"
+  ]
+ },
+ "com.getmimo.analytics.a": {
+  "responsibility": "analytics singleton: Firebase logEvent + Adjust + FCM token + AB-test groups",
+  "methods": [
+   "a",
+   "b",
+   "e",
+   "f"
+  ]
+ },
+ "ge.j": {
+  "responsibility": "analytics event value object (name, index)",
+  "methods": [
+   "<init>"
+  ]
+ },
+ "com.getmimo.data.source.remote.keys.a": {
+  "responsibility": "DefaultKeysRepository: fetch keys + consumeUserKey",
+  "methods": [
+   "consumeUserKey"
+  ]
+ },
+ "com.getmimo.data.source.local.aitutor.AiTutorRepository": {
+  "responsibility": "AI tutor SSE transport",
+  "methods": [
+   "sendMessage"
+  ]
+ },
+ "ri.c": {
+  "responsibility": "token/session holder (used by fh.a via d(0))",
+  "methods": []
+ }
+}

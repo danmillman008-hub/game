@@ -1,0 +1,64 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "mimo.leaderboard_entry.json",
+ "title": "LeaderboardUserResult (reconstructed)",
+ "description": "Field set extracted from the DEX (names are Kotlin-declared). Types inferred from Kotlin types; optionality unknown.",
+ "type": "object",
+ "properties": {
+  "avatar": {
+   "type": "string"
+  },
+  "endDate": {
+   "type": "string"
+  },
+  "isInProgress": {
+   "type": "boolean"
+  },
+  "leaderboardId": {
+   "type": "integer"
+  },
+  "league": {
+   "type": "integer"
+  },
+  "newLeague": {
+   "type": "integer"
+  },
+  "rank": {
+   "type": "integer"
+  },
+  "sparks": {
+   "type": "integer"
+  },
+  "startDate": {
+   "type": "string"
+  },
+  "usedLeagueFreeze": {
+   "type": "boolean"
+  },
+  "username": {
+   "type": "string"
+  },
+  "usersCount": {
+   "type": "integer"
+  }
+ },
+ "required": [
+  "avatar",
+  "endDate",
+  "isInProgress",
+  "leaderboardId",
+  "league",
+  "newLeague",
+  "rank",
+  "sparks",
+  "startDate",
+  "usedLeagueFreeze",
+  "username",
+  "usersCount"
+ ],
+ "x-evidence": {
+  "source": "evidence/DTO_FIELDS.json",
+  "class": "com.getmimo.data.model.leaderboard.LeaderboardUserResult",
+  "label": "VERIFIED_STATIC (field names)"
+ }
+}

@@ -1,0 +1,59 @@
+{
+ "note": "Call graph over the decompiled subset only. Edges are direct invocations recovered by regex over DAD output; dynamic dispatch (interfaces, lambdas) creates edges to the interface method, not the implementation.",
+ "nodes": 3231,
+ "edges": [],
+ "curated_edges": [
+  {
+   "from": "com.getmimo.ui.lesson.interactive.base.c.H",
+   "to": "com.getmimo.data.model.room.LessonProgress",
+   "kind": "constructs"
+  },
+  {
+   "from": "com.getmimo.ui.lesson.interactive.base.c.a0",
+   "to": "ge.j",
+   "kind": "constructs",
+   "data": "event lesson_reset"
+  },
+  {
+   "from": "com.getmimo.ui.lesson.interactive.base.c.a0",
+   "to": "com.getmimo.analytics.a",
+   "kind": "calls (via jm.g)"
+  },
+  {
+   "from": "te.b.a",
+   "to": "te.f.a",
+   "kind": "delegates for <table>"
+  },
+  {
+   "from": "te.c.b",
+   "to": "te.a.a|te.b.a|te.d.a|te.e.a|te.f.a|te.g.a",
+   "kind": "dispatch by tag name"
+  },
+  {
+   "from": "qm.d.a",
+   "to": "qm.e|qm.f|qm.g|qm.h",
+   "kind": "verdict branch"
+  },
+  {
+   "from": "fh.a.intercept",
+   "to": "ri.b.d",
+   "kind": "token lookup"
+  },
+  {
+   "from": "com.getmimo.analytics.a.e",
+   "to": "com.google.firebase.analytics.FirebaseAnalytics.logEvent",
+   "kind": "dispatch"
+  },
+  {
+   "from": "com.getmimo.data.source.remote.keys.a",
+   "to": "UserKeys",
+   "kind": "serialises"
+  },
+  {
+   "from": "pg.a.onMessage",
+   "to": "WebSocket stream consumer",
+   "kind": "callback"
+  }
+ ],
+ "limits": "full edge extraction across 29k classes is not attempted: DAD output is lossy for lambdas and the uncompiled 89% is unavailable"
+}

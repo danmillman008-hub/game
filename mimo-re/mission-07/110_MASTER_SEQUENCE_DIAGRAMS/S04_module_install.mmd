@@ -1,0 +1,7 @@
+sequenceDiagram
+  participant UI as content UI
+  participant P as Play (SplitInstall)
+  participant FS as module assets
+  UI->>P: request content_<locale> (trigger NOT_RECOVERED)
+  P-->>FS: install module
+  FS-->>UI: lessons available offline

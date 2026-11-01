@@ -1,0 +1,97 @@
+{
+ "note": "Only entities with class evidence. Course/Skill/Exercise/Unit/Program do not exist in this build.",
+ "levels": [
+  {
+   "entity": "Track",
+   "identity": [
+    "trackId",
+    "trackVersion"
+   ],
+   "fields": "NOT_RECOVERED"
+  },
+  {
+   "entity": "Section",
+   "fields": [
+    "index",
+    "name",
+    "description",
+    "tutorials",
+    "hasProgress"
+   ]
+  },
+  {
+   "entity": "SectionJson(delta)",
+   "fields": [
+    "name",
+    "description",
+    "startIndex",
+    "endIndex",
+    "tutorialIds"
+   ]
+  },
+  {
+   "entity": "Tutorial",
+   "identity": [
+    "tutorialId"
+   ],
+   "label": "INFERRED_HIGH"
+  },
+  {
+   "entity": "Chapter",
+   "fields": [
+    "id",
+    "title",
+    "type",
+    "isCompleted",
+    "lessons"
+   ]
+  },
+  {
+   "entity": "Lesson",
+   "fields": [
+    "id",
+    "title",
+    "contentType",
+    "images",
+    "hardModeSelected"
+   ]
+  },
+  {
+   "entity": "LessonContent",
+   "variants": [
+    "Interactive",
+    "Executable"
+   ]
+  },
+  {
+   "entity": "Module",
+   "kinds": [
+    "PARAGRAPH",
+    "CODE",
+    "SELECTION",
+    "IMAGE",
+    "WEBVIEW",
+    "DATABASE"
+   ]
+  },
+  {
+   "entity": "Interaction",
+   "types": [
+    "FILL_THE_GAP",
+    "SELECTION",
+    "SPELL",
+    "VALIDATED_INPUT"
+   ]
+  },
+  {
+   "entity": "ExecutableFile",
+   "fields": [
+    "name",
+    "content",
+    "solvedContent",
+    "codeLanguage"
+   ]
+  }
+ ],
+ "evidence": "mission-06/evidence/CONTENT_MODEL_FIELDS.json, PARSER_GRAMMAR.json"
+}
