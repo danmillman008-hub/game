@@ -34,7 +34,7 @@ None of these replaces an existing question; all are additive and cited by the p
 | A15 | which module owns `<output>` | open | variant field names obfuscated |
 | A16 | does a chapter auto-complete on its last lesson? | open | needs `U`/`V` bodies |
 | A17 | meaning of the five boolean flags in `InteractiveLessonBaseViewModel` | open | needs `O` (616 insns) read |
-| A18 | is `base.c.K` `initialiseCodeBlocks` or `storeLessonProgressInMemory`? | open | two families, one method |
+| A18 | is `base.c.K` `initialiseCodeBlocks` or `storeLessonProgressInMemory`? | **CLOSED_STATIC** (C-15: K=initialiseCodeBlocks, e0=storeLessonProgressInMemory) | — |
 | A19 | recovered name of `base.c.O` | open | no lambda family maps to it |
 | A20 | is `hardModeLessonModules` parsed from the same document? | open | one grammar only in parser pools |
 
@@ -50,3 +50,16 @@ None of these replaces an existing question; all are additive and cited by the p
 | A26 | who produces `Output.ConsoleOutput` in the interactive branch | open | no producer found |
 | A27 | which composable consumes `browserOutputDeferred` | open | UI layer, Phase 11 |
 | A28 | what selects MultipleChoice vs SingleChoice | open | two state holders, same predicate |
+
+## Questions raised by Stage 5 (learner model)
+
+| ID | Question | Status |
+|---|---|---|
+| B-1 | exact id→SQL assignment for the remaining 25 generated DAO lambdas | open |
+| B-2 | is learner state intentionally not partitioned by account? | open (no account column anywhere) |
+| B-3 | non-network failure path of the progress POST | open |
+| B-4 | is there any track-level completion predicate? | open |
+| B-5 | what consumes the streak sink `gg.e`? | open |
+| B-6 | can `ChapterViewModel.clearOnExit` drop unsynced progress? | open |
+| B-7 | is the per-tutorial POST loop sequential? | open |
+| B-8 | does the server merge session `attempts`? | backend-only |

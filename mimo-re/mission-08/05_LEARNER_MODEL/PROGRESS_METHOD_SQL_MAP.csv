@@ -1,0 +1,14 @@
+method,kind,api,table,sql_or_effect
+LessonProgressRepository.createLessonProgress,constructs LessonProgress,none,none,"insert timestamp, publishSetVersion from tracks.json, inQueue=1"
+LessonProgressRepository.addOrUpdateLessonProgressInQueue,copies rows with inQueue=true,none,lesson_progress,Room upsert (INSERT + UPDATE fallback adapters both present)
+LessonProgressRepository.getAllLessonProgressInQueue,query,none,lesson_progress,SELECT * FROM lesson_progress WHERE in_queue = 1
+LessonProgressRepository.moveLessonProgressFromQueue,update,none,lesson_progress,UPDATE lesson_progress SET in_queue = 0 WHERE in_queue = 1
+LessonProgressRepository.clearLessonProgressQueue,delete,none,lesson_progress,DELETE FROM lesson_progress WHERE in_queue = 1
+LessonProgressRepository.postUnsyncedLessonProgress,select + post + delete,POST /v1/tutorials/{tutorialId}/progress,lesson_progress,SELECT * FROM lesson_progress; group by tutorialId; DELETE ... WHERE lesson_id IN (...)
+LessonProgressRepository.toProgressList,mapping,none,none,entity -> Progress DTO (9 fields)
+LessonProgressRepository.toLessonProgressSyncResult,mapping,none,none,"PostProgressResponse -> cg.e(reachedGoal, dailyGoalCoinReward)"
+LessonProgressRepository.fetchTrackCompletionForFavoriteTracks,orchestration,CompletionApi.getTrackCompletion,"tutorial_completions, chapter_completions",favourites -> tracks -> completion fetch + store
+"CompletionRepository.fetchTrackCompletion(trackId, trackVersion)",fetch + store,GET /v1/tracks/{trackId}/completion,"tutorial_completions, chapter_completions",also writes SharedPreferences last_interacted_tutorial_id_<trackId>
+CompletionRepository.fetchLastInteractedTrackId,fetch,GET /v1/tracks/completion/lastInteracted,none,LastInteractedTrackResponse.lastInteractedTrackId
+CompletionRepository.attachTutorialAndChapterCompletionToTrack,read + copy model,none,"tutorial_completions, chapter_completions",sets isCompleted on copies of Track/Section/Tutorial/Chapter
+CompletionRepository.getChapterCompletionCount,count,none,chapter_completions,list size of chapter completions for a track

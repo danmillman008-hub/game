@@ -1,0 +1,100 @@
+{
+ "generated": "2026-11-01",
+ "scope": "fields/methods that read or write learner state",
+ "writers": [
+  {
+   "target": "LessonProgress.tries",
+   "writers": [
+    "base.c.V (correct: !(C==TRUE))",
+    "base.c.X (incorrect: 0)",
+    "base.c.U (proceed: (C==TRUE))"
+   ],
+   "evidenced": true
+  },
+  {
+   "target": "LessonProgress.attempts",
+   "writers": [
+    "base.c.V/W/X/U: field d incremented before H()"
+   ],
+   "evidenced": true
+  },
+  {
+   "target": "viewmodel field d",
+   "writers": [
+    "V",
+    "W",
+    "X",
+    "U"
+   ],
+   "readers": [
+    "H"
+   ],
+   "note": "never seeded from stored progress; starts at 0 per view-model instance",
+   "evidenced": true
+  },
+  {
+   "target": "viewmodel field C (boxed Boolean)",
+   "writers": [
+    "V/W false",
+    "X true"
+   ],
+   "readers": [
+    "V",
+    "U"
+   ],
+   "evidenced": true
+  },
+  {
+   "target": "lesson_progress.in_queue",
+   "writers": [
+    "createLessonProgress (1)",
+    "addOrUpdateLessonProgressInQueue (copy with true)",
+    "moveLessonProgressFromQueue (0)"
+   ],
+   "evidenced": true
+  },
+  {
+   "target": "Row deletion",
+   "writers": [
+    "postUnsyncedLessonProgress (DELETE ... lesson_id IN (...))",
+    "clearLessonProgressQueue (DELETE WHERE in_queue=1)"
+   ],
+   "evidenced": true
+  }
+ ],
+ "readers": [
+  {
+   "consumer": "LessonProgressQueue.updateCorrectAnswersCount",
+   "reads": "isSolvedCorrectly()",
+   "effect": "AnswersInChapter flow"
+  },
+  {
+   "consumer": "LessonProgressQueue.getCorrectLessonProgressCount",
+   "reads": "isSolvedCorrectly()",
+   "effect": "chapter exit type"
+  },
+  {
+   "consumer": "LessonProgressQueue.getCorrectLessonsFirstTryCount",
+   "reads": "isSolvedCorrectly(), getAttempts()",
+   "effect": "first-try statistics"
+  },
+  {
+   "consumer": "LessonProgressRepository.toProgressList",
+   "reads": "all entity fields",
+   "effect": "POST body"
+  },
+  {
+   "consumer": "CompletionRepository.attach*",
+   "reads": "tutorial_completions, chapter_completions",
+   "effect": "Track/Section/Tutorial/Chapter isCompleted flags"
+  },
+  {
+   "consumer": "MainViewModel",
+   "reads": "queue methods",
+   "effect": "startup sync"
+  }
+ ],
+ "unresolved": [
+  "no reader of a stored attempts/tries value into the lesson view-model was found: counters are session-scoped"
+ ]
+}

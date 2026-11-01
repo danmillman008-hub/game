@@ -277,6 +277,31 @@ The original Stage-3 report is preserved unchanged in `STAGE_3_REPORT.md`.
 (`lessonBundle`, `browserOutputDeferred`, `interactiveLessonContent`, `codePlaygroundController`, `fillTheGap`,
 `selection`, `spell`, `lessonNavigator`, …). Documented in `04_INTERACTION_ENGINE/PROPERTY_NAME_RECOVERY.md`.
 
+## C-15 — `base.c.e0` is `storeLessonProgressInMemory`, not `initialiseViewModel`
+
+**Original claim (Stage 1 mapping, repeated in Stage 3):** `initialiseViewModel → c.e0` (confidence HIGH, from the
+lambda-family recovery).
+
+**What the code shows (Stage 5):** `e0` instantiates `InteractiveLessonBaseViewModel$storeLessonProgressInMemory$1`,
+whose body launches `$2` and calls `LessonProgressQueue.storeLessonProgress(...)`. The method therefore **stores**
+progress; it does not initialise the view-model. `K` remains `initialiseCodeBlocks` (Stage-4 note), so the pair that
+Stage 3 left ambiguous is resolved: `K = initialiseCodeBlocks`, `e0 = storeLessonProgressInMemory`.
+
+**Effect.** Open question **A18 is closed**. `initialiseViewModel` is now *unidentified* rather than assigned; the
+Stage-1 mapping table keeps its original row and this correction is the authoritative reading.
+
+## C-16 — the persisted progress key is `(lesson_id, tutorial_id)`
+
+**Original claim (Stages 3 and 4):** "Progress keys on `(trackId, lessonId)`".
+
+**What the schema shows:** `CREATE TABLE lesson_progress (… PRIMARY KEY(lesson_id, tutorial_id))`, the INSERT column
+list, and the UPDATE clause `WHERE lesson_id = ? AND tutorial_id = ?`. `track_id` is a payload column. The five-part
+`LessonIdentifier` (which does contain `trackId`) is navigation-only and is never persisted; `chapterId` has no column
+at all.
+
+**Effect.** Stage 5's key/versioning analysis supersedes the earlier phrasing; the earlier documents are preserved
+unchanged.
+
 ## Summary of corrections carried into mission-8
 
 | ID | Kind | Effect on mission-8 |
@@ -294,3 +319,5 @@ The original Stage-3 report is preserved unchanged in `STAGE_3_REPORT.md`.
 | R-11 | self-correction | central auth interceptor `fh.a` exists; `ri.*` family fully mapped |
 | C-13 | substantive | locale content **is** present as assets; only the module code is stubbed; Q-05 restated |
 | C-14 | self-correction | two "analytics events" are Kotlin property names; new naming channel documented |
+| C-15 | self-correction | `e0` = storeLessonProgressInMemory; A18 closed; initialiseViewModel unidentified |
+| C-16 | correction | progress key is `(lesson_id, tutorial_id)`, not `(trackId, lessonId)` |

@@ -19,8 +19,8 @@
 | 2 | `02_CONTENT_DELIVERY/` | **complete** | provider→loader→repository traced; 10,317 asset docs; 5-part identity vs 2-part progress; C-13 |
 | 3 | `03_LESSON_ENGINE/` | **substantially complete** | 7 parsers mapped to their tag vocabularies; 6 `LessonModule` variants; grading + analytics methods recovered |
 | 4 | `04_INTERACTION_ENGINE/` | **substantially complete** | normaliser decrypted; three-way validated-input verdict; nine interaction types mapped; grading is client-side; C-14 |
-| 5 | `05_LEARNER_MODEL/` | next | — |
-| 6 | `06_PERSISTENCE/` | not started | — |
+| 5 | `05_LEARNER_MODEL/` | **substantially complete** | tries=flag, attempts=session, key `(lesson_id,tutorial_id)`, in_queue outbox, completion is server-derived; C-15/C-16 |
+| 6 | `06_PERSISTENCE/` | next | — |
 | 7 | `07_NETWORKING/` | not started | — |
 | 8 | `08_AUTHENTICATION/` | substantially complete (Stage D) | token provider, interceptor, anonymous-first link |
 | rest | 9–24 | not started | — |

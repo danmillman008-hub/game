@@ -1,0 +1,46 @@
+{
+ "generated": "2026-11-01",
+ "subject": "completion as derived from the backend response",
+ "states": [
+  "UNKNOWN",
+  "FETCHED",
+  "CACHED_IN_ROOM",
+  "ATTACHED_TO_TRACK"
+ ],
+ "transitions": [
+  {
+   "from": "UNKNOWN",
+   "to": "FETCHED",
+   "trigger": "CompletionApi.getTrackCompletion(trackId, trackVersion)",
+   "evidenced": true,
+   "note": "client initiates; the rules that decide completion are server-side"
+  },
+  {
+   "from": "FETCHED",
+   "to": "CACHED_IN_ROOM",
+   "trigger": "insert TutorialCompletion + ChapterCompletion rows with now=Instant()",
+   "evidenced": true
+  },
+  {
+   "from": "CACHED_IN_ROOM",
+   "to": "ATTACHED_TO_TRACK",
+   "trigger": "attachTutorialAndChapterCompletionToTrack / attachTutorialCompletionToTrack",
+   "evidenced": true
+  },
+  {
+   "from": "ATTACHED_TO_TRACK",
+   "to": "UNKNOWN",
+   "trigger": "process restart (Room rows persist; lastInteracted pointer in SharedPreferences)",
+   "evidenced": true
+  }
+ ],
+ "objects": {
+  "tutorial_completions": "(tutorial_id, track_id) PK, is_completed, updated_at",
+  "chapter_completions": "(chapter_id, track_id) PK, created_at, tutorial_id",
+  "shared_prefs": "last_interacted_tutorial_id_<trackId> (long)"
+ },
+ "notes": [
+  "no client-side code computes completion; the client stores what the server reports",
+  "chapter completion is a separate list (completedChapters) inside each tutorial entry"
+ ]
+}

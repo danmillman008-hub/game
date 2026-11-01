@@ -1,0 +1,125 @@
+{
+ "generated": "2026-11-01",
+ "phase": 5,
+ "entity": "com.getmimo.data.model.room.LessonProgress",
+ "table": "lesson_progress",
+ "primary_key": [
+  "lesson_id",
+  "tutorial_id"
+ ],
+ "constructor_order": [
+  "lessonId",
+  "completedAt",
+  "startedAt",
+  "tries",
+  "tutorialId",
+  "tutorialVersion",
+  "trackId",
+  "publishSetVersion",
+  "attempts",
+  "isPracticeProgress",
+  "inQueue"
+ ],
+ "evidence": "constructor iput sequence in DEX + CREATE TABLE in leg/e + INSERT/UPDATE column lists in cg/b and cg/c",
+ "fields": [
+  {
+   "name": "lessonId",
+   "type": "J (long)",
+   "role": "PK part 1",
+   "initial_value": "bundle.a",
+   "persistence": "lesson_progress.lesson_id",
+   "meaning": "lesson identity",
+   "confidence": "VERIFIED_STATIC"
+  },
+  {
+   "name": "tutorialId",
+   "type": "J (long)",
+   "role": "PK part 2",
+   "initial_value": "bundle.e",
+   "persistence": "lesson_progress.tutorial_id",
+   "meaning": "content grouping for sync",
+   "confidence": "VERIFIED_STATIC"
+  },
+  {
+   "name": "tutorialVersion",
+   "type": "I (int)",
+   "role": "payload",
+   "initial_value": "bundle.v",
+   "persistence": "lesson_progress.tutorial_version",
+   "meaning": "content version of the tutorial",
+   "confidence": "VERIFIED_STATIC"
+  },
+  {
+   "name": "trackId",
+   "type": "J (long)",
+   "role": "payload (not key)",
+   "initial_value": "bundle.f",
+   "persistence": "lesson_progress.track_id",
+   "meaning": "track attribution",
+   "confidence": "VERIFIED_STATIC"
+  },
+  {
+   "name": "publishSetVersion",
+   "type": "J (long)",
+   "role": "payload",
+   "initial_value": "tracksRepository.getPublishSetVersion() (reads tracks.json: 753)",
+   "persistence": "lesson_progress.publish_set_version",
+   "meaning": "content baseline",
+   "confidence": "VERIFIED_STATIC"
+  },
+  {
+   "name": "tries",
+   "type": "I (int)",
+   "role": "solved flag 0/1",
+   "initial_value": "H(): V passes !(C==TRUE); X passes 0; U passes (C==TRUE)",
+   "persistence": "lesson_progress.tries",
+   "meaning": "solved-correctly indicator; isSolvedCorrectly() = tries>=1",
+   "confidence": "VERIFIED_STATIC"
+  },
+  {
+   "name": "attempts",
+   "type": "I (int)",
+   "role": "session counter",
+   "initial_value": "H(): V/X/U pass field d after +1",
+   "persistence": "lesson_progress.attempts",
+   "meaning": "count of submissions in this session",
+   "confidence": "VERIFIED_STATIC"
+  },
+  {
+   "name": "startedAt",
+   "type": "joda Instant",
+   "role": "opening time",
+   "initial_value": "field I set when the lesson opened",
+   "persistence": "lesson_progress.started_at",
+   "meaning": "duration source",
+   "confidence": "VERIFIED_STATIC"
+  },
+  {
+   "name": "completedAt",
+   "type": "joda Instant",
+   "role": "creation time",
+   "initial_value": "new Instant() inside createLessonProgress",
+   "persistence": "lesson_progress.completed_at",
+   "meaning": "ordering/robustness check",
+   "confidence": "VERIFIED_STATIC"
+  },
+  {
+   "name": "isPracticeProgress",
+   "type": "Z (boolean)",
+   "role": "practice marker",
+   "initial_value": "bundle.B",
+   "persistence": "lesson_progress.is_practice_progress",
+   "meaning": "distinguishes practice runs",
+   "confidence": "VERIFIED_STATIC"
+  },
+  {
+   "name": "inQueue",
+   "type": "Z (boolean)",
+   "role": "1 at creation",
+   "initial_value": "literal 1 in createLessonProgress",
+   "persistence": "lesson_progress.in_queue",
+   "meaning": "local pending flag for the sync queue",
+   "confidence": "VERIFIED_STATIC"
+  }
+ ]
+}

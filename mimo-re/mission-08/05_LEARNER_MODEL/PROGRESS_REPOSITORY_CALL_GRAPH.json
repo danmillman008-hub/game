@@ -1,0 +1,167 @@
+{
+ "generated": "2026-11-01",
+ "subject": "LessonProgressRepository and LessonProgressQueue",
+ "nodes": [
+  {
+   "id": "InteractiveLessonBaseViewModel.V|W|X|U",
+   "kind": "viewmodel",
+   "evidenced": true
+  },
+  {
+   "id": "base.c.H",
+   "kind": "viewmodel-method",
+   "label": "createProgress via repository"
+  },
+  {
+   "id": "LessonProgressRepository.createLessonProgress",
+   "kind": "repository",
+   "api": "none",
+   "db": "constructs entity only"
+  },
+  {
+   "id": "base.c.e0",
+   "kind": "viewmodel-method",
+   "label": "storeLessonProgressInMemory"
+  },
+  {
+   "id": "LessonProgressQueue.storeLessonProgress",
+   "kind": "queue",
+   "params": "(LessonProgress, boolean, boolean)",
+   "evidenced": true
+  },
+  {
+   "id": "LessonProgressRepository.addOrUpdateLessonProgressInQueue",
+   "kind": "repository",
+   "db": "INSERT/UPSERT into lesson_progress with inQueue=true"
+  },
+  {
+   "id": "LessonProgressQueue.updateCorrectAnswersCount",
+   "kind": "queue",
+   "db": "SELECT * WHERE in_queue = 1",
+   "emits": "AnswersInChapter(correct,total)"
+  },
+  {
+   "id": "LessonProgressQueue.updateLessonStreakDetector",
+   "kind": "queue",
+   "call": "gg.e.a(solved, flag)"
+  },
+  {
+   "id": "LessonProgressQueue.storeAndPostAllLessonProgress",
+   "kind": "queue"
+  },
+  {
+   "id": "LessonProgressRepository.moveLessonProgressFromQueue",
+   "kind": "repository",
+   "db": "UPDATE lesson_progress SET in_queue = 0 WHERE in_queue = 1"
+  },
+  {
+   "id": "LessonProgressRepository.postUnsyncedLessonProgress",
+   "kind": "repository",
+   "db": "SELECT * FROM lesson_progress",
+   "api": "POST /v1/tutorials/{tutorialId}/progress"
+  },
+  {
+   "id": "LessonProgressRepository.clearLessonProgressQueue",
+   "kind": "repository",
+   "db": "DELETE FROM lesson_progress WHERE in_queue = 1"
+  },
+  {
+   "id": "LessonProgressRepository.getAllLessonProgressInQueue",
+   "kind": "repository",
+   "db": "SELECT * WHERE in_queue = 1"
+  },
+  {
+   "id": "MainViewModel.fetchLessonProgressAndPostUnsyncedToBackend",
+   "kind": "viewmodel",
+   "evidenced": true
+  },
+  {
+   "id": "ChapterViewModel",
+   "kind": "viewmodel",
+   "calls": "clear, getCorrectLessonProgressCount"
+  },
+  {
+   "id": "ChapterFinishedViewModel",
+   "kind": "viewmodel",
+   "calls": "getLessonProgress, storeAndPostAllLessonProgress"
+  },
+  {
+   "id": "GetChapterEndSuccessState",
+   "kind": "interactor",
+   "calls": "storeAndPostAllLessonProgress, CompletionRepository.fetchTrackCompletion(trackId)"
+  },
+  {
+   "id": "ExecutableLessonViewModel",
+   "kind": "viewmodel",
+   "calls": "storeLessonProgress"
+  }
+ ],
+ "edges": [
+  {
+   "from": "InteractiveLessonBaseViewModel.V|W|X|U",
+   "to": "base.c.H",
+   "evidenced": true
+  },
+  {
+   "from": "base.c.H",
+   "to": "LessonProgressRepository.createLessonProgress",
+   "evidenced": true
+  },
+  {
+   "from": "base.c.H",
+   "to": "base.c.e0",
+   "evidenced": true,
+   "note": "H builds the entity, e0 stores it"
+  },
+  {
+   "from": "base.c.e0",
+   "to": "LessonProgressQueue.storeLessonProgress",
+   "evidenced": true,
+   "via": "storeLessonProgressInMemory$2"
+  },
+  {
+   "from": "LessonProgressQueue.storeLessonProgress",
+   "to": "LessonProgressRepository.addOrUpdateLessonProgressInQueue",
+   "evidenced": true
+  },
+  {
+   "from": "LessonProgressQueue.storeLessonProgress",
+   "to": "LessonProgressQueue.updateCorrectAnswersCount",
+   "evidenced": true
+  },
+  {
+   "from": "LessonProgressQueue.storeLessonProgress",
+   "to": "LessonProgressQueue.updateLessonStreakDetector",
+   "evidenced": true
+  },
+  {
+   "from": "LessonProgressQueue.storeAndPostAllLessonProgress",
+   "to": "LessonProgressRepository.moveLessonProgressFromQueue",
+   "evidenced": true
+  },
+  {
+   "from": "LessonProgressQueue.storeAndPostAllLessonProgress",
+   "to": "LessonProgressRepository.postUnsyncedLessonProgress",
+   "evidenced": true
+  },
+  {
+   "from": "MainViewModel.fetchLessonProgressAndPostUnsyncedToBackend",
+   "to": "LessonProgressRepository.postUnsyncedLessonProgress",
+   "evidenced": true
+  },
+  {
+   "from": "MainViewModel.fetchLessonProgressAndPostUnsyncedToBackend",
+   "to": "LessonProgressRepository.clearLessonProgressQueue",
+   "evidenced": true
+  },
+  {
+   "from": "MainViewModel.fetchLessonProgressAndPostUnsyncedToBackend",
+   "to": "LessonProgressRepository.fetchTrackCompletionForFavoriteTracks",
+   "evidenced": true
+  }
+ ],
+ "unresolved": [
+  "the exact DAO id\u2192SQL mapping for the 29 generated query lambdas (ids 18-21 are assigned by method-name/SQL correspondence)",
+  "whether the POST body is one request per tutorial or one per lesson list ordering"
+ ]
+}
