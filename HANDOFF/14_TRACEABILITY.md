@@ -58,11 +58,15 @@ If a behaviour has none of these, it is a decision → put it in `mimo/OPEN_QUES
 ## 14.5 Auditing this package in five minutes
 
 ```bash
-python3 HANDOFF/tools/verify_handoff.py        # hashes, refs, counts, doc presence
-python3 -m pytest HANDOFF/tests -q             # vector reproduction
-grep -rn "VERIFIED_RUNTIME" HANDOFF/ | wc -l   # must be 0
-grep -rn "TBD\|TODO\|FIXME" HANDOFF/*.md       # must be empty
+python3 HANDOFF/tools/verify_handoff.py        # expected: 10/10 checks passed
+python3 -m pytest -q HANDOFF/tests             # expected: 54 passed
+grep -rn "VERIFIED_RUNTIME" HANDOFF/*.md       # expected: the definition row in 14 + this audit block, nothing else
+grep -rn "TBD\|TODO\|FIXME" HANDOFF/*.md       # expected: this audit block only
 ```
+
+(The grep lines match themselves and the vocabulary definitions by design — what matters is that no *claim* carries
+the `VERIFIED_RUNTIME` label. The status enum in `data/questions_closure.json` also lists the word; that is a
+vocabulary, not a claim.)
 
 ## 14.6 Immutability note
 
