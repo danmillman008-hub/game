@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mimo-lesson-dsl-ast",
+  "title": "Lesson DSL AST (normalized form of interactiveContent / hardModeContent)",
+  "description": "Produced by tools/lesson_dsl.py. Character offsets refer to `source` (concatenated <text> values).",
+  "$defs": {
+    "visibleIf": { "enum": ["always", "wrong", "correct"] },
+    "range": {
+      "type": "object", "required": ["start", "end"],
+      "properties": { "start": { "type": "integer", "minimum": 0 }, "end": { "type": "integer", "minimum": 1 } },
+      "description": "Half-open character range; end > start; end <= len(source)"
+    },
+    "span": {
+      "oneOf": [
+        { "type": "object", "required": ["t"], "properties": { "t": { "const": "text" }, "v": { "type": "string" } } },
+        { "type": "object", "required": ["t"], "properties": { "t": { "const": "break" } } },
+        { "type": "object", "required": ["t", "spans"], "properties": { "t": { "enum": ["strong", "em"] }, "spans": { "type": "array", "items": { "$ref": "#/$defs/span" } } } },
+        { "type": "object", "required": ["t", "v"], "properties": { "t": { "const": "code" }, "v": { "type": "string" } } }
+      ]
+    },
+    "codeBlock": {
+      "type": "object",
+      "required": ["k", "name", "lang", "source", "gaps", "chips"],
+      "properties": {
+        "k": { "const": "code" },
+        "name": { "type": "string", "description": "file path inside the lesson, e.g. index.html or order_tools/utils.py" },
+        "lang": { "enum": ["html", "javascript", "python", "css", "sql", "jsx", "swift", "typescript", "bash", "none", "text"] },
+        "version": { "const": 2 },
+        "visibleIf": { "$ref": "#/$defs/visibleIf" },
+        "source": { "type": "string" },
+        "gaps": { "type": "array", "items": { "$ref": "#/$defs/range" } },
+        "inputs": { "type": "array", "items": { "$ref": "#/$defs/range" } },
+        "chips": { "type": "array", "items": { "type": "string" }, "description": "correct slices + distractors, shuffled" }
+      }
+    },
+    "selection": {
+      "type": "object",
+      "required": ["k", "multiple", "items"],
+      "properties": {
+        "k": { "const": "selection" },
+        "multiple": { "const": true },
+        "isCode": { "type": "boolean" },
+        "items": {
+          "type": "array", "minItems": 2,
+          "items": {
+            "type": "object", "required": ["value", "correct", "spans"],
+            "properties": { "value": { "type": "integer" }, "correct": { "type": "boolean" }, "spans": { "type": "array", "items": { "$ref": "#/$defs/span" } } }
+          }
+        }
+      }
+    },
+    "webview": {
+      "type": "object", "required": ["k", "html"],
+      "properties": {
+        "k": { "const": "webview" },
+        "version": { "const": 2 },
+        "style": { "const": "embedded" },
+        "interaction": { "enum": ["feedback", "unlock"] },
+        "visibleIf": { "$ref": "#/$defs/visibleIf" },
+        "html": { "type": "string" }
+      }
+    },
+    "database": {
+      "type": "object", "required": ["k", "bootstrapSql", "expected"],
+      "properties": {
+        "k": { "const": "database" },
+        "visibleIf": { "$ref": "#/$defs/visibleIf" },
+        "bootstrapSql": { "type": "string" },
+        "expected": {
+          "type": "array",
+          "items": {
+            "type": "object", "required": ["name"],
+            "properties": {
+              "name": { "type": "string" },
+              "headers": { "type": "array", "items": { "type": "string" } },
+              "rows": { "type": "array", "items": { "type": "array", "items": { "type": "string" } } }
+            }
+          }
+        },
+        "output": { "type": "string" }
+      }
+    },
+    "node": {
+      "oneOf": [
+        { "$ref": "#/$defs/codeBlock" },
+        { "$ref": "#/$defs/selection" },
+        { "$ref": "#/$defs/webview" },
+        { "$ref": "#/$defs/database" },
+        { "type": "object", "required": ["k", "spans"], "properties": { "k": { "const": "paragraph" }, "visibleIf": { "$ref": "#/$defs/visibleIf" }, "spans": { "type": "array", "items": { "$ref": "#/$defs/span" } } } },
+        { "type": "object", "required": ["k", "src"], "properties": { "k": { "const": "image" }, "src": { "type": "string" }, "visibleIf": { "$ref": "#/$defs/visibleIf" } } }
+      ]
+    }
+  },
+  "type": "object",
+  "required": ["lessonId", "nodes"],
+  "properties": {
+    "lessonId": { "type": "integer" },
+    "hardMode": { "type": "boolean" },
+    "nodes": { "type": "array", "items": { "$ref": "#/$defs/node" } }
+  }
+}

@@ -1,0 +1,1027 @@
+{
+ "generated_by": "tools/build_api_catalog.py",
+ "annotation_verb_mapping": {
+  "Lie0/o;": {
+   "verb": "POST",
+   "confidence": "MEDIUM",
+   "votes": {
+    "POST": 14,
+    "DELETE": 4,
+    "GET": 1
+   }
+  },
+  "Lie0/f;": {
+   "verb": "GET",
+   "confidence": "HIGH",
+   "votes": {
+    "GET": 18,
+    "POST": 1,
+    "DELETE": 1,
+    "PUT": 1
+   }
+  },
+  "Lie0/n;": {
+   "verb": "PUT",
+   "confidence": "LOW",
+   "votes": {
+    "PUT": 2,
+    "DELETE": 2,
+    "POST": 1
+   }
+  },
+  "Lie0/b;": {
+   "verb": "DELETE",
+   "confidence": "HIGH",
+   "votes": {
+    "DELETE": 3
+   }
+  },
+  "Lie0/p;": {
+   "verb": "DELETE",
+   "confidence": "HIGH",
+   "votes": {
+    "DELETE": 2
+   }
+  }
+ },
+ "counts": {
+  "endpoint_annotations": 62,
+  "mimo_api_endpoints": 53,
+  "literal_paths": 75,
+  "literal_paths_without_annotation": 21,
+  "third_party_interfaces": 2
+ },
+ "endpoints": [
+  {
+   "path": "/api/sendCustomerIoData",
+   "annotation_class": "Lie0/o;",
+   "owner": "Lhg/b;->a(Lcom/getmimo/data/model/customerio/CustomerIoData; Ld70/b;)",
+   "method_name": "a",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": null,
+   "scope": "method",
+   "http_method": "POST",
+   "verb_confidence": "MEDIUM",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/api/v1/branding",
+   "annotation_class": "Lie0/f;",
+   "owner": "Lio/customer/messaginginapp/inbox/data/InboxService;->fetchBranding(Ld70/b;)",
+   "method_name": "fetchBranding",
+   "verb_from_method_name": "GET",
+   "verb_from_path_shape": "GET",
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/api/v1/logs/message/{messageId}",
+   "annotation_class": "Lie0/o;",
+   "owner": "Lio/customer/messaginginapp/gist/data/listeners/GistQueueService;->logMessageView(Ljava/lang/String; Ljava/lang/String; Ld70/b;)",
+   "method_name": "logMessageView",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "DELETE",
+   "scope": "method",
+   "http_method": "POST",
+   "verb_confidence": "MEDIUM",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "messageId"
+   ]
+  },
+  {
+   "path": "/api/v1/logs/queue/{queueId}",
+   "annotation_class": "Lie0/o;",
+   "owner": "Lio/customer/messaginginapp/gist/data/listeners/GistQueueService;->logUserMessageView(Ljava/lang/String; Ljava/lang/String; Ld70/b;)",
+   "method_name": "logUserMessageView",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "DELETE",
+   "scope": "method",
+   "http_method": "POST",
+   "verb_confidence": "MEDIUM",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "queueId"
+   ]
+  },
+  {
+   "path": "/api/v1/messages/{queueId}",
+   "annotation_class": "Lie0/n;",
+   "owner": "Lio/customer/messaginginapp/gist/data/listeners/GistQueueService;->logInboxMessageOpened(Ljava/lang/String; Ljava/lang/String; Ljava/util/Map; Ld70/b;)",
+   "method_name": "logInboxMessageOpened",
+   "verb_from_method_name": "POST",
+   "verb_from_path_shape": "DELETE",
+   "scope": "method",
+   "http_method": "PUT",
+   "verb_confidence": "LOW",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "queueId"
+   ]
+  },
+  {
+   "path": "/api/v1/templates",
+   "annotation_class": "Lie0/f;",
+   "owner": "Lio/customer/messaginginapp/inbox/data/InboxService;->fetchTemplates(Ld70/b;)",
+   "method_name": "fetchTemplates",
+   "verb_from_method_name": "GET",
+   "verb_from_path_shape": "GET",
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/api/v4/users",
+   "annotation_class": "Lie0/o;",
+   "owner": "Lio/customer/messaginginapp/gist/data/listeners/GistQueueService;->fetchMessagesForUser(Ljava/lang/Object; Ljava/lang/String; Ld70/b;)",
+   "method_name": "fetchMessagesForUser",
+   "verb_from_method_name": "GET",
+   "verb_from_path_shape": null,
+   "scope": "method",
+   "http_method": "POST",
+   "verb_confidence": "MEDIUM",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/click/{linkId}",
+   "annotation_class": "Lie0/o;",
+   "owner": "Lph/b;->a(Ljava/lang/String; Ld70/b;)",
+   "method_name": "a",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "DELETE",
+   "scope": "method",
+   "http_method": "POST",
+   "verb_confidence": "MEDIUM",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "linkId"
+   ]
+  },
+  {
+   "path": "/push/events",
+   "annotation_class": "Lie0/o;",
+   "owner": "Lhg/d;->a(Lcom/getmimo/data/model/analytics/PushNotificationDelivered; Ld70/b;)",
+   "method_name": "a",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": null,
+   "scope": "method",
+   "http_method": "POST",
+   "verb_confidence": "MEDIUM",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/account",
+   "annotation_class": "Lie0/b;",
+   "owner": "Lhg/a;->e(Ljava/lang/String; Ld70/b;)",
+   "method_name": "e",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": null,
+   "scope": "method",
+   "http_method": "DELETE",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/account/email",
+   "annotation_class": "Lie0/n;",
+   "owner": "Lhg/a;->d(Lcom/getmimo/data/model/account/ChangeEmailRequestBody; Ld70/b;)",
+   "method_name": "d",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "PUT",
+   "scope": "method",
+   "http_method": "PUT",
+   "verb_confidence": "LOW",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/aiTutor/conversations/messages/count",
+   "annotation_class": "Lie0/f;",
+   "owner": "Ljg/a;->a(Ld70/b;)",
+   "method_name": "a",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "GET",
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/code",
+   "annotation_class": "Lie0/f;",
+   "owner": "Lmh/c;->c(Ld70/b;)",
+   "method_name": "c",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": null,
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/code",
+   "annotation_class": "Lie0/o;",
+   "owner": "Lmh/c;->d(Lcom/getmimo/data/model/savedcode/SaveCodeRequestBody; Ld70/b;)",
+   "method_name": "d",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": null,
+   "scope": "method",
+   "http_method": "POST",
+   "verb_confidence": "MEDIUM",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/code/runfiles",
+   "annotation_class": "Lie0/o;",
+   "owner": "Lhg/c;->c(Lcom/getmimo/data/model/codeexecution/CodePlaygroundExecutionBody; Ld70/b;)",
+   "method_name": "c",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "POST",
+   "scope": "method",
+   "http_method": "POST",
+   "verb_confidence": "MEDIUM",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/code/{savedCodeId}",
+   "annotation_class": "Lie0/b;",
+   "owner": "Lmh/c;->e(J Ld70/b;)",
+   "method_name": "e",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "DELETE",
+   "scope": "method",
+   "http_method": "DELETE",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "savedCodeId"
+   ]
+  },
+  {
+   "path": "/v1/code/{savedCodeId}",
+   "annotation_class": "Lie0/n;",
+   "owner": "Lmh/c;->a(J Lcom/getmimo/data/model/savedcode/SaveCodeRequestBody; Ld70/b;)",
+   "method_name": "a",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "DELETE",
+   "scope": "method",
+   "http_method": "PUT",
+   "verb_confidence": "LOW",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "savedCodeId"
+   ]
+  },
+  {
+   "path": "/v1/code/{savedCodeId}/remixes",
+   "annotation_class": "Lie0/o;",
+   "owner": "Lmh/c;->b(J Lcom/getmimo/data/model/savedcode/RemixCodeRequestBody; Ld70/b;)",
+   "method_name": "b",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "POST",
+   "scope": "method",
+   "http_method": "POST",
+   "verb_confidence": "MEDIUM",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "savedCodeId"
+   ]
+  },
+  {
+   "path": "/v1/code/{savedCodeId}/runfiles",
+   "annotation_class": "Lie0/o;",
+   "owner": "Lhg/c;->d(J Lcom/getmimo/data/model/codeexecution/CodePlaygroundExecutionBody; Ld70/b;)",
+   "method_name": "d",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "POST",
+   "scope": "method",
+   "http_method": "POST",
+   "verb_confidence": "MEDIUM",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "savedCodeId"
+   ]
+  },
+  {
+   "path": "/v1/invitations/{code}",
+   "annotation_class": "Lie0/o;",
+   "owner": "Lug/a;->d(Ljava/lang/String; Ld70/b;)",
+   "method_name": "d",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": null,
+   "scope": "method",
+   "http_method": "POST",
+   "verb_confidence": "MEDIUM",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "code"
+   ]
+  },
+  {
+   "path": "/v1/leaderboards/friends",
+   "annotation_class": "Lie0/f;",
+   "owner": "Lug/a;->c(Ld70/b;)",
+   "method_name": "c",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "GET",
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/leaderboards/latest",
+   "annotation_class": "Lie0/f;",
+   "owner": "Lch/a;->a(Ld70/b;)",
+   "method_name": "a",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "GET",
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/leaderboards/{leaderboardId}/userrank",
+   "annotation_class": "Lie0/f;",
+   "owner": "Lch/a;->b(J Ld70/b;)",
+   "method_name": "b",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "GET",
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "leaderboardId"
+   ]
+  },
+  {
+   "path": "/v1/package/preview",
+   "annotation_class": "Lie0/f;",
+   "owner": "Leh/a;->a(Ld70/b;)",
+   "method_name": "a",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "GET",
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/practice/statistics",
+   "annotation_class": "Lie0/f;",
+   "owner": "Lhh/a;->a(Ld70/b;)",
+   "method_name": "a",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "GET",
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/preview/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/runFiles",
+   "annotation_class": "Lie0/o;",
+   "owner": "Lhg/c;->a(J J J J J Lcom/getmimo/core/model/lesson/executablefiles/ExecuteFilesBody; Ld70/b;)",
+   "method_name": "a",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "POST",
+   "scope": "method",
+   "http_method": "POST",
+   "verb_confidence": "MEDIUM",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "trackId",
+    "tutorialId",
+    "chapterId",
+    "lessonId"
+   ]
+  },
+  {
+   "path": "/v1/products/user",
+   "annotation_class": "Lie0/f;",
+   "owner": "Lnh/c;->b(Ld70/b;)",
+   "method_name": "b",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": null,
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/products/user",
+   "annotation_class": "Lie0/o;",
+   "owner": "Lnh/c;->a(Ljava/lang/String; Lcom/getmimo/data/model/store/ProductTypeBody; Z Ld70/b;)",
+   "method_name": "a",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": null,
+   "scope": "method",
+   "http_method": "POST",
+   "verb_confidence": "MEDIUM",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/tracks/completion/lastInteracted",
+   "annotation_class": "Lie0/f;",
+   "owner": "Lcom/getmimo/data/source/remote/progress/CompletionApi;->getLastInteractedTrack(Ld70/b;)",
+   "method_name": "getLastInteractedTrack",
+   "verb_from_method_name": "GET",
+   "verb_from_path_shape": null,
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/tracks/{trackId}/certificates",
+   "annotation_class": "Lie0/f;",
+   "owner": "Log/a;->b(J Ljava/lang/String; J Ld70/b;)",
+   "method_name": "b",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "GET",
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "trackId"
+   ]
+  },
+  {
+   "path": "/v1/tracks/{trackId}/completion",
+   "annotation_class": "Lie0/f;",
+   "owner": "Lcom/getmimo/data/source/remote/progress/CompletionApi;->getTrackCompletion(J J Ld70/b;)",
+   "method_name": "getTrackCompletion",
+   "verb_from_method_name": "GET",
+   "verb_from_path_shape": "GET",
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "trackId"
+   ]
+  },
+  {
+   "path": "/v1/tracks/{trackId}/eta",
+   "annotation_class": "Lie0/f;",
+   "owner": "Lcom/getmimo/data/source/remote/progress/TrackEtaApi;->getTrackEta(J J Ld70/b;)",
+   "method_name": "getTrackEta",
+   "verb_from_method_name": "GET",
+   "verb_from_path_shape": "GET",
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "trackId"
+   ]
+  },
+  {
+   "path": "/v1/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/runFiles",
+   "annotation_class": "Lie0/o;",
+   "owner": "Lhg/c;->b(J J J J J Z Ljava/lang/String; Lcom/getmimo/core/model/lesson/executablefiles/ExecuteFilesBody; Ld70/b;)",
+   "method_name": "b",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "POST",
+   "scope": "method",
+   "http_method": "POST",
+   "verb_confidence": "MEDIUM",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "trackId",
+    "tutorialId",
+    "chapterId",
+    "lessonId"
+   ]
+  },
+  {
+   "path": "/v1/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/savefiles",
+   "annotation_class": "Lie0/o;",
+   "owner": "Ldh/a;->b(J J J J J Lcom/getmimo/data/model/lesson/SaveLessonFilesBody; Ld70/b;)",
+   "method_name": "b",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": null,
+   "scope": "method",
+   "http_method": "POST",
+   "verb_confidence": "MEDIUM",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "trackId",
+    "tutorialId",
+    "chapterId",
+    "lessonId"
+   ]
+  },
+  {
+   "path": "/v1/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/savedFiles",
+   "annotation_class": "Lie0/f;",
+   "owner": "Ldh/a;->a(J J J J Ld70/b;)",
+   "method_name": "a",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "GET",
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "trackId",
+    "tutorialId",
+    "chapterId"
+   ]
+  },
+  {
+   "path": "/v1/tutorials/drafts/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/render",
+   "annotation_class": "Lie0/f;",
+   "owner": "Lng/a;->a(J J J Ld70/b;)",
+   "method_name": "a",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": null,
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "tutorialId",
+    "chapterId",
+    "lessonId"
+   ]
+  },
+  {
+   "path": "/v1/tutorials/{tutorialId}/lessons/{lessonIdentityId}/report",
+   "annotation_class": "Lie0/o;",
+   "owner": "Lkh/a;->a(J J Lcom/getmimo/core/model/lesson/report/ReportLessonBody; Ld70/b;)",
+   "method_name": "a",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "POST",
+   "scope": "method",
+   "http_method": "POST",
+   "verb_confidence": "MEDIUM",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "tutorialId",
+    "lessonIdentityId"
+   ]
+  },
+  {
+   "path": "/v1/tutorials/{tutorialId}/progress",
+   "annotation_class": "Lie0/o;",
+   "owner": "Lcom/getmimo/data/source/remote/progress/LessonProgressApi;->postProgress(J Lcom/getmimo/data/model/progress/PostProgressRequestBody; Ld70/b;)",
+   "method_name": "postProgress",
+   "verb_from_method_name": "POST",
+   "verb_from_path_shape": "POST",
+   "scope": "method",
+   "http_method": "POST",
+   "verb_confidence": "MEDIUM",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "tutorialId"
+   ]
+  },
+  {
+   "path": "/v1/user/activity",
+   "annotation_class": "Lie0/f;",
+   "owner": "Lsh/h;->a(Ljava/lang/String; Ljava/lang/String; Ld70/b;)",
+   "method_name": "a",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": null,
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/user/coins",
+   "annotation_class": "Lie0/f;",
+   "owner": "Lqg/a;->a(Ld70/b;)",
+   "method_name": "a",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": null,
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/user/deviceTokens",
+   "annotation_class": "Lie0/o;",
+   "owner": "Lhg/a;->c(Lcom/getmimo/data/model/analytics/DeviceToken; Ld70/b;)",
+   "method_name": "c",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "POST",
+   "scope": "method",
+   "http_method": "POST",
+   "verb_confidence": "MEDIUM",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/user/events/subscribe",
+   "annotation_class": "Lie0/f;",
+   "owner": "Lhg/a;->b(Ld70/b;)",
+   "method_name": "b",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "POST",
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/user/favorites/tracks",
+   "annotation_class": "Lie0/f;",
+   "owner": "Lxe/a;->a(Ld70/b;)",
+   "method_name": "a",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": null,
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/user/favorites/tracks/{trackId}",
+   "annotation_class": "Lie0/b;",
+   "owner": "Lxe/a;->c(J Ld70/b;)",
+   "method_name": "c",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "DELETE",
+   "scope": "method",
+   "http_method": "DELETE",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "trackId"
+   ]
+  },
+  {
+   "path": "/v1/user/favorites/tracks/{trackId}",
+   "annotation_class": "Lie0/o;",
+   "owner": "Lxe/a;->b(J Ld70/b;)",
+   "method_name": "b",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "DELETE",
+   "scope": "method",
+   "http_method": "POST",
+   "verb_confidence": "MEDIUM",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "trackId"
+   ]
+  },
+  {
+   "path": "/v1/user/following/{userId}",
+   "annotation_class": "Lie0/b;",
+   "owner": "Lih/a;->a(J Ld70/b;)",
+   "method_name": "a",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "DELETE",
+   "scope": "method",
+   "http_method": "DELETE",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "userId"
+   ]
+  },
+  {
+   "path": "/v1/user/following/{userId}",
+   "annotation_class": "Lie0/p;",
+   "owner": "Lih/a;->f(J Ld70/b;)",
+   "method_name": "f",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "DELETE",
+   "scope": "method",
+   "http_method": "DELETE",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "userId"
+   ]
+  },
+  {
+   "path": "/v1/user/invitations",
+   "annotation_class": "Lie0/f;",
+   "owner": "Lug/a;->a(Ld70/b;)",
+   "method_name": "a",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": null,
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/user/keys",
+   "annotation_class": "Lie0/f;",
+   "owner": "Lbh/a;->b(Ljava/lang/String; Ld70/b;)",
+   "method_name": "b",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": null,
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/user/keys/consume",
+   "annotation_class": "Lie0/o;",
+   "owner": "Lbh/a;->a(Ld70/b;)",
+   "method_name": "a",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "POST",
+   "scope": "method",
+   "http_method": "POST",
+   "verb_confidence": "MEDIUM",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/user/rewards/next",
+   "annotation_class": "Lie0/f;",
+   "owner": "Llh/a;->b(Ld70/b;)",
+   "method_name": "b",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "GET",
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/user/rewards/{rewardId}/confirm",
+   "annotation_class": "Lie0/o;",
+   "owner": "Llh/a;->a(J Ld70/b;)",
+   "method_name": "a",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "POST",
+   "scope": "method",
+   "http_method": "POST",
+   "verb_confidence": "MEDIUM",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "rewardId"
+   ]
+  },
+  {
+   "path": "/v1/user/settings",
+   "annotation_class": "Lie0/f;",
+   "owner": "Lkf/a;->c(Ld70/b;)",
+   "method_name": "c",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "PUT",
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/user/settings",
+   "annotation_class": "Lie0/n;",
+   "owner": "Lkf/a;->a(Lcom/getmimo/data/settings/model/Settings; Ld70/b;)",
+   "method_name": "a",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "PUT",
+   "scope": "method",
+   "http_method": "PUT",
+   "verb_confidence": "LOW",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/user/settings/avatar",
+   "annotation_class": "Lie0/o;",
+   "owner": "Lkf/a;->e(Ld70/b;)",
+   "method_name": "e",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "POST",
+   "scope": "method",
+   "http_method": "POST",
+   "verb_confidence": "MEDIUM",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/user/settings/avatar/{uploadId}",
+   "annotation_class": "Lie0/p;",
+   "owner": "Lkf/a;->d(Ljava/lang/String; Lcom/getmimo/data/settings/model/ConfirmAvatarUploadBody; Ld70/b;)",
+   "method_name": "d",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "DELETE",
+   "scope": "method",
+   "http_method": "DELETE",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "uploadId"
+   ]
+  },
+  {
+   "path": "/v1/user/visits",
+   "annotation_class": "Lie0/o;",
+   "owner": "Lhg/a;->a(Lcom/getmimo/data/model/AppName; Ld70/b;)",
+   "method_name": "a",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "POST",
+   "scope": "method",
+   "http_method": "POST",
+   "verb_confidence": "MEDIUM",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  },
+  {
+   "path": "/v1/users/{userId}/code",
+   "annotation_class": "Lie0/f;",
+   "owner": "Lih/a;->b(J Ld70/b;)",
+   "method_name": "b",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": null,
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "userId"
+   ]
+  },
+  {
+   "path": "/v1/users/{userId}/code/{savedCodeId}",
+   "annotation_class": "Lie0/f;",
+   "owner": "Lih/a;->c(J J Ld70/b;)",
+   "method_name": "c",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "DELETE",
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "userId",
+    "savedCodeId"
+   ]
+  },
+  {
+   "path": "/v1/users/{userId}/profile",
+   "annotation_class": "Lie0/f;",
+   "owner": "Lih/a;->d(J Ld70/b;)",
+   "method_name": "d",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": null,
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "userId"
+   ]
+  },
+  {
+   "path": "/v1/users/{userId}/report",
+   "annotation_class": "Lie0/o;",
+   "owner": "Lih/a;->e(J Ld70/b;)",
+   "method_name": "e",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": "POST",
+   "scope": "method",
+   "http_method": "POST",
+   "verb_confidence": "MEDIUM",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": [
+    "userId"
+   ]
+  },
+  {
+   "path": "/v2/client-config",
+   "annotation_class": "Lie0/f;",
+   "owner": "Llg/a;->a(Ld70/b;)",
+   "method_name": "a",
+   "verb_from_method_name": null,
+   "verb_from_path_shape": null,
+   "scope": "method",
+   "http_method": "GET",
+   "verb_confidence": "HIGH",
+   "evidence_class": "VERIFIED_STATIC",
+   "verb_status": "VERIFIED_STATIC_BY_ANNOTATION_MAPPING",
+   "path_params": []
+  }
+ ],
+ "unannotated_literals": [
+  "/auth/login",
+  "/auth/revoke",
+  "/auth/token",
+  "/authTokens:generate",
+  "/me/",
+  "/measurement_consent",
+  "/tracks",
+  "/tracks.json",
+  "/v1/aiTutor/conversations",
+  "/v1/aiTutor/conversations/",
+  "/v1/customercenter/support/create-ticket",
+  "/v1/diagnostics",
+  "/v1/events",
+  "/v1/health/connectivity",
+  "/v1/offerings",
+  "/v1/product_entitlement_mapping",
+  "/v1/receipts",
+  "/v1/subscribers/identify",
+  "/v1/subscribers/redeem_purchase",
+  "/v1/tracks/",
+  "/v2/purchase"
+ ],
+ "notes": [
+  "PATH = VERIFIED_STATIC (annotation value dereferenced from DEX).",
+  "HTTP METHOD = VERIFIED_STATIC *relative to the annotation-class mapping*: the mapping itself is derived by cross-tabulation of method-name and path-shape evidence and must be read together with its confidence.",
+  "Request/response bodies remain UNKNOWN unless a data contract exists (evidence/data-contracts.json)."
+ ]
+}

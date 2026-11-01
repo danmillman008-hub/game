@@ -1,0 +1,20 @@
+erDiagram
+  PUBLISH_SET ||--o{ TRACK : "publishSetVersion"
+  TRACK ||--o{ SECTION : "sections[]"
+  SECTION ||--o{ TUTORIAL : "tutorialIds[]"
+  TUTORIAL ||--o{ CHAPTER : "chapters[]"
+  CHAPTER ||--o{ LESSON : "lessons[]"
+  LESSON ||--o| INTERACTIVE_DOC : "interactiveContent"
+  LESSON ||--o| EXECUTABLE_BODY : "executableContent"
+  LESSON ||--o| HARD_VARIANT : "hardModeContent"
+  INTERACTIVE_DOC ||--o{ MODULE : "p/code/selection/webview/database"
+  EXECUTABLE_BODY ||--o{ FILE : "files[]"
+  TRACK ||--o{ CONTENT_EXPERIMENT : "originalTrackId / variantTrackId"
+  PUBLISH_SET { int publishSetVersion }
+  TRACK { int id int version string onboardingCategory }
+  SECTION { string name int startIndex int endIndex }
+  TUTORIAL { int id int version string type string codeLanguage }
+  CHAPTER { int id string type }
+  LESSON { int id string contentType }
+  FILE { string name string content string solvedContent }
+  CONTENT_EXPERIMENT { int originalTrackId int variantTrackId int visibilityPercentage }

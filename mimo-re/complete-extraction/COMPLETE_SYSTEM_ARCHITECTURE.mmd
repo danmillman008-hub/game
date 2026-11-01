@@ -1,0 +1,50 @@
+%% Mimo 9.35 — کامل معماری بازسازی‌شده (evidence-based)
+graph TB
+  subgraph Client["Android client (com.getmimo 9.35)"]
+    UI["UI layer<br/>809 layouts + Compose (AiTutor/CodingKeyboard/Glance)"]
+    NAV["Navigation<br/>61 activities, 1 nav graph"]
+    MVI["MVI/Orbit + interactors<br/>ChapterViewModel, Leaderboard"]
+    DSL["Lesson DSL parser + renderer<br/>27 tags, char offsets"]
+    GRADE["Local grading<br/>fillTheGap / validatedInput / selection / database"]
+    ROOM[("Room: lesson_progress / chapter_completions / tutorial_completions<br/>outbox in_queue")]
+    DS[("DataStore settings")]
+    CONTENT[("assets/lessons-<lang>/tracks/*.json<br/>10 langs, 10,304 files, publishSetVersion 753")]
+    AI["AI tutor<br/>SystemMessage + UserMessage builders"]
+    ANALYTICS["Analytics facade<br/>305 property classes → Segment / Mixpanel / Adjust / Customer.io"]
+    BILLING["RevenueCat 2436 classes + Play Billing"]
+  end
+  subgraph Net["HTTP (retrofit obfuscated: Lie0/f=GET, Lie0/o=POST, Lie0/b/p=DELETE, Lie0/n=?)"]
+    API[62 annotated paths / 53 first-party]
+  end
+  subgraph Server["Mimo backend (not in APK)"]
+    PROG["/v1/tutorials/{id}/progress"]
+    TRACKS["/v1/tracks/{id}/{completion,eta}"]
+    CODE["/v1/code/runfiles (grading?)"]
+    USER["/v1/user/{coins,keys,settings,visits,...}"]
+    LEAD["/v1/leaderboards/{latest,friends,userrank}"]
+    AIS["/v1/aiTutor/conversations"]
+    CFG["/v2/client-config"]
+    MASTERY["smart practice + mastery (UNKNOWN)"]
+  end
+  subgraph Third["Third-party"]
+    RC["RevenueCat"]
+    FCM["Firebase Auth/Messaging/RemoteConfig"]
+    CIO["Customer.io"]
+    ADJ["Adjust"]
+  end
+  UI --> NAV --> MVI --> DSL --> GRADE
+  GRADE --> ROOM
+  MVI --> AI
+  MVI --> ANALYTICS
+  DSL --> CONTENT
+  ROOM -->|outbox flush| PROG
+  MVI --> TRACKS
+  GRADE -->|executable| CODE
+  AI --> AIS
+  BILLING --> RC
+  ANALYTICS --> ADJ
+  ANALYTICS --> CIO
+  FCM --> API
+  CFG --> MVI
+  PROG --> MASTERY --> LEAD
+  MASTERY -.->|feeds practice| MVI

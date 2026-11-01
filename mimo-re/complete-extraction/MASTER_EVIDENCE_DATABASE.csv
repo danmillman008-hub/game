@@ -1,0 +1,74 @@
+evidence_id,area,claim_fa,verification_status,confidence,evidence_path,artifact,method
+MIMO-EV-000001,baseline,"هش SHA-256 بستهٔ بازسازی‌شده 48ce1740…f7c7a و اندازهٔ آن 142,353,499 بایت است",VERIFIED_STATIC,HIGH,00_BASELINE/APK_HASHES.json,sha256sum + بازسازی z01/z02/zip,hash
+MIMO-EV-000002,baseline,Package=com.getmimo، versionName=9.35، versionCode=1792759685، minSdk=28، targetSdk=36,VERIFIED_STATIC,HIGH,00_BASELINE/APK_FACTS.json,androguard APK(),static-parse
+MIMO-EV-000003,baseline,اکتیویتی راه‌انداز یک activity-alias به نام com.getmimo.ui.SplashActivity_default است,VERIFIED_STATIC,HIGH,00_BASELINE/APK_FACTS.json,androguard manifest,static-parse
+MIMO-EV-000004,baseline,۲۴ مجوز درخواست شده، شامل CAMERA، RECORD_AUDIO، WRITE_EXTERNAL_STORAGE، USE_BIOMETRIC,VERIFIED_STATIC,HIGH,00_BASELINE/BASELINE_INVENTORY.md,manifest parse,static-parse
+MIMO-EV-000005,baseline,"۱۲ فایل DEX و ۱۰,۵۶۴ فایل assets و ۱۴,۳۹۸ ورودی ZIP وجود دارد",VERIFIED_STATIC,HIGH,00_BASELINE/APK_CONTENT_TREE.json,zipfile walk,static-parse
+MIMO-EV-000006,baseline,۶ کتابخانهٔ native برای دو ABI؛ libsigner.so و libyrf.so تحلیل نمادین نشدند,PARTIALLY_VERIFIED,MEDIUM,01_STATIC_CODE/NATIVE_CODE_ANALYSIS.md,zip listing,static-parse
+MIMO-EV-000007,environment,JDK17 از طریق jdk4py در PyPI نصب شد؛ JADX از GitHub Releases مسدود بود,VERIFIED_STATIC,HIGH,00_BASELINE/ENVIRONMENT_REPORT.md,اجرای واقعی دستورها,runtime-env
+MIMO-EV-000008,environment,هیچ emulator/adb موجود نیست، بنابراین همهٔ آزمون‌های زمان‌اجرا NOT_TESTED هستند,VERIFIED_STATIC,HIGH,15_RUNTIME_TESTING/MISSING_DEPENDENCIES.md,command -v,runtime-env
+MIMO-EV-000009,static,"۲۹,۴۵۴ کلاس در ۱۲ DEX وجود دارد که ۳,۱۳۳ کلاس آن از com.getmimo است",VERIFIED_STATIC,HIGH,01_STATIC_CODE/STATIC_SUMMARY.json,CLASS_INDEX,static-parse
+MIMO-EV-000010,static,"۱۴,۶۰۸ کلاس مبهم‌شده نگاشت شد (نقش پیشنهادی + اطمینان)",PARTIALLY_VERIFIED,MEDIUM,01_STATIC_CODE/OBFUSCATION_MAP.csv.gz,اجرای build_static_artifacts.py,static-parse
+MIMO-EV-000011,static,"۱۹۹,۸۲۳ یال گراف فراخوانی سطح کلاس استخراج شد که ۶,۱۰۸ یال app→app است",VERIFIED_STATIC,HIGH,01_STATIC_CODE/CALL_GRAPH/edges.csv.gz,پارس invoke-*,static-parse
+MIMO-EV-000012,static,"۲۹,۷۴۳ نمونه annotation از ۳۶ نوع متمایز وجود دارد",VERIFIED_STATIC,HIGH,01_STATIC_CODE/annotations.json.gz,extract_annotations.py,static-parse
+MIMO-EV-000013,static,کتابخانه‌های اصلی: Firebase 5718، RevenueCat 2436، Rive 983، Compose 786، Customer.io 351، Adjust 315، Segment 137,VERIFIED_STATIC,HIGH,01_STATIC_CODE/DEPENDENCY_INVENTORY.csv,شمارش namespace,static-parse
+MIMO-EV-000014,resources,"۳,۱۷۷ فایل res؛ ۸۰۹ layout پایه + ۳۱۹ layout-v33 + ۱۵۰ layout-v31",VERIFIED_STATIC,HIGH,02_ANDROID_RESOURCES/RESOURCE_CENSUS.csv,zip walk,static-parse
+MIMO-EV-000015,resources,UI عمدتاً XML/View است؛ Compose فقط در مربی، کیبورد کدنویسی و ویجت Glance,PARTIALLY_VERIFIED,MEDIUM,02_ANDROID_RESOURCES/RESOURCE_CENSUS.md,نام کلاس‌ها + layout,static-parse
+MIMO-EV-000016,resources,۵۹ فایل .riv برای انیمیشن و ۶۹ فایل مرتبط با protobuf در assets وجود دارد,VERIFIED_STATIC,HIGH,02_ANDROID_RESOURCES/RESOURCE_CENSUS.md,zip walk,static-parse
+MIMO-EV-000017,ui,۱۹۲ سطح UI فهرست شد (۳۶ activity برنامه، ۲۲ fragment، ۲۲ modal، ۸۷ bottom sheet),PARTIALLY_VERIFIED,MEDIUM,03_UI_UX/SCREEN_INVENTORY.csv,نام کلاس + رشته,static-parse
+MIMO-EV-000018,ui,۲۴ جفت (سطح، حالت) با شاهد مستقیم رشته‌ای مستند شد؛ حالت‌ها اجرا نشده‌اند,PARTIALLY_VERIFIED,MEDIUM,03_UI_UX/SCREEN_STATE_MATRIX.csv,رشته‌های *_offline_*/empty/loading,static-parse
+MIMO-EV-000019,ui,تنها یک گراف ناوبری اعلانی (nav_onboarding_graph.xml) وجود دارد؛ بقیه imperative است,VERIFIED_STATIC,HIGH,03_UI_UX/NAVIGATION_MAP.md,manifest + res,static-parse
+MIMO-EV-000020,design,۲۳۴ رنگ و ۳۰۰ دایمن برنامه با ۵۹ جفت روشن/تیره استخراج شد,VERIFIED_STATIC,HIGH,03_UI_UX/DESIGN_SYSTEM.md,evidence/design-tokens.json,static-parse
+MIMO-EV-000021,design,نقشهٔ توکن→صفحه بر پایهٔ پیشوند نام توکن ساخته شد,INFERRED,MEDIUM,03_UI_UX/DESIGN_SYSTEM.md,تحلیل نام,inference
+MIMO-EV-000022,content,"۱۹ مسیر، ۲۴۹ بخش، ۱,۰۲۹ آموزش، ۱,۹۴۷ فصل، ۱۸,۲۷۲ درس در بستهٔ انگلیسی",VERIFIED_STATIC,HIGH,04_CONTENT_MODEL/CONTENT_DOMAIN_MODEL.md,پارس lessons-en,static-parse
+MIMO-EV-000023,content,۹ بستهٔ دیگر همان publishSetVersion=753 دارند؛ it/pl/tr/id دو آموزش اضافه دارند,VERIFIED_STATIC,HIGH,04_CONTENT_MODEL/CONTENT_VERSIONING.md,مقایسهٔ tracks.json,static-parse
+MIMO-EV-000024,content,"۱۴,۲۴۸ درس تعاملی و ۴,۰۲۴ درس کدی وجود دارد",VERIFIED_STATIC,HIGH,04_CONTENT_MODEL/CONTENT_DOMAIN_MODEL.md,شمارش contentType,static-parse
+MIMO-EV-000025,content,"۶,۰۵۸ درس نسخهٔ hardModeContent دارند که ۳,۲۵۵ مورد hardModeSelected=true است",VERIFIED_STATIC,HIGH,05_LESSON_DSL/DSL_VALIDATION_REPORT.json,پارس lesson JSON,static-parse
+MIMO-EV-000026,content,"همهٔ ۱,۹۴۷ فصل از نوع practice/challenge هستند؛ فصل نظری یا آزمون وجود ندارد",VERIFIED_STATIC,HIGH,07_PEDAGOGY/PEDAGOGY_OVERVIEW.md,شمارش chapter.type,static-parse
+MIMO-EV-000027,content,هیچ ارجاع شکسته یا آموزش یتیمی وجود ندارد؛ ۴۲ فایل کدی solvedContent ندارد,VERIFIED_STATIC,HIGH,04_CONTENT_MODEL/CONTENT_DOMAIN_MODEL.md,بازتولید یکپارچگی,static-parse
+MIMO-EV-000028,dsl,"۲۷ تگ و ۲۹,۷۴۳ نمونهٔ تگ در ۲۰,۳۰۶ سند درس مشاهده شد",VERIFIED_STATIC,HIGH,05_LESSON_DSL/DSL_TAG_CENSUS.csv,tools/dsl_census.py,static-parse
+MIMO-EV-000029,dsl,اندیس startIndex/endIndex آفست کاراکتر روی متن بازسازی‌شده است، نه اندیس توکن,VERIFIED_STATIC,HIGH,05_LESSON_DSL/SEMANTICS_CORRECTION.md,"اعتبارسنجی ۲۹,۰۹۳ بازه",static-parse
+MIMO-EV-000030,dsl,"۰ نقض محدوده در ۲۹,۰۹۳ بازهٔ جای خالی و ۱,۷۷۲ بازهٔ validatedInput پس از اصلاح پارسر",VERIFIED_STATIC,HIGH,05_LESSON_DSL/DSL_VALIDATION_REPORT.json,tools/lesson_dsl.py,unit-test
+MIMO-EV-000031,dsl,"یک fillTheGap می‌تواند تا ۱۲ جای خالی داشته باشد؛ ۱۱,۱۵۱ بلوک بدون جای خالی است",VERIFIED_STATIC,HIGH,05_LESSON_DSL/DSL_VALIDATION_REPORT.json,توزیع gaps_per_block,static-parse
+MIMO-EV-000032,dsl,"۱۴,۸۷۰ گزینهٔ انحرافی (correct=false) در استخر چیپ‌ها وجود دارد",VERIFIED_STATIC,HIGH,05_LESSON_DSL/BLOCK_REFERENCE.md,شمارش option,static-parse
+MIMO-EV-000034,dsl,۱۳۷ مورد عیب محتوا: ۸ بلوک کد خالی، ۴ webview بدون content، ۱۲۵ selection با value تکراری,VERIFIED_STATIC,HIGH,05_LESSON_DSL/DSL_VALIDATION_REPORT.json,validate(),static-parse
+MIMO-EV-000035,dsl,دامنهٔ visible-if بسته است: always/wrong/correct,VERIFIED_STATIC,HIGH,05_LESSON_DSL/DSL_VALUE_DOMAINS.csv,شمارش مقادیر,static-parse
+MIMO-EV-000036,dsl,۲۳ آزمون واحد روی پارسر و ۴ فیکسچر تألیفی سبز است,VERIFIED_STATIC,HIGH,16_AUTOMATED_TESTS/test_lesson_dsl.py,pytest,unit-test
+MIMO-EV-000037,execution,ماشین حالت درس (Loading/InProgress/Wrong/Correct/ChapterFinished/Offline) از رشته‌ها و ViewModelها بازسازی شد,INFERRED,MEDIUM,06_EXECUTION_ENGINE/EXECUTION_STATE_MACHINE.md,نام state + رشته,inference
+MIMO-EV-000038,execution,درس کدی هیچ فایل تستی در کلاینت ندارد؛ تصحیح احتمالاً سمت سرور است,INFERRED,MEDIUM,06_EXECUTION_ENGINE/CODE_RUNNER_SPEC.md,کلیدهای executableContent,inference
+MIMO-EV-000039,execution,محتوای swift و bash در بسته وجود دارد که در اندروید قابل اجرا نیست,PARTIALLY_VERIFIED,MEDIUM,06_EXECUTION_ENGINE/CODE_RUNNER_SPEC.md,شمارش codeLanguage,static-parse
+MIMO-EV-000040,pedagogy,Mimo گراف پیش‌نیاز صریح ندارد؛ ترتیب خطی از Section.tutorialIds می‌آید,VERIFIED_STATIC,HIGH,07_PEDAGOGY/CURRICULUM_GRAPH.md,پارس محتوا,static-parse
+MIMO-EV-000041,pedagogy,مدل تسلط/الگوریتم تکرار فاصله‌دار در کلاینت قابل اثبات نیست,UNKNOWN,LOW,07_PEDAGOGY/MASTERY_MODEL.md,جستجوی کلاس/رشته,none
+MIMO-EV-000042,pedagogy,تمرین هوشمند فصل‌های موجود را بازخدمت می‌کند و سؤال جدید نمی‌سازد,INFERRED,MEDIUM,07_PEDAGOGY/PRACTICE_ENGINE.md,مودال‌ها + رشته‌ها,inference
+MIMO-EV-000043,ai,ساختار پرامپت مربی در کلاینت ساخته می‌شود: SystemMessage$Executable/Interactive,VERIFIED_STATIC,HIGH,08_AI_TUTOR/PROMPT_CONTRACT.md,class-strings,static-parse
+MIMO-EV-000044,ai,پرامپت ۹ قاعده دارد (فقط درس، بدون لو دادن پاسخ، هم‌زبان کاربر، عدم افشای دستورها),VERIFIED_STATIC,HIGH,08_AI_TUTOR/PROMPT_CONTRACT.md,تحلیل رشتهٔ پرامپت,static-parse
+MIMO-EV-000045,ai,solvedContent به‌عنوان expectedAnswer به مدل داده می‌شود (ریسک لو رفتن پاسخ),VERIFIED_STATIC,HIGH,08_AI_TUTOR/CONTEXT_ASSEMBLY.md,SystemMessage$Executable,static-parse
+MIMO-EV-000046,ai,سهمیهٔ عددی پیام و مدل/تأمین‌کننده در بسته نیست,UNKNOWN,LOW,08_AI_TUTOR/QUOTA_BILLING.md,جستجو,none
+MIMO-EV-000047,progress,"سه جدول Room: lesson_progress, chapter_completions, tutorial_completions",VERIFIED_STATIC,HIGH,11_DATABASE_PERSISTENCE/ROOM_SCHEMA.md,رشته‌های Database_Impl,static-parse
+MIMO-EV-000048,progress,lesson_progress دو شمارندهٔ جدا دارد: attempts (شروع دوباره) و tries (بررسی درون درس),VERIFIED_STATIC,HIGH,11_DATABASE_PERSISTENCE/ROOM_SCHEMA.md,toString entity,static-parse
+MIMO-EV-000049,progress,الگوی outbox با DELETE FROM lesson_progress WHERE lesson_id IN (...) تأیید شد,VERIFIED_STATIC,HIGH,11_DATABASE_PERSISTENCE/SYNC_CONFLICTS.md,رشتهٔ postUnsyncedLessonProgress,static-parse
+MIMO-EV-000050,progress,هیچ کلاس Room Migration در بسته نیست ⇒ ریسک از دست رفتن دادهٔ ارسال‌نشده,INFERRED,MEDIUM,11_DATABASE_PERSISTENCE/MIGRATIONS.md,جستجوی CLASS_INDEX,inference
+MIMO-EV-000051,progress,کلید (Keys) دروازهٔ درس است با بازتولید روزانه,INFERRED,MEDIUM,09_PROGRESS_GAMIFICATION/KEYS_AND_GATING.md,رشته keys_* + endpoints,inference
+MIMO-EV-000052,progress,"لیگ/لیدربورد سه نما دارد: latest, friends, userrank",VERIFIED_STATIC,HIGH,09_PROGRESS_GAMIFICATION/LEADERBOARD.md,annotation paths,static-parse
+MIMO-EV-000053,api,۶۲ مسیر API از annotationها بازیابی شد که ۵۳ مورد first-party است,VERIFIED_STATIC,HIGH,10_BACKEND_API/API_ENDPOINTS.json,extract_annotations + catalog,static-parse
+MIMO-EV-000054,api,Lie0/f=GET، Lie0/b=DELETE، Lie0/p=DELETE با اطمینان HIGH؛ Lie0/o=POST MEDIUM؛ Lie0/n=LOW,VERIFIED_STATIC,HIGH,10_BACKEND_API/VERB_MAPPING.md,رأی‌گیری نام متد + شکل مسیر,static-parse
+MIMO-EV-000055,api,۲۱ literal مسیر بدون annotation وجود دارد (Firebase Auth، RevenueCat، Customer.io، aiTutor),VERIFIED_STATIC,HIGH,10_BACKEND_API/API_CATALOG.md,data/endpoints.txt diff,static-parse
+MIMO-EV-000056,api,احراز هویت Firebase + Bearer است؛ مسیرهای /auth/* در بسته به‌صورت literal هستند,VERIFIED_STATIC,HIGH,10_BACKEND_API/AUTH_MODEL.md,رشته‌ها,static-parse
+MIMO-EV-000057,api,بدنهٔ پاسخ هیچ endpoint بازیابی نشد (بدون اجرا),NOT_ACCESSIBLE,HIGH,10_BACKEND_API/API_CATALOG.md,—,none
+MIMO-EV-000058,api,۲۶۵ stub اسکیمای DTO از نام کلاس مدل‌ها تولید شد,PARTIALLY_VERIFIED,LOW,10_BACKEND_API/DTO_SCHEMA/,نام کلاس + toString,static-parse
+MIMO-EV-000059,subs,RevenueCat با ۲۴۳۶ کلاس موتور خرید است و دو سطح Pro/MAX وجود دارد,VERIFIED_STATIC,HIGH,12_SUBSCRIPTIONS/PRODUCT_MODEL.md,شمارش + رشته,static-parse
+MIMO-EV-000060,subs,۹ نقطهٔ نمایش پی‌وال در رشته‌ها شناسایی شد,PARTIALLY_VERIFIED,MEDIUM,12_SUBSCRIPTIONS/PRODUCT_MODEL.md,رشته‌های upgrade/paywall,static-parse
+MIMO-EV-000061,subs,تخفیف از Remote Config با شمارش معکوس می‌آید (feature_flag_last_call_discount),VERIFIED_STATIC,HIGH,12_SUBSCRIPTIONS/TRIAL_AND_DISCOUNT.md,رشته‌ها + کلاس,static-parse
+MIMO-EV-000062,subs,شناسهٔ محصول/قیمت در APK نیست (از Play/RevenueCat در زمان اجرا),NOT_ACCESSIBLE,HIGH,12_SUBSCRIPTIONS/REVENUECAT_INTEGRATION.md,جستجو,none
+MIMO-EV-000063,config,دو پرچم boolean نام‌دار وجود دارد: feature_flag_ai_tutor_android و feature_flag_last_call_discount,VERIFIED_STATIC,HIGH,13_REMOTE_CONFIG/REMOTE_CONFIG_INVENTORY.md,رشته‌ها,static-parse
+MIMO-EV-000064,config,پیکربندی اختصاصی /v2/client-config وجود دارد و بدنهٔ آن نامعلوم است,PARTIALLY_VERIFIED,MEDIUM,13_REMOTE_CONFIG/CONFIG_CONTRACTS.md,annotation + نبود DTO,static-parse
+MIMO-EV-000065,config,آزمایش محتوا با ContentExperiment (originalTrackId/variantTrackId/visibilityPercentage),VERIFIED_STATIC,HIGH,13_REMOTE_CONFIG/EXPERIMENTS.md,کلاس‌ها,static-parse
+MIMO-EV-000066,analytics,۳۰۵ مورد گزارش‌شدهٔ قبلی «رویداد» در واقع ۳۰۵ کلاس property است,VERIFIED_STATIC,HIGH,14_ANALYTICS_NOTIFICATIONS/ANALYTICS_ARCHITECTURE.md,شمارش CLASS_INDEX,static-parse
+MIMO-EV-000067,analytics,۲۳۷ شناسهٔ snake_case متمایز در بستهٔ تحلیلی وجود دارد,VERIFIED_STATIC,HIGH,14_ANALYTICS_NOTIFICATIONS/ANALYTICS_ARCHITECTURE.md,class-strings,static-parse
+MIMO-EV-000068,analytics,فهرست کامل نام رویدادها بدون decompiler قابل استخراج نیست,NOT_ACCESSIBLE,HIGH,14_ANALYTICS_NOTIFICATIONS/ANALYTICS_ARCHITECTURE.md,—,none
+MIMO-EV-000069,analytics,Segment (۱۳۷ کلاس) به‌عنوان روتر تحلیلی و Mixpanel (۶۲) به‌عنوان مقصد شناسایی شد,PARTIALLY_VERIFIED,MEDIUM,14_ANALYTICS_NOTIFICATIONS/ANALYTICS_ARCHITECTURE.md,شمارش namespace,static-parse
+MIMO-EV-000070,analytics,ثبت توکن اعلان به /v1/user/deviceTokens و Customer.io با پیام خطای مشخص تأیید شد,VERIFIED_STATIC,HIGH,14_ANALYTICS_NOTIFICATIONS/NOTIFICATIONS.md,رشته‌ها,static-parse
+MIMO-EV-000071,analytics,۹ deep link با wildcard /learn/.* شناسایی شد,VERIFIED_STATIC,HIGH,14_ANALYTICS_NOTIFICATIONS/DEEP_LINKS.csv,پارس manifest,static-parse
+MIMO-EV-000072,runtime,۲۴ سناریوی زمان‌اجرا تعریف و همه NOT_TESTED است,NOT_TESTED,HIGH,15_RUNTIME_TESTING/RUNTIME_COVERAGE.md,—,none
+MIMO-EV-000073,runtime,هیچ اسکرین‌شاتی تولید نشده و هیچ تصویری جعل نشده است,NOT_TESTED,HIGH,03_UI_UX/SCREENSHOTS/README.md,—,none
+MIMO-EV-000074,transfer,۳۲ قابلیت در ماتریس انتقال ارزیابی شد: ۸ قرارداد، ۱۲ الگو، ۷ ساخت نو، ۵ نامناسب,INFERRED,MEDIUM,18_KONKUR_TRANSFER/TRANSFER_MATRIX.md,تحلیل,inference

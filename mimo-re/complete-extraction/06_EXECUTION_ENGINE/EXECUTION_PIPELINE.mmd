@@ -1,0 +1,18 @@
+flowchart LR
+  subgraph Client
+    A[content pack cache] --> B[DSL parser]
+    B --> C[AST + chips/inputs]
+    C --> D[renderer]
+    D --> E{checkpoint}
+    E -->|interactive| F[local grader]
+    E -->|executable| G[submit /v1/code/runfiles]
+    F --> H[feedback visible-if]
+    G --> H
+    H --> I[progress event]
+    I --> J[(Room: lesson_progress)]
+    I --> K[outbox queue]
+  end
+  K -->|sync| L[/v1/tutorials/:t/progress/]
+  J --> M[smart practice feed]
+  L --> N[server mastery]
+  N --> M
