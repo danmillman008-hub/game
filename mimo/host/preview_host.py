@@ -199,11 +199,18 @@ class Handler(BaseHTTPRequestHandler):
         except ValueError:
             return self.send_error(403, "outside the preview root")
         if not file.exists() or not file.is_file():
-            # client-side routes of the shell (e.g. /learn) fall back to the app shell
-            if "." not in Path(rel).name:
-                file = SHELL_DIR / "index.html"
+            name = Path(rel).name
+            if "." in name:
+                # the shell is served at "/", so its relative assets arrive as /app.js and /styles.css.
+                # Fall back to the shell directory before giving up.
+                candidate = (SHELL_DIR / name).resolve()
+                if candidate.is_file():
+                    file = candidate
+                else:
+                    return self.send_error(404, "not found")
             else:
-                return self.send_error(404, "not found")
+                # client-side routes of the shell (e.g. /learn) fall back to the app shell
+                file = SHELL_DIR / "index.html"
         data = file.read_bytes()
         ctype = MIME.get(file.suffix.lower()) or mimetypes.guess_type(str(file))[0] or "application/octet-stream"
         self.send_response(200)

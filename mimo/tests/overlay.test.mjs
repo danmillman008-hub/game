@@ -30,6 +30,16 @@ test('dictionary has no empty or identical-to-source translations', () => {
   }
 });
 
+test('interpolated templates are translated by patterns, not lost', async () => {
+  const dom = new JSDOM(`<!doctype html><html><body><p>3 道错题</p><p>共 5 项</p></body></html>`,
+    { url: 'http://localhost:4000/practice/', runScripts: 'outside-only' });
+  dom.window.fetch = async (url) => ({ ok: true, json: async () => (String(url).includes('dict-epm') ? dict : {}) });
+  dom.window.eval(overlay);
+  await new Promise((r) => setTimeout(r, 900));
+  const paragraphs = [...dom.window.document.querySelectorAll('p')].map((p) => p.textContent);
+  assert.deepEqual(paragraphs, ['3 سؤال اشتباه', 'مجموع 5 مورد']);
+});
+
 test('the overlay translates UI text, keeps code, and sets RTL', async () => {
   const html = `<!doctype html><html lang="zh-CN"><head></head><body>
     <nav><a>首页</a><a>错题本</a></nav>
