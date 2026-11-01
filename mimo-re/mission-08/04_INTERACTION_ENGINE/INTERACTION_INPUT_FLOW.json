@@ -1,0 +1,101 @@
+{
+ "generated": "2026-11-01",
+ "pipeline": [
+  {
+   "step": 1,
+   "stage": "UI_EVENT",
+   "selection": {
+    "site": "cn/d item click",
+    "evidence": "cn/d.b selected flag toggled"
+   },
+   "fill_the_gap": {
+    "site": "option tap"
+   },
+   "spell": {
+    "site": "keyboard input"
+   },
+   "validated_input": {
+    "site": "EditText text change \u2192 qm.d.j0(String)"
+   }
+  },
+  {
+   "step": 2,
+   "stage": "EVENT_HANDLER",
+   "selection": "selection.a.j0(nm.e)",
+   "fill_the_gap": "im.d.E0",
+   "spell": "pm.b.E0",
+   "validated_input": "InteractiveLessonValidatedInputFragment.setupViews"
+  },
+  {
+   "step": 3,
+   "stage": "VIEWMODEL",
+   "selection": "selection.a (extends base.c)",
+   "fill_the_gap": "fillthegap.a",
+   "spell": "spell.a",
+   "validated_input": "validatedinput.b \u2192 qm.d"
+  },
+  {
+   "step": 4,
+   "stage": "INPUT_STATE",
+   "selection": "nm.e(viewItems, textCodeItems, textCodeItemsUnmodified)",
+   "fill_the_gap": "im.a",
+   "spell": "pm.f",
+   "validated_input": "qm.d.S (String)"
+  },
+  {
+   "step": 5,
+   "stage": "VALIDATION",
+   "selection": "count equality then per-item selected==correct (cn/d.c)",
+   "fill_the_gap": "size equality then index-wise text equality",
+   "spell": "same as fill-the-gap",
+   "validated_input": "qm.i.a(user) == qm.i.a(expected); then raw equality"
+  },
+  {
+   "step": 6,
+   "stage": "ANSWER_REPRESENTATION",
+   "selection": "joined selected texts (', ')",
+   "fill_the_gap": "joined selected texts (' ')",
+   "spell": "joined letters ('')",
+   "validated_input": "qm.f(userInput, expectedUserInput)"
+  },
+  {
+   "step": 7,
+   "stage": "GRADING",
+   "selection": "boolean \u2192 base.c.Y",
+   "fill_the_gap": "boolean \u2192 base.c.Y",
+   "spell": "boolean \u2192 base.c.Y",
+   "validated_input": "iq.w \u2192 base.c.Z"
+  },
+  {
+   "step": 8,
+   "stage": "VERDICT",
+   "selection": "onLessonRun",
+   "fill_the_gap": "onLessonRun",
+   "spell": "onLessonRun",
+   "validated_input": "qm.e\u2192V / qm.f\u2192W / qm.g\u2192X"
+  },
+  {
+   "step": 9,
+   "stage": "FEEDBACK",
+   "all": "base.c.V|W|X + d0(showWrongFeedbackBlock) + jm.m/jm.n/jm.o state emission"
+  },
+  {
+   "step": 10,
+   "stage": "STATE_UPDATE",
+   "all": "H()\u2192LessonProgress; e0()\u2192persist; f0()\u2192analytics; sound.a(); lesson-id flow emit"
+  },
+  {
+   "step": 11,
+   "stage": "NEXT_ACTION",
+   "all": "lessonSolvedAndProceedToNextLesson (U) / retry / reveal"
+  }
+ ],
+ "state_types": {
+  "jm.m": "correct feedback (CharSequence,Z,Z)",
+  "jm.n": "partial feedback (String,String,Z,Z)",
+  "jm.o": "wrong feedback (CharSequence,Z\u00d76)",
+  "jm.q": "tabbed code view (List,Z)",
+  "jm.k": "webview (String,WebviewType)"
+ },
+ "evidence": "INTERACTION_METHOD_MAP.csv rows + DEX bodies cited in GRADING_IMPLEMENTATION.md"
+}

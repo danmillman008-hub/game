@@ -1,0 +1,9 @@
+interaction_type,ownership,grading_site,algorithm,verdict_handoff,confidence
+Selection,client,nm.b.E0 (fragment/VM layer),compares selected flags of cn.d against correct flags; count equality first,onLessonRun(Z) → base.c.Y,VERIFIED_STATIC
+MultipleChoice,client,km.c.E0 / km.f.b(List),"km.f.b validates the list; join selected texts with ', '",onLessonRun(Z),VERIFIED_STATIC
+SingleChoice,client,om.d.E0 / km.f.b(List),same predicate as MultipleChoice with a different state holder,onLessonRun(Z),VERIFIED_STATIC
+FillTheGap,client,im.d.E0,selected option texts compared index-wise after size equality,onLessonRun(Z),VERIFIED_STATIC
+Spell,client,pm.b.E0,same as FillTheGap; texts joined with empty separator,onLessonRun(Z),VERIFIED_STATIC
+ValidatedInput,client,InteractiveLessonValidatedInputFragment.setupViews,normalise(qm.i) equality + raw equality → qm.e/qm.f/qm.g,Z(iq.w) → V|W|X,VERIFIED_STATIC
+Reveal / None / InteractiveWebView,client,mm.b.E0,returns a stored boolean from state flow E0,onLessonRun(Z),MEDIUM
+Executable lesson (code run),hybrid,lesson.executable.q + websocket/runner,run result is produced outside the lesson VM; postCodeExecutionResult feeds the sheet,unknown,PARTIAL

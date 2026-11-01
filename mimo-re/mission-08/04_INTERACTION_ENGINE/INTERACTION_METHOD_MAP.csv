@@ -1,0 +1,19 @@
+class,method,descriptor,recovered_name,behaviour
+InteractiveLessonBaseViewModel,V,(Continuation)Object,lessonSolvedCorrectly,"suspend; C:=false; H(d,d)→LessonProgress; e0(progress); jm.m state emit; sound.a(false); f0(isSolvedCorrectly); emit lesson id; I(); 'solutionFeedbackCorrect' name check"
+InteractiveLessonBaseViewModel,W,"(qm/f,Continuation)Object",lessonSolvedCorrectlyWithPartialMatch,"same prologue; builds jm.n(userInput,expected); analytics event validated_input_execution_correct_partial_match with user_input+expected_user_input; emit id; I()"
+InteractiveLessonBaseViewModel,X,(Continuation)Object,lessonSolvedIncorrectly,C:=true; H→progress; e0; c0(); d0()=showWrongFeedbackBlock; sound; no id emit
+InteractiveLessonBaseViewModel,Y,(Z)V,onLessonRun,if flag flow f != true → set true and launch onLessonRun$1 → V or X
+InteractiveLessonBaseViewModel,Z,(Liq/w;)V,onValidatedInputExecuted,"launch; delay; when(qm.e→V, qm.f→b0+W, qm.g→X, else NoWhenBranchMatchedException)"
+InteractiveLessonBaseViewModel,d0,(Continuation)Object,showWrongFeedbackBlock,"jm.o state; analytics solutionFeedbackWrong name check; reads data.local.a.f() (hasSeenHardModeTutorIntro) and writes data.local.a.p(); P() isAiTutorUnlimited; new jm.o(CharSequence,Z×6)"
+InteractiveLessonBaseViewModel,H,(II)LessonProgress,createLessonProgress,"calls LessonProgressRepository.createLessonProgress(bundle, I:Instant, int, int)"
+InteractiveLessonBaseViewModel,e0,"(LessonProgress,Continuation)Object",initialiseViewModel/updateProgress,persists progress through repository
+InteractiveLessonBaseViewModel,I,()V,updateCodeViewActionButton,"CodePlaygroundBundle.FromLesson + ui.codeplayground.g.a(J,I,I,I,…) → CodeViewActionButton.State"
+InteractiveLessonBaseViewModel,c0,()V,resetFeedbackUi,"reads flow n (List) and emits jm.q(list, boolean)"
+InteractiveLessonBaseViewModel,M,()V,resetAllFeedbackStates,"resets jm.m, jm.n, jm.o to default and calls jw.p.b()"
+InteractiveLessonBaseViewModel,h0,"(List,Z)V",publishUiItems,"wraps list in ym.f(int,List,Z) and emits it"
+InteractiveLessonBaseViewModel,f0,(ZZ)V,trackLessonCompleted,"builds analytics event via th.b.a(LessonBundle,LessonType,int,Instant,int,String,boolean)"
+InteractiveLessonBaseViewModel,K,()LessonBundle,getLessonBundle,field D with 'lessonBundle' null check
+qm.i,a,(String)String,normaliseAnswer,"lowercase(Locale.US); keep isLetterOrDigit or one of < > ( ) : { } , ."
+qm.d,E,(LessonContent$Interactive)V,configureValidatedInput,"builds qm.h(correctAnswer,prefix,suffix) by Math.max/min on indices; errors for missing/wrong interaction"
+qm.d,j0,(String)V,onInputChanged,RunButton.State enabled/disabled by text length
+InteractiveLessonValidatedInputFragment,setupViews$2,(Continuation)Object,gradeValidatedInput,"normUser=qm.i.a(user); normExpected=qm.i.a(expected); !normEq→qm.g; else rawEq→qm.e; else qm.f(user,expected)+b0"

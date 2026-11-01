@@ -254,6 +254,29 @@ limitation: non-English **content** is now `VERIFIED_STATIC`, while locale-speci
 
 **Preserved:** the original Q-05 text and the mission-07 evidence remain in the mission-07 directories, untouched.
 
+## C-14 — `solutionFeedbackCorrect` / `solutionFeedbackWrong` are property names, not analytics events
+
+**Original claim (Stage 3 report):** the literals `solutionFeedbackCorrect` and `solutionFeedbackWrong` in
+`InteractiveLessonBaseViewModel` were described as analytics event names.
+
+**What the bodies show (Stage 4):** both literals are arguments to
+`kotlin.jvm.internal.h.j(Object, String)` — Kotlin's `checkNotNullExpressionValue` — emitted at the *field* null
+checks:
+* `this.s` (a boxed `Long`) → `"solutionFeedbackCorrect"`;
+* `this.t` (a `jm.o`) → `"solutionFeedbackWrong"` (twice, in `d0` and `X`).
+
+R8 removed the field names but cannot remove the string literals, so these are the **original property names** of two
+fields. The real analytics event in this area is `validated_input_execution_correct_partial_match`, built through
+`analytics.a.o(be.x3)` with `user_input` and `expected_user_input` string properties.
+
+**Effect.** Stage 3's sentence "three of the strings are analytics event names" is wrong; two of the three are
+property names and only `lesson_reset` / `lesson_interaction_delete` remain candidate event names from that set.
+The original Stage-3 report is preserved unchanged in `STAGE_3_REPORT.md`.
+
+**By-product.** A new, repeatable naming channel: null-check literals leak original property names
+(`lessonBundle`, `browserOutputDeferred`, `interactiveLessonContent`, `codePlaygroundController`, `fillTheGap`,
+`selection`, `spell`, `lessonNavigator`, …). Documented in `04_INTERACTION_ENGINE/PROPERTY_NAME_RECOVERY.md`.
+
 ## Summary of corrections carried into mission-8
 
 | ID | Kind | Effect on mission-8 |
@@ -270,3 +293,4 @@ limitation: non-English **content** is now `VERIFIED_STATIC`, while locale-speci
 | R-10 | scope | WebView bridge enters Phase 3/4 with evidence |
 | R-11 | self-correction | central auth interceptor `fh.a` exists; `ri.*` family fully mapped |
 | C-13 | substantive | locale content **is** present as assets; only the module code is stubbed; Q-05 restated |
+| C-14 | self-correction | two "analytics events" are Kotlin property names; new naming channel documented |

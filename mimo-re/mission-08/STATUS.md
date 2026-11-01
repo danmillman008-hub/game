@@ -18,8 +18,8 @@
 | 1 | `01_SYMBOL_RECOVERY/` | **complete** | 1,275 orphan lambdas → 265 owners (HIGH 76), 436 method mappings, 12 clusters |
 | 2 | `02_CONTENT_DELIVERY/` | **complete** | provider→loader→repository traced; 10,317 asset docs; 5-part identity vs 2-part progress; C-13 |
 | 3 | `03_LESSON_ENGINE/` | **substantially complete** | 7 parsers mapped to their tag vocabularies; 6 `LessonModule` variants; grading + analytics methods recovered |
-| 4 | `04_INTERACTION_ENGINE/` | next | — |
-| 5 | `05_LEARNER_MODEL/` | not started | — |
+| 4 | `04_INTERACTION_ENGINE/` | **substantially complete** | normaliser decrypted; three-way validated-input verdict; nine interaction types mapped; grading is client-side; C-14 |
+| 5 | `05_LEARNER_MODEL/` | next | — |
 | 6 | `06_PERSISTENCE/` | not started | — |
 | 7 | `07_NETWORKING/` | not started | — |
 | 8 | `08_AUTHENTICATION/` | substantially complete (Stage D) | token provider, interceptor, anonymous-first link |

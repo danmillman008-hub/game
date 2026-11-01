@@ -1,0 +1,182 @@
+{
+ "generated": "2026-11-01",
+ "phase": 4,
+ "source_basis": "decompiled classes + DEX field tables; every field list is machine-extracted, not transcribed",
+ "base": {
+  "class": "com.getmimo.data.content.lessonparser.interactive.model.LessonModule",
+  "kind": "abstract Parcelable",
+  "variants": 6
+ },
+ "modules": [
+  {
+   "variant": "Code",
+   "class": "\u2026model.LessonModule$Code",
+   "parser": "te.a",
+   "fields": [
+    {
+     "name": "c",
+     "type": "CharSequence",
+     "role": "code text"
+    },
+    {
+     "name": "d",
+     "type": "List",
+     "role": "secondary code lines"
+    },
+    {
+     "name": "e",
+     "type": "Output",
+     "role": "expected output"
+    },
+    {
+     "name": "f",
+     "type": "ModuleVisibility",
+     "role": "visibility gate"
+    },
+    {
+     "name": "g",
+     "type": "com.getmimo.data.content.model.track.CodeLanguage",
+     "role": "language"
+    },
+    {
+     "name": "v",
+     "type": "String",
+     "role": "file name / label"
+    }
+   ],
+   "rendering": "code view (CodeViewActionButton / CodePlaygroundBundle)",
+   "state_owner": "InteractiveLessonBaseViewModel + code playground",
+   "interaction": "validated input or run-and-compare",
+   "grading": "ValidatedInput \u2192 client; run \u2192 run result",
+   "completion": "lessonSolved* paths",
+   "confidence": "HIGH"
+  },
+  {
+   "variant": "Paragraph",
+   "class": "\u2026model.LessonModule$Paragraph",
+   "parser": "te.d",
+   "fields": [
+    {
+     "name": "c",
+     "type": "ArrayList",
+     "role": "inline spans"
+    },
+    {
+     "name": "d",
+     "type": "ModuleVisibility",
+     "role": "visibility gate"
+    }
+   ],
+   "rendering": "text block",
+   "state_owner": "stateless",
+   "interaction": "none",
+   "grading": "none",
+   "completion": "none",
+   "confidence": "HIGH"
+  },
+  {
+   "variant": "Image",
+   "class": "\u2026model.LessonModule$Image",
+   "parser": "te.c",
+   "fields": [
+    {
+     "name": "c",
+     "type": "String",
+     "role": "src"
+    },
+    {
+     "name": "d",
+     "type": "ModuleVisibility",
+     "role": "visibility gate"
+    }
+   ],
+   "rendering": "image",
+   "state_owner": "stateless",
+   "interaction": "none",
+   "grading": "none",
+   "completion": "none",
+   "confidence": "HIGH"
+  },
+  {
+   "variant": "Database",
+   "class": "\u2026model.LessonModule$Database",
+   "parser": "te.b / te.f",
+   "fields": [
+    {
+     "name": "c",
+     "type": "ArrayList",
+     "role": "tables"
+    },
+    {
+     "name": "d",
+     "type": "ModuleVisibility",
+     "role": "visibility gate"
+    }
+   ],
+   "rendering": "table",
+   "state_owner": "stateless",
+   "interaction": "none (data display)",
+   "grading": "none",
+   "completion": "none",
+   "confidence": "MEDIUM"
+  },
+  {
+   "variant": "Selection",
+   "class": "\u2026model.LessonModule$Selection",
+   "parser": "te.e",
+   "fields": [
+    {
+     "name": "c",
+     "type": "ArrayList",
+     "role": "SelectionItem list, each {correct: Boolean, text: CharSequence}"
+    }
+   ],
+   "rendering": "selection/chips",
+   "state_owner": "selection ViewModel (selection.a) + nm.e state",
+   "interaction": "multi/single choice",
+   "grading": "client, in nm.b.E0",
+   "completion": "onLessonRun(boolean)",
+   "confidence": "HIGH"
+  },
+  {
+   "variant": "Webview",
+   "class": "\u2026model.LessonModule$Webview",
+   "parser": "te.g",
+   "fields": [
+    {
+     "name": "c",
+     "type": "String",
+     "role": "url/content"
+    },
+    {
+     "name": "d",
+     "type": "ModuleVisibility",
+     "role": "visibility gate"
+    },
+    {
+     "name": "e",
+     "type": "WebviewType",
+     "role": "BROWSER|EMBEDDED|INTERACTIVE|UNLOCK"
+    }
+   ],
+   "rendering": "WebViewLessonScrollView",
+   "state_owner": "webview package",
+   "interaction": "interactive webview",
+   "grading": "unknown (server/JS)",
+   "completion": "via onLessonRun",
+   "confidence": "HIGH"
+  }
+ ],
+ "visibility_summary": {
+  "with_visibility": [
+   "Code",
+   "Paragraph",
+   "Image",
+   "Database",
+   "Webview"
+  ],
+  "without": [
+   "Selection"
+  ]
+ }
+}

@@ -1,0 +1,86 @@
+{
+ "generated": "2026-11-01",
+ "subject": "interactive lesson interaction state",
+ "states": [
+  "IDLE",
+  "INPUT_PENDING",
+  "SUBMITTED",
+  "CORRECT",
+  "PARTIALLY_CORRECT",
+  "INCORRECT",
+  "FEEDBACK_SHOWN",
+  "RESET"
+ ],
+ "transitions": [
+  {
+   "from": "IDLE",
+   "to": "INPUT_PENDING",
+   "trigger": "user edits (qm.d.j0 / cn/d toggle)",
+   "evidenced": true
+  },
+  {
+   "from": "INPUT_PENDING",
+   "to": "SUBMITTED",
+   "trigger": "run/validate",
+   "evidenced": true
+  },
+  {
+   "from": "SUBMITTED",
+   "to": "CORRECT",
+   "trigger": "base.c.V",
+   "evidenced": true
+  },
+  {
+   "from": "SUBMITTED",
+   "to": "PARTIALLY_CORRECT",
+   "trigger": "base.c.W (only reachable for ValidatedInput)",
+   "evidenced": true
+  },
+  {
+   "from": "SUBMITTED",
+   "to": "INCORRECT",
+   "trigger": "base.c.X \u2192 d0",
+   "evidenced": true
+  },
+  {
+   "from": "CORRECT",
+   "to": "RESET",
+   "trigger": "base.c.M (resetAllFeedbackStates) or lesson change",
+   "evidenced": true
+  },
+  {
+   "from": "INCORRECT",
+   "to": "INPUT_PENDING",
+   "trigger": "retry (M called by fragment 18 / viewmodels)",
+   "evidenced": true
+  },
+  {
+   "from": "FEEDBACK_SHOWN",
+   "to": "NEXT_LESSON",
+   "trigger": "base.c.U lessonSolvedAndProceedToNextLesson",
+   "evidenced": true
+  }
+ ],
+ "invariants": [
+  {
+   "id": "INV-1",
+   "claim": "Selection can never be hidden because ModuleVisibility is absent from its model and from te.e",
+   "evidenced": true
+  },
+  {
+   "id": "INV-2",
+   "claim": "Only ValidatedInput can produce a partial verdict (qm.f constructed at exactly one site)",
+   "evidenced": true
+  },
+  {
+   "id": "INV-3",
+   "claim": "A wrong answer never emits the lesson-id flow; correct and partial do",
+   "evidenced": true
+  },
+  {
+   "id": "INV-4",
+   "claim": "Completion is decided by tries>=1 (LessonProgress.isSolvedCorrectly)",
+   "evidenced": true
+  }
+ ]
+}

@@ -1,0 +1,78 @@
+{
+ "generated": "2026-11-01",
+ "base": {
+  "class": "\u2026model.Output",
+  "kind": "abstract Parcelable, private ctor",
+  "variants": 2
+ },
+ "variants": [
+  {
+   "class": "\u2026model.Output$ConsoleOutput",
+   "fields": [
+    {
+     "name": "a",
+     "type": "CharSequence"
+    }
+   ],
+   "meaning": "console text expected from code execution",
+   "parcel": "TextUtils.writeToParcel"
+  },
+  {
+   "class": "\u2026model.Output$TableOutput",
+   "fields": [
+    {
+     "name": "a",
+     "type": "Table"
+    }
+   ],
+   "meaning": "table-shaped output",
+   "table_schema": {
+    "name": "String",
+    "rows": "List<Row>"
+   },
+   "row_variants": [
+    "Table$Row$Header",
+    "Table$Row$Data"
+   ]
+  }
+ ],
+ "producers": [
+  {
+   "producer": "te.a (code module parser)",
+   "produces": "Output on LessonModule.Code",
+   "evidence": "te.a string pool names 'output' context via code/content tags",
+   "confidence": "MEDIUM"
+  },
+  {
+   "producer": "te.f (table parser)",
+   "produces": "Table for TableOutput",
+   "evidence": "te.f tags table/row/header/data",
+   "confidence": "HIGH"
+  }
+ ],
+ "consumers": [
+  {
+   "consumer": "LessonModule.Code.e",
+   "evidence": "field type Output",
+   "confidence": "HIGH"
+  },
+  {
+   "consumer": "code view / result sheet",
+   "evidence": "ui.lesson.executable.q generateDiffAndShowSheet (executable branch)",
+   "confidence": "MEDIUM"
+  }
+ ],
+ "error_representation": {
+  "type": "xml_parse_error_module",
+  "where": "te.c",
+  "note": "a parse failure becomes a module, not an exception"
+ },
+ "relation_to_browser_output": {
+  "deferred_symbol": "browserOutputDeferred",
+  "implementation": "base.c.i0 updateTabbedCodeViewWithBrowserOutput",
+  "finding": "browser output is a deferred value emitted through a flow, not a return value"
+ },
+ "relation_to_grading": {
+  "finding": "Output is not the grading input. Grading inputs are the correct answer string (qm.h.a / SelectionItem.correct) and the user input; Output is display/compare data for code modules"
+ }
+}

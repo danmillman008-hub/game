@@ -1,0 +1,71 @@
+{
+ "generated": "2026-11-01",
+ "nodes": [
+  {
+   "id": "te.a",
+   "kind": "parser",
+   "emits": "LessonModule.Code(Output)"
+  },
+  {
+   "id": "te.f",
+   "kind": "parser",
+   "emits": "Table"
+  },
+  {
+   "id": "...Output$ConsoleOutput",
+   "kind": "model"
+  },
+  {
+   "id": "...Output$TableOutput",
+   "kind": "model"
+  },
+  {
+   "id": "base.c.i0",
+   "kind": "viewmodel-method",
+   "label": "updateTabbedCodeViewWithBrowserOutput",
+   "consumes": "browser output (deferred)"
+  },
+  {
+   "id": "base.c.I",
+   "kind": "viewmodel-method",
+   "label": "updateCodeViewActionButton",
+   "consumes": "LessonBundle + CodePlaygroundBundle.FromLesson"
+  },
+  {
+   "id": "...lesson.executable.q",
+   "kind": "viewmodel",
+   "label": "ExecutableLessonViewModel",
+   "consumes": "execution result"
+  }
+ ],
+ "edges": [
+  {
+   "from": "te.a",
+   "to": "...Output$ConsoleOutput",
+   "confidence": "MEDIUM",
+   "evidence": "code parser vocabulary includes content/interactions; ConsoleOutput is the only CharSequence output"
+  },
+  {
+   "from": "te.f",
+   "to": "...Output$TableOutput",
+   "confidence": "HIGH",
+   "evidence": "te.f builds Table; TableOutput wraps Table"
+  },
+  {
+   "from": "...Output$ConsoleOutput",
+   "to": "base.c.i0",
+   "confidence": "LOW",
+   "evidence": "both concern console text; no direct call observed"
+  },
+  {
+   "from": "base.c.i0",
+   "to": "compose tabbed code view",
+   "confidence": "HIGH",
+   "evidence": "method name + 'browserOutputDeferred' literal"
+  }
+ ],
+ "unresolved": [
+  "who converts a raw execution result into ConsoleOutput",
+  "whether the interactive branch ever produces Output at runtime"
+ ]
+}

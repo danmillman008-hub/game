@@ -37,3 +37,16 @@ None of these replaces an existing question; all are additive and cited by the p
 | A18 | is `base.c.K` `initialiseCodeBlocks` or `storeLessonProgressInMemory`? | open | two families, one method |
 | A19 | recovered name of `base.c.O` | open | no lambda family maps to it |
 | A20 | is `hardModeLessonModules` parsed from the same document? | open | one grammar only in parser pools |
+
+## Questions raised by Stage 4 (interaction engine)
+
+| ID | Question | Status | Blocker |
+|---|---|---|---|
+| A21 | do `WRONG`-gated modules also render after a partial verdict? | open | partial emits `jm.n`, not `jm.o` |
+| A22 | meaning of the six `jm.o` booleans (hint / solution / retry / AI tutor) | open | argument order not recoverable from the constructor |
+| A23 | which types use `mm.b.E0` pass-through grading | open | `E0` state flow contents not read |
+| A24 | duration of the delay before verdict dispatch | open | `kotlinx.coroutines.a.g` call constant |
+| A25 | can executable lessons produce a partial verdict? | open | `qm.f` has one construction site |
+| A26 | who produces `Output.ConsoleOutput` in the interactive branch | open | no producer found |
+| A27 | which composable consumes `browserOutputDeferred` | open | UI layer, Phase 11 |
+| A28 | what selects MultipleChoice vs SingleChoice | open | two state holders, same predicate |
