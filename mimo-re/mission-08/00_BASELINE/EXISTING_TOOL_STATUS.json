@@ -1,0 +1,130 @@
+{
+ "generated": "2026-11-01",
+ "scope": "every extraction/analysis tool inherited from missions 4-7 plus the two tools added in mission-08",
+ "status_vocabulary": {
+  "VERIFIED_THIS_STAGE": "executed during mission-08 stage A, output inspected",
+  "PRESENT_NOT_RERUN": "tool and its inputs exist, but mission-08 has not re-executed it yet",
+  "PARTIAL": "runs but is known to lose information",
+  "LEGACY": "pre-mission-04 tool kept for provenance; not part of the current pipeline"
+ },
+ "tools": [
+  {
+   "id": "T-01",
+   "path": "mission-05/tools/decompile_apk.py",
+   "purpose": "DAD decompile of selected classes from a dex directory",
+   "status": "VERIFIED_THIS_STAGE",
+   "evidence": "re-ran with --dex-dir /tmp/x --classes-file /tmp/m8_batch.txt --out /tmp/dad: 141 classes requested, 97 new .java emitted, exit 0",
+   "notes": "fails silently (no file, exit 0) for a subset of classes; see T-08"
+  },
+  {
+   "id": "T-02",
+   "path": "mission-07/tools/parse_arsc.py",
+   "purpose": "manual ARSC decode (no aapt2 available)",
+   "status": "PRESENT_NOT_RERUN",
+   "evidence": "outputs from mission-07 still present: evidence/ARSC_SUMMARY.json, evidence/DESIGN_TOKENS_VALUES.json",
+   "notes": "known-good after the sparse/offset16 fix documented in mission-07/19_TOOLS/122"
+  },
+  {
+   "id": "T-03",
+   "path": "mission-07/tools/build_m7_inventory.py",
+   "purpose": "class/method inventory + deep-investigation queue",
+   "status": "PRESENT_NOT_RERUN",
+   "evidence": "01_CLASS_UNIVERSE/*.csv present: 29,454 classes / 15,087 methods / 2,178 queue rows",
+   "notes": "inputs (/tmp/x, /tmp/dad) still available, so a re-run is possible if a count is disputed"
+  },
+  {
+   "id": "T-04",
+   "path": "mission-06/tools/extract_di_graph.py",
+   "purpose": "DI graph extraction (127 arms of ae.m)",
+   "status": "PRESENT_NOT_RERUN",
+   "evidence": "evidence/DI_GRAPH.json present (cases=127 int, records in providers)"
+  },
+  {
+   "id": "T-05",
+   "path": "mission-06/tools/extract_parser_grammar.py",
+   "purpose": "DSL parser grammar extraction (te.a-te.g)",
+   "status": "PRESENT_NOT_RERUN",
+   "evidence": "mission-06 evidence tree present"
+  },
+  {
+   "id": "T-06",
+   "path": "mission-05/tools/build_api_catalog_v2.py",
+   "purpose": "Retrofit endpoint catalogue (62 rows)",
+   "status": "PARTIAL",
+   "evidence": "evidence/API_CATALOG_V2.csv has 62 data rows; mission-07/08_NETWORK/59_ENDPOINT_CATALOG_COMPLETE.json restates them",
+   "notes": "row count 62 is consistent across both artefacts but the mission-07 JSON was never independently re-derived - still flagged"
+  },
+  {
+   "id": "T-07",
+   "path": "complete-extraction/tools/*.py (8 tools)",
+   "purpose": "mission-04 extraction and report builders",
+   "status": "PRESENT_NOT_RERUN"
+  },
+  {
+   "id": "T-08",
+   "path": "mission-08/tools/dex_inspect.py",
+   "purpose": "DEX-level inspection: per-class methods, descriptors, instruction stream, string constants, invoke targets, field accesses; plus --scan (literal regex across all classes), --scan-methods, --queue-csv --coverage",
+   "status": "VERIFIED_THIS_STAGE",
+   "evidence": [
+    "coverage over the 2,178-row queue: present 2,178 / 0 missing, .java present 1,119, DEX-only 1,059 (evidence/QUEUE_DECOMPILE_COVERAGE.json)",
+    "behavioural recovery of ku.a->d(Z)String (token provider) despite DAD refusing that class (evidence/DEX_ku.a_access_token_provider.json)",
+    "refutation of the ri.a token-store hypothesis (evidence/DEX_ri_network_callback.json)",
+    "literal scans: 201 classes match token/Bearer/Credential; 40 match DataStore/EncryptedSharedPreferences; 122 classes have a 'token' method signature (evidence/SCAN_*.json, evidence/SCAN_METHODS_TOKEN.json)",
+    "Rive/WebView consumer dump (evidence/DEX_rive_webview.json)"
+   ],
+   "design_constraint": "read-only over the dex set; no decompiler dependency; deterministic ordering; every value printed is read from the DEX",
+   "limitations": [
+    "cannot recover local-variable names or decompiled structure",
+    "instruction offsets are not exposed by androguard 4.1.4 for every instruction form (recorded as null)",
+    "switch tables / try-catch nesting are not reconstructed"
+   ]
+  },
+  {
+   "id": "T-09",
+   "path": "mission-08/tools/build_canonical_registers.py",
+   "purpose": "rebuild every mission-7 count from the registers, resolve evidence stems, emit the canonical 8-status question register and the 45-domain register",
+   "status": "VERIFIED_THIS_STAGE",
+   "evidence": "outputs: 39 questions (14/11/7/3/2/2 + 2 empty statuses), 45 domains (24/9/7 + 5 NOT_INVESTIGATED), 0 unresolved evidence references"
+  },
+  {
+   "id": "T-10",
+   "path": "tools/analyze_apk.py, tools/design_tokens.py, tools/dex_evidence.py, tools/literal_reverse_index.py, tools/retrofit_endpoints.py, tools/screen_inventory.py, tools/build_evidence_index.py, tools/build_final_report.py, tools/build_report_html.py, tools/analyze_content.py, tools/content_deep.py, tools/export_manifest_resources.py",
+   "purpose": "pre-mission-04 / mission-01-03 helper scripts",
+   "status": "LEGACY",
+   "notes": "kept for provenance; the mission-04 pipeline supersedes them. Not part of mission-08 execution."
+  }
+ ],
+ "external_binaries": {
+  "available": [
+   "python3",
+   "git",
+   "unzip",
+   "androguard 4.1.4 (venv /tmp/venv)",
+   "pytest 9.2.0",
+   "node (partial)"
+  ],
+  "absent": [
+   "java",
+   "jadx",
+   "apktool",
+   "aapt2",
+   "readelf",
+   "objdump",
+   "dot",
+   "mmdc",
+   "adb",
+   "emulator"
+  ],
+  "consequence": "no JVM decompiler upgrade path; no Mermaid/Graphviz rendering (diagrams ship as source); no runtime execution; one decompiler (DAD) only"
+ },
+ "decompiler_failure_profile": {
+  "measured": "1,059 of 2,178 queue classes (48.6%) have no .java output",
+  "observed_cases": [
+   "ri.a / ri.c: DAD emits no file; DEX shows ConnectivityManager$NetworkCallback and a NetworkInfo value class",
+   "ku.a: DAD emits no file; DEX shows the access-token provider d(Z)String plus unrelated merged methods",
+   "AuthenticationFragment: only its inner classes are emitted",
+   "com.getmimo.ui.compose.animation.rive.RiveAnimationKt: the outer class is absent from the dex set itself (only RiveAnimationKt$RiveAnimation$6$1 and its $bytes$1 lambda are present), so the composable BODY is NOT_RECOVERED rather than decompiler-limited"
+  ],
+  "mitigation": "T-08 dex_inspect.py"
+ }
+}

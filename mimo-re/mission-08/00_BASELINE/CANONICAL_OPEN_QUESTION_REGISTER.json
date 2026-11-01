@@ -1,0 +1,932 @@
+{
+ "generated": "2026-11-01",
+ "source_of_truth": [
+  "mission-07/18_CLOSURE/116_MASTER_OPEN_QUESTION_CLOSURE.csv",
+  "mission-07/00_BASELINE/MASTER_OPEN_QUESTIONS.json"
+ ],
+ "status_vocabulary": [
+  "CLOSED_STATIC",
+  "PARTIALLY_CLOSED",
+  "BACKEND_ONLY",
+  "NOT_RECOVERED",
+  "GENUINELY_UNKNOWN",
+  "BLOCKED_BY_ENVIRONMENT",
+  "SUPERSEDED",
+  "OUT_OF_SCOPE"
+ ],
+ "count": 39,
+ "status_distribution": {
+  "BACKEND_ONLY": 2,
+  "BLOCKED_BY_ENVIRONMENT": 2,
+  "CLOSED_STATIC": 14,
+  "GENUINELY_UNKNOWN": 3,
+  "NOT_RECOVERED": 7,
+  "OUT_OF_SCOPE": 0,
+  "PARTIALLY_CLOSED": 11,
+  "SUPERSEDED": 0
+ },
+ "ids_added_after_mission6_register": [
+  "U-01",
+  "U-22"
+ ],
+ "master_register_ids_absent_from_closure": [],
+ "questions": [
+  {
+   "id": "Q-05",
+   "question": "dynamic feature module contents (non-English packs) absent from the APK",
+   "domain": "content",
+   "status_current": "BLOCKED_BY_ENVIRONMENT",
+   "status_mission6": "NOT_RECOVERED",
+   "history": [
+    {
+     "mission": "06",
+     "status": "NOT_RECOVERED"
+    },
+    {
+     "mission": "07",
+     "status": "BLOCKED_BY_ENVIRONMENT"
+    }
+   ],
+   "answer_or_reason": "locale modules not shipped in the base APK",
+   "evidence_ref_m7": "03_CONTENT_AND_MODULES/16",
+   "evidence_files": [
+    "mission-07/03_CONTENT_AND_MODULES/16_DYNAMIC_MODULE_ARCHITECTURE.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-08",
+   "question": "lesson reset effect on the persisted progress row",
+   "domain": "progress",
+   "status_current": "PARTIALLY_CLOSED",
+   "status_mission6": "GENUINELY_UNKNOWN",
+   "history": [
+    {
+     "mission": "06",
+     "status": "GENUINELY_UNKNOWN"
+    },
+    {
+     "mission": "07",
+     "status": "PARTIALLY_CLOSED"
+    }
+   ],
+   "answer_or_reason": "a0() body recovered: clears state + emits lesson_reset with 7 properties; row effect still unresolved",
+   "evidence_ref_m7": "17_END_TO_END/113",
+   "evidence_files": [
+    "mission-07/17_END_TO_END/113_END_TO_END_BEHAVIORAL_RECONSTRUCTION.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-102",
+   "question": "design token values (colours/dimens) - toolchain BLOCKED",
+   "domain": "design",
+   "status_current": "CLOSED_STATIC",
+   "status_mission6": "BLOCKED_BY_ENVIRONMENT",
+   "history": [
+    {
+     "mission": "06",
+     "status": "BLOCKED_BY_ENVIRONMENT"
+    },
+    {
+     "mission": "07",
+     "status": "CLOSED_STATIC"
+    }
+   ],
+   "answer_or_reason": "manual ARSC decode: 1,198 colour keys + 1,401 dimen keys with values",
+   "evidence_ref_m7": "12_UI_RESOURCES/77",
+   "evidence_files": [
+    "mission-07/12_UI_RESOURCES/77_DESIGN_SYSTEM_COMPLETE.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-103",
+   "question": "dark theme existence",
+   "domain": "design",
+   "status_current": "CLOSED_STATIC",
+   "status_mission6": "NOT_RECOVERED",
+   "history": [
+    {
+     "mission": "06",
+     "status": "NOT_RECOVERED"
+    },
+    {
+     "mission": "07",
+     "status": "CLOSED_STATIC"
+    }
+   ],
+   "answer_or_reason": "resource configuration variants decoded; night-qualified entries counted",
+   "evidence_ref_m7": "12_UI_RESOURCES/78",
+   "evidence_files": [
+    "mission-07/12_UI_RESOURCES/78_LIGHT_DARK_THEME.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-115",
+   "question": "feature gating matrix for premium",
+   "domain": "business",
+   "status_current": "PARTIALLY_CLOSED",
+   "status_mission6": "INFERRED",
+   "history": [
+    {
+     "mission": "06",
+     "status": "UNKNOWN"
+    },
+    {
+     "mission": "07",
+     "status": "PARTIALLY_CLOSED"
+    }
+   ],
+   "answer_or_reason": "isPremium is the only flag; paywall surfaces enumerated; gating matrix unrecovered",
+   "evidence_ref_m7": "13_SUBSCRIPTION/91",
+   "evidence_files": [
+    "mission-07/13_SUBSCRIPTION/91_ENTITLEMENT_AND_PAYWALL_COMPLETE.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-118",
+   "question": "remote-config flag consumers",
+   "domain": "config",
+   "status_current": "PARTIALLY_CLOSED",
+   "status_mission6": "GENUINELY_UNKNOWN",
+   "history": [
+    {
+     "mission": "06",
+     "status": "GENUINELY_UNKNOWN"
+    },
+    {
+     "mission": "07",
+     "status": "PARTIALLY_CLOSED"
+    }
+   ],
+   "answer_or_reason": "AB-test groups fetched at analytics init; consumers unknown",
+   "evidence_ref_m7": "10_ANALYTICS_CONFIG/84",
+   "evidence_files": [
+    "mission-07/10_ANALYTICS_CONFIG/84_REMOTE_CONFIG_COMPLETE.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-120",
+   "question": "certificate pinning / cleartext policy details",
+   "domain": "security",
+   "status_current": "CLOSED_STATIC",
+   "status_mission6": "NOT_RECOVERED",
+   "history": [
+    {
+     "mission": "06",
+     "status": "NOT_RECOVERED"
+    },
+    {
+     "mission": "07",
+     "status": "CLOSED_STATIC"
+    }
+   ],
+   "answer_or_reason": "no CertificatePinner; network_security_config present; cleartext not in API hosts",
+   "evidence_ref_m7": "08_NETWORK/58",
+   "evidence_files": [
+    "mission-07/08_NETWORK/58_NETWORK_STACK_COMPLETE.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-121",
+   "question": "token storage mechanism",
+   "domain": "security",
+   "status_current": "NOT_RECOVERED",
+   "status_mission6": "NOT_RECOVERED",
+   "history": [
+    {
+     "mission": "06",
+     "status": "NOT_RECOVERED"
+    },
+    {
+     "mission": "07",
+     "status": "NOT_RECOVERED"
+    }
+   ],
+   "answer_or_reason": "token storage backend (ri.* not decompiled to body level)",
+   "evidence_ref_m7": "07_STORAGE_AND_SYNC/54",
+   "evidence_files": [
+    "mission-07/07_STORAGE_AND_SYNC/54_TOKEN_LIFECYCLE.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-134",
+   "question": "consent/opt-out surface",
+   "domain": "privacy",
+   "status_current": "NOT_RECOVERED",
+   "status_mission6": "NOT_RECOVERED",
+   "history": [
+    {
+     "mission": "06",
+     "status": "NOT_RECOVERED"
+    },
+    {
+     "mission": "07",
+     "status": "NOT_RECOVERED"
+    }
+   ],
+   "answer_or_reason": "consent/opt-out surface",
+   "evidence_ref_m7": "10_ANALYTICS_CONFIG/84",
+   "evidence_files": [
+    "mission-07/10_ANALYTICS_CONFIG/84_REMOTE_CONFIG_COMPLETE.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-14",
+   "question": "complete content-locale inventory (enum has 5, modules imply more)",
+   "domain": "content",
+   "status_current": "PARTIALLY_CLOSED",
+   "status_mission6": "GENUINELY_UNKNOWN",
+   "history": [
+    {
+     "mission": "06",
+     "status": "GENUINELY_UNKNOWN"
+    },
+    {
+     "mission": "07",
+     "status": "PARTIALLY_CLOSED"
+    }
+   ],
+   "answer_or_reason": "5 ContentLocale constants + fused modules + UI string coverage; module list truncated",
+   "evidence_ref_m7": "03_CONTENT_AND_MODULES/15",
+   "evidence_files": [
+    "mission-07/03_CONTENT_AND_MODULES/15_DYNAMIC_MODULE_INVENTORY.json"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-140",
+   "question": "webview module URL allowlist",
+   "domain": "security",
+   "status_current": "GENUINELY_UNKNOWN",
+   "status_mission6": "GENUINELY_UNKNOWN",
+   "history": [
+    {
+     "mission": "06",
+     "status": "GENUINELY_UNKNOWN"
+    },
+    {
+     "mission": "07",
+     "status": "GENUINELY_UNKNOWN"
+    }
+   ],
+   "answer_or_reason": "webview URL allowlist",
+   "evidence_ref_m7": "15_FAILURE/102",
+   "evidence_files": [
+    "mission-07/15_FAILURE/102_OFFLINE_BEHAVIOR_COMPLETE.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-141",
+   "question": "Play Integrity presence",
+   "domain": "security",
+   "status_current": "CLOSED_STATIC",
+   "status_mission6": "NOT_RECOVERED",
+   "history": [
+    {
+     "mission": "06",
+     "status": "NOT_RECOVERED"
+    },
+    {
+     "mission": "07",
+     "status": "CLOSED_STATIC"
+    }
+   ],
+   "answer_or_reason": "no Play Integrity/SafetyNet classes in inventory",
+   "evidence_ref_m7": "11_SDK_NATIVE/96",
+   "evidence_files": [
+    "mission-07/11_SDK_NATIVE/96_EXTERNAL_SDK_COMPLETE_CATALOG.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-15",
+   "question": "Track/Tutorial field sets",
+   "domain": "content",
+   "status_current": "NOT_RECOVERED",
+   "status_mission6": "NOT_RECOVERED",
+   "history": [
+    {
+     "mission": "06",
+     "status": "NOT_RECOVERED"
+    },
+    {
+     "mission": "07",
+     "status": "NOT_RECOVERED"
+    }
+   ],
+   "answer_or_reason": "Track/Tutorial field sets",
+   "evidence_ref_m7": "03_CONTENT_AND_MODULES/18",
+   "evidence_files": [
+    "mission-07/03_CONTENT_AND_MODULES/18_CONTENT_HIERARCHY_COMPLETE.json"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-17",
+   "question": "serialised JSON names (@SerialName) for DTOs",
+   "domain": "network",
+   "status_current": "NOT_RECOVERED",
+   "status_mission6": "NOT_RECOVERED",
+   "history": [
+    {
+     "mission": "06",
+     "status": "NOT_RECOVERED"
+    },
+    {
+     "mission": "07",
+     "status": "NOT_RECOVERED"
+    }
+   ],
+   "answer_or_reason": "@SerialName overrides",
+   "evidence_ref_m7": "08_NETWORK/59",
+   "evidence_files": [
+    "mission-07/08_NETWORK/59_ENDPOINT_CATALOG_COMPLETE.json"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-19",
+   "question": "OkHttp disk cache presence",
+   "domain": "content",
+   "status_current": "CLOSED_STATIC",
+   "status_mission6": "GENUINELY_UNKNOWN",
+   "history": [
+    {
+     "mission": "06",
+     "status": "GENUINELY_UNKNOWN"
+    },
+    {
+     "mission": "07",
+     "status": "CLOSED_STATIC"
+    }
+   ],
+   "answer_or_reason": "no Cache configured on the OkHttp builder in case 20",
+   "evidence_ref_m7": "08_NETWORK/58",
+   "evidence_files": [
+    "mission-07/08_NETWORK/58_NETWORK_STACK_COMPLETE.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-27",
+   "question": "chapter ordering (index vs server order)",
+   "domain": "content",
+   "status_current": "PARTIALLY_CLOSED",
+   "status_mission6": "GENUINELY_UNKNOWN",
+   "history": [
+    {
+     "mission": "06",
+     "status": "GENUINELY_UNKNOWN"
+    },
+    {
+     "mission": "07",
+     "status": "PARTIALLY_CLOSED"
+    }
+   ],
+   "answer_or_reason": "section ordering is index-based (Section.index / SectionJson ranges); chapter ordering authored",
+   "evidence_ref_m7": "03_CONTENT_AND_MODULES/19",
+   "evidence_files": [
+    "mission-07/03_CONTENT_AND_MODULES/19_CONTENT_IDENTITY_AND_VERSIONING.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-30",
+   "question": "unknown-tag behaviour per parser",
+   "domain": "dsl",
+   "status_current": "GENUINELY_UNKNOWN",
+   "status_mission6": "GENUINELY_UNKNOWN",
+   "history": [
+    {
+     "mission": "06",
+     "status": "GENUINELY_UNKNOWN"
+    },
+    {
+     "mission": "07",
+     "status": "GENUINELY_UNKNOWN"
+    }
+   ],
+   "answer_or_reason": "unknown-tag else-branch not readable in te.c.b",
+   "evidence_ref_m7": "04_DSL_PARSER_RENDERER/28",
+   "evidence_files": [
+    "mission-07/04_DSL_PARSER_RENDERER/28_UNRESOLVED_DSL_CONSTRUCTS.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-31",
+   "question": "NUMBER tag purpose (declared, no parser accepts it)",
+   "domain": "dsl",
+   "status_current": "CLOSED_STATIC",
+   "status_mission6": "GENUINELY_UNKNOWN",
+   "history": [
+    {
+     "mission": "06",
+     "status": "GENUINELY_UNKNOWN"
+    },
+    {
+     "mission": "07",
+     "status": "CLOSED_STATIC"
+    }
+   ],
+   "answer_or_reason": "NUMBER is dead vocabulary; corpus <number> hits are prose",
+   "evidence_ref_m7": "04_DSL_PARSER_RENDERER/28",
+   "evidence_files": [
+    "mission-07/04_DSL_PARSER_RENDERER/28_UNRESOLVED_DSL_CONSTRUCTS.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-34",
+   "question": "which .riv animations bind to which lesson state",
+   "domain": "ui",
+   "status_current": "NOT_RECOVERED",
+   "status_mission6": "NOT_RECOVERED",
+   "history": [
+    {
+     "mission": "06",
+     "status": "NOT_RECOVERED"
+    },
+    {
+     "mission": "07",
+     "status": "NOT_RECOVERED"
+    }
+   ],
+   "answer_or_reason": "no .riv name ↔ class binding in decompiled subset",
+   "evidence_ref_m7": "12_UI_RESOURCES/80",
+   "evidence_files": [
+    "mission-07/12_UI_RESOURCES/80_RIVE_RUNTIME_ARCHITECTURE.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-39",
+   "question": "REST vs WebSocket selection for code execution",
+   "domain": "executable",
+   "status_current": "PARTIALLY_CLOSED",
+   "status_mission6": "GENUINELY_UNKNOWN",
+   "history": [
+    {
+     "mission": "06",
+     "status": "GENUINELY_UNKNOWN"
+    },
+    {
+     "mission": "07",
+     "status": "PARTIALLY_CLOSED"
+    }
+   ],
+   "answer_or_reason": "both channels exist; selection logic outside decompiled subset",
+   "evidence_ref_m7": "09_STREAMING/70",
+   "evidence_files": [
+    "mission-07/09_STREAMING/70_EXECUTION_WEBSOCKET_PROTOCOL.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-40",
+   "question": "WebSocket message schema",
+   "domain": "executable",
+   "status_current": "NOT_RECOVERED",
+   "status_mission6": "NOT_RECOVERED",
+   "history": [
+    {
+     "mission": "06",
+     "status": "NOT_RECOVERED"
+    },
+    {
+     "mission": "07",
+     "status": "NOT_RECOVERED"
+    }
+   ],
+   "answer_or_reason": "pg.a message schema",
+   "evidence_ref_m7": "09_STREAMING/70",
+   "evidence_files": [
+    "mission-07/09_STREAMING/70_EXECUTION_WEBSOCKET_PROTOCOL.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-42",
+   "question": "whether a SELECTION can have several correct items",
+   "domain": "grading",
+   "status_current": "CLOSED_STATIC",
+   "status_mission6": "GENUINELY_UNKNOWN",
+   "history": [
+    {
+     "mission": "06",
+     "status": "GENUINELY_UNKNOWN"
+    },
+    {
+     "mission": "07",
+     "status": "CLOSED_STATIC"
+    }
+   ],
+   "answer_or_reason": "no multiple attribute in DSL or corpus → single-answer selections",
+   "evidence_ref_m7": "04_DSL_PARSER_RENDERER/28",
+   "evidence_files": [
+    "mission-07/04_DSL_PARSER_RENDERER/28_UNRESOLVED_DSL_CONSTRUCTS.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-44",
+   "question": "non-ASCII answer handling (filter drops non-[a-z0-9<.])",
+   "domain": "grading",
+   "status_current": "CLOSED_STATIC",
+   "status_mission6": "INFERRED",
+   "history": [
+    {
+     "mission": "06",
+     "status": "UNKNOWN"
+    },
+    {
+     "mission": "07",
+     "status": "CLOSED_STATIC"
+    }
+   ],
+   "answer_or_reason": "normaliser is ASCII-only and locale-blind; non-Latin answers cannot match",
+   "evidence_ref_m7": "06_LEARNER_AND_GRADING/39",
+   "evidence_files": [
+    "mission-07/06_LEARNER_AND_GRADING/39_NORMALIZATION_SPECIFICATION.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-49",
+   "question": "server-side chapter completion recomputation",
+   "domain": "progress",
+   "status_current": "BACKEND_ONLY",
+   "status_mission6": "GENUINELY_UNKNOWN",
+   "history": [
+    {
+     "mission": "06",
+     "status": "GENUINELY_UNKNOWN"
+    },
+    {
+     "mission": "07",
+     "status": "BACKEND_ONLY"
+    }
+   ],
+   "answer_or_reason": "server recomputation invisible",
+   "evidence_ref_m7": "07_STORAGE_AND_SYNC/45",
+   "evidence_files": [
+    "mission-07/07_STORAGE_AND_SYNC/45_PROGRESS_MODEL_COMPLETE.json"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-50",
+   "question": "ETA formula",
+   "domain": "progress",
+   "status_current": "BACKEND_ONLY",
+   "status_mission6": "GENUINELY_UNKNOWN",
+   "history": [
+    {
+     "mission": "06",
+     "status": "GENUINELY_UNKNOWN"
+    },
+    {
+     "mission": "07",
+     "status": "BACKEND_ONLY"
+    }
+   ],
+   "answer_or_reason": "ETA formula server-side",
+   "evidence_ref_m7": "07_STORAGE_AND_SYNC/45",
+   "evidence_files": [
+    "mission-07/07_STORAGE_AND_SYNC/45_PROGRESS_MODEL_COMPLETE.json"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-54",
+   "question": "per-row vs per-batch delete after push",
+   "domain": "sync",
+   "status_current": "PARTIALLY_CLOSED",
+   "status_mission6": "INFERRED",
+   "history": [
+    {
+     "mission": "06",
+     "status": "UNKNOWN"
+    },
+    {
+     "mission": "07",
+     "status": "PARTIALLY_CLOSED"
+    }
+   ],
+   "answer_or_reason": "repo deletes pushed rows; per-row vs batch not readable",
+   "evidence_ref_m7": "07_STORAGE_AND_SYNC/55",
+   "evidence_files": [
+    "mission-07/07_STORAGE_AND_SYNC/55_OUTBOX_AND_SYNC_COMPLETE.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-57",
+   "question": "keys/hearts consumption path",
+   "domain": "gamification",
+   "status_current": "PARTIALLY_CLOSED",
+   "status_mission6": "GENUINELY_UNKNOWN",
+   "history": [
+    {
+     "mission": "06",
+     "status": "GENUINELY_UNKNOWN"
+    },
+    {
+     "mission": "07",
+     "status": "PARTIALLY_CLOSED"
+    }
+   ],
+   "answer_or_reason": "consumeUserKey exists in DefaultKeysRepository; calling UI not recovered",
+   "evidence_ref_m7": "13_SUBSCRIPTION/91",
+   "evidence_files": [
+    "mission-07/13_SUBSCRIPTION/91_ENTITLEMENT_AND_PAYWALL_COMPLETE.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-69",
+   "question": "4xx handling for progress push (no dead-letter found)",
+   "domain": "sync",
+   "status_current": "GENUINELY_UNKNOWN",
+   "status_mission6": "GENUINELY_UNKNOWN",
+   "history": [
+    {
+     "mission": "06",
+     "status": "GENUINELY_UNKNOWN"
+    },
+    {
+     "mission": "07",
+     "status": "GENUINELY_UNKNOWN"
+    }
+   ],
+   "answer_or_reason": "no 4xx branch in outbox",
+   "evidence_ref_m7": "07_STORAGE_AND_SYNC/56",
+   "evidence_files": [
+    "mission-07/07_STORAGE_AND_SYNC/56_CONFLICT_AND_RETRY_RULES.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-70",
+   "question": "push trigger points",
+   "domain": "sync",
+   "status_current": "PARTIALLY_CLOSED",
+   "status_mission6": "GENUINELY_UNKNOWN",
+   "history": [
+    {
+     "mission": "06",
+     "status": "GENUINELY_UNKNOWN"
+    },
+    {
+     "mission": "07",
+     "status": "PARTIALLY_CLOSED"
+    }
+   ],
+   "answer_or_reason": "no WorkManager worker found → foreground-only push; exact trigger unknown",
+   "evidence_ref_m7": "10_ANALYTICS_CONFIG/86",
+   "evidence_files": [
+    "mission-07/10_ANALYTICS_CONFIG/86_BACKGROUND_TASK_ARCHITECTURE.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-80",
+   "question": "login/credential exchange payload",
+   "domain": "auth",
+   "status_current": "NOT_RECOVERED",
+   "status_mission6": "NOT_RECOVERED",
+   "history": [
+    {
+     "mission": "06",
+     "status": "NOT_RECOVERED"
+    },
+    {
+     "mission": "07",
+     "status": "NOT_RECOVERED"
+    }
+   ],
+   "answer_or_reason": "login payload",
+   "evidence_ref_m7": "13_SUBSCRIPTION/89",
+   "evidence_files": [
+    "mission-07/13_SUBSCRIPTION/89_AUTHENTICATION_COMPLETE.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-81",
+   "question": "token refresh/expiry handling",
+   "domain": "auth",
+   "status_current": "CLOSED_STATIC",
+   "status_mission6": "NOT_RECOVERED",
+   "history": [
+    {
+     "mission": "06",
+     "status": "NOT_RECOVERED"
+    },
+    {
+     "mission": "07",
+     "status": "CLOSED_STATIC"
+    }
+   ],
+   "answer_or_reason": "no Authenticator, no refresh interceptor, no 401 branch",
+   "evidence_ref_m7": "08_NETWORK/62",
+   "evidence_files": [
+    "mission-07/08_NETWORK/62_AUTH_INTERCEPTOR_COMPLETE.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-88",
+   "question": "pagination shape (none seen)",
+   "domain": "network",
+   "status_current": "CLOSED_STATIC",
+   "status_mission6": "GENUINELY_UNKNOWN",
+   "history": [
+    {
+     "mission": "06",
+     "status": "GENUINELY_UNKNOWN"
+    },
+    {
+     "mission": "07",
+     "status": "CLOSED_STATIC"
+    }
+   ],
+   "answer_or_reason": "no pagination field in any recovered response DTO",
+   "evidence_ref_m7": "08_NETWORK/59",
+   "evidence_files": [
+    "mission-07/08_NETWORK/59_ENDPOINT_CATALOG_COMPLETE.json"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-89",
+   "question": "Pusher channel usage",
+   "domain": "realtime",
+   "status_current": "PARTIALLY_CLOSED",
+   "status_mission6": "GENUINELY_UNKNOWN",
+   "history": [
+    {
+     "mission": "06",
+     "status": "GENUINELY_UNKNOWN"
+    },
+    {
+     "mission": "07",
+     "status": "PARTIALLY_CLOSED"
+    }
+   ],
+   "answer_or_reason": "Pusher client + auth path found; channel/event names not recovered",
+   "evidence_ref_m7": "09_STREAMING/71",
+   "evidence_files": [
+    "mission-07/09_STREAMING/71_PUSHER_ARCHITECTURE.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "Q-92",
+   "question": "whether lesson/code context is inlined into tutor messages",
+   "domain": "ai",
+   "status_current": "CLOSED_STATIC",
+   "status_mission6": "GENUINELY_UNKNOWN",
+   "history": [
+    {
+     "mission": "06",
+     "status": "GENUINELY_UNKNOWN"
+    },
+    {
+     "mission": "07",
+     "status": "CLOSED_STATIC"
+    }
+   ],
+   "answer_or_reason": "context is typed message objects (SystemMessage/UserMessage variants); no lesson ids in the DTO",
+   "evidence_ref_m7": "09_STREAMING/67",
+   "evidence_files": [
+    "mission-07/09_STREAMING/67_AI_TUTOR_PROMPT_AND_CONTEXT.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "U-01",
+   "question": "DSL grammar of te.a–te.g",
+   "domain": "dsl",
+   "status_current": "CLOSED_STATIC",
+   "status_mission6": "NOT_RECOVERED",
+   "history": [
+    {
+     "mission": "06",
+     "status": "NOT_RECOVERED"
+    },
+    {
+     "mission": "07",
+     "status": "CLOSED_STATIC"
+    }
+   ],
+   "answer_or_reason": "full grammar + attributes, corpus-verified",
+   "evidence_ref_m7": "04_DSL_PARSER_RENDERER/21",
+   "evidence_files": [
+    "mission-07/04_DSL_PARSER_RENDERER/21_COMPLETE_DSL_GRAMMAR.md"
+   ],
+   "in_mission6_register": false
+  },
+  {
+   "id": "U-18",
+   "question": "bin.ghost/libyrf.so triggers - repack-related, not Mimo behaviour",
+   "domain": "integrity",
+   "status_current": "BLOCKED_BY_ENVIRONMENT",
+   "status_mission6": "BLOCKED_BY_ENVIRONMENT",
+   "history": [
+    {
+     "mission": "06",
+     "status": "BLOCKED_BY_ENVIRONMENT"
+    },
+    {
+     "mission": "07",
+     "status": "BLOCKED_BY_ENVIRONMENT"
+    }
+   ],
+   "answer_or_reason": "bin.ghost classes structural only (19 classes); bodies not analysed in depth",
+   "evidence_ref_m7": "11_SDK_NATIVE/97",
+   "evidence_files": [
+    "mission-07/11_SDK_NATIVE/97_BIN_GHOST_APPLICATION_ARCHITECTURE.md"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "U-20",
+   "question": "analytics event-name to emitter binding",
+   "domain": "analytics",
+   "status_current": "PARTIALLY_CLOSED",
+   "status_mission6": "NOT_RECOVERED",
+   "history": [
+    {
+     "mission": "06",
+     "status": "NOT_RECOVERED"
+    },
+    {
+     "mission": "07",
+     "status": "PARTIALLY_CLOSED"
+    }
+   ],
+   "answer_or_reason": "dispatcher com.getmimo.analytics.a.e(String,Map) identified; 14 events verified at call sites; remaining names in undecompiled classes",
+   "evidence_ref_m7": "10_ANALYTICS_CONFIG/82",
+   "evidence_files": [
+    "mission-07/10_ANALYTICS_CONFIG/82_ANALYTICS_COMPLETE_CATALOG.json"
+   ],
+   "in_mission6_register": true
+  },
+  {
+   "id": "U-22",
+   "question": "API base URL",
+   "domain": "network",
+   "status_current": "CLOSED_STATIC",
+   "status_mission6": "NOT_RECOVERED",
+   "history": [
+    {
+     "mission": "06",
+     "status": "NOT_RECOVERED"
+    },
+    {
+     "mission": "07",
+     "status": "CLOSED_STATIC"
+    }
+   ],
+   "answer_or_reason": "api.mimo.org / api-testing.mimo.org via DI case 22",
+   "evidence_ref_m7": "02_ARCHITECTURE_AND_DI/09",
+   "evidence_files": [
+    "mission-07/02_ARCHITECTURE_AND_DI/09_COMPLETE_DI_GRAPH.json"
+   ],
+   "in_mission6_register": false
+  },
+  {
+   "id": "U-23",
+   "question": "PATCH vs PUT - resolved: both genuinely exist (4 PATCH, 2 PUT)",
+   "domain": "network",
+   "status_current": "CLOSED_STATIC",
+   "status_mission6": "VERIFIED_STATIC",
+   "history": [
+    {
+     "mission": "06",
+     "status": "UNKNOWN"
+    },
+    {
+     "mission": "07",
+     "status": "CLOSED_STATIC"
+    }
+   ],
+   "answer_or_reason": "4 PATCH + 2 PUT genuinely coexist; no conflicting annotations",
+   "evidence_ref_m7": "08_NETWORK/59",
+   "evidence_files": [
+    "mission-07/08_NETWORK/59_ENDPOINT_CATALOG_COMPLETE.json"
+   ],
+   "in_mission6_register": true
+  }
+ ]
+}
