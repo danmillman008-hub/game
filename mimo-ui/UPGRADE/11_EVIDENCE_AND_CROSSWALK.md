@@ -31,7 +31,7 @@
 
 | یادگرفته | منبع | سطح | کجا استفاده شد |
 |---|---|---|---|
-| ۴ تب واقعی میمو | `mimo-ui/SOURCE/res/menu/bottom_navigation_menu.xml` + `navigation_*` strings | `VERIFIED_STATIC` | `02`, `08`, `10` |
+| ۴ تب واقعی میمو (**شاهد بایگانی**؛ طرح محصول v4 = ۵ تب) | `mimo-ui/SOURCE/res/menu/bottom_navigation_menu.xml` + `navigation_*` strings | `VERIFIED_STATIC` | `02`, `08`, `10`, `15` |
 | `cv_practice_tab` ComposeView + toolbar include | `practice_tab_fragment.xml` | `VERIFIED_STATIC` | `03`, `08` |
 | `btn_ai_tutor` / `iv_ai_tutor_pulse` + ۲۸ رشته | `coding_keyboard_layout.xml`, `values/string.xml` | `VERIFIED_STATIC` | `04` |
 | توکنها/ابعاد/انیمیشنها | `DESIGN_TOKENS.json`, `ATLAS/tokens.css` | `VERIFIED_STATIC` | `02`, `wireframes.html` |

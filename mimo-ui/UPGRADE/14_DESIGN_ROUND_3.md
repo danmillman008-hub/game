@@ -1,6 +1,6 @@
 # دور سوم طراحی — سادهسازی و تغییر دامنه (DESIGN DRAFT v3)
 
-> ⚠️ **تا حدی توسط v4 اصلاح شد:** چت v3 «حداکثر یک تاریخچه» بود؛ در v4 دکمههای پنل اصلی LH به آن اضافه شدند و ناوبری ۵ تب شد. حکم فعلی ← `15_DESIGN_ROUND_4.md`. مشاوره PARKED و سادگی کلی چت پابرجاست.
+> ⚠️ **تا حدی توسط v4 اصلاح شد:** چت v3 «حداکثر یک تاریخچه» بود؛ در v4 دکمههای پنل اصلی LH به آن اضافه شدند، ناوبری **۵ تب** شد، Learn اضافه شد و سیاست پاسخنامه تعریف شد. حکم فعلی ← `15_DESIGN_ROUND_4.md`. مشاوره PARKED و سادگی کلی چت پابرجاست.
 
 **ورودی:** بازخورد جدید + اسکرینشات پنل اصلی LearnHarness (`DESIGN/REFERENCE/learnharness-main-panel-user-screenshot.png`) + لینک ریپوی EPM.
 **خروجی:** `DESIGN/index.html` (v3)، لاگ حاضر، `CATALOGS/SCOPE_DECISIONS.csv`, `CATALOGS/AI_PANEL_SPEC.csv`, `CATALOGS/EPM_MINOR_OPTIONS.csv`، بهروزرسانی `04` / `05` / `00` / `11` / `12` / `README` / `13` / `MANIFEST`.

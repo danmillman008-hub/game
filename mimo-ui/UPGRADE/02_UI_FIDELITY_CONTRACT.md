@@ -37,7 +37,7 @@
 | انحراف | منبع | حکم |
 |---|---|---|
 | ۵ تب `Learn / Practice / Max / Leaderboard / Profile` | `/home/user/_work/prev/mimo/shell/app.js` | ❌ تب `Max` ممنوع؛ ولی **۵ تب `Learn / Practice / AI / Leaderboard / Profile` بهحکم v4 الزامی است** |
-| «۳ تب» در برخی اسناد قدیمی | `18_KONKUR_TRANSFER/ADAPTATION_PLAN.md` | ❌ اصلاح به ۴ تب |
+| «۳ تب» در برخی اسناد قدیمی | `18_KONKUR_TRANSFER/ADAPTATION_PLAN.md` | ❌ اصلاح به **۵ تب (v4)** |
 | قرار دادن موتورهای وب بهعنوان تب مستقل | همان پروتوتایپ | ❌ موتورها پشت مقصدهای درونتبی پروکسی میشوند |
 | ساختن زبان بصری تازه برای کنکور | ریسک اصلی | ❌ ممنوع؛ فقط ترکیب مجدد کامپوننتهای موجود |
 
