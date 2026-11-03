@@ -1,104 +1,96 @@
-# یادداشتهای طراحی — نسخهٔ نهایی v5 (DESIGN v5 · FINAL DRAFT)
+# یادداشتهای طراحی — دور ششم (DESIGN v6)
 
-**وضعیت:** طرح نهایی، منتظر تأیید شما. بعد از تأیید → «مرحلهٔ بعد» (پیادهمسازی). هیچ کد محصولی نوشته نشده؛ تعاملات `index.html` فقط برای لمس و بازبینی طرح ساخته شدند. لاگ کامل: `../16_DESIGN_ROUND_5.md`.
+> **فقط دیزاین/پلن.** هیچ کد محصولی نوشته نشده. جایگزین یادداشتهای v5 است.
 
-**خروجی قابل لمس:** `DESIGN/index.html` (پیشنمایش زندهٔ پورت ۸۰۸۱: `/DESIGN/index.html`). وایرفریم v1 در `../wireframes.html` بایگانی است.
+## اصل روش
+بازسازی **از داخل کد APK**، نه از روی عکس. اسکرینشاتها فقط چک بصریاند.
 
----
-
-## ۰. تفاوت بنیادین v5 با v4
-
-> در v4 بخش یادگیری «شبیه میمو» نبود؛ در v5 **بخشهای اصلی مستقیماً از جداول منبع APK ۹٫۳۵ تولید میشوند**.
-
-`DESIGN/index.html` دیگر دستینویس نیست. خط لوله:
-
+خط لولهٔ قابلتکرار:
 ```
-python3 tools/extract_mimo_geometry.py .   → DESIGN/CODE_GEOMETRY.json + CATALOGS/MIMO_CODE_GEOMETRY.csv
-python3 tools/build_design_v5.py .         → DESIGN/index.html
+tools/extract_mimo_geometry.py   → DESIGN/CODE_GEOMETRY.json
+tools/extract_mimo_learn_v6.py   → DESIGN/LEARN_CODE_GEOMETRY.json + CATALOGS/MIMO_LEARN_SUBSCREENS.csv (۸۶۸ ردیف شاهد)
+tools/build_design_v6.py         → DESIGN/index.html
+```
+منابع خواندهشده: جداول ARSC (`DESIGN_TOKENS.json`)، `res/drawable/*.xml` (`android:pathData`)،
+`res/layout/*.xml` (AXML)، `res/navigation/nav_onboarding_graph.xml`،
+`assets/ui/testdata/test-tracks.json`، `dex/UI_CLASSES.json`، `dex/UI_STRING_LITERALS.txt`.
+نتیجه: ۱۵۰ رشته، ۴۱ وکتور، ۱۶ لایه، ۱۵ فصل واقعی، ۲۷۲ کلاس DEX، ۶۸ رنگ / ۶۲ دایمنشن / ۲۱۳ استایل.
+
+---
+
+## ۱. صفحهٔ ورود حذف شد
+شما گفتید «فعلاً به صفحهٔ ورود که صفحهٔ ۷ هست نیازی نداریم».
+صفحهٔ `onboarding` کاملاً از سوییچر و نماها حذف شد؛ شاهد تصویری
+`mimo-09-onboarding.webp` فقط بایگانی است.
+
+## ۲. صفحهٔ یادگیری تمیز شد
+عوامل شلوغی v5 حذف شدند: حلقهٔ ۱۲٪، چیپ «پیشرفت ۱/۲»، نوشتهٔ توضیحی **داخل گوشی**،
+قرص فصل و FAB اضافه. جایگزین:
+- **۳ چیپ**: سکه ۱٬۲۷۲ / کلید ∞ / استریک ۰ → `PathToolbarKt$RowWithKeys`، `ic_key`، `ic_infinity`.
+- **کارت سربرگ مسیر**: «Career path» / «3. Arrays & Functions» / نوار پیشرفت ۴۳٪
+  → `ViewsKt$OverviewEntryPointHeader` + `progress_bar_mimo.xml` (شعاع ۱۰۰dp).
+- **سهخط `ic_list_bulleted`** کنار نام مسیر، قابلکلیک → `Select Path`.
+- مسیر مارپیچ تمیز ۵ گرهای → `PathMapScreenKt`، `ic_check_white`، `ic_flash`.
+
+## ۳. صفحاتی که نساخته بودم، ساخته شدند
+
+### `Select Path` (سهخط)
+`select_path`، `track_switcher_career_paths`، ۴ کارت مسیر شغلی
+(منتخب با کادر `card_outline #7E4BDE`)، `courses`، ۶ ردیف تکدرس
+(`track_switcher_typescript_label = "JS required"`،
+`track_switcher_react_label = "HTML, CSS and JS requi…"` با ellipsize)،
+حلقههای ۵۶dp از `profile_certificate_view.xml`، badgeها از `ic_badge_*` / `ic_code_lang_*`.
+پشتش: `ObservePathSwitcherState` (۵۱ کلاس)، `showPathSwitcher`، `key_path_switcher_on_exit_enabled`.
+
+### `Path Overview` (کارت مسیر)
+`onboarding_path_type_career_path`، دکمهٔ `ic_switch`،
+`certificates_professional_title`، «22% Complete» (`path_overview_certificate_percent_complete`)،
+`2/9`، و فصلهای شمارهدار با `path_overview_section_ordinal = "%d. %s"`؛
+**نام/توضیح/تعداد درس مستقیم از `test-tracks.json :: tracks[0].sections[]`**.
+پشتش: `PathOverviewScreenKt`، `OverviewEtaCardKt`، `PathOverviewViewModel`.
+
+### `Section detail` (داخل مبحث)
+فهرست درسها با **شناسههای واقعی `tutorialIds`**، وضعیت ✓/▶/🔒،
+`path_overview_section_project_label = "Section Project"`،
+`path_section_coming_soon = "Coming soon"`،
+`alert_msg_section_setion_locked`،
+`lesson_continue` → کارت شروع فصل → صفحهٔ درس.
+
+### `Unfinished track` (دیالوگ)
+`certificates_unfinished_track_dialog_title/text/action` عیناً،
+شعاع ۲۸dp، ماسکات `ic_mimo_mascot` (۲۹ مسیر). با کلیک روی مسیر ناتمام / کارت گواهی / «Coming soon» باز میشود.
+
+---
+
+## ۴. گراف کلیک
+```
+Learn ──سهخط──▶ Select Path ──درس──▶ Section detail ──Continue──▶ Chapter ──▶ Lesson
+  │                  ▲                     │
+  └──کارت مسیر──▶ Path Overview ─ic_switch┘  └──See course overview──▶ Path Overview
+                       ├──فصل──▶ Section detail
+                       └──گواهی──▶ Unfinished track
 ```
 
-- ۴۶ وکتور (`pathData`ی دیکدشده) → تابع `icon()` همان مسیرها را در `<svg>` رسم میکند؛ `#AARRGGBB` به `rgba()` و `fillType=1` به `fill-rule="evenodd"` نگاشت میشود.
-- ۴۱ رنگ (روز + شب) → متغیرهای CSS با همان مقادیر `DESIGN_TOKENS.json`.
-- ۳۶ دایمنشن و ۱۳ استایل متن → فاصلهها، شعاعها، ارتفاع نوارها و اندازهٔ تایپ.
-- ۴۵ رشتهٔ `strings.xml` → لیبلهای کروم عیناً؛ **فقط نام درس/فصل/مبحث کنکوری شد**.
-- ۱۹ لایهٔ AXML + ۸۰ کلاس Composeی `PathMap*` → ساختار صفحات.
-- ۹ اسکرینشات پیوستشده = **چک بصری فقط** (`CATALOGS/MIMO_SCREENSHOT_CROSSWALK.csv`، نقش `VISUAL_CROSSCHECK_ONLY`).
+## ۵. حفظشده از دورهای قبل
+۵ تب `Learn / Practice / AI / Leaderboard / Profile` (نه MAX) · ۷ بخش لیبلدار هاب آزمون ·
+تایمر فقط داخل آزمون (کلیک ← عدد ← شروع ← معکوس، ۲۷۰ دقیقۀ ثابت) ·
+**«پاسخبرگ»** = گزینههای زدهشده / **«پاسخنامه»** = جواب تشریحی + کلید تستی ·
+زمان خالص آزمون برای جامع/جمعبندی/نهایی ·
+**یک** دکمهٔ «توضیح با هوش مصنوعی» در صفحهٔ سؤالات + **همان** دکمه در صفحهٔ نتیجه ·
+چت مینیمال + تاریخچه + ۸ دکمهٔ LH · لیدربورد با اطلاعات/امتیازات/آزمونهای خود فرد ·
+بخش مشاوره `PARKED` · بدون Pro/پرداخت/اشتراک ·
+«وارد کردن کلید API» فقط یادآوری، **الان در UI طراحی نشده**.
 
-هیچ فایل باینری، فونت، تصویر یا کدی از APK کپی نشده است.
+## ۶. تفاوت کد و عکس (کد ملاک است)
+- منوی AXML چهارتبه است؛ `mimo-10` نسخهای با تب MAX نشان میدهد؛
+  **حکم صریح شما** ۵ تب با AI است و MAX راه نیافت.
+- نام فصلها در `test-tracks.json` با اسکرینشات فرق دارد؛ ساختار/رشتهها/حلقهها از کد آمدند،
+  فقط **نام درس و مبحث** کنکوری شد.
+- APK هیچ کوالیفایر RTL ندارد → نمای پیشفرض LTRِ ۱۰۰٪ میمو + دکمهٔ «فارسی / RTL».
 
----
+## ۷. تست
+`node --check` ✓ · اجرای واقعی DOM (jsdom): ۰ خطا، ۱۳ نما، ۹۹/۹۹ آیکن SVG،
+همهٔ جریانها، RTL/LTR، حالت شب، تایمر، پاسخبرگ/پاسخنامه و دکمههای AI ✓ ·
+`VERIFICATION_REPORT.json` = PASS · ۱۴ اسکرینشات فقط چک بصری.
 
-## ۱. نکات کلیدی صفحه
-
-| بخش | محل | نکته |
-|---|---|---|
-| نوار بالا | بالای صفحه | `DESIGN v5 · FINAL`، حالت شب، **فارسی/RTL**، لینک `CODE_GEOMETRY.json` و یادداشتها |
-| سوییچر | بالای گوشی | ۱۱ نما: ۷ نمای اصلی میمو + ۴ نمای تازه کنکور |
-| پنل راست | کنار گوشی | شمارش شواهد کد، «تفاوت کد با اسکرینشات»، ویرایشهای دور، توکنها، وضعیت |
-
-### نمای پیشفرض = مسیر یادگیری (۱۰۰٪ میمو)
-
-- قرصهای بالا: سکه ۲۰۰ (`ic_coin`) و استریک ۱ (`ic_streak_active`).
-- نوار درس: `ic_list_bulleted` + نام درس (`Web Development` در حالت انگلیسی / «زیستشناسی» در حالت فارسی).
-- پسزمینهٔ نقطهای، قرص فصل «HTML Basics / سلول و بافت» با حلقهٔ ۱۲٪ (`progress_chapter_primary`).
-- گرهها: انجامشده (`ic_check_white` + لبهٔ `button_primary_highlight`), جاری (دو حلقهٔ `card_outline`، `ic_play` یا «۱/۲» با دکمۀ `progress 1/2`), قفل (`ic_lock_alt_02` + `card_disabled`), رعد (`ic_flash`), دکمۀ شناور «A».
-- خطوط وصلکننده با `progress_chapter_primary`.
-- کلیک روی گرهٔ جاری → **کارت شروع فصل** (`LEARN` / `CHAPTER 0/2` / نوار ۶dp / `START LEARNING`).
-- نوار پایین: ۵ تب با `ic_cap(_filled)`, `ic_flash(_filled)`, `ic_magic_wand(_filled)`, `ic_trophy(_filled)`, `ic_user_circle(_filled)` و رنگ `icon_primary`/`icon_weak`.
-
-### نماهای اصلی دیگر (همه از AXML کد)
-
-| نما | کد | نکتۀ بازآفرینی |
-|---|---|---|
-| صفحهٔ درس | `chapter_toolbar.xml`, `lesson_noninteractive_fragment.xml` | `btn_lesson_close`, `btn_lesson_report`, نوار ۶dp، چیپهای `code_highlight`، کارت مرورگر با `browser_view_header_dots`، دکمۀ ۴۸dp `CONTINUE` |
-| لیدربورد | `leaderboard_fragment_active.xml`, `leaderboard_item.xml`, `leaderboard_promotion_divider.xml` | ۵ نشان لیگ، ردیفهای ۶۰dp، ردیف آبی خود فرد، `support_yellow`, `support_blue`, `support_green` + **اطلاعات/امتیازات/آزمونهای من** |
-| پروفایل کاربر | `public_profile_fragment.xml`, `profile_info_card_view.xml` | آواتار ۸۸dp، ۳ کارت ۳۲dp آیکن / `TextH3` / `TextLabel3` تمامحروف |
-| پروفایل | `profile_fragment.xml`, `profile_empty_trophies_item.xml`, `border_dashed.xml` | نوار ۵۶dp، کادر خطچین ۲dp/۸dp/۸dp/۱۲dp، آیکن ۸۰dp، متن با حاشیۀ ۶۰dp |
-| صفحۀ ورود | `onboarding_pick_a_path.xml` | نوار ۶dp، نقاط، `GET STARTED`, «I ALREADY HAVE AN ACCOUNT» |
-| باتمشیت ساخت آزمون | `codeplayground_template_*` | «Select a Template» + ۴ قالب با وکتورهای واقعی |
-
----
-
-## ۲. «پاسخبرگ» در برابر «پاسخنامه» (تصحیح نامگذاری شما)
-
-| دکمه | محتوا | حین آزمون | پایان آزمون |
-|---|---|---|---|
-| **پاسخبرگ** (`#answerSheetBtn`) | شبکۀ ۲۰ سؤال + **گزینهای که زدهاید**؛ پاسخ صحیح مخفی | عادی/زماندار/تحلیلی ✅ · جامع/جمعبندی ❌ | همه ✅ |
-| **پاسخنامه** (`#answerKeyBtn`) | باتمشیت بالا میآید: تب «پاسخ تشریحی» (جواب تشریحی + توضیحات سؤال، پیشفرض) و تب «پاسخ تستی» | عادی/زماندار/تحلیلی ✅ · جامع/جمعبندی ❌ | همه ✅ + تحلیل |
-
-> «یه سری آزمونها باید خالص وقت برای آزمون باشه و در آخر آزمون اون صفحه بیاد» → برای `comprehensive` / `review` هیچ پاسخبرگ/پاسخنامهای حین آزمون نیست و **`finishExam()` صفحۀ پاسخنامه را خودکار باز میکند**. فایل ماشینخوان: `../CATALOGS/ANSWER_SHEET_POLICY.csv`.
-
----
-
-## ۳. «توضیح با هوش مصنوعی» = یک دکمه، دو جا
-
-- صفحۀ **سؤالات آزمون** (`#askAiBtn`): نام آزمون + شماره سؤال + **صورت سؤال** + **گزینۀ انتخابشده** → چت مینیمال.
-- صفحۀ **آخر آزمون** (`#askAiResultBtn`): **همان دکمه**؛ ۳ سؤال غلط را با **صورت سؤال + پاسخ شما + پاسخ صحیح** به همان چت منتقل میکند (حباب زمینه).
-- بدون پنل تازه، بدون داک، بدون دکمۀ اضافه در آزمون. تنها ایدۀ جزیی EPM، همانطور که خواستید.
-
----
-
-## ۴. لیدربورد = اطلاعات خود فرد
-
-ردیف آبی `sarah / 20 / 330` (قابلکلیک → پروفایل کاربر)، ۳ کارت «روز متوالی / امتیاز کل / لیگ» و کادر «آزمونها و امتیازات من»: آزمون جامع (۶۸٪، رتبه ۱۲۴۰)، تکدرسی زیست (۸۲٪)، زماندار شیمی (۷۱٪)، تحلیلی غلطها (۴ غلط / ۵ نزده)، XP هفته (۳۳۰).
-
----
-
-## ۵. RTL، شب و قانون ۰ تغییر بصری
-
-- نمای پیشفرض **LTR** است، چون APK ۹٫۳۵ هیچ کوالیفایر RTL ندارد (۱۶۱ کوالیفایر، ۰ مورد `fa/ar/he/ur/ps`). دکمۀ «↔ فارسی / RTL» آینهسازی + لیبلهای فارسی را اعمال میکند.
-- حالت شب مقادیر `night` همان جداول ARSC را میگیرد (مثلاً `--bg: #252746`).
-- ۰ رنگ/فونت/شعاع/آیکن تازه؛ تمام آیکنها وکتورهای خود میموند.
-- ۵ تب `Learn / Practice / AI / Leaderboard / Profile` طبق حکم صریح دور چهارم حفظ شد؛ اسکرینشاتها بیلد قدیمی ۴ تب (با `Community`) را نشان میدهند و این اختلاف در `../16_DESIGN_ROUND_5.md` §۱٫۱ ثبت شد.
-
----
-
-## ۶. چیزهایی که عمداً وجود **ندارند**
-
-مشاوره/برنامهریز (PARKED) · صفحه یا فیلد «کلید API» (فقط یادداشت) · اشتراک/پرداخت/Pro · ۳۲ دکمۀ LH · سایدبار نشستها · گراف دانش · FSRS/RAG/FTS/۳D/واژگان/A4 · تایمر بیرون از آزمون · پالت سؤالات (نام قدیمی) · هرگونه کد محصول.
-
----
-
-## ۷. تأیید
-
-`tools/verify_upgrade.py .` → `PASS`، `node --check` روی اسکریپت صفحه بیخطا، ۰ آلودگی CJK. بعد از **تأیید نهایی شما** وارد مرحلۀ پیادهمسازی (P0 به بعد؛ P5 همچنان PARKED) میشویم.
+**منتظر تأیید نهایی**؛ بعد از «مرحلهٔ بعد» ← P0 پیادهمسازی.

@@ -1,5 +1,7 @@
 # دور پنجم طراحی — بازآفرینی ۱۰۰٪ میمو **از داخل کد** (DESIGN v5 · FINAL DRAFT)
 
+> ⚠️ **بایگانی / superseded:** این سند مربوط به دورهای قبل است. طراحی فعلی **[DESIGN v6](17_DESIGN_ROUND_6.md)** است؛ صفحهٔ ورود حذف، یادگیری بازسازی و زیرصفحات «انتخاب مسیر / نمای مسیر / داخل مبحث» از کد اضافه شدند. لاگهای قدیمی صرفاً ردپای حسابرسیاند.
+
 **ورودی:** ۹ اسکرینشات تازۀ میمو + بازخورد شما در سه پیام پیاپی.
 **خروجی:** `DESIGN/index.html` (v5، تولیدشده از `DESIGN/CODE_GEOMETRY.json`)، `tools/extract_mimo_geometry.py`، `tools/build_design_v5.py`، `tools/design_v5_template.html`، `CATALOGS/MIMO_CODE_GEOMETRY.csv`، `CATALOGS/MIMO_SCREENSHOT_CROSSWALK.csv`، `CATALOGS/ANSWER_SHEET_POLICY.csv`، بهروزرسانی ۱۴ سند/CSV و `MANIFEST.json`، لاگ حاضر.
 **وضعیت:** `DESIGN v5 · FINAL DRAFT` — منتظر تأیید نهایی. هیچ کد محصولی نوشته نشده است.

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Fail-closed verification of the Konkur-upgrade planning deliverable (v5)."""
+"""Fail-closed verification of the Konkur-upgrade planning deliverable (v6)."""
 from __future__ import annotations
 import csv, hashlib, json, re, sys
 from pathlib import Path
@@ -13,15 +13,15 @@ docs = ["README.md", "00_START_HERE.md", "01_CRAFT_ANYTHING_INSTALL.md",
         "09_DATA_MODEL_AND_BACKEND.md", "10_PHASED_ROADMAP.md",
         "11_EVIDENCE_AND_CROSSWALK.md", "12_RISKS_UNKNOWN_AND_QUESTIONS.md",
         "13_DESIGN_ROUND_2.md", "14_DESIGN_ROUND_3.md", "15_DESIGN_ROUND_4.md",
-        "16_DESIGN_ROUND_5.md", "wireframes.html"]
-csvs = {"UI_FIDELITY_RULES.csv": 14, "FEATURE_MAP.csv": 17, "EXAM_TYPES.csv": 11,
+        "16_DESIGN_ROUND_5.md", "17_DESIGN_ROUND_6.md", "wireframes.html"]
+csvs = {"UI_FIDELITY_RULES.csv": 20, "FEATURE_MAP.csv": 17, "EXAM_TYPES.csv": 11,
         "HADAF_TEMPLATES.csv": 7, "GAMIFICATION_MAP.csv": 13, "PHASES.csv": 8,
         "LEARNHARNESS_ACTIONS.csv": 32, "EVIDENCE_LEDGER.csv": 10, "OPEN_QUESTIONS.csv": 5,
-        "DESIGN_FEEDBACK.csv": 28, "SCOPE_DECISIONS.csv": 15,
+        "DESIGN_FEEDBACK.csv": 36, "SCOPE_DECISIONS.csv": 20,
         "AI_PANEL_SPEC.csv": 21, "EPM_MINOR_OPTIONS.csv": 7,
         "EXAM_SECTION_TEMPLATES.csv": 7,
-        "MIMO_CODE_GEOMETRY.csv": 200, "MIMO_SCREENSHOT_CROSSWALK.csv": 9,
-        "ANSWER_SHEET_POLICY.csv": 5}
+        "MIMO_CODE_GEOMETRY.csv": 200, "MIMO_SCREENSHOT_CROSSWALK.csv": 14,
+        "ANSWER_SHEET_POLICY.csv": 5, "MIMO_LEARN_SUBSCREENS.csv": 868}
 checks, problems = [], []
 
 
@@ -57,8 +57,8 @@ ck("wireframe:v1-banner", "DESIGN/index.html" in t, "v1 archived, points to v5")
 D = ROOT / "DESIGN"
 dt = (D / "index.html").read_text(encoding="utf-8") if (D / "index.html").is_file() else ""
 ck("design:index", len(dt) > 20000, "%d chars" % len(dt))
-ck("design:v5-header", "DESIGN v5" in dt and "FINAL" in dt, "final version 5")
-ck("design:v4-archived", "DESIGN v4" not in dt or "DESIGN v5" in dt, "v4 superseded")
+ck("design:v6-header", "DESIGN v6" in dt and "دور ششم" in dt, "design round 6 review")
+ck("design:v5-archived", "DESIGN v5" not in dt or "DESIGN v6" in dt, "v5 superseded")
 ck("design:no-hub-timer", "exam-hub" in dt and "⏱ ۱۲:۴۵" not in dt, "timer removed from exam hub")
 ck("design:timer-states", all(x in dt for x in ["timerSheet","timerStart","timerPause","timerReset","finished"]), "click-number-start-countdown")
 ck("design:counseling-removed",
@@ -71,12 +71,12 @@ ck("design:ai-no-clutter", all(x not in dt for x in
 ck("design:lh-buttons", all(x in dt for x in
    ["Chains","Import notes","Dictate","gemini-flash-lite-latest","medium","TEACH","PRACTICE"]), "8 LH panel buttons restored")
 ck("design:epm-link", "askAi" in dt and "EPM" in dt, "minor EPM idea in exam")
-ck("design:11views", dt.count('<button data-go=') == 11, "11 design views, counseling PARKED")
+ck("design:13views", dt.count('<button data-go=') == 13, "13 design views: onboarding removed, 3 Learn sub-screens added")
 ck("design:5tabs", dt.count('data-tab="') == 5 and all(x in dt for x in
    ['data-tab="Learn"','data-tab="Practice"','data-tab="AI"','data-tab="Leaderboard"','data-tab="Profile"']),
    "five tabs Learn/Practice/AI/Leaderboard/Profile")
-ck("design:learn", 'data-screen="learn"' in dt and "PathMapScreenKt" in dt and "chapter-pill" in dt,
-   "Learn = Mimo path map reconstructed from code")
+ck("design:learn", 'data-screen="learn"' in dt and "PathMapScreenKt" in dt and "overview-card" in dt and '<section class="screen mimo on" data-screen="learn">' in dt and dt.split('data-screen="learn"')[1].split("</section>")[0].count("path-note") == 0,
+   "Learn rebuilt clean: 3 pills + overview header card, annotations removed")
 ck("design:leaderboard", 'data-screen="leaderboard"' in dt and "selfbox" in dt and "آزمونها و امتیازات من" in dt,
    "leaderboard view with own info/scores/exams")
 ck("design:answer-sheet", all(x in dt for x in
@@ -113,15 +113,21 @@ if gp.is_file():
        "CSS custom properties injected from ARSC colour tables")
 ck("design:build-tools", (ROOT / "tools/extract_mimo_geometry.py").is_file()
    and (ROOT / "tools/build_design_v5.py").is_file()
-   and (ROOT / "tools/design_v5_template.html").is_file(), "reproducible extract -> build pipeline")
+   and (ROOT / "tools/design_v5_template.html").is_file()
+   and (ROOT / "tools/extract_mimo_learn_v6.py").is_file()
+   and (ROOT / "tools/build_design_v6.py").is_file()
+   and (ROOT / "tools/design_v6_template.html").is_file(), "reproducible extract -> build pipeline (v5 + v6)")
 
 # ---- 9 Mimo reference screenshots (visual cross-check only) ----
 shots = ["mimo-01-learn-path-play.jpg","mimo-02-learn-path-half.jpg",
          "mimo-03-chapter-start-dialog.jpg","mimo-04-lesson-continue.jpg",
          "mimo-05-weekly-leaderboard.jpg","mimo-06-user-profile.jpg",
          "mimo-07-profile-trophies.jpg","mimo-08-create-playground.jpg",
-         "mimo-09-onboarding.webp"]
-ck("design:9screenshots", all((D / "REFERENCE" / s).is_file() and (D / "REFERENCE" / s).stat().st_size > 10000 for s in shots),
+         "mimo-09-onboarding.webp",
+         "mimo-10-path-map-current.jpg","mimo-11-select-path-careers.jpg",
+         "mimo-12-select-path-courses.jpg","mimo-13-path-overview-sections.jpg",
+         "mimo-14-unfinished-track-dialog.jpg"]
+ck("design:14screenshots", all((D / "REFERENCE" / s).is_file() and (D / "REFERENCE" / s).stat().st_size > 10000 for s in shots),
    "%d Mimo screenshots archived" % len(shots))
 ck("design:screenshot", (D / "REFERENCE/learnharness-ui-user-screenshot.png").is_file()
    and (D / "REFERENCE/learnharness-ui-user-screenshot.png").stat().st_size > 10000, "user LH screenshot")
@@ -132,7 +138,7 @@ ck("design:screenshot3", (D / "REFERENCE/lh-composer-user-screenshot.png").is_fi
 ck("design:screenshot4", (D / "REFERENCE/lh-topbar-user-screenshot.png").is_file()
    and (D / "REFERENCE/lh-topbar-user-screenshot.png").stat().st_size > 3000, "LH topbar screenshot")
 xw = (ROOT / "CATALOGS/MIMO_SCREENSHOT_CROSSWALK.csv").read_text(encoding="utf-8")
-ck("design:screenshot-role", xw.count("VISUAL_CROSSCHECK_ONLY") == 9, "all 9 screenshots marked visual cross-check only")
+ck("design:screenshot-role", xw.count("VISUAL_CROSSCHECK_ONLY") == 14, "all 14 screenshots marked visual cross-check only")
 
 # ---- AI exam buttons (one button, two places) ----
 ck("design:ai-exam-button", all(x in dt for x in
@@ -141,6 +147,52 @@ ck("design:ai-exam-button", all(x in dt for x in
 ck("csv:answer-policy", (ROOT / "CATALOGS/ANSWER_SHEET_POLICY.csv").is_file()
    and "during_exam_answer_key" in (ROOT / "CATALOGS/ANSWER_SHEET_POLICY.csv").read_text(encoding="utf-8"),
    "machine-readable answer sheet / answer key policy")
+
+# ---- DESIGN v6: Learn sub-screens, code-first deep extraction ----
+ck("design:v6:no-onboarding", 'data-screen="onboarding"' not in dt and 'data-go="onboarding"' not in dt,
+   "onboarding removed from design per user")
+for scr in ["select-path","path-overview","section-detail"]:
+    ck("design:v6:screen-"+scr, 'data-screen="%s"' % scr in dt, scr + " reconstructed")
+ck("design:v6:three-lines", 'id="pathSwitchBtn"' in dt and 'data-nav="select-path"' in dt,
+   "ic_list_bulleted three-lines icon opens Select Path")
+ck("design:v6:overview-entry", 'id="overviewEntry"' in dt and 'data-nav="path-overview"' in dt,
+   "path header card opens Path Overview")
+ck("design:v6:ic-switch", 'id="overviewSwitch"' in dt and 'ic_switch' in dt,
+   "two-way arrows open Select Path from Path Overview")
+ck("design:v6:unfinished", all(x in dt for x in ["unfinishedModal","Unfinished track","personalised certificate","ic_mimo_mascot"]),
+   "Unfinished track modal from certificate strings")
+ck("design:v6:career-content", all(x in dt for x in ["Career Paths","Full-Stack Developer","Back-End Developer","Courses","TypeScript","JS required","6/14"]),
+   "Select Path career cards + course rows")
+ck("design:v6:certificate", all(x in dt for x in ["Professional Certificate","22% Complete","2/9","path_overview_certificate_percent_complete"]),
+   "certificate card from ARSC strings")
+ck("design:v6:sections-from-code", all(x in dt for x in ["sectionRows","path_overview_section_ordinal","tutorialIds","Section Project","Coming soon"]),
+   "numbered sections + tutorial ids rendered from shipped JSON")
+ck("design:v6:no-max-tab", 'data-tab="MAX"' not in dt and "tabMap" in dt,
+   "MAX tab from screenshot NOT introduced; approved 5 tabs kept")
+ck("design:v6:clean-learn", all(x in dt for x in ["1,272","ic_key","ic_infinity","overview-card","l6n1"]),
+   "clean Learn: 3 pills + overview card + zigzag nodes")
+lp = D / "LEARN_CODE_GEOMETRY.json"
+ck("design:v6:learn-geometry", lp.is_file(), "LEARN_CODE_GEOMETRY.json present")
+if lp.is_file():
+    lg = json.loads(lp.read_text(encoding="utf-8"))
+    ck("design:v6:learn-vectors", len(lg["vectors"]) >= 40 and all(v["paths"] for v in lg["vectors"].values()),
+       "%d vectors with pathData" % len(lg["vectors"]))
+    ck("design:v6:learn-strings", sum(len(v) for v in lg["strings"].values()) >= 140,
+       "%d ARSC strings" % sum(len(v) for v in lg["strings"].values()))
+    ck("design:v6:learn-layouts", len(lg["layouts"]) >= 15 and len(lg["navigation"]) >= 1,
+       "%d AXML layouts / %d nav graphs" % (len(lg["layouts"]), len(lg["navigation"])))
+    ck("design:v6:learn-content", len(lg["contentModel"]["sections"]) >= 15 and lg["contentModel"]["sections"][0]["tutorialIds"],
+       "%d real sections with tutorialIds from test-tracks.json" % len(lg["contentModel"]["sections"]))
+    ck("design:v6:learn-dex", sum(v["count"] for k,v in lg["dex"].items() if k != "literals") >= 250,
+       "%d DEX classes" % sum(v["count"] for k,v in lg["dex"].items() if k != "literals"))
+ck("design:v6:LEARN-payload", "var LEARN=" in dt and "LEARN.contentModel" in dt and "LEARN.counts" in dt,
+   "sub-screens rendered from injected code payload")
+lsub = ROOT / "CATALOGS/MIMO_LEARN_SUBSCREENS.csv"
+ck("design:v6:sub-catalog", lsub.is_file() and len(rows(lsub)) - 1 == 868, "868 code-evidence rows")
+ck("design:v6:build-bytes", len(dt) > 200000, "%d chars" % len(dt))
+ck("docs:v6:17", "DESIGN v6" in (ROOT / "17_DESIGN_ROUND_6.md").read_text(encoding="utf-8"), "v6 final log")
+ck("docs:v6:notes", "DESIGN v6" in (D / "DESIGN_NOTES.fa.md").read_text(encoding="utf-8"), "v6 design notes")
+ck("docs:v5:16", "DESIGN v5" in (ROOT / "16_DESIGN_ROUND_5.md").read_text(encoding="utf-8"), "v5 log archived")
 
 # ---- docs cross-references ----
 ck("docs:v5:16", "DESIGN v5" in (ROOT / "16_DESIGN_ROUND_5.md").read_text(encoding="utf-8"), "v5 final log")

@@ -2,11 +2,11 @@
  "round": "konkur-upgrade-planning",
  "branch": "arena/aebb90b7-game",
  "date": "2026-11-03",
- "status": "PLAN_ONLY + DESIGN v5 FINAL DRAFT (no product implementation)",
+ "status": "PLAN_ONLY + DESIGN v6 REVIEW (no product implementation)",
  "goal": "Upgrade Mimo 9.35 into an Iranian Konkur learning app with strict fidelity to Mimo UI/mechanism/navigation",
  "deliverables": {
-  "persian_docs": 18,
-  "csv_catalogs": 17,
+  "persian_docs": 19,
+  "csv_catalogs": 18,
   "wireframes_html": 2,
   "source_apps": 2,
   "extracted_assets_files": 1874,
@@ -16,10 +16,13 @@
   "phases": 8,
   "phase_status": "P0..P4/P6/P7 PLANNED · P5 PARKED (counseling) · awaiting final design approval",
   "interactive_design_prototype": 1,
-  "verification_checks": 109,
-  "design_round": "v5 (FINAL DRAFT)",
+  "verification_checks": 136,
+  "design_round": "v6 (REVIEW)",
   "code_first_geometry": "DESIGN/CODE_GEOMETRY.json (46 vectors / 41 colors / 36 dims / 13 styles / 45 strings / 19 AXML layouts / 80 Compose path classes)",
-  "mimo_reference_screenshots": 9
+  "mimo_reference_screenshots": 14,
+  "learn_code_evidence": "DESIGN/LEARN_CODE_GEOMETRY.json (150 ARSC strings / 41 vectors / 16 AXML layouts / 1 nav graph / 15 real sections / 272 DEX classes / 68 colors / 62 dimens / 213 styles) + CATALOGS/MIMO_LEARN_SUBSCREENS.csv (868 rows)",
+  "design_views": 13,
+  "design_svg_vectors": 71
  },
  "source_hashes": {
   "Mimo_9.35": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
@@ -141,7 +144,7 @@
   "next": "after final design approval → implementation phase"
  },
  "design_round_5": {
-  "status": "DESIGN v5 · FINAL DRAFT — awaiting final approval (CURRENT)",
+  "status": "SUPERSEDED by DESIGN v6 (17_DESIGN_ROUND_6.md) — archived audit trail",
   "trigger": "9 Mimo screenshots + 3 rounds of user feedback (code-first reconstruction, answer sheet split, AI button, leaderboard self info)",
   "method": "CODE_FIRST / tools/extract_mimo_geometry.py -> DESIGN/CODE_GEOMETRY.json -> tools/build_design_v5.py -> DESIGN/index.html",
   "interactive_prototype": "DESIGN/index.html",
@@ -160,5 +163,32 @@
    "Leaderboard/user-profile own info, scores and exam history",
    "v4/superseded docs kept as audit trail; counseling PARKED; no product code"
   ]
+ },
+ "design_round_6": {
+  "status": "DESIGN v6 · REVIEW — awaiting final approval (CURRENT)",
+  "trigger": "5 new Mimo screenshots + user feedback: remove onboarding (page 7), rebuild messy Learn, reconstruct the three-lines Select Path page and the inside-topic pages, and dig deeper into code",
+  "method": "CODE_FIRST / tools/extract_mimo_geometry.py + tools/extract_mimo_learn_v6.py -> DESIGN/CODE_GEOMETRY.json + DESIGN/LEARN_CODE_GEOMETRY.json -> tools/build_design_v6.py -> DESIGN/index.html",
+  "interactive_prototype": "DESIGN/index.html (281,106 bytes)",
+  "new_screens": [
+   "select-path",
+   "path-overview",
+   "section-detail",
+   "unfinished-track (modal)"
+  ],
+  "removed_screens": [
+   "onboarding"
+  ],
+  "click_flow": "three-lines -> Select Path -> course -> Section detail -> Continue -> chapter modal -> Lesson; overview card -> Path Overview -> section -> Section detail; ic_switch -> Select Path; unfinished path/certificate -> Unfinished track",
+  "code_sources": [
+   "CATALOGS/DESIGN_TOKENS.json (ARSC)",
+   "SOURCE/res/drawable/*.xml (pathData)",
+   "SOURCE/res/layout/*.xml (AXML)",
+   "SOURCE/res/navigation/nav_onboarding_graph.xml",
+   "SOURCE/assets/ui/testdata/test-tracks.json",
+   "SOURCE/dex/UI_CLASSES.json",
+   "SOURCE/dex/UI_STRING_LITERALS.txt"
+  ],
+  "runtime_test": "jsdom: 0 errors, 13 views, 5 tabs, 99/99 SVG icons painted, all flows/RTL/night/timer/answer-split/AI-buttons PASS",
+  "final_approval": "PENDING — no product implementation until user says the design is final"
  }
 }
