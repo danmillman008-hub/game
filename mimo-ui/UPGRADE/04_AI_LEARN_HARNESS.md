@@ -59,6 +59,26 @@
 
 نمایش: همان `flash_bar_view.xml` / ردیف chip با `card_pressed`، `12dp`، `8dp` فاصله، اسکرول افقی RTL، `contentDescription` کامل؛ **بدون تغییر هدر، حباب، نوار ورودی، ماسکات و پالس**. در حالت آفلاین، chipها به `card_disabled` میروند و `ai_tutor_offline_description` نشان داده میشود (نه صفحهٔ خرید).
 
+## ۴٫۱ جاسازی کنترلهای واقعی LH (بازخورد v2 — اسکرینشات کاربر)
+
+خواستهٔ جدید: «دستیار هوشمند باید در ظاهر یو آی اون دکمههایی که لرنهارنس در یو آی خودش داره رو جا سازی شده باشه، صرفاً ظاهرش شبیه میمو باشه».
+
+منبع: `DESIGN/REFERENCE/learnharness-ui-user-screenshot.png` (پیوست کاربر، ۱۷۹۶×۱۰۱۵، SHA-256 `c94a223aa07544f2f5768c45d61245ec41d7738bc459810797719086bdca945d`) + کامپوننتهای کلونشدهٔ LH. جدول کامل در `CATALOGS/LEARNHARNESS_ACTIONS.csv` (۲۶ ردیف) و پیادهمسازی قابل لمس در `DESIGN/index.html` → نمای «دستیار هوشمند».
+
+| ناحیهٔ LH در اسکرینشات | جاسازی در پوستهٔ میمو |
+|---|---|
+| `+ TEACHING` / `PRACTICE` | «＋ آموزش» / «＋ تمرین» بالای کارت جلسهها |
+| `SESSIONS` + `Search...` + `ALL/TEACHING/PRACTICE` | کارت جلسهها + جستجو + سه تب |
+| لیست جلسهها `Waiting for input · 2d ago` | همان لیست با `card_enabled` |
+| `Chains`, `Import notes…`, `$0.01` | ردیف بالا: زنجیرهها / یادداشتها / هزینه |
+| `Knowledge graph` + «Start a session or import notes…» | کارت مرکزی با همان empty state |
+| `What do you want to learn?` + دکمهٔ ارسال | نوار ورودی میمو (`ai_tutor_input_placeholder`) |
+| `TEACH/PRACTICE`, `Dictate`, `gemini-flash-lite-latest`, `medium`, `Context`, `Steps`, `Cost` | ردیف زیر ورودی |
+| `BACKGROUND AGENTS`, `SETTINGS` | ردیف جمعشوندهٔ پایین |
+| ۱۵ اکشن کامپوننتی (Plan window, Confidence rail, …) | ردیف چیپ `lhDock` (برچسب فارسی + نام انگلیسی) |
+
+**قاعدهٔ طلایی:** کنترلها = LH (**هیچکدام حذف نشود**)، پوسته = Mimo (رنگ/شعاع/فاصله/RTL/نایت مُد/ماسکات/پالس/حبابها/رشتههای `ai_tutor_*`). فقط برچسبها ترجمه و جاسازی میشوند؛ منطق LH همان `basePath=/max` و دیتاستور جدا باقی میماند.
+
 ## ۵. مقایسه با اپهای مشاوره (آموختهها)
 
 - همدرس: `AIChatWebViewScreen`, `AiChatConversationScreen`, `AiChatInputBar`, `AiChatCubit`, `AiChatThemeCubit`, ۲۶ دارایی `assets/ai_chat/` (ربات، `Counselor.svg`, میکروفون، کپی، لایک/دیسلایک، `magic_pen`, `documents`, `gallery-send`, `question-square`, `volume`)، و درسهای UX `ai-ask` و `ai-credit`.
@@ -70,6 +90,7 @@
 - [ ] diff رشتههای `ai_tutor_*` = ۰ تغییر؛ `@id/btn_ai_tutor` و `iv_ai_tutor_pulse` سر جای خود
 - [ ] `/max/*` پاسخ میدهد، `LH_DATA_DIR` جدا است، prefix حفظ شده
 - [ ] ۱۶ اکشن LH در UI قابلرویتاند و هیچکدام پشت منوی پنهان نیستند
+- [ ] تکتک کنترلهای اسکرینشات LH (TEACH/PRACTICE, Chains, Import notes, Dictate, Model, medium, Cost, Sessions, Knowledge graph, Background agents, Settings) جاسازی و قابلکلیکاند؛ ۰ حذف
 - [ ] پاسخ صحیح/کلید/answerKey هرگز در prompt ارسال نمیشود (تست خودکار)
 - [ ] حالت آفلاین و خطا با همان رشتههای میمو
 - [ ] نایت مُد و RTL تست شده؛ ۰ تب جدید

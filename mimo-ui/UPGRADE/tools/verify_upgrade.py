@@ -12,10 +12,11 @@ docs = ["README.md", "00_START_HERE.md", "01_CRAFT_ANYTHING_INSTALL.md",
         "07_LESSON_STRUCTURE_AND_QUESTIONS.md", "08_NAVIGATION_AND_IA.md",
         "09_DATA_MODEL_AND_BACKEND.md", "10_PHASED_ROADMAP.md",
         "11_EVIDENCE_AND_CROSSWALK.md", "12_RISKS_UNKNOWN_AND_QUESTIONS.md",
-        "wireframes.html"]
+        "13_DESIGN_ROUND_2.md", "wireframes.html"]
 csvs = {"UI_FIDELITY_RULES.csv": 10, "FEATURE_MAP.csv": 16, "EXAM_TYPES.csv": 11,
         "HADAF_TEMPLATES.csv": 7, "GAMIFICATION_MAP.csv": 13, "PHASES.csv": 8,
-        "LEARNHARNESS_ACTIONS.csv": 16, "EVIDENCE_LEDGER.csv": 10, "OPEN_QUESTIONS.csv": 5}
+        "LEARNHARNESS_ACTIONS.csv": 32, "EVIDENCE_LEDGER.csv": 10, "OPEN_QUESTIONS.csv": 5,
+        "DESIGN_FEEDBACK.csv": 5}
 checks, problems = [], []
 
 
@@ -45,6 +46,31 @@ ck("wireframe:tokens", all(x in t for x in ["#7E4BDE", "#FFF6F7FB".replace("FF",
 ck("wireframe:4tabs", t.count('class="tab') >= 4 and "<div class=\"tab\">Learn</div>" in t,
    "four bottom tabs rendered")
 ck("wireframe:3col-grid", "repeat(3,minmax(0,1fr))" in t, "exam node grid")
+ck("wireframe:v1-banner", "DESIGN/index.html" in t, "v1 archived, points to v2")
+
+# ---- DESIGN v2 interactive prototype ----
+D = ROOT / "DESIGN"
+dt = (D / "index.html").read_text(encoding="utf-8") if (D / "index.html").is_file() else ""
+ck("design:index", len(dt) > 20000, "%d chars" % len(dt))
+ck("design:no-hub-timer", "exam-hub" in dt and "⏱ ۱۲:۴۵" not in dt, "timer removed from exam hub")
+ck("design:timer-states", all(x in dt for x in ["timerSheet","timerStart","timerPause","timerReset","finished"]), "click-number-start-countdown")
+ck("design:counseling-planner", all(x in dt for x in
+   ["konkur-plan-v2","localStorage","goalSheet","blockSheet","exportPlan","clearPlan","savePlan"]), "usable weekly planner")
+ck("design:lh-controls", all(x in dt for x in
+   ["Chains","Import notes","TEACH","PRACTICE","Knowledge graph","Dictate",
+    "gemini-flash-lite-latest","BACKGROUND AGENTS","SETTINGS","lhDock"]), "LearnHarness controls embedded")
+ck("design:4tabs", dt.count('data-tab="') == 4, "four Mimo tabs")
+js = re.search(r"<script>(.*?)</script>", dt, re.S)
+used = set(re.findall(r'\$\("#([A-Za-z0-9_-]+)"\)', js.group(1))) if js else set()
+defined = set(re.findall(r'id="([A-Za-z0-9_-]+)"', dt))
+ck("design:js-ids", bool(js) and used <= defined, "%d used / %d defined; missing=%s" % (len(used), len(defined), sorted(used-defined)[:8]))
+ck("design:notes", (D / "DESIGN_NOTES.fa.md").is_file() and (D / "DESIGN_NOTES.fa.md").stat().st_size > 2000, "design notes")
+ck("design:screenshot", (D / "REFERENCE/learnharness-ui-user-screenshot.png").is_file()
+   and (D / "REFERENCE/learnharness-ui-user-screenshot.png").stat().st_size > 10000, "user LH screenshot")
+for f,mark in [("03_EXAM_HUB.md","فقط داخل آزمون"),
+               ("04_AI_LEARN_HARNESS.md","جاسازی کنترلهای واقعی LH"),
+               ("05_COUNSELING_HADAF_PLUS.md","برنامهریز هفتگی قابلاستفاده")]:
+    ck("docs:v2:" + f, mark in (ROOT / f).read_text(encoding="utf-8"), mark)
 
 # extracted source apps
 for slug, sha, entries in [("hamdars", "9e362f08670174a3e8a3b319b5a2f687da8ecf7896ea78ea2ec70b95dd817be3", 1363),

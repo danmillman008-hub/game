@@ -48,7 +48,8 @@
 | اکشنهای LH | کلون `components/*.tsx` (start session, sessions, graph, plan, practice, confidence…) | `VERIFIED_STATIC` | `04`, `LEARNHARNESS_ACTIONS.csv` |
 | ESQ 1.0 / FSRS / WrongView | `epm/docs/question-bank-format.md`, `frontend/src/views/WrongView.vue` | `VERIFIED_STATIC` | `07`, `09` |
 | ماتریس انتقال ۴۲ ردیفی / ۳۲ ردیفی | `19_KONKUR_PRODUCT_TRANSFER_SPEC.md`, `18_KONKUR_TRANSFER/*` | `VERIFIED_STATIC` | `10` |
-| رگرسیون ۵ تبه | `/home/user/_work/prev/mimo/shell/app.js` | `VERIFIED_STATIC` | `02`, `10` |
+| رگرسیون پنجتب پیشین | `/home/user/_work/prev/mimo/shell/app.js` | `VERIFIED_STATIC` | `02`, `10` |
+| کنترلهای واقعی LH (TEACH/PRACTICE, Chains, Import notes, Dictate, Model, medium, Cost, Sessions, Knowledge graph, Background agents, Settings) | اسکرینشات پیوستشدهٔ کاربر + کامپوننتهای کلونشدهٔ LH | `VERIFIED_STATIC` | `04`, `DESIGN/index.html`, `LEARNHARNESS_ACTIONS.csv` |
 | `craft-anything` v0.3.0 | `/home/user/_work/craft-anything`, `docs/tools.md`, ۴ schema | `VERIFIED_STATIC` | `01` |
 | JS/WebView evidence میمو | `mimo-ui/REFERENCE/REA_EVIDENCE/JS_EVIDENCE.json` (REA `rea-agents@6.8.0`) | `VERIFIED_STATIC` + ۸ محدودیت | `07` |
 

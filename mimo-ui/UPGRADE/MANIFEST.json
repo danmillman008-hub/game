@@ -2,35 +2,37 @@
   "round": "konkur-upgrade-planning",
   "branch": "arena/aebb90b7-game",
   "date": "2026-11-03",
-  "status": "PLAN_ONLY (no product implementation)",
+  "status": "PLAN_ONLY + DESIGN DRAFT v2 (no product implementation)",
   "goal": "Upgrade Mimo 9.35 into an Iranian Konkur learning app with strict fidelity to Mimo UI/mechanism/navigation",
   "deliverables": {
-    "persian_docs": 14,
-    "csv_catalogs": 9,
-    "wireframes_html": 1,
+    "persian_docs": 15,
+    "csv_catalogs": 10,
+    "wireframes_html": 2,
     "source_apps": 2,
-    "extracted_assets_files": 1860,
-    "total_bytes": 17776450,
+    "extracted_assets_files": 1865,
+    "total_bytes": 17752784,
     "craft_anything": "vendored docs + 33-id agent adapter + 13 evidence records",
-    "verification": {
-      "verdict": "PASS",
-      "checks": 44,
-      "passed": 44
-    },
+    "verification": "PASS",
     "phases": 8,
-    "phase_status": "ALL PLANNED"
+    "phase_status": "ALL PLANNED (design approval pending)",
+    "interactive_design_prototype": 1,
+    "verification_checks": 59
   },
   "source_hashes": {
     "Mimo_9.35": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
     "hamdars_7.4.4": "9e362f08670174a3e8a3b319b5a2f687da8ecf7896ea78ea2ec70b95dd817be3",
-    "HadafPlus_2.0.2": "b282f578b255fecc4b72ee74f2ce79eb5bbcde35f3515690342b7fa37a5bbf43"
+    "HadafPlus_2.0.2": "b282f578b255fecc4b72ee74f2ce79eb5bbcde35f3515690342b7fa37a5bbf43",
+    "learnharness_ui_screenshot": "c94a223aa07544f2f5768c45d61245ec41d7738bc459810797719086bdca945d"
   },
   "critical_findings": [
     "Mimo 9.35 bottom navigation = exactly 4 tabs (Learn/Practice/Leaderboard/Profile); previous 5-tab prototype is a fidelity regression",
     "Hamdars ships an 8-section/33-lesson/149-step/100-screenshot in-app UX document (assets/helpcenter/lessons.json)",
     "Hadaf Plus ships 7 ready-made weekly study templates (study_schedule/*.jpg); subscription page excluded",
     "Persian strings in both Flutter libapp.so snapshots are UTF-16LE",
-    "AI Tutor surface frozen (btn_ai_tutor, iv_ai_tutor_pulse, 28 ai_tutor_* strings) + 16 LearnHarness actions surfaced"
+    "AI Tutor surface frozen (btn_ai_tutor, iv_ai_tutor_pulse, 28 ai_tutor_* strings) + 16 LearnHarness actions surfaced",
+    "Design v2: exam hub has zero timer; countdown lives only inside exam run",
+    "Design v2: counseling planner is interactive and persists plans (konkur-plan-v2 JSON)",
+    "Design v2: 32 LearnHarness controls embedded in Mimo skin, 0 removed"
   ],
   "reproduce": [
     "python3 tools/extract_source_apps.py <google_drive_dir> .",
@@ -44,5 +46,18 @@
     "BankBookkonkor PDF image-only, needs OCR",
     "native craft-anything binary not installable in this sandbox"
   ],
-  "final_deliverable": true
+  "final_deliverable": true,
+  "design_round_2": {
+    "status": "DESIGN DRAFT v2 — awaiting final approval",
+    "trigger": "user feedback + attached LearnHarness UI screenshot",
+    "interactive_prototype": "DESIGN/index.html",
+    "design_notes": "DESIGN/DESIGN_NOTES.fa.md",
+    "feedback_log": "CATALOGS/DESIGN_FEEDBACK.csv",
+    "changes": [
+      "Timer removed from exam hub; click→number→start→countdown only inside exam run",
+      "Counseling turned into a usable weekly planner (7 templates, add/remove blocks, goals, persistent save, JSON export)",
+      "All LearnHarness controls from the user screenshot embedded in Mimo skin (32-row action catalog)"
+    ],
+    "next": "after design approval → implementation phase (P0 starts)"
+  }
 }

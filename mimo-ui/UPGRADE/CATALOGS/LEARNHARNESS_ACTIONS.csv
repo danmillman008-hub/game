@@ -1,17 +1,33 @@
-lh_action,component,persian_label,placement,mimo_token
+lh_action,component_or_source,persian_label,placement,mimo_token
 Start session,new-session.tsx / aria-label,جلسهٔ تازه,action dock,card_pressed + button_primary
-Sessions,top-bar.tsx / session-navigation,جلسهها,action dock,card_pressed
+Sessions,top-bar.tsx / session-navigation,جلسهها,sessions card,card_pressed
 Plan window / Targets,plan-window.tsx,نقشهٔ یادگیری,action dock,card_outline
-Knowledge graph / Search nodes,graph-view.tsx,گراف دانش,action dock,card_pressed
+Knowledge graph / Search nodes,graph-view.tsx,گراف دانش,center card,card_enabled
 Practice / Next problem / Retest,practice-cards.tsx,تمرین / سؤال بعد,action dock,card_pressed
-Check your understanding,question-dock.tsx,بفهمم یا نه,action dock,card_pressed
+Check your understanding,question-dock.tsx,بررسی فهم,action dock,card_pressed
 Confidence rail,confidence-rail.tsx,میزان اطمینان,action dock,progress_chapter_primary
 Thinking fields / Think out loud,thinking-block.tsx,فکر کردن با صدای بلند,action dock,card_pressed
-Hint rung,practice-cards.tsx,راهنما,action dock,card_pressed
-Notes import,notes-import.tsx,یادداشتهام,action dock,card_pressed
-Researcher,composer-actions.tsx,پژوهش,action dock,card_pressed
-Figure maker,composer-actions.tsx,شکلسازی,action dock,card_pressed
-PDF reader / Demo builder,composer-actions.tsx,PDF / نمونه,action dock,card_pressed
-Model / Context / Cost / Steps / Settings,"top-bar.tsx, stats-bar.tsx",مدل / هزینه / تنظیمات,status chips,text_primary
-Dictation,dictation.tsx,گفتار,action dock,card_pressed
+Hint rung,practice-cards.tsx,نردبان راهنما,action dock,card_pressed
+Notes import,notes-import.tsx,وارد کردن یادداشتها,action dock,card_pressed
+Researcher,composer-actions.tsx,پژوهشگر,action dock,card_pressed
+Figure maker,composer-actions.tsx,شکلساز,action dock,card_pressed
+PDF reader / Demo builder,composer-actions.tsx,خوانندهٔ PDF / نمونهساز,action dock,card_pressed
+Model / Context / Cost / Steps / Settings,"top-bar.tsx, stats-bar.tsx",مدل / زمینه / هزینه / گامها / تنظیمات,status chips,text_primary
+Dictation,dictation.tsx,دیکته,composer foot,card_pressed
 Stop / Abort / End background process,abort-turn-dialog.tsx,توقف,action dock,error_default
+TEACH / PRACTICE mode toggle,screenshot: composer foot,آموزش / تمرین,composer foot,card_pressed + button_primary
++ TEACHING,screenshot: sidebar top,＋ آموزش,sessions card header,card_pressed
++ PRACTICE,screenshot: sidebar top,＋ تمرین,sessions card header,card_pressed
+SESSIONS + Search...,screenshot: sidebar,جلسهها + جستجو,sessions card,card_enabled
+ALL / TEACHING / PRACTICE tabs,screenshot: session filter,همه / آموزش / تمرین,sessions card,card_pressed
+Session list + Waiting for input · 2d ago,screenshot: sidebar list,لیست جلسهها,sessions card,card_enabled
+Chains,screenshot: top-right,زنجیرهها,top row,card_pressed
+Import notes...,screenshot: top-right,یادداشتها,top row,card_pressed
+Cost $0.01,screenshot: top-right,هزینه,top row,text_primary
+Knowledge graph empty state,screenshot: center,گراف دانش (خالی),center card,card_disabled + card_outline
+What do you want to learn? + send,screenshot: composer,پیامت رو بنویس… + ارسال,composer,button_primary
+Dictate,screenshot: composer foot,دیکته,composer foot,card_pressed
+gemini-flash-lite-latest (Model picker),screenshot: composer foot,انتخاب مدل,composer foot,card_pressed
+medium (Effort),screenshot: composer foot,سطح تلاش,composer foot,card_pressed
+Context / Steps / Cost chips,screenshot: composer foot,زمینه / گامها / هزینه,composer foot,card_pressed
+BACKGROUND AGENTS / SETTINGS,screenshot: sidebar bottom,عاملهای پسزمینه / تنظیمات,collapsed row,card_pressed
