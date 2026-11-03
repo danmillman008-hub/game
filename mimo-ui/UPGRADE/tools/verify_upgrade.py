@@ -12,12 +12,13 @@ docs = ["README.md", "00_START_HERE.md", "01_CRAFT_ANYTHING_INSTALL.md",
         "07_LESSON_STRUCTURE_AND_QUESTIONS.md", "08_NAVIGATION_AND_IA.md",
         "09_DATA_MODEL_AND_BACKEND.md", "10_PHASED_ROADMAP.md",
         "11_EVIDENCE_AND_CROSSWALK.md", "12_RISKS_UNKNOWN_AND_QUESTIONS.md",
-        "13_DESIGN_ROUND_2.md", "14_DESIGN_ROUND_3.md", "wireframes.html"]
-csvs = {"UI_FIDELITY_RULES.csv": 10, "FEATURE_MAP.csv": 16, "EXAM_TYPES.csv": 11,
+        "13_DESIGN_ROUND_2.md", "14_DESIGN_ROUND_3.md", "15_DESIGN_ROUND_4.md", "wireframes.html"]
+csvs = {"UI_FIDELITY_RULES.csv": 10, "FEATURE_MAP.csv": 17, "EXAM_TYPES.csv": 11,
         "HADAF_TEMPLATES.csv": 7, "GAMIFICATION_MAP.csv": 13, "PHASES.csv": 8,
         "LEARNHARNESS_ACTIONS.csv": 32, "EVIDENCE_LEDGER.csv": 10, "OPEN_QUESTIONS.csv": 5,
-        "DESIGN_FEEDBACK.csv": 10, "SCOPE_DECISIONS.csv": 5,
-        "AI_PANEL_SPEC.csv": 10, "EPM_MINOR_OPTIONS.csv": 6}
+        "DESIGN_FEEDBACK.csv": 20, "SCOPE_DECISIONS.csv": 11,
+        "AI_PANEL_SPEC.csv": 19, "EPM_MINOR_OPTIONS.csv": 6,
+        "EXAM_SECTION_TEMPLATES.csv": 7}
 checks, problems = [], []
 
 
@@ -44,8 +45,8 @@ for name, n in csvs.items():
 t = (ROOT / "wireframes.html").read_text(encoding="utf-8")
 ck("wireframe:tokens", all(x in t for x in ["#7E4BDE", "#FFF6F7FB".replace("FF", ""), "#F6F7FB", "#E4E6F1", "#66BC5A", "#F05A6E"]),
    "Mimo palette present")
-ck("wireframe:4tabs", t.count('class="tab') >= 4 and "<div class=\"tab\">Learn</div>" in t,
-   "four bottom tabs rendered")
+ck("wireframe:legacy-tabs", t.count('class="tab') >= 4 and "<div class=\"tab\">Learn</div>" in t,
+   "archived v1 wireframe renders its legacy tabs")
 ck("wireframe:3col-grid", "repeat(3,minmax(0,1fr))" in t, "exam node grid")
 ck("wireframe:v1-banner", "DESIGN/index.html" in t, "v1 archived, points to v2")
 
@@ -53,7 +54,7 @@ ck("wireframe:v1-banner", "DESIGN/index.html" in t, "v1 archived, points to v2")
 D = ROOT / "DESIGN"
 dt = (D / "index.html").read_text(encoding="utf-8") if (D / "index.html").is_file() else ""
 ck("design:index", len(dt) > 20000, "%d chars" % len(dt))
-ck("design:v3-header", "DESIGN v3" in dt, "version 3")
+ck("design:v4-header", "DESIGN v4" in dt and "FINAL" in dt, "final version 4")
 ck("design:no-hub-timer", "exam-hub" in dt and "⏱ ۱۲:۴۵" not in dt, "timer removed from exam hub")
 ck("design:timer-states", all(x in dt for x in ["timerSheet","timerStart","timerPause","timerReset","finished"]), "click-number-start-countdown")
 ck("design:counseling-removed",
@@ -62,10 +63,22 @@ ck("design:counseling-removed",
 ck("design:ai-minimal", all(x in dt for x in
    ["chatThread","aiInput","aiSend","historySheet","histList","newChat","typing","aiContext"]), "minimal chat + history")
 ck("design:ai-no-clutter", all(x not in dt for x in
-   ["lhDock","sessList","Knowledge graph","gemini-flash-lite-latest","BACKGROUND AGENTS"]), "no 32-button dock / sidebar")
+   ["lhDock","sessList","Knowledge graph","BACKGROUND AGENTS"]), "no 32-button dock / sessions sidebar")
+ck("design:lh-buttons", all(x in dt for x in
+   ["Chains","Import notes","Dictate","gemini-flash-lite-latest","medium","TEACH","PRACTICE"]), "8 LH panel buttons restored")
 ck("design:epm-link", "askAi" in dt and "EPM" in dt, "minor EPM idea in exam")
-ck("design:4views", dt.count('<button data-go=') == 4, "4 design views, counseling removed")
-ck("design:4tabs", dt.count('data-tab="') == 4, "four Mimo tabs")
+ck("design:6views", dt.count('<button data-go=') == 6, "6 design views, counseling PARKED")
+ck("design:5tabs", dt.count('data-tab="') == 5 and all(x in dt for x in
+   ['data-tab="Learn"','data-tab="Practice"','data-tab="AI"','data-tab="Leaderboard"','data-tab="Profile"']),
+   "five tabs Learn/Practice/AI/Leaderboard/Profile")
+ck("design:learn", 'data-screen="learn"' in dt and "همان الگوی گرههای میمو" in dt, "Learn identical to Mimo")
+ck("design:leaderboard", 'data-screen="leaderboard"' in dt, "leaderboard view")
+ck("design:answer-sheet", all(x in dt for x in
+   ["answerSheetBtn","policyHint","keyTestSheet","keyDescSheet","POLICY","during:false","during:true"]), "answer sheet policy + two keys")
+ck("design:labeled-sections", dt.count('class="cat-meta"') == 7 and "زمان ثابت ۲۷۰ دقیقه" in dt,
+   "7 labeled sections with fixed-time comprehensive template")
+ck("design:api-key-not-designed", "DOCUMENTED_ONLY" not in dt and "وارد کردن کلید API" in dt,
+   "API key is a note only, no settings UI")
 js = re.search(r"<script>(.*?)</script>", dt, re.S)
 used = set(re.findall(r'\$\("#([A-Za-z0-9_-]+)"\)', js.group(1))) if js else set()
 defined = set(re.findall(r'id="([A-Za-z0-9_-]+)"', dt))
@@ -75,6 +88,17 @@ ck("design:screenshot", (D / "REFERENCE/learnharness-ui-user-screenshot.png").is
    and (D / "REFERENCE/learnharness-ui-user-screenshot.png").stat().st_size > 10000, "user LH screenshot")
 ck("design:screenshot2", (D / "REFERENCE/learnharness-main-panel-user-screenshot.png").is_file()
    and (D / "REFERENCE/learnharness-main-panel-user-screenshot.png").stat().st_size > 10000, "user LH main-panel screenshot")
+ck("design:screenshot3", (D / "REFERENCE/lh-composer-user-screenshot.png").is_file()
+   and (D / "REFERENCE/lh-composer-user-screenshot.png").stat().st_size > 5000, "LH composer screenshot")
+ck("design:screenshot4", (D / "REFERENCE/lh-topbar-user-screenshot.png").is_file()
+   and (D / "REFERENCE/lh-topbar-user-screenshot.png").stat().st_size > 3000, "LH topbar screenshot")
+ck("docs:v4:15", "طرح نهایی" in (ROOT / "15_DESIGN_ROUND_4.md").read_text(encoding="utf-8"), "v4 final log")
+ck("docs:v4:02", "حکم محصول ۵ تب" in (ROOT / "02_UI_FIDELITY_CONTRACT.md").read_text(encoding="utf-8"), "5-tab override")
+ck("docs:v4:08", "۵ تب" in (ROOT / "08_NAVIGATION_AND_IA.md").read_text(encoding="utf-8"), "5-tab IA")
+ck("docs:v4:03", "سیاست بر اساس نوع آزمون" in (ROOT / "03_EXAM_HUB.md").read_text(encoding="utf-8"), "answer sheet policy")
+ck("docs:v4:04", "دکمههای LH در چت مینیمال" in (ROOT / "04_AI_LEARN_HARNESS.md").read_text(encoding="utf-8"), "LH buttons in chat")
+ck("scope:5tabs", "FIVE_TABS" in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encoding="utf-8"), "5-tab decision")
+ck("csv:exam-policy", "answer_sheet_policy" in (ROOT / "CATALOGS/EXAM_TYPES.csv").read_text(encoding="utf-8"), "policy column")
 ck("docs:v3:14", "تصمیمات دامنهای" in (ROOT / "14_DESIGN_ROUND_3.md").read_text(encoding="utf-8"), "v3 log")
 ck("docs:v3:04", "پنل مینیمال v3" in (ROOT / "04_AI_LEARN_HARNESS.md").read_text(encoding="utf-8"), "minimal AI spec")
 ck("docs:v3:05", "PARKED" in (ROOT / "05_COUNSELING_HADAF_PLUS.md").read_text(encoding="utf-8"), "counseling parked")

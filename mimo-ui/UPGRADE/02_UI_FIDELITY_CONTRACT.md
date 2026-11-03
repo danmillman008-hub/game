@@ -14,7 +14,12 @@
 
 هیچ تصمیم بصری از حافظه، حدس، یا اسکرینشات اپهای دیگر گرفته نمیشود؛ فقط از این منابع.
 
-## ۲. ناوبری واقعی = **۴ تب** (کشف اصلاحی)
+## ۲. ناوبری — شاهد استخراج ۴ تب / **حکم محصول ۵ تب (v4)**
+
+> ⚠️ **OVERRIDE صریح کاربر (دور چهارم):** «منوی پایین باید `learn / practice / ai / leaderboard / profile` باشه… صفحات چت با هوش مصنوعی رو قاتی بخش تمرین نکن».
+> جدول زیر **واقعیت APK استخراجشده** است و بهعنوان شاهد بایگانی ماند؛ ولی **طرح نهایی محصول = ۵ تب** است. این تنها فاصلهٔ مجاز از استخراج خام میمو است و صرفاً بهدستور کاربر انجام شد. F0/F1 در `CATALOGS/UI_FIDELITY_RULES.csv` بر همین اساس بازنویسی شدند.
+
+### ۲٫الف شاهد استخراج (APK واقعی): ۴ تب
 
 `mimo-ui/SOURCE/res/menu/bottom_navigation_menu.xml`:
 
@@ -31,7 +36,7 @@
 
 | انحراف | منبع | حکم |
 |---|---|---|
-| ۵ تب `Learn / Practice / Max / Leaderboard / Profile` | `/home/user/_work/prev/mimo/shell/app.js` (نمونهٔ اولیهٔ قبلی) | ❌ تب `Max` حذف؛ ناوبری ۴تبه بازگردانده شود |
+| ۵ تب `Learn / Practice / Max / Leaderboard / Profile` | `/home/user/_work/prev/mimo/shell/app.js` | ❌ تب `Max` ممنوع؛ ولی **۵ تب `Learn / Practice / AI / Leaderboard / Profile` بهحکم v4 الزامی است** |
 | «۳ تب» در برخی اسناد قدیمی | `18_KONKUR_TRANSFER/ADAPTATION_PLAN.md` | ❌ اصلاح به ۴ تب |
 | قرار دادن موتورهای وب بهعنوان تب مستقل | همان پروتوتایپ | ❌ موتورها پشت مقصدهای درونتبی پروکسی میشوند |
 | ساختن زبان بصری تازه برای کنکور | ریسک اصلی | ❌ ممنوع؛ فقط ترکیب مجدد کامپوننتهای موجود |
@@ -46,7 +51,7 @@
 |---|---|---|
 | هاب آزمونها | Practice | `practice_tab_fragment.xml` → `cv_practice_tab` (ComposeView) + `include @layout/toolbar` |
 | مشاوره + ۷ قالب | Practice (کارت ورودی) / Leaderboard (رقابت) | `base_modal_card.xml`, `bottom_sheet_dialog`, `flash_bar_view.xml` |
-| AI (ظاهر unchanged) | همان محل همیشگی | `coding_keyboard_layout.xml` → `btn_ai_tutor`, `iv_ai_tutor_pulse`؛ ۲۸ رشتهٔ `ai_tutor_*`؛ سطح چت Compose |
+| AI (ظاهر unchanged) | **تب مستقل AI (v4)**، نه داخل Practice | `coding_keyboard_layout.xml` → `btn_ai_tutor`, `iv_ai_tutor_pulse`؛ ۲۸ رشتهٔ `ai_tutor_*`؛ سطح چت Compose |
 | پروفایل کنکوری | Profile | `profile_fragment.xml`, `profile_header_view.xml`, `profile_info_card_view.xml`, `profile_certificates_view.xml`, `profile_trophies_item.xml`, `profile_friends_*`, `public_profile_activity.xml`, `settings_fragment.xml` |
 | دوستان/رقابت | Leaderboard | `leaderboard_fragment_active.xml`, `leaderboard_item.xml`, `leaderboard_podium_item.xml`, `leaderboard_result_*` |
 
@@ -93,7 +98,7 @@
 | F8 | تحلیل اثر | لیست `include`/`xref` صفحهٔ تازه با `mimo-ui/CATALOGS/LAYOUT_XREFS.csv` مقایسه شود |
 | F9 | مقایسهٔ بصری | diff اطلس: صفحهٔ تازه در کنار دوسیهٔ مرجع، حداقل ۹۰٪ تطابق توکن/فاصله (تست خودکار + نگاه انسانی) |
 
-**هرگونه تغییر ظاهری در بخش AI فقط در حد اضافهشدن ردیف دکمههای Learn Harness مجاز است** (`04_AI_LEARN_HARNESS.md`)؛ حذف هیچ عنصری مجاز نیست.
+**هرگونه تغییر ظاهری در بخش AI فقط در حد اضافهشدن دکمههای پنل اصلی Learn Harness مجاز است** (`04_AI_LEARN_HARNESS.md` §۴٫۴)؛ حذف هیچ عنصری مجاز نیست. ناوبری ۵تبهٔ v4 حکم صریح کاربر است.
 
 ## ۷. «سازوکار» یعنی چه (غیر از ظاهر)
 
@@ -110,7 +115,7 @@
 ## ۸. ضدرگرسیون — چکلیست قبل از هر PR اجرایی
 
 - [ ] `F0…F9` همگی PASS و نتیجه در `CATALOGS/FIDELITY_CHECKS.json` ثبت شده
-- [ ] هیچ تب/صفحهای با نام موتور (`Max`, `Practice Machine`, `LearnHarness`) در ناوبری دیده نمیشود
+- [ ] ناوبری دقیقاً ۵ تب `Learn / Practice / AI / Leaderboard / Profile` (F0 v4)؛ هیچ تب/صفحهای با نام موتور (`Max`, `Practice Machine`, `LearnHarness`) دیده نمیشود
 - [ ] هیچ صفحهٔ اشتراک/پرداختی اضافه نشده است
 - [ ] رشتههای `ai_tutor_*` تغییر نکردهاند
 - [ ] نسخهٔ نایت مُد تست شده

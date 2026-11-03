@@ -10,6 +10,6 @@
 - لایهٔ نصبشدهٔ craft-anything: `CRAFT_ANYTHING/`
 - ابزارهای قابلتکرار: `tools/extract_source_apps.py`, `tools/write_upgrade_plan.py`, `CRAFT_ANYTHING/craft_adapter.py`
 
-**طرح تعاملی v3 (حکم فعلی):** `DESIGN/index.html` · یادداشتها: `DESIGN/DESIGN_NOTES.fa.md` · لاگ: `14_DESIGN_ROUND_3.md` · تصمیمات: `CATALOGS/SCOPE_DECISIONS.csv`. تایمر فقط داخل آزمون، **مشاوره PARKED**، AI = چت مینیمال + تاریخچه، آزمون دستنخورده + ایدههای جزیی EPM.
+**طرح نهایی v4 (حکم فعلی):** `DESIGN/index.html` · یادداشتها: `DESIGN/DESIGN_NOTES.fa.md` · لاگ: `15_DESIGN_ROUND_4.md` · تصمیمات: `CATALOGS/SCOPE_DECISIONS.csv`. **۵ تب**، Learn عین میمو، هاب ۷بخشهٔ لیبلدار قابلاسکرول، سیاست «پاسخنامه» + پاسخنامهٔ تستی/تشریحی، چت مینیمال + دکمههای LH، مشاوره PARKED، کلید API فقط یادداشت.
 
 **وضعیت:** فقط پلن و شواهد؛ هشت فاز `PLANNED`، هیچ پیادهمسازی محصول انجام نشده است.

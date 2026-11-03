@@ -175,13 +175,21 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
 .hist-item{border:1px solid var(--line);border-radius:9px;padding:8px 10px;font-size:12px;background:var(--card);cursor:pointer}
 .hist-item small{display:block;color:var(--muted);font-size:9px}
 .linkbtn{border:0;background:transparent;color:var(--primary);text-decoration:underline;cursor:pointer;font-size:11px;padding:0}
+.cat-meta{background:var(--card-pressed);border:1px dashed var(--outline);border-radius:8px;padding:6px 10px;font-size:10px;color:var(--muted);margin:-4px 0 10px;line-height:1.9}
+.keylist{font-size:11px;line-height:2;color:var(--text)}
+.keylist b{color:var(--primary)}
+.lrow{display:flex;justify-content:space-between;border-bottom:1px dashed var(--line);padding:7px 0;font-size:12px}
+.mode{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;flex-shrink:0}
+.mode button{border:0;background:transparent;padding:4px 9px;font-size:10px;color:var(--muted)}
+.mode button.on{background:var(--primary);color:#fff}
+.tabs{grid-template-columns:repeat(5,1fr)}
 </style>
 </head>
 <body>
 <header class="top">
   <div>
-    <h1>طرح رابط کاربری — نسخهٔ ۳ <span class="ver">DESIGN v3</span></h1>
-    <p>بازبینی طراحی بر اساس بازخورد جدید · فقط دیزاین، نه پیادهمسازی محصول · چت مینیمال میمو + آزمون دستنخورده · مشاوره فعلاً کنار گذاشته شد</p>
+    <h1>طرح رابط کاربری — نسخهٔ نهایی <span class="ver">DESIGN v4 · FINAL</span></h1>
+    <p>طرح نهایی · ۵ تب (Learn / Practice / AI / Leaderboard / Profile) · Learn عین میمو · آزمون لیبلدار و قابلاسکرول + سیاست پاسخنامه · چت مینیمال با دکمههای LH · مشاوره PARKED</p>
   </div>
   <div class="row">
     <button class="btn" id="themeBtn">🌙 حالت شب</button>
@@ -193,38 +201,105 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
 <div class="layout">
   <div class="canvas">
     <div class="switcher" id="switcher">
+      <button data-go="learn">یادگیری (Learn)</button>
       <button data-go="exam-hub" class="on">هاب آزمونها</button>
       <button data-go="exam-run">اجرای آزمون / تایمر</button>
-      <button data-go="ai">دستیار هوشمند</button>
+      <button data-go="ai">چت هوش مصنوعی</button>
+      <button data-go="leaderboard">لیدربورد</button>
       <button data-go="profile">پروفایل</button>
     </div>
 
     <div class="phone">
-      <!-- ===================== EXAM HUB ===================== -->
+      <!-- ===================== LEARN (Mimo-identical) ===================== -->
+      <section class="screen" data-screen="learn">
+        <div class="appbar">
+          <b>یادگیری</b>
+          <div class="left"><span class="tag">🔥 ۱۲ روز</span><button class="iconbtn" data-help="مسیر یادگیری">؟</button></div>
+        </div>
+        <div class="card">
+          <b>هدف روزانه</b>
+          <div class="kv"><span>امتیاز امروز</span><span>۴۲ / ۵۰ ⚡</span></div>
+          <div class="progress"><i style="width:84%"></i></div>
+        </div>
+        <div class="sec">فصل ۱ · زیستشناسی <span class="tag">همان الگوی گرههای میمو</span></div>
+        <div class="grid3">
+          <div><div class="node done">✓</div><div class="label">سلول و<br>بافت</div></div>
+          <div><div class="node current">◇</div><div class="label">ژنتیک و<br>وراثت</div></div>
+          <div><div class="node">◇</div><div class="label">گردش<br>خون</div></div>
+          <div><div class="node locked">🔒</div><div class="label">سمها و<br>ترشحات</div></div>
+          <div><div class="node locked">🔒</div><div class="label">آنزیمها</div></div>
+          <div><div class="node locked">🔒</div><div class="label">بومشناسی</div></div>
+        </div>
+        <div class="sec">فصل ۲ · شیمی</div>
+        <div class="grid3">
+          <div><div class="node">◇</div><div class="label">ترمودینامیک</div></div>
+          <div><div class="node">◇</div><div class="label">تعادل<br>شیمیایی</div></div>
+          <div><div class="node locked">🔒</div><div class="label">الکتروشیمی</div></div>
+        </div>
+        <div class="card" style="margin-top:12px"><b>درس امروز</b><div class="kv"><span>مبحث</span><span>ژنتیک و وراثت</span></div><div class="kv"><span>تمرینها</span><span>۳ تمرین · ۱۲ دقیقه</span></div><div class="kv"><span>پاداش</span><span>۱۵ XP ⚡</span></div></div>
+        <p class="note">✅ این بخش **دقیقاً همان Learn میمو** است: گرهها، نوار پیشرفت، streak، کارت هدف و باتمشیتها عیناً. <b>فقط</b> اسم درسها و مباحث کنکوری شد (زیست/شیمی/فیزیک/ریاضی… بهجای مباحث برنامهنویسی). ۰ تغییر در کامپوننت، توکن، انیمیشن، آیکن یا چینش.</p>
+      </section>
+
+      <!-- ===================== EXAM HUB (v4: scrollable, labeled sections) ===================== -->
       <section class="screen on" data-screen="exam-hub">
         <div class="appbar">
           <b>آزمونها</b>
           <div class="left"><button class="iconbtn" data-help="هاب آزمون">؟</button></div>
         </div>
-        <div class="hint">✅ تایمر دیگر اینجا نیست. زمان فقط <b>پس از ورود به آزمون</b> و با کلیک روی «تنظیم زمان» تعیین و معکوس میشود.</div>
-        <div class="chips"><span class="chip on">همه</span><span class="chip">جامع</span><span class="chip">تکدرسی</span><span class="chip">مبحثی</span><span class="chip">این ماه</span></div>
-        <div class="sec">آزمونهای این ماه</div>
+        <div class="hint">📜 **همهچیز در همین یک صفحه با اسکرول دیده میشود.** هر بخش یک <b>لیبل عنوان</b> و <b>فیلدهای قالب مشخص</b> دارد تا هنگام اضافهکردن آزمون تازه، قالبش از قبل معلوم باشد. ✅ تایمر فقط داخل آزمون است.</div>
+        <div class="chips"><span class="chip on">همه</span><span class="chip">جامع</span><span class="chip">زماندار</span><span class="chip">تکدرسی</span><span class="chip">مبحثی</span><span class="chip">این ماه</span><span class="chip">تحلیلی</span><span class="chip">جمع بندی</span></div>
+        <div class="sec">۱ · آزمونهای جامع</div>
+        <div class="cat-meta">قالب ثابت: <b>زمان ثابت ۲۷۰ دقیقه</b> · ۲۰۰–۴۰۰ سؤال · نمرهٔ منفی ⅓ · بدون پاسخنامه حین آزمون · پاسخنامهٔ تستی/تشریحی بعد از اتمام</div>
         <div class="grid3">
-          <div><div class="node current" data-exam="آزمون جامع کنکور">◇<span class="mini">۲۰۰ سؤال</span></div><div class="label">آزمون جامع<br>کنکور</div></div>
-          <div><div class="node" data-exam="آزمون تکدرسی زیست">◇<span class="mini">۲۰ سؤال</span></div><div class="label">آزمون تکدرسی<br>زیست</div></div>
-          <div><div class="node done" data-exam="آزمون مبحثی سمها">✓</div><div class="label">آزمون مبحثی<br>سمها</div></div>
-          <div><div class="node" data-exam="آزمون این ماه">◇<span class="mini">جدید</span></div><div class="label">آزمون این ماه</div></div>
-          <div><div class="node locked" data-exam="آزمون نهایی">🔒</div><div class="label">آزمون نهایی</div></div>
-          <div><div class="node" data-exam="آزمون زماندار">◇</div><div class="label">آزمون زماندار</div></div>
+          <div><div class="node" data-exam="آزمون جامع کنکور" data-kind="comprehensive">◇<span class="mini">۲۰۰ سؤال</span></div><div class="label">آزمون جامع<br>کنکور</div></div>
+          <div><div class="node" data-exam="آزمون جامع تجربی" data-kind="comprehensive">◇<span class="mini">زمان ثابت</span></div><div class="label">جامع<br>تجربی</div></div>
+          <div><div class="node" data-exam="آزمون جامع ریاضی" data-kind="comprehensive">◇<span class="mini">زمان ثابت</span></div><div class="label">جامع<br>ریاضی</div></div>
+        </div>
+        <div class="sec">۲ · آزمونهای زماندار</div>
+        <div class="cat-meta">قالب: <b>مدت قابلتنظیم</b> (کلیک روی تایمر داخل آزمون ← عدد ← شروع) · ۵–۴۰۰ سؤال · تایمر معکوس · پاسخنامه حین آزمون</div>
+        <div class="grid3">
+          <div><div class="node" data-exam="آزمون زماندار ۳۰ دقیقه" data-kind="timed">⏱<span class="mini">۳۰ د</span></div><div class="label">زماندار<br>۳۰ دقیقه</div></div>
+          <div><div class="node" data-exam="آزمون سرعتی" data-kind="timed">⏱<span class="mini">۱۰ د</span></div><div class="label">سرعتی<br>۱۰ دقیقه</div></div>
+          <div><div class="node" data-exam="پومودورو تست" data-kind="timed">⏱<span class="mini">۲۵ د</span></div><div class="label">پومودورو<br>تست</div></div>
+        </div>
+        <div class="sec">۳ · تکدرسی و مبحثی</div>
+        <div class="cat-meta">قالب: ۲۰–۶۰ سؤال · ۴۵–۹۰ دقیقه · ضریب درس ×۲ · <b>پاسخنامه حین آزمون</b> · نتیجه و تحلیل</div>
+        <div class="grid3">
+          <div><div class="node" data-exam="آزمون تکدرسی زیست" data-kind="normal">◇<span class="mini">۲۰ سؤال</span></div><div class="label">تکدرسی<br>زیست</div></div>
+          <div><div class="node" data-exam="آزمون مبحثی سمها" data-kind="normal">✓<span class="mini">انجام شد</span></div><div class="label">مبحثی<br>سمها</div></div>
+          <div><div class="node" data-exam="آزمون فصل ۱ شیمی" data-kind="normal">◇<span class="mini">۴۰ سؤال</span></div><div class="label">فصل ۱<br>شیمی</div></div>
+        </div>
+        <div class="sec">۴ · آزمونهای این ماه</div>
+        <div class="cat-meta">قالب: تقویم ماه · تراز و رتبه · قفل تا زمان انتشار · پاسخنامه بعد از اتمام · پاداش ماهانه</div>
+        <div class="grid3">
+          <div><div class="node" data-exam="آزمون این ماه" data-kind="normal">◇<span class="mini">جدید</span></div><div class="label">آزمون<br>این ماه</div></div>
+          <div><div class="node" data-exam="آزمون هفتۀ سوم" data-kind="normal">◇<span class="mini">تراز</span></div><div class="label">هفتۀ<br>سوم</div></div>
+          <div><div class="node" data-exam="آزمون ماه قبل" data-kind="normal">✓<span class="mini">انجام شد</span></div><div class="label">ماه<br>قبل</div></div>
+        </div>
+        <div class="sec">۵ · آزمونهای تحلیلی</div>
+        <div class="cat-meta">قالب: <b>پاسخنامه حین و بعد</b> · شبیهسازی «اگر غلطها نزده میذاشتی» · نقشهٔ ضعف · تحلیل مبحثبه مبحث</div>
+        <div class="grid3">
+          <div><div class="node" data-exam="آزمون تحلیلی زیست" data-kind="analytical">◇<span class="mini">تحلیل</span></div><div class="label">تحلیلی<br>زیست</div></div>
+          <div><div class="node" data-exam="تحلیل آزمون جامع" data-kind="analytical">◇<span class="mini">گزارش</span></div><div class="label">تحلیل<br>جامع</div></div>
+          <div><div class="node" data-exam="تحلیل غلطها" data-kind="analytical">◇<span class="mini">FSRS</span></div><div class="label">تحلیل<br>غلطها</div></div>
+        </div>
+        <div class="sec">۶ · جمع بندی و دوره</div>
+        <div class="cat-meta">قالب: <b>بدون پاسخنامه حین آزمون</b> (شبیهسازی جلسهٔ واقعی) · جمع بندی فصلها · پاسخنامهٔ تستی/تشریحی بعد از اتمام</div>
+        <div class="grid3">
+          <div><div class="node" data-exam="آزمون جمع بندی" data-kind="review">◇<span class="mini">بدون پاسخنامه</span></div><div class="label">جمع بندی<br>فصلها</div></div>
+          <div><div class="node" data-exam="دورۀ فشرده" data-kind="review">◇<span class="mini">بدون پاسخنامه</span></div><div class="label">دورۀ<br>فشرده</div></div>
+          <div><div class="node" data-exam="آزمون نهایی" data-kind="review">🔒<span class="mini">قفل</span></div><div class="label">آزمون<br>نهایی</div></div>
+        </div>
+        <div class="sec">۷ · مرور غلطها / آزمون دوباره / تشریحی</div>
+        <div class="cat-meta">قالب: فقط غلطهای ذخیرهشده · FSRS · <b>پاسخنامهٔ تشریحی</b> · «تعویض سوال» · تصحیح دستی برای تشریحی</div>
+        <div class="grid3">
+          <div><div class="node" data-exam="آزمون دوباره" data-kind="normal">◇<span class="mini">فقط غلطها</span></div><div class="label">آزمون<br>دوباره</div></div>
+          <div><div class="node" data-exam="مرور غلطها" data-kind="normal">◇<span class="mini">FSRS</span></div><div class="label">مرور<br>غلطها</div></div>
+          <div><div class="node" data-exam="آزمون تشریحی" data-kind="normal">◇<span class="mini">تشریحی</span></div><div class="label">آزمون<br>تشریحی</div></div>
         </div>
         <div class="progress"><i style="width:62%"></i></div>
-        <div class="sec">ادامهٔ مسیر (همان الگوی فصلهای میمو)</div>
-        <div class="grid3">
-          <div><div class="node" data-exam="آزمون تشریحی">◇</div><div class="label">تشریحی</div></div>
-          <div><div class="node" data-exam="آزمون دوباره">◇</div><div class="label">آزمون دوباره</div></div>
-          <div><div class="node" data-exam="مرور غلطها">◇</div><div class="label">مرور غلطها</div></div>
-        </div>
-        <p class="note">روی هر گره کلیک کنید ← وارد اجرای آزمون میشوید؛ آنجاست که تایمر را تنظیم و شروع میکنید.</p>
+        <p class="note">⬇️ همچنان ادامه دارد — بخشهای تازه (آزمونهای شخصیساخته، سریع، نهایی، لیگ…) بعداً به همین صفحه با همان لیبل/قالب اضافه میشوند؛ نیازی به صفحهٔ تازه نیست.</p>
+        <p class="note">روی هر گره کلیک کنید ← وارد اجرای آزمون میشوید. آنجا تایمر را تنظیم میکنید و بسته به <b>نوع آزمون</b>، دکمهٔ «پاسخنامه» نمایش داده میشود یا نه.</p>
       </section>
 
       <!-- ===================== EXAM RUN ===================== -->
@@ -232,8 +307,10 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
         <div class="appbar">
           <div class="left"><button class="iconbtn" data-go="exam-hub">→</button><b id="examTitle">آزمون جامع کنکور</b></div>
           <button class="timerchip" id="timerChip">⏱ <span id="timerLabel">تنظیم زمان</span></button>
+          <span class="tag" id="examKindTag">عادی · پاسخنامه حین آزمون</span>
         </div>
         <div id="examFinished"></div>
+        <div id="examResult"></div>
         <div class="qmeta"><span>سؤال ۳ از ۲۰</span><span id="timerStateText">زمان تنظیم نشده</span></div>
         <div class="qtext">کدامیک از گزینههای زیر دربارهٔ «سمها» درست است؟ اگر پاسخ را نمیدانید میتوانید علامت بزنید و بعداً برگردید.</div>
         <div class="opt" data-opt="1"><span>۱</span> گزینهٔ اول</div>
@@ -242,11 +319,13 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
         <div class="opt" data-opt="4"><span>۴</span> گزینهٔ چهارم</div>
         <div class="row" style="margin-top:12px">
           <button class="btn primary" id="nextQ">سؤال بعد</button>
-          <button class="btn" data-sheet="paletteSheet">پالت سؤالات</button>
+          <button class="btn" id="answerSheetBtn" data-sheet="paletteSheet">پاسخنامه</button>
           <button class="btn" data-sheet="exitSheet">خروج</button>
+          <button class="btn ghost" id="endExam">اتمام آزمون</button>
           <button class="btn ghost" id="timerPause" style="display:none">توقف</button>
           <button class="btn ghost" id="timerReset" style="display:none">تنظیم مجدد</button>
         </div>
+        <div class="hint" id="policyHint">سیاست پاسخنامه: <b>عادی / زماندار / تحلیلی</b> ← «پاسخنامه» حین آزمون هست؛ <b>جامع / جمع بندی</b> ← نیست، ولی بعد از اتمام «پاسخنامهٔ تستی» و «پاسخنامهٔ تشریحی» + تحلیل کامل میآید.</div>
         <div class="hint">تایمر معکوس فقط داخل آزمون است: کلیک روی chip بالا ← وارد کردن عدد دقیقه ← «شروع» ← شمارش معکوس. توقف/ادامه و ثبت خودکار پاسخها در صفر همینجاست.</div>
 
         <p class="note">💡 تنها ایدهٔ جزیی گرفتهشده از EPM: <button class="linkbtn" id="askAi">«توضیح این سؤال رو از دستیار بپرس»</button> — زمینهٔ سؤال به چت مینیمال منتقل میشود، بدون پنل یا دکمهٔ تازه در آزمون.</p>
@@ -256,6 +335,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
           <div class="handle"></div>
           <h4>تنظیم زمان آزمون</h4>
           <div class="field"><label>مدت زمان (دقیقه)</label><input type="number" id="timerMinutes" min="1" max="300" value="30"></div>
+          <p class="note" id="timerFixedHint">عدد دلخواه بین ۱ تا ۳۰۰ دقیقه.</p>
           <div class="row" style="margin-bottom:10px">
             <button class="mini-btn" data-min="15">۱۵</button><button class="mini-btn" data-min="30">۳۰</button>
             <button class="mini-btn" data-min="45">۴۵</button><button class="mini-btn" data-min="60">۶۰</button>
@@ -266,9 +346,31 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
         </div>
         <!-- palette sheet -->
         <div class="sheet" id="paletteSheet">
-          <div class="handle"></div><h4>پالت سؤالات / پاسخبرگ</h4>
+          <div class="handle"></div><h4>پاسخنامهٔ آزمون (پاسخبرگ)</h4>
+          <p class="note">شمارهٔ سؤالها و گزینهای که علامت زدهاید. پاسخهای صحیح تا «اتمام آزمون» نمایش داده نمیشوند.</p>
           <div class="palette" id="palette"></div>
           <div class="row" style="margin-top:12px"><button class="btn primary" data-close="paletteSheet">بستن</button><button class="btn" id="submitExam">ثبت پاسخها و پایان</button></div>
+        </div>
+        <!-- answer-key sheets -->
+        <div class="sheet" id="keyTestSheet">
+          <div class="handle"></div><h4>پاسخنامهٔ تستی</h4>
+          <div class="keylist">
+            <div>سؤال ۱ ← <b>گزینهٔ ۳</b> · پاسخ شما: ۳ ✓</div>
+            <div>سؤال ۲ ← <b>گزینهٔ ۱</b> · پاسخ شما: ۴ ✗</div>
+            <div>سؤال ۳ ← <b>گزینهٔ ۲</b> · پاسخ شما: ۲ ✓</div>
+            <div>سؤال ۴ ← <b>گزینهٔ ۴</b> · نزده</div>
+            <div>… تا سؤال ۲۰ · کلید نسخهٔ <span class="lh">answerKeyVersion</span></div>
+          </div>
+          <div class="row" style="margin-top:12px"><button class="btn primary" data-close="keyTestSheet">بستن</button></div>
+        </div>
+        <div class="sheet" id="keyDescSheet">
+          <div class="handle"></div><h4>پاسخنامهٔ تشریحی</h4>
+          <div class="keylist">
+            <div><b>سؤال ۲ · زیست / سمها:</b> پاسخ صحیح گزینهٔ ۱ است، چون… (پاسخ تشریحی کامل + ارجاع به مبحث و صفحهٔ کتاب).</div>
+            <div><b>سؤال ۴ · شیمی / تعادل:</b> نزده مانده؛ توضیح گامبهگام + نکتۀ پرتکرار.</div>
+            <div>قابلیتها: «پاسخ تشریحی»، «تعویض سوال»، «حذف سوال»، «تعداد غلط»؛ منبع: همدرس + EPM WrongView.</div>
+          </div>
+          <div class="row" style="margin-top:12px"><button class="btn primary" data-close="keyDescSheet">بستن</button></div>
         </div>
         <!-- exit sheet -->
         <div class="sheet" id="exitSheet">
@@ -278,13 +380,21 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
         </div>
       </section>
 
-      <!-- ===================== AI (v3: minimal chat panel) ===================== -->
+      <!-- ===================== AI (v4: minimal chat + LH buttons) ===================== -->
       <section class="screen" data-screen="ai">
         <div class="appbar">
           <div class="ai-head" style="flex:1">
             <div class="mascot">✦</div><div><b>دستیار هوشمند</b><div class="note" style="margin:0">ai_tutor_chat_header · پوستهٔ میمو</div></div>
           </div>
           <div class="left"><button class="iconbtn" data-sheet="historySheet" title="تاریخچهٔ گفتگوها">🕘</button></div>
+        </div>
+
+        <div class="row" style="justify-content:space-between;margin-bottom:8px">
+          <div class="row">
+            <button class="fchip" data-lh="Chains">🔗 زنجیرهها <span class="lh">Chains</span></button>
+            <button class="fchip" data-lh="Import notes...">⬆ یادداشتها <span class="lh">Import notes...</span></button>
+          </div>
+          <span class="cost" data-lh="Cost $0.01">$0.01</span>
         </div>
 
         <div class="thread" id="chatThread">
@@ -296,7 +406,13 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
         </div>
 
         <div class="composer">
-          <div class="in"><input id="aiInput" placeholder="پیامت رو بنویس… (ai_tutor_input_placeholder)"><button class="send" id="aiSend">↩</button></div>
+          <div class="in"><input id="aiInput" placeholder="What do you want to learn? · ai_tutor_input_placeholder"><button class="send" id="aiSend">↩</button></div>
+          <div class="foot">
+            <span class="mode" id="mode"><button class="on" data-mode="TEACH">آموزش <span class="lh">TEACH</span></button><button data-mode="PRACTICE">تمرین <span class="lh">PRACTICE</span></button></span>
+            <button class="fchip" data-lh="Dictate">🎙 دیکته <span class="lh">Dictate</span></button>
+            <button class="fchip" data-lh="Model picker">gemini-flash-lite-latest ▾</button>
+            <button class="fchip" data-lh="Effort">medium ▾</button>
+          </div>
           <div class="composer-note">پاسخها از LearnHarness میآیند · <span class="lh">/max</span></div>
         </div>
 
@@ -305,7 +421,20 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
           <div class="hist" id="histList"></div>
           <div class="row"><button class="btn primary" id="newChat">＋ گفتگوی تازه</button><button class="btn" data-close="historySheet">بستن</button></div>
         </div>
-        <p class="note">همینقدر ساده: چت + ورودی + ارسال + <b>حداکثر یک «تاریخچه»</b>. هیچ داک دکمه، سایدبار جلسهها، گراف دانش یا ردیف ابزار وجود ندارد. قابلیتهای LH پشت بکاند <code>/max</code> باقیاند و حذف نشدهاند، فقط نمایش داده نمیشوند.</p>
+        <p class="note">✅ چت همچنان ساده و مینیمال است؛ فقط <b>دکمههای پنل اصلی LH</b> (از دو اسکرینشات پیوستشده: Chains / Import notes / Cost / TEACH-PRACTICE / Dictate / مدل / medium) به آن <b>اضافه شدند</b> — همانطور که خواستید. ۱۵ اکشن کامپوننتی LH همچنان بایگانیاند. 📌 «وارد کردن کلید API در تنظیمات» فقط یادداشت/الزام است؛ <b>الان در UI طراحی نشده</b>.</p>
+      </section>
+
+      <!-- ===================== LEADERBOARD ===================== -->
+      <section class="screen" data-screen="leaderboard">
+        <div class="appbar"><b>لیگ هفتگی</b><div class="left"><span class="tag">رتبهٔ شما ۳</span></div></div>
+        <div class="card"><b>دوستان و رقابت</b><div class="kv"><span>امتیاز این هفته</span><span>۱۲۴۰ ⚡</span></div><div class="progress"><i style="width:72%"></i></div></div>
+        <div class="card"><b>جدول لیگ</b>
+          <div class="lrow"><span>۱ · سارا</span><span>۱۸۲۰ ⚡</span></div>
+          <div class="lrow"><span>۲ · امیر</span><span>۱۵۱۰ ⚡</span></div>
+          <div class="lrow"><span>۳ · شما</span><span>۱۲۴۰ ⚡</span></div>
+          <div class="lrow"><span>۴ · رضا</span><span>۹۸۰ ⚡</span></div>
+        </div>
+        <p class="note">همان <code>leaderboard_*</code> میمو؛ فقط امتیازها از آزمونها، برنامه و AI سراسری میآیند.</p>
       </section>
 
       <!-- ===================== PROFILE ===================== -->
@@ -319,61 +448,53 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
 
       <div class="tabs" id="tabs">
         <div class="tab" data-tab="Learn">Learn</div><div class="tab on" data-tab="Practice">Practice</div>
-        <div class="tab" data-tab="Leaderboard">Leaderboard</div><div class="tab" data-tab="Profile">Profile</div>
+        <div class="tab" data-tab="AI">AI</div><div class="tab" data-tab="Leaderboard">Leaderboard</div>
+        <div class="tab" data-tab="Profile">Profile</div>
       </div>
     </div>
   </div>
 
   <aside class="spec">
-    <h3>تغییرات v3 (بازخورد جدید)</h3>
+    <h3>طرح نهایی v4 — تغییرات این دور</h3>
     <ul>
-      <li><b>۱) مشاوره:</b> فعلاً <b>کنار گذاشته شد</b> (PARKED). هیچ صفحه، طراحی یا استفادهای برایش وجود ندارد؛ فقط شواهد RE بایگانی است.</li>
-      <li><b>۲) دستیار هوشمند:</b> به <b>چت ساده و مینیمال</b> تبدیل شد: حبابها + ورودی + ارسال + حداکثر یک «تاریخچه». ۳۲ دکمه، سایدبار جلسهها، گراف دانش و ردیف ابزار <b>حذف شدند</b>.</li>
-      <li><b>۳) قابلیتهای LH:</b> حذف نشدهاند؛ پشت بکاند <code>/max</code> و لایهٔ نشست باقیاند، فقط دیگر در UI نمایش داده نمیشوند.</li>
-      <li><b>۴) آزمون:</b> دقیقاً همان طرح قبلی («عالی») دستنخورده ماند؛ فقط ۳ آپشن جزیی از EPM مستند شد و یک لینک «توضیح سؤال» به چت اضافه شد.</li>
+      <li><b>۱) منوی پایین = ۵ تب:</b> <code>Learn / Practice / AI / Leaderboard / Profile</code>. چت AI **تب مستقل** دارد و قاتی تمرین نشده. (حکم صریح شما جایگزین کشف «۴ تب میمو» شد.)</li>
+      <li><b>۲) بخش یادگیری:</b> دقیقاً همان Learn میمو؛ فقط اسم درسها/مباحث کنکوری شد. ۰ تغییر بصری.</li>
+      <li><b>۳) «پاسخنامه»:</b> جای «پالت سؤالات»؛ سیاست بر اساس نوع آزمون. بعد از اتمام ← پاسخنامهٔ تستی + تشریحی + تحلیل.</li>
+      <li><b>۴) هاب آزمون:</b> یک صفحهٔ **قابلاسکرول** با ۷ بخش لیبلدار و فیلدهای قالب مشخص؛ جامع = زمان ثابت ۲۷۰ دقیقه.</li>
+      <li><b>۵) دکمههای LH:</b> Chains / Import notes / Cost / TEACH-PRACTICE / Dictate / مدل / medium به چت مینیمال **اضافه شدند** (از دو اسکرینشات جدید). ۱۵ اکشن کامپوننتی همچنان بایگانی.</li>
+      <li><b>۶) مشاوره:</b> همچنان PARKED. 📌 کلید API در تنظیمات = فقط یادداشت، بدون طراحی UI.</li>
     </ul>
-    <h3>پنل AI — مشخصات مینیمال</h3>
-    <span class="tag">هدر میمو + ماسکات/پالس</span><span class="tag">حبابهای گفتگو</span>
-    <span class="tag">ورودی ai_tutor_input_placeholder</span><span class="tag">دکمهٔ ارسال</span>
-    <span class="tag">تاریخچه (تنها گزینهٔ اضافی)</span><span class="tag">پاسخ جریانی</span>
-    <p class="note">ایده از <code>ChatView.vue</code> و <code>AiAssistant.vue</code> در EPM: چت + تاریخچه + پاسخ streaming. منبع دوم: اسکرینشات پنل اصلی LH (<code>REFERENCE/learnharness-main-panel-user-screenshot.png</code>).</p>
-    <h3>از EPM فقط اینها (همینقدر کم)</h3>
+    <h3>سیاست پاسخنامه (بر اساس نوع آزمون)</h3>
     <ul>
-      <li>جابهجایی گزینهها (ضد حفظ پاسخ)</li>
-      <li>پرش به سؤالات نزده</li>
-      <li>تمرین دوبارهٔ فقط غلطها</li>
-      <li>لینک «توضیح این سؤال» ← چت</li>
+      <li><b>عادی / تکدرسی / مبحثی / زماندار</b> → «پاسخنامه» حین آزمون ✅</li>
+      <li><b>تحلیلی</b> → پاسخنامه حین آزمون ✅ + تحلیل کامل بعد ✅</li>
+      <li><b>جامع / جمع بندی / نهایی</b> → حین آزمون ❌ (شبیهسازی جلسهٔ واقعی)؛ بعد از اتمام: «پاسخنامهٔ تستی» + «پاسخنامهٔ تشریحی» + درصد/غلطها/شبیهسازی «اگر غلطها نزده میذاشتی» ✅</li>
     </ul>
-    <p class="note">❌ نیامد: FSRS / واژگان / RAG / FTS / تحلیل پیشرفته / 3D / چاپ A4 — «زیاد بودن امکانات لزوماً به معنی خوب نیست».</p>
-    <h3>ماشین حالت تایمر (بدون تغییر)</h3>
+    <h3>۷ بخش لیبلدار هاب (فیلدها مشخصاند)</h3>
     <ul>
-      <li><b>idle</b> → «تنظیم زمان» (بدون عدد)</li>
-      <li><b>setting</b> → باتمشیت: عدد + پیشفرضها</li>
-      <li><b>running</b> → mm:ss معکوس + توقف/ادامه</li>
-      <li><b>paused</b> → عدد متوقف، رنگ خنثی</li>
-      <li><b>finished</b> → صفر، قرمز، ثبت خودکار پاسخها</li>
+      <li>۱ آزمونهای جامع · ۲ زماندار · ۳ تکدرسی و مبحثی</li>
+      <li>۴ این ماه · ۵ تحلیلی · ۶ جمع بندی و دوره</li>
+      <li>۷ مرور غلطها / دوباره / تشریحی</li>
+      <li>هر بخش: لیبل + <code>قالب: …</code> + گرههای ۳تایی RTL</li>
     </ul>
+    <p class="note">منبع ایدهٔ پاسخنامه/تحلیل: همدرس («پاسخ تشریحی»، «تعویض سوال»، «تعداد غلط») + EPM (<code>WrongView</code>، کلید پاسخ، تحلیل). همان «خیلی کم گرفتن» که گفتید.</p>
+    <h3>دکمههای LH در چت (همین ۸ تا)</h3>
+    <span class="tag">TEACH / PRACTICE</span><span class="tag">Dictate</span><span class="tag">gemini-flash-lite-latest</span>
+    <span class="tag">medium</span><span class="tag">Chains</span><span class="tag">Import notes...</span>
+    <span class="tag">Cost $0.01</span><span class="tag">تاریخچه</span>
+    <h3>ماشین حالت تایمر</h3>
+    <ul><li><b>idle → setting → running ⇄ paused → finished</b></li><li>جامع: عدد ثابت ۲۷۰ دقیقه؛ بقیه: عدد دلخواه</li></ul>
     <h3>توکنهای میمو (بدون تغییر)</h3>
-    <ul>
-      <li><b>background</b> #F6F7FB · <b>card</b> #FFFFFF</li>
-      <li><b>primary / outline</b> #7E4BDE · <b>text</b> #252746</li>
-      <li><b>success</b> #66BC5A · <b>error</b> #F05A6E</li>
-      <li><b>progress</b> #8D60E2 · radius 12dp · gap 16dp</li>
-      <li><b>max width</b> 608dp · sheet 496dp · progressbar 6dp</li>
-      <li>حالت شب: #252746 / #3F4273 / #885BDE</li>
-    </ul>
-    <h3>دروازههای وفاداری</h3>
-    <span class="tag">F0 چهار تب</span><span class="tag">F1 بدون تب تازه</span><span class="tag">F2 توکنها</span>
-    <span class="tag">F5 حالت کارت</span><span class="tag">F6 RTL</span><span class="tag">F7 clean-room</span><span class="tag">F9 diff بصری</span>
-    <h3>حذفشدهها</h3>
-    <ul><li>صفحهٔ مشاوره / برنامهریز ❌ (PARKED)</li><li>۳۲ دکمهٔ LH و سایدبار جلسهها ❌</li><li>تایمر بیرون از آزمون ❌</li><li>صفحهٔ اشتراک / پرداخت ❌</li><li>تب پنجم / تب Max ❌</li></ul>
+    <ul><li><b>bg</b> #F6F7FB / شب #252746 · <b>primary</b> #7E4BDE</li><li><b>card</b> #FFF / شب #3F4273 · <b>success</b> #66BC5A · <b>error</b> #F05A6E</li><li>radius 12dp · gap 16dp · max 608dp · progress 6dp · RTL</li></ul>
+    <h3>یادداشتها (بدون طراحی UI)</h3>
+    <ul><li>تنظیمات ← وارد کردن <b>کلید API</b> برای راهاندازی چت <code>/max</code></li><li>بخش مشاوره = PARKED تا اطلاع ثانوی</li></ul>
     <h3>وضعیت</h3>
-    <ul><li><b>DESIGN DRAFT v3</b> — منتظر تأیید نهایی شما</li><li>بعد از نهایی شدن ← مرحلهٔ بعد (پیادهمسازی)</li><li>هیچ کد محصولی نوشته نشده؛ تعاملات فقط برای بازبینی طرحاند</li></ul>
+    <ul><li><b>DESIGN v4 · FINAL DRAFT</b> — منتظر تأیید نهایی</li><li>بعد از تأیید ← مرحلهٔ پیادهمسازی</li><li>هیچ کد محصولی نوشته نشده</li></ul>
   </aside>
 </div>
 
 <footer class="foot-note">
-⚠️ این یک <b>پروتوتایپ طراحی v3</b> است، نه محصول. تعاملات (تایمر، چت، تاریخچه) فقط برای لمس و نهاییکردن طرح ساخته شدند. رنگها/شعاعها/فاصلهها مستقیم از استخراج Mimo 9.35 آمدهاند؛ ایدهٔ چت مینیمال از پنل اصلی LearnHarness و <code>ChatView.vue</code>/<code>AiAssistant.vue</code>ی EPM. بخش مشاوره بنا به درخواست شما فعلاً کنار گذاشته شد. هیچ دارایی، متن یا کدی از Mimo، همدرس، هدفپلاس، LH یا EPM کپی نشده است.
+⚠️ این <b>طرح نهایی v4</b> است، نه محصول. تعاملات (تایمر، پاسخنامه، چت، تاریخچه، دکمههای LH) فقط برای لمس و نهاییکردن طرح ساخته شدند. رنگها/شعاعها/فاصلهها مستقیم از استخراج Mimo 9.35 آمدهاند؛ دکمهها از اسکرینشاتهای پیوستشدهٔ LearnHarness؛ ایدهٔ پاسخنامه/تحلیل از همدرس و EPM. ناوبری ۵تبه بنا به حکم صریح شماست. هیچ دارایی، متن یا کدی کپی نشده است.
 </footer>
 <div class="toast" id="toast"></div>
 
@@ -387,7 +508,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
   function fa(n){return String(n).replace(/\d/g,function(d){return "۰۱۲۳۴۵۶۷۸۹"[+d]})}
 
   /* ---------- screen switcher ---------- */
-  var tabMap={"exam-hub":"Practice","exam-run":"Practice","ai":"Practice","profile":"Profile"};
+  var tabMap={"learn":"Learn","exam-hub":"Practice","exam-run":"Practice","ai":"AI","leaderboard":"Leaderboard","profile":"Profile"};
   function go(name){
     $$(".screen").forEach(function(s){s.classList.toggle("on",s.dataset.screen===name)});
     $$("#switcher button").forEach(function(b){b.classList.toggle("on",b.dataset.go===name)});
@@ -402,14 +523,28 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
     var lh=e.target.closest("[data-lh]"); if(lh){toast("LearnHarness ← "+lh.dataset.lh);return}
   });
   $$("#tabs .tab").forEach(function(t){t.addEventListener("click",function(){
-    var m={"Practice":"exam-hub","Profile":"profile","Leaderboard":"exam-hub","Learn":"exam-hub"};
-    go(m[t.dataset.tab]);toast("تب "+t.dataset.tab+" (ناوبری ۴ تب میمو)")
+    var m={"Learn":"learn","Practice":"exam-hub","AI":"ai","Leaderboard":"leaderboard","Profile":"profile"};
+    go(m[t.dataset.tab]);toast("تب "+t.dataset.tab+" (ناوبری ۵ تب کنکور)")
   })});
   $("#themeBtn").addEventListener("click",function(){document.body.classList.toggle("night");this.textContent=document.body.classList.contains("night")?"☀️ حالت روز":"🌙 حالت شب"});
 
   /* ---------- exam hub -> exam run ---------- */
+  var POLICY={
+    comprehensive:{label:"جامع · زمان ثابت ۲۷۰ دقیقه · بدون پاسخنامه حین آزمون",during:false},
+    review:{label:"جمع بندی / نهایی · بدون پاسخنامه حین آزمون",during:false},
+    normal:{label:"عادی · پاسخنامه حین آزمون",during:true},
+    timed:{label:"زماندار · پاسخنامه حین آزمون",during:true},
+    analytical:{label:"تحلیلی · پاسخنامه حین و بعد",during:true}
+  };
+  var EXAM_KIND="normal";
   $$(".node[data-exam]").forEach(function(n){n.addEventListener("click",function(){
-    $("#examTitle").textContent=n.dataset.exam;go("exam-run");toast("وارد «"+n.dataset.exam+"» شدید — اینجا تایمر را تنظیم کنید")
+    $("#examTitle").textContent=n.dataset.exam;
+    EXAM_KIND=n.dataset.kind||"normal";
+    var pol=POLICY[EXAM_KIND]||POLICY.normal;
+    $("#answerSheetBtn").style.display=pol.during?"":"none";
+    $("#examKindTag").textContent=pol.label;
+    $("#examResult").innerHTML="";$("#examFinished").innerHTML="";
+    go("exam-run");toast("وارد «"+n.dataset.exam+"» شدید — "+pol.label);
   })});
 
   /* ---------- exam timer state machine ---------- */
@@ -430,15 +565,35 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
     T.remaining=Math.max(0,Math.ceil((T.endAt-Date.now())/1000));
     if(T.remaining===0){finish()}render();
   }
-  function finish(){
-    T.state="finished";clearInterval(T.timer);T.timer=null;
-    $("#examFinished").innerHTML='<div class="banner warn">زمان تمام شد — پاسخها بهصورت خودکار ثبت شدند. گزینهها قفل شدند.</div>';
-    $$(".opt").forEach(function(o){o.style.pointerEvents="none";o.style.opacity=".55"});
-    toast("اتمام خودکار آزمون");render();
+  function showResult(){
+    $("#examResult").innerHTML=
+      '<div class="card"><b>نتیجه و تحلیل آزمون</b>'+
+      '<div class="kv"><span>درصد با نمرهٔ منفی</span><span>۶۸٪</span></div>'+
+      '<div class="kv"><span>اگر غلطها نزده میذاشتی</span><span>۷۴٪</span></div>'+
+      '<div class="kv"><span>غلط / نزده</span><span>۴ / ۵</span></div>'+
+      '<div class="kv"><span>نوع آزمون</span><span>'+POLICY[EXAM_KIND].label+'</span></div>'+
+      '<div class="row" style="margin-top:10px"><button class="btn primary" data-sheet="keyTestSheet">پاسخنامهٔ تستی</button>'+
+      '<button class="btn primary" data-sheet="keyDescSheet">پاسخنامهٔ تشریحی</button></div>'+
+      '<div class="row" style="margin-top:8px"><button class="btn" data-go="exam-hub">بازگشت به هاب</button></div></div>';
   }
+  function finishExam(reason){
+    T.state="finished";clearInterval(T.timer);T.timer=null;
+    $("#examFinished").innerHTML='<div class="banner warn">'+reason+' — گزینهها قفل و پاسخها ثبت شدند.</div>';
+    $$(".opt").forEach(function(o){o.style.pointerEvents="none";o.style.opacity=".55"});
+    showResult();render();toast("آزمون به پایان رسید — پاسخنامهها آمادهاند");
+  }
+  function finish(){finishExam("زمان تمام شد (ثبت خودکار)")}
   chip.addEventListener("click",function(){
     if(T.state==="running"||T.state==="paused"){toast("تایمر در حال اجراست؛ از «تنظیم مجدد» استفاده کنید");return}
-    $("#timerSheet").classList.add("on");T.state="setting";render();
+    $("#timerSheet").classList.add("on");T.state="setting";
+    if(EXAM_KIND==="comprehensive"){
+      $("#timerMinutes").value=270;$("#timerMinutes").readOnly=true;
+      $("#timerFixedHint").textContent="زمان ثابت ۲۷۰ دقیقه (آزمون جامع) — غیرقابل تغییر";
+    }else{
+      $("#timerMinutes").readOnly=false;
+      $("#timerFixedHint").textContent="عدد دلخواه بین ۱ تا ۳۰۰ دقیقه";
+    }
+    render();
   });
   $$("[data-min]").forEach(function(b){b.addEventListener("click",function(){
     $("#timerMinutes").value=b.dataset.min;
@@ -449,7 +604,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
     if(!m||m<1||m>300){toast("عددی بین ۱ تا ۳۰۰ دقیقه وارد کنید");return}
     T.total=m*60;T.remaining=T.total;T.endAt=Date.now()+T.total*1000;T.state="running";
     clearInterval(T.timer);T.timer=setInterval(tick,250);
-    $("#timerSheet").classList.remove("on");$("#examFinished").innerHTML="";
+    $("#timerSheet").classList.remove("on");$("#examFinished").innerHTML="";$("#examResult").innerHTML="";
     $$(".opt").forEach(function(o){o.style.pointerEvents="";o.style.opacity=""});
     toast("شروع شد: "+fa(m)+" دقیقه معکوس");render();
   });
@@ -460,7 +615,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
   });
   $("#timerReset").addEventListener("click",function(){
     clearInterval(T.timer);T.timer=null;T.state="idle";T.remaining=0;T.total=0;
-    $("#examFinished").innerHTML="";$$(".opt").forEach(function(o){o.style.pointerEvents="";o.style.opacity=""});
+    $("#examFinished").innerHTML="";$("#examResult").innerHTML="";$$(".opt").forEach(function(o){o.style.pointerEvents="";o.style.opacity=""});
     chip.classList.remove("running","finished");$("#timerReset").textContent="تنظیم مجدد";
     $("#timerSheet").classList.add("on");toast("زمان پاک شد — دوباره عدد بدهید");render();
   });
@@ -468,7 +623,8 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
     if(T.state==="finished")return;$$(".opt").forEach(function(x){x.classList.remove("on")});o.classList.add("on")
   })});
   $("#nextQ").addEventListener("click",function(){toast("سؤال بعدی (همان چیدمان lesson_interactive میمو)")});
-  $("#submitExam").addEventListener("click",function(){$("#paletteSheet").classList.remove("on");toast("پاسخها ثبت و درصد محاسبه شد")});
+  $("#submitExam").addEventListener("click",function(){$("#paletteSheet").classList.remove("on");finishExam("پاسخها ثبت شد")});
+  $("#endExam").addEventListener("click",function(){finishExam("آزمون به پایان رسید")});
   var pal=$("#palette");for(var i=1;i<=20;i++){var d=document.createElement("div");d.textContent=fa(i);if(i<3)d.className="done";if(i===3)d.className="cur";pal.appendChild(d)}
 
   /* ---------- AI: minimal chat panel (v3) ---------- */
@@ -508,6 +664,10 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
     var ty=document.createElement("div");ty.className="typing";ty.id="typing";ty.hidden=true;ty.textContent="در حال نوشتن…";th.appendChild(ty);
     $("#historySheet").classList.remove("on");toast("گفتگوی تازه شروع شد");
   });
+  $$("#mode button").forEach(function(b){b.addEventListener("click",function(){
+    $$("#mode button").forEach(function(x){x.classList.remove("on")});b.classList.add("on");
+    toast("حالت "+b.dataset.mode+" انتخاب شد");
+  })});
   $("#askAi").addEventListener("click",function(){
     var c=$("#aiContext");c.hidden=false;c.textContent="زمینه: "+$("#examTitle").textContent+" · سؤال ۳";
     go("ai");toast("زمینهٔ سؤال به چت منتقل شد");

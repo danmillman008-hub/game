@@ -1,54 +1,61 @@
-# ناوبری و معماری اطلاعات — همان ۴ تب، مقصدهای تازه
+# ناوبری و معماری اطلاعات — **۵ تب** (حکم نهایی v4)
+
+> ⚠️ استخراج Mimo 9.35 چهار تب داشت؛ بهدستور صریح کاربر در دور چهارم، طرح محصول **۵ تب** شد و چت AI تب مستقل گرفت. جزئیات override در `02_UI_FIDELITY_CONTRACT.md` §۲ و `15_DESIGN_ROUND_4.md` §۲.
 
 ## ۱. ساختار ثابت
 
 ```
 MainActivity (main_activity_content.xml)
-├── contentFrame ......................... میزبان ۴ تب
+├── contentFrame ......................... میزبان ۵ تب
 ├── container_bottombar
-└── navigation_bar (bottom_navigation_menu.xml: ۴ آیتم)
-      ├── Learn ................ مسیر درسی میمو (دستنخورده)
-      ├── Practice ............. cv_practice_tab  → [ آزمونها ] [ مشاوره ] [ ابزارها ] [ درسهای موجود ]
+└── navigation_bar (v4: ۵ آیتم)
+      ├── Learn ................ مسیر درسی میمو (دستنخورده؛ فقط نام مباحث کنکوری)
+      ├── Practice ............. cv_practice_tab → [ هاب آزمونها ] (۷ بخش لیبلدار، اسکرول یکصفحهای)
+      ├── AI ................... چت مینیمال + دکمههای LH + تاریخچه (تب مستقل، قاتی Practice نشده)
       ├── Leaderboard .......... لیگ/دوستان/رقابت (همان leaderboard_*)
-      └── Profile .............. پروفایل کنکوری (همان profile_*)
+      └── Profile .............. پروفایل کنکوری (همان profile_*) + تنظیمات (کلید API فقط یادداشت)
 ```
 
-- ۶۱ اکتیویتی، ۶ alias، ۴۶ `<data>`، ۱ گراف ناوبری، `SplashActivity_default` alias از استخراج Mimo → گراف موجود **توسعه** مییابد، **جایگزین** نمیشود.
-- زنجیرهٔ مودال Mimo حفظ شود: onboarding → daily goal → lesson → feedback → chapter finished → streak → leaderboard result. آزمونها به همین زنجیره وصل میشوند (`chapter_finished_fragment.xml` همان صفحهٔ نتیجه است).
+- ترتیب دقیق: `Learn / Practice / AI / Leaderboard / Profile`. ۰ تب ششم، ۰ تب `Max`، ۰ تب موتور.
+- زنجیرهٔ مودال Mimo حفظ شود: onboarding → daily goal → lesson → feedback → chapter finished → streak → leaderboard result. آزمونها به همین زنجیره وصل میشوند.
+- **بخش Learn عیناً میمو**: گرهها، نوار پیشرفت، streak، کارت هدف و باتمشیتها؛ تنها تفاوت = نام درسها/مباحث (زیست/شیمی/فیزیک/…).
 
-## ۲. مقصدها (درون تب، بدون تب تازه)
+## ۲. مقصدها
 
 | مسیر | تب | الگوی میمو | یادداشت |
 |---|---|---|---|
-| `exam/hub` | Practice | گرههای درسی | گرید ۳تایی |
+| `learn/*` | Learn | موجود | دستنخورده، فقط محتوای کنکوری |
+| `exam/hub` | Practice | گرههای درسی | **۷ بخش لیبلدار + فیلد قالب + اسکرول** |
 | `exam/setup/{type}` | Practice | `base_modal_card` | باتمشیت |
-| `exam/run/{examId}` | Practice | `lesson_interactive_*` | فولاسکرین موقت، ناوبری پنهان (الگوی خود میمو در درس) |
-| `exam/result/{attemptId}` | Practice | `chapter_finished_fragment` | XP/streak |
-| `exam/analysis/{attemptId}` | Practice | `report_lesson_fragment` | چارت/نقشهٔ ضعف |
+| `exam/run/{examId}` | Practice | `lesson_interactive_*` | فولاسکرین موقت، ناوبری پنهان، تایمر داخل آزمون |
+| `exam/answersheet/{attemptId}` | Practice | باتمشیت | «پاسخنامه» حین آزمون فقط برای انواع مجاز |
+| `exam/result/{attemptId}` | Practice | `chapter_finished_fragment` | پاسخنامهٔ تستی + تشریحی + تحلیل |
+| `exam/analysis/{attemptId}` | Practice | `report_lesson_fragment` | چارت/نقشهٔ ضعف/شبیهسازی غلطها |
 | `exam/review/{topicId}` | Practice | `WrongView` معادل بومی | FSRS |
-| `counseling/hub` | Practice | کارت/گره | ۷ قالب + خدمات |
-| `counseling/templates` | Practice | گرید ۳تایی | ۷ قالب |
-| `counseling/request` | Practice | مودال فرم | بدون پرداخت |
-| `counseling/plans|reports|chat` | Practice/Profile | باتمشیت/کارت | `/Advisor/Plans` معادل |
-| `ai/tutor` | همان محل | AI Tutor Compose | ظاهر frozen |
+| `ai/tutor` | **AI** | AI Tutor Compose | چت مینیمال؛ ظاهر frozen |
+| `ai/history` | AI | باتمشیت | گفتگوها + «گفتگوی تازه» |
 | `max/*` | (پشت AI) | پروکسی | prefix حفظ میشود |
 | `leaderboard/*` | Leaderboard | موجود | دوستان/رقابت |
 | `profile/*` | Profile | موجود | فیلدهای کنکوری |
+| `settings/api-key` | Profile | `settings_fragment` | **الزام مستند، ولی فعلاً طراحی UI نشده** (v4) |
+| `counseling/*` | — | — | **PARKED (v3)**؛ هیچ مسیر فعالی |
 
 ## ۳. دیپلینکها
 
-`konkur://exam/{examId}`, `konkur://exam/result/{attemptId}`, `konkur://counseling/template/{id}`, `konkur://max/session/{id}`, `konkur://review/{topicId}` — همگی به `contentFrame` تب مربوطه هدایت میشوند و back stack میمو را رعایت میکنند (بازگشت به هاب، نه خروج از اپ).
+`konkur://exam/{examId}`, `konkur://exam/result/{attemptId}`, `konkur://ai/session/{id}`, `konkur://review/{topicId}` — همگی به `contentFrame` تب مربوطه هدایت میشوند و back stack میمو را رعایت میکنند (بازگشت به هاب، نه خروج از اپ).
 
 ## ۴. قواعد رفتاری
 
 - دکمهٔ بازگشت سختافزاری: در `exam/run` → پنل «خروج از آزمون؟»؛ در باتمشیتها → dismiss؛ در هاب → تب قبلی.
-- در حالت آزمون، `navigation_bar` مثل حالت درس میمو پنهان میشود تا تمرکز حفظ شود (رفتار موجود، نه اختراع تازه).
+- در حالت آزمون، `navigation_bar` مثل حالت درس میمو پنهان میشود.
 - وضعیتها: قفل/`card_disabled` تا زمان بازشدن آزمون ماه؛ `card_outline` برای جاری؛ `accent_success` برای گذرانده.
-- آفلاین: تمام مقصدها از بستهٔ محتوا/بانک محلی کار میکنند؛ `/max` و `/practice` در نبود سرور پیام `ai_tutor_offline_description` / معادل میمو نشان میدهند.
+- آفلاین: تمام مقصدها از بستهٔ محتوا/بانک محلی کار میکنند؛ `/max` در نبود کلید API پیام `ai_tutor_offline_description` نشان میدهد.
 
 ## ۵. پذیرش
 
-- [ ] `bottom_navigation_menu.xml` عیناً ۴ آیتم (F0)
-- [ ] ۰ `<item>` تازه، ۰ tab تازه در shell (F1)
+- [ ] ناوبری دقیقاً **۵ تب** بهترتیب `Learn / Practice / AI / Leaderboard / Profile` (F0 v4)
+- [ ] چت AI داخل Practice نیست؛ `Max` و هر تب اضافی ممنوع (F1 v4)
+- [ ] Learn عین میمو، فقط نام مباحث/درسها فرق دارد
+- [ ] هاب آزمون ۷ لیبل + قالب مشخص + اسکرول در همان صفحه
 - [ ] هر مقصد تازه یک دوسیهٔ مرجع از `mimo-ui/SCREENS/` دارد (F3)
 - [ ] دیپلینکها + back stack + پنهانسازی ناوبری در آزمون تست شده

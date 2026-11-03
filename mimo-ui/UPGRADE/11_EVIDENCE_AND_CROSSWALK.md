@@ -53,6 +53,9 @@
 | پنل اصلی LH (Knowledge graph / What do you want to learn? / TEACH-PRACTICE / Dictate / model / medium / Cost) | اسکرینشات دوم پیوستشدهٔ کاربر (`DESIGN/REFERENCE/learnharness-main-panel-user-screenshot.png`, SHA `514a6167…890e6`) | `VERIFIED_STATIC` | `14_DESIGN_ROUND_3.md`, `AI_PANEL_SPEC.csv` |
 | چت + تاریخچه + پاسخ جریانی EPM | `frontend/src/views/ChatView.vue`, `frontend/src/components/AiAssistant.vue`, README feature table | `VERIFIED_STATIC` | `04` §۴٫۲, `DESIGN/index.html`, `EPM_MINOR_OPTIONS.csv` |
 | ۳ آپشن جزیی آزمون (shuffle / unanswered / redo-wrong-only) | README ریپوی EPM | `VERIFIED_STATIC` | `EPM_MINOR_OPTIONS.csv`, `14_DESIGN_ROUND_3.md` §۴ |
+| دکمههای پنل اصلی LH (composer + topbar) | `DESIGN/REFERENCE/lh-composer-user-screenshot.png` (SHA `3b37831a…`), `lh-topbar-user-screenshot.png` (SHA `0bd72dae…`) | `VERIFIED_STATIC` | `04` §۴٫۴, `AI_PANEL_SPEC.csv` |
+| پاسخنامهٔ تستی/تشریحی + تحلیل | همدرس («پاسخ تشریحی», «تعویض سوال», «تعداد غلط», `AnalyisByLessonsScreenWidget`) + EPM (`WrongView`, `answer key`) | `VERIFIED_STATIC` | `03` §۴٫۱, `EXAM_TYPES.csv` |
+| ۷ بخش لیبلدار / فیلد قالب / زمان ثابت جامع | بازخورد v4 + `CATALOGS/EXAM_SECTION_TEMPLATES.csv` | `VERIFIED_STATIC` | `15_DESIGN_ROUND_4.md` §۴ |
 | `craft-anything` v0.3.0 | `/home/user/_work/craft-anything`, `docs/tools.md`, ۴ schema | `VERIFIED_STATIC` | `01` |
 | JS/WebView evidence میمو | `mimo-ui/REFERENCE/REA_EVIDENCE/JS_EVIDENCE.json` (REA `rea-agents@6.8.0`) | `VERIFIED_STATIC` + ۸ محدودیت | `07` |
 
