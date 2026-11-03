@@ -1,123 +1,164 @@
 {
-  "round": "konkur-upgrade-planning",
-  "branch": "arena/aebb90b7-game",
-  "date": "2026-11-03",
-  "status": "PLAN_ONLY + DESIGN v4 FINAL DRAFT (no product implementation)",
-  "goal": "Upgrade Mimo 9.35 into an Iranian Konkur learning app with strict fidelity to Mimo UI/mechanism/navigation",
-  "deliverables": {
-    "persian_docs": 17,
-    "csv_catalogs": 14,
-    "wireframes_html": 2,
-    "source_apps": 2,
-    "extracted_assets_files": 1874,
-    "total_bytes": 17881763,
-    "craft_anything": "vendored docs + 33-id agent adapter + 13 evidence records",
-    "verification": "PASS",
-    "phases": 8,
-    "phase_status": "P0..P4/P6/P7 PLANNED · P5 PARKED (counseling) · awaiting final design approval",
-    "interactive_design_prototype": 1,
-    "verification_checks": 59,
-    "design_round": "v4 (FINAL DRAFT)"
-  },
-  "source_hashes": {
-    "Mimo_9.35": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
-    "hamdars_7.4.4": "9e362f08670174a3e8a3b319b5a2f687da8ecf7896ea78ea2ec70b95dd817be3",
-    "HadafPlus_2.0.2": "b282f578b255fecc4b72ee74f2ce79eb5bbcde35f3515690342b7fa37a5bbf43",
-    "learnharness_ui_screenshot": "c94a223aa07544f2f5768c45d61245ec41d7738bc459810797719086bdca945d",
-    "learnharness_main_panel_screenshot": "514a61671f9e3eb3562905c057fdd132ece6e8dd06df0711d125338a403890e6",
-    "lh_composer_screenshot": "3b37831ac087ec9ee2a2469611678ea196bfc9d951b94c16d20d60eab9b16acf",
-    "lh_topbar_screenshot": "0bd72daeef6cabbd08ef2bd6f7cebff2994d75bf97ebbfa5968bdf45fd764d33"
-  },
-  "critical_findings": [
-    "Mimo 9.35 bottom navigation = exactly 4 tabs (Learn/Practice/Leaderboard/Profile); previous 5-tab prototype is a fidelity regression",
-    "Hamdars ships an 8-section/33-lesson/149-step/100-screenshot in-app UX document (assets/helpcenter/lessons.json)",
-    "Hadaf Plus ships 7 ready-made weekly study templates (study_schedule/*.jpg); subscription page excluded",
-    "Persian strings in both Flutter libapp.so snapshots are UTF-16LE",
-    "AI Tutor surface frozen (btn_ai_tutor, iv_ai_tutor_pulse, 28 ai_tutor_* strings) + 16 LearnHarness actions surfaced",
-    "Design v2: exam hub has zero timer; countdown lives only inside exam run",
-    "Design v2: counseling planner is interactive and persists plans (konkur-plan-v2 JSON)",
-    "Design v2: 32 LearnHarness controls embedded in Mimo skin, 0 removed",
-    "v3: counseling section PARKED by explicit user request; no design/use",
-    "v3: AI reduced to minimal chat + one history option; 32 LH controls archived (not rendered), capabilities remain behind /max",
-    "v3: exam design explicitly kept unchanged; only minor EPM options borrowed (ChatView/AiAssistant, shuffle, unanswered, redo-wrong)",
-    "v4: bottom nav = 5 tabs Learn/Practice/AI/Leaderboard/Profile by explicit user override; AI chat has its own tab",
-    "v4: Learn section is Mimo-identical; only Konkur subject/topic names differ",
-    "v4: exam hub is one scrollable page with 7 labeled sections + field templates; comprehensive exams fixed 270 min",
-    "v4: palette renamed to answer sheet; 4 answer-sheet policies; test + descriptive keys + analysis after exam",
-    "v4: minimal AI chat gained 8 LH main-panel buttons; API key in settings documented but not designed"
+ "round": "konkur-upgrade-planning",
+ "branch": "arena/aebb90b7-game",
+ "date": "2026-11-03",
+ "status": "PLAN_ONLY + DESIGN v5 FINAL DRAFT (no product implementation)",
+ "goal": "Upgrade Mimo 9.35 into an Iranian Konkur learning app with strict fidelity to Mimo UI/mechanism/navigation",
+ "deliverables": {
+  "persian_docs": 18,
+  "csv_catalogs": 17,
+  "wireframes_html": 2,
+  "source_apps": 2,
+  "extracted_assets_files": 1874,
+  "total_bytes": 17881763,
+  "craft_anything": "vendored docs + 33-id agent adapter + 13 evidence records",
+  "verification": "PASS",
+  "phases": 8,
+  "phase_status": "P0..P4/P6/P7 PLANNED · P5 PARKED (counseling) · awaiting final design approval",
+  "interactive_design_prototype": 1,
+  "verification_checks": 109,
+  "design_round": "v5 (FINAL DRAFT)",
+  "code_first_geometry": "DESIGN/CODE_GEOMETRY.json (46 vectors / 41 colors / 36 dims / 13 styles / 45 strings / 19 AXML layouts / 80 Compose path classes)",
+  "mimo_reference_screenshots": 9
+ },
+ "source_hashes": {
+  "Mimo_9.35": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+  "hamdars_7.4.4": "9e362f08670174a3e8a3b319b5a2f687da8ecf7896ea78ea2ec70b95dd817be3",
+  "HadafPlus_2.0.2": "b282f578b255fecc4b72ee74f2ce79eb5bbcde35f3515690342b7fa37a5bbf43",
+  "learnharness_ui_screenshot": "c94a223aa07544f2f5768c45d61245ec41d7738bc459810797719086bdca945d",
+  "learnharness_main_panel_screenshot": "514a61671f9e3eb3562905c057fdd132ece6e8dd06df0711d125338a403890e6",
+  "lh_composer_screenshot": "3b37831ac087ec9ee2a2469611678ea196bfc9d951b94c16d20d60eab9b16acf",
+  "lh_topbar_screenshot": "0bd72daeef6cabbd08ef2bd6f7cebff2994d75bf97ebbfa5968bdf45fd764d33",
+  "mimo_ref_mimo_01_learn_path_play": "1dabb8e5c0cd5e9945f3ac1f254eb427a2a43878018ef5f9fb33b0268eb683f3",
+  "mimo_ref_mimo_02_learn_path_half": "c59ad85f812a1af6ca9a5fc4b76b74fb2368de6c4e8aa76cd11bda33f7b03362",
+  "mimo_ref_mimo_03_chapter_start_dialog": "bf9349fb40ad070307cecce8d4d2f3fb394eeee61a7c2f3a325ae198b0d2e42c",
+  "mimo_ref_mimo_04_lesson_continue": "e1801491d07458d1e255fad5683d6eb28d5a3e7605438df9a3b488859bca4840",
+  "mimo_ref_mimo_05_weekly_leaderboard": "0439e104c5daf830dc4ae6143597ab4f955826322e5d3b636d47620b128d1d04",
+  "mimo_ref_mimo_06_user_profile": "233bacc80fc155b5e01bb19f8f531b676cd05cb5c7094910d250e021b36b789e",
+  "mimo_ref_mimo_07_profile_trophies": "c2492dce4461a30496773b0b20a5782c7d92fcc67bbb6e33a4e404c7142bbeea",
+  "mimo_ref_mimo_08_create_playground": "af70dfdbcf28be1010b086d8d0c4fdcab7692d8ae595f06a65909965ea3bfc06",
+  "mimo_ref_mimo_09_onboarding": "36eacbfb7e35054d5604faa6b11075617c273e185702099febbf0e0362bf1387"
+ },
+ "critical_findings": [
+  "Mimo 9.35 bottom navigation = exactly 4 tabs (Learn/Practice/Leaderboard/Profile); previous 5-tab prototype is a fidelity regression",
+  "Hamdars ships an 8-section/33-lesson/149-step/100-screenshot in-app UX document (assets/helpcenter/lessons.json)",
+  "Hadaf Plus ships 7 ready-made weekly study templates (study_schedule/*.jpg); subscription page excluded",
+  "Persian strings in both Flutter libapp.so snapshots are UTF-16LE",
+  "AI Tutor surface frozen (btn_ai_tutor, iv_ai_tutor_pulse, 28 ai_tutor_* strings) + 16 LearnHarness actions surfaced",
+  "Design v2: exam hub has zero timer; countdown lives only inside exam run",
+  "Design v2: counseling planner is interactive and persists plans (konkur-plan-v2 JSON)",
+  "Design v2: 32 LearnHarness controls embedded in Mimo skin, 0 removed",
+  "v3: counseling section PARKED by explicit user request; no design/use",
+  "v3: AI reduced to minimal chat + one history option; 32 LH controls archived (not rendered), capabilities remain behind /max",
+  "v3: exam design explicitly kept unchanged; only minor EPM options borrowed (ChatView/AiAssistant, shuffle, unanswered, redo-wrong)",
+  "v4: bottom nav = 5 tabs Learn/Practice/AI/Leaderboard/Profile by explicit user override; AI chat has its own tab",
+  "v4: Learn section is Mimo-identical; only Konkur subject/topic names differ",
+  "v4: exam hub is one scrollable page with 7 labeled sections + field templates; comprehensive exams fixed 270 min",
+  "v4: palette renamed to answer sheet; 4 answer-sheet policies; test + descriptive keys + analysis after exam",
+  "v4: minimal AI chat gained 8 LH main-panel buttons; API key in settings documented but not designed",
+  "v5: main sections reconstructed CODE_FIRST from decoded APK resource tables (not screenshot tracing); 9 screenshots are visual cross-check only",
+  "v5: Mimo 9.35 path screen is Compose (PathMapScreenKt, 80 classes) with no XML layout; node/curve geometry rebuilt from code constants + visual check",
+  "v5: naming corrected -- answerSheetBtn is now پاسخبرگ (chosen options); separate answerKeyBtn پاسخنامه (descriptive + test keys)",
+  "v5: pure-time exam policy -- comprehensive/review show no answer sheet/key during exam and auto-open answer key page at finish",
+  "v5: ONE «توضیح با هوش مصنوعی» button on exam question page and the SAME button on exam result page (wrong stems + user answers + correct answers -> minimal chat)",
+  "v5: Leaderboard shows own info/scores/exams (own blue row, 3 profile_info_card_view stat cards, 5-row self exam list)",
+  "v5: APK has 0 RTL resource qualifiers (161 qualifiers); design default is Mimo-native LTR with an RTL/FA mirror toggle"
+ ],
+ "reproduce": [
+  "python3 tools/extract_source_apps.py <google_drive_dir> .",
+  "python3 tools/write_upgrade_plan.py .",
+  "python3 CRAFT_ANYTHING/craft_adapter.py doctor",
+  "python3 tools/extract_mimo_geometry.py .",
+  "python3 tools/build_design_v5.py .",
+  "python3 tools/verify_upgrade.py ."
+ ],
+ "limitations": [
+  "no runtime/device/screenshots",
+  "no DEX/Dart decompile (string mining only)",
+  "BankBookkonkor PDF image-only, needs OCR",
+  "native craft-anything binary not installable in this sandbox"
+ ],
+ "final_deliverable": true,
+ "design_round_2": {
+  "status": "DESIGN DRAFT v2 — awaiting final approval",
+  "trigger": "user feedback + attached LearnHarness UI screenshot",
+  "interactive_prototype": "DESIGN/index.html",
+  "design_notes": "DESIGN/DESIGN_NOTES.fa.md",
+  "feedback_log": "CATALOGS/DESIGN_FEEDBACK.csv",
+  "changes": [
+   "Timer removed from exam hub; click→number→start→countdown only inside exam run",
+   "Counseling turned into a usable weekly planner (7 templates, add/remove blocks, goals, persistent save, JSON export)",
+   "All LearnHarness controls from the user screenshot embedded in Mimo skin (32-row action catalog)"
   ],
-  "reproduce": [
-    "python3 tools/extract_source_apps.py <google_drive_dir> .",
-    "python3 tools/write_upgrade_plan.py .",
-    "python3 CRAFT_ANYTHING/craft_adapter.py doctor",
-    "python3 tools/verify_upgrade.py ."
-  ],
-  "limitations": [
-    "no runtime/device/screenshots",
-    "no DEX/Dart decompile (string mining only)",
-    "BankBookkonkor PDF image-only, needs OCR",
-    "native craft-anything binary not installable in this sandbox"
-  ],
-  "final_deliverable": true,
-  "design_round_2": {
-    "status": "DESIGN DRAFT v2 — awaiting final approval",
-    "trigger": "user feedback + attached LearnHarness UI screenshot",
-    "interactive_prototype": "DESIGN/index.html",
-    "design_notes": "DESIGN/DESIGN_NOTES.fa.md",
-    "feedback_log": "CATALOGS/DESIGN_FEEDBACK.csv",
-    "changes": [
-      "Timer removed from exam hub; click→number→start→countdown only inside exam run",
-      "Counseling turned into a usable weekly planner (7 templates, add/remove blocks, goals, persistent save, JSON export)",
-      "All LearnHarness controls from the user screenshot embedded in Mimo skin (32-row action catalog)"
-    ],
-    "next": "after design approval → implementation phase (P0 starts)"
+  "next": "after design approval → implementation phase (P0 starts)"
+ },
+ "design_round_3": {
+  "status": "DESIGN DRAFT v3 — awaiting final approval (CURRENT)",
+  "trigger": "new user feedback + LearnHarness main-panel screenshot + EPM repo link",
+  "supersedes": "design_round_2 (counseling planner + 32-button LH dock) partially revoked",
+  "scope": {
+   "counseling": "PARKED — no page, no design, no use; 7 templates archived as RE evidence only",
+   "ai": "MINIMAL_CHAT — Mimo skin, bubbles + input + send + at most one history option; LH capabilities stay behind /max, not rendered",
+   "exam": "KEPT unchanged (user: excellent) + 3 minor EPM options documented + one ask-AI link",
+   "epm": "borrowed very little: ChatView.vue / AiAssistant.vue chat+history+streaming, option shuffle, jump-to-unanswered, redo-wrong-only; NOT FSRS/vocab/RAG/FTS/3D/A4"
   },
-  "design_round_3": {
-    "status": "DESIGN DRAFT v3 — awaiting final approval (CURRENT)",
-    "trigger": "new user feedback + LearnHarness main-panel screenshot + EPM repo link",
-    "supersedes": "design_round_2 (counseling planner + 32-button LH dock) partially revoked",
-    "scope": {
-      "counseling": "PARKED — no page, no design, no use; 7 templates archived as RE evidence only",
-      "ai": "MINIMAL_CHAT — Mimo skin, bubbles + input + send + at most one history option; LH capabilities stay behind /max, not rendered",
-      "exam": "KEPT unchanged (user: excellent) + 3 minor EPM options documented + one ask-AI link",
-      "epm": "borrowed very little: ChatView.vue / AiAssistant.vue chat+history+streaming, option shuffle, jump-to-unanswered, redo-wrong-only; NOT FSRS/vocab/RAG/FTS/3D/A4"
-    },
-    "artifacts": [
-      "DESIGN/index.html",
-      "DESIGN/DESIGN_NOTES.fa.md",
-      "14_DESIGN_ROUND_3.md",
-      "CATALOGS/SCOPE_DECISIONS.csv",
-      "CATALOGS/AI_PANEL_SPEC.csv",
-      "CATALOGS/EPM_MINOR_OPTIONS.csv",
-      "DESIGN/REFERENCE/learnharness-main-panel-user-screenshot.png"
-    ],
-    "next": "after design approval → implementation phase"
+  "artifacts": [
+   "DESIGN/index.html",
+   "DESIGN/DESIGN_NOTES.fa.md",
+   "14_DESIGN_ROUND_3.md",
+   "CATALOGS/SCOPE_DECISIONS.csv",
+   "CATALOGS/AI_PANEL_SPEC.csv",
+   "CATALOGS/EPM_MINOR_OPTIONS.csv",
+   "DESIGN/REFERENCE/learnharness-main-panel-user-screenshot.png"
+  ],
+  "next": "after design approval → implementation phase"
+ },
+ "design_round_4": {
+  "status": "DESIGN v4 · SUPERSEDED by v5 (CURRENT: 16_DESIGN_ROUND_5.md)",
+  "trigger": "final user feedback + 2 new LearnHarness screenshots (composer/topbar)",
+  "supersedes": "design_round_3 (minimal chat with only one history option) refined; design_round_2 partially",
+  "scope": {
+   "navigation": "FIVE TABS: Learn / Practice / AI / Leaderboard / Profile (explicit user override of 4-tab APK evidence)",
+   "learn": "Mimo-identical; only subject/topic names changed to Konkur subjects",
+   "exam_hub": "one scrollable page, 7 labeled sections with explicit field templates; comprehensive = fixed 270 min",
+   "answer_sheet": "renamed from palette; 4 policies by exam type; test + descriptive answer keys + analysis after finish",
+   "ai": "minimal chat + 8 LH main-panel buttons (Chains/Import notes/Cost/TEACH-PRACTICE/Dictate/model/medium) + history; 15 component actions archived",
+   "api_key": "settings API-key entry documented as requirement ONLY, no UI designed",
+   "counseling": "still PARKED",
+   "epm_hamdars": "answer-key/analysis idea borrowed very little from Hamdars/Hadaf Plus + EPM WrongView"
   },
-  "design_round_4": {
-    "status": "DESIGN v4 · FINAL DRAFT — awaiting final approval (CURRENT)",
-    "trigger": "final user feedback + 2 new LearnHarness screenshots (composer/topbar)",
-    "supersedes": "design_round_3 (minimal chat with only one history option) refined; design_round_2 partially",
-    "scope": {
-      "navigation": "FIVE TABS: Learn / Practice / AI / Leaderboard / Profile (explicit user override of 4-tab APK evidence)",
-      "learn": "Mimo-identical; only subject/topic names changed to Konkur subjects",
-      "exam_hub": "one scrollable page, 7 labeled sections with explicit field templates; comprehensive = fixed 270 min",
-      "answer_sheet": "renamed from palette; 4 policies by exam type; test + descriptive answer keys + analysis after finish",
-      "ai": "minimal chat + 8 LH main-panel buttons (Chains/Import notes/Cost/TEACH-PRACTICE/Dictate/model/medium) + history; 15 component actions archived",
-      "api_key": "settings API-key entry documented as requirement ONLY, no UI designed",
-      "counseling": "still PARKED",
-      "epm_hamdars": "answer-key/analysis idea borrowed very little from Hamdars/Hadaf Plus + EPM WrongView"
-    },
-    "artifacts": [
-      "DESIGN/index.html",
-      "DESIGN/DESIGN_NOTES.fa.md",
-      "15_DESIGN_ROUND_4.md",
-      "CATALOGS/EXAM_SECTION_TEMPLATES.csv",
-      "CATALOGS/SCOPE_DECISIONS.csv",
-      "CATALOGS/AI_PANEL_SPEC.csv",
-      "CATALOGS/DESIGN_FEEDBACK.csv",
-      "DESIGN/REFERENCE/lh-composer-user-screenshot.png",
-      "DESIGN/REFERENCE/lh-topbar-user-screenshot.png"
-    ],
-    "next": "after final design approval → implementation phase"
-  }
+  "artifacts": [
+   "DESIGN/index.html",
+   "DESIGN/DESIGN_NOTES.fa.md",
+   "15_DESIGN_ROUND_4.md",
+   "CATALOGS/EXAM_SECTION_TEMPLATES.csv",
+   "CATALOGS/SCOPE_DECISIONS.csv",
+   "CATALOGS/AI_PANEL_SPEC.csv",
+   "CATALOGS/DESIGN_FEEDBACK.csv",
+   "DESIGN/REFERENCE/lh-composer-user-screenshot.png",
+   "DESIGN/REFERENCE/lh-topbar-user-screenshot.png"
+  ],
+  "next": "after final design approval → implementation phase"
+ },
+ "design_round_5": {
+  "status": "DESIGN v5 · FINAL DRAFT — awaiting final approval (CURRENT)",
+  "trigger": "9 Mimo screenshots + 3 rounds of user feedback (code-first reconstruction, answer sheet split, AI button, leaderboard self info)",
+  "method": "CODE_FIRST / tools/extract_mimo_geometry.py -> DESIGN/CODE_GEOMETRY.json -> tools/build_design_v5.py -> DESIGN/index.html",
+  "interactive_prototype": "DESIGN/index.html",
+  "design_notes": "DESIGN/DESIGN_NOTES.fa.md",
+  "final_log": "16_DESIGN_ROUND_5.md",
+  "code_geometry": "DESIGN/CODE_GEOMETRY.json + CATALOGS/MIMO_CODE_GEOMETRY.csv (200 rows)",
+  "screenshot_crosswalk": "CATALOGS/MIMO_SCREENSHOT_CROSSWALK.csv (9 rows, VISUAL_CROSSCHECK_ONLY)",
+  "answer_sheet_policy": "CATALOGS/ANSWER_SHEET_POLICY.csv (5 rows)",
+  "changes": [
+   "Learn path + 7 other main screens rebuilt from APK AXML/ARSC/DEX; only course/chapter/topic names differ",
+   "46 real vector pathData rendered as inline SVG (AARRGGBB -> rgba, fillType -> evenodd)",
+   "41 day/night colours + 36 dimens + 13 text styles + 45 strings injected as CSS/custom data",
+   "11 views; 5 tabs; 7 labeled exam sections; night + RTL mirror",
+   "پاسخبرگ (chosen options) split from پاسخنامه (descriptive+test keys); pure-time policy with auto-open at finish",
+   "Single AI button «توضیح با هوش مصنوعی» on exam-run and exam-result, no panel/dock",
+   "Leaderboard/user-profile own info, scores and exam history",
+   "v4/superseded docs kept as audit trail; counseling PARKED; no product code"
+  ]
+ }
 }

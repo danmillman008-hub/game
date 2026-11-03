@@ -1,0 +1,6 @@
+policy_id,exam_kind,exam_types,during_exam_answer_sheet,during_exam_answer_key,at_finish,fixed_time_minutes,rationale,artifact
+P1,normal,عادی / تکدرسی / مبحثی / دوباره / تشریحی / این ماه,YES (پاسخبرگ: گزینههای زدهشده),YES (پاسخنامه: تشریحی + تستی),پاسخبرگ + پاسخ تستی + پاسخ تشریحی + تحلیل,,تمرین و یادگیری؛ دیدن پاسخ حین آزمون مجاز,"DESIGN/index.html#answerSheetBtn, #answerKeyBtn"
+P2,timed,زماندار / سرعتی / پومودورو,YES,YES,همان + گزارش زمان,,زمان قابلتنظیم، تایمر معکوس داخل آزمون,03_EXAM_HUB.md
+P3,analytical,تحلیلی / تحلیل غلطها,YES,YES,همان + شبیهسازی «اگر غلطها نزده میذاشتی» + نقشهٔ ضعف,,ماهیت تحلیلی,EXAM_TYPES.csv
+P4,comprehensive,جامع کنکور / جامع تجربی / جامع ریاضی,NO,NO,صفحۀ پاسخنامه بهصورت خودکار باز میشود + پاسخ تستی + تشریحی + تحلیل,270,زمان خالص آزمون؛ ۲۷۰ دقیقهٔ ثابت,"POLICY.comprehensive, finishExam()"
+P5,review,جمع بندی / دورۀ فشرده / نهایی,NO,NO,صفحۀ پاسخنامه بهصورت خودکار باز میشود + پاسخ تستی + تشریحی + تحلیل,,شبیهسازی جلسۀ واقعی کنکور,"POLICY.review, finishExam()"
