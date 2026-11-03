@@ -1,0 +1,75 @@
+# بخش هوش مصنوعی میمو — ظاهر عیناً همان، بکاند Learn Harness
+
+خواسته: «دقیقا ظاهر اون بخش هوش مصنوعی میمو رو نگه میداری ولی پشتش بک اندش رو باید وصل کنی لرن هارنس… داخل بقیه اپلیکیشنهای مشاوره هم همچین بخشی هست، هرچند رابط کاربریش مختصر باید تغییر کنه تا دکمههای لرن هارنس داخل یو آی دربیاد و حذف نشه».
+
+## ۱. آنچه **نباید** تغییر کند (Frozen Surface)
+
+از استخراج Mimo 9.35:
+
+- نقطهٔ ورود: `res/layout/coding_keyboard_layout.xml` → `@id/btn_ai_tutor` و `@id/iv_ai_tutor_pulse` (پالس همان انیمیشن).
+- متنها: ۲۸ رشتهٔ `ai_tutor_*` و `ai_*` عیناً: `ai_tutor_chat_header`, `ai_tutor_input_placeholder`, `ai_tutor_input_max_characters`, `ai_tutor_first_hint`, `ai_tutor_second_hint`, `ai_tutor_start_message`, `ai_tutor_intro_title`, `ai_tutor_intro_benefit_1..4`, `ai_tutor_intro_disclaimer`, `ai_tutor_error_message_template`, `ai_tutor_offline_description`, `ai_intro_no_chat_history`, `ai_mascot_name`, `ai_initial_prompt_*`, `ai_progress_banner_*`.
+- سطح چت **Compose** است (هیچ `ai_tutor_*.xml` جداگانهای وجود ندارد؛ ۷۱ لایوت ComposeView)، بنابراین قرارداد بصری از روی همان کامپوننت Compose و توکنها حفظ میشود: هدر، حبابها، نوار ورودی، `ai_tutor_input_placeholder`، حالت آفلاین، بنر پیشرفت، خطا، ماسکات.
+- پالس، `bottom_sheet_slide_in/out`، `flash_bar_view` برای پیامها.
+
+**هیچ عنصری حذف نمیشود.** تنها افزودهٔ مجاز: یک **ردیف اکشن (Action Dock)** زیر نوار ورودی، برای نمایانکردن قابلیتهای Learn Harness.
+
+## ۲. بکاند: Learn Harness پینشدهٔ خود ریپو
+
+`/home/user/_work/prev/mimo/engines/pins.json`:
+
+```json
+{"repo": "https://github.com/amosblomqvist/learnharness.git",
+ "commit": "e69e85269c064c6c9c49a8b06ae78c06e79c4a63",
+ "license": "AGPL-3.0-only",
+ "stack": "Next.js 16 (React 19) + its own Node server",
+ "run": "next dev --port 3000 with LH_DATA_DIR + LH_AUTH_FILE isolated",
+ "integration": "basePath=/max and reverse-proxied at /max (prefix kept)"}
+```
+
+- اسکریپت `mimo/engines/prepare_learnharness.py` همان `basePath: "/max"` را تزریق میکند؛ `start-preview.sh` پورت ۳۰۰۰ را پشت `/max/*` پروکسی میکند (پیشوند **حفظ** میشود، برخلاف `/practice/*` که حذف میشود).
+- `LH_DATA_DIR` و `LH_AUTH_FILE` جدا از Mimo و EPM؛ **هیچ دیتاستور مشترکی** وجود ندارد (قاعدهٔ سند `19`).
+- **LH بازنویسی نمیشود**: همان Next.js اجرا میشود؛ تنها لایهٔ فارسی/RTL و تزریق زمینه (context) به آن اضافه میشود.
+- محتوای آموزشی LH: Measure → Plan → Teach → Practice، گراف دانش پایدار، confidence rail، thinking fields، hints، practice sessions. اینها دقیقاً همان «سازوکار یادگیری»ای هستند که باید پشت ظاهر میمو قرار بگیرند.
+
+## ۳. زمینهای که به LH داده میشود (و آنچه داده نمیشود)
+
+داده میشود: `lessonId`, `documentId`, `subject`, `topic`, `userLevel`, `recentMistakes[]`, `visible-if` وضعیت، `progress triple`، زبان `fa`.
+**داده نمیشود**: پاسخ صحیح، `answerKey`، `offset`های نمرهدهی، کلید مدل، اطلاعات شخصی (قواعد سند `19` و «No secrets»ی craft-anything).
+
+## ۴. دکمههای LH که باید «داخل UI دیده شوند و حذف نشوند»
+
+از کامپوننتهای واقعی کلونشدهٔ LH (`components/home.tsx`, `new-session.tsx`, `top-bar.tsx`, `composer-actions.tsx`, `practice-cards.tsx`, `question-dock.tsx`, `graph-view.tsx`, `plan-window.tsx`, `confidence-rail.tsx`, `thinking-block.tsx`, `notes-import.tsx`, `dictation.tsx`, `session-navigation.tsx`). فهرست کامل در `CATALOGS/LEARNHARNESS_ACTIONS.csv`.
+
+| اکشن LH | برچسب فارسی در ردیف اکشن میمو | رفتار |
+|---|---|---|
+| `Start session` / `aria-label="Start session"` | «جلسهٔ تازه» | شروع Measure→Plan |
+| `Sessions` + `session-navigation` | «جلسهها» | لیست/ادامهٔ جلسه |
+| `Plan window` / `Targets` | «نقشهٔ یادگیری» | نمایش dependency map |
+| `Knowledge graph` / `Search nodes` | «گراف دانش» | نمودارگزارهها |
+| `Practice` / `Next problem` / `Retest` | «تمرین» / «سؤال بعد» | نشست تمرین مجزا |
+| `Check your understanding` | «بفهمم یا نه» | مرحلهٔ Teach |
+| `Confidence rail` | «میزان اطمینان» | ثبت confidence |
+| `Thinking fields` / «Think out loud» | «فکر کردن با صدای بلند» | فیلد تفکر |
+| `Hint rung` | «راهنما» | نردبان راهنما |
+| `Notes import` | «یادداشتهام» | واردکردن جزوه |
+| `Researcher`, `Figure maker`, `PDF reader`, `Demo builder` | «پژوهش»، «شکل»، «PDF»، «نمونه» | ابزارهای پسزمینهای |
+| `Model` / `Context` / `Cost` / `Steps` / `Settings` | «مدل»، «هزینه» | همان chipهای LH |
+| `Dictation` | «گفتار» | دیکته (اختیاری) |
+| `Stop` / `Abort` / `End this background process` | «توقف» | قطع جریان |
+
+نمایش: همان `flash_bar_view.xml` / ردیف chip با `card_pressed`، `12dp`، `8dp` فاصله، اسکرول افقی RTL، `contentDescription` کامل؛ **بدون تغییر هدر، حباب، نوار ورودی، ماسکات و پالس**. در حالت آفلاین، chipها به `card_disabled` میروند و `ai_tutor_offline_description` نشان داده میشود (نه صفحهٔ خرید).
+
+## ۵. مقایسه با اپهای مشاوره (آموختهها)
+
+- همدرس: `AIChatWebViewScreen`, `AiChatConversationScreen`, `AiChatInputBar`, `AiChatCubit`, `AiChatThemeCubit`, ۲۶ دارایی `assets/ai_chat/` (ربات، `Counselor.svg`, میکروفون، کپی، لایک/دیسلایک، `magic_pen`, `documents`, `gallery-send`, `question-square`, `volume`)، و درسهای UX `ai-ask` و `ai-credit`.
+- هدفپلاس: `/Chatbot/conversations`, `/Chatbot/messages/stream`, انیمیشن `chatbot.json`, `اتاق رسمی هدفپلاس`, `/Chat/Admins`, `/Chat/Studying`.
+- نتیجه: اپهای مشاوره AI را **بهصورت چتتمامصفحه + اعتبار/خرید** نشان میدهند؛ ما این الگو را **نمیپذیریم**، چون وفاداری به میمو اولویت دارد. فقط ایدهٔ «دکمههای قابلیت کنار ورودی» و «لایک/دیسلایک پاسخ» بهعنوان **چیپهای اختیاری در همان ردیف اکشن** گرفته میشود؛ «اعتبار/بسته/اشتراک» حذف میگردد.
+
+## ۶. پذیرش فاز P4
+
+- [ ] diff رشتههای `ai_tutor_*` = ۰ تغییر؛ `@id/btn_ai_tutor` و `iv_ai_tutor_pulse` سر جای خود
+- [ ] `/max/*` پاسخ میدهد، `LH_DATA_DIR` جدا است، prefix حفظ شده
+- [ ] ۱۶ اکشن LH در UI قابلرویتاند و هیچکدام پشت منوی پنهان نیستند
+- [ ] پاسخ صحیح/کلید/answerKey هرگز در prompt ارسال نمیشود (تست خودکار)
+- [ ] حالت آفلاین و خطا با همان رشتههای میمو
+- [ ] نایت مُد و RTL تست شده؛ ۰ تب جدید

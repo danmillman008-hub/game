@@ -1,0 +1,31 @@
+/* flutter_tex 5.x host-app stylesheet (loaded by packages/flutter_tex/core/flutter_tex.html).
+   Must exist so the local server serves it with a valid text/css MIME type; otherwise the
+   WebView refuses it and TeXView renders blank. */
+
+/* فونتِ اپ (IRANYekan) را داخلِ WebViewِ TeXView معرفی می‌کنیم. فایل‌ها از مسیرِ مطلقِ /fonts/
+   توسط سرورِ محلی از rootBundle سرو می‌شوند (همان فایل‌های ثبت‌شده در pubspec، بدون کپیِ مجدد). */
+@font-face {
+    font-family: 'IRANYekan';
+    src: url("/fonts/IRANYekanXFaNum-Regular.ttf");
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'IRANYekan';
+    src: url("/fonts/IRANYekanXFaNum-Medium.ttf");
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'IRANYekan';
+    src: url("/fonts/IRANYekanXFaNum-Bold.ttf");
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* margin/padding پیش‌فرضِ مرورگر حذف شود و فونتِ اپ روی کلِ محتوا اعمال شود. */
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'IRANYekan', sans-serif;
+}

@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>قرارداد وفاداری UI — Mimo Konkur (نمایش پلن، نه محصول نهایی)</title>
+<style>
+:root{
+ --bg:#F6F7FB; --card:#FFFFFF; --card-pressed:#F6F7FB; --card-disabled:#E4E6F1;
+ --outline:#7E4BDE; --primary:#7E4BDE; --text:#252746; --muted:#6A7180;
+ --success:#66BC5A; --error:#F05A6E; --progress:#8D60E2; --progress-bg:#E4E6F1;
+ --radius:12px; --gap:16px; --maxw:608px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Tahoma,"Segoe UI",system-ui,sans-serif;font-size:14px;line-height:1.7}
+header{background:var(--card);border-bottom:1px solid var(--card-disabled);padding:18px 24px}
+header h1{margin:0;font-size:20px} header p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:24px;padding:24px;max-width:1400px;margin:auto}
+aside{background:var(--card);border-radius:var(--radius);padding:18px;border:1px solid var(--card-disabled);height:max-content;position:sticky;top:24px}
+aside h3{margin:0 0 10px;font-size:15px} aside code{background:var(--card-pressed);padding:1px 5px;border-radius:6px;font-size:11px}
+aside ul{margin:0 10px 14px;padding:0;list-style:none} aside li{padding:4px 0;border-bottom:1px dashed var(--card-disabled);font-size:12px}
+.badge{display:inline-block;background:var(--card-pressed);border:1px solid var(--outline);color:var(--primary);border-radius:999px;padding:1px 9px;font-size:11px;margin:2px}
+.screens{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;align-items:start}
+.screen{background:var(--card);border:1px solid var(--card-disabled);border-radius:var(--radius);overflow:hidden}
+.screen > h2{font-size:14px;margin:0;padding:12px 16px;background:var(--card-pressed);border-bottom:1px solid var(--card-disabled)}
+.phone{max-width:var(--maxw);margin:auto;padding:14px}
+.appbar{display:flex;align-items:center;justify-content:space-between;background:var(--card);border-bottom:1px solid var(--card-disabled);padding:8px 4px;margin-bottom:12px}
+.appbar b{font-size:16px} .timer{background:var(--card-pressed);border:1px solid var(--error);color:var(--error);border-radius:999px;padding:4px 12px;font-size:13px;font-weight:bold}
+.chips{display:flex;gap:8px;overflow:auto;margin-bottom:14px;padding-bottom:4px}
+.chip{white-space:nowrap;border:1px solid var(--card-disabled);background:var(--card);border-radius:999px;padding:5px 12px;font-size:12px}
+.chip.on{background:var(--outline);color:#fff;border-color:var(--outline)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--gap)}
+.node{background:var(--card);border:1px solid var(--card-disabled);border-radius:var(--radius);height:96px;display:flex;align-items:center;justify-content:center;font-size:28px;position:relative;box-shadow:0 1px 2px rgba(37,39,70,.06)}
+.node.current{border:2px solid var(--outline)} .node.done{border-color:var(--success);background:#F3FBF2}
+.node.locked{background:var(--card-disabled);color:var(--muted);opacity:.75}
+.node .mini{position:absolute;top:6px;left:8px;font-size:10px;background:var(--card-pressed);border-radius:6px;padding:1px 5px}
+.label{text-align:center;font-size:13px;margin-top:8px;color:var(--text);min-height:38px}
+.section-title{font-size:14px;margin:18px 0 10px;color:var(--muted)}
+.progress{height:6px;border-radius:6px;background:var(--progress-bg);overflow:hidden;margin:10px 0}
+.progress i{display:block;height:100%;width:62%;background:var(--progress)}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--card-disabled);background:var(--card)}
+.tab{text-align:center;padding:10px 4px;font-size:11px;color:var(--muted)}
+.tab.on{color:var(--primary);font-weight:bold;border-top:2px solid var(--primary)}
+.ai{border:1px solid var(--card-disabled);border-radius:var(--radius);padding:12px;background:var(--card)}
+.ai .head{display:flex;justify-content:space-between;border-bottom:1px solid var(--card-disabled);padding-bottom:8px;font-weight:bold}
+.bubble{background:var(--card-pressed);border-radius:var(--radius);padding:8px 12px;margin:10px 0;max-width:82%;font-size:12px}
+.bubble.me{background:var(--outline);color:#fff;margin-right:auto}
+.dockb{display:flex;gap:8px;overflow:auto;margin:10px 0;padding-bottom:4px}
+.dockb span{white-space:nowrap;background:var(--card-pressed);border:1px solid var(--card-disabled);border-radius:999px;padding:5px 10px;font-size:11px}
+.input{border:1px solid var(--outline);border-radius:var(--radius);padding:9px 12px;color:var(--muted);font-size:12px}
+.tpl{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.tpl div{border:1px solid var(--card-disabled);border-radius:var(--radius);padding:10px;text-align:center;font-size:12px;background:var(--card)}
+.tpl div.on{border:2px solid var(--outline)}
+.pcard{border:1px solid var(--card-disabled);border-radius:var(--radius);padding:12px;margin-bottom:10px;background:var(--card)}
+.pcard b{color:var(--primary)}
+.kv{display:flex;justify-content:space-between;font-size:12px;border-bottom:1px dashed var(--card-disabled);padding:4px 0}
+.note{background:#FFF7E6;border:1px solid #F5D28B;border-radius:var(--radius);padding:10px 14px;font-size:12px;margin:0 24px 24px;max-width:1400px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}aside{position:static}}
+</style>
+</head>
+<body>
+<header>
+  <h1>قرارداد وفاداری UI — ارتقای Mimo به اپ کنکور</h1>
+  <p>نمایشگر پلن فاز P1…P6 با توکنهای واقعی استخراجشدهٔ Mimo 9.35. این یک وایرفریم مشخصاتی است، نه محصول نهایی و نه کپیای از اپهای مشاوره.</p>
+</header>
+<div class="layout">
+  <div class="screens">
+
+    <section class="screen">
+      <h2>① تب Practice — هاب آزمونها (گرههای ۳تایی، برچسب زیر)</h2>
+      <div class="phone">
+        <div class="appbar"><b>آزمونها</b><span class="timer">⏱ ۱۲:۴۵</span></div>
+        <div class="chips"><span class="chip on">همه</span><span class="chip">جامع</span><span class="chip">تکدرسی</span><span class="chip">مبحثی</span><span class="chip">این ماه</span></div>
+        <div class="section-title">آزمونهای این ماه</div>
+        <div class="grid">
+          <div><div class="node current">◇<span class="mini">⏱</span></div><div class="label">آزمون جامع<br>کنکور</div></div>
+          <div><div class="node">◇<span class="mini">۲۰ سؤال</span></div><div class="label">آزمون تکدرسی<br>زیست</div></div>
+          <div><div class="node done">✓</div><div class="label">آزمون مبحثی<br>سمها</div></div>
+          <div><div class="node">◇<span class="mini">جدید</span></div><div class="label">آزمون این ماه</div></div>
+          <div><div class="node locked">🔒</div><div class="label">آزمون نهایی</div></div>
+          <div><div class="node">⏱</div><div class="label">آزمون زماندار</div></div>
+        </div>
+        <div class="progress"><i></i></div>
+        <div class="section-title">ادامهٔ مسیر (همان الگوی فصلهای میمو)</div>
+        <div class="grid">
+          <div><div class="node">◇</div><div class="label">تشریحی</div></div>
+          <div><div class="node">◇</div><div class="label">آزمون دوباره</div></div>
+          <div><div class="node">◇</div><div class="label">مرور غلطها</div></div>
+        </div>
+      </div>
+      <div class="tabs"><div class="tab">Learn</div><div class="tab on">Practice</div><div class="tab">Leaderboard</div><div class="tab">Profile</div></div>
+    </section>
+
+    <section class="screen">
+      <h2>② AI میمو — ظاهر ثابت + ردیف دکمههای Learn Harness</h2>
+      <div class="phone">
+        <div class="appbar"><b>دستیار هوشمند</b><span class="badge">پالس AI</span></div>
+        <div class="ai">
+          <div class="head"><span>گفتگو</span><span>✕</span></div>
+          <div class="bubble">سلام! روی کدوم مبحث میخوای کار کنیم؟</div>
+          <div class="bubble me">مشتقات رو برام توضیح بده</div>
+          <div class="bubble">اول ببینیم از کجا شروع کنیم… <span class="badge">Think out loud</span></div>
+          <div class="dockb">
+            <span>جلسهٔ تازه</span><span>جلسهها</span><span>نقشهٔ یادگیری</span><span>گراف دانش</span>
+            <span>تمرین</span><span>سؤال بعد</span><span>بفهمم یا نه</span><span>میزان اطمینان</span>
+            <span>فکر کردن با صدای بلند</span><span>راهنما</span><span>یادداشتهام</span><span>پژوهش</span>
+            <span>شکلسازی</span><span>PDF</span><span>گفتار</span><span>توقف</span>
+          </div>
+          <div class="input">پیامت رو بنویس… (ai_tutor_input_placeholder)</div>
+        </div>
+        <p style="font-size:11px;color:var(--muted)">هدر، حبابها، نوار ورودی، ماسکات و پالس بدون تغییر؛ فقط ردیف اکشن اضافه شده است. هیچ عنصری حذف نشده.</p>
+      </div>
+    </section>
+
+    <section class="screen">
+      <h2>③ مشاوره — ۷ قالب هدفپلاس با کارتهای میمو</h2>
+      <div class="phone">
+        <div class="appbar"><b>مشاوره و برنامه</b><span class="badge">؟ راهنما</span></div>
+        <div class="section-title">برنامۀ هفته رو با یه قالب آماده بچین</div>
+        <div class="tpl">
+          <div class="on">پومودورو</div><div>روز مدرسه</div><div>سحرخیزی</div>
+          <div>شبخوانی</div><div>بعد از ۱۰</div><div>روز تعطیل</div>
+          <div>دورهٔ فشرده</div>
+        </div>
+        <div class="pcard" style="margin-top:14px"><b>درخواست مشاور</b><div class="kv"><span>پایه / رشته</span><span>دوازدهم تجربی</span></div><div class="kv"><span>تراز کل</span><span>۶۲۰۰</span></div><div class="kv"><span>هدف</span><span>پزشکی تهران</span></div></div>
+        <div class="pcard"><b>گزارش هفتگی</b><div class="kv"><span>ساعت مطالعه</span><span>۱۲:۳۶</span></div><div class="kv"><span>تعداد تست</span><span>۱۱۵</span></div><div class="kv"><span>روزهای تا کنکور</span><span>۲۲۹</span></div></div>
+        <p style="font-size:11px;color:var(--muted)">هیچ صفحهٔ اشتراک، سبد خرید، پرداخت یا بنر «پرو» وجود ندارد.</p>
+      </div>
+    </section>
+
+    <section class="screen">
+      <h2>④ پروفایل — همان کارتهای Mimo + دادهٔ کنکور</h2>
+      <div class="phone">
+        <div class="appbar"><b>پروفایل</b><span class="badge">🔥 ۱۲ روز</span></div>
+        <div class="pcard"><b>کاربر کنکور</b><div class="kv"><span>امتیاز امروز</span><span>۴۲ / ۵۰ ⚡</span></div><div class="progress"><i style="width:84%"></i></div></div>
+        <div class="pcard"><b>اطلاعات تحصیلی</b><div class="kv"><span>پایه</span><span>دوازدهم</span></div><div class="kv"><span>رشته</span><span>تجربی</span></div><div class="kv"><span>تراز</span><span>۶۲۰۰</span></div><div class="kv"><span>سهمیه</span><span>منطقه ۱</span></div></div>
+        <div class="pcard"><b>نشانها</b><div class="tpl" style="grid-template-columns:repeat(4,1fr)"><div>تحلیلگر</div><div>جبران</div><div>منظم</div><div>لیگ</div></div></div>
+        <div class="pcard"><b>دوستان و رقابت</b><div class="kv"><span>لیگ هفتگی</span><span>رتبه ۳</span></div></div>
+      </div>
+      <div class="tabs"><div class="tab">Learn</div><div class="tab">Practice</div><div class="tab">Leaderboard</div><div class="tab on">Profile</div></div>
+    </section>
+
+  </div>
+
+  <aside>
+    <h3>توکنهای الزامی (عیناً)</h3>
+    <ul>
+      <li>background <code>#F6F7FB</code> / night <code>#252746</code></li>
+      <li>card_enabled <code>#FFFFFF</code> · pressed <code>#F6F7FB</code></li>
+      <li>card_disabled <code>#E4E6F1</code> · outline <code>#7E4BDE</code></li>
+      <li>button_primary <code>#7E4BDE</code> / night <code>#885BDE</code></li>
+      <li>text_primary <code>#252746</code> · success <code>#66BC5A</code></li>
+      <li>error_default <code>#F05A6E</code> · progress <code>#8D60E2</code></li>
+      <li>radius <code>12dp</code> · gap <code>16dp</code> (<code>sw600dp 24dp</code>)</li>
+      <li>content_max_width <code>608dp</code> · sheet <code>496dp</code></li>
+      <li>progressbar <code>6dp</code> · keyboard <code>64dp</code> · modal <code>296dp</code></li>
+      <li>streak_calendar <code>264dp</code> (<code>sw600dp 324dp</code>)</li>
+    </ul>
+    <h3>دروازهها</h3>
+    <span class="badge">F0 چهار تب</span><span class="badge">F1 بدون تب تازه</span><span class="badge">F2 توکنها</span>
+    <span class="badge">F3 دوسیه مرجع</span><span class="badge">F4 مودال/بازگشت</span><span class="badge">F5 حالت کارت</span>
+    <span class="badge">F6 RTL</span><span class="badge">F7 clean-room</span><span class="badge">F8 xref</span><span class="badge">F9 diff بصری</span>
+    <h3 style="margin-top:16px">ضدرگرسیون</h3>
+    <ul>
+      <li>❌ پروتوتایپ قبلی ۵ تب داشت (تب <b>Max</b>) → حذف</li>
+      <li>❌ «۳ تب» در اسناد قدیمی → اصلاح به ۴</li>
+      <li>❌ موتورهای وب بهعنوان تب مستقل → پشت مقصد درونتبی</li>
+      <li>❌ صفحهٔ اشتراک هدفپلاس → حذف کامل</li>
+      <li>❌ تغییر رشتههای <code>ai_tutor_*</code> → ممنوع</li>
+    </ul>
+    <h3>منابع</h3>
+    <ul>
+      <li><code>mimo-ui/ATLAS/index.html</code></li>
+      <li><code>mimo-ui/CATALOGS/DESIGN_TOKENS.json</code></li>
+      <li><code>UPGRADE/SOURCE_APPS/*</code></li>
+      <li><code>UPGRADE/CATALOGS/*.csv</code></li>
+      <li><code>UPGRADE/02_UI_FIDELITY_CONTRACT.md</code></li>
+    </ul>
+  </aside>
+</div>
+<div class="note">⚠️ این صفحه صرفاً <b>مشخصات بصری پلن</b> است. رنگها، فاصلهها و شعاعها مستقیم از استخراج Mimo 9.35 آمدهاند؛ هیچ دارایی، متن یا تصویری از Mimo، همدرس یا هدفپلاس کپی نشده است. وضعیت اجرا: تمام فازها <b>PLANNED</b>.</div>
+</body>
+</html>

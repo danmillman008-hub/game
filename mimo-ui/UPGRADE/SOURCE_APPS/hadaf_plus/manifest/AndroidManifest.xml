@@ -1,0 +1,226 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="5013" android:versionName="2.0.2" android:compileSdkVersion="36" android:compileSdkVersionCodename="16" package="app.hadafplus.hadaf_plus" platformBuildVersionCode="36" platformBuildVersionName="16">
+  <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="36"/>
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="android.permission.SET_ALARM"/>
+  <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+  <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+  <uses-permission android:name="android.permission.WAKE_LOCK"/>
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
+  <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
+  <queries>
+    <intent>
+      <action android:name="android.intent.action.VIEW"/>
+      <data android:scheme="https"/>
+    </intent>
+    <intent>
+      <action android:name="android.support.customtabs.action.CustomTabsService"/>
+    </intent>
+  </queries>
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+  <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
+  <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
+  <uses-permission android:name="android.permission.VIBRATE"/>
+  <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+  <permission android:name="app.hadafplus.hadaf_plus.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" android:protectionLevel="0x00000002"/>
+  <uses-permission android:name="app.hadafplus.hadaf_plus.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"/>
+  <application android:label="Hadaf Plus" android:icon="@7F0F0001" android:name="android.app.Application" android:extractNativeLibs="true" android:networkSecurityConfig="@7F140007" android:appComponentFactory="androidx.core.app.CoreComponentFactory">
+    <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@7F0800B0"/>
+    <meta-data android:name="com.google.firebase.messaging.default_notification_color" android:resource="@7F060030"/>
+    <activity android:theme="@7F1200C5" android:name="app.hadafplus.hadaf_plus.MainActivity" android:exported="true" android:launchMode="2" android:configChanges="0x40003FB4" android:windowSoftInputMode="0x00000010" android:hardwareAccelerated="true">
+      <meta-data android:name="io.flutter.embedding.android.NormalTheme" android:resource="@7F1200C6"/>
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="es.antonborri.home_widget.action.LAUNCH"/>
+      </intent-filter>
+      <meta-data android:name="flutter_deeplinking_enabled" android:value="false"/>
+      <intent-filter android:autoVerify="true">
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:scheme="https" android:host="app.hadafplus.app"/>
+        <data android:scheme="https" android:host="app.hadafplus.app"/>
+      </intent-filter>
+    </activity>
+    <service android:name="com.pravera.flutter_foreground_task.service.ForegroundService" android:exported="false" android:foregroundServiceType="0x00000001"/>
+    <meta-data android:name="app.hadafplus.hadaf_plus.service.TIMER_ICON" android:resource="@7F0800B2"/>
+    <meta-data android:name="app.hadafplus.hadaf_plus.service.TIMER_COLOR" android:resource="@7F060030"/>
+    <service android:name="flutter.overlay.window.flutter_overlay_window.OverlayService" android:exported="false" android:foregroundServiceType="0x00000001"/>
+    <meta-data android:name="flutterEmbedding" android:value="2"/>
+    <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" android:exported="false"/>
+    <receiver android:label="هدف امروز" android:name="app.hadafplus.hadaf_plus.widget.TodayGoalWidget" android:exported="true">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+      </intent-filter>
+      <meta-data android:name="android.appwidget.provider" android:resource="@7F140005"/>
+    </receiver>
+    <receiver android:label="استریک" android:name="app.hadafplus.hadaf_plus.widget.StreakWidget" android:exported="true">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+      </intent-filter>
+      <meta-data android:name="android.appwidget.provider" android:resource="@7F140004"/>
+    </receiver>
+    <receiver android:label="لیگ من" android:name="app.hadafplus.hadaf_plus.widget.LeagueWidget" android:exported="true">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+      </intent-filter>
+      <meta-data android:name="android.appwidget.provider" android:resource="@7F140003"/>
+    </receiver>
+    <receiver android:name="app.hadafplus.hadaf_plus.widget.HwTickReceiver" android:exported="true">
+      <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED"/>
+        <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
+        <action android:name="android.intent.action.TIME_SET"/>
+      </intent-filter>
+    </receiver>
+    <receiver android:name="com.pravera.flutter_foreground_task.service.RebootReceiver" android:enabled="true" android:exported="true">
+      <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED"/>
+        <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+        <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+      </intent-filter>
+    </receiver>
+    <receiver android:name="com.pravera.flutter_foreground_task.service.RestartReceiver" android:enabled="true" android:exported="false"/>
+    <provider android:name="dev.fluttercommunity.plus.share.ShareFileProvider" android:exported="false" android:authorities="app.hadafplus.hadaf_plus.flutter.share_provider" android:grantUriPermissions="true">
+      <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@7F140002"/>
+    </provider>
+    <receiver android:name="dev.fluttercommunity.plus.share.SharePlusPendingIntent" android:exported="false">
+      <intent-filter>
+        <action android:name="EXTRA_CHOSEN_COMPONENT"/>
+      </intent-filter>
+    </receiver>
+    <service android:name="androidx.credentials.playservices.CredentialProviderMetadataHolder" android:enabled="true" android:exported="false">
+      <meta-data android:name="androidx.credentials.CREDENTIAL_PROVIDER_KEY" android:value="androidx.credentials.playservices.CredentialProviderPlayServicesImpl"/>
+    </service>
+    <activity android:theme="@7F120154" android:name="androidx.credentials.playservices.HiddenActivity" android:enabled="true" android:exported="false" android:configChanges="0x000005A0" android:fitsSystemWindows="true"/>
+    <activity android:theme="@7F120154" android:name="androidx.credentials.playservices.IdentityCredentialApiHiddenActivity" android:enabled="true" android:exported="false" android:configChanges="0x000005A0" android:fitsSystemWindows="true"/>
+    <activity android:theme="@android:01030010" android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity" android:exported="false" android:excludeFromRecents="true"/>
+    <service android:name="com.google.android.gms.auth.api.signin.RevocationBoundService" android:permission="com.google.android.gms.auth.api.signin.permission.REVOCATION_NOTIFICATION" android:exported="true" android:visibleToInstantApps="true"/>
+    <activity android:theme="@7F120005" android:name="com.pichillilorenzo.flutter_inappwebview_android.in_app_browser.InAppBrowserActivity" android:exported="false" android:configChanges="0x400035B4"/>
+    <activity android:theme="@7F12015E" android:name="com.pichillilorenzo.flutter_inappwebview_android.chrome_custom_tabs.ChromeCustomTabsActivity" android:exported="false"/>
+    <activity android:theme="@7F12015E" android:name="com.pichillilorenzo.flutter_inappwebview_android.chrome_custom_tabs.TrustedWebActivity" android:exported="false"/>
+    <activity android:theme="@7F12015E" android:name="com.pichillilorenzo.flutter_inappwebview_android.chrome_custom_tabs.ChromeCustomTabsActivitySingleInstance" android:exported="false" android:launchMode="3"/>
+    <activity android:theme="@7F12015E" android:name="com.pichillilorenzo.flutter_inappwebview_android.chrome_custom_tabs.TrustedWebActivitySingleInstance" android:exported="false" android:launchMode="3"/>
+    <receiver android:name="com.pichillilorenzo.flutter_inappwebview_android.chrome_custom_tabs.ActionBroadcastReceiver" android:enabled="true" android:exported="false"/>
+    <meta-data android:name="io.flutter.embedded_views_preview" android:value="true"/>
+    <provider android:name="com.crazecoder.openfile.FileProvider" android:exported="false" android:authorities="app.hadafplus.hadaf_plus.fileProvider.com.crazecoder.openfile" android:grantUriPermissions="true" android:requestLegacyExternalStorage="true">
+      <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@7F140000"/>
+    </provider>
+    <service android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingBackgroundService" android:permission="android.permission.BIND_JOB_SERVICE" android:exported="false"/>
+    <service android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingService" android:exported="false">
+      <intent-filter>
+        <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+      </intent-filter>
+    </service>
+    <receiver android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingReceiver" android:permission="com.google.android.c2dm.permission.SEND" android:exported="true">
+      <intent-filter>
+        <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+      </intent-filter>
+    </receiver>
+    <service android:name="com.google.firebase.components.ComponentDiscoveryService" android:exported="false" android:directBootAware="true">
+      <meta-data android:name="com.google.firebase.components:io.flutter.plugins.firebase.messaging.FlutterFirebaseAppRegistrar" android:value="com.google.firebase.components.ComponentRegistrar"/>
+      <meta-data android:name="com.google.firebase.components:io.flutter.plugins.firebase.core.FlutterFirebaseCoreRegistrar" android:value="com.google.firebase.components.ComponentRegistrar"/>
+      <meta-data android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingKtxRegistrar" android:value="com.google.firebase.components.ComponentRegistrar"/>
+      <meta-data android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingRegistrar" android:value="com.google.firebase.components.ComponentRegistrar"/>
+      <meta-data android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsKtxRegistrar" android:value="com.google.firebase.components.ComponentRegistrar"/>
+      <meta-data android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar" android:value="com.google.firebase.components.ComponentRegistrar"/>
+      <meta-data android:name="com.google.firebase.components:com.google.firebase.FirebaseCommonKtxRegistrar" android:value="com.google.firebase.components.ComponentRegistrar"/>
+      <meta-data android:name="com.google.firebase.components:com.google.firebase.datatransport.TransportRegistrar" android:value="com.google.firebase.components.ComponentRegistrar"/>
+    </service>
+    <provider android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingInitProvider" android:exported="false" android:authorities="app.hadafplus.hadaf_plus.flutterfirebasemessaginginitprovider" android:initOrder="99"/>
+    <service android:name="id.flutter.flutter_background_service.BackgroundService" android:enabled="true" android:exported="true" android:stopWithTask="false"/>
+    <receiver android:name="id.flutter.flutter_background_service.WatchdogReceiver" android:enabled="true" android:exported="true"/>
+    <receiver android:name="id.flutter.flutter_background_service.BootReceiver" android:enabled="true" android:exported="true">
+      <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED"/>
+        <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+        <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+      </intent-filter>
+    </receiver>
+    <provider android:name="io.flutter.plugins.imagepicker.ImagePickerFileProvider" android:exported="false" android:authorities="app.hadafplus.hadaf_plus.flutter.image_provider" android:grantUriPermissions="true">
+      <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@7F140001"/>
+    </provider>
+    <service android:name="com.google.android.gms.metadata.ModuleDependencies" android:enabled="false" android:exported="false">
+      <intent-filter>
+        <action android:name="com.google.android.gms.metadata.MODULE_DEPENDENCIES"/>
+      </intent-filter>
+      <meta-data android:name="photopicker_activity:0:required" android:value=""/>
+    </service>
+    <activity android:theme="@android:01030007" android:name="io.flutter.plugins.urllauncher.WebViewActivity" android:exported="false"/>
+    <receiver android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver" android:permission="com.google.android.c2dm.permission.SEND" android:exported="true">
+      <intent-filter>
+        <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+      </intent-filter>
+      <meta-data android:name="com.google.android.gms.cloudmessaging.FINISHED_AFTER_HANDLED" android:value="true"/>
+    </receiver>
+    <service android:name="com.google.firebase.messaging.FirebaseMessagingService" android:exported="false" android:directBootAware="true">
+      <intent-filter android:priority="-500">
+        <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+      </intent-filter>
+    </service>
+    <activity android:theme="@android:01030010" android:name="com.google.android.gms.common.api.GoogleApiActivity" android:exported="false"/>
+    <provider android:name="com.google.firebase.provider.FirebaseInitProvider" android:exported="false" android:authorities="app.hadafplus.hadaf_plus.firebaseinitprovider" android:initOrder="100" android:directBootAware="true"/>
+    <activity android:theme="@android:01030055" android:name="androidx.glance.appwidget.action.ActionTrampolineActivity" android:enabled="true" android:exported="false" android:excludeFromRecents="true"/>
+    <activity android:theme="@7F1201AA" android:name="androidx.glance.appwidget.action.InvisibleActionTrampolineActivity" android:enabled="true" android:exported="false" android:taskAffinity="androidx.glance.appwidget.ListAdapterCallbackTrampoline" android:launchMode="3" android:noHistory="true"/>
+    <receiver android:name="androidx.glance.appwidget.action.ActionCallbackBroadcastReceiver" android:enabled="true" android:exported="false"/>
+    <receiver android:name="androidx.glance.appwidget.UnmanagedSessionReceiver" android:enabled="true" android:exported="false"/>
+    <receiver android:name="androidx.glance.appwidget.MyPackageReplacedReceiver" android:enabled="true" android:exported="false">
+      <intent-filter>
+        <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+      </intent-filter>
+    </receiver>
+    <service android:name="androidx.glance.appwidget.GlanceRemoteViewsService" android:permission="android.permission.BIND_REMOTEVIEWS" android:exported="true"/>
+    <provider android:name="androidx.startup.InitializationProvider" android:exported="false" android:authorities="app.hadafplus.hadaf_plus.androidx-startup">
+      <meta-data android:name="androidx.work.WorkManagerInitializer" android:value="androidx.startup"/>
+      <meta-data android:name="androidx.emoji2.text.EmojiCompatInitializer" android:value="androidx.startup"/>
+      <meta-data android:name="androidx.lifecycle.ProcessLifecycleInitializer" android:value="androidx.startup"/>
+      <meta-data android:name="androidx.profileinstaller.ProfileInstallerInitializer" android:value="androidx.startup"/>
+    </provider>
+    <service android:name="androidx.work.impl.background.systemjob.SystemJobService" android:permission="android.permission.BIND_JOB_SERVICE" android:enabled="@7F050005" android:exported="true" android:directBootAware="false"/>
+    <service android:name="androidx.work.impl.foreground.SystemForegroundService" android:enabled="@7F050004" android:exported="false" android:directBootAware="false"/>
+    <receiver android:name="androidx.work.impl.utils.ForceStopRunnable$BroadcastReceiver" android:enabled="true" android:exported="false" android:directBootAware="false"/>
+    <receiver android:name="androidx.work.impl.background.systemalarm.RescheduleReceiver" android:enabled="false" android:exported="false" android:directBootAware="false">
+      <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED"/>
+      </intent-filter>
+    </receiver>
+    <receiver android:name="androidx.work.impl.diagnostics.DiagnosticsReceiver" android:permission="android.permission.DUMP" android:enabled="true" android:exported="true" android:directBootAware="false">
+      <intent-filter>
+        <action android:name="androidx.work.diagnostics.REQUEST_DIAGNOSTICS"/>
+      </intent-filter>
+    </receiver>
+    <uses-library android:name="androidx.window.extensions" android:required="false"/>
+    <uses-library android:name="androidx.window.sidecar" android:required="false"/>
+    <service android:name="androidx.core.widget.RemoteViewsCompatService" android:permission="android.permission.BIND_REMOTEVIEWS"/>
+    <receiver android:name="androidx.profileinstaller.ProfileInstallReceiver" android:permission="android.permission.DUMP" android:enabled="true" android:exported="true" android:directBootAware="false">
+      <intent-filter>
+        <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="androidx.profileinstaller.action.SKIP_FILE"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="androidx.profileinstaller.action.SAVE_PROFILE"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION"/>
+      </intent-filter>
+    </receiver>
+    <service android:name="androidx.room.MultiInstanceInvalidationService" android:exported="false" android:directBootAware="true"/>
+    <meta-data android:name="com.google.android.gms.version" android:value="@7F0B0004"/>
+    <service android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery" android:exported="false">
+      <meta-data android:name="backend:com.google.android.datatransport.cct.CctBackendFactory" android:value="cct"/>
+    </service>
+    <service android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService" android:permission="android.permission.BIND_JOB_SERVICE" android:exported="false"/>
+    <receiver android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver" android:exported="false"/>
+  </application>
+</manifest>
