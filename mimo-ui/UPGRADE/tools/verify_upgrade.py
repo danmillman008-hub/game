@@ -12,11 +12,12 @@ docs = ["README.md", "00_START_HERE.md", "01_CRAFT_ANYTHING_INSTALL.md",
         "07_LESSON_STRUCTURE_AND_QUESTIONS.md", "08_NAVIGATION_AND_IA.md",
         "09_DATA_MODEL_AND_BACKEND.md", "10_PHASED_ROADMAP.md",
         "11_EVIDENCE_AND_CROSSWALK.md", "12_RISKS_UNKNOWN_AND_QUESTIONS.md",
-        "13_DESIGN_ROUND_2.md", "wireframes.html"]
+        "13_DESIGN_ROUND_2.md", "14_DESIGN_ROUND_3.md", "wireframes.html"]
 csvs = {"UI_FIDELITY_RULES.csv": 10, "FEATURE_MAP.csv": 16, "EXAM_TYPES.csv": 11,
         "HADAF_TEMPLATES.csv": 7, "GAMIFICATION_MAP.csv": 13, "PHASES.csv": 8,
         "LEARNHARNESS_ACTIONS.csv": 32, "EVIDENCE_LEDGER.csv": 10, "OPEN_QUESTIONS.csv": 5,
-        "DESIGN_FEEDBACK.csv": 5}
+        "DESIGN_FEEDBACK.csv": 10, "SCOPE_DECISIONS.csv": 5,
+        "AI_PANEL_SPEC.csv": 10, "EPM_MINOR_OPTIONS.csv": 6}
 checks, problems = [], []
 
 
@@ -52,13 +53,18 @@ ck("wireframe:v1-banner", "DESIGN/index.html" in t, "v1 archived, points to v2")
 D = ROOT / "DESIGN"
 dt = (D / "index.html").read_text(encoding="utf-8") if (D / "index.html").is_file() else ""
 ck("design:index", len(dt) > 20000, "%d chars" % len(dt))
+ck("design:v3-header", "DESIGN v3" in dt, "version 3")
 ck("design:no-hub-timer", "exam-hub" in dt and "⏱ ۱۲:۴۵" not in dt, "timer removed from exam hub")
 ck("design:timer-states", all(x in dt for x in ["timerSheet","timerStart","timerPause","timerReset","finished"]), "click-number-start-countdown")
-ck("design:counseling-planner", all(x in dt for x in
-   ["konkur-plan-v2","localStorage","goalSheet","blockSheet","exportPlan","clearPlan","savePlan"]), "usable weekly planner")
-ck("design:lh-controls", all(x in dt for x in
-   ["Chains","Import notes","TEACH","PRACTICE","Knowledge graph","Dictate",
-    "gemini-flash-lite-latest","BACKGROUND AGENTS","SETTINGS","lhDock"]), "LearnHarness controls embedded")
+ck("design:counseling-removed",
+   'data-screen="counseling"' not in dt and "konkur-plan-v2" not in dt and "localStorage" not in dt and "goalSheet" not in dt,
+   "counseling page PARKED / removed")
+ck("design:ai-minimal", all(x in dt for x in
+   ["chatThread","aiInput","aiSend","historySheet","histList","newChat","typing","aiContext"]), "minimal chat + history")
+ck("design:ai-no-clutter", all(x not in dt for x in
+   ["lhDock","sessList","Knowledge graph","gemini-flash-lite-latest","BACKGROUND AGENTS"]), "no 32-button dock / sidebar")
+ck("design:epm-link", "askAi" in dt and "EPM" in dt, "minor EPM idea in exam")
+ck("design:4views", dt.count('<button data-go=') == 4, "4 design views, counseling removed")
 ck("design:4tabs", dt.count('data-tab="') == 4, "four Mimo tabs")
 js = re.search(r"<script>(.*?)</script>", dt, re.S)
 used = set(re.findall(r'\$\("#([A-Za-z0-9_-]+)"\)', js.group(1))) if js else set()
@@ -67,6 +73,12 @@ ck("design:js-ids", bool(js) and used <= defined, "%d used / %d defined; missing
 ck("design:notes", (D / "DESIGN_NOTES.fa.md").is_file() and (D / "DESIGN_NOTES.fa.md").stat().st_size > 2000, "design notes")
 ck("design:screenshot", (D / "REFERENCE/learnharness-ui-user-screenshot.png").is_file()
    and (D / "REFERENCE/learnharness-ui-user-screenshot.png").stat().st_size > 10000, "user LH screenshot")
+ck("design:screenshot2", (D / "REFERENCE/learnharness-main-panel-user-screenshot.png").is_file()
+   and (D / "REFERENCE/learnharness-main-panel-user-screenshot.png").stat().st_size > 10000, "user LH main-panel screenshot")
+ck("docs:v3:14", "تصمیمات دامنهای" in (ROOT / "14_DESIGN_ROUND_3.md").read_text(encoding="utf-8"), "v3 log")
+ck("docs:v3:04", "پنل مینیمال v3" in (ROOT / "04_AI_LEARN_HARNESS.md").read_text(encoding="utf-8"), "minimal AI spec")
+ck("docs:v3:05", "PARKED" in (ROOT / "05_COUNSELING_HADAF_PLUS.md").read_text(encoding="utf-8"), "counseling parked")
+ck("scope:parked", "PARKED" in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encoding="utf-8"), "scope decisions")
 for f,mark in [("03_EXAM_HUB.md","فقط داخل آزمون"),
                ("04_AI_LEARN_HARNESS.md","جاسازی کنترلهای واقعی LH"),
                ("05_COUNSELING_HADAF_PLUS.md","برنامهریز هفتگی قابلاستفاده")]:

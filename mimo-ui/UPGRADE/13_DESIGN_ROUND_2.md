@@ -1,5 +1,7 @@
 # دور دوم طراحی — لاگ بازخورد و تغییرات (DESIGN DRAFT v2)
 
+> ⚠️ **تا حدی توسط v3 لغو شد:** «مشاورهٔ برنامهریز تعاملی» و «جاسازی ۳۲ دکمهٔ LearnHarness» در بازخورد بعدی رد شدند. حکم فعلی ← `14_DESIGN_ROUND_3.md` و `DESIGN/index.html` (v3). تایمر داخل آزمون همچنان معتبر است.
+
 **ورودی:** بازخورد شما + اسکرینشات رابط واقعی LearnHarness (`DESIGN/REFERENCE/learnharness-ui-user-screenshot.png`).
 **خروجی:** `DESIGN/index.html` (پروتوتایپ تعاملی)، `DESIGN/DESIGN_NOTES.fa.md`، بهروزرسانی `03` / `04` / `05` / `00` / `11` / `wireframes.html`، `CATALOGS/DESIGN_FEEDBACK.csv`، `CATALOGS/LEARNHARNESS_ACTIONS.csv` (۳۲ ردیف).
 **وضعیت:** پیشنویس طراحی، منتظر تأیید نهایی. **هیچ پیادهمسازی محصول انجام نشده**؛ بعد از تأیید میرویم «مرحلهٔ بعد».

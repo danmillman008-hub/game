@@ -10,6 +10,6 @@
 - لایهٔ نصبشدهٔ craft-anything: `CRAFT_ANYTHING/`
 - ابزارهای قابلتکرار: `tools/extract_source_apps.py`, `tools/write_upgrade_plan.py`, `CRAFT_ANYTHING/craft_adapter.py`
 
-**طرح تعاملی v2 (بعد از بازخورد):** `DESIGN/index.html` · یادداشتها: `DESIGN/DESIGN_NOTES.fa.md` · لاگ تغییرات: `13_DESIGN_ROUND_2.md`. تایمر فقط داخل آزمون، مشاوره برنامهریز قابلاستفاده، دکمههای LH در پوستهٔ میمو.
+**طرح تعاملی v3 (حکم فعلی):** `DESIGN/index.html` · یادداشتها: `DESIGN/DESIGN_NOTES.fa.md` · لاگ: `14_DESIGN_ROUND_3.md` · تصمیمات: `CATALOGS/SCOPE_DECISIONS.csv`. تایمر فقط داخل آزمون، **مشاوره PARKED**، AI = چت مینیمال + تاریخچه، آزمون دستنخورده + ایدههای جزیی EPM.
 
 **وضعیت:** فقط پلن و شواهد؛ هشت فاز `PLANNED`، هیچ پیادهمسازی محصول انجام نشده است.
