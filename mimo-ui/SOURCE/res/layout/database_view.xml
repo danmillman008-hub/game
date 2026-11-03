@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent">
+  <com.google.android.material.tabs.TabLayout android:gravity="0x00800013" android:id="@id/tl_database_header" android:background="@color/background_secondary" android:paddingTop="0.000000dip" android:paddingBottom="0.000000dip" android:focusable="true" android:focusableInTouchMode="true" android:layout_width="0.000000dip" android:layout_height="48.000000dip" android:paddingStart="@dimen/spacing_s" app:layout_constraintEnd_toEndOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toTopOf="0" style="@style/CodeEditorTabLayout"/>
+  <View android:id="@id/code_header_separator" android:background="@color/line_primary" android:layout_width="match_parent" android:layout_height="1.000000dip" app:layout_constraintBottom_toBottomOf="@id/tl_database_header"/>
+  <com.getmimo.ui.common.viewpager2.NestedScrollableHost android:layout_width="0.000000dip" android:layout_height="wrap_content" app:layout_constraintEnd_toEndOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toBottomOf="@id/tl_database_header">
+    <com.getmimo.ui.common.viewpager2.TwoWayNestedScrollView android:scrollbarStyle="0x00000000" android:id="@id/nsv_table_content" android:scrollbars="0x00000300" android:layout_width="match_parent" android:layout_height="match_parent" android:scrollbarFadeDuration="200"/>
+  </com.getmimo.ui.common.viewpager2.NestedScrollableHost>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

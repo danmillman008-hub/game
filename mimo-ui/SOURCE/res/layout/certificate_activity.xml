@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android" android:id="@id/layout_certificate_activity" android:background="@color/background_primary" android:fitsSystemWindows="false" android:layout_width="match_parent" android:layout_height="match_parent">
+  <com.google.android.material.appbar.AppBarLayout android:id="@id/appbar_certificate" android:background="@color/navbar_background" android:fitsSystemWindows="true" android:layout_width="match_parent" android:layout_height="wrap_content" app:elevation="0.000000dip" app:layout_constraintTop_toTopOf="0">
+    <include android:id="@id/layout_toolbar" android:layout_width="match_parent" android:layout_height="@dimen/toolbar_height" layout="@layout/toolbar"/>
+  </com.google.android.material.appbar.AppBarLayout>
+  <ImageView android:id="@id/iv_certificate_pdf" android:layout_width="match_parent" android:layout_height="0.000000dip" android:layout_marginTop="28.000000dip" android:layout_marginBottom="28.000000dip" android:contentDescription="@null" app:layout_constraintBottom_toBottomOf="0" app:layout_constraintLeft_toLeftOf="0" app:layout_constraintRight_toRightOf="0" app:layout_constraintTop_toBottomOf="@id/appbar_certificate"/>
+  <ProgressBar android:layout_gravity="0x00000011" android:id="@id/pb_certificate" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:indeterminateTint="@color/progress_primary" app:layout_constraintBottom_toBottomOf="0" app:layout_constraintLeft_toLeftOf="0" app:layout_constraintRight_toRightOf="0" app:layout_constraintTop_toTopOf="0"/>
+  <androidx.compose.ui.platform.ComposeView android:id="@id/btn_download_certificate" android:visibility="invisible" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="16.000000dip" android:layout_marginBottom="16.000000dip" app:layout_constraintBottom_toBottomOf="0" app:layout_constraintRight_toRightOf="0"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

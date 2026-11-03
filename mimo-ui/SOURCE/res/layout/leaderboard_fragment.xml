@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android" android:id="@id/root_leaderboard_fragment" android:layout_width="match_parent" android:layout_height="match_parent">
+  <com.google.android.material.appbar.AppBarLayout android:id="@id/appbar_leaderboard" android:background="@color/navbar_background" android:visibility="gone" android:fitsSystemWindows="true" android:layout_width="match_parent" android:layout_height="wrap_content" app:elevation="0.000000dip">
+    <include android:id="@id/layout_toolbar" android:layout_width="match_parent" android:layout_height="@dimen/toolbar_height" layout="@layout/toolbar"/>
+  </com.google.android.material.appbar.AppBarLayout>
+  <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent" app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    <com.getmimo.ui.components.common.OfflineView android:id="@id/layout_leaderboard_offline" android:visibility="gone" android:layout_width="match_parent" android:layout_height="match_parent" app:offline_description="@string/leaderboard_offline_message"/>
+    <ProgressBar android:layout_gravity="0x00000011" android:id="@id/pb_leaderboard_loading_progress" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+    <include android:id="@id/layout_leaderboard_locked" android:visibility="gone" android:layout_width="match_parent" android:layout_height="match_parent" layout="@layout/leaderboard_fragment_locked"/>
+    <include android:id="@id/layout_leaderboard_active" android:visibility="gone" android:layout_width="match_parent" android:layout_height="match_parent" layout="@layout/leaderboard_fragment_active"/>
+    <com.getmimo.ui.authentication.lock.AnonymousUserFeatureLockedView android:id="@id/anonymous_user_lock_view" android:visibility="gone" android:layout_width="match_parent" android:layout_height="match_parent"/>
+  </FrameLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+

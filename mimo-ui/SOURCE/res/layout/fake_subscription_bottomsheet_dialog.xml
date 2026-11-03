@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:padding="@dimen/spacing_m" android:layout_width="match_parent" android:layout_height="wrap_content">
+  <com.getmimo.ui.settings.SettingsListSwitchItem android:id="@id/switch_no_subscription" android:layout_width="match_parent" android:layout_height="wrap_content" app:settings_icon="@drawable/ic_plus" app:settings_label="No subscription"/>
+  <com.getmimo.ui.settings.SettingsListSwitchItem android:id="@id/switch_subscription_with_trial" android:layout_width="match_parent" android:layout_height="wrap_content" app:settings_icon="@drawable/ic_plus" app:settings_label="Subscription with free trial"/>
+  <com.getmimo.ui.settings.SettingsListSwitchItem android:id="@id/switch_subscription_without_trial" android:layout_width="match_parent" android:layout_height="wrap_content" app:settings_icon="@drawable/ic_plus" app:settings_label="Subscription without free trial"/>
+  <TextView android:textColor="@color/primary_default" android:id="@id/tv_end_date_label" android:paddingTop="@dimen/spacing_m" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Select end date:" style="@style/TextH3"/>
+  <CalendarView android:layout_gravity="0x00000001" android:id="@id/cv_main" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+  <com.getmimo.ui.settings.SettingsListSwitchItem android:id="@id/switch_is_cancelled" android:layout_width="match_parent" android:layout_height="wrap_content" app:settings_icon="@drawable/ic_plus" app:settings_label="Is subscription cancelled"/>
+  <androidx.compose.ui.platform.ComposeView android:layout_gravity="0x00000011" android:id="@id/btn_apply" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16.000000dip" android:layout_marginBottom="24.000000dip"/>
+</LinearLayout>
+

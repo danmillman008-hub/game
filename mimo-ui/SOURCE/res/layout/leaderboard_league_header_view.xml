@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android" android:background="@color/navbar_background" android:layout_width="match_parent" android:layout_height="wrap_content" android:elevation="4.000000dip">
+  <FrameLayout android:id="@id/frameLayout" android:layout_width="0.000000dip" android:layout_height="@dimen/leaderboard_league_header_height" app:layout_constraintEnd_toEndOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toTopOf="0">
+    <androidx.recyclerview.widget.RecyclerView android:layout_gravity="0x00000011" android:orientation="horizontal" android:id="@id/rv_leaderboard_result_leagues" android:layout_width="wrap_content" android:layout_height="match_parent" android:overScrollMode="2" app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+  </FrameLayout>
+  <TextView android:textColor="@color/navbar_text" android:id="@id/tv_leaderboard_results_league_label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/spacing_m" android:layout_marginStart="@dimen/spacing_m" app:layout_constraintBottom_toBottomOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toBottomOf="@id/frameLayout" style="@style/TextLeaderboardLeagueHeader"/>
+  <TextView android:textColor="@color/navbar_text" android:id="@id/tv_leaderboard_header_results_available_timer" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/spacing_m" android:layout_marginEnd="@dimen/spacing_m" app:layout_constraintBottom_toBottomOf="0" app:layout_constraintEnd_toEndOf="0" app:layout_constraintTop_toBottomOf="@id/frameLayout" style="@style/TextP1"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

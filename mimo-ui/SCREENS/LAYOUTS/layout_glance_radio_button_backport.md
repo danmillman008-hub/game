@@ -1,0 +1,89 @@
+# پروندهٔ لایه — `res/layout/glance_radio_button_backport.xml`
+
+> **کلاس شواهد:** `VERIFIED_STATIC` (دیکد مستقیم AXML باینری APK). هیچ بازسازی یا حدسی در XML زیر وجود ندارد؛ فقط شناسه‌های عددی به نام نمادین حل شده‌اند.
+
+| ویژگی | مقدار |
+|---|---|
+| مسیر در APK | `res/layout/glance_radio_button_backport.xml` |
+| فایل دیکدشده | [`SOURCE/res/layout/glance_radio_button_backport.xml`](../../SOURCE/res/layout/glance_radio_button_backport.xml) |
+| SHA-256 دیکد | `734af43d76c2118bb61e8ec4b4e7652c74ec50cc908fd8cd9241c73251d7f7b1` |
+| ریشه | `LinearLayout` |
+| تعداد گره | 3 |
+| تعداد شناسه | 2 |
+| تگ‌های استفاده‌شده | 2 |
+| ویوهای سفارشی `com.getmimo` | 0 |
+| `ComposeView` | 0 |
+| `WebView` | 0 |
+| `<include>`/`<ViewStub>` | 6 |
+| ارجاع به منابع | 5 |
+
+## ۱. درخت کامل مؤلفه‌ها
+
+```text
+└─ LinearLayout
+   ├─ ViewStub  #@id/radioIcon
+   └─ ViewStub  #@id/radioText
+```
+
+## ۲. جدول کامل ویژگی‌ها (همهٔ گره‌ها)
+
+| # | عنصر (tag) | ویژگی | مقدار |
+|---:|---|---|---|
+| 1 | `LinearLayout` | `android:gravity` | `0x00000011` |
+| 2 | `LinearLayout` | `android:orientation` | `horizontal` |
+| 3 | `LinearLayout` | `android:tag` | `glanceCompoundButton` |
+| 4 | `LinearLayout` | `android:layout_width` | `wrap_content` |
+| 5 | `LinearLayout` | `android:layout_height` | `wrap_content` |
+| 6 | `LinearLayout` | `app:glance_isTopLevelLayout` | `true` |
+| 7 | `LinearLayout` | `style` | `@style/Glance.AppWidget.RadioButton` |
+| 8 | `ViewStub` | `android:id` | `@id/radioIcon` |
+| 9 | `ViewStub` | `android:layout` | `@layout/glance_radio_icon` |
+| 10 | `ViewStub` | `android:layout_width` | `32.000000dip` |
+| 11 | `ViewStub` | `android:layout_height` | `32.000000dip` |
+| 12 | `ViewStub` | `android:id` | `@id/radioText` |
+| 13 | `ViewStub` | `android:layout` | `@layout/glance_radio_text` |
+| 14 | `ViewStub` | `android:layout_width` | `0.000000dip` |
+| 15 | `ViewStub` | `android:layout_height` | `wrap_content` |
+| 16 | `ViewStub` | `android:layout_weight` | `1.000000` |
+
+## ۳. مقادیر حل‌شدهٔ ارجاعات
+
+| ارجاع | مقدار حل‌شده |
+|---|---|
+| `@style/Glance.AppWidget.RadioButton` | `[]` |
+
+## ۴. شناسه‌های `@id`
+
+```text
+@id/radioIcon
+@id/radioText
+```
+
+## ۵. ارجاع به لایه‌های دیگر
+
+```text
+0.000000dip
+1.000000
+32.000000dip
+@layout/glance_radio_icon
+@layout/glance_radio_text
+wrap_content
+```
+
+## ۶. صفحاتی که از این لایه استفاده می‌کنند
+
+(هیچ صفحهٔ نام‌برداری به این لایه متصل نشد؛ ممکن است لایهٔ کتابخانه/`<include>` باشد)
+
+## ۷. لایه‌هایی که این لایه را include می‌کنند
+
+(none)
+
+## ۸. کد XML کامل (همانطور که در APK نوشته شده)
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:gravity="0x00000011" android:orientation="horizontal" android:tag="glanceCompoundButton" android:layout_width="wrap_content" android:layout_height="wrap_content" app:glance_isTopLevelLayout="true" style="@style/Glance.AppWidget.RadioButton">
+  <ViewStub android:id="@id/radioIcon" android:layout="@layout/glance_radio_icon" android:layout_width="32.000000dip" android:layout_height="32.000000dip"/>
+  <ViewStub android:id="@id/radioText" android:layout="@layout/glance_radio_text" android:layout_width="0.000000dip" android:layout_height="wrap_content" android:layout_weight="1.000000"/>
+</LinearLayout>
+```

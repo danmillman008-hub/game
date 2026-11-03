@@ -1,0 +1,32 @@
+{
+  "generated_by": "sha256sum + androguard APK facts",
+  "artifacts": [
+    {
+      "file": "google_drive/Mimo_9.35 (1).zip",
+      "role": "split-archive segment 3 of 3 (plain zip container)",
+      "size_bytes": 31069368,
+      "sha256": "91c670864fc66d852b371ed83c1f6d260ab4075c078030f74b29620807ffa2b7"
+    },
+    {
+      "file": "google_drive/Mimo_9.35 (1).z01",
+      "role": "split-archive segment 1",
+      "size_bytes": 52428800,
+      "sha256": "1e3a41159ebe531121f0b04f146791fe900605c7ac15cc9cf54b1501d3b93b18"
+    },
+    {
+      "file": "google_drive/Mimo_9.35 (1).z02",
+      "role": "split-archive segment 2",
+      "size_bytes": 52428800,
+      "sha256": "1ac22ab2c916f302d8ba0fd42317f1cb79ea53eb6045061d0a174993a634f539"
+    },
+    {
+      "file": "/tmp/apk/Mimo_9.35 (1).apk",
+      "role": "re-assembled APK (cat z01 z02 zip > full.zip; unzip)",
+      "size_bytes": 142353499,
+      "sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+      "verified_identical_to_previous_analysis": true
+    }
+  ],
+  "reassembly_command": "cat 'Mimo_9.35 (1).z01' 'Mimo_9.35 (1).z02' 'Mimo_9.35 (1).zip' > /tmp/mimo_full.zip && unzip -o /tmp/mimo_full.zip -d /tmp/apk",
+  "note": "The APK is never modified. All extraction happens in /tmp (outside the repo); only derived evidence is committed."
+}

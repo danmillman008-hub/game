@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+  <com.google.android.material.appbar.AppBarLayout android:background="@color/navbar_background" android:fitsSystemWindows="true" android:layout_width="match_parent" android:layout_height="wrap_content" app:elevation="0.000000dip">
+    <include android:id="@id/layout_toolbar" android:layout_width="match_parent" android:layout_height="@dimen/toolbar_height" layout="@layout/toolbar"/>
+  </com.google.android.material.appbar.AppBarLayout>
+  <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
+    <com.getmimo.ui.components.common.MimoWebView android:id="@id/integrated_webview" android:layout_width="match_parent" android:layout_height="match_parent"/>
+    <com.getmimo.ui.components.common.OfflineView android:id="@id/offline_view_integrated_webview" android:background="@color/background_primary" android:visibility="gone" android:layout_width="match_parent" android:layout_height="match_parent" app:offline_description="@string/integrated_webview_offline_view"/>
+    <com.getmimo.ui.components.common.LoadingView android:layout_gravity="0x00000011" android:id="@id/loading_view_integrated_webview" android:background="@color/background_primary" android:visibility="gone" android:layout_width="match_parent" android:layout_height="match_parent" android:elevation="2.000000dip"/>
+  </FrameLayout>
+</LinearLayout>
+

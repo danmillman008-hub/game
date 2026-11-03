@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:background="@color/background_primary" android:layout_width="match_parent" android:layout_height="match_parent">
+  <FrameLayout android:id="@id/report_lesson_header" android:background="@color/background_secondary" android:layout_width="match_parent" android:layout_height="@dimen/toolbar_height" app:layout_constraintTop_toTopOf="0">
+    <TextView android:textColor="@color/text_weak" android:layout_gravity="0x00000011" android:id="@id/tv_report_lesson_header" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/report_lesson_header" style="@style/TextH4"/>
+    <ImageButton android:layout_gravity="0x00800015" android:id="@id/btn_report_lesson_close" android:background="?attr/selectableItemBackgroundBorderless" android:padding="@dimen/spacing_xxs" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="@dimen/spacing_m" app:srcCompat="@drawable/ic_close" app:tint="@color/icon_weak"/>
+  </FrameLayout>
+  <androidx.core.widget.NestedScrollView android:id="@id/nsv_report_content" android:layout_width="match_parent" android:layout_height="0.000000dip" android:layout_marginBottom="@dimen/spacing_m" app:layout_constraintBottom_toTopOf="@id/btn_report_lesson_report" app:layout_constraintTop_toBottomOf="@id/report_lesson_header">
+    <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="80.000000dip" android:layout_marginHorizontal="@dimen/spacing_m">
+      <TextView android:textColor="@color/text_primary" android:gravity="0x00000011" android:id="@id/tv_report_lesson_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/report_lesson_title" app:layout_constraintTop_toTopOf="0" style="@style/TextH1"/>
+      <ViewFlipper android:id="@id/vf_report_lesson_view_flipper" android:layout_width="0.000000dip" android:layout_height="wrap_content" android:layout_marginTop="@dimen/spacing_l" app:layout_constraintEnd_toEndOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toBottomOf="@id/tv_report_lesson_title" app:layout_constraintWidth_max="@dimen/general_max_width">
+        <com.getmimo.ui.common.ChoiceCard android:id="@id/layout_report_lesson_choice_card" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" style="@style/MaterialEditTextLayout">
+          <com.google.android.material.textfield.TextInputEditText android:gravity="0x00000030" android:id="@id/et_report_lesson_feedback" android:padding="@dimen/spacing_m" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="@string/report_lesson_other_hint" android:minLines="5" android:maxLength="1000" style="@style/MaterialEditText"/>
+        </com.google.android.material.textfield.TextInputLayout>
+      </ViewFlipper>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+  </androidx.core.widget.NestedScrollView>
+  <androidx.compose.ui.platform.ComposeView android:id="@id/btn_report_lesson_report" android:layout_width="0.000000dip" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/spacing_m" android:layout_marginHorizontal="@dimen/spacing_m" app:layout_constraintBottom_toBottomOf="0" app:layout_constraintEnd_toEndOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintWidth_max="@dimen/general_max_width"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

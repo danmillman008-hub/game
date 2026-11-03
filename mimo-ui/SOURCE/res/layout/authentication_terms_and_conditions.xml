@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent">
+  <androidx.constraintlayout.helper.widget.Flow android:layout_width="0.000000dip" android:layout_height="wrap_content" app:constraint_referenced_ids="ll_terms_conditions_prefix, tv_terms" app:flow_firstHorizontalStyle="2" app:flow_horizontalAlign="2" app:flow_horizontalGap="4.000000dip" app:flow_horizontalStyle="2" app:flow_wrapMode="1" app:layout_constraintEnd_toEndOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toTopOf="0"/>
+  <LinearLayout android:orientation="horizontal" android:id="@id/ll_terms_conditions_prefix" android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintEnd_toStartOf="@id/tv_terms" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toTopOf="0">
+    <TextView android:textColor="@color/text_weak" android:id="@id/tv_terms_conditions_prefix" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/sign_up_terms_conditions_prefix" style="@style/TextP3"/>
+    <TextView android:textColor="@color/text_weak" android:id="@id/tv_sing_in_terms_conditions_prefix" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/sign_in_terms_conditions_prefix" style="@style/TextP3"/>
+  </LinearLayout>
+  <TextView android:textColor="@color/text_weak" android:gravity="0x00000011" android:id="@id/tv_terms" android:background="?attr/selectableItemBackgroundBorderless" android:focusable="true" android:clickable="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/sign_up_terms_conditions_clickable_terms" app:layout_constraintStart_toEndOf="@id/ll_terms_conditions_prefix" app:layout_constraintTop_toTopOf="0" style="@style/TextP3"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

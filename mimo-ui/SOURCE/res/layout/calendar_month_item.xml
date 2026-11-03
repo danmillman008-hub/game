@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android" android:id="@id/test222" android:layout_width="match_parent" android:layout_height="@dimen/streak_calendar_height">
+  <androidx.recyclerview.widget.RecyclerView android:id="@id/rv_month" android:background="@color/background_secondary" android:layout_width="match_parent" android:layout_height="@dimen/streak_calendar_height"/>
+  <com.google.android.material.progressindicator.CircularProgressIndicator android:layout_gravity="0x00000011" android:id="@id/progress_indicator" android:visibility="invisible" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/spacing_l" android:indeterminate="true" app:indicatorColor="@color/progress_weak" app:showDelay="0"/>
+  <TextView android:textColor="@color/text_primary" android:gravity="0x00000001" android:layout_gravity="0x00000011" android:id="@id/tv_error_message" android:visibility="invisible" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/spacing_l" android:text="@string/streak_drawer_error_text" android:drawablePadding="@dimen/spacing_xs" app:drawableTint="@color/text_primary" app:drawableTopCompat="@drawable/ic_alert_circle" style="@style/TextP2"/>
+</FrameLayout>
+

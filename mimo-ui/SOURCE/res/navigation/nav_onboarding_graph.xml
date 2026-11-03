@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android" android:id="@id/nav_onboarding_graph" app:startDestination="@id/nav_introduction">
+  <fragment android:name="com.getmimo.ui.onboarding.step1.IntroductionFragment" android:id="@id/nav_introduction">
+    <action android:id="@id/action_skill_preference" app:destination="@id/nav_skill_preference" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+    <action android:id="@id/action_set_motive" app:destination="@id/nav_set_motive" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+  </fragment>
+  <fragment android:name="com.getmimo.ui.onboarding.skillpreference.OnboardingSkillPreferenceFragment" android:id="@id/nav_skill_preference">
+    <action android:id="@id/action_set_motive" app:destination="@id/nav_set_motive" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+  </fragment>
+  <fragment android:name="com.getmimo.ui.onboarding.motive.SetMotiveFragment" android:id="@id/nav_set_motive">
+    <action android:id="@id/action_set_occupation" app:destination="@id/nav_set_occupation" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+    <action android:id="@id/action_motive_reassurance" app:destination="@id/nav_motive_reassurance" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+  </fragment>
+  <fragment android:name="com.getmimo.ui.onboarding.reassurance.OnboardingMotiveReassuranceFragment" android:id="@id/nav_motive_reassurance">
+    <action android:id="@id/action_set_occupation" app:destination="@id/nav_set_occupation" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+  </fragment>
+  <fragment android:name="com.getmimo.ui.onboarding.occupation.SetOccupationFragment" android:id="@id/nav_set_occupation">
+    <action android:id="@id/action_select_path" app:destination="@id/nav_select_path" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+    <action android:id="@id/action_set_experience" app:destination="@id/nav_set_experience" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+    <action android:id="@id/action_set_work_function" app:destination="@id/nav_set_work_function" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+  </fragment>
+  <fragment android:name="com.getmimo.ui.onboarding.workfunction.SetWorkFunctionFragment" android:id="@id/nav_set_work_function">
+    <action android:id="@id/action_select_path" app:destination="@id/nav_select_path" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+    <action android:id="@id/action_set_experience" app:destination="@id/nav_set_experience" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+  </fragment>
+  <fragment android:name="com.getmimo.ui.onboarding.step2.SetExperienceFragment" android:id="@id/nav_set_experience">
+    <action android:id="@id/action_path_reassurance" app:destination="@id/nav_path_reassurance" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+    <action android:id="@id/action_select_path" app:destination="@id/nav_select_path" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+  </fragment>
+  <fragment android:name="com.getmimo.ui.onboarding.selectpath.OnboardingSelectPathContainerFragment" android:id="@id/nav_select_path">
+    <action android:id="@id/action_set_experience" app:destination="@id/nav_set_experience" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+    <action android:id="@id/action_path_reassurance" app:destination="@id/nav_path_reassurance" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+  </fragment>
+  <fragment android:name="com.getmimo.ui.onboarding.reassurance.OnboardingPathReassuranceFragment" android:id="@id/nav_path_reassurance">
+    <action android:id="@id/action_daily_goal" app:destination="@id/nav_daily_goal" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+  </fragment>
+  <fragment android:name="com.getmimo.ui.onboarding.dailygoal.OnboardingSetDailyGoalFragment" android:id="@id/nav_daily_goal">
+    <action android:id="@id/action_path_completion_estimation" app:destination="@id/nav_path_completion_estimation" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+    <action android:id="@id/action_set_reminder_time" app:destination="@id/nav_set_reminder_time" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+  </fragment>
+  <fragment android:name="com.getmimo.ui.onboarding.pathcompletionestimation.PathCompletionEstimationFragment" android:id="@id/nav_path_completion_estimation">
+    <action android:id="@id/action_set_reminder_time" app:destination="@id/nav_set_reminder_time" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+  </fragment>
+  <fragment android:name="com.getmimo.ui.chapter.remindertime.SetReminderTimeFragment" android:id="@id/nav_set_reminder_time">
+    <argument android:name="fromOnboarding" android:defaultValue="true" app:argType="boolean"/>
+    <action android:id="@id/action_device_preference" app:destination="@id/nav_device_preference" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+  </fragment>
+  <fragment android:name="com.getmimo.ui.onboarding.devicepreference.OnboardingDevicePreferenceFragment" android:id="@id/nav_device_preference">
+    <action android:id="@id/action_device_reassurance" app:destination="@id/nav_device_reassurance" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+  </fragment>
+  <fragment android:name="com.getmimo.ui.onboarding.reassurance.OnboardingDeviceReassuranceFragment" android:id="@id/nav_device_reassurance">
+    <action android:id="@id/action_free_trial" app:destination="@id/nav_free_trial" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+  </fragment>
+  <fragment android:name="com.getmimo.ui.iap.freetrial.HonestFreeTrialFragment" android:id="@id/nav_free_trial">
+    <action android:id="@id/action_prepare_curriculum" app:destination="@id/nav_preparing_curriculum" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+    <action android:id="@id/action_trial_reminder_choice" app:destination="@id/nav_trial_reminder_choice" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right"/>
+  </fragment>
+  <fragment android:name="com.getmimo.ui.iap.trialreminder.TrialReminderChoiceFragment" android:id="@id/nav_trial_reminder_choice">
+    <action android:id="@id/action_prepare_curriculum" app:destination="@id/nav_preparing_curriculum" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right" app:popUpTo="@id/nav_free_trial" app:popUpToInclusive="true"/>
+  </fragment>
+  <fragment android:name="com.getmimo.ui.onboarding.postsignup.OnboardingPreparingCurriculumFragment" android:id="@id/nav_preparing_curriculum"/>
+</navigation>
+

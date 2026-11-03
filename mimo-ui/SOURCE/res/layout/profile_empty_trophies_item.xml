@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android" android:paddingBottom="@dimen/spacing_m_expandable" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/spacing_m_expandable">
+  <TextView android:textAppearance="@style/TextH3" android:textColor="@color/text_primary" android:id="@id/tv_trophies_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/leaderboard_trophies_title" android:layout_marginStart="@dimen/spacing_m_expandable" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toTopOf="0"/>
+  <LinearLayout android:gravity="0x00000011" android:orientation="vertical" android:id="@id/layout_no_trophies" android:background="@drawable/border_dashed" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/spacing_m_expandable" android:layout_marginHorizontal="@dimen/spacing_m_expandable" android:paddingVertical="@dimen/spacing_xl" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toBottomOf="@id/tv_trophies_title">
+    <ImageView android:layout_width="80.000000dip" android:layout_height="80.000000dip" android:src="@drawable/ic_leaderboard_locked"/>
+    <TextView android:textColor="@color/text_primary" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/spacing_m" android:text="@string/no_trophies_yet_title" style="@style/TextH3"/>
+    <TextView android:textColor="@color/text_weak" android:gravity="0x00000011" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/spacing_xs" android:text="@string/no_trophies_yet_desc" android:layout_marginStart="60.000000dip" android:layout_marginEnd="60.000000dip" style="@style/TextP2"/>
+  </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

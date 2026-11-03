@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android" android:fitsSystemWindows="false" android:clipChildren="false" android:clipToPadding="false" android:layout_width="match_parent" android:layout_height="match_parent" android:animateLayoutChanges="false">
+  <androidx.constraintlayout.widget.ConstraintLayout android:id="@id/layout_awesome_mode_intro_screen" android:layout_width="match_parent" android:layout_height="match_parent">
+    <TextView android:id="@id/tv_awesome_mode_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="104.000000dip" android:text="@string/developer_menu_awesome_mode_title" app:layout_constraintEnd_toEndOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toTopOf="0" style="@style/TextH1"/>
+    <TextView android:gravity="0x00000011" android:id="@id/tv_awesome_mode_explanation" android:layout_width="0.000000dip" android:layout_height="wrap_content" android:layout_marginTop="32.000000dip" android:text="@string/developer_menu_awesome_mode_instructions" android:layout_marginStart="32.000000dip" android:layout_marginEnd="32.000000dip" app:layout_constraintEnd_toEndOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toBottomOf="@id/tv_awesome_mode_title" style="@style/TextLabel2"/>
+  </androidx.constraintlayout.widget.ConstraintLayout>
+  <androidx.coordinatorlayout.widget.CoordinatorLayout android:id="@id/layout_awesome_mode_content_screen" android:visibility="gone" android:layout_width="match_parent" android:layout_height="match_parent">
+    <androidx.viewpager2.widget.ViewPager2 android:id="@id/vp_lessons" android:layout_width="match_parent" android:layout_height="match_parent"/>
+    <com.google.android.material.appbar.AppBarLayout android:id="@id/appbar_awesome_mode" android:focusable="false" android:focusableInTouchMode="false" android:layout_width="match_parent" android:layout_height="wrap_content" android:elevation="0.000000dip">
+      <com.getmimo.ui.chapter.view.ChapterToolbar android:id="@id/toolbar_awesome_mode" android:layout_width="match_parent" android:layout_height="@dimen/lesson_progress_navbar_height"/>
+    </com.google.android.material.appbar.AppBarLayout>
+  </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+

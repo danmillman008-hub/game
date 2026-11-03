@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android" android:id="@id/chapter_activity_root" android:clipChildren="false" android:clipToPadding="false" android:layout_width="match_parent" android:layout_height="match_parent" android:animateLayoutChanges="false">
+  <androidx.compose.ui.platform.ComposeView android:id="@id/compose_view" android:fitsSystemWindows="false" android:layout_width="match_parent" android:layout_height="match_parent"/>
+  <androidx.coordinatorlayout.widget.CoordinatorLayout android:fitsSystemWindows="true" android:clipChildren="false" android:clipToPadding="false" android:layout_width="match_parent" android:layout_height="match_parent" android:animateLayoutChanges="false">
+    <androidx.viewpager2.widget.ViewPager2 android:id="@id/vp_lessons" android:layout_width="match_parent" android:layout_height="match_parent"/>
+    <androidx.fragment.app.FragmentContainerView android:id="@id/layout_chapter_finished_share_fragment" android:layout_width="match_parent" android:layout_height="match_parent"/>
+    <com.google.android.material.appbar.AppBarLayout android:id="@id/chapter_appbarlayout" android:background="@color/navbar_background" android:focusable="false" android:focusableInTouchMode="false" android:fitsSystemWindows="true" android:layout_width="match_parent" android:layout_height="wrap_content" android:elevation="0.000000dip" app:elevation="0.000000dip">
+      <com.getmimo.ui.chapter.view.ChapterToolbar android:id="@id/chapter_toolbar" android:layout_width="match_parent" android:layout_height="@dimen/lesson_progress_navbar_height"/>
+    </com.google.android.material.appbar.AppBarLayout>
+  </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</FrameLayout>
+

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android" android:id="@id/seekbar_with_intervals" android:layout_width="match_parent" android:layout_height="wrap_content">
+  <LinearLayout android:orientation="horizontal" android:id="@id/intervals_text" android:layout_width="match_parent" android:layout_height="wrap_content" app:layout_constraintTop_toTopOf="0"/>
+  <LinearLayout android:orientation="horizontal" android:id="@id/intervals_dots" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingHorizontal="@dimen/spacing_xs" app:layout_constraintBottom_toBottomOf="@id/seekbar" app:layout_constraintTop_toTopOf="@id/seekbar"/>
+  <androidx.appcompat.widget.AppCompatSeekBar android:id="@id/seekbar" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10.000000dip" app:layout_constraintTop_toBottomOf="@id/intervals_text" style="@style/MySeekBar"/>
+</merge>
+

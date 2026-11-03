@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="horizontal" android:paddingTop="@dimen/spacing_l" android:paddingBottom="@dimen/spacing_l" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="@dimen/spacing_m" android:paddingEnd="@dimen/spacing_m">
+  <ImageView android:id="@id/iv_league" android:layout_width="@dimen/trophies_icon_size" android:layout_height="@dimen/trophies_icon_size"/>
+  <Space android:id="@id/v_league_spacing" android:layout_width="@dimen/spacing_l" android:layout_height="wrap_content"/>
+  <LinearLayout android:orientation="horizontal" android:id="@id/layout_first_place" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:paddingEnd="@dimen/spacing_l">
+    <ImageView android:id="@id/iv_first_place" android:layout_width="@dimen/trophies_icon_size" android:layout_height="@dimen/trophies_icon_size"/>
+    <TextView android:textColor="@color/text_primary" android:gravity="0x00000011" android:id="@id/tv_first_place" android:layout_width="wrap_content" android:layout_height="match_parent" android:layout_marginStart="@dimen/spacing_xs" style="@style/TextH4"/>
+  </LinearLayout>
+  <LinearLayout android:orientation="horizontal" android:id="@id/layout_second_place" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:paddingEnd="@dimen/spacing_l">
+    <ImageView android:id="@id/iv_second_place" android:layout_width="@dimen/trophies_icon_size" android:layout_height="@dimen/trophies_icon_size"/>
+    <TextView android:textColor="@color/text_primary" android:gravity="0x00000011" android:id="@id/tv_second_place" android:layout_width="wrap_content" android:layout_height="match_parent" android:layout_marginStart="@dimen/spacing_xs" style="@style/TextH4"/>
+  </LinearLayout>
+  <LinearLayout android:id="@id/layout_third_place" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content">
+    <ImageView android:id="@id/iv_third_place" android:layout_width="@dimen/trophies_icon_size" android:layout_height="@dimen/trophies_icon_size"/>
+    <TextView android:textColor="@color/text_primary" android:gravity="0x00000011" android:id="@id/tv_third_place" android:layout_width="wrap_content" android:layout_height="match_parent" android:layout_marginStart="@dimen/spacing_xs" style="@style/TextH4"/>
+  </LinearLayout>
+</LinearLayout>
+

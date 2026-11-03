@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge>
+  <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:background="@color/background_primary" android:layout_width="match_parent" android:layout_height="wrap_content" app:layout_constraintTop_toBottomOf="@id/cv_bottom_sheet_header">
+    <include android:id="@id/invite_bottomsheet_dialog_content" android:visibility="invisible" android:layout_width="match_parent" android:layout_height="wrap_content" layout="@layout/invitations_overview_bottomsheet"/>
+    <com.getmimo.ui.components.common.OfflineView android:layout_gravity="0x00000011" android:id="@id/layout_invitations_offline" android:visibility="gone" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="60.000000dip" android:layout_marginBottom="60.000000dip" app:layout_constraintBottom_toBottomOf="0" app:layout_constraintEnd_toEndOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toTopOf="0" app:offline_description="@string/friends_offline_message"/>
+    <ProgressBar android:id="@id/pb_invitations_loading" android:visibility="gone" android:layout_width="32.000000dip" android:layout_height="32.000000dip" android:layout_marginTop="260.000000dip" android:layout_marginBottom="260.000000dip" android:indeterminateTint="@color/progress_primary" app:layout_constraintBottom_toBottomOf="0" app:layout_constraintEnd_toEndOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toTopOf="0"/>
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</merge>
+

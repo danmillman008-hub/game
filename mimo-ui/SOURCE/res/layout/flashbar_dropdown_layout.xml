@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:id="@id/fbRoot" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="@dimen/flashbar_playground_min_height">
+  <LinearLayout android:id="@id/fbContent" android:layout_width="match_parent" android:layout_height="wrap_content">
+    <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="@dimen/flashbar_playground_min_height">
+      <ImageView android:id="@id/fbIcon" android:layout_width="24.000000dip" android:layout_height="24.000000dip" android:layout_marginTop="@dimen/flashbar_playground_icon_vertical_margin" android:layout_marginBottom="@dimen/flashbar_playground_icon_vertical_margin" android:layout_marginStart="@dimen/flashbar_playground_icon_horizontal_margin" app:layout_constraintBottom_toBottomOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toTopOf="0"/>
+      <TextView android:id="@id/fbMessage" android:visibility="gone" android:layout_width="0.000000dip" android:layout_height="wrap_content" android:layout_marginTop="@dimen/flashbar_playground_vertical_margin" android:layout_marginBottom="@dimen/flashbar_playground_vertical_margin" android:minLines="2" android:layout_marginStart="@dimen/flashbar_playground_horizontal_margin" android:layout_marginEnd="@dimen/flashbar_playground_horizontal_margin" app:layout_constraintBottom_toBottomOf="0" app:layout_constraintEnd_toEndOf="0" app:layout_constraintStart_toEndOf="@id/fbIcon" app:layout_constraintTop_toTopOf="0" style="@style/TextFlashbarMessage"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+  </LinearLayout>
+</LinearLayout>
+

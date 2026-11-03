@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:background="@color/background_primary" android:layout_width="match_parent" android:layout_height="match_parent">
+  <com.getmimo.ui.leaderboard.LeaderboardLeagueHeaderView android:id="@id/leaderboard_league_header_view_locked" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+  <Space android:layout_width="wrap_content" android:layout_height="0.000000dip" android:layout_weight="1.000000"/>
+  <ImageView android:layout_gravity="0x00000011" android:id="@id/iv_leaderboard_fragment_locked_illustration" android:layout_width="wrap_content" android:layout_height="120.000000dip" android:adjustViewBounds="true" app:layout_constraintEnd_toEndOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toTopOf="0" app:srcCompat="@drawable/ic_leaderboard_locked"/>
+  <TextView android:textColor="@color/text_primary" android:layout_gravity="0x00000011" android:id="@id/tv_leaderboard_fragment_locked_header" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/spacing_l" app:layout_constraintEnd_toEndOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toBottomOf="@id/iv_leaderboard_fragment_locked_illustration" style="@style/TextH1"/>
+  <TextView android:textColor="@color/text_weak" android:gravity="0x00000011" android:id="@id/tv_leaderboard_fragment_locked_message" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/spacing_xs" android:layout_marginHorizontal="@dimen/spacing_l" app:layout_constraintEnd_toEndOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toBottomOf="@id/tv_leaderboard_fragment_locked_header" style="@style/TextP1"/>
+  <Space android:layout_width="wrap_content" android:layout_height="0.000000dip" android:layout_weight="1.000000"/>
+  <androidx.compose.ui.platform.ComposeView android:id="@id/btn_leaderboard_fragment_locked_jump_into_lesson" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/spacing_m" android:layout_marginHorizontal="@dimen/spacing_m_expandable"/>
+</LinearLayout>
+

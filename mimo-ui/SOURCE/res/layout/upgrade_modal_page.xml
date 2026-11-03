@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android" android:gravity="0x00000011" android:layout_gravity="0x00000011" android:layout_width="match_parent" android:layout_height="match_parent" android:paddingStart="@dimen/modal_default_padding_horizontal" android:paddingEnd="@dimen/modal_default_padding_horizontal">
+  <FrameLayout android:id="@id/image_container_upgrade_modal" android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintEnd_toEndOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toTopOf="0">
+    <ImageView android:id="@id/iv_upgrade_modal" android:layout_width="wrap_content" android:layout_height="120.000000dip"/>
+    <app.rive.runtime.kotlin.RiveAnimationView android:layout_gravity="0x00000001" android:id="@id/rive_upgrade_modal_animation" android:layout_width="wrap_content" android:layout_height="120.000000dip" app:riveFit="4" app:riveLoop="1" app:riveStateMachine="default"/>
+  </FrameLayout>
+  <TextView android:textColor="@color/text_primary" android:gravity="0x00000011" android:id="@id/tv_upgrade_modal_title" android:layout_width="0.000000dip" android:layout_height="wrap_content" android:layout_marginTop="@dimen/modal_default_image_margin_bottom" app:layout_constraintEnd_toEndOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toBottomOf="@id/image_container_upgrade_modal" style="@style/TextH2"/>
+  <TextView android:textColor="@color/text_weak" android:gravity="0x00000031" android:id="@id/tv_upgrade_modal_description" android:layout_width="0.000000dip" android:layout_height="wrap_content" android:layout_marginTop="@dimen/modal_default_title_margin_bottom" android:layout_marginBottom="@dimen/modal_default_description_margin_bottom" app:layout_constraintEnd_toEndOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toBottomOf="@id/tv_upgrade_modal_title" style="@style/TextP2"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

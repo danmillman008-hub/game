@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+  <androidx.constraintlayout.widget.ConstraintLayout android:background="@color/background_primary" android:layout_width="match_parent" android:layout_height="wrap_content" app:layout_constraintTop_toBottomOf="@id/cv_bottom_sheet_header">
+    <TextView android:textColor="@color/text_weak" android:id="@id/tv_pick_playground_template" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/spacing_l" android:text="@string/codeplayground_template_label" android:layout_marginStart="@dimen/spacing_m" app:layout_constraintTop_toTopOf="0" style="@style/TextSubtitle"/>
+    <androidx.recyclerview.widget.RecyclerView android:id="@id/rv_pick_playground_template" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/spacing_s" android:layout_marginBottom="@dimen/spacing_l" android:nestedScrollingEnabled="false" app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" app:layout_constraintBottom_toBottomOf="0" app:layout_constraintTop_toBottomOf="@id/tv_pick_playground_template"/>
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</merge>
+

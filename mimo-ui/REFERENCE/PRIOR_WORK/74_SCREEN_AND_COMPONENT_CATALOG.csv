@@ -1,0 +1,13 @@
+screen,evidence_class,state_owner,data_source,label
+onboarding,ui.onboarding.* + nav xml (17 fragments),onboarding VM,prefs + remote config,VERIFIED_STATIC
+home / learning path,ui tracks list,list VM,TracksJson + completion endpoint,INFERRED_HIGH
+track/section/chapter,list screens,list VM,"TracksJson, isCompleted",INFERRED_HIGH
+interactive lesson,"ui.lesson.interactive.{fillthegap,selection,spell,validatedinput} + base.c",base.c,lesson AST + Room,VERIFIED_STATIC
+executable lesson,ui.lesson.executable.*,executable VM,Executable payload + runfiles,VERIFIED_STATIC
+code editor,"ui.codeeditor.* (CodingKeyboardView, HighlightJsTheme)",editor VM,saved code endpoints,VERIFIED_STATIC
+ai tutor,ui.aitutor.* (7 classes),AiTutorViewModel,SSE + quota,VERIFIED_STATIC
+leaderboard,ui.leaderboard-ish package,board VM,/v1/leaderboards/*,INFERRED_HIGH
+profile,ui profile package,profile VM,PublicUser,INFERRED_HIGH
+paywall/upgrade,ui.paywall / ui.upgrade / ui.iap,purchase VM,RevenueCat,VERIFIED_STATIC
+settings,ui.settings,settings VM,prefs,INFERRED
+widget,Glance service,widget,local,INFERRED

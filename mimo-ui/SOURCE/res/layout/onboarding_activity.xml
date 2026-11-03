@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:id="@id/onboarding_root" android:layout_width="match_parent" android:layout_height="match_parent">
+  <androidx.compose.ui.platform.ComposeView android:id="@id/onboarding_progress_bar" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/spacing_m"/>
+  <androidx.fragment.app.FragmentContainerView android:name="androidx.navigation.fragment.NavHostFragment" android:id="@id/container" android:layout_width="match_parent" android:layout_height="0.000000dip" android:layout_weight="1.000000" app:defaultNavHost="true" app:navGraph="@navigation/nav_onboarding_graph"/>
+</LinearLayout>
+

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android" android:id="@id/fl_main" android:background="@color/generic_backdrop_color" android:layout_width="match_parent" android:layout_height="match_parent">
+  <com.google.android.material.card.MaterialCardView android:layout_gravity="0x00000011" android:layout_width="@dimen/modal_default_width" android:layout_height="wrap_content" app:cardCornerRadius="@dimen/cardview_corner_radius_large" app:cardUseCompatPadding="true">
+    <androidx.constraintlayout.widget.ConstraintLayout android:background="@color/background_secondary" android:layout_width="match_parent" android:layout_height="wrap_content">
+      <ImageButton android:id="@id/iv_upgrade_modal_close" android:background="?attr/selectableItemBackgroundBorderless" android:padding="@dimen/modal_default_close_button_padding" android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintEnd_toEndOf="0" app:layout_constraintTop_toTopOf="0" app:srcCompat="@drawable/ic_close" app:tint="@color/icon_weak"/>
+      <androidx.viewpager2.widget.ViewPager2 android:id="@id/vp_in_app" android:clipToPadding="false" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="40.000000dip" app:layout_constraintBottom_toTopOf="@id/vpi_in_app" app:layout_constraintTop_toTopOf="0"/>
+      <com.getmimo.ui.common.ViewPagerIndicator android:id="@id/vpi_in_app" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/modal_upgrade_description_margin_bottom" app:layout_constraintEnd_toEndOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toBottomOf="@id/vp_in_app"/>
+      <com.getmimo.ui.upgrade.UpgradeModalBottomView android:id="@id/upgrade_modal_bottom_view" android:layout_width="match_parent" android:layout_height="wrap_content" app:layout_constraintTop_toBottomOf="@id/vpi_in_app"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+  </com.google.android.material.card.MaterialCardView>
+</FrameLayout>
+

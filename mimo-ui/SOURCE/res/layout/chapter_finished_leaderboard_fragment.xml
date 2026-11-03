@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@id/cl_chapter_finished_leaderboard" android:background="@color/background_primary" android:layout_width="match_parent" android:layout_height="match_parent">
+  <androidx.constraintlayout.widget.ConstraintLayout android:id="@id/cl_main_content" android:layout_width="match_parent" android:layout_height="match_parent">
+    <FrameLayout android:id="@id/fl_chapter_finished_leaderboard_container" android:layout_width="0.000000dip" android:layout_height="0.000000dip" app:layout_constraintBottom_toTopOf="@id/btn_chapter_finished_leaderboard_continue" app:layout_constraintEnd_toEndOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toTopOf="0" app:layout_constraintWidth_max="@dimen/general_max_width"/>
+    <androidx.compose.ui.platform.ComposeView android:id="@id/btn_chapter_finished_leaderboard_continue" android:layout_width="0.000000dip" android:layout_height="wrap_content" android:layout_marginTop="@dimen/spacing_s" android:layout_marginBottom="@dimen/chapter_end_continue_button_margin_bottom" android:layout_marginHorizontal="@dimen/spacing_m" app:layout_constraintBottom_toBottomOf="0" app:layout_constraintEnd_toEndOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toBottomOf="@id/fl_chapter_finished_leaderboard_container" app:layout_constraintWidth_max="@dimen/general_max_width"/>
+  </androidx.constraintlayout.widget.ConstraintLayout>
+  <ProgressBar android:layout_gravity="0x00000011" android:id="@id/pb_loading" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+</FrameLayout>
+
