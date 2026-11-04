@@ -59,11 +59,11 @@ jobs:
           "$J" --help > ANALYSIS/DECOMPILED/JADX_HELP.txt 2>&1
           echo "help_exit=$?"
 
-          for N in classes classes2 classes3; do
+          for N in classes; do
             echo "== DECOMPILE $N.dex =="
             rm -rf "$RUNNER_TEMP/out_$N"
-            timeout 900 "$J" -d "$RUNNER_TEMP/out_$N" -r -j 4 --show-bad-code \
-              --log-level WARN "ANALYSIS/_INPUT/$N.dex" \
+            timeout 900 env JAVA_OPTS='-Xmx4g' "$J" -d "$RUNNER_TEMP/out_$N" -r -j 2 \
+              --log-level ERROR "ANALYSIS/_INPUT/$N.dex" \
               > "$RUNNER_TEMP/$N.jadx.log" 2>&1
             RC=$?
             echo "$N jadx_exit=$RC java_files=$(find "$RUNNER_TEMP/out_$N" -name '*.java' 2>/dev/null | wc -l) log_lines=$(wc -l < "$RUNNER_TEMP/$N.jadx.log")"
@@ -77,7 +77,7 @@ jobs:
           echo "== PACKAGE =="
           rm -rf "$RUNNER_TEMP/pkg"
           mkdir -p "$RUNNER_TEMP/pkg"
-          for N in classes classes2 classes3; do
+          for N in classes; do
             G=$(find "$RUNNER_TEMP/out_$N" -type d -path '*/com/getmimo' 2>/dev/null | sort | head -1)
             echo "$N getmimo_tree=$G"
             if [[ -n "$G" ]]; then
@@ -99,7 +99,7 @@ jobs:
             echo "- workflow run: ${{ github.run_id }} / commit ${{ github.sha }} / $(date -u +%FT%TZ)"
             echo "- jadx: $(cat ANALYSIS/DECOMPILED/JADX_VERSION.txt | tr '\n' ' ')"
             echo "- jadx zip sha256: $(cut -d' ' -f1 ANALYSIS/DECOMPILED/JADX_ZIP.sha256)"
-            echo "- input DEX: ANALYSIS/_INPUT/classes.dex, classes2.dex, classes3.dex"
+            echo "- input DEX: ANALYSIS/_INPUT/classes.dex (16,237,920 B; the DEX holding PathMapScreenKt)"
             echo "- java files: $NF"
             echo "- java lines: $NL"
             echo "- files containing JADX stubs: $NS"
@@ -117,6 +117,7 @@ jobs:
           } 2>&1 | tee ANALYSIS/DECOMPILED/run.log
 
       - name: Commit decompiled evidence back to the analysis branch
+        if: always()
         shell: bash
         run: |
           set +e
