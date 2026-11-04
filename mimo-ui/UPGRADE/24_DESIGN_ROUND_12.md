@@ -75,7 +75,7 @@
 
 ## ۷. v12.1 — رفع ایرادات کد (بدون تغییر دیزاین)
 
-> `<!-- v12.1-bugfix -->` · اسکریپت: `tools/fix_design_v12_1.py` (روی خروجی `tools/design_v12_template.html`). تستها: `check_v12_1.js` (۱۰۹ تست / ۰ خطا) و `verify_upgrade.py` (PASS ۲۳۴/۲۳۴).
+> `<!-- v12.1-bugfix -->` · اسکریپت: `tools/fix_design_v12_1.py` (روی خروجی `tools/design_v12_template.html`). تستها: `check_v12_1.js` (۱۰۸ تست / ۰ خطا) و `verify_upgrade.py` (PASS ۲۳۴/۲۳۴).
 
 | # | ایراد | رفع |
 |---|---|---|
