@@ -376,5 +376,8 @@ assert s.count('id="askAiBtn"') == 1
 assert s.count('<p class="note"') == 3
 
 (TOOLS / "design_v12_5_template.html").write_text(s, encoding="utf-8")
-(UP / "DESIGN" / "index.html").write_text(s, encoding="utf-8")
+# DESIGN/index.html is produced by tools/localize_v12_5_fa.py (pass فارسیسازی)،
+# not here — otherwise a re-run of this builder would silently undo the
+# default-Persian labels and bring the glossary affordance back.
 print(f"v12.5 built: {n} replacements, {len(s.encode('utf-8'))} bytes")
+print("next: python3 tools/localize_v12_5_fa.py  ->  DESIGN/index.html")

@@ -59,17 +59,17 @@ aside ul{margin:0 10px 14px;padding:0;list-style:none} aside li{padding:4px 0;bo
 </style>
 </head>
 <body>
-<div style="background:#FFF7E6;border:2px solid #7E4BDE;color:#252746;padding:12px 18px;font:700 14px Tahoma,sans-serif;text-align:center">⚠️ وایرفریم v1 بایگانی شد — طراحی فعلی <a href="DESIGN/index.html">DESIGN v12.5</a> است (معماری اورجینال قوسدار با فاصلهٔ واقعی بین گرهها، حذف روتین/دیکته/توضیحات، پوستهٔ میمویی آزمونها). <a href="24_DESIGN_ROUND_12.md">لاگ دور دوازدهم</a></div>
-<div style="background:#FFF7E6;border:1px solid #F5D28B;border-radius:12px;padding:10px 18px;margin:12px 24px;font-size:13px">⚠️ این وایرفریم <b>v1</b> بایگانی شد. طرح <b>v5 نهایی</b> (حکم فعلی، بازآفرینی ۱۰۰٪ از کد) در <a href="DESIGN/index.html">DESIGN/index.html</a> است: ۵ تب، Learn عین میمو، هاب لیبلدار قابلاسکرول، «پاسخبرگ»/«پاسخنامه» جدا، دکمۀ «توضیح با هوش مصنوعی» در صفحۀ سؤالات و صفحۀ آخر، لیدربورد با اطلاعات خود فرد، چت مینیمال با دکمههای LH، مشاوره PARKED.</div>
+<div style="background:#FFF7E6;border:2px solid #7E4BDE;color:#252746;padding:12px 18px;font:700 14px Tahoma,sans-serif;text-align:center">⚠️ وایرفریم v1 بایگانی شد — طراحی فعلی <a href="DESIGN/index.html" data-code="DESIGN v12.5">طرح v12.5</a> است (معماری اورجینال قوسدار با فاصلهٔ واقعی بین گرهها، حذف روتین/دیکته/توضیحات، پوستهٔ میمویی آزمونها). <a href="24_DESIGN_ROUND_12.md">لاگ دور دوازدهم</a></div>
+<div style="background:#FFF7E6;border:1px solid #F5D28B;border-radius:12px;padding:10px 18px;margin:12px 24px;font-size:13px" data-code="DESIGN v5 (archived)"><!-- v12.5-fa-localization --> ℹ️ بستهٔ فارسیسازی: تمام لیبلهای دیدنی <a href="DESIGN/index.html">طرح فعلی</a> فارسی شدند، ناوبری پایین بهصورت پیشفرض فارسی است و آیکون «واژهنامهٔ مبحث» حذف شد. نگاشتهای انگلیسی قدیمی فقط در <code>data-code</code> / <code>data-lh</code> و همین بایگانی v1 ماندهاند؛ محتوای کنکوری و ۵ تب «یادگیری / تمرین / هوش مصنوعی / امتیازها / پروفایل» پابرجاست.</div>
 <header>
-  <h1>قرارداد وفاداری UI — ارتقای Mimo به اپ کنکور</h1>
+  <h1>قرارداد وفاداری رابط کاربری — ارتقای میمو به اپ کنکور</h1>
   <p>نمایشگر پلن فاز P1…P6 با توکنهای واقعی استخراجشدهٔ Mimo 9.35. این یک وایرفریم مشخصاتی است، نه محصول نهایی و نه کپیای از اپهای مشاوره.</p>
 </header>
 <div class="layout">
   <div class="screens">
 
     <section class="screen">
-      <h2>① تب Practice — هاب آزمونها (گرههای ۳تایی، برچسب زیر)</h2>
+      <h2>① تب تمرین — هاب آزمونها (گرههای ۳تایی، برچسب زیر)</h2>
       <div class="phone">
         <div class="appbar"><b>آزمونها</b><span class="timer">⏱ ۱۲:۴۵</span></div>
         <div class="chips"><span class="chip on">همه</span><span class="chip">جامع</span><span class="chip">تکدرسی</span><span class="chip">مبحثی</span><span class="chip">این ماه</span></div>
@@ -90,18 +90,18 @@ aside ul{margin:0 10px 14px;padding:0;list-style:none} aside li{padding:4px 0;bo
           <div><div class="node">◇</div><div class="label">مرور غلطها</div></div>
         </div>
       </div>
-      <div class="tabs"><div class="tab">Learn</div><div class="tab on">Practice</div><div class="tab">Leaderboard</div><div class="tab">Profile</div></div>
+      <div class="tabs"><div class="tab" data-code="Learn">یادگیری</div><div class="tab on" data-code="Practice">تمرین</div><div class="tab" data-code="Leaderboard">امتیازها</div><div class="tab" data-code="Profile">پروفایل</div></div>
     </section>
 
     <section class="screen">
-      <h2>② AI میمو — ظاهر ثابت + ردیف دکمههای Learn Harness</h2>
+      <h2>② دستیار هوشمند میمو — ظاهر ثابت + ردیف دکمههای چارچوب یادگیری</h2>
       <div class="phone">
         <div class="appbar"><b>دستیار هوشمند</b><span class="badge">پالس AI</span></div>
         <div class="ai">
           <div class="head"><span>گفتگو</span><span>✕</span></div>
           <div class="bubble">سلام! روی کدوم مبحث میخوای کار کنیم؟</div>
           <div class="bubble me">مشتقات رو برام توضیح بده</div>
-          <div class="bubble">اول ببینیم از کجا شروع کنیم… <span class="badge">Think out loud</span></div>
+          <div class="bubble">اول ببینیم از کجا شروع کنیم… <span class="badge">بلند فکر کردن</span></div>
           <div class="dockb">
             <span>جلسهٔ تازه</span><span>جلسهها</span><span>نقشهٔ یادگیری</span><span>گراف دانش</span>
             <span>تمرین</span><span>سؤال بعد</span><span>بفهمم یا نه</span><span>میزان اطمینان</span>
@@ -131,7 +131,7 @@ aside ul{margin:0 10px 14px;padding:0;list-style:none} aside li{padding:4px 0;bo
     </section>
 
     <section class="screen">
-      <h2>④ پروفایل — همان کارتهای Mimo + دادهٔ کنکور</h2>
+      <h2>④ پروفایل — همان کارتهای میمو + دادهٔ کنکور</h2>
       <div class="phone">
         <div class="appbar"><b>پروفایل</b><span class="badge">🔥 ۱۲ روز</span></div>
         <div class="pcard"><b>کاربر کنکور</b><div class="kv"><span>امتیاز امروز</span><span>۴۲ / ۵۰ ⚡</span></div><div class="progress"><i style="width:84%"></i></div></div>
@@ -139,7 +139,7 @@ aside ul{margin:0 10px 14px;padding:0;list-style:none} aside li{padding:4px 0;bo
         <div class="pcard"><b>نشانها</b><div class="tpl" style="grid-template-columns:repeat(4,1fr)"><div>تحلیلگر</div><div>جبران</div><div>منظم</div><div>لیگ</div></div></div>
         <div class="pcard"><b>دوستان و رقابت</b><div class="kv"><span>لیگ هفتگی</span><span>رتبه ۳</span></div></div>
       </div>
-      <div class="tabs"><div class="tab">Learn</div><div class="tab">Practice</div><div class="tab">Leaderboard</div><div class="tab on">Profile</div></div>
+      <div class="tabs"><div class="tab" data-code="Learn">یادگیری</div><div class="tab" data-code="Practice">تمرین</div><div class="tab" data-code="Leaderboard">امتیازها</div><div class="tab on" data-code="Profile">پروفایل</div></div>
     </section>
 
   </div>

@@ -2,15 +2,15 @@
   "round": "konkur-upgrade-planning",
   "branch": "arena/aebb90b7-game",
   "date": "2026-11-04",
-  "status": "PLAN_ONLY + DESIGN v12.5 REVIEW (v12.3 RTL arrows + v12.4 cleanup kept; AI chip restored to its v12.1 place/style, manual timer minutes for EVERY exam kind, three exit options with a partial کارنامه)",
+  "status": "PLAN_ONLY + DESIGN v12.5 REVIEW (v12.3 RTL arrows + v12.4 cleanup kept; AI chip restored to its v12.1 place/style, manual timer minutes for EVERY exam kind, three exit options with a partial کارنامه) + v12.5-fa localization (Persian-by-default bottom nav, Konkur subject labels, glossary icon removed; legacy EN kept only as hidden evidence)",
   "goal": "Upgrade Mimo 9.35 into an Iranian Konkur learning app with strict fidelity to Mimo UI/mechanism/navigation",
   "deliverables": {
     "persian_docs": 25,
     "csv_catalogs": 21,
     "wireframes_html": 2,
     "source_apps": 2,
-    "extracted_assets_files": 1950,
-    "total_bytes": 24833951,
+    "extracted_assets_files": 1953,
+    "total_bytes": 25335837,
     "craft_anything": "vendored docs + 33-id agent adapter + 13 evidence records",
     "verification": "PASS",
     "phases": 8,
@@ -30,7 +30,7 @@
     "v9_changes": "re-reviewed node code; ONE straight vertical line (no curve/zigzag); corrected 7 code-derived numbers; real charged/mastered bolt vectors; linear unlocked state sequence",
     "v10_changes": "REVERTED v9 single straight line; restored original curved zigzag with real gaps; deeper DEX/test-tracks code review; corrected 2 wrong number attributions",
     "v11_content": "KONKUR_CURRICULUM.json / KONKUR_CURRICULUM.csv (12 courses x 5 chapters x 3 lessons = 12/60/180) + 10 fortnight dates 1 Aban..15 Esfand + 3 big Mimo-icon cards + My-status-only leaderboard + zero programming emblems",
-    "v12_exam_ui": "EXAM_PAGE_REFERENCES.json + EXAM_UI_CODE_EVIDENCE.json — v12.5: THREE quiet chips (پاسخبرگ / پاسخنامه / توضیح با هوش مصنوعی, exactly the v12.1 style), no duplicate AI in #keySheet; one-chip timer with editable minutes in every exam kind (270 = preset only); #exitSheet with three options, real save/resume state and a partial درصد computed from answered-so-far; accepted v12.1 structure + v12.3 RTL arrows intact"
+    "v12_exam_ui": "EXAM_PAGE_REFERENCES.json + EXAM_UI_CODE_EVIDENCE.json — v12.5: THREE quiet chips (پاسخبرگ / پاسخنامه / توضیح با هوش مصنوعی, exactly the v12.1 style), no duplicate AI in #keySheet; one-chip timer with editable minutes in every exam kind (270 = preset only); #exitSheet with three options, real save/resume state and a partial درصد computed from answered-so-far; accepted v12.1 structure + v12.3 RTL arrows intact | v12.5-fa: visible labels localized; five data-tab identifiers + hidden-chip policy + all exam behavior unchanged"
   },
   "source_hashes": {
     "Mimo_9.35": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
@@ -117,7 +117,10 @@
     "v12.4: options start with their number (۱.) and the whole card changes colour on selection; AI explanation relocated into the پاسخنامه bottom sheet",
     "v12.5: the AI explanation chip was restored as the third exam-body .lb-chip in its exact v12.1/v12.3 position and style (ic_magic_wand 16dp mono); the v12.4 duplicate inside #keySheet was removed; the one-AI-button rule still holds",
     "v12.5: #timerMinutes is editable in EVERY exam kind — no readOnly, no readonly attribute, no max ceiling and no «غیرقابل تغییر» anywhere; 270 is only the comprehensive default/preset, the six quick presets stay and 270:00 renders correctly",
-    "v12.5: #exitSheet has three options — خروج و ذخیره now snapshots the question index, answers, marks and timer and can be resumed later (finishing after resume yields the full کارنامه), ادامهٔ آزمون is unchanged, and پایان آزمون و دیدن کارنامه / خروج و دیدن درصد shows a partial percentage computed only from answers given so far"
+    "v12.5: #exitSheet has three options — خروج و ذخیره now snapshots the question index, answers, marks and timer and can be resumed later (finishing after resume yields the full کارنامه), ادامهٔ آزمون is unchanged, and پایان آزمون و دیدن کارنامه / خروج و دیدن درصد shows a partial percentage computed only from answers given so far",
+    "v12.5-fa: all visible English labels in leaderboard / profile / lesson / practice / modals / sheets are Persian by DEFAULT; the five data-tab identifiers and GEO/LEARN/NODE/KONKUR payloads are untouched",
+    "v12.5-fa: the glossary («واژهنامهٔ مبحث») affordance is removed from DOM, CSS and its click handler; bottom-nav labels are Persian without relying on the RTL toggle, and the tab toast uses a Persian label map",
+    "v12.5-fa: visible HTML / programming titles replaced with Konkur subject and exam names (زیست دهم, ساختار سلول و بافت, آزمون جامع/تکدرس/زماندار/تحلیلی); legacy English strings survive only in data-code / data-lh evidence attributes"
   ],
   "reproduce": [
     "python3 tools/extract_source_apps.py <google_drive_dir> .",
@@ -146,7 +149,9 @@
     "python3 tools/build_exam_v12_4.py .",
     "python3 tools/finalize_v12_4.py .",
     "python3 tools/build_exam_v12_5.py .",
-    "python3 tools/finalize_v12_5.py ."
+    "python3 tools/finalize_v12_5.py .",
+    "python3 tools/localize_v12_5_fa.py .",
+    "python3 tools/finalize_v12_5_fa.py ."
   ],
   "limitations": [
     "no runtime/device/screenshots",
@@ -610,6 +615,22 @@
       ],
       "tests": "check_v12_5.js (150 checks / 0 errors) + verify_upgrade.py PASS 259/259 + diag12.js 185 clicks / 0 errors",
       "unchanged": "all v11.1 acceptances + v12.1 bug fixes + v12.3 RTL arrows + v12.4 removals (except AI) + rollback snapshots"
+    },
+    "v12_5_localization": {
+      "status": "APPLIED, awaiting final approval",
+      "trigger": "user: فقط یه سری ویرایش ریزه / لیدربورد و پروفایل کلمات انگلیسی رو فارسی کن / بالای لیدربورد HTML رو اسم یه درسی بنویس / واژهنامهٔ مبحث رو نمیخوام / نوار پایین کلا فارسی / کل پروژه عنوان انگلیسی",
+      "script": "tools/localize_v12_5_fa.py (reads tools/design_v12_5_template.html, writes DESIGN/index.html + tools/design_v12_5_fa_template.html)",
+      "finalizer": "tools/finalize_v12_5_fa.py",
+      "changed": [
+        "visible labels in leaderboard / user-profile / profile / lesson / practice / AI / modals / playgroundSheet",
+        "bottom nav Persian BY DEFAULT + tabFa Persian toast map + RTL toggle no longer restores English",
+        "Konkur subject/exam names instead of HTML/Python/JavaScript/Static website/React app",
+        "gloss-fab icon, CSS, data-glossary handler and spec mention removed",
+        "header / document title / aside status / wireframes banners + headings Persianized"
+      ],
+      "evidence_policy": "legacy English only in non-visible data-code / data-lh attributes, archived v1 wireframe and GEO/LEARN/NODE/KONKUR payloads; data-tab / data-mode / data-code>=15 / data-lh>=7 / p.note<=3 unchanged",
+      "tests": "verify_upgrade.py PASS 259/259 + check_v12_6.js 160 checks / 0 errors + diag12.js 185 clicks / 0 errors",
+      "unchanged": "v12.5 AI chip, editable-minute timer in every exam kind, three exit options + partial report, hidden-chip policy, 5 tab identifiers, exam architecture, SAVED in-memory only"
     }
   }
 }

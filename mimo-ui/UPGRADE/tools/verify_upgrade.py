@@ -15,10 +15,10 @@ docs = ["README.md", "00_START_HERE.md", "01_CRAFT_ANYTHING_INSTALL.md",
         "13_DESIGN_ROUND_2.md", "14_DESIGN_ROUND_3.md", "15_DESIGN_ROUND_4.md",
         "16_DESIGN_ROUND_5.md", "17_DESIGN_ROUND_6.md",
         "18_DESIGN_ROUND_7.md", "20_DESIGN_ROUND_8.md", "21_DESIGN_ROUND_9.md", "22_DESIGN_ROUND_10.md", "23_DESIGN_ROUND_11.md", "24_DESIGN_ROUND_12.md", "wireframes.html"]
-csvs = {"UI_FIDELITY_RULES.csv": 45, "FEATURE_MAP.csv": 17, "EXAM_TYPES.csv": 11,
+csvs = {"UI_FIDELITY_RULES.csv": 46, "FEATURE_MAP.csv": 17, "EXAM_TYPES.csv": 11,
         "HADAF_TEMPLATES.csv": 7, "GAMIFICATION_MAP.csv": 13, "PHASES.csv": 8,
         "LEARNHARNESS_ACTIONS.csv": 32, "EVIDENCE_LEDGER.csv": 10, "OPEN_QUESTIONS.csv": 13,
-        "DESIGN_FEEDBACK.csv": 69, "SCOPE_DECISIONS.csv": 49,
+        "DESIGN_FEEDBACK.csv": 70, "SCOPE_DECISIONS.csv": 50,
         "AI_PANEL_SPEC.csv": 27, "EPM_MINOR_OPTIONS.csv": 7,
         "EXAM_SECTION_TEMPLATES.csv": 7,
         "MIMO_CODE_GEOMETRY.csv": 200, "MIMO_SCREENSHOT_CROSSWALK.csv": 14,
@@ -51,8 +51,9 @@ for name, n in csvs.items():
 t = (ROOT / "wireframes.html").read_text(encoding="utf-8")
 ck("wireframe:tokens", all(x in t for x in ["#7E4BDE", "#F6F7FB", "#E4E6F1", "#66BC5A", "#F05A6E"]),
    "Mimo palette present")
-ck("wireframe:legacy-tabs", t.count('class="tab') >= 4 and "<div class=\"tab\">Learn</div>" in t,
-   "archived v1 wireframe renders its legacy tabs")
+ck("wireframe:legacy-tabs", t.count('class="tab') >= 4 and 'data-code="Learn"' in t
+   and ">یادگیری</div>" in t and ">تمرین</div>" in t and ">امتیازها</div>" in t and ">پروفایل</div>" in t,
+   "v12.5-fa: archived v1 tabs are Persian; legacy EN labels kept as data-code evidence")
 ck("wireframe:3col-grid", "repeat(3,minmax(0,1fr))" in t, "exam node grid")
 ck("wireframe:v1-banner", "DESIGN/index.html" in t and "DESIGN v12" in t, "v1 archived, points to v12")
 
@@ -80,6 +81,8 @@ ck("design:epm-link", "askAi" in dt and "EPM" in dt, "minor EPM idea referenced 
 ck("design:14views", dt.count('<button data-go=') == 14, "14 design views (routine view removed)")
 ck("design:5tabs", dt.count('data-tab="') == 5 and all(x in dt for x in
    ['data-tab="Learn"','data-tab="Practice"','data-tab="AI"','data-tab="Leaderboard"','data-tab="Profile"'])
+   and '>یادگیری</span>' in dt and '>تمرین</span>' in dt and '>هوش مصنوعی</span>' in dt
+   and '>امتیازها</span>' in dt and '>پروفایل</span>' in dt and "var tabFa=" in dt
    and 'data-tab="MAX"' not in dt and 'data-tab="Routine"' not in dt,
    "5 Mimo tabs restored; MAX and روتین روزانه forbidden")
 ck("design:learn", 'data-screen="learn"' in dt and "PathMapScreenKt" in dt and "overview-card" in dt and '<section class="screen mimo on" data-screen="learn">' in dt and dt.split('data-screen="learn"')[1].split("</section>")[0].count("path-note") == 0,
@@ -172,7 +175,8 @@ ck("design:v6:overview-entry", 'id="overviewEntry"' in dt and 'data-nav="path-ov
    "path header card opens Path Overview")
 ck("design:v6:ic-switch", 'id="overviewSwitch"' in dt and 'ic_switch' in dt,
    "two-way arrows open Select Path from Path Overview")
-ck("design:v6:unfinished", all(x in dt for x in ["unfinishedModal","Unfinished track","personalised certificate","ic_mimo_mascot"]),
+ck("design:v6:unfinished", all(x in dt for x in ["unfinishedModal","Unfinished track","personalised certificate","ic_mimo_mascot"])
+   and ">مسیر ناتمام</h2>" in dt and ">باشه</button>" in dt,
    "Unfinished track modal from certificate strings")
 ck("design:v6:career-content", all(x in dt for x in ["Career Paths","Full-Stack Developer","Back-End Developer","Courses","TypeScript","JS required","6/14"]),
    "Select Path career cards + course rows")
@@ -208,7 +212,9 @@ ck("design:v6:build-bytes", len(dt) > 200000, "%d chars" % len(dt))
 ck("design:v10:nodes", all(x in dt for x in
    ["l10n1","l10n2","l10n3","l10n4","l10n5","l10n6","gloss-fab","hring",
     "M242 70 H280 Q312 70 312 102 V140","Q312 302 280 302","nodeGeometry","original_curved_zigzag"])
-   and '<path d="M196 0 V620"' not in dt and "pathLineGrad" not in dt,
+   and '<path d="M196 0 V620"' not in dt and "pathLineGrad" not in dt
+   and 'class="gloss-fab"' not in dt and 'data-glossary="1"' not in dt
+   and 'toast("واژهنامهٔ مبحث")' not in dt,
    "6 data-driven nodes, ORIGINAL curved zigzag restored, v9 straight line gone")
 ck("design:v9:node-states", all(x in dt for x in
    ["node done","node cur","node next","node bolt active","node bolt optional","curInner",
@@ -327,7 +333,8 @@ lb = re.search(r'<section class="screen mimo" data-screen="leaderboard".*?</sect
 ck("design:v8:no-promo", bool(lb) and "Promotion Zone" not in lb.group(0) and "منطقهٔ صعود" not in lb.group(0) and 'class="promo"' not in lb.group(0),
    "Promotion Zone removed from leaderboard UI")
 ck("design:v8:section-practice", all(x in dt for x in
-   ['data-screen="section-practice"','data-scope="learn-practice"','practiceQuestions','practiceModal','practiceStart','Fully charged','Practice anyway']),
+   ['data-screen="section-practice"','data-scope="learn-practice"','practiceQuestions','practiceModal','practiceStart','Fully charged','Practice anyway'])
+   and '>شارژ کامل!</button>' in dt and '>ساختار سلول و بافت</h2>' in dt and 'var P_FA=' in dt,
    "bolt nodes open an isolated Learn checkpoint quiz")
 sp = re.search(r'<section class="screen mimo" data-screen="section-practice".*?</section>', dt, re.S)
 ck("design:v8:practice-isolation", bool(sp) and all(x not in sp.group(0) for x in
@@ -337,14 +344,17 @@ ck("design:v8:ai-header", all(x in dt for x in
    ["اضافه کردن فایل","زنجیره گفت و گو","attachment","ic_link_external","ai-top-left"]),
    "tidy AI top row: file icon + short label + conversation chain")
 ck("design:v8:ai-footer", all(x in dt for x in
-   ["ai-foot","data-mode=\"TEACH\"","data-mode=\"PRACTICE\"","flex-wrap:nowrap","gemini-flash-lite-latest","medium"]),
+   ["ai-foot","data-mode=\"TEACH\"","data-mode=\"PRACTICE\"","flex-wrap:nowrap","gemini-flash-lite-latest","medium"])
+   and ">آموزش</button>" in dt and ">تمرین</button>" in dt and ">مدل سریع " in dt
+   and 'placeholder="دربارهٔ کدام مبحث' in dt,
    "TEACH/PRACTICE/model/medium on one tiny line, no Dictate")
 ck("design:v8:build-bytes", len(dt) > 300000, "%d chars" % len(dt))
 
 # ---- DESIGN v11: leaderboard / program tracks / topic courses ----
 lbm = re.search(r'<section class="screen mimo" data-screen="leaderboard".*?</section>', dt, re.S)
 lbb = lbm.group(0) if lbm else ""
-ck("design:v11:leaderboard", bool(lbm) and "My status" in lbb and 'data-fa="وضعیت من"' in lbb
+ck("design:v11:leaderboard", bool(lbm) and ">وضعیت من</div>" in lbb and 'data-fa="وضعیت من"' in lbb
+   and not re.search(r'>(?:My status|Day streak|XP total|Weekly XP|Comprehensive exam|Biology single-subject|Timed chemistry|Analytical / wrong answers)<', lbb)
    and "selfbox" in lbb and "آزمونها و امتیازات من" in lbb
    and all(x not in lbb for x in ["Wooden", "League", "6d 22h", "MIGUELBAOBAB", "mairi", "Aska", "sarah", "lucas", "lb-row", "league-row"]),
    "Wooden League + countdown + all 5 rival rows + league badges REMOVED; My status only")
@@ -591,16 +601,23 @@ ck("design:v12.5:no-stale-v12.4-text", all(x not in dt for x in
    "stale v12.4 labels/hints (fixed 270, relocated AI, 270 دقیقهٔ ثابت) are superseded")
 ck("docs:v12.5:log", "v12.5" in (ROOT / "24_DESIGN_ROUND_12.md").read_text(encoding="utf-8")
    and "v12.5" in (D / "DESIGN_NOTES.fa.md").read_text(encoding="utf-8")
-   and "DESIGN v12.5" in (ROOT / "wireframes.html").read_text(encoding="utf-8"),
+   and "DESIGN v12.5" in (ROOT / "wireframes.html").read_text(encoding="utf-8")
+   and "v12.5-fa-localization" in (ROOT / "24_DESIGN_ROUND_12.md").read_text(encoding="utf-8")
+   and "v12.5-fa-localization" in (D / "DESIGN_NOTES.fa.md").read_text(encoding="utf-8"),
    "round-12 §10 + design notes §10 + wireframes link document the v12.5 corrections")
 ck("scope:v12.5:catalogs", "F-70" in (ROOT / "CATALOGS/DESIGN_FEEDBACK.csv").read_text(encoding="utf-8")
    and "D50" in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encoding="utf-8")
-   and "F46" in (ROOT / "CATALOGS/UI_FIDELITY_RULES.csv").read_text(encoding="utf-8"),
+   and "F46" in (ROOT / "CATALOGS/UI_FIDELITY_RULES.csv").read_text(encoding="utf-8")
+   and "F-71" in (ROOT / "CATALOGS/DESIGN_FEEDBACK.csv").read_text(encoding="utf-8")
+   and "D51" in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encoding="utf-8")
+   and "F47" in (ROOT / "CATALOGS/UI_FIDELITY_RULES.csv").read_text(encoding="utf-8"),
    "v12.5 correction round recorded in feedback / decisions / fidelity rules")
 man125 = json.loads((ROOT / "MANIFEST.json").read_text(encoding="utf-8"))
 ck("manifest:v12.5", "v12.5" in man125["status"]
    and any("build_exam_v12_5.py" in c for c in man125["reproduce"])
-   and "v12_5_corrections" in man125["design_round_12"],
+   and "v12_5_corrections" in man125["design_round_12"]
+   and "v12_5_localization" in man125["design_round_12"]
+   and any("localize_v12_5_fa.py" in c for c in man125["reproduce"]),
    "MANIFEST advertises v12.5 + its reproduce command + the correction record")
 
 # ---- docs / catalogs ----

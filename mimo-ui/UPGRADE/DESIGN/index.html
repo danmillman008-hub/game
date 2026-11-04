@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>طرح رابط کاربری v12.5 — بازگشت چیپ AI + مدت دستی در همهٔ آزمونها + گزینهٔ سوم خروج و کارنامه (Design Review)</title>
+<title>طرح رابط کاربری v12.5 — بازگشت چیپ هوش مصنوعی + مدت دستی در همهٔ آزمونها + گزینهٔ سوم خروج و کارنامه (بازبینی طراحی)</title>
 <style>
 :root{
 --bg:#F6F7FB;
@@ -461,8 +461,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
 .pathwrap.l7 .node.practice{background:linear-gradient(160deg,var(--purple-light),var(--primary));box-shadow:0 8px 0 var(--primary-hi),0 12px 18px rgba(37,39,70,.18)}
 .pathwrap.l7 .node.practice.charged{background:var(--purple-light);color:var(--primary)}
 .pathwrap.l7 .node.practice.locked{background:var(--disabled);box-shadow:0 8px 0 var(--card-pressed);color:#fff;opacity:.92}
-.gloss-fab{position:absolute;z-index:4;right:16px;bottom:12px;width:56px;height:56px;border-radius:50%;background:var(--card);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;color:var(--text);cursor:pointer;box-shadow:0 3px 8px rgba(37,39,70,.12)}
-.gloss-fab .ga{position:absolute;font:700 13px/1 system-ui,sans-serif;color:var(--primary)}
+/* v12.5-fa: دایرهٔ .gloss-fab / «واژهنامهٔ مبحث» حذف شد؛ شواهد فقط در data-code و NODE payload */
 .l7n1,.l6n1{left:calc(50% - 46px);top:22px}
 .l7n2,.l6n2{left:calc(80% - 46px);top:128px}
 .l7n3,.l6n3{left:calc(50% - 46px);top:234px}
@@ -531,6 +530,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
 /* ============ v10 · ORIGINAL CURVED ZIGZAG nodes (data-driven from NODE_CODE_GEOMETRY.json) ============ */
 .tabs{grid-template-columns:repeat(5,1fr)}
 .tabs .tab{font-size:10px;letter-spacing:0}
+.tabs .tab>span:last-child{white-space:nowrap}
 .pathwrap.l10{height:720px;margin-top:8px;background:radial-gradient(circle,var(--line2) 1.6px,transparent 1.7px) 0 0/26px 26px;background-color:var(--bg);position:relative;overflow:hidden}
 .pathwrap.l10 .connector{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
 .pathwrap.l10 .node{position:absolute;width:92px;height:92px;border-radius:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;transition:transform .22s ease,box-shadow .22s ease;-webkit-tap-highlight-color:transparent}
@@ -557,10 +557,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
 .l10n4{left:calc(20% - 46px);top:372px}
 .l10n5{left:calc(50% - 46px);top:488px}
 .l10n6{left:calc(20% - 46px);top:604px}
-.gloss-fab{position:absolute;z-index:4;right:12px;bottom:8px;width:56px;height:56px;border-radius:50%;background:var(--card);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;color:var(--text);cursor:pointer;box-shadow:0 3px 8px rgba(37,39,70,.12)}
-.gloss-fab .book{width:27px;height:31px;border:2px solid var(--text);border-radius:5px;position:relative;display:flex;align-items:center;justify-content:center}
-.gloss-fab .book:before{content:"";position:absolute;left:4px;top:0;bottom:0;width:2px;background:var(--text);opacity:.55}
-.gloss-fab .book b{font:700 13px/1 system-ui,sans-serif;margin-left:4px;color:var(--text)}
+/* v12.5-fa: CSS دایرهٔ .gloss-fab / .book حذف شد (شاهد قدیمی: NODE payload) */
 /* ---- v12 · the separate "konkur exam skin" is GONE; AI screen keeps only these tokens ---- */
 .konkur .appbar{background:var(--card);border-bottom:1px solid var(--line);padding:0 16px;height:var(--toolbar);min-height:56px}
 .konkur .appbar b{font:700 18px/1.2 system-ui,sans-serif;color:var(--text)}
@@ -691,12 +688,12 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
 <body>
 <header class="top">
   <div>
-    <h1>طرح رابط کاربری — دور دوازدهم <span class="ver">DESIGN v12.5 · REVIEW</span></h1>
-    <p>بازآفرینی ۱۰۰٪ بخشهای اصلی میمو <b>از روی کد/مهندسی معکوس</b> · <b>دور دوازدهم:</b> سطوح آزمون از روی لایههای واقعی میمو بازسازی شدند: <code>chapter_toolbar.xml</code> (X + نوار پیشرفت ۶dp + پرچم)، <code>lesson_interactive_multiplechoice_fragment.xml</code>، <code>choice_list_item.xml</code> و <code>interaction_keyboard_view.xml</code> (<b>یک دکمهٔ بنفش تمامعرض CONTINUE</b> + دکمههای مربعی ۴۸dp). دو دکمهٔ هموزن «سؤال قبل / سؤال بعد» و نوار ۷ دکمهای حذف شدند؛ چیپهای «پاسخبرگ»، «پاسخنامه» و «توضیح با هوش مصنوعی» دقیقاً کنار هم در بدنهٔ آزموناند و پاسخنامهٔ تشریحی بهصورت پنل feedback میمو نمایش داده میشود. معماری اورجینال قوسدار، ۵ تب، ۷ بخش آزمون، ۲۷۰ دقیقه بهعنوان پیشفرضِ قابل تغییر و قفلها دستنخوردهاند. اسکرینشاتها فقط چک بصری.</p>
+    <h1>طرح رابط کاربری — دور دوازدهم <span class="ver" data-code="DESIGN v12.5 · REVIEW">طرح v12.5 · بازبینی</span></h1>
+    <p>بازآفرینی ۱۰۰٪ بخشهای اصلی میمو <b>از روی کد/مهندسی معکوس</b> · <b>دور دوازدهم:</b> سطوح آزمون از روی لایههای واقعی میمو بازسازی شدند: <code>chapter_toolbar.xml</code> (X + نوار پیشرفت ۶dp + پرچم)، <code>lesson_interactive_multiplechoice_fragment.xml</code>، <code>choice_list_item.xml</code> و <code>interaction_keyboard_view.xml</code> (<b data-code="CONTINUE">یک دکمهٔ بنفش تمامعرض «ادامه»</b> + دکمههای مربعی ۴۸dp). دو دکمهٔ هموزن «سؤال قبل / سؤال بعد» و نوار ۷ دکمهای حذف شدند؛ چیپهای «پاسخبرگ»، «پاسخنامه» و «توضیح با هوش مصنوعی» دقیقاً کنار هم در بدنهٔ آزموناند و پاسخنامهٔ تشریحی بهصورت پنل feedback میمو نمایش داده میشود. معماری اورجینال قوسدار، ۵ تب، ۷ بخش آزمون، ۲۷۰ دقیقه بهعنوان پیشفرضِ قابل تغییر و قفلها دستنخوردهاند. اسکرینشاتها فقط چک بصری.</p>
   </div>
   <div style="display:flex;gap:7px;flex-wrap:wrap">
     <button class="btn" id="themeBtn">🌙 حالت شب</button>
-    <button class="btn" id="dirBtn">↔ فارسی / RTL</button>
+    <button class="btn" id="dirBtn" data-code="RTL mirror toggle">↔ راستبهچپ</button>
     <a class="btn" href="DESIGN_NOTES.fa.md">📄 یادداشتهای طراحی</a>
     <a class="btn" href="CODE_GEOMETRY.json">🧬 هندسهٔ کد</a>
     <a class="btn" href="LEARN_CODE_GEOMETRY.json">📚 شواهد زیرصفحات یادگیری</a>
@@ -721,7 +718,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
       <button data-go="exam-hub">۱۱ · هاب آزمونها</button>
       <button data-go="exam-run">۱۲ · اجرای آزمون</button>
       <button data-go="exam-result">۱۳ · صفحهٔ آخر آزمون</button>
-      <button data-go="ai">۱۴ · چت AI</button>
+      <button data-go="ai">۱۴ · چت هوش مصنوعی</button>
     </div>
 
     <div class="phone" id="phone">
@@ -757,13 +754,12 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
           <div class="node next l10n4" data-icon="ic_square_rounded" data-size="48" data-mono="1" data-nav="chapter" data-section="4" data-code="ic_square_rounded · UNLOCKED next chapter · test-tracks.json section"></div>
           <div class="node bolt active l10n5" data-icon="ic_bolt_charged" data-size="48" data-nav="section-practice" data-practice="4" data-section="5" data-code="ic_bolt_charged · charged practice checkpoint"></div>
           <div class="node bolt optional l10n6" data-icon="ic_bolt_mastered" data-size="48" data-nav="section-practice" data-practice="6" data-section="6" data-code="ic_bolt_mastered · optional/mastered practice"></div>
-          <div class="gloss-fab" data-glossary="1" data-code="floating book / dictionary affordance"><span class="book"><b>A</b></span></div>
         </div>
       </section>
 
       <!-- ============ 2. SELECT PATH = the three-lines icon ============ -->
       <section class="screen mimo" data-screen="select-path">
-        <div class="sp-top"><button class="x" data-nav="learn"><span data-icon="ic_close" data-size="24" data-mono="1"></span></button><b data-fa="انتخاب مسیر">Select Path</b></div>
+        <div class="sp-top"><button class="x" data-nav="learn"><span data-icon="ic_close" data-size="24" data-mono="1"></span></button><b data-fa="انتخاب مسیر">انتخاب مسیر</b></div>
         <div class="sp-body">
           <h3 id="careerHeading" data-fa="یادگیری برنامه محور" data-code="track_switcher_career_paths = Career Paths (relabelled)">یادگیری برنامه محور</h3>
           <div id="careerCards" data-code="Full-Stack Developer / Python Developer / Back-End Developer / Front-End Developer"></div>
@@ -801,8 +797,8 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
           <div class="cbar"><i></i></div>
         </div>
         <div class="sd-list" id="lessonRows" data-code="tutorialIds from test-tracks.json · lesson_continue"></div>
-        <button class="sd-cta" id="sdContinue" data-nav="chapter" data-fa="ادامه">Continue</button>
-        <button class="sd-link" id="sdOverview" data-nav="path-overview" data-fa="نمای دوره">See course overview</button>
+        <button class="sd-cta" id="sdContinue" data-nav="chapter" data-fa="ادامه">ادامه</button>
+        <button class="sd-link" id="sdOverview" data-nav="path-overview" data-fa="نمای دوره">نمای دوره</button>
       </section>
 
       <!-- ============ 3. LESSON = chapter_toolbar.xml ============ -->
@@ -815,74 +811,74 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
           </div>
           <div class="lprogress"><i></i></div>
           <div class="lesson-body">
-            <p data-fa="گاهی لازم است متنها را با شکستن خطوط، خواناتر کنیم.">Sometimes we want to format paragraphs with line breaks.</p>
-            <p data-fa="مثلاً این جمله خیلی بهتر میشد اگر &lt;span class=&quot;codechip&quot;&gt;غضروف&lt;/span&gt; در یک خط و &lt;span class=&quot;codechip&quot;&gt;استخوان&lt;/span&gt; در خط بعدی قرار میگرفت.">For example, this song would look much better if <span class="codechip">Raindrops on roses</span> appeared on one line, <span class="codechip">Whiskers on kittens</span> on the next, and so on.</p>
+            <p data-fa="گاهی لازم است متنها را با شکستن خطوط، خواناتر کنیم.">گاهی لازم است متنها را با شکستن خطوط، خواناتر کنیم.</p>
+            <p data-fa="مثلاً این جمله خیلی بهتر میشد اگر &lt;span class=&quot;codechip&quot;&gt;غضروف&lt;/span&gt; در یک خط و &lt;span class=&quot;codechip&quot;&gt;استخوان&lt;/span&gt; در خط بعدی قرار میگرفت.">مثلاً این جمله خیلی بهتر میشد اگر <span class="codechip">غضروف</span> در یک خط و <span class="codechip">استخوان</span> در خط بعدی قرار میگرفت.</p>
             <div class="browser">
               <div class="browser-bar"><span data-icon="browser_view_header_dots" data-size="24"></span></div>
               <div class="browser-in">
-                <h3 data-fa="بافتها">My favorite things</h3>
-                <p data-fa="بافت پوششی، بافت پیوندی، بافت ماهیچهای و بافت عصبی">Raindrops on roses Whiskers on kittens Bright copper kettles Warm woolen mittens</p>
+                <h3 data-fa="بافتها">بافتها</h3>
+                <p data-fa="بافت پوششی، بافت پیوندی، بافت ماهیچهای و بافت عصبی">بافت پوششی، بافت پیوندی، بافت ماهیچهای و بافت عصبی</p>
               </div>
             </div>
           </div>
-          <button class="continue-btn" data-nav="learn" data-fa="ادامه">Continue</button>
+          <button class="continue-btn" data-nav="learn" data-fa="ادامه">ادامه</button>
         </div>
       </section>
 
       <!-- ============ 4. LEADERBOARD = Mimo + own info ============ -->
       <section class="screen mimo" data-screen="leaderboard">
-        <div class="sec-h" data-fa="وضعیت من" data-code="profile_info_card_view.xml">My status</div>
+        <div class="sec-h" data-fa="وضعیت من" data-code="profile_info_card_view.xml · My status (archived EN label)">وضعیت من</div>
         <div class="statcards">
-          <div class="statcard"><span class="ic" data-icon="ic_streak_active" data-size="32"></span><b>1</b><small data-fa="روز متوالی">Day streak</small></div>
-          <div class="statcard"><span class="ic" data-icon="ic_flash_filled" data-size="32" data-mono="1" style="color:var(--yellow)"></span><b>480</b><small data-fa="امتیاز کل">XP total</small></div>
+          <div class="statcard"><span class="ic" data-icon="ic_streak_active" data-size="32"></span><b>1</b><small data-fa="روز متوالی">روز متوالی</small></div>
+          <div class="statcard"><span class="ic" data-icon="ic_flash_filled" data-size="32" data-mono="1" style="color:var(--yellow)"></span><b>480</b><small data-fa="امتیاز کل">امتیاز کل</small></div>
           <div class="statcard"><span class="ic" data-icon="ic_trophy" data-size="32"></span><b>۷</b><small data-fa="آزمونهای من">آزمونهای من</small></div>
         </div>
         <div class="selfbox">
-          <h4 data-fa="آزمونها و امتیازات من">My exams &amp; scores</h4>
-          <div class="selfrow"><span data-fa="آزمون جامع تجربی">Comprehensive exam</span><b>۶۸٪ · رتبه ۱۲۴۰</b></div>
-          <div class="selfrow"><span data-fa="آزمون تکدرسی زیست">Biology single-subject</span><b>۸۲٪ · ۴۰ سؤال</b></div>
-          <div class="selfrow"><span data-fa="آزمون زماندار شیمی">Timed chemistry</span><b>۷۱٪ · ۳۰ دقیقه</b></div>
-          <div class="selfrow"><span data-fa="آزمون تحلیلی غلطها">Analytical / wrong answers</span><b>۴ غلط · ۵ نزده</b></div>
-          <div class="selfrow"><span data-fa="امتیاز این هفته">Weekly XP</span><b>330 ⚡</b></div>
+          <h4 data-fa="آزمونها و امتیازات من">آزمونها و امتیازات من</h4>
+          <div class="selfrow"><span data-fa="آزمون جامع تجربی">آزمون جامع تجربی</span><b>۶۸٪ · رتبه ۱۲۴۰</b></div>
+          <div class="selfrow"><span data-fa="آزمون تکدرسی زیست">آزمون تکدرسی زیست</span><b>۸۲٪ · ۴۰ سؤال</b></div>
+          <div class="selfrow"><span data-fa="آزمون زماندار شیمی">آزمون زماندار شیمی</span><b>۷۱٪ · ۳۰ دقیقه</b></div>
+          <div class="selfrow"><span data-fa="آزمون تحلیلی غلطها">آزمون تحلیلی غلطها</span><b>۴ غلط · ۵ نزده</b></div>
+          <div class="selfrow"><span data-fa="امتیاز این هفته">امتیاز این هفته</span><b>۳۳۰ ⚡</b></div>
         </div>
       </section>
 
       <!-- ============ 5. USER PROFILE = public_profile_fragment.xml ============ -->
       <section class="screen mimo" data-screen="user-profile">
-        <div class="up-head"><span class="bk" data-nav="leaderboard">‹ Back</span><b data-fa="پروفایل کاربر">User Profile</b><span data-icon="ic_user_alert" data-size="22" data-mono="1"></span></div>
+        <div class="up-head"><span class="bk" data-nav="leaderboard">‹ بازگشت</span><b data-fa="پروفایل کاربر">پروفایل کاربر</b><span data-icon="ic_user_alert" data-size="22" data-mono="1"></span></div>
         <div class="up-body">
           <div class="up-av"></div>
-          <h3 data-fa="سارا">malibu</h3>
-          <p data-fa="هنوز اطلاعاتی از سارا ثبت نشده است">We don't know anything about malibu</p>
-          <button class="follow" data-fa="دنبال کردن">Follow</button>
+          <h3 data-fa="سارا">سارا</h3>
+          <p data-fa="هنوز اطلاعاتی از سارا ثبت نشده است">هنوز اطلاعاتی از سارا ثبت نشده است</p>
+          <button class="follow" data-fa="دنبال کردن">دنبال کردن</button>
         </div>
         <div class="statcards" style="margin-top:14px">
-          <div class="statcard"><span class="ic" data-icon="ic_streak_active" data-size="32"></span><b>1</b><small>Day streak</small></div>
-          <div class="statcard"><span class="ic" data-icon="ic_flash_filled" data-size="32" data-mono="1" style="color:var(--yellow)"></span><b>480</b><small>XP total</small></div>
-          <div class="statcard"><span class="ic" data-icon="img_brain" data-size="32"></span><b>Wooden</b><small>League</small></div>
+          <div class="statcard"><span class="ic" data-icon="ic_streak_active" data-size="32"></span><b>1</b><small data-fa="روز متوالی">روز متوالی</small></div>
+          <div class="statcard"><span class="ic" data-icon="ic_flash_filled" data-size="32" data-mono="1" style="color:var(--yellow)"></span><b>480</b><small data-fa="امتیاز کل">امتیاز کل</small></div>
+          <div class="statcard"><span class="ic" data-icon="img_brain" data-size="32"></span><b data-fa="چوبی">چوبی</b><small data-fa="لیگ">لیگ</small></div>
         </div>
-        <div class="sec-h">Playgrounds</div>
-        <div class="dash"><div class="boxmascot"><div class="bt"><i></i><i></i></div><div class="bx"></div></div><b data-fa="هیچ آزمونی نیست">No playgrounds</b><p data-fa="برای ساختن آزمون تازه، روی «ساخت آزمون» بزن">There are no Playgrounds on malibu's profile</p></div>
+        <div class="sec-h" data-fa="آزمونهای من">آزمونهای من</div>
+        <div class="dash"><div class="boxmascot"><div class="bt"><i></i><i></i></div><div class="bx"></div></div><b data-fa="هیچ آزمونی نیست">هیچ آزمونی نیست</b><p data-fa="برای ساختن آزمون تازه، روی «ساخت آزمون» بزن">برای ساختن آزمون تازه، روی «ساخت آزمون» بزن</p></div>
       </section>
 
       <!-- ============ 6. PROFILE = profile_fragment.xml ============ -->
       <section class="screen mimo" data-screen="profile">
-        <div class="prof-head"><b data-fa="پروفایل">Profile</b><span class="gear" data-icon="ic_settings" data-size="24" data-mono="1" data-code="settings"></span></div>
+        <div class="prof-head"><b data-fa="پروفایل">پروفایل</b><span class="gear" data-icon="ic_settings" data-size="24" data-mono="1" data-code="settings"></span></div>
         <div class="prof-course">
           <span class="badge" data-icon="ic_cap_filled" data-size="52" data-mono="1" style="color:var(--progress-weak)"></span>
-          <b data-fa="زیستشناسی">HTML</b><span class="pct">0%</span>
+          <b data-fa="زیست دهم" data-code="HTML (archived EN course label)">زیست دهم</b><span class="pct">0%</span>
         </div>
-        <div class="sec-h" data-fa="جامهای لیگ">Leaderboard Trophies</div>
+        <div class="sec-h" data-fa="جامهای امتیازها">جامهای امتیازها</div>
         <div class="dash">
           <span style="display:flex;justify-content:center"><span data-icon="ic_leaderboard_locked" data-size="80"></span></span>
-          <b data-fa="هنوز جامی ندارید">No trophies yet</b>
-          <p data-fa="به بالای لیدربورد برسید تا جام بگیرید">Get to the top of your Leaderboard and win a trophy</p>
+          <b data-fa="هنوز جامی ندارید">هنوز جامی ندارید</b>
+          <p data-fa="به بالای لیدربورد برسید تا جام بگیرید">به بالای لیدربورد برسید تا جام بگیرید</p>
         </div>
-        <div class="plink"><span data-fa="آزمونهای من">Playgrounds</span><span data-sheet="playgroundSheet" data-fa="＋ ساخت آزمون">＋ PLAYGROUNDS</span></div>
+        <div class="plink"><span data-fa="آزمونهای من">آزمونهای من</span><span data-sheet="playgroundSheet" data-fa="＋ ساخت آزمون">＋ ساخت آزمون</span></div>
         <div class="dash">
           <div class="boxmascot"><div class="bt"><i></i><i></i></div><div class="bx"></div></div>
-          <b data-fa="ایدههایتان را کاوش کنید">Explore Your Ideas</b>
-          <p data-fa="آزمون بسازید، تست بزنید و نتیجه را از گوشی دنبال کنید">Code, test, and share projects seamlessly from your phone</p>
+          <b data-fa="ایدههایتان را کاوش کنید">ایدههایتان را کاوش کنید</b>
+          <p data-fa="آزمون بسازید، تست بزنید و نتیجه را از گوشی دنبال کنید">آزمون بسازید، تست بزنید و نتیجه را از گوشی دنبال کنید</p>
         </div>
       </section>
 
@@ -999,7 +995,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
         </div>
         <div class="banner warn" id="resPartial" hidden data-code="v12.5 · خروج و دیدن درصد: computed only from answered-so-far"></div>
         <div class="card">
-          <b>صورت اشتباهات (منتقلشونده به AI)</b>
+          <b>صورت اشتباهات (منتقلشونده به هوش مصنوعی)</b>
           <div class="wrong">سؤال ۲ · زیست / سمها — صورت سؤال: «کدام گزینه دربارهٔ سمها درست است؟» · پاسخ شما: گزینهٔ ۴ · پاسخ صحیح: گزینهٔ ۱</div>
           <div class="wrong">سؤال ۴ · شیمی / تعادل — صورت سؤال: «ثابت تعادل در دمای ثابت…» · پاسخ شما: نزده · پاسخ صحیح: گزینهٔ ۴</div>
           <div class="wrong">سؤال ۹ · فیزیک / ترمودینامیک — صورت سؤال: «کار انجامشده در فرایند همحجم…» · پاسخ شما: گزینهٔ ۲ · پاسخ صحیح: گزینهٔ ۳</div>
@@ -1018,7 +1014,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
           <div class="ai-top-left">
             <button class="fchip ai-chip" data-lh="Import notes..."><span data-icon="attachment" data-size="14" data-mono="1"></span><b>اضافه کردن فایل</b></button>
             <button class="fchip ai-chip" data-lh="Chains"><span data-icon="ic_link_external" data-size="14" data-mono="1"></span><b>زنجیره گفت و گو</b></button>
-          </div><span class="cost" data-lh="Cost $0.01">$0.01</span>
+          </div><span class="cost" data-lh="Cost $0.01">۰٫۰۱ دلار</span>
         </div>
         <div class="thread" id="chatThread">
           <div class="ctx" id="aiContext" hidden></div>
@@ -1028,29 +1024,29 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
           <div class="typing" id="typing" hidden>در حال نوشتن…</div>
         </div>
         <div class="composer">
-          <div class="in"><input id="aiInput" placeholder="What do you want to learn? · ai_tutor_input_placeholder"><button class="send" id="aiSend"><span data-icon="ic_arrow_right" data-size="16" data-mono="1"></span></button></div>
-          <div class="foot ai-foot">
-            <span class="mode" id="mode"><button class="on" data-mode="TEACH" data-lh="TEACH mode" data-fa="آموزش">TEACH </button><button data-mode="PRACTICE" data-lh="PRACTICE mode" data-fa="تمرین">PRACTICE </button></span>
-            <button class="fchip ai-foot-chip" data-lh="Model picker">gemini-flash-lite-latest <span data-icon="ic_chevron_down" data-size="11" data-mono="1"></span></button>
-            <button class="fchip ai-foot-chip" data-lh="Effort">medium <span data-icon="ic_chevron_down" data-size="11" data-mono="1"></span></button>
+          <div class="in"><input id="aiInput" placeholder="دربارهٔ کدام مبحث میخواهی یاد بگیری؟" data-code="ai_tutor_input_placeholder · What do you want to learn?"><button class="send" id="aiSend"><span data-icon="ic_arrow_right" data-size="16" data-mono="1"></span></button></div>
+          <div class="foot ai-foot" data-code="gemini-flash-lite-latest · medium · TEACH / PRACTICE">
+            <span class="mode" id="mode"><button class="on" data-mode="TEACH" data-lh="TEACH mode" data-fa="آموزش">آموزش</button><button data-mode="PRACTICE" data-lh="PRACTICE mode" data-fa="تمرین">تمرین</button></span>
+            <button class="fchip ai-foot-chip" data-lh="Model picker">مدل سریع <span data-icon="ic_chevron_down" data-size="11" data-mono="1"></span></button>
+            <button class="fchip ai-foot-chip" data-lh="Effort">تلاش متوسط <span data-icon="ic_chevron_down" data-size="11" data-mono="1"></span></button>
           </div>
         </div>
       </section>
 
       <!-- ============ v7 · SECTION PRACTICE = bolt checkpoint quiz (LEARN ONLY) ============ -->
       <section class="screen mimo" data-screen="section-practice" data-scope="learn-practice" data-isolated="exam">
-        <div class="sp-top"><button class="x" data-nav="learn"><span data-icon="ic_arrow_left" data-size="22" data-mono="1"></span></button><b data-fa="تمرین مبحث">Section practice</b></div>
+        <div class="sp-top"><button class="x" data-nav="learn"><span data-icon="ic_arrow_left" data-size="22" data-mono="1"></span></button><b data-fa="تمرین مبحث">تمرین مبحث</b></div>
         <div class="sd-hero">
-          <span class="kick">SECTION · PRACTICE</span>
-          <h2 id="spTitle">HTML Basics</h2>
-          <p>Sharpen your skills with hands-on practice exercises and projects</p>
+          <span class="kick">مبحث · تمرین</span>
+          <h2 id="spTitle" data-code="HTML Basics (archived EN section)">ساختار سلول و بافت</h2>
+          <p>تمرینهای کوتاه و طبقهبندیشدهٔ مباحث تا فصل ۴</p>
           <span class="sp-scope" id="spScope">تا فصل ۳ · ۰ درس</span>
           <div class="cbar"><i style="width:43%"></i></div>
         </div>
         <div class="sp-list" id="practiceQuestions"></div>
         <div id="practiceResult"></div>
-        <button class="sd-cta" id="practiceStart">Start lesson</button>
-        <button class="sd-link" data-modal="practiceModal">Fully charged!</button>
+        <button class="sd-cta" id="practiceStart">شروع تمرین</button>
+        <button class="sd-link" data-modal="practiceModal">شارژ کامل!</button>
       </section>
 
       <!-- ============ sheets & modal ============ -->
@@ -1082,43 +1078,43 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
       <div class="sheet" id="exitSheet"><div class="handle"></div><h4>خروج از آزمون؟</h4><p class="note">پاسخها تا این لحظه ذخیره میشوند. «خروج و ذخیره» بعداً از همان سؤال قابل ادامه است و در انتها کارنامه میدهد؛ گزینهٔ سوم همانجا درصد پاسخهای زدهشده را نشان میدهد.</p><div class="krow exit-actions" style="margin:0"><button class="btn primary" id="exitSaveBtn" data-close="exitSheet" data-nav="exam-hub">خروج و ذخیره</button><button class="btn" data-close="exitSheet">ادامهٔ آزمون</button><button class="btn" id="exitFinishBtn">پایان آزمون و دیدن کارنامه<small>خروج و دیدن درصد تا همینجا</small></button></div></div>
       <div class="sheet" id="historySheet"><div class="handle"></div><h4>تاریخچهٔ گفتگوها</h4><div id="histList"></div><div class="krow" style="margin:10px 0 0"><button class="btn primary" id="newChat">＋ گفتگوی تازه</button><button class="btn" data-close="historySheet">بستن</button></div></div>
       <div class="sheet mimo" id="playgroundSheet"><div class="handle"></div>
-        <div style="display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:14px"><span style="position:absolute;left:0;cursor:pointer" data-close="playgroundSheet" data-icon="ic_close" data-size="22" data-mono="1"></span><b style="font:700 18px/1 system-ui,sans-serif">Create Playground</b></div>
-        <div class="lbl" style="color:var(--text-weak);font:700 14px/1 system-ui,sans-serif;margin-bottom:12px">Select a Template</div>
-        <div class="tpl-row"><div class="tpl-thumb"><span data-icon="ic_file" data-size="40"></span></div><div><b>Python</b><p>Python environment for experimentation and prototyping</p></div></div>
-        <div class="tpl-row"><div class="tpl-thumb"><span data-icon="ic_square_rounded" data-size="40"></span></div><div><b>JavaScript</b><p>JavaScript environment for experimentation and prototyping</p></div></div>
-        <div class="tpl-row"><div class="tpl-thumb"><span data-icon="ic_task_completed" data-size="40"></span></div><div><b>Static website</b><p>Basic HTML, CSS, and JS starter for static sites</p></div></div>
-        <div class="tpl-row"><div class="tpl-thumb"><span data-icon="ic_sparks" data-size="40"></span></div><div><b>React app</b><p>React starter for dynamic single-page applications</p></div></div>
+        <div style="display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:14px"><span style="position:absolute;left:0;cursor:pointer" data-close="playgroundSheet" data-icon="ic_close" data-size="22" data-mono="1"></span><b style="font:700 18px/1 system-ui,sans-serif">ساخت آزمون</b></div>
+        <div class="lbl" style="color:var(--text-weak);font:700 14px/1 system-ui,sans-serif;margin-bottom:12px">انتخاب قالب آزمون</div>
+        <div class="tpl-row" data-code="Python (archived EN template)"><div class="tpl-thumb"><span data-icon="ic_file" data-size="40"></span></div><div><b>آزمون جامع</b><p>همهٔ درسها، با زمانبندی و کارنامهٔ کامل</p></div></div>
+        <div class="tpl-row" data-code="JavaScript (archived EN template)"><div class="tpl-thumb"><span data-icon="ic_square_rounded" data-size="40"></span></div><div><b>آزمون تکدرس</b><p>یک مبحث مشخص، مثلاً «زیست دهم»</p></div></div>
+        <div class="tpl-row" data-code="Static website (archived EN template)"><div class="tpl-thumb"><span data-icon="ic_task_completed" data-size="40"></span></div><div><b>آزمون زماندار</b><p>زمان محدود و تمرین سرعت پاسخگویی</p></div></div>
+        <div class="tpl-row" data-code="React app (archived EN template)"><div class="tpl-thumb"><span data-icon="ic_sparks" data-size="40"></span></div><div><b>آزمون تحلیلی</b><p>بررسی غلطها و سؤالهای نزده</p></div></div>
       </div>
       <div class="modal" id="unfinishedModal"><div class="modal-card ut-card">
         <span class="utx" data-modal-close="unfinishedModal"><span data-icon="ic_close" data-size="22" data-mono="1"></span></span>
         <div class="ut-art"><span data-icon="ic_mimo_mascot" data-size="104"></span></div>
-        <h2 data-fa="مسیر ناتمام">Unfinished track</h2>
-        <p data-fa="مسیر را تمام کنید تا گواهی شخصیشدهاقتان را بگیرید">Finish the track and receive your personalised certificate</p>
-        <button class="utok" data-modal-close="unfinishedModal" data-fa="باشه">Ok</button>
+        <h2 data-fa="مسیر ناتمام">مسیر ناتمام</h2>
+        <p data-fa="مسیر را تمام کنید تا گواهی شخصیشدهاقتان را بگیرید">مسیر را تمام کنید تا گواهی شخصیشدهاقتان را بگیرید</p>
+        <button class="utok" data-modal-close="unfinishedModal" data-fa="باشه">باشه</button>
       </div></div>
       <div class="modal" id="practiceModal"><div class="modal-card ut-card">
         <span class="utx" data-modal-close="practiceModal"><span data-icon="ic_close" data-size="22" data-mono="1"></span></span>
         <div class="ut-art"><span data-icon="ic_mascot_practice" data-size="104"></span></div>
-        <h2 id="practiceModalTitle">Fully charged!</h2>
-        <p id="practiceModalText">Practicing little every day is proved to be the most effective.</p>
-        <button class="utok" data-modal-close="practiceModal">Practice anyway</button>
+        <h2 id="practiceModalTitle">شارژ کامل!</h2>
+        <p id="practiceModalText">هر روز کمی تمرین کردن، مؤثرترین راه یادگیری است.</p>
+        <button class="utok" data-modal-close="practiceModal">بااینحال تمرین میکنم</button>
       </div></div>
       <div class="modal" id="chapterModal"><div class="modal-card">
-        <div class="mtop"><span class="lbl" data-fa="یادگیری">Learn</span><span class="cap" data-icon="ic_cap_filled" data-size="44" data-mono="1"></span></div>
-        <h2 data-fa="ساختار سلول و بافت">Structuring Text with Tags</h2>
-        <div class="chapter-row"><span data-fa="فصل">Chapter</span><span>0/2</span></div>
+        <div class="mtop"><span class="lbl" data-fa="یادگیری">یادگیری</span><span class="cap" data-icon="ic_cap_filled" data-size="44" data-mono="1"></span></div>
+        <h2 data-fa="ساختار سلول و بافت">ساختار سلول و بافت</h2>
+        <div class="chapter-row"><span data-fa="فصل">فصل</span><span>0/2</span></div>
         <div class="mprogress"><i></i></div>
-        <button class="startbtn" id="startLearning"><span data-fa="شروع یادگیری">Start learning</span><span class="circ"></span></button>
+        <button class="startbtn" id="startLearning"><span data-fa="شروع یادگیری">شروع یادگیری</span><span class="circ"></span></button>
         <div class="krow" style="margin:10px 0 0;justify-content:center"><button class="btn" data-close="chapterModal">بستن</button></div>
       </div></div>
 
       <!-- ============ BOTTOM NAV = 5 tabs (v8: روتین روزانه removed; MAX forbidden) ============ -->
       <div class="tabs" id="tabs">
-        <div class="tab on" data-tab="Learn"><span class="ir i-off" data-icon="ic_cap" data-size="22" data-mono="1"></span><span class="ir i-on" data-icon="ic_cap_filled" data-size="22" data-mono="1"></span><span data-fa="یادگیری">Learn</span></div>
-        <div class="tab" data-tab="Practice"><span class="ir i-off" data-icon="ic_flash" data-size="22" data-mono="1"></span><span class="ir i-on" data-icon="ic_flash_filled" data-size="22" data-mono="1"></span><span data-fa="تمرین">Practice</span></div>
-        <div class="tab" data-tab="AI"><span class="ir i-off" data-icon="ic_magic_wand" data-size="22" data-mono="1"></span><span class="ir i-on" data-icon="ic_magic_wand_filled" data-size="22" data-mono="1"></span><span>AI</span></div>
-        <div class="tab" data-tab="Leaderboard"><span class="ir i-off" data-icon="ic_trophy" data-size="22" data-mono="1"></span><span class="ir i-on" data-icon="ic_trophy_filled" data-size="22" data-mono="1"></span><span data-fa="لیدربورد">Leaderboard</span></div>
-        <div class="tab" data-tab="Profile"><span class="ir i-off" data-icon="ic_user_circle" data-size="22" data-mono="1"></span><span class="ir i-on" data-icon="ic_user_circle_filled" data-size="22" data-mono="1"></span><span data-fa="پروفایل">Profile</span></div>
+        <div class="tab on" data-tab="Learn"><span class="ir i-off" data-icon="ic_cap" data-size="22" data-mono="1"></span><span class="ir i-on" data-icon="ic_cap_filled" data-size="22" data-mono="1"></span><span data-fa="یادگیری">یادگیری</span></div>
+        <div class="tab" data-tab="Practice"><span class="ir i-off" data-icon="ic_flash" data-size="22" data-mono="1"></span><span class="ir i-on" data-icon="ic_flash_filled" data-size="22" data-mono="1"></span><span data-fa="تمرین">تمرین</span></div>
+        <div class="tab" data-tab="AI"><span class="ir i-off" data-icon="ic_magic_wand" data-size="22" data-mono="1"></span><span class="ir i-on" data-icon="ic_magic_wand_filled" data-size="22" data-mono="1"></span><span data-fa="هوش مصنوعی" data-code="AI (archived EN tab label)">هوش مصنوعی</span></div>
+        <div class="tab" data-tab="Leaderboard"><span class="ir i-off" data-icon="ic_trophy" data-size="22" data-mono="1"></span><span class="ir i-on" data-icon="ic_trophy_filled" data-size="22" data-mono="1"></span><span data-fa="امتیازها">امتیازها</span></div>
+        <div class="tab" data-tab="Profile"><span class="ir i-off" data-icon="ic_user_circle" data-size="22" data-mono="1"></span><span class="ir i-on" data-icon="ic_user_circle_filled" data-size="22" data-mono="1"></span><span data-fa="پروفایل">پروفایل</span></div>
       </div>
     </div>
   </div>
@@ -1135,7 +1131,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
     </ul>
     <h3>دور یازدهم · لیدربورد «وضعیت من»، مسیرهای برنامهمحور و کورسهای مبحثی</h3>
     <ul>
-      <li>بلوک <code>Wooden League / 6d 22h 38m</code> و <b>همهٔ ۵ ردیف رقیب</b> بطور کامل حذف شد؛ فقط <b>My status / وضعیت من</b> و کارتهای آمار و «آزمونها و امتیازات من» ماند.</li>
+      <li>بلوک <code>Wooden League / 6d 22h 38m</code> و <b>همهٔ ۵ ردیف رقیب</b> بطور کامل حذف شد؛ فقط <b data-code="My status">«وضعیت من»</b> و کارتهای آمار و «آزمونها و امتیازات من» ماند.</li>
       <li><code>Career Paths</code> → <b>«یادگیری برنامه محور»</b>؛ <code>Courses</code> → <b>«یادگیری مبحثی»</b>. <b>سه کارت درشت</b>: برنامهٔ دوازدهم/یازدهم/دهم. کارت چهارم «یادگیری مبحثی» حذف شد چون همان عنوان بخش کورسها در پایین است. ۱۲ کورس = ۴ درس × ۳ پایه.</li>
       <li>نمای مسیر: <b>«یادگیری برنامه محور»</b> / نام برنامهٔ پایه / <b>«مدرک پایان دوره»</b> / <b>«۲۲ درصد کامل شده»</b> / <code>2/9</code>. زیرمباحث <b>۱۰ بازهٔ دو هفتهای</b> از ۱ آبان تا ۱۵ اسفند (آبان، آذر، دی، بهمن، اسفند)، هر کدام «دروس: زیست، شیمی، ریاضی، فیزیک».</li>
       <li>برای کورسهای مبحثی، همان نمای مسیر با <b>اسم فصل و اسم درس</b> از مدل محتوای کنکوری داخل ریپو پر میشود (<code>DESIGN/KONKUR_CURRICULUM.json</code>، <code>CATALOGS/KONKUR_CURRICULUM.csv</code>)؛ سلسلهمراتب «کتاب ← فصل ← مبحث» از <code>SOURCE_APPS/hamdars/HELP_CENTER_UX.md §learn-books</code>.</li>
@@ -1163,7 +1159,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
       <li><b>ابزار تازه:</b> <code>tools/extract_mimo_nodes_v8.py</code> → <code>DESIGN/NODE_CODE_GEOMETRY.json</code> + <code>CATALOGS/MIMO_PATH_NODES.csv</code> (<span id="nodeStats">شمارش…</span>).</li>
       <li><b>هندسه دقیق از کد:</b> مربع <code>92dp</code> / شعاع <code>26dp</code> / لبهٔ سهبعدی <code>8dp</code> (<code>button_primary_highlight #FF6E3EC8</code>) · گرادیان <code>progress_chapter_primary #FF8D60E2 → button_primary #FF7E4BDE</code> · شبکهٔ نقطهای <code>26dp</code> · اتور <code>stroke 10dp</code> با <b>گوشههای گرد Q به شعاع ۳۲dp</b> (راست/پایین/چپ/پایین)، نه منحنی بزیه.</li>
       <li><b>حالتها:</b> انجامشده = <code>ic_check_white</code> سفید · فعلی = کارت سفید + حلقهٔ دوتایی بنفش (۳dp border + ۷dp فاصله + ۳dp حلقه) + <b>حلقهٔ پیشرفت ½</b> (<code>glance_circular_progress_indicator.xml</code>) · نسخهٔ پلی = <code>ic_play #FF252746</code> · رعدوبرق فعال = <code>ic_flash</code> سرمهای روی بنفش · رعدوبرق اختیاری = <code>ic_bolt</code> سفید روی <code>card_disabled</code>.</li>
-      <li><b>شناور:</b> دایرهٔ کتاب/واژهنامه با A (<code>ic_file.xml</code> + <code>bookmark_no_fill.xml</code>) · سربرگ ۳ چیپ <code>PathToolbarKt$RowWithKeys</code> · کارت <code>ViewsKt$OverviewEntryPointHeader</code>.</li>
+      <li><b>شناور:</b> دایرهٔ کتاب/واژهنامه <b>حذف شد</b> (شواهد قدیمی: <code>ic_file.xml</code> + <code>bookmark_no_fill.xml</code>، فقط در <code>data-code</code>) · سربرگ ۳ چیپ <code>PathToolbarKt$RowWithKeys</code> · کارت <code>ViewsKt$OverviewEntryPointHeader</code>.</li>
       <li><b>چک بصری فقط:</b> <code>mimo-01</code> (تیک/پلی/دو بولت/کتاب)، <code>mimo-02</code> (حلقهٔ دوتایی + ½)، <code>mimo-10</code> (چهار تیک + بولت فعال + اتور گردگوشه). کد ملاک است؛ ۰ رنگ/فونت/شعاع/آیکون تازه.</li>
       <li><b>شواهد DEX:</b> <code>PathMapScreenKt</code>، <code>PathMapViewModel$onTutorialClick</code>، <code>GetPathMapState/Dialogs</code>، <code>PathToolbarButtonType</code>، <code>PracticeOptionalIntroKt</code>، <code>TutorialSpotlightKt</code>، <code>ModalData$SmartPractice*</code> — ۹۲ کلاس PathMap. شِیپها: <code>rounded_background_primary</code>، <code>progress_bar_chapter</code>، <code>ic_square_rounded</code>، <code>bg_circular</code>، <code>shadow_bottom</code>.</li>
     </ul>
@@ -1195,12 +1191,12 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
       <li><b>TextH1</b> 24sp · <b>TextP2</b> 16sp · <b>toolbar</b> 56dp · <b>card radius</b> 12dp</li>
     </ul>
     <h3>وضعیت</h3>
-    <ul><li><b>DESIGN v8 · REVIEW</b> — منتظر تأیید نهایی</li><li>بعد از تأیید ← مرحلهٔ پیادهمسازی</li><li>هیچ کد محصولی نوشته نشده</li></ul>
+    <ul><li><b data-code="DESIGN v8 · REVIEW">طرح v12.5 · بازبینی</b> — منتظر تأیید نهایی</li><li>بعد از تأیید ← مرحلهٔ پیادهمسازی</li><li>هیچ کد محصولی نوشته نشده</li></ul>
   </aside>
 </div>
 
 <footer class="foot-note">
-⚠️ این <b>طرح دور دوازدهم v12.5</b> است، نه محصول. گرههای مسیر یادگیری مستقیماً از <code>NODE_CODE_GEOMETRY.json</code> (جداول ARSC، <code>pathData</code>، شِیپها، <code>test-tracks.json</code> و ۹۲ کلاس PathMap DEX) رندر شدند؛ ۱۴ اسکرینشات فقط <b>چک بصری</b>اند. روتین روزانه و ایدهٔ امتیازدهیاش بهکل حذف شد، دیکته حذف شد، یادداشتهای توضیحی داخل UI پاک شدند و ظاهر آزمونها فقط با آیکون/رنگ میمو نزدیکتر شد. در دور دهم درخواست خط صاف پس گرفته شد و <b>معماری اورجینال قوسدار</b> با کاوش عمیقتر کد بازسازی شد. در دور یازدهم محتوای لیدربورد/مسیرها/کورسها کنکوری و بدون نشانهای برنامهنویسی شد. در دور دوازدهم سطوح آزمون با معماری واقعی صفحهٔ درس/کوییز میمو هماهنگ شدند. <b>v12.3:</b> چهارمدل v12.2 بهدلیل قاتیشدن پاسخبرگ با بدنهٔ سؤال <b>رد و به همان ساختار v12.1 برگردانده شد</b>؛ پاسخبرگ و پاسخنامه همچنان <b>کشوی پایین صفحه</b>اند، و فلشها در RTL اصلاح شدند (بعدی ←، قبلی/بازگشت →). <b>v12.4:</b> چیپهای «توضیح با هوش مصنوعی / اتمام آزمون / خروج / توقف / تنظیم مجدد»، پرچم کنار تایمر، «رد کردن سؤال»، متن تکراری «زمان تنظیم نشده» و دایرهٔ رادیویی گزینهها حذف شدند؛ تایمر حالا <b>یک دکمهٔ واحد</b> است که کنار زمانش علامت توقف/پلی و استاپ میگیرد. <b>v12.5:</b> چیپ «توضیح با هوش مصنوعی» دقیقاً به همان جایگاه و استایل قبل، کنار «پاسخبرگ / پاسخنامه» برگشت و کپی اضافهٔ داخل پاسخنامه حذف شد؛ مدت آزمون در <b>همهٔ</b> آزمونها (حتی جامع ۲۷۰ دقیقه) دستی و قابل تغییر است؛ کشوی خروج گزینهٔ سوم «پایان آزمون و دیدن کارنامه / خروج و دیدن درصد» گرفت که درصد پاسخهای زدهشده تا همان لحظه را نشان میدهد، و «خروج و ذخیره» پیشرفت را نگه میدارد تا بعداً ادامه شود و در پایان کارنامه بدهد. نسخههای <b>DESIGN v6</b> و <b>DESIGN v7</b> بایگانی حسابرسیاند. «وارد کردن کلید API» فقط یک یادداشت است و هیچ صفحۀ تنظیماتی طراحی نشده. هیچ کد محصولی نوشته نشده است.
+⚠️ این <b>طرح دور دوازدهم v12.5</b> است، نه محصول. گرههای مسیر یادگیری مستقیماً از <code>NODE_CODE_GEOMETRY.json</code> (جداول ARSC، <code>pathData</code>، شِیپها، <code>test-tracks.json</code> و ۹۲ کلاس PathMap DEX) رندر شدند؛ ۱۴ اسکرینشات فقط <b>چک بصری</b>اند. روتین روزانه و ایدهٔ امتیازدهیاش بهکل حذف شد، دیکته حذف شد، یادداشتهای توضیحی داخل UI پاک شدند و ظاهر آزمونها فقط با آیکون/رنگ میمو نزدیکتر شد. در دور دهم درخواست خط صاف پس گرفته شد و <b>معماری اورجینال قوسدار</b> با کاوش عمیقتر کد بازسازی شد. در دور یازدهم محتوای لیدربورد/مسیرها/کورسها کنکوری و بدون نشانهای برنامهنویسی شد. در دور دوازدهم سطوح آزمون با معماری واقعی صفحهٔ درس/کوییز میمو هماهنگ شدند. <b>v12.3:</b> چهارمدل v12.2 بهدلیل قاتیشدن پاسخبرگ با بدنهٔ سؤال <b>رد و به همان ساختار v12.1 برگردانده شد</b>؛ پاسخبرگ و پاسخنامه همچنان <b>کشوی پایین صفحه</b>اند، و فلشها در RTL اصلاح شدند (بعدی ←، قبلی/بازگشت →). <b>v12.4:</b> چیپهای «توضیح با هوش مصنوعی / اتمام آزمون / خروج / توقف / تنظیم مجدد»، پرچم کنار تایمر، «رد کردن سؤال»، متن تکراری «زمان تنظیم نشده» و دایرهٔ رادیویی گزینهها حذف شدند؛ تایمر حالا <b>یک دکمهٔ واحد</b> است که کنار زمانش علامت توقف/پلی و استاپ میگیرد. <b>v12.5:</b> چیپ «توضیح با هوش مصنوعی» دقیقاً به همان جایگاه و استایل قبل، کنار «پاسخبرگ / پاسخنامه» برگشت و کپی اضافهٔ داخل پاسخنامه حذف شد؛ مدت آزمون در <b>همهٔ</b> آزمونها (حتی جامع ۲۷۰ دقیقه) دستی و قابل تغییر است؛ کشوی خروج گزینهٔ سوم «پایان آزمون و دیدن کارنامه / خروج و دیدن درصد» گرفت که درصد پاسخهای زدهشده تا همان لحظه را نشان میدهد، و «خروج و ذخیره» پیشرفت را نگه میدارد تا بعداً ادامه شود و در پایان کارنامه بدهد. نسخههای <b>DESIGN v6</b> و <b>DESIGN v7</b> بایگانی حسابرسیاند. <b>بستهٔ فارسیسازی:</b> لیبلهای دیدنی لیدربورد/پروفایل/ناوبری/تمرین فارسی شدند، عنوانهای HTML و قالبهای برنامهنویسی به نام درسها و آزمونهای کنکور تغییر کردند، آیکون «واژهنامهٔ مبحث» حذف شد و ناوبری پایین بدون نیاز به دکمهٔ RTL فارسی است؛ رشتههای انگلیسی قدیمی فقط بهعنوان شاهد نامرئی (<code>data-code</code> / <code>data-lh</code>) و در payloadهای کد باقیاند. «وارد کردن کلید API» فقط یک یادداشت است و هیچ صفحۀ تنظیماتی طراحی نشده. هیچ کد محصولی نوشته نشده است.
 </footer>
 <div class="toast" id="toast"></div>
 
@@ -1264,24 +1260,22 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
     var sh=e.target.closest("[data-sheet]");if(sh){var t=q("#"+sh.dataset.sheet);if(t)t.classList.add("on");return}
     var cl=e.target.closest("[data-close]");if(cl){var c=q("#"+cl.dataset.close);if(c)c.classList.remove("on");return}
     var h=e.target.closest("[data-help]");if(h){toast("راهنمای «"+h.dataset.help+"»: گامبهگام، همان الگوی helpcenter");return}
-    var lh=e.target.closest("[data-lh]");if(lh){toast("LearnHarness ← "+lh.dataset.lh);return}
+    var lh=e.target.closest("[data-lh]");if(lh){toast("چارچوب یادگیری ← "+(lh.dataset.fa||"شاهد کد"));return}
     var kt=e.target.closest("#keytabs button");if(kt){qa("#keytabs button").forEach(function(b){b.classList.remove("on")});kt.classList.add("on");qa(".keypanel").forEach(function(p){p.classList.toggle("on",p.id===kt.dataset.key)});return}
     if(e.target.closest("#curNode")){q("#chapterModal").classList.add("on");return}
     if(e.target.closest("#myRow")){go("user-profile");return}
     if(e.target.closest("#startLearning")){q("#chapterModal").classList.remove("on");go("lesson");return}
   });
-  qa("#tabs .tab").forEach(function(t){t.addEventListener("click",function(){go(tabScreen[t.dataset.tab]);toast("تب "+t.dataset.tab+" · ناوبری ۵ تب میمو")})});
+  var tabFa={Learn:"یادگیری",Practice:"تمرین",AI:"هوش مصنوعی",Leaderboard:"امتیازها",Profile:"پروفایل"};
+  qa("#tabs .tab").forEach(function(t){t.addEventListener("click",function(){go(tabScreen[t.dataset.tab]);toast("تب "+tabFa[t.dataset.tab]+" · ناوبری ۵ تب میمو")})});
   q("#themeBtn").addEventListener("click",function(){document.body.classList.toggle("night");this.textContent=document.body.classList.contains("night")?"☀️ حالت روز":"🌙 حالت شب"});
   var rtl=false;
+  /* v12.5-fa: لیبلها پیشفرض فارسیاند؛ دکمه فقط جهت را آینه میکند و متن انگلیسی برنمیگرداند */
   q("#dirBtn").addEventListener("click",function(){
     rtl=!rtl;var ph=q("#phone");ph.style.direction=rtl?"rtl":"ltr";
     qa(".mimo,.exv12",ph).forEach(function(s){s.style.direction=rtl?"rtl":"ltr"});
-    qa("[data-fa]",ph).forEach(function(el){
-      if(el.dataset.enhtml===undefined)el.dataset.enhtml=el.innerHTML;
-      el.innerHTML=rtl?el.dataset.fa:el.dataset.enhtml;
-    });
-    this.textContent=rtl?"↔ English / LTR":"↔ فارسی / RTL";
-    toast(rtl?"آینهٔ RTL + لیبلهای فارسی":"نمای ۱۰۰٪ میمو (LTR)");
+    this.textContent=rtl?"↔ چپبراست":"↔ راستبهچپ";
+    toast(rtl?"آینهٔ راستبهچپ · لیبلها فارسی":"نمای چپبراست · لیبلها فارسی");
   });
 
   /* ---------- exam policy: پاسخبرگ / پاسخنامه ---------- */
@@ -1593,7 +1587,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
     var s="<b>صورت اشتباهات + پاسخهای من + صورت سؤالها:</b><br>";
     WRONG.forEach(function(w){s+="• "+w.q+" | "+w.a+" | "+w.k+"<br>"});
     setCtx("زمینه: نتیجهٔ "+q("#examTitle").textContent+" · ۳ سؤال غلط (همراه پاسخ و صورت سؤال)",s);
-    go("ai");toast("اشتباهات، پاسخها و صورت سؤالها به AI منتقل شد");
+    go("ai");toast("اشتباهات، پاسخها و صورت سؤالها به هوش مصنوعی منتقل شد");
   });
 
   /* ---------- minimal chat ---------- */
@@ -1604,7 +1598,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
     var v=q("#aiInput").value.trim();if(!v){toast("یک پیام بنویسید");return}
     addBubble(v,true);q("#aiInput").value="";q("#typing").hidden=false;
     setTimeout(function(){q("#typing").hidden=true;addBubble("بیا قدمبهقدم جلو بریم: اول صورت سؤال رو با هم مرور میکنیم، بعد یه تست مشابه میزنیم.","")},700);
-    toast("ارسال به LearnHarness (/max)");
+    toast("ارسال به چارچوب یادگیری");
   });
   q("#aiInput").addEventListener("keydown",function(e){if(e.key==="Enter")q("#aiSend").click()});
   q("#newChat").addEventListener("click",function(){
@@ -1612,7 +1606,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
     q("#aiContext").hidden=true;addBubble("سلام! روی کدوم مبحث میخوای کار کنیم؟","");
     q("#historySheet").classList.remove("on");toast("گفتگوی تازه شروع شد");
   });
-  qa("#mode button").forEach(function(b){b.addEventListener("click",function(){qa("#mode button").forEach(function(x){x.classList.remove("on")});b.classList.add("on");toast("حالت "+b.dataset.mode+" انتخاب شد")})});
+  qa("#mode button").forEach(function(b){b.addEventListener("click",function(){qa("#mode button").forEach(function(x){x.classList.remove("on")});b.classList.add("on");toast("حالت "+b.dataset.fa+" انتخاب شد")})});
 
   /* ============ v6 · Learn sub-screens rendered from extracted code data ============ */
   function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
@@ -1739,6 +1733,8 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
 
   /* ============ v7 · bolt nodes -> isolated section-practice checkpoint quiz ============ */
   var NS=NODE.strings, NCM=NODE.contentModel, PRACTICE_SECTION=3;
+  /* v12.5-fa: نام فصلهای کنکوری جایگزین عنوانهای HTML/برنامهنویسی شد */
+  var P_FA=["ساختار سلول و بافت","آنزیمها","اتم و ساختار الکترونی","حرکتشناسی","تابع و مشتق","ژنتیک و وراثت","تعادل شیمیایی","ترمودینامیک","گسلش و فشار","دستهبندی گیاهان"];
   var P_STEMS=[
     "کدام گزینه تعریف درست این مبحث را میدهد؟",
     "کدام نکته دربارهٔ درسهای تا این فصل صحیح است؟",
@@ -1752,32 +1748,32 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
   function renderPractice(n){
     PRACTICE_SECTION=n;
     var sc=practiceScope(n), sec=NCM.sections[Math.min(n,NCM.sections.length)-1];
-    q("#spTitle").textContent=sec.name;
+    q("#spTitle").textContent=P_FA[Math.min(n,P_FA.length)-1];
     q("#spScope").textContent="تا فصل "+fa(n)+" · "+fa(sc.ids.length)+" درس";
     var box=q("#practiceQuestions");box.innerHTML="";
     P_STEMS.forEach(function(stem,i){
       var d=document.createElement("div");d.className="sp-q";d.dataset.q=String(i);
-      var sname=sc.sections[i%sc.sections.length].name;
+      var sname=P_FA[i%P_FA.length];
       var tid=sc.ids[i%sc.ids.length]||0;
       var opts=[1,2,3,4].map(function(o){return '<button class="sp-opt" data-o="'+o+'">'+fa(o)+'</button>'}).join("");
-      d.innerHTML='<div class="sp-stem"><b>'+fa(i+1)+'. '+esc(stem)+'</b><small>'+esc(sname)+' · tutorialId '+fa(tid)+'</small></div><div class="sp-opts">'+opts+'</div>';
+      d.innerHTML='<div class="sp-stem"><b>'+fa(i+1)+'. '+esc(stem)+'</b><small>'+esc(sname)+' · شناسهٔ درس '+fa(tid)+'</small></div><div class="sp-opts">'+opts+'</div>';
       box.appendChild(d);
     });
     q("#practiceResult").innerHTML="";
     q("#practiceStart").textContent="شروع تمرین";
-    q("#practiceModalTitle").textContent=NS.practice.section_details_smart_practice_charged_dialog_title;
-    q("#practiceModalText").textContent=NS.practice.section_details_smart_practice_charged_dialog_description;
+    q("#practiceModalTitle").textContent="شارژ کامل!";
+    q("#practiceModalText").textContent="هر روز کمی تمرین کردن، مؤثرترین راه یادگیری است.";
     paintIcons(box);
   }
   q("#practiceStart").addEventListener("click",function(){
     var qs=qa("#practiceQuestions .sp-q"),answered=0,correct=0;
     qs.forEach(function(x,i){var s=q(".sp-opt.on",x);if(s){answered++;if(+s.dataset.o===(i%4)+1)correct++}});
-    q("#practiceResult").innerHTML='<div class="sp-fb"><b>'+fa(answered)+' / '+fa(qs.length)+'</b> پاسخ ثبت شد · '+esc(NS.chapter_start.lesson_feedback_keep_going||"Let's keep it going.")+'</div>';
+    q("#practiceResult").innerHTML='<div class="sp-fb"><b>'+fa(answered)+' / '+fa(qs.length)+'</b> پاسخ ثبت شد · '+esc("ادامه بده، خوب پیش میروی")+'</div>';
     if(answered===qs.length){
-      q("#practiceModalTitle").textContent=NS.practice.section_details_smart_practice_mastered_dialog_title;
-      q("#practiceModalText").textContent=NS.practice.section_details_smart_practice_mastered_dialog_description;
+      q("#practiceModalTitle").textContent="همهٔ تمرینها تمام شد!";
+      q("#practiceModalText").textContent="این مبحث را بهطور کامل تمرین کردهاید.";
       q("#practiceModal").classList.add("on");
-      toast(NS.practice.you_finished_all_practice_sessions);
+      toast("همهٔ تمرینهای این مبحث انجام شد");
     }else toast("چند سؤال هنوز پاسخ ندادهاند");
   });
 
@@ -1805,8 +1801,6 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
       toast("تمرین مبحث: تا فصل "+fa(n)+" (جدا از آزمون کنکور)");
       return;
     }
-    var gl=e.target.closest("[data-glossary]");
-    if(gl){toast("واژهنامهٔ مبحث");return}
     var o=e.target.closest(".sp-opt");
     if(o){qa(".sp-opt",o.parentNode).forEach(function(x){x.classList.remove("on")});o.classList.add("on");return}
   });
