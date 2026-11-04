@@ -32,7 +32,9 @@ jobs:
           fetch-depth: 1
 
       - name: Prepare evidence directory
-        run: mkdir -p ANALYSIS/GHIDRA && : > ANALYSIS/GHIDRA/run.log
+        run: |
+          mkdir -p ANALYSIS/GHIDRA
+          : > ANALYSIS/GHIDRA/run.log
 
       - name: Install JDK 25 (Ghidra 12.2 requires it)
         uses: actions/setup-java@v4
