@@ -6,7 +6,7 @@ Source of truth: tools/design_v10_template.html (v10, original curved zigzag).
 Round 11 changes ONLY the following (no path geometry / exam architecture changes):
   * Leaderboard: drop Wooden League + all 5 competitor rows; keep "My status" only.
   * Select Path: "Career Paths" -> «یادگیری برنامه محور», "Courses" -> «یادگیری مبحثی».
-  * 4 big Mimo-icon cards: 3 grade programs + topic-based learning.
+  * 3 big Mimo-icon cards: the 3 grade programs (no duplicate topic card).
   * 12 courses: subject x grade (زیست/ریاضی/شیمی/فیزیک x دهم/یازدهم/دوازدهم).
   * Path Overview: «یادگیری برنامه محور» / grade program / «مدرک پایان دوره» /
     «۲۲ درصد کامل شده»; 10 biweekly dates ۱ آبان..۱۵ اسفند with «دروس: زیست، شیمی، ریاضی، فیزیک».
@@ -223,7 +223,7 @@ rep("<h1>طرح رابط کاربری — دور دهم <span class=\"ver\">DESI
 old_p = html[html.index("<p>بازآفرینی ۱۰۰٪"):html.index("</p>", html.index("<p>بازآفرینی ۱۰۰٪")) + 4]
 new_p = ("<p>بازآفرینی ۱۰۰٪ بخشهای اصلی میمو <b>از روی کد/مهندسی معکوس</b> · "
          "<b>دور یازدهم:</b> لیدربورد رقابتی حذف و فقط «وضعیت من» ماند؛ سرتیترها به "
-         "<b>«یادگیری برنامه محور»</b> و <b>«یادگیری مبحثی»</b> تبدیل شدند؛ چهار کارت درشت "
+         "<b>«یادگیری برنامه محور»</b> و <b>«یادگیری مبحثی»</b> تبدیل شدند؛ سه کارت درشت "
          "با آیکونهای واقعی میمو (بدون هیچ نشان برنامهنویسی)، ۱۲ کورس «درس × پایه»، "
          "<b>مدرک پایان دوره</b> با «۲۲ درصد کامل شده»، و زیرمباحث <b>دو هفتهای</b> "
          "از ۱ آبان تا ۱۵ اسفند (۵ ماه) با «دروس: زیست، شیمی، ریاضی، فیزیک». "
@@ -242,7 +242,7 @@ rep(aside_anchor, """<aside class="spec">
     <h3>دور یازدهم · لیدربورد «وضعیت من»، مسیرهای برنامهمحور و کورسهای مبحثی</h3>
     <ul>
       <li>بلوک <code>Wooden League / 6d 22h 38m</code> و <b>همهٔ ۵ ردیف رقیب</b> بطور کامل حذف شد؛ فقط <b>My status / وضعیت من</b> و کارتهای آمار و «آزمونها و امتیازات من» ماند.</li>
-      <li><code>Career Paths</code> → <b>«یادگیری برنامه محور»</b>؛ <code>Courses</code> → <b>«یادگیری مبحثی»</b>. چهار کارت درشت: سه برنامهٔ دوازدهم/یازدهم/دهم + کارت «یادگیری مبحثی». ۱۲ کورس = ۴ درس × ۳ پایه.</li>
+      <li><code>Career Paths</code> → <b>«یادگیری برنامه محور»</b>؛ <code>Courses</code> → <b>«یادگیری مبحثی»</b>. <b>سه کارت درشت</b>: برنامهٔ دوازدهم/یازدهم/دهم. کارت چهارم «یادگیری مبحثی» حذف شد چون همان عنوان بخش کورسها در پایین است. ۱۲ کورس = ۴ درس × ۳ پایه.</li>
       <li>نمای مسیر: <b>«یادگیری برنامه محور»</b> / نام برنامهٔ پایه / <b>«مدرک پایان دوره»</b> / <b>«۲۲ درصد کامل شده»</b> / <code>2/9</code>. زیرمباحث <b>۱۰ بازهٔ دو هفتهای</b> از ۱ آبان تا ۱۵ اسفند (آبان، آذر، دی، بهمن، اسفند)، هر کدام «دروس: زیست، شیمی، ریاضی، فیزیک».</li>
       <li>برای کورسهای مبحثی، همان نمای مسیر با <b>اسم فصل و اسم درس</b> از مدل محتوای کنکوری داخل ریپو پر میشود (<code>DESIGN/KONKUR_CURRICULUM.json</code>، <code>CATALOGS/KONKUR_CURRICULUM.csv</code>)؛ سلسلهمراتب «کتاب ← فصل ← مبحث» از <code>SOURCE_APPS/hamdars/HELP_CENTER_UX.md §learn-books</code>.</li>
       <li><b>هیچ آرم/نشان برنامهنویسی</b>ای نمایش داده نمیشود: تمام <code>ic_badge_*</code> / <code>ic_code_lang_*</code> / <code>ic_code_playground_template_*</code> با وکتورهای بومی میمو جایگزین شدند؛ بقیهٔ المانها سر جای خود ماندند.</li>
@@ -350,7 +350,6 @@ JS11 = r'''  /* ============ v11 · program-based / topic-based Konkur tracks ==
   function v11Lab(s){return ' data-fa="'+esc(s)+'"'}
   /* 4 BIG cards — icons are decoded Mimo vectors, never programming emblems */
   var V11_CARDS=V11_PROGRAMS.map(function(p){return {key:p.key,kind:"program",label:p.label,icon:p.icon,sec:"۲/۱۰",pct:22}});
-  V11_CARDS.push({key:"courses",kind:"courses",label:KONKUR.topic_label,icon:"ic_square_rounded",sec:"۱۲ درس",pct:22});
   var CC=q("#careerCards");CC.innerHTML="";
   V11_CARDS.forEach(function(c,i){
     var b=document.createElement("button");b.className="career-card"+(i===0?" sel":"");
@@ -441,11 +440,6 @@ JS11 = r'''  /* ============ v11 · program-based / topic-based Konkur tracks ==
     var c=e.target.closest("[data-v11]");
     if(c){
       var parts=c.dataset.v11.split(":");
-      if(parts[0]==="courses"){
-        var cr=q("#courseRows");if(cr&&cr.scrollIntoView)cr.scrollIntoView({block:"start"});
-        qa("#careerCards .career-card").forEach(function(x){x.classList.remove("sel")});
-        c.classList.add("sel");return;
-      }
       V11_SEL={kind:parts[0],key:parts[1]};
       qa("#careerCards .career-card").forEach(function(x){x.classList.remove("sel")});
       if(parts[0]==="program")c.classList.add("sel");
@@ -493,7 +487,7 @@ print(json.dumps({
     "lessons": KONKUR["lesson_count"],
     "fortnight_dates": len(DATES),
     "months": KONKUR["months"],
-    "program_cards": len(V11_CARDS) if False else 4,
+    "program_cards": len(V11_CARDS) if False else 3,
     "programming_icons_swapped": nswap,
     "leaderboard_block_removed": "Wooden" not in body and "MIGUELBAOBAB" not in body
                                   and 'class="lb-row' not in body,

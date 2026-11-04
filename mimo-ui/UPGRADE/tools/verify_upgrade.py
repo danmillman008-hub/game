@@ -15,10 +15,10 @@ docs = ["README.md", "00_START_HERE.md", "01_CRAFT_ANYTHING_INSTALL.md",
         "13_DESIGN_ROUND_2.md", "14_DESIGN_ROUND_3.md", "15_DESIGN_ROUND_4.md",
         "16_DESIGN_ROUND_5.md", "17_DESIGN_ROUND_6.md",
         "18_DESIGN_ROUND_7.md", "20_DESIGN_ROUND_8.md", "21_DESIGN_ROUND_9.md", "22_DESIGN_ROUND_10.md", "23_DESIGN_ROUND_11.md", "wireframes.html"]
-csvs = {"UI_FIDELITY_RULES.csv": 37, "FEATURE_MAP.csv": 17, "EXAM_TYPES.csv": 11,
+csvs = {"UI_FIDELITY_RULES.csv": 38, "FEATURE_MAP.csv": 17, "EXAM_TYPES.csv": 11,
         "HADAF_TEMPLATES.csv": 7, "GAMIFICATION_MAP.csv": 13, "PHASES.csv": 8,
         "LEARNHARNESS_ACTIONS.csv": 32, "EVIDENCE_LEDGER.csv": 10, "OPEN_QUESTIONS.csv": 12,
-        "DESIGN_FEEDBACK.csv": 61, "SCOPE_DECISIONS.csv": 41,
+        "DESIGN_FEEDBACK.csv": 62, "SCOPE_DECISIONS.csv": 42,
         "AI_PANEL_SPEC.csv": 27, "EPM_MINOR_OPTIONS.csv": 7,
         "EXAM_SECTION_TEMPLATES.csv": 7,
         "MIMO_CODE_GEOMETRY.csv": 200, "MIMO_SCREENSHOT_CROSSWALK.csv": 14,
@@ -348,13 +348,14 @@ ck("design:v11:headings", 'id="careerHeading" data-fa="یادگیری برنام
    and ">یادگیری برنامه محور</h3>" in dt and ">یادگیری مبحثی</h3>" in dt,
    "Career Paths / Courses relabelled to program-based / topic-based learning")
 ck("design:v11:cards-courses", "V11_CARDS" in dt and "V11_COURSES" in dt
+   and "V11_CARDS.push" not in dt and 'data-v11="courses:' not in dt
    and all(x in dt for x in ["یادگیری همگام با برنامه آزمون دوازدهم",
                              "یادگیری همگام با برنامه آزمون یازدهم",
                              "یادگیری همگام با برنامه آزمون دهم"])
    and all(x in dt for x in ["زیست دهم", "ریاضی دهم", "شیمی دهم", "فیزیک دهم",
                              "زیست یازدهم", "ریاضی یازدهم", "شیمی یازدهم", "فیزیک یازدهم",
                              "زیست دوازدهم", "ریاضی دوازدهم", "شیمی دوازدهم", "فیزیک دوازدهم"]),
-   "4 big cards (3 grade programs + topic) + 12 subject x grade courses")
+   "3 big program cards (duplicate topic card removed) + 12 subject x grade courses")
 ck("design:v11:certificate", "مدرک پایان دوره" in dt and "۲۲ درصد کامل شده" in dt
    and "2/9" in dt and 'id="poKicker"' in dt and 'id="poTitle"' in dt,
    "certificate card relabelled; path overview is data-driven")
@@ -412,9 +413,9 @@ ck("scope:v9", all(x in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encodi
    ["F-53","F-54","F-55"]),
    "all 3 round-9 decisions + 3 round-9 corrections recorded")
 ck("scope:v11", all(x in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encoding="utf-8") for x in
-   ["MY_STATUS_ONLY_V11","PROGRAM_AND_TOPIC_TRACKS_V11","NO_PROGRAMMING_EMBLEMS_V11"])
+   ["MY_STATUS_ONLY_V11","PROGRAM_AND_TOPIC_TRACKS_V11","NO_PROGRAMMING_EMBLEMS_V11","THREE_CARDS_ONLY_V11"])
    and all(x in (ROOT / "CATALOGS/DESIGN_FEEDBACK.csv").read_text(encoding="utf-8") for x in
-   ["F-59","F-60","F-61"]) and "U12" in (ROOT / "CATALOGS/OPEN_QUESTIONS.csv").read_text(encoding="utf-8"),
+   ["F-59","F-60","F-61","F-62"]) and "U12" in (ROOT / "CATALOGS/OPEN_QUESTIONS.csv").read_text(encoding="utf-8"),
    "all 3 round-11 decisions + 3 corrections + curriculum assumption recorded")
 ck("scope:v10", all(x in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encoding="utf-8") for x in
    ["ORIGINAL_CURVED_ZIGZAG_RESTORED","NUMBERS_REATTRIBUTED","DEEP_CODE_REVIEW_V10"])

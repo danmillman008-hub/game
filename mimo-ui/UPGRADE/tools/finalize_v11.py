@@ -17,7 +17,10 @@ APPEND = {
          "لیگ، شمارش معکوس، نشانهای لیگ، ۵ ردیف رقبا و «Wooden/League» کارت سوم حذف شد؛ فقط «My status / وضعیت من» + ۳ کارت آمار + «آزمونها و امتیازات من» ماند",
          "DESIGN/index.html#leaderboard", "APPLIED"],
         ["F-60", "سرتیترها و کارتها و کورسها کنکوری شوند",
-         "Career Paths → «یادگیری برنامه محور»؛ Courses → «یادگیری مبحثی»؛ ۴ کارت درشت (۳ برنامهٔ پایه + مبحثی)؛ ۱۲ کورس «درس × پایه»",
+         "Career Paths → «یادگیری برنامه محور»؛ Courses → «یادگیری مبحثی»؛ ۳ کارت درشت (۳ برنامهٔ پایه)؛ ۱۲ کورس «درس × پایه»",
+         "DESIGN/index.html#select-path", "APPLIED"],
+        ["F-62", "کارت چهارم «یادگیری مبحثی» در بخش یادگیری برنامه محور اضافی است",
+         "کارت چهارم بطور کامل حذف شد؛ فقط ۳ کارت برنامهٔ پایه ماند. «یادگیری مبحثی» فقط عنوان بخش کورسها در پایین است و تکرار نشد",
          "DESIGN/index.html#select-path", "APPLIED"],
         ["F-61", "نمای مسیر: مدرک پایان دوره، ۲۲ درصد، تاریخهای دو هفتهای، دروس، فصل/درس، بدون آرم برنامهنویسی",
          "۱۰ بازهٔ ۱ آبان..۱۵ اسفند با «دروس: زیست، شیمی، ریاضی، فیزیک»؛ برای کورسها ۶۰ فصل / ۱۸۰ درس؛ تمام ic_badge_*/ic_code_* با وکتور بومی میمو جایگزین شد",
@@ -30,6 +33,8 @@ APPEND = {
          "بازخورد صریح دور یازدهم", "DESIGN/KONKUR_CURRICULUM.json"],
         ["D41", "نشانها", "NO_PROGRAMMING_EMBLEMS_V11", "هیچ ic_badge_*/ic_code_lang_*/ic_code_playground_template_* در UI؛ فقط وکتورهای استخراجشدهٔ میمو",
          "بازخورد صریح دور یازدهم", "CATALOGS/UI_FIDELITY_RULES.csv F35-F37"],
+        ["D42", "کارتهای بخش برنامهمحور", "THREE_CARDS_ONLY_V11", "فقط ۳ کارت درشت؛ هیچ کارت تکراری «یادگیری مبحثی» در بالا نیست",
+         "اصلاحیهٔ کاربر پس از v11", "23_DESIGN_ROUND_11.md §۲"],
     ],
     "UI_FIDELITY_RULES.csv": [
         ["F35", "لیدربورد", "فقط «My status / وضعیت من» + ۳ کارت آمار + کادر آزمونها؛ بدون لیگ/رقبا/شمارش معکوس",
@@ -38,6 +43,8 @@ APPEND = {
          "KONKUR_CURRICULUM.json + F-60/F-61"],
         ["F37", "آیکونها", "بدون ic_badge_*/ic_code_*؛ فقط وکتورهای ARSC میمو (ic_cap*, ic_target, img_brain, ic_sparks_alt, ic_flash_filled, …)",
          "DESIGN/CODE_GEOMETRY.json::vectors"],
+        ["F38", "تعداد کارتهای برنامهمحور", "دقیقاً ۳ کارت درشت (دوازدهم/یازدهم/دهم)؛ «یادگیری مبحثی» فقط یکبار، بهعنوان سرتیتر بخش کورسها",
+         "F-62 / D42 / 23_DESIGN_ROUND_11.md §۲"],
     ],
     "OPEN_QUESTIONS.csv": [
         ["U12", "آیا اسامی دقیق فصل/درس همان سرفصلهای استاندارد کتابهای درسیاند؟",
@@ -83,14 +90,13 @@ DOC23 = r'''# دور یازدهم طراحی — DESIGN v11 (لیدربورد، 
 | `Career Paths` | **«یادگیری برنامه محور»** |
 | `Courses` | **«یادگیری مبحثی»** |
 
-**چهار کارت درشت** (هر کدام یک آیکون ۴۸dp از وکتورهای واقعی میمو، بدون هیچ نشان برنامهنویسی):
+**سه کارت درشت** (هر کدام یک آیکون ۴۸dp از وکتورهای واقعی میمو، بدون هیچ نشان برنامهنویسی):
 
 1. «یادگیری همگام با برنامه آزمون دوازدهم» — `ic_cap_filled`
 2. «یادگیری همگام با برنامه آزمون یازدهم» — `ic_cap`
 3. «یادگیری همگام با برنامه آزمون دهم» — `ic_target`
-4. «یادگیری مبحثی» — `ic_square_rounded` (اسکرول به فهرست کورسها)
 
-> کارت چهارم برای پر کردن همان «۴ آیکون درشت»ای است که خواستید؛ سه تای اول نام برده شدند و چهارم به بخش مبحثی وصل است (`U12` در کنار سایر فرضها ثبت شد).
+> **اصلاحیهٔ کاربر:** کارت چهارمی که «یادگیری مبحثی» نام داشت **حذف شد**، چون همان نام در پایین، عنوانِ خودِ بخش کورسهاست (`F-62` / `D42` / `F38`). «یادگیری مبحثی» حالا فقط **یکبار** و فقط بهعنوان سرتیتر دیده میشود.
 
 **۱۲ کورس** (۴ درس × ۳ پایه، دقیقاً به ترتیبی که نوشتید):
 
@@ -130,7 +136,7 @@ DOC23 = r'''# دور یازدهم طراحی — DESIGN v11 (لیدربورد، 
 
 ## ۶. تحویل
 
-`tools/build_design_v11.py` (از `design_v10_full.html`) → `DESIGN/index.html` ۳۸۷٬۰۰۳ بایت / ۱۴ نما / ۵ تب / ۹۳ وکتور / ۱۱۳ آیکن رسمشده / ۰ قفل یادگیری. `tools/finalize_v11.py` → کاتالوگها/داکیومنتها/منیفست. `verify_upgrade.py` PASS، `check_v11.js` **۷۸ تست / ۰ خطا**، `node --check` OK. تأیید نهایی همچنان **PENDING**؛ هیچ کد محصولی نوشته نشده.
+`tools/build_design_v11.py` (از `design_v10_full.html`) → `DESIGN/index.html` ۱۴ نما / ۵ تب / ۹۳ وکتور / ۱۱۲ آیکن رسمشده / ۰ قفل یادگیری. `tools/finalize_v11.py` → کاتالوگها/داکیومنتها/منیفست. `verify_upgrade.py` PASS، `check_v11.js` **۷۹ تست / ۰ خطا**، `node --check` OK. تأیید نهایی همچنان **PENDING**؛ هیچ کد محصولی نوشته نشده.
 '''
 
 NOTES = r'''# یادداشتهای طراحی — DESIGN v11
@@ -147,7 +153,7 @@ NOTES = r'''# یادداشتهای طراحی — DESIGN v11
 
 ## ۳. دور یازدهم — لیدربورد و محتوا
 
-لیدربورد فقط **«My status / وضعیت من»** + ۳ کارت آمار + «آزمونها و امتیازات من»؛ بلوک `Wooden League / 6d 22h 38m` و هر ۵ ردیف رقیب حذف شد. `Career Paths` → **«یادگیری برنامه محور»**؛ `Courses` → **«یادگیری مبحثی»**. چهار کارت درشت = ۳ برنامهٔ دوازدهم/یازدهم/دهم + مبحثی. ۱۲ کورس = ۴ درس × ۳ پایه. نمای مسیر: «یادگیری برنامه محور» / نام پایه / **«مدرک پایان دوره»** / **«۲۲ درصد کامل شده»** / `2/9` / **۱۰ بازهٔ دو هفتهای ۱ آبان..۱۵ اسفند** با «دروس: زیست، شیمی، ریاضی، فیزیک». کورسها همان نما را با **فصل + درس** (`KONKUR_CURRICULUM.json`: ۶۰ فصل / ۱۸۰ درس) پر میکنند. **هیچ آرم/نشان برنامهنویسی**ای نمایش داده نمیشود؛ فقط وکتورهای بومی میمو.
+لیدربورد فقط **«My status / وضعیت من»** + ۳ کارت آمار + «آزمونها و امتیازات من»؛ بلوک `Wooden League / 6d 22h 38m` و هر ۵ ردیف رقیب حذف شد. `Career Paths` → **«یادگیری برنامه محور»**؛ `Courses` → **«یادگیری مبحثی»**. **سه کارت درشت** = ۳ برنامهٔ دوازدهم/یازدهم/دهم (کارت تکراری «یادگیری مبحثی» حذف شد؛ آن نام فقط سرتیتر بخش کورسهاست). ۱۲ کورس = ۴ درس × ۳ پایه. نمای مسیر: «یادگیری برنامه محور» / نام پایه / **«مدرک پایان دوره»** / **«۲۲ درصد کامل شده»** / `2/9` / **۱۰ بازهٔ دو هفتهای ۱ آبان..۱۵ اسفند** با «دروس: زیست، شیمی، ریاضی، فیزیک». کورسها همان نما را با **فصل + درس** (`KONKUR_CURRICULUM.json`: ۶۰ فصل / ۱۸۰ درس) پر میکنند. **هیچ آرم/نشان برنامهنویسی**ای نمایش داده نمیشود؛ فقط وکتورهای بومی میمو.
 
 ## ۴. مصوبات پابرجا
 
@@ -155,7 +161,7 @@ NOTES = r'''# یادداشتهای طراحی — DESIGN v11
 
 ## ۵. clean-room و وضعیت
 
-هیچ دارایی/کدی از Mimo، همدرس، Hadaf Plus، LearnHarness، EPM یا Habitica کپی نشده. `DESIGN/index.html` از payloadهای استخراجشده رندر میشود: ۱۴ نما / ۵ تب / ۹۳ وکتور / ۱۱۳ آیکن / ۰ خطای jsdom / وریفایر PASS. منتظر **تأیید نهایی**؛ بعدش تازه P0.
+هیچ دارایی/کدی از Mimo، همدرس، Hadaf Plus، LearnHarness، EPM یا Habitica کپی نشده. `DESIGN/index.html` از payloadهای استخراجشده رندر میشود: ۱۴ نما / ۵ تب / ۹۳ وکتور / ۱۱۲ آیکن / ۰ خطای jsdom / وریفایر PASS. منتظر **تأیید نهایی**؛ بعدش تازه P0.
 '''
 
 (UP / "23_DESIGN_ROUND_11.md").write_text(DOC23, encoding="utf-8")
@@ -201,12 +207,12 @@ dl["design_views"] = 14
 dl["design_svg_vectors"] = 93
 dl["bottom_nav_tabs"] = 5
 dl["v11_content"] = ("KONKUR_CURRICULUM.json / KONKUR_CURRICULUM.csv (12 courses x 5 chapters x 3 lessons = "
-                     "12/60/180) + 10 fortnight dates 1 Aban..15 Esfand + 4 big Mimo-icon cards + "
+                     "12/60/180) + 10 fortnight dates 1 Aban..15 Esfand + 3 big Mimo-icon cards + "
                      "My-status-only leaderboard + zero programming emblems")
 cf = m["critical_findings"]
 for x in [
     "v11: leaderboard competition block (Wooden League, countdown, 5 rival rows, league badges) fully removed; only My status + own stats/exams remain",
-    "v11: Career Paths -> یادگیری برنامه محور; Courses -> یادگیری مبحثی; 4 big cards (3 grade programs + topic learning); 12 courses = 4 subjects x 3 grades",
+    "v11: Career Paths -> یادگیری برنامه محور; Courses -> یادگیری مبحثی; 3 big program cards only (duplicate topic card removed); 12 courses = 4 subjects x 3 grades",
     "v11: Path Overview relabelled مدرک پایان دوره / ۲۲ درصد کامل شده / 2-9; 10 biweekly slots from 1 Aban to 15 Esfand (5 months) with دروس: زیست، شیمی، ریاضی، فیزیک",
     "v11: course overviews use 60 فصل / 180 درس from the repo Konkur curriculum instead of JavaScript/HTML/CSS sections; U12 records the naming assumption",
     "v11: ZERO programming emblems — ic_badge_*, ic_code_lang_*, ic_code_playground_template_* replaced by decoded Mimo vectors; everything else stays in place",
@@ -224,7 +230,8 @@ m["design_round_11"] = {
     "leaderboard": "MY_STATUS_ONLY (Wooden League + countdown + 5 rival rows + league badges removed)",
     "headings": {"career": "یادگیری برنامه محور", "courses": "یادگیری مبحثی"},
     "cards": ["یادگیری همگام با برنامه آزمون دوازدهم", "یادگیری همگام با برنامه آزمون یازدهم",
-              "یادگیری همگام با برنامه آزمون دهم", "یادگیری مبحثی"],
+              "یادگیری همگام با برنامه آزمون دهم"],
+    "cards_note": "duplicate 4th «یادگیری مبحثی» card REMOVED (user correction); that label appears only once, as the Courses heading",
     "courses": ["زیست دهم", "ریاضی دهم", "شیمی دهم", "فیزیک دهم",
                 "زیست یازدهم", "ریاضی یازدهم", "شیمی یازدهم", "فیزیک یازدهم",
                 "زیست دوازدهم", "ریاضی دوازدهم", "شیمی دوازدهم", "فیزیک دوازدهم"],
@@ -238,7 +245,7 @@ m["design_round_11"] = {
                    "source": "SOURCE_APPS/hamdars/HELP_CENTER_UX.md §learn-books + repo Konkur content model + standard Iranian textbook سرفصلها",
                    "files": ["DESIGN/KONKUR_CURRICULUM.json", "CATALOGS/KONKUR_CURRICULUM.csv"]},
     "icons": "decoded Mimo vectors ONLY; zero ic_badge_*/ic_code_lang_*/ic_code_playground_template_* in UI",
-    "interactive_prototype": "DESIGN/index.html (14 views / 5 tabs / 93 SVG vectors / 113 painted icons / 0 Learn locks / 0 jsdom errors)",
+    "interactive_prototype": "DESIGN/index.html (14 views / 5 tabs / 93 SVG vectors / 112 painted icons / 0 Learn locks / 0 jsdom errors)",
     "unchanged": ["original curved zigzag path map", "5 tabs / no MAX", "routine + Habitica removed",
                   "Dictate removed", "no UI annotations", "7 labelled exam sections + descriptive answer",
                   "exam architecture / timer / 270 min / پاسخبرگ≠پاسخنامه",
