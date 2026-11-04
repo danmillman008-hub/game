@@ -2,22 +2,22 @@
   "round": "konkur-upgrade-planning",
   "branch": "arena/aebb90b7-game",
   "date": "2026-11-04",
-  "status": "PLAN_ONLY + DESIGN v12.3 REVIEW (v12.2 rejected; exam page rolled back to v12.1 + RTL arrows)",
+  "status": "PLAN_ONLY + DESIGN v12.4 REVIEW (v12.3 rollback to v12.1 + extra exam buttons removed + one-chip timer)",
   "goal": "Upgrade Mimo 9.35 into an Iranian Konkur learning app with strict fidelity to Mimo UI/mechanism/navigation",
   "deliverables": {
     "persian_docs": 25,
     "csv_catalogs": 21,
     "wireframes_html": 2,
     "source_apps": 2,
-    "extracted_assets_files": 1944,
-    "total_bytes": 23852632,
+    "extracted_assets_files": 1947,
+    "total_bytes": 24324456,
     "craft_anything": "vendored docs + 33-id agent adapter + 13 evidence records",
     "verification": "PASS",
     "phases": 8,
     "phase_status": "P0..P4/P6/P7 PLANNED · P5 PARKED (counseling) · awaiting final design approval",
     "interactive_design_prototype": 1,
-    "verification_checks": 241,
-    "design_round": "v12.3 (REVIEW)",
+    "verification_checks": 249,
+    "design_round": "v12.4 (REVIEW)",
     "code_first_geometry": "DESIGN/CODE_GEOMETRY.json (46 vectors / 41 colors / 36 dims / 13 styles / 45 strings / 19 AXML layouts / 80 Compose path classes)",
     "mimo_reference_screenshots": 14,
     "learn_code_evidence": "DESIGN/LEARN_CODE_GEOMETRY.json (150 ARSC strings / 41 vectors / 16 AXML layouts / 1 nav graph / 15 real sections / 272 DEX classes / 68 colors / 62 dimens / 213 styles) + CATALOGS/MIMO_LEARN_SUBSCREENS.csv (868 rows)",
@@ -30,7 +30,7 @@
     "v9_changes": "re-reviewed node code; ONE straight vertical line (no curve/zigzag); corrected 7 code-derived numbers; real charged/mastered bolt vectors; linear unlocked state sequence",
     "v10_changes": "REVERTED v9 single straight line; restored original curved zigzag with real gaps; deeper DEX/test-tracks code review; corrected 2 wrong number attributions",
     "v11_content": "KONKUR_CURRICULUM.json / KONKUR_CURRICULUM.csv (12 courses x 5 chapters x 3 lessons = 12/60/180) + 10 fortnight dates 1 Aban..15 Esfand + 3 big Mimo-icon cards + My-status-only leaderboard + zero programming emblems",
-    "v12_exam_ui": "EXAM_UI_CODE_EVIDENCE.json + EXAM_PAGE_REFERENCES.json — v12.3: v12.2 four-model redesign rejected and reverted to the accepted v12.1 single-CTA Mimo lesson UI; answer sheet / key remain bottom sheets; RTL arrows corrected; ic_survey / ic_cap emblems"
+    "v12_exam_ui": "EXAM_UI_CODE_EVIDENCE.json + EXAM_PAGE_REFERENCES.json — v12.4: exam tool row reduced to پاسخبرگ / پاسخنامه only; X exits; end exam from پاسخبرگ; AI in پاسخنامه; one-chip timer with inline pause/play + stop; no radio circle; accepted v12.1 structure intact"
   },
   "source_hashes": {
     "Mimo_9.35": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
@@ -111,7 +111,10 @@
     "v12.1: BUG FIX — RTL/LTR toggle skipped exv12 screens; hidden .mini badges moved into row labels; per-question bookmarks",
     "v12.3: the v12.2 FOUR exam-page models were REJECTED by the user (answer sheet card placed above the stem made the question body incoherent); exam-run rolled back byte-for-byte to the accepted v12.1 structure at d356963",
     "v12.3: RTL directional arrows fixed — NEXT/ادامه now uses ic_arrow_left (arrowhead LEFT), PREVIOUS and BACK use ic_arrow_right (arrowhead RIGHT); other ic_arrow_* glyphs mirrored only under dir=rtl",
-    "v12.3: cross-checked against mindskip/xzs (学之思) student exam page do.vue — clean question body, separate compact number/time bar, single submit, answers/解析 only after submit; used for understanding only, nothing copied"
+    "v12.3: cross-checked against mindskip/xzs (学之思) student exam page do.vue — clean question body, separate compact number/time bar, single submit, answers/解析 only after submit; used for understanding only, nothing copied",
+    "v12.4: extra exam chips (AI / اتمام آزمون / خروج / توقف / تنظیم مجدد), the flag next to the timer, «رد کردن سؤال», the duplicate «زمان تنظیم نشده» line and the option radio circles were removed at the user's request",
+    "v12.4: the timer is ONE chip — tap to set / pause / resume; while running it grows an inline pause-play + stop pair next to the countdown, no separate control chips",
+    "v12.4: options start with their number (۱.) and the whole card changes colour on selection; AI explanation relocated into the پاسخنامه bottom sheet"
   ],
   "reproduce": [
     "python3 tools/extract_source_apps.py <google_drive_dir> .",
@@ -136,7 +139,9 @@
     "python3 tools/fix_design_v12_1.py .",
     "python3 tools/finalize_v12_1.py .",
     "python3 tools/build_exam_v12_3.py .",
-    "python3 tools/finalize_v12_3.py ."
+    "python3 tools/finalize_v12_3.py .",
+    "python3 tools/build_exam_v12_4.py .",
+    "python3 tools/finalize_v12_4.py ."
   ],
   "limitations": [
     "no runtime/device/screenshots",
@@ -482,7 +487,7 @@
     "final_approval": "PENDING — no product implementation until user says the design is final"
   },
   "design_round_12": {
-    "status": "DESIGN v12 · REVIEW — superseded by v12.1 fixes and the v12.3 rollback (CURRENT)",
+    "status": "DESIGN v12 · REVIEW — superseded by v12.1 fixes, the v12.3 rollback and the v12.4 button cleanup (CURRENT)",
     "trigger": "user: پروتوتایپ بخش آزمون خیلی بد و جدا از اپلیکیشن است، شبیهترش کن به پروتوتایپ اصلی میمو؛ دکمهٔ سؤال بعدی/قبلی را اشتباه گذاشتی؛ ساختار دکمهها و بقیه را از روی اپ اصلی بساز؛ اجازهٔ تغییرات زیاد و حتی ساختارشکنی (نهایت برمیگردیم عقب)",
     "method": "CODE_FIRST / decoded APK layouts, dimens, colors, styles, strings; screenshots VISUAL_CROSSCHECK_ONLY",
     "evidence_file": "DESIGN/EXAM_UI_CODE_EVIDENCE.json",
@@ -555,6 +560,26 @@
       "emblem": "ic_survey (hub) / ic_cap (result) kept from the previous explicit request",
       "tests": "check_v12_3.js (122 checks / 0 errors) + verify_upgrade.py PASS 241/241",
       "unchanged": "all v11.1 acceptances + v12.1 bug fixes + rollback snapshots"
+    },
+    "v12_4_cleanup": {
+      "status": "APPLIED, awaiting final approval",
+      "trigger": "user: خیلی دکمه هارو اضافی گزاشتی … اون خروج رو حدف کن … دایره نیاز نیست … رد کردن سوال اضافیه … دوبار نوشتی … پرچم حزف کن … صرفا یکی روی تایمر بزنه علامت ایست میاد",
+      "script": "tools/build_exam_v12_4.py (runs on tools/design_v12_3_template.html)",
+      "removed": [
+        "lb-chip AI",
+        "lb-chip اتمام آزمون",
+        "lb-chip خروج",
+        "lb-chip توقف",
+        "lb-chip تنظیم مجدد",
+        "ln-report flag",
+        "lk-skip رد کردن سؤال",
+        "timerStateText",
+        "opt-radio"
+      ],
+      "timer": "ONE chip: idle=تنظیم زمان, running/paused=countdown + inline pause/play + stop; tap the chip to pause/resume",
+      "ai": "moved into #keySheet (پاسخنامه); #askAiResultBtn unchanged",
+      "tests": "check_v12_4.js (132 checks / 0 errors) + verify_upgrade.py PASS 249/249",
+      "unchanged": "all v11.1 acceptances + v12.1 bug fixes + v12.3 RTL arrows + rollback snapshots"
     }
   }
 }

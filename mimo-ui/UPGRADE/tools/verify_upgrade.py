@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Fail-closed verification of the Konkur-upgrade planning deliverable (v12.3)."""
+"""Fail-closed verification of the Konkur-upgrade planning deliverable (v12.4)."""
 from __future__ import annotations
 import csv, hashlib, json, re, sys
 from pathlib import Path
@@ -15,10 +15,10 @@ docs = ["README.md", "00_START_HERE.md", "01_CRAFT_ANYTHING_INSTALL.md",
         "13_DESIGN_ROUND_2.md", "14_DESIGN_ROUND_3.md", "15_DESIGN_ROUND_4.md",
         "16_DESIGN_ROUND_5.md", "17_DESIGN_ROUND_6.md",
         "18_DESIGN_ROUND_7.md", "20_DESIGN_ROUND_8.md", "21_DESIGN_ROUND_9.md", "22_DESIGN_ROUND_10.md", "23_DESIGN_ROUND_11.md", "24_DESIGN_ROUND_12.md", "wireframes.html"]
-csvs = {"UI_FIDELITY_RULES.csv": 43, "FEATURE_MAP.csv": 17, "EXAM_TYPES.csv": 11,
+csvs = {"UI_FIDELITY_RULES.csv": 44, "FEATURE_MAP.csv": 17, "EXAM_TYPES.csv": 11,
         "HADAF_TEMPLATES.csv": 7, "GAMIFICATION_MAP.csv": 13, "PHASES.csv": 8,
         "LEARNHARNESS_ACTIONS.csv": 32, "EVIDENCE_LEDGER.csv": 10, "OPEN_QUESTIONS.csv": 13,
-        "DESIGN_FEEDBACK.csv": 67, "SCOPE_DECISIONS.csv": 47,
+        "DESIGN_FEEDBACK.csv": 68, "SCOPE_DECISIONS.csv": 48,
         "AI_PANEL_SPEC.csv": 27, "EPM_MINOR_OPTIONS.csv": 7,
         "EXAM_SECTION_TEMPLATES.csv": 7,
         "MIMO_CODE_GEOMETRY.csv": 200, "MIMO_SCREENSHOT_CROSSWALK.csv": 14,
@@ -128,7 +128,8 @@ ck("design:build-tools", all((ROOT / "tools" / f).is_file() for f in
     "design_v10_full.html", "build_design_v11.py", "design_v11_template.html", "finalize_v11.py",
     "design_v11_full.html", "build_design_v12.py", "design_v12_template.html", "finalize_v12.py",
     "fix_design_v12_1.py", "design_v12_1_template.html", "build_exam_v12_3.py",
-    "design_v12_3_template.html", "finalize_v12_3.py"]),
+    "design_v12_3_template.html", "finalize_v12_3.py", "build_exam_v12_4.py",
+    "design_v12_4_template.html", "finalize_v12_4.py"]),
    "reproducible extract -> build pipeline (v5..v11 archived + v12 current)")
 
 # ---- 14 Mimo reference screenshots (visual cross-check only) ----
@@ -400,12 +401,12 @@ ck("design:v12:no-konkur-exam-skin", all('class="screen konkur" data-screen="'+n
    "the separate konkur skin is GONE from all 3 exam screens")
 ck("design:v12:mimo-navbar", bool(erb) and all(x in erb for x in
    ["chapter_toolbar.xml","lesson_progress_navbar_height=52dp",'class="ln"','class="ln-x"',
-    'data-icon="ic_close"','class="ln-prog"','id="examProgress"','data-icon="ic_flag"','id="timerChip"']),
-   "chapter_toolbar.xml: X | 6dp progress | flag | timer, 52dp")
+    'data-icon="ic_close"','class="ln-prog"','id="examProgress"','id="timerWrap"','id="timerChip"']) and 'data-icon="ic_flag"' not in erb,
+   "chapter_toolbar.xml: X | 6dp progress | ONE timer chip, no flag, 52dp")
 ck("design:v12:choice-cards", bool(erb) and all(x in erb for x in
    ["lesson_interactive_multiplechoice_fragment.xml","rv_multiplechoice_options","choice_list_item.xml",
-    "layout_choice_card_item.xml",'class="lb-choices"','class="opt-radio"',
-    "interaction_hint_single_choice"])
+    "layout_choice_card_item.xml",'class="lb-choices"','class="opt-num"',
+    "interaction_hint_single_choice"]) and 'class="opt-radio"' not in erb
    and "multiplechoice_background_selected.xml" in ev["drawables"],
    "ChoiceView + choice_list_item cards + TextInteractionHint")
 ck("design:v12:feedback", bool(erb) and "lesson_interactive_feedback_bottom_sheet_dialog" in erb
@@ -450,8 +451,8 @@ ck("design:v12.1:qbank", "var QTOTAL=QBANK.length,QI=0,QCHECKED=false,MARKS={};"
 ck("design:v12.1:ai-dynamic", 'setCtx("زمینه: "+q("#examTitle").textContent+" · سؤال "+fa(QI+1)+"' in dt,
    "AI context uses the live question number instead of a hardcoded «سؤال ۳»")
 ck("design:v12.1:rtl", 'qa(".mimo,.exv12",ph)' in dt
-   and 'T.state==="setting"' in dt and dt.count('q("#timerPause").style.display="none"') >= 2,
-   "RTL toggle covers exam screens; timer chips reset in setting state")
+   and 'T.state==="setting"' in dt and dt.count('ctl.hidden=true') >= 2,
+   "RTL toggle covers exam screens; the single timer chip resets in setting state")
 ck("design:v12.1:row-meta", 'className="row-meta"' in dt and ".exv12 .label .row-meta" in dt
    and ".exv12 .nodek .mini" not in dt,
    "hidden .mini badges moved into the row label as Mimo subtitles")
@@ -511,6 +512,41 @@ ck("manifest:v12.3", "v12.3" in man123["status"]
    and any("build_exam_v12_3.py" in c for c in man123["reproduce"])
    and "EXAM_PAGE_REFERENCES.json" in man123["deliverables"].get("v12_exam_ui", ""),
    "MANIFEST advertises v12.3 + its reproduce command")
+
+# ---- DESIGN v12.4: remove the extra exam buttons / ONE timer chip ----
+ck("design:v12.4:chip-cleanup", bool(erb) and dt.count('class="lb-chip"') == 2
+   and all(x not in erb for x in ['id="endExam"', 'id="skipQ"', 'id="timerStateText"',
+                                  'class="ln-report"', 'class="lk-skip"'])
+   and 'data-sheet="exitSheet"' not in erb.split('class="lb-tools"')[1].split('</div>')[0],
+   "only پاسخبرگ / پاسخنامه chips; no AI / end / exit / pause / reset / skip / duplicate status")
+ck("design:v12.4:one-timer-chip", bool(erb) and all(x in erb for x in
+   ['id="timerWrap"', 'id="timerControls"', 'id="timerPause"', 'id="timerReset"',
+    'class="tm-bars"', 'class="tm-play"', 'class="tm-square"'])
+   and "pauseOrResume" in dt and 'if(T.state==="running"||T.state==="paused"){pauseOrResume();return}' in dt,
+   "ONE timer chip: tap to set / pause / resume + inline play/pause & stop next to the countdown")
+ck("design:v12.4:no-radio", 'opt-radio' not in dt
+   and dt.count('<span class="opt-num">') == 4
+   and '.opt.on .opt-num{color:var(--primary)}' in dt,
+   "option starts with its number; the whole card changes colour, no radio circle")
+ck("design:v12.4:ai-relocated", dt.count('id="askAiBtn"') == 1
+   and dt.index('<div class="sheet" id="keySheet"') < dt.index('id="askAiBtn"') < dt.index('<div class="sheet" id="exitSheet"')
+   and 'id="askAiResultBtn"' in dt,
+   "AI explanation lives in the پاسخنامه sheet; one AI button in two places")
+ck("design:v12.4:no-duplicate-timer-text", "timerStateText" not in dt
+   and erb.count('تنظیم زمان') >= 1 and dt.count('id="timerLabel"') == 1,
+   "the timer label appears once; no «زمان تنظیم نشده» duplicate")
+ck("docs:v12.4:log", "v12.4" in (ROOT / "24_DESIGN_ROUND_12.md").read_text(encoding="utf-8")
+   and "تکدکمهای" in (ROOT / "24_DESIGN_ROUND_12.md").read_text(encoding="utf-8"),
+   "round-12 log documents the button cleanup")
+ck("scope:v12.4:catalogs", "F-69" in (ROOT / "CATALOGS/DESIGN_FEEDBACK.csv").read_text(encoding="utf-8")
+   and "D49" in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encoding="utf-8")
+   and "F45" in (ROOT / "CATALOGS/UI_FIDELITY_RULES.csv").read_text(encoding="utf-8"),
+   "button-cleanup round recorded in feedback / decisions / fidelity rules")
+man124 = json.loads((ROOT / "MANIFEST.json").read_text(encoding="utf-8"))
+ck("manifest:v12.4", "v12.4" in man124["status"]
+   and any("build_exam_v12_4.py" in c for c in man124["reproduce"])
+   and "v12.4" in json.dumps(man124.get("design_round_12", {}), ensure_ascii=False),
+   "MANIFEST advertises v12.4 + its reproduce command")
 
 # ---- docs / catalogs ----
 ck("docs:v10:22", "DESIGN v10" in (ROOT / "22_DESIGN_ROUND_10.md").read_text(encoding="utf-8")

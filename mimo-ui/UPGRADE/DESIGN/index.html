@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>طرح رابط کاربری v12.3 — بازگشت به ساختار تأییدشدهٔ صفحهٔ آزمون + فلشهای RTL (Design Review)</title>
+<title>طرح رابط کاربری v12.4 — حذف دکمههای اضافی صفحهٔ آزمون + تایمر تکدکمهای (Design Review)</title>
 <style>
 :root{
 --bg:#F6F7FB;
@@ -578,13 +578,21 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
 .exv12 *{scrollbar-width:thin}
 /* chapter_toolbar.xml : 52dp */
 .exv12 .ln{height:52px;min-height:52px;display:flex;align-items:center;gap:6px;padding:0 10px;background:var(--card);border-bottom:1px solid var(--line);position:relative;z-index:3;flex:0 0 52px}
-.exv12 .ln-x,.exv12 .ln-report{width:40px;height:40px;flex:0 0 40px;border:0;background:transparent;color:var(--weak-icon);display:inline-flex;align-items:center;justify-content:center;padding:0}
-.exv12 .ln-x:hover,.exv12 .ln-report:hover{color:var(--primary)}
+.exv12 .ln-x{width:40px;height:40px;flex:0 0 40px;border:0;background:transparent;color:var(--weak-icon);display:inline-flex;align-items:center;justify-content:center;padding:0}
+.exv12 .ln-x:hover{color:var(--primary)}
 .exv12 .ln-mid{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;align-items:center}
 .exv12 .ln-mid b{font:700 11px/1.2 Tahoma,system-ui,sans-serif;color:var(--text-weak);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .exv12 .ln-prog{width:100%;height:6px;border-radius:999px;background:var(--progress-bg);overflow:hidden}
 .exv12 .ln-prog i{display:block;height:100%;border-radius:999px;background:var(--progress);transition:width .22s ease}
-.exv12 .ln-timer{flex:0 0 auto;font:700 10px/1 Tahoma,system-ui,sans-serif;padding:5px 8px;gap:4px}
+.exv12 .ln-timer{flex:0 0 auto;font:700 11px/1 Tahoma,system-ui,sans-serif;padding:3px 6px;gap:0}
+.exv12 .tm-main{border:0;background:transparent;color:inherit;display:inline-flex;align-items:center;gap:5px;padding:2px 4px;font:inherit;white-space:nowrap}
+.exv12 .tm-main:hover{color:var(--primary)}
+.exv12 .tm-controls{display:inline-flex;align-items:center;gap:3px;border-inline-start:1px solid currentColor;padding-inline-start:6px;margin-inline-start:4px;opacity:.9}
+.exv12 .tm-btn{width:22px;height:22px;flex:0 0 22px;border:0;border-radius:7px;background:rgba(37,39,70,.09);color:inherit;display:inline-flex;align-items:center;justify-content:center;padding:0}
+.exv12 .tm-btn:hover{background:var(--primary);color:#fff}
+.exv12 .tm-bars{display:block;width:3px;height:10px;background:currentColor;transform:translateX(-3px);box-shadow:6px 0 0 currentColor}
+.exv12 .tm-play svg{display:block}
+.exv12 .tm-square{display:block;width:9px;height:9px;border-radius:2px;background:currentColor}
 .exv12 .tag{font:700 10px/1 Tahoma,system-ui,sans-serif;padding:4px 9px}
 /* lesson body / ScrollView */
 .exv12 .lb-body{flex:1;min-height:0;overflow:auto;padding:8px 16px 16px}
@@ -599,18 +607,14 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
 .exv12 .lb-choices{display:flex;flex-direction:column;gap:8px}
 .exv12 .opt{width:100%;min-height:52px;margin:0;padding:12px 14px;border:2px solid transparent;border-radius:12px;background:var(--card);box-shadow:0 1px 2px rgba(37,39,70,.10);display:flex;align-items:center;gap:10px;text-align:right;font:400 15px/1.5 Tahoma,system-ui,sans-serif;color:var(--text)}
 .exv12 .opt:hover{background:var(--card-pressed)}
-.exv12 .opt-radio{width:20px;height:20px;flex:0 0 20px;border:2px solid var(--weak-icon);border-radius:999px;display:inline-flex;align-items:center;justify-content:center}
+.exv12 .opt-num{font:700 15px/1 Tahoma,system-ui,sans-serif;color:var(--text-weak);flex:0 0 auto;min-width:20px}
 .exv12 .opt-txt{flex:1}
-.exv12 .opt-num{font:700 12px/1 Tahoma,system-ui,sans-serif;color:var(--text-weak);background:var(--card-pressed);border-radius:999px;padding:4px 7px;flex:0 0 auto}
 .exv12 .opt.on{border-color:var(--blue);background:var(--card-pressed)}
-.exv12 .opt.on .opt-radio{border-color:var(--blue);background:var(--blue)}
-.exv12 .opt.on .opt-radio:after{content:"";width:8px;height:8px;border-radius:999px;background:#fff}
+.exv12 .opt.on .opt-num{color:var(--primary)}
 .exv12 .opt.correct{border-color:var(--success);background:var(--card)}
-.exv12 .opt.correct .opt-radio{border-color:var(--success);background:var(--success)}
-.exv12 .opt.correct .opt-radio:after{content:"";width:8px;height:8px;border-radius:999px;background:#fff}
+.exv12 .opt.correct .opt-num{color:var(--success)}
 .exv12 .opt.wrong{border-color:var(--error);background:var(--card)}
-.exv12 .opt.wrong .opt-radio{border-color:var(--error);background:var(--error)}
-.exv12 .opt.wrong .opt-radio:after{content:"";width:8px;height:8px;border-radius:999px;background:#fff}
+.exv12 .opt.wrong .opt-num{color:var(--error)}
 /* lesson_interactive_feedback_bottom_sheet_dialog.xml */
 .exv12 .lb-feedback{display:flex;gap:10px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-right:4px solid var(--success);border-radius:12px;padding:12px;margin:14px 0 0;box-shadow:0 2px 0 var(--card-pressed)}
 .exv12 .lb-feedback.bad{border-right-color:var(--error)}
@@ -631,7 +635,6 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
 .exv12 .lk-cta{flex:1;min-width:140px;height:52px;border:0;border-radius:12px;background:var(--primary);color:#fff;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 3px 0 var(--primary-hi);font:700 16px/1 Tahoma,system-ui,sans-serif}
 .exv12 .lk-cta:active{transform:translateY(2px);box-shadow:0 1px 0 var(--primary-hi)}
 .exv12 .lk-cta b{font-weight:700;letter-spacing:.5px}
-.exv12 .lk-skip{align-self:center;border:0;background:transparent;color:var(--text-weak);font:400 11px/1 Tahoma,system-ui,sans-serif;text-decoration:underline;padding:2px 6px}
 /* ---- exam hub: Mimo list rows instead of a detached 3-column node grid ---- */
 .exv12 .appbar{background:var(--card);border-bottom:1px solid var(--line);padding:0 16px;height:56px;min-height:56px;margin:0;display:flex;align-items:center;justify-content:space-between}
 .exv12 .appbar b{font:700 18px/1.2 Tahoma,system-ui,sans-serif;color:var(--text)}
@@ -681,7 +684,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
 <body>
 <header class="top">
   <div>
-    <h1>طرح رابط کاربری — دور دوازدهم <span class="ver">DESIGN v12.3 · REVIEW</span></h1>
+    <h1>طرح رابط کاربری — دور دوازدهم <span class="ver">DESIGN v12.4 · REVIEW</span></h1>
     <p>بازآفرینی ۱۰۰٪ بخشهای اصلی میمو <b>از روی کد/مهندسی معکوس</b> · <b>دور دوازدهم:</b> سطوح آزمون از روی لایههای واقعی میمو بازسازی شدند: <code>chapter_toolbar.xml</code> (X + نوار پیشرفت ۶dp + پرچم)، <code>lesson_interactive_multiplechoice_fragment.xml</code>، <code>choice_list_item.xml</code> و <code>interaction_keyboard_view.xml</code> (<b>یک دکمهٔ بنفش تمامعرض CONTINUE</b> + دکمههای مربعی ۴۸dp). دو دکمهٔ هموزن «سؤال قبل / سؤال بعد» و نوار ۷ دکمهای حذف شدند؛ پاسخبرگ، پاسخنامه، AI و تایمر در ردیف چیپهای آرام و پاسخنامهٔ تشریحی بهصورت پنل feedback میمو نمایش داده میشوند. معماری اورجینال قوسدار، ۵ تب، ۷ بخش آزمون، ۲۷۰ دقیقهٔ ثابت و قفلها دستنخوردهاند. اسکرینشاتها فقط چک بصری.</p>
   </div>
   <div style="display:flex;gap:7px;flex-wrap:wrap">
@@ -923,21 +926,26 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
         <div class="ln" data-code="chapter_toolbar.xml · lesson_progress_navbar_height=52dp · pb_chapter=6dp">
           <button class="ln-x" data-sheet="exitSheet" aria-label="خروج"><span data-icon="ic_close" data-size="24" data-mono="1"></span></button>
           <div class="ln-mid"><b id="examTitle">آزمون جامع کنکور</b><div class="ln-prog" data-code="ProgressBarChapter / progress_bar_chapter.xml"><i id="examProgress" style="width:5%"></i></div></div>
-          <button class="timerchip ln-timer" id="timerChip" data-code="timer ONLY inside exam · comprehensive fixed at 270 min"><span data-icon="ic_clock_black_24dp" data-size="16" data-mono="1"></span><span id="timerLabel">تنظیم زمان</span></button>
-          <button class="ln-report" data-sheet="paletteSheet" aria-label="پاسخبرگ"><span data-icon="ic_flag" data-size="22" data-mono="1"></span></button>
+          <div class="timerchip ln-timer" id="timerWrap" data-code="timer ONLY inside exam · ONE chip: tap to set / pause / resume · comprehensive fixed 270 min">
+            <button class="tm-main" id="timerChip" aria-label="تنظیم زمان"><span data-icon="ic_clock_black_24dp" data-size="16" data-mono="1"></span><span id="timerLabel">تنظیم زمان</span></button>
+            <span class="tm-controls" id="timerControls" hidden>
+              <button class="tm-btn" id="timerPause" aria-label="توقف تایمر"><span class="tm-bars"></span><span class="tm-play" data-icon="ic_play" data-size="12" data-mono="1" hidden></span></button>
+              <button class="tm-btn" id="timerReset" aria-label="پاک کردن تایمر"><span class="tm-square"></span></button>
+            </span>
+          </div>
         </div>
 
         <!-- ScrollView nsv_multiplechoice_lesson_content / LessonDescriptionView / ChoiceView -->
         <div class="lb-body" data-code="nsv_multiplechoice_lesson_content · layout_lesson_description · lesson_multiplechoice_view">
-          <div class="lb-step"><span id="examStep">سؤال ۱ از ۲۰</span><span id="timerStateText">زمان تنظیم نشده</span></div>
+          <div class="lb-step"><span id="examStep">سؤال ۱ از ۲۰</span></div>
           <div class="lb-subject" id="examSubject"><span class="lb-dot"></span>زیست<span class="lb-sep">·</span>سمها<span class="lb-sep">·</span>دشواری متوسط</div>
           <h2 class="qtext" id="qText" data-code="LessonDescriptionView · TextH2 20sp / TextP1 18sp">کدامیک از گزینههای زیر دربارهٔ «سمها» درست است؟ اگر پاسخ را نمیدانید میتوانید علامت بزنید و بعداً برگردید.</h2>
           <div class="lb-hint" data-code="tv_multiplechoice_hint · interaction_hint_single_choice = Tap the correct answer"><span data-icon="ic_help" data-size="14" data-mono="1"></span>گزینهٔ درست را انتخاب کنید</div>
           <div class="lb-choices" id="exChoices" data-code="rv_multiplechoice_options · choice_list_item.xml · layout_choice_card_item.xml">
-            <button class="opt" data-opt="1"><span class="opt-radio"></span><span class="opt-txt">گزینهٔ اول</span><span class="opt-num">۱</span></button>
-            <button class="opt" data-opt="2"><span class="opt-radio"></span><span class="opt-txt">گزینهٔ دوم</span><span class="opt-num">۲</span></button>
-            <button class="opt" data-opt="3"><span class="opt-radio"></span><span class="opt-txt">گزینهٔ سوم</span><span class="opt-num">۳</span></button>
-            <button class="opt" data-opt="4"><span class="opt-radio"></span><span class="opt-txt">گزینهٔ چهارم</span><span class="opt-num">۴</span></button>
+            <button class="opt" data-opt="1"><span class="opt-num">۱.</span><span class="opt-txt">گزینهٔ اول</span></button>
+            <button class="opt" data-opt="2"><span class="opt-num">۲.</span><span class="opt-txt">گزینهٔ دوم</span></button>
+            <button class="opt" data-opt="3"><span class="opt-num">۳.</span><span class="opt-txt">گزینهٔ سوم</span></button>
+            <button class="opt" data-opt="4"><span class="opt-num">۴.</span><span class="opt-txt">گزینهٔ چهارم</span></button>
           </div>
           <div class="lb-feedback" id="exFeedback" hidden data-code="lesson_interactive_feedback_bottom_sheet_dialog.xml">
             <span class="fb-ic" data-icon="ic_check_white" data-size="18" data-mono="1"></span>
@@ -945,25 +953,19 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
           </div>
           <div id="examFinished"></div>
           <div class="hint" id="policyHint" hidden></div>
-          <div class="lb-tools" data-code="lesson_skip / report_lesson / exam utilities (quiet chips, not a scrolling button bar)">
+          <div class="lb-tools" data-code="only پاسخبرگ / پاسخنامه chips remain · exit via chapter-toolbar X · end exam via پاسخبرگ · AI via پاسخنامه">
             <button class="lb-chip" id="answerSheetBtn" data-sheet="paletteSheet"><span data-icon="ic_list_bulleted" data-size="16" data-mono="1"></span>پاسخبرگ</button>
             <button class="lb-chip" id="answerKeyBtn" data-sheet="keySheet"><span data-icon="ic_file" data-size="16" data-mono="1"></span>پاسخنامه</button>
-            <button class="lb-chip" id="askAiBtn"><span data-icon="ic_magic_wand" data-size="16" data-mono="1"></span>توضیح با هوش مصنوعی</button>
-            <button class="lb-chip" id="endExam"><span data-icon="ic_task_completed" data-size="16" data-mono="1"></span>اتمام آزمون</button>
-            <button class="lb-chip" id="timerPause" style="display:none"><span data-icon="ic_play" data-size="16" data-mono="1"></span><span id="timerPauseLabel">توقف</span></button>
-            <button class="lb-chip" id="timerReset" style="display:none"><span data-icon="ic_settings" data-size="16" data-mono="1"></span>تنظیم مجدد</button>
-            <button class="lb-chip" data-sheet="exitSheet"><span data-icon="ic_close" data-size="16" data-mono="1"></span>خروج</button>
           </div>
         </div>
 
         <!-- interaction_keyboard_view.xml / run_button_view.xml : NO prev/next pill pair -->
-        <div class="lk" data-code="interaction_keyboard_view.xml · interaction_keyboard_height=68dp · run_button_view.xml">
+        <div class="lk" data-code="interaction_keyboard_view.xml · run_button_view.xml · lesson_skip=Skip is handled by «ادامه» with no selection">
           <div class="lk-row">
             <button class="lk-square" id="prevQ" aria-label="سؤال قبل" data-code="btn_undo · 48dp square"><span data-icon="ic_arrow_right" data-arrow="prev" data-size="22" data-mono="1"></span></button>
             <button class="lk-square" id="markQ" aria-label="علامتگذاری" data-code="btn_reset · 48dp square"><span data-icon="bookmark" data-size="20" data-mono="1"></span></button>
             <button class="lk-cta" id="nextQ" data-code="btn_continue_big / btn_submit · lesson_continue=Continue · lesson_submit=Submit"><b id="nextQLabel">ادامه</b><span data-icon="ic_arrow_left" data-arrow="next" data-size="18" data-mono="1"></span></button>
           </div>
-          <button class="lk-skip" id="skipQ" data-code="lesson_skip=Skip">رد کردن سؤال</button>
         </div>
       </section>
 
@@ -1065,7 +1067,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
           <div>سؤال ۳ ← <b>گزینهٔ ۲</b> · پاسخ شما: ۲ ✓</div><div>سؤال ۴ ← <b>گزینهٔ ۴</b> · نزده</div>
           <div>… تا سؤال ۲۰ · کلید نسخهٔ </div>
         </div>
-        <div class="krow" style="margin:12px 0 0"><button class="btn primary" data-close="keySheet">بستن</button></div>
+        <div class="krow" style="margin:12px 0 0"><button class="btn primary" data-close="keySheet">بستن</button><button class="btn" id="askAiBtn"><span data-icon="ic_magic_wand" data-size="14" data-mono="1"></span>توضیح با هوش مصنوعی</button></div>
       </div>
       <div class="sheet" id="exitSheet"><div class="handle"></div><h4>خروج از آزمون؟</h4><p class="note">پاسخهای تا این لحظه ذخیره میشوند.</p><div class="krow" style="margin:0"><button class="btn primary" data-close="exitSheet" data-nav="exam-hub">خروج و ذخیره</button><button class="btn" data-close="exitSheet">ادامهٔ آزمون</button></div></div>
       <div class="sheet" id="historySheet"><div class="handle"></div><h4>تاریخچهٔ گفتگوها</h4><div id="histList"></div><div class="krow" style="margin:10px 0 0"><button class="btn primary" id="newChat">＋ گفتگوی تازه</button><button class="btn" data-close="historySheet">بستن</button></div></div>
@@ -1188,7 +1190,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
 </div>
 
 <footer class="foot-note">
-⚠️ این <b>طرح دور دوازدهم v12.3</b> است، نه محصول. گرههای مسیر یادگیری مستقیماً از <code>NODE_CODE_GEOMETRY.json</code> (جداول ARSC، <code>pathData</code>، شِیپها، <code>test-tracks.json</code> و ۹۲ کلاس PathMap DEX) رندر شدند؛ ۱۴ اسکرینشات فقط <b>چک بصری</b>اند. روتین روزانه و ایدهٔ امتیازدهیاش بهکل حذف شد، دیکته حذف شد، یادداشتهای توضیحی داخل UI پاک شدند و ظاهر آزمونها فقط با آیکون/رنگ میمو نزدیکتر شد. در دور دهم درخواست خط صاف پس گرفته شد و <b>معماری اورجینال قوسدار</b> با کاوش عمیقتر کد بازسازی شد. در دور یازدهم محتوای لیدربورد/مسیرها/کورسها کنکوری و بدون نشانهای برنامهنویسی شد. در دور دوازدهم سطوح آزمون با معماری واقعی صفحهٔ درس/کوییز میمو هماهنگ شدند. <b>v12.3:</b> چهارمدل v12.2 بهدلیل قاتیشدن پاسخبرگ با بدنهٔ سؤال <b>رد و به همان ساختار v12.1 برگردانده شد</b>؛ پاسخبرگ و پاسخنامه همچنان <b>کشوی پایین صفحه</b>اند، و فلشها در RTL اصلاح شدند (بعدی ←، قبلی/بازگشت →). نسخههای <b>DESIGN v6</b> و <b>DESIGN v7</b> بایگانی حسابرسیاند. «وارد کردن کلید API» فقط یک یادداشت است و هیچ صفحۀ تنظیماتی طراحی نشده. هیچ کد محصولی نوشته نشده است.
+⚠️ این <b>طرح دور دوازدهم v12.4</b> است، نه محصول. گرههای مسیر یادگیری مستقیماً از <code>NODE_CODE_GEOMETRY.json</code> (جداول ARSC، <code>pathData</code>، شِیپها، <code>test-tracks.json</code> و ۹۲ کلاس PathMap DEX) رندر شدند؛ ۱۴ اسکرینشات فقط <b>چک بصری</b>اند. روتین روزانه و ایدهٔ امتیازدهیاش بهکل حذف شد، دیکته حذف شد، یادداشتهای توضیحی داخل UI پاک شدند و ظاهر آزمونها فقط با آیکون/رنگ میمو نزدیکتر شد. در دور دهم درخواست خط صاف پس گرفته شد و <b>معماری اورجینال قوسدار</b> با کاوش عمیقتر کد بازسازی شد. در دور یازدهم محتوای لیدربورد/مسیرها/کورسها کنکوری و بدون نشانهای برنامهنویسی شد. در دور دوازدهم سطوح آزمون با معماری واقعی صفحهٔ درس/کوییز میمو هماهنگ شدند. <b>v12.3:</b> چهارمدل v12.2 بهدلیل قاتیشدن پاسخبرگ با بدنهٔ سؤال <b>رد و به همان ساختار v12.1 برگردانده شد</b>؛ پاسخبرگ و پاسخنامه همچنان <b>کشوی پایین صفحه</b>اند، و فلشها در RTL اصلاح شدند (بعدی ←، قبلی/بازگشت →). <b>v12.4:</b> چیپهای «توضیح با هوش مصنوعی / اتمام آزمون / خروج / توقف / تنظیم مجدد»، پرچم کنار تایمر، «رد کردن سؤال»، متن تکراری «زمان تنظیم نشده» و دایرهٔ رادیویی گزینهها حذف شدند؛ تایمر حالا <b>یک دکمهٔ واحد</b> است که کنار زمانش علامت توقف/پلی و استاپ میگیرد. نسخههای <b>DESIGN v6</b> و <b>DESIGN v7</b> بایگانی حسابرسیاند. «وارد کردن کلید API» فقط یک یادداشت است و هیچ صفحۀ تنظیماتی طراحی نشده. هیچ کد محصولی نوشته نشده است.
 </footer>
 <div class="toast" id="toast"></div>
 
@@ -1292,7 +1294,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
   function openExam(n){
     EXAM_KIND=n.dataset.kind||"normal";q("#examTitle").textContent=n.dataset.exam;
     QI=0;MARKS={};q("#examFinished").innerHTML="";resetOptions();renderQuestion();
-    T.state="idle";clearInterval(T.timer);T.timer=null;
+    T.state="idle";clearInterval(T.timer);T.timer=null;render();
     applyPolicy();go("exam-run");toast("وارد «"+n.dataset.exam+"» شدید — "+(POLICY[EXAM_KIND]||POLICY.normal).label);
   }
   var ehRows=qa('[data-screen="exam-hub"] .grid3 > div');
@@ -1324,17 +1326,26 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
   });
   applyPolicy();
 
-  /* ---------- timer state machine ---------- */
+  /* ---------- timer state machine · v12.4: ONE chip, no extra control chips ---------- */
   var T={state:"idle",remaining:0,total:0,timer:null,endAt:0};
-  var chip=q("#timerChip"),label=q("#timerLabel"),stateText=q("#timerStateText");
+  var wrap=q("#timerWrap"),chip=q("#timerChip"),label=q("#timerLabel"),ctl=q("#timerControls");
   function fmt(s){var m=Math.floor(s/60),x=s%60;return fa(("0"+m).slice(-2))+":"+fa(("0"+x).slice(-2))}
+  function pauseOrResume(){
+    if(T.state==="running"){T.remaining=Math.max(0,Math.ceil((T.endAt-Date.now())/1000));T.state="paused";clearInterval(T.timer);T.timer=null;toast("تایمر متوقف شد")}
+    else if(T.state==="paused"){T.endAt=Date.now()+T.remaining*1000;T.state="running";T.timer=setInterval(tick,250);toast("ادامهٔ تایمر")}
+    render();
+  }
   function render(){
-    chip.classList.remove("running","finished");
-    if(T.state==="idle"){label.textContent="تنظیم زمان";stateText.textContent="زمان تنظیم نشده";q("#timerPause").style.display="none";q("#timerReset").style.display="none"}
-    else if(T.state==="setting"){label.textContent="تنظیم زمان";stateText.textContent="در حال تنظیم";q("#timerPause").style.display="none";q("#timerReset").style.display="none"}
-    else if(T.state==="running"){label.textContent=fmt(T.remaining);chip.classList.add("running");stateText.textContent="زمان معکوس در حال اجرا";q("#timerPause").style.display="";q("#timerReset").style.display="";q("#timerPauseLabel").textContent="توقف"}
-    else if(T.state==="paused"){label.textContent=fmt(T.remaining);stateText.textContent="متوقف شده";q("#timerPause").style.display="";q("#timerReset").style.display="";q("#timerPauseLabel").textContent="ادامه"}
-    else if(T.state==="finished"){label.textContent=fmt(0);chip.classList.add("finished");stateText.textContent="زمان تمام شد";q("#timerPause").style.display="none";q("#timerReset").style.display=""}
+    wrap.classList.remove("running","finished");
+    var pb=q("#timerPause"),bars=pb.querySelector(".tm-bars"),play=pb.querySelector(".tm-play");
+    if(T.state==="idle"||T.state==="setting"){label.textContent="تنظیم زمان";ctl.hidden=true}
+    else if(T.state==="running"){
+      label.textContent=fmt(T.remaining);wrap.classList.add("running");ctl.hidden=false;
+      pb.classList.remove("is-paused");pb.setAttribute("aria-label","توقف تایمر");bars.hidden=false;play.hidden=true;
+    } else if(T.state==="paused"){
+      label.textContent=fmt(T.remaining);wrap.classList.add("running");ctl.hidden=false;
+      pb.classList.add("is-paused");pb.setAttribute("aria-label","ادامهٔ تایمر");bars.hidden=true;play.hidden=false;
+    } else if(T.state==="finished"){label.textContent=fmt(0);wrap.classList.add("finished");ctl.hidden=true}
   }
   function tick(){if(T.state!=="running")return;T.remaining=Math.max(0,Math.ceil((T.endAt-Date.now())/1000));if(T.remaining===0)finishExam("زمان تمام شد (ثبت خودکار)");render()}
   function finishExam(reason){
@@ -1347,7 +1358,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
     else toast("آزمون به پایان رسید — پاسخبرگ و پاسخنامه آمادهاند");
   }
   chip.addEventListener("click",function(){
-    if(T.state==="running"||T.state==="paused"){toast("تایمر در حال اجراست؛ از «تنظیم مجدد» استفاده کنید");return}
+    if(T.state==="running"||T.state==="paused"){pauseOrResume();return}
     q("#timerSheet").classList.add("on");T.state="setting";
     if(EXAM_KIND==="comprehensive"){q("#timerMinutes").value=270;q("#timerMinutes").readOnly=true;q("#timerFixedHint").textContent="زمان ثابت ۲۷۰ دقیقه (آزمون جامع) — غیرقابل تغییر"}
     else{q("#timerMinutes").readOnly=false;q("#timerFixedHint").textContent="عدد دلخواه بین ۱ تا ۳۰۰ دقیقه"}
@@ -1361,13 +1372,11 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
     q("#timerSheet").classList.remove("on");q("#examFinished").innerHTML="";resetOptions();
     toast("شروع شد: "+fa(m)+" دقیقه معکوس");render();
   });
-  q("#timerPause").addEventListener("click",function(){
-    if(T.state==="running"){T.remaining=Math.max(0,Math.ceil((T.endAt-Date.now())/1000));T.state="paused";clearInterval(T.timer);T.timer=null;toast("تایمر متوقف شد")}
-    else if(T.state==="paused"){T.endAt=Date.now()+T.remaining*1000;T.state="running";T.timer=setInterval(tick,250);toast("ادامهٔ تایمر")}render();
-  });
-  q("#timerReset").addEventListener("click",function(){
-    clearInterval(T.timer);T.timer=null;T.state="idle";T.remaining=0;T.total=0;
-    q("#examFinished").innerHTML="";resetOptions();q("#timerSheet").classList.add("on");toast("زمان پاک شد — دوباره عدد بدهید");render();
+  q("#timerPause").addEventListener("click",function(e){e.stopPropagation();pauseOrResume()});
+  q("#timerReset").addEventListener("click",function(e){
+    e.stopPropagation();clearInterval(T.timer);T.timer=null;T.state="idle";T.remaining=0;T.total=0;
+    q("#examFinished").innerHTML="";resetOptions();q("#timerSheet").classList.remove("on");
+    toast("تایمر پاک شد");render();
   });
   function resetOptions(){qa(".opt").forEach(function(o){o.style.pointerEvents="";o.style.opacity="";o.classList.remove("on","correct","wrong")})}
   /* ============ v12.1 · Mimo lesson_interactive question flow (corrected) ============
@@ -1437,7 +1446,6 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
     QI=Math.min(QTOTAL-1,QI+1);renderQuestion();toast("سؤال بعدی · "+fa(QI+1)+" از "+fa(QTOTAL));
   });
   q("#prevQ").addEventListener("click",function(){QI=Math.max(0,QI-1);renderQuestion();toast("سؤال قبل · "+fa(QI+1)+" از "+fa(QTOTAL))});
-  q("#skipQ").addEventListener("click",function(){QI=Math.min(QTOTAL-1,QI+1);renderQuestion();toast("سؤال رد شد")});
   q("#markQ").addEventListener("click",function(){
     if(MARKS[QI])delete MARKS[QI];else MARKS[QI]=true;
     q("#markQ").classList.toggle("marked",!!MARKS[QI]);
@@ -1445,7 +1453,6 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
   });
   renderQuestion();
   q("#submitExam").addEventListener("click",function(){q("#paletteSheet").classList.remove("on");finishExam("پاسخها ثبت شد")});
-  q("#endExam").addEventListener("click",function(){finishExam("آزمون به پایان رسید")});
   var pal=q("#palette");for(var i=1;i<=20;i++){
     var d=document.createElement("div");d.innerHTML="<span>"+fa(i)+"</span>"+(i<15?"<small>"+fa((i%4)+1)+"</small>":"<small>—</small>");
     if(i<15)d.className="done";if(i===3)d.className="cur";pal.appendChild(d);
