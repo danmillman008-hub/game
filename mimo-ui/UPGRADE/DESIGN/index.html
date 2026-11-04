@@ -571,8 +571,10 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
 
 
 /* ---- v12 · EXAM surfaces rebuilt from decoded Mimo lesson layouts ---- */
-.exv12{direction:rtl;background:var(--bg);display:none;flex-direction:column;overflow:hidden}
+.exv12{direction:rtl;background:var(--bg);display:none;flex-direction:column;overflow:auto;padding:0}
 .exv12.on{display:flex}
+/* only exam-run owns an internal scroller (.lb-body) + pinned footer (.lk); the other two must scroll */
+.exv12[data-screen="exam-run"]{overflow:hidden}
 .exv12 *{scrollbar-width:thin}
 /* chapter_toolbar.xml : 52dp */
 .exv12 .ln{height:52px;min-height:52px;display:flex;align-items:center;gap:6px;padding:0 10px;background:var(--card);border-bottom:1px solid var(--line);position:relative;z-index:3;flex:0 0 52px}
@@ -585,7 +587,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
 .exv12 .ln-timer{flex:0 0 auto;font:700 10px/1 Tahoma,system-ui,sans-serif;padding:5px 8px;gap:4px}
 .exv12 .tag{font:700 10px/1 Tahoma,system-ui,sans-serif;padding:4px 9px}
 /* lesson body / ScrollView */
-.exv12 .lb-body{flex:1;overflow:auto;padding:8px 16px 16px}
+.exv12 .lb-body{flex:1;min-height:0;overflow:auto;padding:8px 16px 16px}
 .exv12 .lb-step{display:flex;justify-content:space-between;align-items:center;gap:10px;font:400 11px/1.5 Tahoma,system-ui,sans-serif;color:var(--text-weak);margin:8px 0 14px}
 .exv12 .lb-subject{display:inline-flex;align-items:center;gap:6px;font:700 11px/1.3 Tahoma,system-ui,sans-serif;color:var(--primary);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 10px;margin:0 0 14px}
 .exv12 .lb-dot{width:6px;height:6px;border-radius:999px;background:var(--progress)}
@@ -639,15 +641,16 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
 .exv12 .eh-hero b{font:700 18px/1.3 Tahoma,system-ui,sans-serif;color:var(--text)}
 .exv12 .eh-hero p{margin:4px 0 0;font:400 12px/1.6 Tahoma,system-ui,sans-serif;color:var(--text-weak)}
 .exv12 .chips{padding:4px 16px 10px}
+.exv12 .chips .chip{cursor:pointer;border:0;user-select:none}
 .exv12 .chip{font:700 11px/1 Tahoma,system-ui,sans-serif}
 .exv12 .sec{font:700 13px/1.3 Tahoma,system-ui,sans-serif;color:var(--text);margin:18px 16px 2px}
 .exv12 .cat-meta{background:transparent;border:0;border-radius:0;padding:0;font:400 11px/1.75 Tahoma,system-ui,sans-serif;color:var(--text-weak);margin:0 16px 10px}
 .exv12 .cat-meta b{color:var(--primary)}
 .exv12 .grid3{display:flex;flex-direction:column;gap:8px;padding:0 16px}
-.exv12 .grid3>div{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;box-shadow:0 2px 0 var(--card-pressed);cursor:pointer}
+.exv12 .grid3>div{display:flex;align-items:center;gap:12px;position:relative;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;box-shadow:0 2px 0 var(--card-pressed);cursor:pointer}
 .exv12 .grid3>div:hover{border-color:var(--primary)}
 .exv12 .nodek{width:44px;height:44px;flex:0 0 44px;border-radius:12px;background:var(--card-pressed);border:0;box-shadow:none;display:flex;align-items:center;justify-content:center;color:var(--primary);position:static;padding:0}
-.exv12 .nodek .mini{position:static;display:none}
+.exv12 .label .row-meta{display:block;font:400 10px/1.4 Tahoma,system-ui,sans-serif;color:var(--text-weak);margin-top:3px}
 .exv12 .label{text-align:right;font:700 12px/1.4 Tahoma,system-ui,sans-serif;color:var(--text);margin:0;min-height:0;flex:1}
 .exv12 .progress{margin:14px 16px}
 /* ---- exam result: Mimo celebration ---- */
@@ -659,6 +662,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
 .exv12 .card b{font:700 14px/1.4 Tahoma,system-ui,sans-serif;color:var(--text)}
 .exv12 .kv{font:400 12px/1.5 Tahoma,system-ui,sans-serif}
 .exv12 .wrong{background:var(--card-pressed);border:1px solid var(--line);border-radius:12px;padding:9px 11px;font:400 11.5px/1.9 Tahoma,system-ui,sans-serif}
+.exv12 #examFinished .banner{margin:14px 0 0}
 .exv12 .qfoot{position:static;display:flex;flex-wrap:wrap;gap:8px;overflow:visible;margin:14px 16px;padding:0;background:transparent;border:0}
 .exv12 .qfoot .btn{font:700 12px/1 Tahoma,system-ui,sans-serif;padding:10px 14px;border-radius:12px;color:var(--text);background:var(--card);border:1px solid var(--line);white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
 .exv12 .qfoot .btn:hover{border-color:var(--primary);color:var(--primary)}
@@ -870,7 +874,16 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
           <div class="eh-art"><span data-icon="ic_mimo_mascot" data-size="48"></span></div>
           <div><b>آزمونها</b><p>هر آزمون، یک قدم نزدیکتر به هدف کنکور</p></div>
         </div>
-        <div class="chips"><span class="chip on">همه</span><span class="chip">جامع</span><span class="chip">زماندار</span><span class="chip">تکدرسی</span><span class="chip">مبحثی</span><span class="chip">این ماه</span><span class="chip">تحلیلی</span><span class="chip">جمع بندی</span></div>
+        <div class="chips" data-code="Mimo filter chips — functional section filters">
+          <button type="button" class="chip on" data-filter="all">همه</button>
+          <button type="button" class="chip" data-filter="0">جامع</button>
+          <button type="button" class="chip" data-filter="1">زماندار</button>
+          <button type="button" class="chip" data-filter="2">تکدرسی</button>
+          <button type="button" class="chip" data-filter="2">مبحثی</button>
+          <button type="button" class="chip" data-filter="3">این ماه</button>
+          <button type="button" class="chip" data-filter="4">تحلیلی</button>
+          <button type="button" class="chip" data-filter="5,6">جمع بندی</button>
+        </div>
         <div class="sec">۱ · آزمونهای جامع</div>
         <div class="cat-meta">قالب ثابت: <b>زمان ثابت ۲۷۰ دقیقه</b> · ۲۰۰–۴۰۰ سؤال · نمرهٔ منفی ⅓ · «زمان خالص آزمون» · پاسخنامه در پایان آزمون باز میشود</div>
         <div class="grid3"><div><div class="nodek" data-exam="آزمون جامع کنکور" data-kind="comprehensive"><span data-icon="ic_trophy" data-size="28" data-mono="1"></span><span class="mini">۲۰۰ سؤال</span></div><div class="label">آزمون جامع<br>کنکور</div></div><div><div class="nodek" data-exam="آزمون جامع تجربی" data-kind="comprehensive"><span data-icon="ic_trophy" data-size="28" data-mono="1"></span><span class="mini">زمان ثابت</span></div><div class="label">جامع<br>تجربی</div></div><div><div class="nodek" data-exam="آزمون جامع ریاضی" data-kind="comprehensive"><span data-icon="ic_trophy" data-size="28" data-mono="1"></span><span class="mini">زمان ثابت</span></div><div class="label">جامع<br>ریاضی</div></div></div>
@@ -900,14 +913,14 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
         <!-- chapter_toolbar.xml : 52dp · btn_lesson_close / pb_chapter / btn_lesson_report -->
         <div class="ln" data-code="chapter_toolbar.xml · lesson_progress_navbar_height=52dp · pb_chapter=6dp">
           <button class="ln-x" data-sheet="exitSheet" aria-label="خروج"><span data-icon="ic_close" data-size="24" data-mono="1"></span></button>
-          <div class="ln-mid"><b id="examTitle">آزمون جامع کنکور</b><div class="ln-prog" data-code="ProgressBarChapter / progress_bar_chapter.xml"><i id="examProgress" style="width:15%"></i></div></div>
+          <div class="ln-mid"><b id="examTitle">آزمون جامع کنکور</b><div class="ln-prog" data-code="ProgressBarChapter / progress_bar_chapter.xml"><i id="examProgress" style="width:5%"></i></div></div>
           <button class="timerchip ln-timer" id="timerChip" data-code="timer ONLY inside exam · comprehensive fixed at 270 min"><span data-icon="ic_clock_black_24dp" data-size="16" data-mono="1"></span><span id="timerLabel">تنظیم زمان</span></button>
           <button class="ln-report" data-sheet="paletteSheet" aria-label="پاسخبرگ"><span data-icon="ic_flag" data-size="22" data-mono="1"></span></button>
         </div>
 
         <!-- ScrollView nsv_multiplechoice_lesson_content / LessonDescriptionView / ChoiceView -->
         <div class="lb-body" data-code="nsv_multiplechoice_lesson_content · layout_lesson_description · lesson_multiplechoice_view">
-          <div class="lb-step"><span id="examStep">سؤال ۳ از ۲۰</span><span id="timerStateText">زمان تنظیم نشده</span></div>
+          <div class="lb-step"><span id="examStep">سؤال ۱ از ۲۰</span><span id="timerStateText">زمان تنظیم نشده</span></div>
           <div class="lb-subject" id="examSubject"><span class="lb-dot"></span>زیست<span class="lb-sep">·</span>سمها<span class="lb-sep">·</span>دشواری متوسط</div>
           <h2 class="qtext" id="qText" data-code="LessonDescriptionView · TextH2 20sp / TextP1 18sp">کدامیک از گزینههای زیر دربارهٔ «سمها» درست است؟ اگر پاسخ را نمیدانید میتوانید علامت بزنید و بعداً برگردید.</h2>
           <div class="lb-hint" data-code="tv_multiplechoice_hint · interaction_hint_single_choice = Tap the correct answer"><span data-icon="ic_help" data-size="14" data-mono="1"></span>گزینهٔ درست را انتخاب کنید</div>
@@ -1241,7 +1254,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
   var rtl=false;
   q("#dirBtn").addEventListener("click",function(){
     rtl=!rtl;var ph=q("#phone");ph.style.direction=rtl?"rtl":"ltr";
-    qa(".mimo",ph).forEach(function(s){s.style.direction=rtl?"rtl":"ltr"});
+    qa(".mimo,.exv12",ph).forEach(function(s){s.style.direction=rtl?"rtl":"ltr"});
     qa("[data-fa]",ph).forEach(function(el){
       if(el.dataset.enhtml===undefined)el.dataset.enhtml=el.innerHTML;
       el.innerHTML=rtl?el.dataset.fa:el.dataset.enhtml;
@@ -1266,11 +1279,40 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
     q("#resultKind").textContent=EXAM_KIND==="comprehensive"?"جامع":p.label.split(" · ")[0];
     /* v8: no policy explanation inside the UI */
   }
-  qa(".nodek[data-exam]").forEach(function(n){n.addEventListener("click",function(){
+  /* v12.1 B2: the WHOLE Mimo list row is clickable, not just the 44dp icon */
+  function openExam(n){
     EXAM_KIND=n.dataset.kind||"normal";q("#examTitle").textContent=n.dataset.exam;
-    q("#examFinished").innerHTML="";resetOptions();renderQuestion();T.state="idle";clearInterval(T.timer);T.timer=null;
+    QI=0;MARKS={};q("#examFinished").innerHTML="";resetOptions();renderQuestion();
+    T.state="idle";clearInterval(T.timer);T.timer=null;
     applyPolicy();go("exam-run");toast("وارد «"+n.dataset.exam+"» شدید — "+(POLICY[EXAM_KIND]||POLICY.normal).label);
-  })});
+  }
+  var ehRows=qa('[data-screen="exam-hub"] .grid3 > div');
+  ehRows.forEach(function(row){
+    var n=row.querySelector(".nodek[data-exam]");if(!n)return;
+    row.setAttribute("role","button");row.tabIndex=0;
+    row.addEventListener("click",function(){openExam(n)});
+    row.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();openExam(n)}});
+    /* B7: the previously hidden .mini badge becomes the row subtitle */
+    var mini=row.querySelector(".mini"),lab=row.querySelector(".label");
+    if(mini&&lab){mini.className="row-meta";lab.appendChild(mini)}
+  });
+  /* v12.1 B3: filter chips were decorative; wire them to the 7 labelled sections */
+  var ehSec=q('[data-screen="exam-hub"]'),ehGroups=[],ehCur=null;
+  Array.prototype.forEach.call(ehSec.children,function(c){
+    if(c.classList.contains("sec")){ehCur=[c];ehGroups.push(ehCur)}
+    else if(ehCur&&(c.classList.contains("cat-meta")||c.classList.contains("grid3")))ehCur.push(c);
+  });
+  qa('[data-screen="exam-hub"] .chips .chip').forEach(function(ch){
+    ch.addEventListener("click",function(){
+      qa('[data-screen="exam-hub"] .chips .chip').forEach(function(x){x.classList.remove("on")});
+      ch.classList.add("on");
+      var want=(ch.dataset.filter==="all")?null:ch.dataset.filter.split(",");
+      ehGroups.forEach(function(g,i){
+        var show=!want||want.indexOf(String(i))>=0;
+        g.forEach(function(el){el.style.display=show?"":"none"});
+      });
+    });
+  });
   applyPolicy();
 
   /* ---------- timer state machine ---------- */
@@ -1280,7 +1322,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
   function render(){
     chip.classList.remove("running","finished");
     if(T.state==="idle"){label.textContent="تنظیم زمان";stateText.textContent="زمان تنظیم نشده";q("#timerPause").style.display="none";q("#timerReset").style.display="none"}
-    else if(T.state==="setting"){label.textContent="تنظیم زمان";stateText.textContent="در حال تنظیم"}
+    else if(T.state==="setting"){label.textContent="تنظیم زمان";stateText.textContent="در حال تنظیم";q("#timerPause").style.display="none";q("#timerReset").style.display="none"}
     else if(T.state==="running"){label.textContent=fmt(T.remaining);chip.classList.add("running");stateText.textContent="زمان معکوس در حال اجرا";q("#timerPause").style.display="";q("#timerReset").style.display="";q("#timerPauseLabel").textContent="توقف"}
     else if(T.state==="paused"){label.textContent=fmt(T.remaining);stateText.textContent="متوقف شده";q("#timerPause").style.display="";q("#timerReset").style.display="";q("#timerPauseLabel").textContent="ادامه"}
     else if(T.state==="finished"){label.textContent=fmt(0);chip.classList.add("finished");stateText.textContent="زمان تمام شد";q("#timerPause").style.display="none";q("#timerReset").style.display=""}
@@ -1319,39 +1361,50 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
     q("#examFinished").innerHTML="";resetOptions();q("#timerSheet").classList.add("on");toast("زمان پاک شد — دوباره عدد بدهید");render();
   });
   function resetOptions(){qa(".opt").forEach(function(o){o.style.pointerEvents="";o.style.opacity="";o.classList.remove("on","correct","wrong")})}
-  /* ============ v12 · Mimo lesson_interactive question flow ============
-     ChoiceView selection -> btn_submit (بررسی پاسخ) -> feedback bottom sheet
-     -> btn_continue_big (ادامه) -> next question.  btn_undo = سؤال قبل (48dp square).
-     No equal-weight prev/next pill pair any more (interaction_keyboard_view.xml). */
-  var QBANK=[
-    {sub:"زیست · سمها · دشواری متوسط",stem:"کدامیک از گزینههای زیر دربارهٔ «سمها» درست است؟",
-     opts:["سمها همواره تنها در کبد ساخته میشوند","سمها میتوانند با اتصال به آنزیمها، فعالیت آنها را مهار کنند","همهٔ سمها در بدن به گلوکز تبدیل میشوند","سمها فقط از راه پوست وارد بدن میشوند"],ok:1,
-     expl:"سمها با اتصال به جایگاه فعال آنزیمها میتوانند آنها را مهار کنند؛ زیست یازدهم، فصل سمها و بیماریها."},
-    {sub:"شیمی · تعادل شیمیایی · دشواری متوسط",stem:"ثابت تعادل یک واکنش برگشتپذیر در دمای ثابت، با افزایش غلظت یکی از واکنشدهندهها…",
-     opts:["کاهش مییابد","افزایش مییابد","تغییر نمیکند","صفر میشود"],ok:2,
-     expl:"Kc فقط تابع دماست؛ تغییر غلظت، سامانه را جابهجا میکند ولی مقدار ثابت تعادل ثابت میماند (اصل لوشاتلیه)."},
-    {sub:"فیزیک · ترمودینامیک · دشواری سخت",stem:"کار انجامشده توسط گاز در یک فرایند همحجم برابر است با…",
-     opts:["PΔV","صفر","nRΔT","ΔU"],ok:1,
-     expl:"در فرایند همحجم ΔV=۰ است، پس W=PΔV=۰ و تمام گرما صرف تغییر انرژی درونی میشود."},
-    {sub:"ریاضی · مشتق · دشواری متوسط",stem:"مشتق تابع f(x)=x³-3x در x=۱ کدام است؟",
-     opts:["۰","۱","۳","۶"],ok:0,
-     expl:"f′(x)=3x²-3، پس f′(1)=0؛ نقطهٔ بحرانی و اکسترمم نسبی."},
-    {sub:"زیست · ژنتیک · دشواری آسان",stem:"در قانون دوم مندل (تفکیک)، نسبت ژنوتیپی نسل F₂ برای یک صفت تکژنی چیست؟",
-     opts:["۳:۱","۱:۲:۱","۹:۳:۳:۱","۱:۱"],ok:1,
-     expl:"نسبت فنوتیپی ۳:۱ و نسبت ژنوتیپی ۱:۲:۱ است (AA:Aa:aa)."}
+  /* ============ v12.1 · Mimo lesson_interactive question flow (corrected) ============
+     ChoiceView -> btn_submit (بررسی پاسخ) -> feedback bottom sheet -> btn_continue_big
+     (ادامه) -> next question.  btn_undo = سؤال قبل (48dp square).  No equal prev/next pair.
+     B5: 20 distinct questions match the declared QTOTAL; QI resets for every new exam. */
+  var QRAW=[
+    ["زیست · سمها · دشواری متوسط","کدامیک از گزینههای زیر دربارهٔ «سمها» درست است؟",["سمها همواره تنها در کبد ساخته میشوند","سمها میتوانند با اتصال به آنزیمها، فعالیت آنها را مهار کنند","همهٔ سمها در بدن به گلوکز تبدیل میشوند","سمها فقط از راه پوست وارد بدن میشوند"],1,"سمها با اتصال به جایگاه فعال آنزیمها میتوانند آنها را مهار کنند؛ زیست یازدهم، فصل سمها و بیماریها."],
+    ["شیمی · تعادل شیمیایی · دشواری متوسط","ثابت تعادل یک واکنش برگشتپذیر در دمای ثابت، با افزایش غلظت یکی از واکنشدهندهها…",["کاهش مییابد","افزایش مییابد","تغییر نمیکند","صفر میشود"],2,"Kc فقط تابع دماست؛ تغییر غلظت سامانه را جابهجا میکند ولی مقدار ثابت تعادل ثابت میماند (اصل لوشاتلیه)."],
+    ["فیزیک · ترمودینامیک · دشواری سخت","کار انجامشده توسط گاز در یک فرایند همحجم برابر است با…",["PΔV","صفر","nRΔT","ΔU"],1,"در فرایند همحجم ΔV=۰ است، پس W=PΔV=۰ و تمام گرما صرف تغییر انرژی درونی میشود."],
+    ["ریاضی · مشتق · دشواری متوسط","مشتق تابع f(x)=x³−3x در x=۱ کدام است؟",["۰","۱","۳","۶"],0,"f′(x)=3x²−3، پس f′(1)=0؛ نقطهٔ بحرانی و اکسترمم نسبی."],
+    ["زیست · ژنتیک · دشواری آسان","در قانون دوم مندل (تفکیک)، نسبت ژنوتیپی نسل F₂ برای یک صفت تکژنی چیست؟",["۳:۱","۱:۲:۱","۹:۳:۳:۱","۱:۱"],1,"نسبت فنوتیپی ۳:۱ و نسبت ژنوتیپی ۱:۲:۱ است (AA:Aa:aa)."],
+    ["شیمی · پیوند شیمیایی · دشواری آسان","کدام عنصر الکترونگاتیویتر است؟",["سدیم","منیزیم","کلر","پتاسیم"],2,"الکترونگاتیوی در یک دوره از چپ به راست افزایش و در یک گروه از بالا به پایین کاهش مییابد؛ کلر بیشینه است."],
+    ["فیزیک · نور و پرتو · دشواری متوسط","هنگام گذر نور از هوا به شیشه، کدام کمیت ثابت میماند؟",["سرعت نور","طول موج","بسامد","جهت پرتو"],2,"بسامد نور هنگام تغییر محیط ثابت است؛ سرعت و طول موج تغییر میکنند و پرتو میشکند."],
+    ["ریاضی · دنبالهها · دشواری متوسط","حد دنبالهٔ aₙ=(2n+1)/(3n−1) کدام است؟",["۰","۲/۳","۱","∞"],1,"با تقسیم صورت و مخرج بر n، حد برابر ۲/۳ میشود."],
+    ["زیست · سلول · دشواری متوسط","کدام اندامک مسئول ساخت ATP در یاختهٔ یوکاریوتی است؟",["ریبوزوم","میتوکندری","دستگاه گلژی","شبکهٔ آندوپلاسمی"],1,"میتوکندری با تنفس یاخته‌ای ATP میسازد؛ ریبوزوم محل ساخت پروتئین است."],
+    ["شیمی · استوکیومتری · دشواری متوسط","چند مولکول آب از واکنش کامل ۲ مول هیدروژن با اکسیژن کافی بهدست میآید؟",["۱ مول","۲ مول","۳ مول","۴ مول"],1,"2H₂+O₂→2H₂O؛ نسبت مولی H₂ به H₂O برابر ۱:۱ است، پس ۲ مول آب."],
+    ["فیزیک · مکانیک · دشواری سخت","نیروی ۱۲ نیوتونی به جسمی به جرم ۳ کیلوگرم وارد میشود؛ شتاب چند متر بر مجذور ثانیه است؟",["۲","۳","۴","۱۲"],2,"قانون دوم نیوتون: a=F/m=۱۲/۳=۴ m/s²."],
+    ["ریاضی · احتمال · دشواری متوسط","در پرتاب یک تاس سالم، احتمال آمدن عدد زوج چقدر است؟",["۱/۶","۱/۳","۱/۲","۲/۳"],2,"اعداد زوج ۲، ۴ و ۶اند؛ ۳ حالت مطلوب از ۶ حالت، یعنی ۱/۲."],
+    ["زیست · فتوسنتز · دشواری متوسط","واکنشهای نوری فتوسنتز در کدام بخش کلروپلاست رخ میدهند؟",["استروما","تیلاکوئید","دیوارهٔ یاخته","واکوئول"],1,"واکنشهای نوری در غشای تیلاکوئید و چرخهٔ کالوین در استروما انجام میشود."],
+    ["شیمی · محلولها · دشواری آسان","افزایش دما معمولاً انحلالپذیری نمکهای جامد در آب را…",["کاهش میدهد","افزایش میدهد","تغییر نمیدهد","صفر میکند"],1,"انحلال اغلب نمکهای جامد گرماگیر است؛ با افزایش دما انحلالپذیری بیشتر میشود."],
+    ["فیزیک · الکتریسیته · دشواری متوسط","دو مقاومت ۶ و ۳ اهمی بهصورت موازی بسته شوند؛ مقاومت معادل چقدر است؟",["۹ اهم","۴٫۵ اهم","۲ اهم","۱ اهم"],2,"1/R=1/6+1/3=1/2، پس R=۲ اهم."],
+    ["ریاضی · مثلثات · دشواری متوسط","مقدار sin²x+cos²x برای هر zاویهٔ x کدام است؟",["۰","۱/۲","۱","۲"],2,"اتحاد بنیادی مثلثات: sin²x+cos²x=۱."],
+    ["زیست · گردش خون · دشواری آسان","خون سرشار از اکسیژن از ششها به کدام حفرهٔ قلب بازمیگردد؟",["دهلیز راست","بطن راست","دهلیز چپ","بطن چپ"],2,"سیاهرگهای ششی خون اکسیژندار را به دهلیز چپ میآورند."],
+    ["شیمی · سینتیک · دشواری سخت","کاتالیزگر در یک واکنش شیمیایی چه میکند؟",["آنتروپی را تغییر میدهد","انرژی فعالسازی را کاهش میدهد","تعادل را جابهجا میکند","دمای واکنش را افزایش میدهد"],1,"کاتالیزگر مسیری با انرژی فعالسازی کمتر فراهم میکند؛ ثابت تعادل و ΔG را تغییر نمیدهد."],
+    ["فیزیک · موج · دشواری متوسط","اگر بسامد موجی دو برابر شود و سرعت ثابت بماند، طول موج…",["دو برابر میشود","نصف میشود","ثابت میماند","چهار برابر میشود"],1,"v=fλ؛ با ثابت بودن v، دو برابر شدن f یعنی نصف شدن λ."],
+    ["ریاضی · انتگرال · دشواری سخت","∫(2x+1)dx کدام است؟",["x²+x+C","2x²+x+C","x²+C","2+C"],0,"انتگرال جزءبهجزء: x²+x+C (C ثابت انتگرالگیری)."]
   ];
-  var QI=2,QCHECKED=false;
+  var QBANK=QRAW.map(function(r){return {sub:r[0],stem:r[1],opts:r[2],ok:r[3],expl:r[4]}});
+  var QTOTAL=QBANK.length,QI=0,QCHECKED=false,MARKS={};
   function renderQuestion(){
     var item=QBANK[QI%QBANK.length];
-    q("#examStep").textContent="سؤال "+fa(QI+1)+" از ۲۰";
-    q("#examSubject").innerHTML='<span class="lb-dot"></span>'+esc(item.sub.split(" · ")[0])+'<span class="lb-sep">·</span>'+esc(item.sub.split(" · ")[1])+'<span class="lb-sep">·</span>'+esc(item.sub.split(" · ")[2]);
+    q("#examStep").textContent="سؤال "+fa(QI+1)+" از "+fa(QTOTAL);
+    /* B5: build the subject chip from DOM nodes (no innerHTML / no esc() dependency) */
+    var subj=q("#examSubject");subj.innerHTML="";
+    var dot=document.createElement("span");dot.className="lb-dot";subj.appendChild(dot);
+    item.sub.split(" · ").forEach(function(part,i){
+      if(i){var sep=document.createElement("span");sep.className="lb-sep";sep.textContent="·";subj.appendChild(sep)}
+      var t=document.createElement("span");t.textContent=part;subj.appendChild(t);
+    });
     q("#qText").textContent=item.stem;
     qa("#exChoices .opt").forEach(function(o,i){o.querySelector(".opt-txt").textContent=item.opts[i]});
     resetOptions();q("#exFeedback").hidden=true;QCHECKED=false;
     q("#nextQLabel").textContent="ادامه";
-    q("#examProgress").style.width=Math.min(100,((QI+1)/20)*100)+"%";
-    q("#markQ").classList.remove("marked");
-    paintIcons(q("#examSubject"));
+    q("#examProgress").style.width=Math.min(100,((QI+1)/QTOTAL)*100)+"%";
+    q("#markQ").classList.toggle("marked",!!MARKS[QI]);
   }
   function setCtaLabel(){q("#nextQLabel").textContent=(q(".opt.on")&&!QCHECKED)?"بررسی پاسخ":"ادامه"}
   qa(".opt").forEach(function(o){o.addEventListener("click",function(){
@@ -1372,11 +1425,15 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
       q("#nextQLabel").textContent="ادامه";toast(ok?"درست ✔ پاسخنامهٔ تشریحی نشان داده شد":"نادرست ✕ توضیح مبحث نشان داده شد");
       return;
     }
-    QI=Math.min(19,QI+1);renderQuestion();toast("سؤال بعدی · "+fa(QI+1)+" از ۲۰");
+    QI=Math.min(QTOTAL-1,QI+1);renderQuestion();toast("سؤال بعدی · "+fa(QI+1)+" از "+fa(QTOTAL));
   });
-  q("#prevQ").addEventListener("click",function(){QI=Math.max(0,QI-1);renderQuestion();toast("سؤال قبل · "+fa(QI+1)+" از ۲۰")});
-  q("#skipQ").addEventListener("click",function(){QI=Math.min(19,QI+1);renderQuestion();toast("سؤال رد شد")});
-  q("#markQ").addEventListener("click",function(){q("#markQ").classList.toggle("marked");toast(q("#markQ").classList.contains("marked")?"سؤال علامتگذاری شد":"علامت برداشته شد")});
+  q("#prevQ").addEventListener("click",function(){QI=Math.max(0,QI-1);renderQuestion();toast("سؤال قبل · "+fa(QI+1)+" از "+fa(QTOTAL))});
+  q("#skipQ").addEventListener("click",function(){QI=Math.min(QTOTAL-1,QI+1);renderQuestion();toast("سؤال رد شد")});
+  q("#markQ").addEventListener("click",function(){
+    if(MARKS[QI])delete MARKS[QI];else MARKS[QI]=true;
+    q("#markQ").classList.toggle("marked",!!MARKS[QI]);
+    toast(MARKS[QI]?"سؤال علامتگذاری شد":"علامت برداشته شد");
+  });
   renderQuestion();
   q("#submitExam").addEventListener("click",function(){q("#paletteSheet").classList.remove("on");finishExam("پاسخها ثبت شد")});
   q("#endExam").addEventListener("click",function(){finishExam("آزمون به پایان رسید")});
@@ -1399,7 +1456,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
   }
   q("#askAiBtn").addEventListener("click",function(){
     var chosen=(q(".opt.on")||{}).textContent||"هنوز انتخاب نشده";
-    setCtx("زمینه: "+q("#examTitle").textContent+" · سؤال ۳ · "+q("#qText").textContent+" · پاسخ شما: "+chosen.trim(),null);
+    setCtx("زمینه: "+q("#examTitle").textContent+" · سؤال "+fa(QI+1)+" · "+q("#qText").textContent+" · پاسخ شما: "+chosen.trim(),null);
     go("ai");toast("صورت سؤال و پاسخ شما به چت مینیمال منتقل شد");
   });
   q("#askAiResultBtn").addEventListener("click",function(){

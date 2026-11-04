@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Fail-closed verification of the Konkur-upgrade planning deliverable (v12)."""
+"""Fail-closed verification of the Konkur-upgrade planning deliverable (v12.1)."""
 from __future__ import annotations
 import csv, hashlib, json, re, sys
 from pathlib import Path
@@ -15,10 +15,10 @@ docs = ["README.md", "00_START_HERE.md", "01_CRAFT_ANYTHING_INSTALL.md",
         "13_DESIGN_ROUND_2.md", "14_DESIGN_ROUND_3.md", "15_DESIGN_ROUND_4.md",
         "16_DESIGN_ROUND_5.md", "17_DESIGN_ROUND_6.md",
         "18_DESIGN_ROUND_7.md", "20_DESIGN_ROUND_8.md", "21_DESIGN_ROUND_9.md", "22_DESIGN_ROUND_10.md", "23_DESIGN_ROUND_11.md", "24_DESIGN_ROUND_12.md", "wireframes.html"]
-csvs = {"UI_FIDELITY_RULES.csv": 41, "FEATURE_MAP.csv": 17, "EXAM_TYPES.csv": 11,
+csvs = {"UI_FIDELITY_RULES.csv": 42, "FEATURE_MAP.csv": 17, "EXAM_TYPES.csv": 11,
         "HADAF_TEMPLATES.csv": 7, "GAMIFICATION_MAP.csv": 13, "PHASES.csv": 8,
         "LEARNHARNESS_ACTIONS.csv": 32, "EVIDENCE_LEDGER.csv": 10, "OPEN_QUESTIONS.csv": 13,
-        "DESIGN_FEEDBACK.csv": 65, "SCOPE_DECISIONS.csv": 45,
+        "DESIGN_FEEDBACK.csv": 66, "SCOPE_DECISIONS.csv": 46,
         "AI_PANEL_SPEC.csv": 27, "EPM_MINOR_OPTIONS.csv": 7,
         "EXAM_SECTION_TEMPLATES.csv": 7,
         "MIMO_CODE_GEOMETRY.csv": 200, "MIMO_SCREENSHOT_CROSSWALK.csv": 14,
@@ -126,7 +126,8 @@ ck("design:build-tools", all((ROOT / "tools" / f).is_file() for f in
     "extract_mimo_nodes_v9.py", "build_design_v9.py", "design_v9_template.html", "finalize_v9.py",
     "extract_mimo_nodes_v10.py", "build_design_v10.py", "design_v10_template.html", "finalize_v10.py",
     "design_v10_full.html", "build_design_v11.py", "design_v11_template.html", "finalize_v11.py",
-    "design_v11_full.html", "build_design_v12.py", "design_v12_template.html", "finalize_v12.py"]),
+    "design_v11_full.html", "build_design_v12.py", "design_v12_template.html", "finalize_v12.py",
+    "fix_design_v12_1.py", "design_v12_1_template.html"]),
    "reproducible extract -> build pipeline (v5..v11 archived + v12 current)")
 
 # ---- 14 Mimo reference screenshots (visual cross-check only) ----
@@ -429,6 +430,47 @@ ck("design:v12:rollback", (ROOT / "tools/design_v11_full.html").is_file()
    and "V11_ROLLBACK_SNAPSHOT_V12" in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encoding="utf-8"),
    "v11.1 snapshot kept as an explicit rollback path")
 
+# ---- DESIGN v12.1: bug-fix pass over the v12 exam code ----
+ck("design:v12.1:scroll", '.exv12[data-screen="exam-run"]{overflow:hidden}' in dt
+   and ".exv12{direction:rtl;background:var(--bg);display:none;flex-direction:column;overflow:auto;padding:0}" in dt
+   and ".exv12 .lb-body{flex:1;min-height:0;overflow:auto" in dt,
+   "exam-hub / exam-result scroll as a whole; only exam-run keeps the pinned footer")
+ck("design:v12.1:row-click", all(x in dt for x in
+   ["function openExam(n)","QI=0;MARKS={}","var ehRows=qa('[data-screen=\"exam-hub\"] .grid3 > div')",
+    'row.setAttribute("role","button")','e.key==="Enter"']),
+   "the whole Mimo list row is clickable + keyboard activated; index resets per exam")
+ck("design:v12.1:filters", dt.count('data-filter="') == 8 and "ehGroups" in dt
+   and 'data-filter="all"' in dt and 'data-filter="5,6"' in dt,
+   "8 filter chips wired to the 7 labelled sections")
+ck("design:v12.1:qbank", "var QTOTAL=QBANK.length,QI=0,QCHECKED=false,MARKS={};" in dt
+   and dt.count('\n    ["') == 20 and "var i=1;i<=20;i++" in dt
+   and 'q("#examStep").textContent="سؤال "+fa(QI+1)+" از "+fa(QTOTAL)' in dt,
+   "20 distinct questions + one QTOTAL + palette of 20 (no more hardcoded 3-of-20)")
+ck("design:v12.1:ai-dynamic", 'setCtx("زمینه: "+q("#examTitle").textContent+" · سؤال "+fa(QI+1)+"' in dt,
+   "AI context uses the live question number instead of a hardcoded «سؤال ۳»")
+ck("design:v12.1:rtl", 'qa(".mimo,.exv12",ph)' in dt
+   and 'T.state==="setting"' in dt and dt.count('q("#timerPause").style.display="none"') >= 2,
+   "RTL toggle covers exam screens; timer chips reset in setting state")
+ck("design:v12.1:row-meta", 'className="row-meta"' in dt and ".exv12 .label .row-meta" in dt
+   and ".exv12 .nodek .mini" not in dt,
+   "hidden .mini badges moved into the row label as Mimo subtitles")
+ck("design:v12.1:evidence", "bugfixes_v12_1" in ev and len(ev["bugfixes_v12_1"]) == 7,
+   "7 code bugs documented in EXAM_UI_CODE_EVIDENCE.json")
+ck("design:v12.1:no-regression", 'class="qnav"' not in dt and dt.count('class="cat-meta"') == 7
+   and "M242 70 H280 Q312 70 312 102 V140" in dt and dt.count('data-tab="') == 5
+   and "زمان ثابت ۲۷۰ دقیقه" in dt and dt.count('data-icon="ic_lock_alt_02"') == 1,
+   "bug fixes did not touch the accepted v11.1 / v12 contract")
+ck("docs:v12.1:log", "v12.1" in (ROOT / "24_DESIGN_ROUND_12.md").read_text(encoding="utf-8")
+   and "B1" in (ROOT / "24_DESIGN_ROUND_12.md").read_text(encoding="utf-8"),
+   "round-12 log documents every bug fix")
+ck("scope:v12.1:catalogs", "F-66" in (ROOT / "CATALOGS/DESIGN_FEEDBACK.csv").read_text(encoding="utf-8")
+   and "D46" in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encoding="utf-8")
+   and "F42" in (ROOT / "CATALOGS/UI_FIDELITY_RULES.csv").read_text(encoding="utf-8"),
+   "bug-fix round recorded in feedback / decisions / fidelity rules")
+man121 = json.loads((ROOT / "MANIFEST.json").read_text(encoding="utf-8"))
+ck("manifest:v12.1", "v12.1" in man121["status"] and any("fix_design_v12_1.py" in c for c in man121["reproduce"]),
+   "MANIFEST advertises the v12.1 fix pass + reproduce command")
+
 # ---- docs / catalogs ----
 ck("docs:v10:22", "DESIGN v10" in (ROOT / "22_DESIGN_ROUND_10.md").read_text(encoding="utf-8")
    and "Q312 70" in (ROOT / "22_DESIGN_ROUND_10.md").read_text(encoding="utf-8"),
@@ -536,7 +578,7 @@ ck("craft:phases", len(json.loads((ca / "workspace/plan.json").read_text(encodin
 
 # MANIFEST coherence
 man = json.loads((ROOT / "MANIFEST.json").read_text(encoding="utf-8"))
-ck("manifest:v12", "DESIGN v12" in man["status"] and man["deliverables"]["design_round"] == "v12 (REVIEW)"
+ck("manifest:v12", "DESIGN v12" in man["status"] and man["deliverables"]["design_round"].startswith("v12")
    and man["deliverables"]["design_views"] == 14 and man["deliverables"]["csv_catalogs"] == 21
    and man["deliverables"]["persian_docs"] == 25 and "design_round_12" in man
    and man["design_round_11"]["status"].startswith("DESIGN v11 · SUPERSEDED")

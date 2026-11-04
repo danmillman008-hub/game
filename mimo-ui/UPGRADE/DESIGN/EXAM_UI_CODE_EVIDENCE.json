@@ -154,5 +154,14 @@
     "isolated section-practice",
     "original curved zigzag path map",
     "no UI annotation notes"
+  ],
+  "bugfixes_v12_1": [
+    "B1: exam-hub / exam-result were clipped by overflow:hidden with no internal scroller -> whole-screen scroll, exam-run keeps its .lb-body scroller + pinned .lk footer",
+    "B2: click handler bound only to the 44dp .nodek icon after the grid became list rows -> whole row + keyboard activation",
+    "B3: 8 filter chips were inert spans -> real buttons filtering the 7 labelled sections",
+    "B4: AI context hardcoded «سؤال ۳» -> dynamic fa(QI+1)",
+    "B5: counter said 20 but QBANK had 5; QI not reset per exam -> 20 distinct questions, one QTOTAL, QI=0 on openExam",
+    "B6: RTL/LTR toggle skipped exv12 screens; render() did not reset timer chips in setting state",
+    "B7: hidden .mini badges lost their meta -> moved into each row label as a Mimo subtitle; DOM-built subject chip; per-question bookmarks"
   ]
 }

@@ -1,7 +1,7 @@
 {
   "verdict": "PASS",
-  "checks": 222,
-  "passed": 222,
+  "checks": 234,
+  "passed": 234,
   "failed": [],
   "details": [
     {
@@ -127,7 +127,7 @@
     {
       "check": "doc:24_DESIGN_ROUND_12.md",
       "status": "PASS",
-      "detail": "7868"
+      "detail": "11592"
     },
     {
       "check": "doc:wireframes.html",
@@ -137,7 +137,7 @@
     {
       "check": "csv:UI_FIDELITY_RULES.csv",
       "status": "PASS",
-      "detail": "41 rows"
+      "detail": "42 rows"
     },
     {
       "check": "csv:FEATURE_MAP.csv",
@@ -182,12 +182,12 @@
     {
       "check": "csv:DESIGN_FEEDBACK.csv",
       "status": "PASS",
-      "detail": "65 rows"
+      "detail": "66 rows"
     },
     {
       "check": "csv:SCOPE_DECISIONS.csv",
       "status": "PASS",
-      "detail": "45 rows"
+      "detail": "46 rows"
     },
     {
       "check": "csv:AI_PANEL_SPEC.csv",
@@ -262,7 +262,7 @@
     {
       "check": "design:index",
       "status": "PASS",
-      "detail": "390496 chars"
+      "detail": "396246 chars"
     },
     {
       "check": "design:v12-header",
@@ -552,7 +552,7 @@
     {
       "check": "design:v6:build-bytes",
       "status": "PASS",
-      "detail": "390496 chars"
+      "detail": "396246 chars"
     },
     {
       "check": "design:v10:nodes",
@@ -722,7 +722,7 @@
     {
       "check": "design:v8:build-bytes",
       "status": "PASS",
-      "detail": "390496 chars"
+      "detail": "396246 chars"
     },
     {
       "check": "design:v11:leaderboard",
@@ -833,6 +833,66 @@
       "check": "design:v12:rollback",
       "status": "PASS",
       "detail": "v11.1 snapshot kept as an explicit rollback path"
+    },
+    {
+      "check": "design:v12.1:scroll",
+      "status": "PASS",
+      "detail": "exam-hub / exam-result scroll as a whole; only exam-run keeps the pinned footer"
+    },
+    {
+      "check": "design:v12.1:row-click",
+      "status": "PASS",
+      "detail": "the whole Mimo list row is clickable + keyboard activated; index resets per exam"
+    },
+    {
+      "check": "design:v12.1:filters",
+      "status": "PASS",
+      "detail": "8 filter chips wired to the 7 labelled sections"
+    },
+    {
+      "check": "design:v12.1:qbank",
+      "status": "PASS",
+      "detail": "20 distinct questions + one QTOTAL + palette of 20 (no more hardcoded 3-of-20)"
+    },
+    {
+      "check": "design:v12.1:ai-dynamic",
+      "status": "PASS",
+      "detail": "AI context uses the live question number instead of a hardcoded «سؤال ۳»"
+    },
+    {
+      "check": "design:v12.1:rtl",
+      "status": "PASS",
+      "detail": "RTL toggle covers exam screens; timer chips reset in setting state"
+    },
+    {
+      "check": "design:v12.1:row-meta",
+      "status": "PASS",
+      "detail": "hidden .mini badges moved into the row label as Mimo subtitles"
+    },
+    {
+      "check": "design:v12.1:evidence",
+      "status": "PASS",
+      "detail": "7 code bugs documented in EXAM_UI_CODE_EVIDENCE.json"
+    },
+    {
+      "check": "design:v12.1:no-regression",
+      "status": "PASS",
+      "detail": "bug fixes did not touch the accepted v11.1 / v12 contract"
+    },
+    {
+      "check": "docs:v12.1:log",
+      "status": "PASS",
+      "detail": "round-12 log documents every bug fix"
+    },
+    {
+      "check": "scope:v12.1:catalogs",
+      "status": "PASS",
+      "detail": "bug-fix round recorded in feedback / decisions / fidelity rules"
+    },
+    {
+      "check": "manifest:v12.1",
+      "status": "PASS",
+      "detail": "MANIFEST advertises the v12.1 fix pass + reproduce command"
     },
     {
       "check": "docs:v10:22",
@@ -1102,7 +1162,7 @@
     {
       "check": "manifest:checks",
       "status": "PASS",
-      "detail": "verification_checks=222 expected 222"
+      "detail": "verification_checks=234 expected 234"
     },
     {
       "check": "docs:no-cjk",
@@ -1112,8 +1172,8 @@
     {
       "check": "sums",
       "status": "PASS",
-      "detail": "1938 files hashed"
+      "detail": "1941 files hashed"
     }
   ],
-  "files_hashed": 1938
+  "files_hashed": 1941
 }
