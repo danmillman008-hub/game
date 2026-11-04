@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Fail-closed verification of the Konkur-upgrade planning deliverable (v10)."""
+"""Fail-closed verification of the Konkur-upgrade planning deliverable (v11)."""
 from __future__ import annotations
 import csv, hashlib, json, re, sys
 from pathlib import Path
@@ -14,15 +14,16 @@ docs = ["README.md", "00_START_HERE.md", "01_CRAFT_ANYTHING_INSTALL.md",
         "11_EVIDENCE_AND_CROSSWALK.md", "12_RISKS_UNKNOWN_AND_QUESTIONS.md",
         "13_DESIGN_ROUND_2.md", "14_DESIGN_ROUND_3.md", "15_DESIGN_ROUND_4.md",
         "16_DESIGN_ROUND_5.md", "17_DESIGN_ROUND_6.md",
-        "18_DESIGN_ROUND_7.md", "20_DESIGN_ROUND_8.md", "21_DESIGN_ROUND_9.md", "22_DESIGN_ROUND_10.md", "wireframes.html"]
-csvs = {"UI_FIDELITY_RULES.csv": 34, "FEATURE_MAP.csv": 17, "EXAM_TYPES.csv": 11,
+        "18_DESIGN_ROUND_7.md", "20_DESIGN_ROUND_8.md", "21_DESIGN_ROUND_9.md", "22_DESIGN_ROUND_10.md", "23_DESIGN_ROUND_11.md", "wireframes.html"]
+csvs = {"UI_FIDELITY_RULES.csv": 37, "FEATURE_MAP.csv": 17, "EXAM_TYPES.csv": 11,
         "HADAF_TEMPLATES.csv": 7, "GAMIFICATION_MAP.csv": 13, "PHASES.csv": 8,
-        "LEARNHARNESS_ACTIONS.csv": 32, "EVIDENCE_LEDGER.csv": 10, "OPEN_QUESTIONS.csv": 11,
-        "DESIGN_FEEDBACK.csv": 58, "SCOPE_DECISIONS.csv": 38,
+        "LEARNHARNESS_ACTIONS.csv": 32, "EVIDENCE_LEDGER.csv": 10, "OPEN_QUESTIONS.csv": 12,
+        "DESIGN_FEEDBACK.csv": 61, "SCOPE_DECISIONS.csv": 41,
         "AI_PANEL_SPEC.csv": 27, "EPM_MINOR_OPTIONS.csv": 7,
         "EXAM_SECTION_TEMPLATES.csv": 7,
         "MIMO_CODE_GEOMETRY.csv": 200, "MIMO_SCREENSHOT_CROSSWALK.csv": 14,
         "ANSWER_SHEET_POLICY.csv": 5, "MIMO_LEARN_SUBSCREENS.csv": 868,
+        "KONKUR_CURRICULUM.csv": 180,
         "MIMO_PATH_NODES.csv": 106, "PRACTICE_VS_EXAM.csv": 12}
 checks, problems = [], []
 
@@ -53,13 +54,13 @@ ck("wireframe:tokens", all(x in t for x in ["#7E4BDE", "#F6F7FB", "#E4E6F1", "#6
 ck("wireframe:legacy-tabs", t.count('class="tab') >= 4 and "<div class=\"tab\">Learn</div>" in t,
    "archived v1 wireframe renders its legacy tabs")
 ck("wireframe:3col-grid", "repeat(3,minmax(0,1fr))" in t, "exam node grid")
-ck("wireframe:v1-banner", "DESIGN/index.html" in t and "DESIGN v10" in t, "v1 archived, points to v10")
+ck("wireframe:v1-banner", "DESIGN/index.html" in t and "DESIGN v11" in t, "v1 archived, points to v11")
 
 # ---- DESIGN v8 interactive prototype ----
 D = ROOT / "DESIGN"
 dt = (D / "index.html").read_text(encoding="utf-8") if (D / "index.html").is_file() else ""
 ck("design:index", len(dt) > 20000, "%d chars" % len(dt))
-ck("design:v10-header", "DESIGN v10" in dt and "دور دهم" in dt, "design round 10 review")
+ck("design:v11-header", "DESIGN v11" in dt and "دور یازدهم" in dt, "design round 11 review")
 ck("design:v7-archived", "DESIGN v7" in dt, "v7 archive line kept in spec")
 ck("design:v6-archived", "DESIGN v6" in dt, "v6 archive line kept in spec")
 ck("design:no-hub-timer", "exam-hub" in dt and "⏱ ۱۲:۴۵" not in dt, "timer removed from exam hub")
@@ -123,8 +124,9 @@ ck("design:build-tools", all((ROOT / "tools" / f).is_file() for f in
     "extract_mimo_nodes_v7.py", "build_design_v7.py", "design_v7_template.html", "finalize_v7.py",
     "extract_mimo_nodes_v8.py", "build_design_v8.py", "design_v8_template.html", "finalize_v8.py",
     "extract_mimo_nodes_v9.py", "build_design_v9.py", "design_v9_template.html", "finalize_v9.py",
-    "extract_mimo_nodes_v10.py", "build_design_v10.py", "design_v10_template.html", "finalize_v10.py"]),
-   "reproducible extract -> build pipeline (v5..v9 archived + v10 current)")
+    "extract_mimo_nodes_v10.py", "build_design_v10.py", "design_v10_template.html", "finalize_v10.py",
+    "design_v10_full.html", "build_design_v11.py", "design_v11_template.html", "finalize_v11.py"]),
+   "reproducible extract -> build pipeline (v5..v10 archived + v11 current)")
 
 # ---- 14 Mimo reference screenshots (visual cross-check only) ----
 shots = ["mimo-01-learn-path-play.jpg","mimo-02-learn-path-half.jpg",
@@ -334,6 +336,52 @@ ck("design:v8:ai-footer", all(x in dt for x in
    "TEACH/PRACTICE/model/medium on one tiny line, no Dictate")
 ck("design:v8:build-bytes", len(dt) > 300000, "%d chars" % len(dt))
 
+# ---- DESIGN v11: leaderboard / program tracks / topic courses ----
+lbm = re.search(r'<section class="screen mimo" data-screen="leaderboard".*?</section>', dt, re.S)
+lbb = lbm.group(0) if lbm else ""
+ck("design:v11:leaderboard", bool(lbm) and "My status" in lbb and 'data-fa="وضعیت من"' in lbb
+   and "selfbox" in lbb and "آزمونها و امتیازات من" in lbb
+   and all(x not in lbb for x in ["Wooden", "League", "6d 22h", "MIGUELBAOBAB", "mairi", "Aska", "sarah", "lucas", "lb-row", "league-row"]),
+   "Wooden League + countdown + all 5 rival rows + league badges REMOVED; My status only")
+ck("design:v11:headings", 'id="careerHeading" data-fa="یادگیری برنامه محور"' in dt
+   and 'id="courseHeading" data-fa="یادگیری مبحثی"' in dt
+   and ">یادگیری برنامه محور</h3>" in dt and ">یادگیری مبحثی</h3>" in dt,
+   "Career Paths / Courses relabelled to program-based / topic-based learning")
+ck("design:v11:cards-courses", "V11_CARDS" in dt and "V11_COURSES" in dt
+   and all(x in dt for x in ["یادگیری همگام با برنامه آزمون دوازدهم",
+                             "یادگیری همگام با برنامه آزمون یازدهم",
+                             "یادگیری همگام با برنامه آزمون دهم"])
+   and all(x in dt for x in ["زیست دهم", "ریاضی دهم", "شیمی دهم", "فیزیک دهم",
+                             "زیست یازدهم", "ریاضی یازدهم", "شیمی یازدهم", "فیزیک یازدهم",
+                             "زیست دوازدهم", "ریاضی دوازدهم", "شیمی دوازدهم", "فیزیک دوازدهم"]),
+   "4 big cards (3 grade programs + topic) + 12 subject x grade courses")
+ck("design:v11:certificate", "مدرک پایان دوره" in dt and "۲۲ درصد کامل شده" in dt
+   and "2/9" in dt and 'id="poKicker"' in dt and 'id="poTitle"' in dt,
+   "certificate card relabelled; path overview is data-driven")
+ck("design:v11:fortnight", all(x in dt for x in
+   ["۱ آبان", "۱۵ آبان", "۱ آذر", "۱۵ آذر", "۱ دی", "۱۵ دی", "۱ بهمن", "۱۵ بهمن", "۱ اسفند", "۱۵ اسفند"])
+   and "دروس: زیست، شیمی، ریاضی، فیزیک" in dt and '"lessons_label":"دروس"' in dt,
+   "10 biweekly dates over 5 Persian months + «دروس» line with 4 subjects")
+ck("design:v11:no-programming-icons", not re.search(r'data-icon="(ic_badge_|ic_code_lang_|ic_code_playground_template_)', dt)
+   and "ic_cap_filled" in dt and "img_brain" in dt,
+   "ZERO programming emblems/logos; decoded Mimo vectors used instead")
+kp = D / "KONKUR_CURRICULUM.json"
+ck("design:v11:curriculum-json", kp.is_file(), "KONKUR_CURRICULUM.json present")
+if kp.is_file():
+    k = json.loads(kp.read_text(encoding="utf-8"))
+    ck("design:v11:curriculum-counts", k["round"] == "v11" and len(k["courses"]) == 12
+       and k["chapter_count"] == 60 and k["lesson_count"] == 180
+       and all(len(c["chapters"]) == 5 and all(ch["lessons"] for ch in c["chapters"]) for c in k["courses"]),
+       "12 courses / 60 فصل / 180 درس with lesson names")
+    ck("design:v11:curriculum-payload", "var KONKUR=" in dt and "KONKUR.courses" in dt,
+       "prototype renders the machine-readable curriculum payload")
+ck("design:v11:chapter-lessons", "v11RenderSection" in dt and "v11RenderOverview" in dt
+   and "data-v11section" in dt and "فصل " in dt,
+   "course overviews show فصل names + درس names, section detail shows real lessons")
+ck("design:v11:geometry-unchanged", "M242 70 H280 Q312 70 312 102 V140" in dt
+   and 'data-screen="exam-hub"' in dt and dt.count('data-tab="') == 5,
+   "original curved zigzag + 5 tabs + exam architecture untouched")
+
 # ---- docs / catalogs ----
 ck("docs:v10:22", "DESIGN v10" in (ROOT / "22_DESIGN_ROUND_10.md").read_text(encoding="utf-8")
    and "Q312 70" in (ROOT / "22_DESIGN_ROUND_10.md").read_text(encoding="utf-8"),
@@ -344,6 +392,13 @@ ck("docs:v10:notes", "DESIGN v10" in (D / "DESIGN_NOTES.fa.md").read_text(encodi
    and "NODE_CODE_GEOMETRY.json" in (D / "DESIGN_NOTES.fa.md").read_text(encoding="utf-8"), "v10 design notes")
 ck("docs:v10:banners", sum("<!-- v10-banner -->" in (ROOT / d).read_text(encoding="utf-8") for d in docs if d.endswith(".md")) >= 21,
    "archived docs carry v10 superseded banner")
+ck("docs:v11:23", "DESIGN v11" in (ROOT / "23_DESIGN_ROUND_11.md").read_text(encoding="utf-8")
+   and "KONKUR_CURRICULUM" in (ROOT / "23_DESIGN_ROUND_11.md").read_text(encoding="utf-8"),
+   "v11 final log + curriculum evidence")
+ck("docs:v11:notes", "DESIGN v11" in (D / "DESIGN_NOTES.fa.md").read_text(encoding="utf-8")
+   and "KONKUR_CURRICULUM.json" in (D / "DESIGN_NOTES.fa.md").read_text(encoding="utf-8"), "v11 design notes")
+ck("docs:v11:banners", sum("<!-- v11-banner -->" in (ROOT / d).read_text(encoding="utf-8") for d in docs if d.endswith(".md")) >= 22,
+   "archived docs carry v11 superseded banner")
 ck("docs:v7:18", "DESIGN v7" in (ROOT / "18_DESIGN_ROUND_7.md").read_text(encoding="utf-8"), "v7 log archived")
 ck("scope:v8", all(x in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encoding="utf-8") for x in
    ["REMOVED_ENTIRELY_V8","FIVE_TABS_RESTORED","DICTATE_REMOVED","NO_ANNOTATIONS_IN_UI","ONE_LOCK_ONLY","NODE_CODE_FIRST_V8"]),
@@ -356,6 +411,11 @@ ck("scope:v9", all(x in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encodi
    and all(x in (ROOT / "CATALOGS/DESIGN_FEEDBACK.csv").read_text(encoding="utf-8") for x in
    ["F-53","F-54","F-55"]),
    "all 3 round-9 decisions + 3 round-9 corrections recorded")
+ck("scope:v11", all(x in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encoding="utf-8") for x in
+   ["MY_STATUS_ONLY_V11","PROGRAM_AND_TOPIC_TRACKS_V11","NO_PROGRAMMING_EMBLEMS_V11"])
+   and all(x in (ROOT / "CATALOGS/DESIGN_FEEDBACK.csv").read_text(encoding="utf-8") for x in
+   ["F-59","F-60","F-61"]) and "U12" in (ROOT / "CATALOGS/OPEN_QUESTIONS.csv").read_text(encoding="utf-8"),
+   "all 3 round-11 decisions + 3 corrections + curriculum assumption recorded")
 ck("scope:v10", all(x in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encoding="utf-8") for x in
    ["ORIGINAL_CURVED_ZIGZAG_RESTORED","NUMBERS_REATTRIBUTED","DEEP_CODE_REVIEW_V10"])
    and all(x in (ROOT / "CATALOGS/DESIGN_FEEDBACK.csv").read_text(encoding="utf-8") for x in
@@ -417,13 +477,14 @@ ck("craft:phases", len(json.loads((ca / "workspace/plan.json").read_text(encodin
 
 # MANIFEST coherence
 man = json.loads((ROOT / "MANIFEST.json").read_text(encoding="utf-8"))
-ck("manifest:v10", "DESIGN v10" in man["status"] and man["deliverables"]["design_round"] == "v10 (REVIEW)"
-   and man["deliverables"]["design_views"] == 14 and man["deliverables"]["csv_catalogs"] == 20
-   and man["deliverables"]["persian_docs"] == 23 and "design_round_10" in man
-   and man["design_round_9"]["status"].startswith("DESIGN v9 · SUPERSEDED")
-   and man["design_round_10"]["layout"]["curve_commands"] == 5
-   and man["design_round_10"]["layout"]["mode"] == "original_curved_zigzag",
-   "MANIFEST advertises v10: 14 views / 20 CSVs / 23 docs / v9 retracted / 5 Q elbows")
+ck("manifest:v11", "DESIGN v11" in man["status"] and man["deliverables"]["design_round"] == "v11 (REVIEW)"
+   and man["deliverables"]["design_views"] == 14 and man["deliverables"]["csv_catalogs"] == 21
+   and man["deliverables"]["persian_docs"] == 24 and "design_round_11" in man
+   and man["design_round_10"]["status"].startswith("DESIGN v10 · SUPERSEDED")
+   and man["design_round_11"]["leaderboard"] == "MY_STATUS_ONLY (Wooden League + countdown + 5 rival rows + league badges removed)"
+   and man["design_round_11"]["curriculum"]["chapters"] == 60
+   and man["design_round_11"]["geometry"].startswith("UNCHANGED"),
+   "MANIFEST advertises v11: 14 views / 21 CSVs / 24 docs / curved geometry kept / 60 فصل")
 # +3 = this check itself + docs:no-cjk + sums (the three checks after this point)
 EXPECTED_CHECKS = len(checks) + 3
 ck("manifest:checks", man["deliverables"]["verification_checks"] == EXPECTED_CHECKS,
