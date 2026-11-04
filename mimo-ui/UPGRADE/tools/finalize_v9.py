@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ARCHIVED (round 10): the single straight line was RETRACTED by the user; use v10 tools.
 # -*- coding: utf-8 -*-
 """finalize_v9.py — round-9 docs/catalogs/banners/MANIFEST. Idempotent."""
 from __future__ import annotations

@@ -87,3 +87,21 @@ V9-13,state,linear progression done/done/current/next/bolt/bolt,PathMapViewModel
 V9-14,timing,checkpoint enter 220ms / exit 400ms,rc_checkpoint_window_enter.xml / _exit.xml,SOURCE/res/anim/,code
 V9-15,shape,node shape pathData from ic_square_rounded (18x18 on 24 viewport),"android:pathData M18.25,21H5.75...",SOURCE/res/drawable/ic_square_rounded.xml,code
 V9-16,lock,still ZERO Learn locks; one exam-hub lock untouched,user round-8 + round-9,DESIGN/index.html#exam-hub,decision
+V10-01,layout,ORIGINAL curved zigzag RESTORED (v9 straight line retracted),user round-10: من حرفمو پس میگیرم,21_DESIGN_ROUND_9.md -> 22_DESIGN_ROUND_10.md,decision
+V10-02,layout,"3 lanes x=80/196/312, spacing 116dp = node 92 + spacing_l 24",dimen.xml spacing_l = 24.000000dip,SOURCE/values/values/dimen.xml,code
+V10-03,layout,vertical pitch 116dp (24dp GAP between nodes),dimen.xml spacing_l,DESIGN/NODE_CODE_GEOMETRY.json::nodeGeometry.layout,code
+V10-04,layout,alternating lane sequence center/right/center/left/center/left,mimo-01/02/10 + PathMapScreenKt,DESIGN/NODE_CODE_GEOMETRY.json,visual cross-check
+V10-05,connector,rounded Q elbow radius 32dp from spacing_xl,dimen.xml spacing_xl = 32.000000dip,SOURCE/values/values/dimen.xml,code
+V10-06,connector,"2 coloured segments: done purple / next light, split at current node",progress_chapter_primary / progress_chapter_background,CATALOGS/DESIGN_TOKENS.json,code
+V10-07,connector,alternating elbow types: horizontal-exit->vertical & vertical-exit->horizontal,mimo-01/02/10 path shape,DESIGN/index.html#learn,visual cross-check
+V10-08,connector,0 straight-line-only architecture; Q commands present,regex-verified Q count = 5,DESIGN/NODE_CODE_GEOMETRY.json::nodeGeometry.connector_paths,code
+V10-09,geometry,corner radius 26dp restored (16dp belongs to Glance widgets),glance_component_square_icon_button_corners = 16dp is a Glance widget dimen,SOURCE/res/drawable/glance_component_btn_square.xml,code
+V10-10,geometry,connector stroke 10dp restored (6dp is lesson_progressbar_height),lesson_progressbar_height = 6.000000dip applies to LESSON bar,SOURCE/values/values/dimen.xml,code
+V10-11,geometry,node icon 48dp kept from glance_component_btn_circle / ic_bolt_mastered,48.000000dip,SOURCE/res/drawable/glance_component_btn_circle.xml,code
+V10-12,code,"92 PathMap* DEX classes, 5 groups (screen/viewmodel/overlay/interactors/practice)",UI_CLASSES.json 3255 classes,SOURCE/dex/UI_CLASSES.json,code
+V10-13,code,ArcProgressView finished/unfinished stroke colours + setStrokeWidth(F),Lcom/getmimo/ui/streaks/ArcProgressView;,SOURCE/dex/UI_CLASSES.json,code
+V10-14,code,test-tracks.json 15 sections / 223 tutorialIds mapped to node ordinals,sections[].startIndex/endIndex/tutorialIds,SOURCE/assets/ui/testdata/test-tracks.json,code
+V10-15,code,progress_bar_chapter.xml 3 layer-list items (corners 100dp pill),background / weak / primary,SOURCE/res/drawable/progress_bar_chapter.xml,code
+V10-16,code,dotted_border_background.xml stroke 2dp / dash 8dp / gap 8dp,line_secondary,SOURCE/res/drawable/dotted_border_background.xml,code
+V10-17,code,checkpoint window enter 220ms / exit 400ms kept,rc_checkpoint_window_enter.xml / _exit.xml,SOURCE/res/anim/,code
+V10-18,lock,"next node is light + ic_square_rounded, UNLOCKED; zero Learn locks",user round-8 + round-10,DESIGN/index.html#learn,decision

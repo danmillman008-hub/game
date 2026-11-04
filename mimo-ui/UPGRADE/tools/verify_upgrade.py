@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Fail-closed verification of the Konkur-upgrade planning deliverable (v9)."""
+"""Fail-closed verification of the Konkur-upgrade planning deliverable (v10)."""
 from __future__ import annotations
 import csv, hashlib, json, re, sys
 from pathlib import Path
@@ -14,16 +14,16 @@ docs = ["README.md", "00_START_HERE.md", "01_CRAFT_ANYTHING_INSTALL.md",
         "11_EVIDENCE_AND_CROSSWALK.md", "12_RISKS_UNKNOWN_AND_QUESTIONS.md",
         "13_DESIGN_ROUND_2.md", "14_DESIGN_ROUND_3.md", "15_DESIGN_ROUND_4.md",
         "16_DESIGN_ROUND_5.md", "17_DESIGN_ROUND_6.md",
-        "18_DESIGN_ROUND_7.md", "20_DESIGN_ROUND_8.md", "21_DESIGN_ROUND_9.md", "wireframes.html"]
-csvs = {"UI_FIDELITY_RULES.csv": 31, "FEATURE_MAP.csv": 17, "EXAM_TYPES.csv": 11,
+        "18_DESIGN_ROUND_7.md", "20_DESIGN_ROUND_8.md", "21_DESIGN_ROUND_9.md", "22_DESIGN_ROUND_10.md", "wireframes.html"]
+csvs = {"UI_FIDELITY_RULES.csv": 34, "FEATURE_MAP.csv": 17, "EXAM_TYPES.csv": 11,
         "HADAF_TEMPLATES.csv": 7, "GAMIFICATION_MAP.csv": 13, "PHASES.csv": 8,
-        "LEARNHARNESS_ACTIONS.csv": 32, "EVIDENCE_LEDGER.csv": 10, "OPEN_QUESTIONS.csv": 10,
-        "DESIGN_FEEDBACK.csv": 55, "SCOPE_DECISIONS.csv": 35,
+        "LEARNHARNESS_ACTIONS.csv": 32, "EVIDENCE_LEDGER.csv": 10, "OPEN_QUESTIONS.csv": 11,
+        "DESIGN_FEEDBACK.csv": 58, "SCOPE_DECISIONS.csv": 38,
         "AI_PANEL_SPEC.csv": 27, "EPM_MINOR_OPTIONS.csv": 7,
         "EXAM_SECTION_TEMPLATES.csv": 7,
         "MIMO_CODE_GEOMETRY.csv": 200, "MIMO_SCREENSHOT_CROSSWALK.csv": 14,
         "ANSWER_SHEET_POLICY.csv": 5, "MIMO_LEARN_SUBSCREENS.csv": 868,
-        "MIMO_PATH_NODES.csv": 88, "PRACTICE_VS_EXAM.csv": 12}
+        "MIMO_PATH_NODES.csv": 106, "PRACTICE_VS_EXAM.csv": 12}
 checks, problems = [], []
 
 
@@ -53,13 +53,13 @@ ck("wireframe:tokens", all(x in t for x in ["#7E4BDE", "#F6F7FB", "#E4E6F1", "#6
 ck("wireframe:legacy-tabs", t.count('class="tab') >= 4 and "<div class=\"tab\">Learn</div>" in t,
    "archived v1 wireframe renders its legacy tabs")
 ck("wireframe:3col-grid", "repeat(3,minmax(0,1fr))" in t, "exam node grid")
-ck("wireframe:v1-banner", "DESIGN/index.html" in t and "DESIGN v9" in t, "v1 archived, points to v9")
+ck("wireframe:v1-banner", "DESIGN/index.html" in t and "DESIGN v10" in t, "v1 archived, points to v10")
 
 # ---- DESIGN v8 interactive prototype ----
 D = ROOT / "DESIGN"
 dt = (D / "index.html").read_text(encoding="utf-8") if (D / "index.html").is_file() else ""
 ck("design:index", len(dt) > 20000, "%d chars" % len(dt))
-ck("design:v9-header", "DESIGN v9" in dt and "دور نهم" in dt, "design round 9 review")
+ck("design:v10-header", "DESIGN v10" in dt and "دور دهم" in dt, "design round 10 review")
 ck("design:v7-archived", "DESIGN v7" in dt, "v7 archive line kept in spec")
 ck("design:v6-archived", "DESIGN v6" in dt, "v6 archive line kept in spec")
 ck("design:no-hub-timer", "exam-hub" in dt and "⏱ ۱۲:۴۵" not in dt, "timer removed from exam hub")
@@ -122,8 +122,9 @@ ck("design:build-tools", all((ROOT / "tools" / f).is_file() for f in
     "extract_mimo_learn_v6.py", "build_design_v6.py", "design_v6_template.html",
     "extract_mimo_nodes_v7.py", "build_design_v7.py", "design_v7_template.html", "finalize_v7.py",
     "extract_mimo_nodes_v8.py", "build_design_v8.py", "design_v8_template.html", "finalize_v8.py",
-    "extract_mimo_nodes_v9.py", "build_design_v9.py", "design_v9_template.html", "finalize_v9.py"]),
-   "reproducible extract -> build pipeline (v5..v8 archived + v9 current)")
+    "extract_mimo_nodes_v9.py", "build_design_v9.py", "design_v9_template.html", "finalize_v9.py",
+    "extract_mimo_nodes_v10.py", "build_design_v10.py", "design_v10_template.html", "finalize_v10.py"]),
+   "reproducible extract -> build pipeline (v5..v9 archived + v10 current)")
 
 # ---- 14 Mimo reference screenshots (visual cross-check only) ----
 shots = ["mimo-01-learn-path-play.jpg","mimo-02-learn-path-half.jpg",
@@ -174,7 +175,7 @@ ck("design:v6:sections-from-code", all(x in dt for x in ["sectionRows","path_ove
    "numbered sections + tutorial ids rendered from shipped JSON")
 ck("design:v6:no-max-tab", 'data-tab="MAX"' not in dt and "tabMap" in dt,
    "MAX tab forbidden; 5 tabs restored")
-ck("design:v6:clean-learn", all(x in dt for x in ["1,272","ic_key","ic_infinity","overview-card","l9n1"]),
+ck("design:v6:clean-learn", all(x in dt for x in ["1,272","ic_key","ic_infinity","overview-card","l10n1"]),
    "clean Learn: 3 pills + overview card + code-derived nodes")
 lp = D / "LEARN_CODE_GEOMETRY.json"
 ck("design:v6:learn-geometry", lp.is_file(), "LEARN_CODE_GEOMETRY.json present")
@@ -197,9 +198,11 @@ ck("design:v6:sub-catalog", lsub.is_file() and len(rows(lsub)) - 1 == 868, "868 
 ck("design:v6:build-bytes", len(dt) > 200000, "%d chars" % len(dt))
 
 # ---- MAIN TASK: exact code-driven node geometry (v8) ----
-ck("design:v9:nodes", all(x in dt for x in
-   ["l9n1","l9n2","l9n3","l9n4","l9n5","l9n6","gloss-fab","hring","M196 0 V620","nodeGeometry","pathLineGrad"]),
-   "6 data-driven nodes, ONE straight line, 1/2 ring, floating book")
+ck("design:v10:nodes", all(x in dt for x in
+   ["l10n1","l10n2","l10n3","l10n4","l10n5","l10n6","gloss-fab","hring",
+    "M242 70 H280 Q312 70 312 102 V140","Q312 302 280 302","nodeGeometry","original_curved_zigzag"])
+   and '<path d="M196 0 V620"' not in dt and "pathLineGrad" not in dt,
+   "6 data-driven nodes, ORIGINAL curved zigzag restored, v9 straight line gone")
 ck("design:v9:node-states", all(x in dt for x in
    ["node done","node cur","node next","node bolt active","node bolt optional","curInner",
     "ic_check_white","ic_square_rounded","ic_bolt_charged","ic_bolt_mastered"]),
@@ -225,27 +228,37 @@ if np_.is_file():
        "%d sections / %d tutorialIds" % (len(ng["contentModel"]["sections"]),
                                          sum(s["tutorialCount"] for s in ng["contentModel"]["sections"])))
     geom = ng["nodeGeometry"]
-    ck("design:v9:machine-geometry", geom["node"]["size_dp"] == 92 and geom["node"]["corner_radius_dp"] == 16
+    ck("design:v10:machine-geometry", geom["node"]["size_dp"] == 92 and geom["node"]["corner_radius_dp"] == 26
        and geom["node"]["lip_dp"] == 8 and geom["node"]["icon_dp"] == 48
-       and geom["viewBox"] == [392, 620] and len(geom["nodes"]) == 6
-       and len(geom["connector_paths"]) == 1 and geom["connector_paths"][0]["d"] == "M196 0 V620"
-       and not re.search(r"[QqCcSsTtAa]", geom["connector_paths"][0]["d"]),
-       "92dp/16dp/48dp + 392x620 + 6 nodes + ONE straight path (0 curve commands)")
+       and geom["viewBox"] == [392, 720] and len(geom["nodes"]) == 6
+       and len(geom["connector_paths"]) == 2
+       and sum(p["d"].count("Q") for p in geom["connector_paths"]) == 5,
+       "92dp/26dp/48dp + 392x720 + 6 nodes + 2 Q paths (5 rounded elbows)")
     L = geom["layout"]
-    ck("design:v9:single-line", L["mode"] == "single_vertical_line" and L["axis_x"] == 196
-       and L["gap_dp"] == 12 and L["curve"] is False and L["zigzag"] is False
-       and L["one_continuous_connector"] is True
-       and all(n["cx"] == L["axis_x"] for n in geom["nodes"]),
-       "single vertical line / axis 196 / 12dp gap / no curve-zigzag / all 6 on axis")
-    ck("design:v9:code-fidelity", ng["code_fidelity"]["dimens"]["corner_radius_dp"] == 16
-       and ng["code_fidelity"]["dimens"]["progress_stroke_dp"] == 6
-       and ng["code_fidelity"]["dimens"]["gap_dp"] == 12
-       and ng["code_fidelity"]["animations"] == {"enter_ms": 220.0, "exit_ms": 400.0}
-       and len(ng["code_fidelity"]["corrections_vs_v8"]) == 7,
-       "7 v8 inferred numbers corrected from dimen.xml / drawables / anims")
-    ck("design:v9:gradient-stop", len(geom["connector_paths"][0]["gradient_stops"]) == 4
-       and abs(geom["connector_paths"][0]["gradient_stops"][1]["offset"] - 0.4161) < 0.001,
-       "hard gradient stop at the current node (41.61%)")
+    ck("design:v10:original-zigzag", L["mode"] == "original_curved_zigzag"
+       and L["lanes"] == {"left": 80, "center": 196, "right": 312}
+       and L["lane_sequence"] == ["center", "right", "center", "left", "center", "left"]
+       and L["node_gap_dp"] == 24 and L["elbow_radius_dp"] == 32
+       and L["curve"] is True and L["zigzag"] is True
+       and L["one_continuous_connector"] is False
+       and sorted({n["cx"] for n in geom["nodes"]}) == [80, 196, 312],
+       "ORIGINAL 3-lane zigzag / 24dp gaps / 32dp Q elbows / no straight line")
+    ck("design:v10:deep-code-review", geom["codeReview"]["pathmap_dex_classes"] == 92
+       and geom["codeReview"]["track"]["section_count"] == 15
+       and geom["codeReview"]["track"]["tutorial_id_count"] == 223
+       and len(geom["codeReview"]["shapes"]) == 10
+       and len(geom["codeReview"]["vectors_reviewed"]) == 10
+       and "getFinishedStrokeColor()" in " ".join(geom["codeReview"]["arc_progress_methods"])
+       and len(ng["code_fidelity"]["corrections_vs_v9"]) == 3,
+       "92 PathMap DEX classes / 15 sections / 223 tutorialIds / ArcProgressView / 3 v9 reversions")
+    ck("design:v10:no-misattribution", "lesson_progressbar_height" in geom["connector"]["stroke_source"]
+       and "Glance widget" in geom["node"]["corner_source"]
+       and geom["connector"]["stroke_dp"] == 10,
+       "26dp corner & 10dp stroke restored; 16dp/6dp attributed to their real components")
+    ck("design:v10:connector-segments", [p["role"] for p in geom["connector_paths"]] == ["done", "next"]
+       and geom["connector_paths"][0]["color_token"] == "progress_chapter_primary"
+       and geom["connector_paths"][1]["color_token"] == "progress_chapter_background",
+       "two coloured connector segments split at the current node")
     ck("design:v8:states-removed", len(geom["states_removed"]) >= 4
        and "locked lesson" in geom["states_removed"][0],
        "locked/START/stray ring/debug chips listed as removed")
@@ -254,7 +267,7 @@ if np_.is_file():
     ck("design:v8:node-method", "CODE_FIRST" in ng["method"] and "VISUAL_CROSSCHECK_ONLY" in ng["method"],
        "code-first, screenshots cross-check only")
 pcat = ROOT / "CATALOGS/MIMO_PATH_NODES.csv"
-ck("design:v9:node-catalog", pcat.is_file() and len(rows(pcat)) - 1 == 88, "88 node code-evidence rows")
+ck("design:v10:node-catalog", pcat.is_file() and len(rows(pcat)) - 1 == 106, "106 node code-evidence rows")
 ck("design:v8:NODE-payload", "var NODE=" in dt and "NODE.nodeGeometry" in dt and "G.nodes.forEach" in dt,
    "prototype HTML rendered from the injected machine-readable geometry")
 
@@ -322,14 +335,15 @@ ck("design:v8:ai-footer", all(x in dt for x in
 ck("design:v8:build-bytes", len(dt) > 300000, "%d chars" % len(dt))
 
 # ---- docs / catalogs ----
-ck("docs:v9:21", "DESIGN v9" in (ROOT / "21_DESIGN_ROUND_9.md").read_text(encoding="utf-8")
-   and "M196 0 V620" in (ROOT / "21_DESIGN_ROUND_9.md").read_text(encoding="utf-8"),
-   "v9 final log + single-line geometry")
+ck("docs:v10:22", "DESIGN v10" in (ROOT / "22_DESIGN_ROUND_10.md").read_text(encoding="utf-8")
+   and "Q312 70" in (ROOT / "22_DESIGN_ROUND_10.md").read_text(encoding="utf-8"),
+   "v10 final log + original curved geometry")
+ck("docs:v9:21", "DESIGN v9" in (ROOT / "21_DESIGN_ROUND_9.md").read_text(encoding="utf-8"), "v9 log archived / retracted")
 ck("docs:v8:20", "DESIGN v8" in (ROOT / "20_DESIGN_ROUND_8.md").read_text(encoding="utf-8"), "v8 log archived")
-ck("docs:v9:notes", "DESIGN v9" in (D / "DESIGN_NOTES.fa.md").read_text(encoding="utf-8")
-   and "NODE_CODE_GEOMETRY.json" in (D / "DESIGN_NOTES.fa.md").read_text(encoding="utf-8"), "v9 design notes")
-ck("docs:v9:banners", sum("<!-- v9-banner -->" in (ROOT / d).read_text(encoding="utf-8") for d in docs if d.endswith(".md")) >= 20,
-   "archived docs carry v9 superseded banner")
+ck("docs:v10:notes", "DESIGN v10" in (D / "DESIGN_NOTES.fa.md").read_text(encoding="utf-8")
+   and "NODE_CODE_GEOMETRY.json" in (D / "DESIGN_NOTES.fa.md").read_text(encoding="utf-8"), "v10 design notes")
+ck("docs:v10:banners", sum("<!-- v10-banner -->" in (ROOT / d).read_text(encoding="utf-8") for d in docs if d.endswith(".md")) >= 21,
+   "archived docs carry v10 superseded banner")
 ck("docs:v7:18", "DESIGN v7" in (ROOT / "18_DESIGN_ROUND_7.md").read_text(encoding="utf-8"), "v7 log archived")
 ck("scope:v8", all(x in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encoding="utf-8") for x in
    ["REMOVED_ENTIRELY_V8","FIVE_TABS_RESTORED","DICTATE_REMOVED","NO_ANNOTATIONS_IN_UI","ONE_LOCK_ONLY","NODE_CODE_FIRST_V8"]),
@@ -342,6 +356,11 @@ ck("scope:v9", all(x in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encodi
    and all(x in (ROOT / "CATALOGS/DESIGN_FEEDBACK.csv").read_text(encoding="utf-8") for x in
    ["F-53","F-54","F-55"]),
    "all 3 round-9 decisions + 3 round-9 corrections recorded")
+ck("scope:v10", all(x in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encoding="utf-8") for x in
+   ["ORIGINAL_CURVED_ZIGZAG_RESTORED","NUMBERS_REATTRIBUTED","DEEP_CODE_REVIEW_V10"])
+   and all(x in (ROOT / "CATALOGS/DESIGN_FEEDBACK.csv").read_text(encoding="utf-8") for x in
+   ["F-56","F-57","F-58"]),
+   "all 3 round-10 decisions + 3 round-10 corrections recorded")
 pv = ROOT / "CATALOGS/PRACTICE_VS_EXAM.csv"
 ck("csv:practice-vs-exam", pv.is_file() and len(rows(pv)) - 1 == 12
    and "learn_bolt_practice" in pv.read_text(encoding="utf-8")
@@ -398,12 +417,13 @@ ck("craft:phases", len(json.loads((ca / "workspace/plan.json").read_text(encodin
 
 # MANIFEST coherence
 man = json.loads((ROOT / "MANIFEST.json").read_text(encoding="utf-8"))
-ck("manifest:v9", "DESIGN v9" in man["status"] and man["deliverables"]["design_round"] == "v9 (REVIEW)"
+ck("manifest:v10", "DESIGN v10" in man["status"] and man["deliverables"]["design_round"] == "v10 (REVIEW)"
    and man["deliverables"]["design_views"] == 14 and man["deliverables"]["csv_catalogs"] == 20
-   and man["deliverables"]["persian_docs"] == 22 and "design_round_9" in man
-   and man["design_round_8"]["status"].startswith("DESIGN v8 · SUPERSEDED")
-   and man["design_round_9"]["layout"]["curve_commands"] == 0,
-   "MANIFEST advertises v9: 14 views / 20 CSVs / 22 docs / v8 superseded / 0 curves")
+   and man["deliverables"]["persian_docs"] == 23 and "design_round_10" in man
+   and man["design_round_9"]["status"].startswith("DESIGN v9 · SUPERSEDED")
+   and man["design_round_10"]["layout"]["curve_commands"] == 5
+   and man["design_round_10"]["layout"]["mode"] == "original_curved_zigzag",
+   "MANIFEST advertises v10: 14 views / 20 CSVs / 23 docs / v9 retracted / 5 Q elbows")
 # +3 = this check itself + docs:no-cjk + sums (the three checks after this point)
 EXPECTED_CHECKS = len(checks) + 3
 ck("manifest:checks", man["deliverables"]["verification_checks"] == EXPECTED_CHECKS,

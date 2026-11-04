@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ARCHIVED (round 10): the single straight line was RETRACTED by the user; use v10 tools.
 # -*- coding: utf-8 -*-
 """extract_mimo_nodes_v9.py — round-9 RE-REVIEW of path-map node code.
 

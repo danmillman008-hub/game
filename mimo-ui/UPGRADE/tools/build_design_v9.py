@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ARCHIVED (round 10): the single straight line was RETRACTED by the user; use v10 tools.
 # -*- coding: utf-8 -*-
 """build_design_v9.py — DESIGN v9: ONE straight vertical line of nodes.
 

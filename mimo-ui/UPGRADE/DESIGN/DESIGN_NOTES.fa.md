@@ -1,27 +1,23 @@
-# یادداشتهای طراحی — DESIGN v9
+# یادداشتهای طراحی — DESIGN v10
 
-> نسخهٔ جاری: **DESIGN v9 · REVIEW** (منتظر تأیید نهایی). نسخههای **DESIGN v6 / v7 / v8** بایگانی حسابرسیاند. همچنان **فقط پلن/دیزاین**؛ هیچ کد محصولی نوشته نشده است.
+> نسخهٔ جاری: **DESIGN v10 · REVIEW** (منتظر تأیید نهایی). نسخههای **DESIGN v6 / DESIGN v7 / DESIGN v8 / DESIGN v9** بایگانی حسابرسیاند. همچنان **فقط پلن/دیزاین**؛ هیچ کد محصولی نوشته نشده.
 
-## ۱. اصل حاکم
+## ۱. اصل
 
-بازآفرینی ۱۰۰٪ بخشهای اصلی میمو **از داخل کد و مهندسی معکوس**؛ ۱۴ اسکرینشات فقط `VISUAL_CROSSCHECK_ONLY`. منابع: `CATALOGS/DESIGN_TOKENS.json` (ARSC)، `SOURCE/values/values/dimen.xml`، `SOURCE/values/values/string.xml`، `SOURCE/res/drawable/*.xml`، `SOURCE/res/anim/`, `SOURCE/dex/UI_CLASSES.json`، `test-tracks.json`. فقط نام درسها/فصلها/مباحث کنکوری میشود؛ ۰ رنگ/فونت/شعاع/آیکون تازه.
+کد مبناست (`ARSC`، `dimen.xml`، `drawable/*.xml`، `pathData`، `anim`، `DEX`، `test-tracks.json`)؛ ۱۴ اسکرینشات فقط `VISUAL_CROSSCHECK_ONLY`. فقط نام درسها/فصلها کنکوری میشود؛ ۰ رنگ/فونت/شعاع/آیکون تازه.
 
-## ۲. گرهها (دور نهم): یک خط عمودی واحد
+## ۲. معماری اورجینال قوسدار (بازگشته)
 
-همهٔ ۶ گره روی **محور x=196**، بدون قوس، بدون زانوی `Q`، بدون زیگزاگ. مسیر **یک `<path>` صاف `M196 0 V620`** با `linearGradient` سخت در محل گرهٔ فعلی (`41.61%`). مختصات هم در بیلد و هم در رانتایم از `NODE_CODE_GEOMETRY.json::nodeGeometry` خوانده میشود.
+درخواست «خط صاف» دور نهم **پس گرفته شد**. سه لاین `۸۰/۱۹۶/۳۱۲`، ترتیب `center/right/center/left/center/left`، فاصلهٔ **۲۴dp** (`spacing_l`) و گام ۱۱۶dp، زانوهای گرد `Q` به شعاع **۳۲dp** (`spacing_xl`) با الگوی `A/B/A/B/B`، دو قطعهٔ رنگی مسیر (بنفش تا گرهٔ فعلی، یاسی بعد از آن)، `viewBox 392×720`. شعاع گره **۲۶dp**، ضخامت مسیر **۱۰dp**، آیکن **۴۸dp**؛ ۱۶dp مال Glance widget و ۶dp مال نوار پیشرفت درس است. حالتها: انجامشده×۲ / فعلی (½ یا `ic_play`) / بعدیِ **بدون قفل** / `ic_bolt_charged` / `ic_bolt_mastered`. حلقهٔ دوتایی سفید، گرادیان سهلایهٔ `progress_bar_chapter`، نقطهچین و کتاب شناور حفظ شدند.
 
-اعداد از کد (جایگزین حدسهای v8): شعاع **۱۶dp** (`glance_component_btn_square.xml → dimen`)، ضخامت خط **۶dp** (`lesson_progressbar_height`)، فاصلهٔ گرهها **۱۲dp** (`spacing_s`)، آیکن **۴۸dp** (`glance_component_btn_circle.xml`)، گرادیان سهلایهٔ `progress_bar_chapter.xml`، شکل `ic_square_rounded.xml`، بولتهای واقعی `ic_bolt_charged` / `ic_bolt_mastered`، انیمیشن ۲۲۰/۴۰۰ms از `rc_checkpoint_window_*`.
+## ۳. کاوش عمیق کد
 
-توالی خطی: انجامشده / انجامشده / فعلی (½ یا `ic_play`) / **بعدیِ بدون قفل** / بولت شارژشده / بولت تسلطیافته. حلقهٔ دوتایی سفید، گرادیان بنفش، تیک `ic_check_white`، نقطهچین و کتاب شناور حفظ شدند. **هیچ گرهٔ قفلی** وجود ندارد؛ تنها قفل همان کارت «آزمون نهایی / دو هفتگی» هاب آزمونهاست.
+۹۲ کلاس `PathMap*`ی DEX در ۵ گروه، `ArcProgressView` با رنگهای finished/unfinished و `setStrokeWidth(F)`، **۱۵ فصل / ۲۲۳ `tutorialId`** از `test-tracks.json` با `startIndex/endIndex` که به `data-section` گرهها نگاشت شد، ۱۰ شِیپ AXML، ۱۰ وکتور `pathData`، ۱۳۹۶ دایمنشن، انیمیشن چکپوینت ۲۲۰/۴۰۰ms.
 
-## ۳. مصوبات پابرجا
+## ۴. مصوبات پابرجا
 
-روتین روزانه و کل ایدهٔ Habitica حذف · دیکته حذف · یادداشتهای توضیحی داخل UI حذف (شواهد نامرئی `data-code`/`data-lh`) · **۷ بخش لیبلدار / قالب فیلد / پاسخنامهٔ تشریحی نگه داشته شد** · ۵ تب، `MAX` ممنوع · ظاهر آزمونها فقط پوستهٔ میمو (بدون تغییر معماری/تایمر/۲۷۰ دقیقه/پاسخبرگ≠پاسخنامه) · بولت ← `section-practice` جدا از آزمون · لیدربورد selfbox بدون Promotion Zone · چت مینیمال · RTL/شب · بدون Pro/پرداخت/MAX · «وارد کردن کلید API» فقط یادداشت.
+۵ تب (`MAX` ممنوع) · حذف روتین/Habitica و دیکته · حذف یادداشتهای داخل UI · **نگهداری ۷ بخش لیبلدار / قالب فیلد / پاسخنامهٔ تشریحی** · بدون تغییر معماری/تایمر/۲۷۰ دقیقه/«پاسخبرگ»≠«پاسخنامه» · **صفر گرهٔ قفلی** و تنها یک قفل «آزمون نهایی / دو هفتگی» در هاب · بولت ← `section-practice` جدا · لیدربورد selfbox بدون Promotion Zone · چت مینیمال · RTL/شب · بدون Pro/پرداخت · «وارد کردن کلید API» فقط یادداشت.
 
-## ۴. حقوقی / clean-room
+## ۵. clean-room و وضعیت
 
-هیچ دارایی، فونت، رشته یا کدی از Mimo 9.35، Hamdars، Hadaf Plus، LearnHarness، EPM یا Habitica کپی نشده است. subscription/cart/Pro و اسکرینشات رانتایم ممنوعاند.
-
-## ۵. شواهد و وضعیت
-
-`DESIGN/CODE_GEOMETRY.json` + `LEARN_CODE_GEOMETRY.json` + `NODE_CODE_GEOMETRY.json` (v9) → `tools/build_design_v9.py` → `DESIGN/index.html`. ۱۴ نما / ۵ تب / ۹۳ وکتور SVG / ۱۳۳ آیکن / ۰ خطای jsdom / وریفایر PASS. منتظر **تأیید نهایی**؛ بعدش تازه P0 شروع میشود.
+هیچ دارایی/کدی از Mimo، Hamdars، Hadaf Plus، LearnHarness، EPM یا Habitica کپی نشده. `DESIGN/index.html` از `NODE_CODE_GEOMETRY.json` هم در بیلد و هم رانتایم رندر میشود: ۱۴ نما / ۵ تب / ۹۳ وکتور / ۱۳۳ آیکن / ۰ خطای jsdom / وریفایر PASS. منتظر **تأیید نهایی**؛ بعدش تازه P0.

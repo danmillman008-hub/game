@@ -1,7 +1,7 @@
 {
-  "method": "CODE_FIRST_TOKENS + SINGLE_LINE_LAYOUT + VISUAL_CROSSCHECK_ONLY (mimo-01 / mimo-02 / mimo-10)",
+  "method": "CODE_FIRST_TOKENS + ORIGINAL_CURVED_ZIGZAG + VISUAL_CROSSCHECK_ONLY (mimo-01 / mimo-02 / mimo-10)",
   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
-  "round": "v9",
+  "round": "v10",
   "sources": {
     "tokens": "mimo-ui/CATALOGS/DESIGN_TOKENS.json (50,477 ARSC config rows)",
     "vectors": "mimo-ui/SOURCE/res/drawable/*.xml (exact android:pathData)",
@@ -12,29 +12,45 @@
     "screenshots": "14 Mimo screenshots, VISUAL_CROSSCHECK_ONLY"
   },
   "nodeGeometry": {
-    "round": "v9",
+    "round": "v10",
     "layout": {
-      "mode": "single_vertical_line",
-      "axis_x": 196,
-      "node_count": 6,
-      "gap_dp": 12,
-      "gap_source": "values/values/dimen.xml :: spacing_s = 12dp",
-      "pitch_dp": 104,
-      "top_margin_dp": 4,
-      "curve": false,
-      "zigzag": false,
-      "alternating_x_offsets": false,
-      "one_continuous_connector": true,
-      "code_basis": "PathMapScreenKt / PathMapViewModel$onTutorialClick + glance_component_btn_square.xml + dimen.xml"
+      "mode": "original_curved_zigzag",
+      "restored_from": "v8 (user retracted the v9 single-line request)",
+      "lanes": {
+        "left": 80,
+        "center": 196,
+        "right": 312
+      },
+      "lane_sequence": [
+        "center",
+        "right",
+        "center",
+        "left",
+        "center",
+        "left"
+      ],
+      "lane_spacing_dp": 116,
+      "node_gap_dp": 24,
+      "node_gap_source": "values/values/dimen.xml :: spacing_l = 24dp",
+      "pitch_dp": 116,
+      "top_margin_dp": 24,
+      "elbow_radius_dp": 32,
+      "elbow_radius_source": "values/values/dimen.xml :: spacing_xl = 32dp",
+      "curve": true,
+      "zigzag": true,
+      "alternating_x_offsets": true,
+      "one_continuous_connector": false,
+      "connector_count": 2,
+      "code_basis": "PathMapScreenKt / PathMapViewModel$onTutorialClick (92 DEX classes) + test-tracks.json sections[].startIndex/endIndex + dimen.xml spacing scale"
     },
     "viewBox": [
       392,
-      620
+      720
     ],
     "node": {
       "size_dp": 92,
-      "corner_radius_dp": 16.0,
-      "corner_source": "glance_component_btn_square.xml -> @dimen/glance_component_square_icon_button_corners = 16dp",
+      "corner_radius_dp": 26,
+      "corner_source": "Compose RoundedCornerShape in PathMapScreenKt — NOT the 16dp glance_component_square_icon_button_corners (that dimen belongs to Glance widget square buttons). 26dp is VISUAL_CROSSCHECK_ONLY (mimo-01/02/10) and matches v8.",
       "icon_dp": 48,
       "icon_source": "glance_component_btn_circle.xml size 48dp; ic_bolt_mastered.xml is 48dp",
       "lip_dp": 8,
@@ -48,11 +64,11 @@
         "progress_chapter_weak",
         "progress_chapter_primary"
       ],
-      "progress_bar_source": "progress_bar_chapter.xml (3 layer-list items, corners 100dp = pill)",
+      "progress_bar_source": "progress_bar_chapter.xml (3 layer-list items, corners 100dp pill)",
       "optional_bg_token": "card_disabled",
       "shape_pathData": "M18.25,21H5.75C4.235,21 3,19.765 3,18.25V5.75C3,4.235 4.235,3 5.75,3H18.25C19.765,3 21,4.235 21,5.75V18.25C21,19.765 19.765,21 18.25,21Z",
       "shape_source": "res/drawable/ic_square_rounded.xml",
-      "state_source": "PathMapScreenKt 81 composables + PathMapViewModel$onTutorialClick"
+      "state_source": "PathMapViewModel$onTutorialClick + ModalData$SmartPracticeChargedModal/MasteredModal"
     },
     "grid": {
       "dot_dp": 1.6,
@@ -61,12 +77,13 @@
       "dash_source": "dotted_border_background.xml :: stroke 2dp / dash 8dp / gap 8dp"
     },
     "connector": {
-      "stroke_dp": 6.0,
-      "stroke_source": "values/values/dimen.xml :: lesson_progressbar_height = 6dp",
+      "stroke_dp": 10,
+      "stroke_source": "VISUAL_CROSSCHECK_ONLY (mimo-01/02/10 ~10dp); lesson_progressbar_height = 6dp belongs to the LESSON progress bar, NOT the path-map connector — v9's attribution was wrong and is reverted",
       "done_color_token": "progress_chapter_primary",
       "weak_color_token": "progress_chapter_weak",
       "next_color_token": "progress_chapter_background",
-      "note": "SINGLE straight vertical line with a hard linearGradient stop at the current node; NO Q/C/S curve commands"
+      "note": "ORIGINAL rounded Q elbows (right/down/left/down), NOT a bezier S curve, NOT a straight line. Two coloured segments split at the current node.",
+      "stroke_color_evidence": "ArcProgressView.getFinishedStrokeColor()/getUnfinishedStrokeColor()/setStrokeWidth(F)"
     },
     "current": {
       "outer_border_dp": 3,
@@ -78,91 +95,99 @@
       "ring_progress_percent": 55,
       "ring_label": "1/2",
       "play_vector": "ic_play",
-      "ring_source": "glance_circular_progress_indicator / bg_circular.xml shape=ring"
+      "ring_source": "bg_circular.xml shape=ring + glance circular progress indicator"
     },
     "nodes": [
       {
-        "id": "l9n1",
+        "id": "l10n1",
         "state": "done",
+        "lane": "center",
         "cx": 196,
-        "cy": 50,
+        "cy": 70,
         "icon": "ic_check_white",
         "click": "chapter",
-        "top_dp": 4
+        "top_dp": 24,
+        "section_ordinal": 1,
+        "section_name": "HTML Basics"
       },
       {
-        "id": "l9n2",
+        "id": "l10n2",
         "state": "done",
-        "cx": 196,
-        "cy": 154,
+        "lane": "right",
+        "cx": 312,
+        "cy": 186,
         "icon": "ic_check_white",
         "click": "chapter",
-        "top_dp": 108
+        "top_dp": 140,
+        "section_ordinal": 2,
+        "section_name": "CSS Basics"
       },
       {
-        "id": "l9n3",
+        "id": "l10n3",
         "state": "current",
+        "lane": "center",
         "cx": 196,
-        "cy": 258,
+        "cy": 302,
         "icon": "ic_play",
         "click": "chapter",
-        "top_dp": 212,
+        "top_dp": 256,
+        "section_ordinal": 3,
+        "section_name": "JavaScript Basics",
         "ring": "1/2"
       },
       {
-        "id": "l9n4",
+        "id": "l10n4",
         "state": "next",
-        "cx": 196,
-        "cy": 362,
+        "lane": "left",
+        "cx": 80,
+        "cy": 418,
         "icon": "ic_square_rounded",
         "click": "chapter",
-        "top_dp": 316
+        "top_dp": 372,
+        "section_ordinal": 4,
+        "section_name": "HTML Intermediate"
       },
       {
-        "id": "l9n5",
+        "id": "l10n5",
         "state": "bolt_active",
+        "lane": "center",
         "cx": 196,
-        "cy": 466,
+        "cy": 534,
         "icon": "ic_bolt_charged",
         "click": "section-practice",
-        "top_dp": 420,
+        "top_dp": 488,
+        "section_ordinal": 5,
+        "section_name": "Semantic HTML",
         "practice": 4
       },
       {
-        "id": "l9n6",
+        "id": "l10n6",
         "state": "bolt_optional",
-        "cx": 196,
-        "cy": 570,
+        "lane": "left",
+        "cx": 80,
+        "cy": 650,
         "icon": "ic_bolt_mastered",
         "click": "section-practice",
-        "top_dp": 524,
+        "top_dp": 604,
+        "section_ordinal": 6,
+        "section_name": "CSS Intermediate",
         "practice": 6
       }
     ],
     "connector_paths": [
       {
-        "role": "single",
-        "d": "M196 0 V620",
-        "stroke_dp": 6.0,
-        "note": "ONE straight vertical line, NO elbow/Q curves, NO zigzag, NO alternating x offsets",
-        "gradient_stops": [
-          {
-            "offset": 0.0,
-            "token": "progress_chapter_primary"
-          },
-          {
-            "offset": 0.4161,
-            "token": "progress_chapter_primary"
-          },
-          {
-            "offset": 0.4161,
-            "token": "progress_chapter_background"
-          },
-          {
-            "offset": 1.0,
-            "token": "progress_chapter_background"
-          }
-        ]
+        "role": "done",
+        "d": "M242 70 H280 Q312 70 312 102 V140 M312 232 V270 Q312 302 280 302 H242",
+        "color_token": "progress_chapter_primary",
+        "stroke_dp": 10,
+        "note": "purple finished segment: 2 subpaths with rounded Q elbows"
+      },
+      {
+        "role": "next",
+        "d": "M150 302 H112 Q80 302 80 334 V372 M80 464 V502 Q80 534 112 534 H150 M196 580 V618 Q196 650 164 650 H126",
+        "color_token": "progress_chapter_background",
+        "stroke_dp": 10,
+        "note": "light unfinished segment: 3 subpaths with rounded Q elbows"
       }
     ],
     "affordances": [
@@ -170,7 +195,7 @@
         "id": "gloss-fab",
         "type": "floating_book_dictionary",
         "cx": 340,
-        "cy": 600,
+        "cy": 650,
         "source": "ic_file.xml + bookmark_no_fill.xml + mimo-01/02 (VISUAL_CROSSCHECK_ONLY)"
       }
     ],
@@ -180,24 +205,222 @@
       "START bubble (not a Mimo path-map element)",
       "stray 12% ring on the path (belongs to the chapter header card)",
       "gray floating dot / debug chips",
-      "v9: alternating x offsets / zigzag snake layout",
-      "v9: rounded Q elbow connector (replaced by one straight line)",
-      "v9: inferred 26dp corner radius (corrected to 16dp from dimen.xml)",
-      "v9: inferred 10dp connector stroke (corrected to 6dp from dimen.xml)"
+      "v9 single straight line (REVERTED by explicit user instruction)",
+      "v9 16dp corner / 6dp stroke attributions (reverted: wrong component)"
     ],
     "lock_policy": "ZERO locked nodes in Learn / section detail / practice. The ONLY lock in the prototype is the pre-existing exam-hub «آزمون نهایی / دو هفتگی» card (section ۶); it is left untouched.",
     "timing": {
       "checkpoint_enter_ms": 220.0,
       "checkpoint_exit_ms": 400.0,
-      "source": "res/anim/rc_checkpoint_window_enter.xml + rc_checkpoint_window_exit.xml"
+      "source": "res/anim/rc_checkpoint_window_enter.xml + _exit.xml"
     },
-    "timing_note": "node hover/enter transition uses the shipped 220ms / 400ms checkpoint window timings",
     "screenshots": [
       "mimo-01-learn-path-play.jpg",
       "mimo-02-learn-path-half.jpg",
       "mimo-10-path-map-current.jpg"
     ],
-    "screenshot_role": "VISUAL_CROSSCHECK_ONLY — geometry comes from code, not from tracing the images"
+    "screenshot_role": "VISUAL_CROSSCHECK_ONLY — code is the source of truth",
+    "codeReview": {
+      "dimens": {
+        "spacing_xxs": 4.0,
+        "spacing_xs": 8.0,
+        "spacing_s": 12.0,
+        "spacing_m": 16.0,
+        "spacing_l": 24.0,
+        "spacing_xl": 32.0,
+        "spacing_xxl": 40.0,
+        "lesson_progressbar_height": 6.0,
+        "toolbar_height": 56.0,
+        "cardview_corner_radius_large": 12.0,
+        "glance_component_square_icon_button_corners": 16.0,
+        "glance_component_circle_icon_button_corners": 9999.0
+      },
+      "track": {
+        "title": "Make a Website",
+        "section_count": 15,
+        "tutorial_id_count": 223,
+        "sections": [
+          {
+            "index": 1,
+            "name": "HTML Basics",
+            "startIndex": 0,
+            "endIndex": 20,
+            "tutorialIds": 21
+          },
+          {
+            "index": 2,
+            "name": "CSS Basics",
+            "startIndex": 21,
+            "endIndex": 44,
+            "tutorialIds": 24
+          },
+          {
+            "index": 3,
+            "name": "JavaScript Basics",
+            "startIndex": 45,
+            "endIndex": 60,
+            "tutorialIds": 16
+          },
+          {
+            "index": 4,
+            "name": "HTML Intermediate",
+            "startIndex": 61,
+            "endIndex": 81,
+            "tutorialIds": 21
+          },
+          {
+            "index": 5,
+            "name": "Semantic HTML",
+            "startIndex": 82,
+            "endIndex": 89,
+            "tutorialIds": 8
+          },
+          {
+            "index": 6,
+            "name": "CSS Intermediate",
+            "startIndex": 90,
+            "endIndex": 122,
+            "tutorialIds": 33
+          },
+          {
+            "index": 7,
+            "name": "Types and Comparisons",
+            "startIndex": 123,
+            "endIndex": 135,
+            "tutorialIds": 13
+          },
+          {
+            "index": 8,
+            "name": "Accessibility Basics",
+            "startIndex": 136,
+            "endIndex": 141,
+            "tutorialIds": 6
+          },
+          {
+            "index": 9,
+            "name": "HTML Forms",
+            "startIndex": 142,
+            "endIndex": 146,
+            "tutorialIds": 5
+          },
+          {
+            "index": 10,
+            "name": "CSS Layout Fundamentals",
+            "startIndex": 147,
+            "endIndex": 158,
+            "tutorialIds": 12
+          },
+          {
+            "index": 11,
+            "name": "Conditionals",
+            "startIndex": 159,
+            "endIndex": 169,
+            "tutorialIds": 11
+          },
+          {
+            "index": 12,
+            "name": "Flexbox Basics",
+            "startIndex": 170,
+            "endIndex": 181,
+            "tutorialIds": 12
+          },
+          {
+            "index": 13,
+            "name": "Flexbox Containers",
+            "startIndex": 182,
+            "endIndex": 197,
+            "tutorialIds": 16
+          },
+          {
+            "index": 14,
+            "name": "Flexbox Items",
+            "startIndex": 198,
+            "endIndex": 207,
+            "tutorialIds": 10
+          },
+          {
+            "index": 15,
+            "name": "Loops",
+            "startIndex": 208,
+            "endIndex": 222,
+            "tutorialIds": 15
+          }
+        ]
+      },
+      "pathmap_dex_classes": 92,
+      "pathmap_class_groups": [
+        "interactors",
+        "other",
+        "path_map_overlay",
+        "path_map_screen",
+        "path_map_viewmodel"
+      ],
+      "arc_progress_methods": [
+        "<init>(Landroid/content/Context; Landroid/util/AttributeSet;)V",
+        "setArcAngle(F)V",
+        "setArcBottomHeight(F)V",
+        "setPadding(F)V",
+        "setStrokeWidth(F)V",
+        "a()V",
+        "getFinishedStrokeColor()I",
+        "getMax()I",
+        "getProgress()F",
+        "getUnfinishedStrokeColor()I",
+        "invalidate()V",
+        "onDraw(Landroid/graphics/Canvas;)V",
+        "onMeasure(I I)V",
+        "setFinishedStrokeColor(I)V",
+        "setMax(I)V",
+        "setProgress(F)V",
+        "setUnfinishedStrokeColor(I)V"
+      ],
+      "shapes": {
+        "progress_bar_chapter": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <layer-list xmlns:android=\"http://schemas.android.com/apk/res/android\"> <item android:id=\"@0x01020000\"> <shape> <solid android:color=\"@color/progress_chapter_background\"/> <corners android:radius=\"100.000000dip\"/> </shape> </item> <item android:id=\"@0x0102000F\"> <scale android:scaleWidth=\"100%\"> <shape> <corners android:radius=\"100.000000dip\"/> <solid android:color=\"@color/progr",
+        "progress_bar_mimo": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <layer-list xmlns:android=\"http://schemas.android.com/apk/res/android\"> <item android:id=\"@0x01020000\"> <shape> <solid android:color=\"@color/background_secondary\"/> <corners android:radius=\"100.000000dip\"/> </shape> </item> <item android:id=\"@0x0102000F\"> <scale android:scaleWidth=\"100%\"> <shape> <corners android:radius=\"100.000000dip\"/> <solid android:color=\"@color/progress_wea",
+        "glance_component_btn_square": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <shape xmlns:android=\"http://schemas.android.com/apk/res/android\"> <corners android:radius=\"@dimen/glance_component_square_icon_button_corners\"/> <solid android:color=\"@0x0106000C\"/> </shape>",
+        "glance_component_btn_circle": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <shape xmlns:android=\"http://schemas.android.com/apk/res/android\" android:shape=\"1\"> <size android:height=\"48.000000dip\" android:width=\"48.000000dip\"/> <solid android:color=\"@0x0106000C\"/> </shape>",
+        "dotted_border_background": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <shape xmlns:android=\"http://schemas.android.com/apk/res/android\" android:shape=\"0\"> <corners android:radius=\"12.000000dip\"/> <stroke android:width=\"2.000000dip\" android:color=\"@color/line_secondary\" android:dashWidth=\"8.000000dip\" android:dashGap=\"8.000000dip\"/> </shape>",
+        "ic_square_rounded": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <vector xmlns:android=\"http://schemas.android.com/apk/res/android\" android:height=\"24.000000dip\" android:width=\"24.000000dip\" android:viewportWidth=\"24.000000\" android:viewportHeight=\"24.000000\"> <path android:fillColor=\"#FF252746\" android:pathData=\"M18.25,21H5.75C4.235,21 3,19.765 3,18.25V5.75C3,4.235 4.235,3 5.75,3H18.25C19.765,3 21,4.235 21,5.75V18.25C21,19.765 19.765,21 18.2",
+        "bg_circular": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <shape xmlns:android=\"http://schemas.android.com/apk/res/android\" android:shape=\"3\" android:thicknessRatio=\"2.000000\" android:useLevel=\"false\" android:innerRadius=\"0.000000dip\"> <solid android:color=\"@color/background_secondary\"/> </shape>",
+        "rounded_background_primary": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <shape xmlns:android=\"http://schemas.android.com/apk/res/android\" android:shape=\"0\"> <solid android:color=\"@color/background_primary\"/> <corners android:radius=\"12.000000dip\"/> </shape>",
+        "shadow_bottom": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <shape xmlns:android=\"http://schemas.android.com/apk/res/android\" android:shape=\"0\"> <gradient android:startColor=\"@0x0106000D\" android:endColor=\"@color/shadow_color\" android:angle=\"90.000000\"/> </shape>",
+        "shadow_top": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <shape xmlns:android=\"http://schemas.android.com/apk/res/android\" android:shape=\"0\"> <gradient android:startColor=\"@0x0106000D\" android:endColor=\"@color/shadow_color\" android:angle=\"-90.000000\"/> </shape>"
+      },
+      "vectors_reviewed": [
+        "ic_bolt",
+        "ic_bolt_charged",
+        "ic_bolt_mastered",
+        "ic_check_thick",
+        "ic_check_white",
+        "ic_flash",
+        "ic_mascot_practice",
+        "ic_play",
+        "ic_square_rounded",
+        "ic_tab_practice"
+      ],
+      "vector_state_map": {
+        "done": "ic_check_white",
+        "current": "ic_play / hring 1/2",
+        "next": "ic_square_rounded (unlocked, light)",
+        "bolt_active": "ic_bolt_charged",
+        "bolt_optional": "ic_bolt_mastered"
+      },
+      "reverted_v9": [
+        "single_vertical_line / axis x=196 for all nodes",
+        "one straight path M196 0 V620 with linearGradient",
+        "16dp corner radius from Glance widget dimen",
+        "6dp connector stroke from lesson_progressbar_height",
+        "12dp node gap from spacing_s"
+      ],
+      "kept_from_v9": [
+        "48dp icon size (glance_component_btn_circle / ic_bolt_mastered)",
+        "real ic_bolt_charged / ic_bolt_mastered practice vectors",
+        "3-layer progress_bar_chapter gradient tokens",
+        "linear state sequence with an UNLOCKED next node",
+        "220ms / 400ms checkpoint window timings",
+        "ic_square_rounded pathData as node shape evidence"
+      ]
+    }
   },
   "tokens": {
     "colors": {
@@ -2906,8 +3129,12 @@
     "exam-hub / exam-run / exam-result remain the only Konkur exam surfaces",
     "NO Habitica /Daily Routine idea: removed entirely in round 8",
     "NO locked nodes in Learn/section-detail/practice; only the pre-existing exam-hub lock stays",
-    "v9: Learn nodes are ONE straight vertical line (axis x=196); no curve/zigzag; connector is one continuous path",
-    "v9: node geometry re-reviewed against dimen.xml / drawable shapes; 16dp corners, 6dp line, 12dp gap"
+    "v10: ORIGINAL curved zigzag path map restored (user retracted the v9 single-line request)",
+    "v10: node sequence mapped to test-tracks.json sections[].startIndex/endIndex; gaps 24dp / elbows 32dp from dimen.xml",
+    "v10: no locked Learn nodes; the one exam-hub lock is untouched",
+    "v10: ORIGINAL curved zigzag path map restored (user retracted the v9 single-line request)",
+    "v10: node sequence mapped to test-tracks.json sections[].startIndex/endIndex; gaps 24dp / elbows 32dp from dimen.xml",
+    "v10: no locked Learn nodes; the one exam-hub lock is untouched"
   ],
   "counts": {
     "vectors": 58,
@@ -2921,107 +3148,45 @@
     "dex_literals": 22,
     "sections": 15,
     "tutorial_ids": 223,
-    "catalog_rows": 88,
-    "layout_mode": "single_vertical_line",
-    "connector_paths": 1,
-    "curves": 0,
+    "catalog_rows": 106,
+    "layout_mode": "original_curved_zigzag",
+    "connector_paths": 2,
+    "curves": 5,
     "node_axis_x": 196,
-    "node_gap_dp": 12,
-    "corner_radius_dp": 16.0,
-    "connector_stroke_dp": 6.0,
-    "code_fidelity_shapes": 13,
-    "code_fidelity_vectors": 10
+    "node_gap_dp": 24,
+    "corner_radius_dp": 26,
+    "connector_stroke_dp": 10,
+    "code_fidelity_shapes": 10,
+    "code_fidelity_vectors": 10,
+    "elbow_radius_dp": 32
   },
   "vectorMisses": [],
   "code_fidelity": {
     "dimens": {
-      "corner_radius_dp": 16.0,
-      "button_radius_dp": 24.0,
-      "circle_button_dp": 9999.0,
-      "card_radius_dp": 12.0,
-      "gap_dp": 12.0,
-      "spacing_m_dp": 16.0,
-      "spacing_l_dp": 24.0,
-      "progress_stroke_dp": 6.0,
-      "toolbar_dp": 56.0
+      "spacing_xxs": 4.0,
+      "spacing_xs": 8.0,
+      "spacing_s": 12.0,
+      "spacing_m": 16.0,
+      "spacing_l": 24.0,
+      "spacing_xl": 32.0,
+      "spacing_xxl": 40.0,
+      "lesson_progressbar_height": 6.0,
+      "toolbar_height": 56.0,
+      "cardview_corner_radius_large": 12.0,
+      "glance_component_square_icon_button_corners": 16.0,
+      "glance_component_circle_icon_button_corners": 9999.0
     },
     "shapes": {
-      "glance_component_btn_square": {
-        "source": "res/drawable/glance_component_btn_square.xml",
-        "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <shape xmlns:android=\"http://schemas.android.com/apk/res/android\"> <corners android:radius=\"@dimen/glance_component_square_icon_button_corners\"/> <solid android:color=\"@0x0106000C\"/> </shape>",
-        "radius": "@dimen/glance_component_square_icon_button_corners"
-      },
-      "glance_component_btn_circle": {
-        "source": "res/drawable/glance_component_btn_circle.xml",
-        "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <shape xmlns:android=\"http://schemas.android.com/apk/res/android\" android:shape=\"1\"> <size android:height=\"48.000000dip\" android:width=\"48.000000dip\"/> <solid android:color=\"@0x0106000C\"/> </shape>",
-        "width": "48.000000dip",
-        "shape": "1"
-      },
-      "glance_component_square_button_ripple": {
-        "source": "res/drawable/glance_component_square_button_ripple.xml",
-        "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <ripple xmlns:android=\"http://schemas.android.com/apk/res/android\" android:color=\"?0x0101042C\"> <item android:id=\"@0x0102002E\"> <shape android:shape=\"0\"> <corners android:radius=\"@dimen/glance_component_square_icon_button_corners\"/> <solid android:color=\"@0x0106000B\"/> </shape> </item> </ripple>",
-        "radius": "@dimen/glance_component_square_icon_button_corners",
-        "shape": "0"
-      },
-      "progress_bar_chapter": {
-        "source": "res/drawable/progress_bar_chapter.xml",
-        "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <layer-list xmlns:android=\"http://schemas.android.com/apk/res/android\"> <item android:id=\"@0x01020000\"> <shape> <solid android:color=\"@color/progress_chapter_background\"/> <corners android:radius=\"100.000000dip\"/> </shape> </item> <item android:id=\"@0x0102000F\"> <scale android:scaleWidth=\"100%\"> <shape> <corners android:radius=\"100.000000dip\"/> <solid android:color=\"@color/progress_chapter_weak\"/> </shape> </scale> </item> <item android:id=\"@0x0102000D\"> <scale android:scaleWidth=\"100%\"> <shape> <corners android:radius=\"100.000000dip\"/> <solid android:col",
-        "radius": "100.000000dip"
-      },
-      "progress_bar_mimo": {
-        "source": "res/drawable/progress_bar_mimo.xml",
-        "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <layer-list xmlns:android=\"http://schemas.android.com/apk/res/android\"> <item android:id=\"@0x01020000\"> <shape> <solid android:color=\"@color/background_secondary\"/> <corners android:radius=\"100.000000dip\"/> </shape> </item> <item android:id=\"@0x0102000F\"> <scale android:scaleWidth=\"100%\"> <shape> <corners android:radius=\"100.000000dip\"/> <solid android:color=\"@color/progress_weak\"/> </shape> </scale> </item> <item android:id=\"@0x0102000D\"> <scale android:scaleWidth=\"100%\"> <shape> <corners android:radius=\"100.000000dip\"/> <solid android:color=\"@color/prog",
-        "radius": "100.000000dip"
-      },
-      "bg_circular": {
-        "source": "res/drawable/bg_circular.xml",
-        "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <shape xmlns:android=\"http://schemas.android.com/apk/res/android\" android:shape=\"3\" android:thicknessRatio=\"2.000000\" android:useLevel=\"false\" android:innerRadius=\"0.000000dip\"> <solid android:color=\"@color/background_secondary\"/> </shape>",
-        "shape": "3"
-      },
-      "bg_chapter_finished_equation": {
-        "source": "res/drawable/bg_chapter_finished_equation.xml",
-        "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <shape xmlns:android=\"http://schemas.android.com/apk/res/android\"> <solid android:color=\"@color/background_secondary\"/> <corners android:radius=\"12.000000dip\"/> <padding android:left=\"0.000000dip\" android:top=\"0.000000dip\" android:right=\"0.000000dip\" android:bottom=\"0.000000dip\"/> </shape>",
-        "radius": "12.000000dip"
-      },
-      "rounded_background_primary": {
-        "source": "res/drawable/rounded_background_primary.xml",
-        "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <shape xmlns:android=\"http://schemas.android.com/apk/res/android\" android:shape=\"0\"> <solid android:color=\"@color/background_primary\"/> <corners android:radius=\"12.000000dip\"/> </shape>",
-        "radius": "12.000000dip",
-        "shape": "0"
-      },
-      "rounded_background_secondary": {
-        "source": "res/drawable/rounded_background_secondary.xml",
-        "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <shape xmlns:android=\"http://schemas.android.com/apk/res/android\" android:shape=\"0\"> <solid android:color=\"@color/background_secondary\"/> <corners android:radius=\"12.000000dip\"/> </shape>",
-        "radius": "12.000000dip",
-        "shape": "0"
-      },
-      "dotted_border_background": {
-        "source": "res/drawable/dotted_border_background.xml",
-        "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <shape xmlns:android=\"http://schemas.android.com/apk/res/android\" android:shape=\"0\"> <corners android:radius=\"12.000000dip\"/> <stroke android:width=\"2.000000dip\" android:color=\"@color/line_secondary\" android:dashWidth=\"8.000000dip\" android:dashGap=\"8.000000dip\"/> </shape>",
-        "radius": "12.000000dip",
-        "width": "2.000000dip",
-        "dashWidth": "8.000000dip",
-        "dashGap": "8.000000dip",
-        "shape": "0"
-      },
-      "shadow_bottom": {
-        "source": "res/drawable/shadow_bottom.xml",
-        "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <shape xmlns:android=\"http://schemas.android.com/apk/res/android\" android:shape=\"0\"> <gradient android:startColor=\"@0x0106000D\" android:endColor=\"@color/shadow_color\" android:angle=\"90.000000\"/> </shape>",
-        "angle": "90.000000",
-        "shape": "0"
-      },
-      "shadow_top": {
-        "source": "res/drawable/shadow_top.xml",
-        "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <shape xmlns:android=\"http://schemas.android.com/apk/res/android\" android:shape=\"0\"> <gradient android:startColor=\"@0x0106000D\" android:endColor=\"@color/shadow_color\" android:angle=\"-90.000000\"/> </shape>",
-        "angle": "-90.000000",
-        "shape": "0"
-      },
-      "bg_reward_label": {
-        "source": "res/drawable/bg_reward_label.xml",
-        "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <shape xmlns:android=\"http://schemas.android.com/apk/res/android\" android:shape=\"0\"> <solid android:color=\"@color/support_yellow\"/> <corners android:topLeftRadius=\"14.000000dip\" android:topRightRadius=\"14.000000dip\" android:bottomLeftRadius=\"14.000000dip\" android:bottomRightRadius=\"14.000000dip\"/> <stroke android:width=\"2.000000dip\" android:color=\"@color/background_secondary\"/> </shape>",
-        "width": "2.000000dip",
-        "shape": "0"
-      }
+      "progress_bar_chapter": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <layer-list xmlns:android=\"http://schemas.android.com/apk/res/android\"> <item android:id=\"@0x01020000\"> <shape> <solid android:color=\"@color/progress_chapter_background\"/> <corners android:radius=\"100.000000dip\"/> </shape> </item> <item android:id=\"@0x0102000F\"> <scale android:scaleWidth=\"100%\"> <shape> <corners android:radius=\"100.000000dip\"/> <solid android:color=\"@color/progr",
+      "progress_bar_mimo": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <layer-list xmlns:android=\"http://schemas.android.com/apk/res/android\"> <item android:id=\"@0x01020000\"> <shape> <solid android:color=\"@color/background_secondary\"/> <corners android:radius=\"100.000000dip\"/> </shape> </item> <item android:id=\"@0x0102000F\"> <scale android:scaleWidth=\"100%\"> <shape> <corners android:radius=\"100.000000dip\"/> <solid android:color=\"@color/progress_wea",
+      "glance_component_btn_square": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <shape xmlns:android=\"http://schemas.android.com/apk/res/android\"> <corners android:radius=\"@dimen/glance_component_square_icon_button_corners\"/> <solid android:color=\"@0x0106000C\"/> </shape>",
+      "glance_component_btn_circle": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <shape xmlns:android=\"http://schemas.android.com/apk/res/android\" android:shape=\"1\"> <size android:height=\"48.000000dip\" android:width=\"48.000000dip\"/> <solid android:color=\"@0x0106000C\"/> </shape>",
+      "dotted_border_background": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <shape xmlns:android=\"http://schemas.android.com/apk/res/android\" android:shape=\"0\"> <corners android:radius=\"12.000000dip\"/> <stroke android:width=\"2.000000dip\" android:color=\"@color/line_secondary\" android:dashWidth=\"8.000000dip\" android:dashGap=\"8.000000dip\"/> </shape>",
+      "ic_square_rounded": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <vector xmlns:android=\"http://schemas.android.com/apk/res/android\" android:height=\"24.000000dip\" android:width=\"24.000000dip\" android:viewportWidth=\"24.000000\" android:viewportHeight=\"24.000000\"> <path android:fillColor=\"#FF252746\" android:pathData=\"M18.25,21H5.75C4.235,21 3,19.765 3,18.25V5.75C3,4.235 4.235,3 5.75,3H18.25C19.765,3 21,4.235 21,5.75V18.25C21,19.765 19.765,21 18.2",
+      "bg_circular": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <shape xmlns:android=\"http://schemas.android.com/apk/res/android\" android:shape=\"3\" android:thicknessRatio=\"2.000000\" android:useLevel=\"false\" android:innerRadius=\"0.000000dip\"> <solid android:color=\"@color/background_secondary\"/> </shape>",
+      "rounded_background_primary": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <shape xmlns:android=\"http://schemas.android.com/apk/res/android\" android:shape=\"0\"> <solid android:color=\"@color/background_primary\"/> <corners android:radius=\"12.000000dip\"/> </shape>",
+      "shadow_bottom": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <shape xmlns:android=\"http://schemas.android.com/apk/res/android\" android:shape=\"0\"> <gradient android:startColor=\"@0x0106000D\" android:endColor=\"@color/shadow_color\" android:angle=\"90.000000\"/> </shape>",
+      "shadow_top": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <shape xmlns:android=\"http://schemas.android.com/apk/res/android\" android:shape=\"0\"> <gradient android:startColor=\"@0x0106000D\" android:endColor=\"@color/shadow_color\" android:angle=\"-90.000000\"/> </shape>"
     },
     "vector_state_map": {
       "done": "ic_check_white",
@@ -3046,14 +3211,11 @@
       "enter_ms": 220.0,
       "exit_ms": 400.0
     },
-    "corrections_vs_v8": [
-      "corner radius 26dp -> 16dp (dimen.xml)",
-      "connector stroke 10dp -> 6dp (lesson_progressbar_height)",
-      "connector 2 curved Q paths -> 1 straight continuous line with gradient",
-      "node x offsets 196/312/80 -> all 196 (single vertical axis)",
-      "bolt icons ic_flash/ic_bolt -> ic_bolt_charged/ic_bolt_mastered (real practice vectors)",
-      "node gap 106dp ad-hoc -> 12dp from spacing_s",
-      "state sequence made linear: done/done/current/next/bolt/bolt"
+    "corrections_vs_v8": [],
+    "corrections_vs_v9": [
+      "reverted straight line / 16dp / 6dp / 12dp",
+      "restored 24dp gap, 32dp elbow, 26dp corner, 10dp stroke",
+      "deeper DEX + test-tracks.json section mapping"
     ]
   }
 }
