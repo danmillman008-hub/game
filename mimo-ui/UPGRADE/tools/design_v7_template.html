@@ -1,0 +1,1425 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>طرح رابط کاربری v7 — بازآفرینی ۱۰۰٪ میمو از روی کد (Design Review)</title>
+<style>
+/*__CSS__*/
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Tahoma,"Segoe UI",system-ui,sans-serif;font-size:14px;line-height:1.65;transition:background .2s,color .2s}
+button,input,select{font-family:inherit;font-size:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--primary)}
+header.top{background:var(--card);border-bottom:1px solid var(--line);padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+header.top h1{margin:0;font-size:18px} header.top p{margin:3px 0 0;color:var(--text-weak);font-size:12px;max-width:900px}
+.ver{background:var(--card-pressed);border:1px solid var(--primary);color:var(--primary);border-radius:999px;padding:2px 11px;font-size:11px;font-weight:bold}
+.btn{border:1px solid var(--line2);background:var(--card);color:var(--text);border-radius:999px;padding:6px 13px;font-size:12px}
+.btn:hover{border-color:var(--primary)}
+.btn.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+.btn.ghost{background:transparent}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:22px;padding:22px;max-width:1480px;margin:auto;align-items:start}
+aside.spec{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;position:sticky;top:22px;max-height:calc(100vh - 44px);overflow:auto}
+aside.spec h3{margin:15px 0 7px;font-size:13px;border-bottom:1px solid var(--line);padding-bottom:5px}
+aside.spec h3:first-child{margin-top:0}
+aside.spec ul{margin:0;padding:0 14px 0 0;list-style:none}
+aside.spec li{font-size:11.5px;padding:4px 0;border-bottom:1px dashed var(--line);color:var(--text-weak)}
+aside.spec li b{color:var(--text)}
+.tag{display:inline-block;background:var(--card-pressed);border:1px solid var(--primary);color:var(--primary);border-radius:999px;padding:1px 8px;font-size:10px;margin:2px}
+.lh{font-size:9px;color:var(--text-weak);direction:ltr;display:inline-block;font-family:monospace;opacity:.85}
+.canvas{min-width:0}
+.switcher{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+.switcher button{border:1px solid var(--line2);background:var(--card);border-radius:999px;padding:6px 12px;font-size:11.5px;color:var(--text-weak)}
+.switcher button.on{background:var(--primary);border-color:var(--primary);color:#fff;font-weight:bold}
+.phone{background:var(--card);border:1px solid var(--line2);border-radius:28px;width:392px;max-width:100%;margin:auto;overflow:hidden;box-shadow:0 8px 30px rgba(37,39,70,.13);position:relative;height:780px;display:flex;flex-direction:column;direction:ltr}
+/* ---- OS status bar (device chrome, from reference screenshots) ---- */
+.statusbar{height:34px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 20px;font:700 13px/1 system-ui,sans-serif;color:var(--text);background:var(--card)}
+.statusbar .sb-r{display:flex;align-items:center;gap:6px}
+.sb-sig{display:flex;align-items:flex-end;gap:1.5px;height:11px}
+.sb-sig i{width:3px;background:var(--text);border-radius:1px;display:block}
+.sb-wifi{width:15px;height:11px;border:2px solid var(--text);border-bottom:0;border-radius:50% 50% 0 0;position:relative}
+.sb-wifi:after{content:"";position:absolute;width:4px;height:4px;border-radius:50%;background:var(--text);bottom:-3px;left:4px}
+.sb-bat{width:23px;height:11px;border:1.5px solid var(--text);border-radius:3px;padding:1.5px;position:relative}
+.sb-bat i{display:block;height:100%;background:var(--text);border-radius:1px}
+.sb-bat:after{content:"";position:absolute;right:-4px;top:2.5px;width:2px;height:5px;background:var(--text);border-radius:0 2px 2px 0}
+/* ---- screens ---- */
+.screen{display:none;flex:1;overflow:auto;padding:0 0 8px;position:relative}
+.screen.on{display:block}
+.mimo{direction:ltr} .konkur{direction:rtl}
+/* ---- Mimo bottom nav: exact ic_tab_* vectors + bottom_navigation_colors.xml ---- */
+.tabs{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line);background:var(--card);flex-shrink:0;height:66px;padding-bottom:6px}
+.tab{text-align:center;padding:8px 2px 0;font-size:11px;color:var(--weak-icon);font-weight:bold;letter-spacing:.1px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+.tab .ir{height:25px;display:flex;align-items:center;justify-content:center}
+.tab .i-on{display:none}
+.tab.on{color:var(--icon)} .tab.on .i-on{display:flex} .tab.on .i-off{display:none}
+.tab .ic{color:var(--weak-icon)} .tab.on .ic{color:var(--icon)}
+/* ---- Mimo Learn path (100% reconstruction) ---- */
+.mimo-hdr{display:flex;gap:8px;padding:10px 16px 6px}
+.pill{flex:1;background:var(--card-pressed);border-radius:16px;height:42px;display:flex;align-items:center;justify-content:center;gap:8px;font:700 17px/1 system-ui,sans-serif;color:var(--text)}
+.pill .ic{flex-shrink:0}
+.coursebar{height:52px;margin:0 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:center;position:relative}
+.coursebar .lst{position:absolute;left:6px;top:13px;color:var(--text);cursor:pointer}
+.coursebar b{font:700 18px/1.2 system-ui,sans-serif;letter-spacing:.2px}
+.pathwrap{position:relative;height:560px;overflow:hidden;background:radial-gradient(circle,var(--line2) 1.6px,transparent 1.7px) 0 0/26px 26px;background-color:var(--bg)}
+.chapter-pill{position:absolute;top:26px;left:16px;right:16px;height:92px;border-radius:999px;background:var(--card-pressed);border:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 22px;z-index:2}
+.chapter-pill h2{margin:0;font:700 24px/1.15 system-ui,sans-serif;letter-spacing:.2px;max-width:60%}
+.ring{width:66px;height:66px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0}
+.ring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.ring b{font:700 14px/1 system-ui,sans-serif;z-index:1}
+.ring:after{content:"";position:absolute;inset:-7px;border-radius:50%;border:5px solid transparent;border-top-color:var(--progress);border-right-color:var(--progress);transform:rotate(-12deg);pointer-events:none}
+.connector{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+.node{position:absolute;width:104px;height:104px;border-radius:28px;display:flex;align-items:center;justify-content:center;z-index:2;cursor:pointer;transition:transform .12s}
+.node:hover{transform:translateY(-3px)}
+.node.done{background:linear-gradient(160deg,var(--purple-light),var(--primary));box-shadow:0 9px 0 var(--primary-hi),0 12px 18px rgba(37,39,70,.18)}
+.node.done .ic{color:#fff}
+.node.cur{background:var(--card);border:3px solid var(--primary);box-shadow:0 0 0 7px var(--card),0 0 0 10px var(--progress-weak)}
+.node.cur:before{content:"";position:absolute;inset:7px;border:1px solid var(--line2);border-radius:22px}
+.node.cur .ic{color:var(--text);position:relative;z-index:1}
+.node.locked,.node.flash{background:var(--disabled)}
+.node.locked .ic,.node.flash .ic{color:#fff;opacity:.95}
+.node.flash{opacity:.55}
+.fab{position:absolute;right:18px;bottom:16px;width:62px;height:62px;border-radius:50%;background:var(--card);border:1px solid var(--line2);box-shadow:0 3px 10px rgba(37,39,70,.12);display:flex;align-items:center;justify-content:center;z-index:3;cursor:pointer}
+.fab .abook{width:34px;height:36px;border:2.5px solid var(--text);border-radius:7px;position:relative;display:flex;align-items:center;justify-content:center;font:700 19px/1 Georgia,serif;color:var(--text)}
+.fab .abook:before{content:"";position:absolute;left:5px;top:-2px;bottom:-2px;width:2px;background:var(--text)}
+.n100{left:calc(50% - 52px);top:172px}
+.n210{left:calc(82% - 52px);top:300px}
+.n310{left:calc(50% - 52px);top:410px}
+.n410{left:calc(14% - 52px);top:492px}
+.n420{left:calc(50% - 52px);top:492px}
+.path-note{position:absolute;left:16px;top:132px;font:600 11px/1.4 system-ui,sans-serif;color:var(--text-weak);z-index:2;max-width:210px}
+.halfchip{position:absolute;left:16px;top:158px;z-index:3;border:1px solid var(--primary);color:var(--primary);background:var(--card);border-radius:999px;font:700 10px/1 system-ui,sans-serif;padding:5px 9px;cursor:pointer}
+.halfchip.on{background:var(--primary);color:#fff}
+/* ---- chapter start modal ---- */
+.modal{position:absolute;inset:34px 0 66px 0;background:rgba(37,39,70,.55);z-index:20;display:none;align-items:center;justify-content:center;padding:20px}
+.modal.on{display:flex;animation:fade .18s ease}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.modal-card{background:var(--card);border-radius:28px;padding:22px;width:100%;max-width:330px;box-shadow:0 16px 40px rgba(37,39,70,.3);position:relative}
+.modal-card .mtop{display:flex;justify-content:space-between;align-items:flex-start}
+.modal-card .lbl{font:700 12px/1 system-ui,sans-serif;letter-spacing:1.2px;color:var(--text-weak);text-transform:uppercase}
+.modal-card h2{margin:12px 0 20px;font:700 24px/1.2 system-ui,sans-serif;letter-spacing:.2px}
+.modal-card .cap{color:var(--primary)}
+.chapter-row{display:flex;justify-content:space-between;font:700 12px/1 system-ui,sans-serif;letter-spacing:1px;color:var(--text-weak);text-transform:uppercase}
+.mprogress{height:6px;border-radius:999px;background:var(--progress-bg);margin:9px 0 20px;overflow:hidden}
+.mprogress i{display:block;height:100%;width:0;background:var(--progress);border-radius:999px}
+.startbtn{width:100%;height:52px;border-radius:999px;background:var(--primary);color:#fff;border:0;font:700 14px/1 system-ui,sans-serif;letter-spacing:.6px;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:12px;position:relative}
+.startbtn .circ{width:30px;height:30px;border:3px solid #fff;border-radius:50%;position:absolute;right:12px}
+/* ---- Mimo lesson (chapter_toolbar.xml) ---- */
+.lesson{height:100%;display:flex;flex-direction:column}
+.lesson-toolbar{height:52px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid var(--line)}
+.lesson-toolbar .ib{color:var(--weak-icon);cursor:pointer;display:flex}
+.heart{position:relative;width:34px;height:30px;display:flex;align-items:center;justify-content:center;color:#F05A6E}
+.heart .inf{position:absolute;right:2px;bottom:2px;color:#fff}
+.lprogress{height:6px;background:var(--progress-bg);margin:0 16px;flex-shrink:0}
+.lprogress i{display:block;height:100%;width:34%;background:var(--progress);border-radius:0 999px 999px 0}
+.lesson-body{flex:1;overflow:auto;padding:14px 16px;font:400 16px/1.75 system-ui,sans-serif}
+.lesson-body p{margin:0 0 14px}
+.codechip{background:var(--code-bg);border-radius:4px;padding:1px 6px;font:400 14px/1.5 ui-monospace,"Courier New",monospace;letter-spacing:.5px}
+.browser{border:1px solid var(--line2);border-radius:8px;overflow:hidden;margin-top:8px;background:var(--card)}
+.browser-bar{background:var(--code-bg);height:22px;display:flex;align-items:center;padding:0 10px}
+.browser-in{padding:16px 14px 22px;font-family:Georgia,"Times New Roman",serif}
+.browser-in h3{margin:0 0 14px;font-size:26px;letter-spacing:.3px}
+.browser-in p{margin:0;line-height:1.9;font-size:15px}
+.continue-btn{margin:0 16px 12px;height:48px;flex-shrink:0;border-radius:999px;background:var(--primary);color:#fff;border:0;font:700 14px/1 system-ui,sans-serif;letter-spacing:.6px;text-transform:uppercase}
+/* ---- Mimo leaderboard (leaderboard_* layouts) ---- */
+.lb-title{height:52px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--line);font:700 20px/1 system-ui,sans-serif;letter-spacing:.2px}
+.leagues{height:100px;display:flex;align-items:center;justify-content:space-around;padding:0 10px;background:var(--card)}
+.league-b{width:52px;height:50px;display:flex;align-items:center;justify-content:center;opacity:.95}
+.league-b.sel{width:62px;height:60px}
+.league-row{display:flex;justify-content:space-between;padding:6px 16px 12px;font:700 18px/1.2 system-ui,sans-serif}
+.league-row .cd{font:600 15px/1.4 system-ui,sans-serif;color:var(--text-weak)}
+.promo{height:60px;background:var(--card);display:flex;align-items:center;justify-content:center;gap:10px}
+.promo .ln{height:2px;flex:1;background:var(--green);margin:0 16px}
+.promo b{font:700 14px/1 system-ui,sans-serif;letter-spacing:1px;text-transform:uppercase;color:var(--green);white-space:nowrap}
+.lb-row{height:60px;display:flex;align-items:center;gap:12px;padding:0 16px;background:var(--bg)}
+.lb-row:nth-child(even){background:var(--card)}
+.lb-row.me{background:var(--blue);color:#fff}.lb-row.me .ic{color:#fff}
+.lb-row .rk{width:24px;flex-shrink:0;font:700 14px/1 system-ui,sans-serif}
+.lb-row .av{width:40px;height:40px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font:700 13px/1 system-ui,sans-serif;color:#fff}
+.lb-row .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:700 16px/1.2 system-ui,sans-serif}
+.lb-row .xp{display:flex;align-items:center;gap:4px;font:700 16px/1 system-ui,sans-serif}
+.lb-row .sp{color:var(--yellow)}
+.sec-h{font:700 18px/1.3 system-ui,sans-serif;padding:14px 16px 8px}
+.statcards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 16px}
+.statcard{background:var(--card);border-radius:12px;padding:14px 4px;text-align:center;border:1px solid var(--line)}
+.statcard .ic{margin:0 auto 6px;display:flex;justify-content:center;color:var(--primary)}
+.statcard b{display:block;font:700 18px/1.2 system-ui,sans-serif}
+.statcard small{display:block;font:700 12px/1.3 system-ui,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--text-weak);margin-top:4px}
+.selfbox{margin:10px 16px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}
+.selfbox h4{margin:0 0 8px;font:700 14px/1.3 system-ui,sans-serif}
+.selfrow{display:flex;justify-content:space-between;gap:8px;font-size:12px;padding:5px 0;border-bottom:1px dashed var(--line)}
+.selfrow:last-child{border:0}
+.selfrow b{color:var(--primary)}
+/* ---- Mimo user profile ---- */
+.up-head{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid var(--line);font:700 18px/1 system-ui,sans-serif}
+.up-head .bk{font:600 15px/1 system-ui,sans-serif;color:var(--weak-icon)}
+.up-body{text-align:center;padding:18px 16px;background:var(--bg)}
+.up-av{width:88px;height:88px;border-radius:50%;margin:0 auto;background:linear-gradient(160deg,#F8B8E8,#E45BD8);position:relative;overflow:hidden}
+.up-av:after{content:"";position:absolute;left:-8px;right:-8px;bottom:-14px;height:44px;border-radius:50% 50% 0 0;background:#D62FC8}
+.up-body h3{margin:14px 0 4px;font:700 24px/1.2 system-ui,sans-serif}
+.up-body p{margin:0 0 14px;color:var(--text-weak);font:400 15px/1.4 system-ui,sans-serif}
+.follow{background:var(--primary);color:#fff;border:0;border-radius:999px;height:44px;padding:0 34px;font:700 14px/1 system-ui,sans-serif;letter-spacing:.6px;text-transform:uppercase}
+/* ---- Mimo profile ---- */
+.prof-head{height:56px;display:flex;align-items:center;justify-content:center;position:relative;border-bottom:1px solid var(--line)}
+.prof-head b{font:700 18px/1 system-ui,sans-serif}
+.prof-head .gear{position:absolute;right:16px;top:16px;color:var(--text);cursor:pointer}
+.prof-course{margin:16px;background:var(--card-pressed);border-radius:12px;height:76px;display:flex;align-items:center;gap:14px;padding:0 16px}
+.prof-course .badge{width:52px;height:52px;flex-shrink:0}
+.prof-course b{font:700 18px/1 system-ui,sans-serif;flex:1}
+.prof-course .pct{width:52px;height:52px;border-radius:50%;border:4px solid var(--progress-bg);display:flex;align-items:center;justify-content:center;font:700 13px/1 system-ui,sans-serif;color:var(--weak-icon);flex-shrink:0}
+.dash{margin:0 16px 14px;border:2px dashed var(--line2);border-radius:12px;padding:26px 16px;text-align:center;background:var(--card-pressed)}
+.dash .ic{color:var(--progress-weak);margin:0 auto 10px;display:flex;justify-content:center}
+.dash b{display:block;font:700 18px/1.3 system-ui,sans-serif}
+.dash p{margin:5px 30px 0;color:var(--text-weak);font:400 15px/1.5 system-ui,sans-serif}
+.plink{display:flex;justify-content:space-between;align-items:center;padding:0 16px 8px;font:700 18px/1.3 system-ui,sans-serif}
+.plink span{color:var(--primary);font:700 14px/1 system-ui,sans-serif;letter-spacing:.6px;cursor:pointer}
+.boxmascot{width:70px;height:62px;margin:0 auto 8px;position:relative}
+.boxmascot .bx{position:absolute;bottom:0;left:5px;right:5px;height:34px;background:var(--yellow);border-radius:3px}
+.boxmascot .bx:after{content:"";position:absolute;left:0;right:0;top:-9px;height:12px;background:#E8BC3C;clip-path:polygon(0 100%,50% 0,100% 100%)}
+.boxmascot .bt{position:absolute;top:0;left:22px;width:36px;height:30px;border-radius:9px 9px 6px 6px;background:#2C2A4A;display:flex;align-items:center;justify-content:center;gap:5px}
+.boxmascot .bt i{width:5px;height:5px;border-radius:50%;background:#43CBFF}
+/* ---- Mimo onboarding ---- */
+.onb{height:100%;display:flex;flex-direction:column;padding:0 22px;text-align:center;background:var(--card)}
+.onb-prog{height:6px;border-radius:999px;background:var(--progress-bg);margin:14px 0 0;overflow:hidden}
+.onb-prog i{display:block;height:100%;width:9%;background:var(--primary);border-radius:999px}
+.onb-art{flex:1;min-height:250px;display:flex;align-items:center;justify-content:center;position:relative}
+.onb-art .book{width:150px;height:96px;background:var(--primary);border-radius:6px;position:relative;transform:perspective(300px) rotateX(18deg)}
+.onb-art .book:before{content:"";position:absolute;inset:0 50% 0 0;background:var(--primary-hi);border-radius:6px 0 0 6px}
+.onb-art .book:after{content:"</>";position:absolute;right:14px;top:34px;color:rgba(255,255,255,.55);font:700 20px/1 ui-monospace,monospace}
+.onb-art .bot{position:absolute;top:-42px;left:50%;transform:translateX(-50%);width:96px;height:76px;border-radius:24px 24px 14px 14px;background:#2C2A4A;display:flex;align-items:center;justify-content:center;gap:16px;box-shadow:0 0 0 8px rgba(142,96,226,.18)}
+.onb-art .bot i{width:13px;height:13px;border-radius:50%;background:#43CBFF}
+.onb-art .bot:after{content:"";position:absolute;bottom:-7px;left:20px;width:26px;height:12px;background:#2C2A4A;border-radius:0 0 12px 12px}
+.onb-art .sticky{position:absolute;top:-24px;left:16%;width:64px;height:64px;background:var(--yellow);transform:rotate(-14deg);border-radius:2px;display:flex;align-items:center;justify-content:center;font:700 30px/1 system-ui,sans-serif;color:var(--text)}
+.onb-art .mug{position:absolute;bottom:-6px;left:14%;width:42px;height:46px;background:var(--yellow);border-radius:4px 4px 10px 10px}
+.onb-art .mug:after{content:"";position:absolute;right:-14px;top:8px;width:18px;height:22px;border:6px solid var(--yellow);border-left:0;border-radius:0 10px 10px 0}
+.onb h2{margin:0 0 10px;font:700 24px/1.2 system-ui,sans-serif}
+.onb p{margin:0 0 22px;color:var(--text-weak);font:400 16px/1.5 system-ui,sans-serif}
+.dots{display:flex;gap:7px;justify-content:center;margin-bottom:22px}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--line2);display:block}.dots i.on{background:var(--primary)}
+.onb .big{height:52px;border-radius:16px;background:var(--primary);color:#fff;border:0;font:700 14px/1 system-ui,sans-serif;letter-spacing:.6px;text-transform:uppercase;margin-bottom:14px}
+.onb .alt{color:var(--primary);font:700 14px/1 system-ui,sans-serif;letter-spacing:.6px;text-transform:uppercase;margin-bottom:16px;cursor:pointer}
+/* ---- Konkur new sections (Mimo shell, adapted content) ---- */
+.appbar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line);margin-bottom:12px;position:sticky;top:0;background:var(--card);z-index:3}
+.appbar b{font-size:16px}.appbar .left{display:flex;gap:6px;align-items:center}
+.iconbtn{width:30px;height:30px;border-radius:999px;border:1px solid var(--line2);background:var(--card-pressed);display:inline-flex;align-items:center;justify-content:center;font-size:13px}
+.chips{display:flex;gap:8px;overflow:auto;padding:0 14px 8px;scrollbar-width:thin}
+.chip{white-space:nowrap;border:1px solid var(--line2);background:var(--card);border-radius:999px;padding:5px 12px;font-size:12px;color:var(--text-weak)}
+.chip.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;padding:0 14px}
+.nodek{background:var(--card);border:1px solid var(--line2);border-radius:12px;height:86px;display:flex;align-items:center;justify-content:center;font-size:24px;position:relative;box-shadow:0 1px 3px rgba(37,39,70,.08);cursor:pointer;transition:transform .12s,border-color .12s}
+.nodek:hover{transform:translateY(-2px);border-color:var(--primary)}
+.nodek .mini{position:absolute;top:5px;left:7px;font-size:9px;background:var(--card-pressed);border-radius:6px;padding:1px 5px;color:var(--text-weak)}
+.label{text-align:center;font-size:11.5px;margin-top:6px;min-height:32px}
+.sec{font-size:13px;color:var(--text-weak);margin:14px 14px 8px;font-weight:bold}
+.cat-meta{background:var(--card-pressed);border:1px dashed var(--primary);border-radius:8px;padding:6px 10px;font-size:10px;color:var(--text-weak);margin:0 14px 10px;line-height:1.9}
+.card{background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:12px;margin:0 14px 10px;box-shadow:0 1px 3px rgba(37,39,70,.08)}
+.card b{color:var(--primary)}
+.kv{display:flex;justify-content:space-between;font-size:12px;border-bottom:1px dashed var(--line);padding:4px 0}.kv:last-child{border:0}
+.note{font-size:11px;color:var(--text-weak);margin:8px 14px}
+.hint{background:var(--card-pressed);border:1px dashed var(--primary);border-radius:12px;padding:8px 12px;font-size:11px;color:var(--text-weak);margin:10px 14px}
+.progress{height:6px;border-radius:999px;background:var(--progress-bg);overflow:hidden;margin:10px 14px}
+.progress i{display:block;height:100%;background:var(--progress);border-radius:999px}
+/* exam run */
+.timerchip{border:1px solid var(--primary);color:var(--primary);background:var(--card-pressed);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:bold;display:inline-flex;gap:6px;align-items:center}
+.timerchip.running{border-color:var(--error);color:var(--error)}
+.timerchip.finished{background:var(--error);color:#fff;border-color:var(--error)}
+.qtext{font-size:14px;line-height:2;margin:6px 14px 14px}
+.opt{border:1px solid var(--line2);background:var(--card);border-radius:12px;padding:10px 12px;margin:0 14px 8px;font-size:12px;display:flex;gap:8px;align-items:center;cursor:pointer}
+.opt:hover{background:var(--card-pressed)}.opt.on{border:2px solid var(--primary);background:var(--card-pressed)}
+.opt span{width:22px;height:22px;border-radius:999px;background:var(--card-pressed);display:inline-flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.qmeta{display:flex;justify-content:space-between;font-size:11px;color:var(--text-weak);margin:0 14px 8px}
+.krow{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin:12px 14px}
+.sheet{position:absolute;inset:auto 0 0 0;background:var(--card);border-top:1px solid var(--line2);border-radius:12px 12px 0 0;padding:16px;box-shadow:0 -8px 24px rgba(37,39,70,.18);z-index:12;display:none;max-height:80%;overflow:auto}
+.sheet.on{display:block;animation:up .22s ease}
+@keyframes up{from{transform:translateY(30px);opacity:.4}to{transform:translateY(0);opacity:1}}
+.sheet h4{margin:0 0 10px;font-size:14px}
+.handle{width:36px;height:4px;border-radius:4px;background:var(--line2);margin:0 auto 12px}
+.field{display:flex;flex-direction:column;gap:4px;margin-bottom:10px;font-size:12px}
+.field input{border:1px solid var(--line2);background:var(--card);border-radius:10px;padding:8px 10px;font-size:12px;outline:none}
+.mini-btn{border:1px solid var(--line2);background:var(--card-pressed);border-radius:10px;padding:5px 10px;font-size:12px}
+.mini-btn.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+.palette{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.palette div{aspect-ratio:1;border:1px solid var(--line2);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;background:var(--card);line-height:1.2}
+.palette div.done{background:var(--card-pressed);border-color:var(--primary)}
+.palette div.cur{border:2px solid var(--primary)}
+.palette div small{color:var(--primary);font-weight:bold;font-size:10px}
+.banner{border-radius:12px;padding:10px 12px;font-size:12px;margin:0 14px 10px}
+.banner.warn{background:#FFF3E8;border:1px solid #F5C98B;color:#7A4A00}
+body.night .banner.warn{background:#4A3A22;color:#F5D9A8;border-color:#8A6A35}
+.keytabs{display:flex;gap:6px;margin-bottom:12px}
+.keytabs button{flex:1;border:1px solid var(--line2);background:var(--card-pressed);border-radius:999px;padding:7px;font-size:12px;color:var(--text-weak)}
+.keytabs button.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+.keypanel{display:none;font-size:11.5px;line-height:2}.keypanel.on{display:block}
+.keypanel b{color:var(--primary)}
+.wrong{background:var(--card-pressed);border:1px dashed var(--primary);border-radius:10px;padding:8px 10px;margin-bottom:8px;font-size:11.5px;line-height:1.9}
+/* AI chat */
+.ai-head{display:flex;align-items:center;gap:8px;flex:1}
+.mascot{width:34px;height:34px;border-radius:999px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 0 4px var(--card-pressed)}
+.cost{font-size:10px;color:var(--text-weak);direction:ltr;background:var(--card-pressed);border-radius:999px;padding:2px 8px}
+.fchip{border:1px solid var(--line2);background:var(--card-pressed);border-radius:999px;padding:4px 9px;font-size:10px;color:var(--text-weak);display:inline-flex;gap:4px;align-items:center}
+.fchip:hover{border-color:var(--primary);color:var(--primary)}
+.thread{flex:1;min-height:230px;overflow:auto;padding:10px 14px;display:flex;flex-direction:column;gap:8px}
+.ctx{align-self:center;background:var(--card-pressed);border:1px dashed var(--primary);border-radius:999px;padding:4px 10px;font-size:10px;color:var(--text-weak);text-align:center;max-width:92%}
+.bubble{background:var(--card-pressed);border-radius:12px;padding:8px 11px;max-width:86%;font-size:11.5px;line-height:1.8}
+.bubble.me{background:var(--primary);color:#fff;align-self:flex-end}
+.bubble .lh{color:inherit;opacity:.75}
+.composer{border:1px solid var(--primary);border-radius:12px;padding:8px;background:var(--card);margin:0 14px 6px}
+.composer .in{display:flex;gap:8px;align-items:center}
+.composer input{flex:1;border:0;outline:none;background:transparent;font-size:12px;padding:4px}
+.send{width:30px;height:30px;border-radius:9px;background:var(--primary);color:#fff;border:0;font-size:14px}
+.foot{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;align-items:center}
+.mode{display:inline-flex;border:1px solid var(--line2);border-radius:999px;overflow:hidden}
+.mode button{border:0;background:var(--card);padding:4px 10px;font-size:10px;color:var(--text-weak)}
+.mode button.on{background:var(--primary);color:#fff}
+.composer-note{font-size:10px;color:var(--text-weak);padding:5px 4px 0}
+.hist-item{border:1px solid var(--line2);border-radius:9px;padding:8px 10px;font-size:12px;background:var(--card);cursor:pointer;margin-bottom:6px}
+.hist-item small{display:block;color:var(--text-weak);font-size:9px}
+.typing{font-size:11px;color:var(--text-weak);padding:4px 12px}
+.tpl-row{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:12px;margin-bottom:10px}
+.tpl-thumb{width:74px;height:74px;border:2px dashed var(--line2);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--card-pressed)}
+.tpl-row b{font:700 16px/1.3 system-ui,sans-serif;display:block}
+.tpl-row p{margin:3px 0 0;color:var(--text-weak);font:400 13px/1.5 system-ui,sans-serif}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--card);border-radius:999px;padding:9px 18px;font-size:12px;opacity:0;pointer-events:none;transition:.25s;z-index:99;max-width:80vw;text-align:center}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+footer.foot-note{background:#FFF7E6;border:1px solid #F5D28B;color:#6A4A00;border-radius:12px;padding:12px 18px;font-size:12px;margin:8px 22px 28px;max-width:1480px}
+body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A35}
+@media(max-width:980px){.layout{grid-template-columns:1fr}aside.spec{position:static;max-height:none}}
+
+/* ============ v6 · Learn sub-screens, tokens from ARSC ============ */
+.l6 .pill{flex:1;background:var(--card-pressed);border-radius:16px;height:42px;display:flex;align-items:center;justify-content:center;gap:8px;font:700 17px/1 system-ui,sans-serif;color:var(--text)}
+.l6 .pill b{font-weight:700}
+.l6 .pill .inf{margin-left:-5px;color:var(--text)}
+.coursebar.l6{height:50px;margin:2px 16px 0;display:flex;align-items:center;justify-content:center;position:relative;border-bottom:0}
+.coursebar.l6 b{font:700 18px/1.2 system-ui,sans-serif;letter-spacing:.2px}
+.coursebar.l6 .lst{position:absolute;left:2px;top:8px;width:36px;height:36px;border:1px solid var(--line2);background:var(--card);border-radius:13px;display:flex;align-items:center;justify-content:center;color:var(--icon);cursor:pointer}
+.coursebar.l6 .lst:hover{border-color:var(--primary)}
+.overview-card{display:block;width:calc(100% - 32px);margin:6px 16px 0;padding:14px 18px 16px;text-align:left;background:var(--card);border:2px solid var(--line2);border-radius:20px;cursor:pointer}
+.overview-card:hover{border-color:var(--primary)}
+.overview-card .oc-kicker{display:block;font:600 14px/1.3 system-ui,sans-serif;color:var(--text-weak)}
+.overview-card .oc-title{display:block;margin:5px 0 12px;font:700 21px/1.2 system-ui,sans-serif;color:var(--text);letter-spacing:.2px}
+.overview-card .oc-bar{display:block;height:8px;border-radius:999px;background:var(--progress-bg);overflow:hidden}
+.overview-card .oc-bar i{display:block;height:100%;background:var(--progress);border-radius:999px}
+.pathwrap.l6{height:452px;margin-top:8px;background:radial-gradient(circle,var(--line2) 1.6px,transparent 1.7px) 0 0/26px 26px;background-color:var(--bg)}
+.pathwrap.l6 .node{width:92px;height:92px;border-radius:26px}
+.pathwrap.l6 .node.done{background:linear-gradient(160deg,var(--purple-light),var(--primary));box-shadow:0 8px 0 var(--primary-hi),0 11px 16px rgba(37,39,70,.18)}
+.pathwrap.l6 .node.flash{background:var(--purple-light);opacity:1;box-shadow:0 8px 0 var(--primary-hi),0 11px 16px rgba(37,39,70,.18)}
+.pathwrap.l6 .node.flash .ic{color:var(--primary)}
+.l6n1{left:calc(50% - 46px);top:22px}
+.l6n2{left:calc(80% - 46px);top:128px}
+.l6n3{left:calc(50% - 46px);top:234px}
+.l6n4{left:calc(20% - 46px);top:340px}
+.l6n5{left:calc(50% - 46px);top:340px}
+/* ---- Select Path ---- */
+.sp-top,.po-top,.sd-top{height:56px;flex-shrink:0;display:flex;align-items:center;justify-content:center;position:relative;border-bottom:1px solid var(--line)}
+.sp-top b,.sd-top b{font:700 16px/1 system-ui,sans-serif;color:var(--text-weak)}
+.sp-top .x,.po-top .x,.sd-top .x{position:absolute;left:14px;top:14px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;color:var(--icon);cursor:pointer;background:transparent;border:0}
+.sp-body{padding:18px 16px 24px}
+.sp-body h3{margin:0 0 14px;font:700 24px/1.2 system-ui,sans-serif;letter-spacing:.2px}
+.sp-body h3.sub{margin-top:26px}
+.career-card{display:block;width:100%;text-align:left;margin:0 0 16px;padding:16px 18px 18px;background:var(--card);border:2px solid var(--line2);border-radius:22px;cursor:pointer;box-shadow:0 4px 0 var(--card-pressed)}
+.career-card.sel{border:3px solid var(--primary);box-shadow:0 0 0 6px var(--progress-weak),0 4px 0 var(--card-pressed)}
+.career-card .badges{display:flex;gap:5px;align-items:center;height:26px;margin-bottom:10px}
+.career-card .badges span{width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+.career-card h4{margin:0 0 14px;font:700 22px/1.2 system-ui,sans-serif}
+.career-card .cr{display:flex;justify-content:space-between;font:700 12px/1 system-ui,sans-serif;letter-spacing:1.2px;color:var(--text-weak);text-transform:uppercase}
+.career-card .cbar{height:8px;border-radius:999px;background:var(--progress-bg);margin-top:9px;overflow:hidden}
+.career-card .cbar i{display:block;height:100%;background:var(--progress);border-radius:999px}
+.course-row{display:flex;align-items:center;gap:14px;width:100%;text-align:left;margin:0 0 12px;padding:12px 14px;background:var(--card);border:2px solid var(--line2);border-radius:20px;cursor:pointer}
+.course-row .cbadge{width:38px;height:38px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.course-row .ctxt{flex:1;min-width:0}
+.course-row .ctxt b{display:block;font:700 21px/1.2 system-ui,sans-serif}
+.course-row .ctxt small{display:block;color:var(--text-weak);font:400 14px/1.4 system-ui,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cring{width:56px;height:56px;flex-shrink:0;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;font:700 13px/1 system-ui,sans-serif;color:var(--text);background:var(--progress-bg)}
+.cring:before{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--card)}
+.cring b{position:relative;z-index:1}
+.cring.part{background:conic-gradient(var(--progress) 0 43%,var(--progress-bg) 43% 100%)}
+/* ---- Path Overview ---- */
+.po-head{padding:18px 18px 8px;position:relative}
+.po-head .kick{display:block;font:400 16px/1.3 system-ui,sans-serif;color:var(--text-weak)}
+.po-head h1{margin:4px 0 0;font:700 26px/1.2 system-ui,sans-serif;letter-spacing:.2px;max-width:72%}
+.po-head .sw{position:absolute;right:18px;top:30px;width:48px;height:48px;border:1px solid var(--line2);border-radius:14px;background:var(--card);display:flex;align-items:center;justify-content:center;color:var(--primary);cursor:pointer}
+.cert-card{margin:12px 18px 4px;padding:14px 16px;background:var(--card);border:1px solid var(--line2);border-radius:16px;display:flex;gap:14px;align-items:center;cursor:pointer}
+.cert-card .cb{width:48px;height:60px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.cert-card .cc{flex:1;min-width:0}
+.cert-card .cc b{display:block;font:700 19px/1.25 system-ui,sans-serif}
+.cert-card .cc .cbar{height:8px;border-radius:999px;background:var(--progress-bg);margin:10px 0 7px;overflow:hidden}
+.cert-card .cc .cbar i{display:block;height:100%;width:22%;background:var(--progress);border-radius:999px}
+.cert-card .cc .cm{display:flex;justify-content:space-between;font:400 14px/1.3 system-ui,sans-serif;color:var(--text-weak)}
+.po-secs{position:relative;padding:10px 18px 26px}
+.po-secs:before{content:"";position:absolute;left:46px;top:0;bottom:46px;width:6px;border-radius:999px;background:var(--progress);opacity:.85}
+.po-sec{position:relative;display:flex;gap:16px;align-items:flex-start;width:100%;text-align:left;padding:14px 0;background:transparent;border:0;cursor:pointer;z-index:1}
+.po-sec .ring{width:56px;height:56px;flex-shrink:0;border-radius:50%;background:var(--card);border:4px solid var(--progress-bg);display:flex;align-items:center;justify-content:center;font:700 13px/1 system-ui,sans-serif}
+.po-sec.done .ring{background:var(--primary);border-color:var(--primary);color:#fff}
+.po-sec .ring.part{border-color:var(--progress-bg);background:conic-gradient(var(--progress) 0 43%,var(--card) 43% 100%)}
+.po-sec .ring.part:before{content:"";position:absolute;inset:5px;border-radius:50%;background:var(--card)}
+.po-sec .ring.part b{position:relative;z-index:1}
+.po-sec .st{flex:1;padding-top:3px}
+.po-sec .st b{display:block;font:700 20px/1.25 system-ui,sans-serif}
+.po-sec .st p{margin:4px 0 0;font:400 15px/1.45 system-ui,sans-serif;color:var(--text-weak)}
+.po-sec.active{background:var(--card);border:1px solid var(--line2);border-radius:18px;padding:14px 12px;margin:6px -10px;box-shadow:0 2px 8px rgba(37,39,70,.06)}
+.po-sec .proj{display:inline-block;margin-top:6px;font:700 11px/1 system-ui,sans-serif;letter-spacing:1px;text-transform:uppercase;color:var(--primary)}
+.po-sec .soon{display:inline-block;margin-top:6px;font:700 11px/1 system-ui,sans-serif;letter-spacing:1px;text-transform:uppercase;color:var(--text-weak)}
+/* ---- Section detail ---- */
+.sd-hero{padding:18px 18px 12px}
+.sd-hero .kick{display:block;font:400 15px/1.3 system-ui,sans-serif;color:var(--text-weak)}
+.sd-hero h2{margin:5px 0 6px;font:700 24px/1.2 system-ui,sans-serif}
+.sd-hero p{margin:0 0 14px;font:400 15px/1.5 system-ui,sans-serif;color:var(--text-weak)}
+.sd-hero .cbar{height:8px;border-radius:999px;background:var(--progress-bg);overflow:hidden}
+.sd-hero .cbar i{display:block;height:100%;width:43%;background:var(--progress);border-radius:999px}
+.sd-list{padding:0 18px 18px}
+.sd-row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;margin:0 0 10px;padding:11px 13px;background:var(--card);border:1px solid var(--line2);border-radius:16px;cursor:pointer}
+.sd-row .sr{width:34px;height:34px;flex-shrink:0;border-radius:50%;background:var(--card-pressed);display:flex;align-items:center;justify-content:center;font:700 13px/1 system-ui,sans-serif;color:var(--text-weak)}
+.sd-row.done .sr{background:var(--primary);color:#fff}
+.sd-row.cur .sr{background:var(--progress-weak);color:var(--primary)}
+.sd-row .stx{flex:1}
+.sd-row .stx b{display:block;font:700 16px/1.3 system-ui,sans-serif}
+.sd-row .stx small{display:block;color:var(--text-weak);font:400 12px/1.4 system-ui,sans-serif}
+.sd-row .si{color:var(--text-weak);display:flex}
+.sd-row.locked{opacity:.55}
+.sd-cta{display:block;width:calc(100% - 36px);margin:0 18px 12px;height:50px;border:0;border-radius:999px;background:var(--primary);color:#fff;font:700 14px/1 system-ui,sans-serif;letter-spacing:.6px;text-transform:uppercase;cursor:pointer}
+.sd-link{display:block;width:calc(100% - 36px);margin:0 18px 18px;padding:9px;border:1px solid var(--line2);border-radius:999px;background:var(--card);color:var(--primary);font:700 12px/1 system-ui,sans-serif;cursor:pointer}
+.sd-note{margin:0 18px 22px;font:400 12px/1.6 system-ui,sans-serif;color:var(--text-weak)}
+/* ---- Unfinished track modal ---- */
+.ut-card{text-align:center;padding:22px 22px 24px}
+.ut-card .utx{position:absolute;right:18px;top:18px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;color:var(--text-weak);cursor:pointer}
+.ut-card .ut-art{height:112px;display:flex;align-items:center;justify-content:center;color:var(--primary)}
+.ut-card h2{margin:6px 0 12px;font:700 25px/1.25 system-ui,sans-serif}
+.ut-card p{margin:0 0 20px;font:400 17px/1.5 system-ui,sans-serif;color:var(--text)}
+.ut-card .utok{width:100%;height:54px;border:0;border-radius:16px;background:var(--primary);color:#fff;font:700 17px/1 system-ui,sans-serif;cursor:pointer}
+.codechip2{display:inline-block;background:var(--code-bg);border-radius:6px;padding:2px 7px;font:400 11px/1.5 ui-monospace,"Courier New",monospace;direction:ltr;color:var(--text-weak)}
+
+/* ============ v7 · exact Mimo path-map NODES (code + visual cross-check) ============ */
+.tabs{grid-template-columns:repeat(6,1fr)}
+.tabs .tab{font-size:9px;letter-spacing:0}
+.pathwrap.l7{height:560px;margin-top:8px;background:radial-gradient(circle,var(--line2) 1.6px,transparent 1.7px) 0 0/26px 26px;background-color:var(--bg);position:relative;overflow:hidden}
+.pathwrap.l7 .connector{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.pathwrap.l7 .node{position:absolute;width:92px;height:92px;border-radius:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;color:#fff;transition:transform .12s ease;-webkit-tap-highlight-color:transparent}
+.pathwrap.l7 .node:hover{transform:translateY(-2px)}
+.pathwrap.l7 .node .ic{width:44px;height:44px}
+.pathwrap.l7 .node.done{background:linear-gradient(160deg,var(--purple-light),var(--primary));box-shadow:0 8px 0 var(--primary-hi),0 12px 18px rgba(37,39,70,.18)}
+.pathwrap.l7 .node.cur{background:var(--card);border:3px solid var(--primary);box-shadow:0 0 0 7px var(--card),0 0 0 10px var(--progress-weak),0 8px 0 var(--primary-hi),0 12px 18px rgba(37,39,70,.16);color:var(--primary)}
+.pathwrap.l7 .node.cur:before{content:"";position:absolute;inset:5px;border:2px solid var(--line2);border-radius:20px}
+.pathwrap.l7 .node.cur .ic{position:relative;z-index:1}
+.pathwrap.l7 .node.half{background:var(--card);border:3px solid var(--primary);box-shadow:0 0 0 7px var(--card),0 0 0 10px var(--progress-weak),0 8px 0 var(--primary-hi);color:var(--primary)}
+.pathwrap.l7 .node.half .hring{width:56px;height:56px;border-radius:50%;background:conic-gradient(var(--primary) 0 50%,var(--progress-bg) 50% 100%);display:flex;align-items:center;justify-content:center;position:relative}
+.pathwrap.l7 .node.half .hring:before{content:"";position:absolute;inset:7px;border-radius:50%;background:var(--card)}
+.pathwrap.l7 .node.half .hring b{position:relative;z-index:1;font:700 13px/1 system-ui,sans-serif;color:var(--text)}
+.pathwrap.l7 .node.locked{background:var(--disabled);box-shadow:0 8px 0 var(--card-pressed);color:#fff}
+.pathwrap.l7 .node.practice{background:linear-gradient(160deg,var(--purple-light),var(--primary));box-shadow:0 8px 0 var(--primary-hi),0 12px 18px rgba(37,39,70,.18)}
+.pathwrap.l7 .node.practice.charged{background:var(--purple-light);color:var(--primary)}
+.pathwrap.l7 .node.practice.locked{background:var(--disabled);box-shadow:0 8px 0 var(--card-pressed);color:#fff;opacity:.92}
+.node-start{position:absolute;z-index:3;left:calc(50% - 34px);top:201px;background:var(--primary);color:#fff;border-radius:999px;padding:5px 12px;font:700 11px/1 system-ui,sans-serif;letter-spacing:.8px;text-transform:uppercase;box-shadow:0 3px 0 var(--primary-hi)}
+.node-start:after{content:"";position:absolute;left:calc(50% - 5px);bottom:-5px;width:10px;height:10px;background:var(--primary);transform:rotate(45deg)}
+.gloss-fab{position:absolute;z-index:4;right:16px;bottom:12px;width:56px;height:56px;border-radius:50%;background:var(--card);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;color:var(--text);cursor:pointer;box-shadow:0 3px 8px rgba(37,39,70,.12)}
+.gloss-fab .ga{position:absolute;font:700 13px/1 system-ui,sans-serif;color:var(--primary)}
+.l7n1,.l6n1{left:calc(50% - 46px);top:22px}
+.l7n2,.l6n2{left:calc(80% - 46px);top:128px}
+.l7n3,.l6n3{left:calc(50% - 46px);top:234px}
+.l7n4,.l6n4{left:calc(20% - 46px);top:340px}
+.l7n5,.l6n5{left:calc(50% - 46px);top:340px}
+.l7b1{left:calc(80% - 46px);top:446px}
+.l7b2{left:calc(50% - 46px);top:446px}
+/* ---- v7 · section practice (bolt checkpoint quiz = LEARN ONLY) ---- */
+.sp-scope{display:inline-block;margin:0 0 10px;background:var(--card-pressed);border-radius:999px;padding:4px 11px;font:700 11px/1 system-ui,sans-serif;color:var(--primary)}
+.sp-list{padding:0 18px 6px}
+.sp-q{margin:0 0 12px;padding:12px 14px;background:var(--card);border:1px solid var(--line2);border-radius:16px}
+.sp-q .sp-stem b{display:block;font:700 15px/1.4 system-ui,sans-serif}
+.sp-q .sp-stem small{display:block;margin-top:3px;font:400 11px/1.4 system-ui,sans-serif;color:var(--text-weak);direction:ltr}
+.sp-opts{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:10px}
+.sp-opt{border:1px solid var(--line2);background:var(--card);border-radius:12px;padding:9px 0;font:700 13px/1 system-ui,sans-serif;color:var(--text-weak)}
+.sp-opt:hover{border-color:var(--primary)}
+.sp-opt.on{background:var(--primary);border-color:var(--primary);color:#fff}
+.sp-fb{margin:0 18px 12px;padding:10px 13px;border-radius:12px;background:var(--card-pressed);font:400 12px/1.5 system-ui,sans-serif;color:var(--text-weak)}
+.sp-fb b{color:var(--primary)}
+/* ---- v7 · quiet Mimo-skinned daily routine ---- */
+.rt-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 10px}
+.rt-head b{display:block;font:700 20px/1.2 system-ui,sans-serif}
+.rt-head small{display:block;font:400 12px/1.4 system-ui,sans-serif;color:var(--text-weak)}
+.rt-head .rt-ic{color:var(--icon);display:flex}
+.rt-card{margin:0 18px 14px;padding:13px 14px;background:var(--card);border:1px solid var(--line2);border-radius:16px}
+.rt-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.rt-stat{text-align:center;display:flex;flex-direction:column;align-items:center;gap:2px}
+.rt-stat .ic{color:var(--icon);display:flex}
+.rt-stat b{font:700 15px/1 system-ui,sans-serif}
+.rt-stat small{font:400 9px/1.2 system-ui,sans-serif;color:var(--text-weak)}
+.rt-bar{height:6px;border-radius:999px;background:var(--progress-bg);margin:12px 0 7px;overflow:hidden}
+.rt-bar i{display:block;height:100%;background:var(--progress);border-radius:999px}
+.rt-meta{display:flex;justify-content:space-between;font:400 10px/1.3 system-ui,sans-serif;color:var(--text-weak)}
+.rt-list{padding:0 18px 4px}
+.rt-task{display:flex;align-items:center;gap:9px;margin:0 0 9px;padding:9px 11px;background:var(--card);border:1px solid var(--line2);border-radius:14px}
+.rt-task .rt-ic{width:30px;height:30px;border-radius:10px;background:var(--card-pressed);display:flex;align-items:center;justify-content:center;color:var(--icon);flex-shrink:0}
+.rt-task .rt-tx{flex:1;min-width:0}
+.rt-task .rt-tx b{display:block;font:700 13px/1.3 system-ui,sans-serif}
+.rt-task .rt-tx small{display:block;font:400 10px/1.4 system-ui,sans-serif;color:var(--text-weak)}
+.rt-task .rt-pri{font:700 10px/1 system-ui,sans-serif;color:var(--text-weak);background:var(--card-pressed);border-radius:999px;padding:4px 7px}
+.rt-btn{width:28px;height:28px;flex-shrink:0;border:1px solid var(--line2);background:var(--card);border-radius:10px;color:var(--text-weak);font:700 15px/1 system-ui,sans-serif;display:flex;align-items:center;justify-content:center}
+.rt-btn:hover{border-color:var(--primary)}
+.rt-btn.on{background:var(--primary);border-color:var(--primary);color:#fff}
+.rt-btn.buy{width:auto;padding:0 9px;font:700 10px/1 system-ui,sans-serif}
+.rt-foot{display:flex;align-items:center;gap:7px;margin:4px 18px 0;font:400 11px/1.5 system-ui,sans-serif;color:var(--text-weak)}
+/* ---- v7 · AI top row tidy + one-line composer ---- */
+.ai-top-left{display:flex;gap:6px;flex-wrap:nowrap;min-width:0}
+.ai-chip{white-space:nowrap;gap:5px;font-size:10px;padding:4px 9px}
+.ai-chip b{font-weight:600;color:var(--text);font-size:10px}
+.ai-chip .ic{flex-shrink:0;color:var(--primary)}
+.ai-foot{flex-wrap:nowrap;overflow-x:auto;gap:4px;scrollbar-width:none;padding-bottom:1px}
+.ai-foot::-webkit-scrollbar{display:none}
+.ai-foot .mode{flex-shrink:0}
+.ai-foot .mode button{font-size:9px;padding:3px 7px;white-space:nowrap}
+.ai-foot .mode .lh{display:none}
+.ai-foot-chip{font-size:9px;padding:3px 7px;white-space:nowrap;gap:3px;flex-shrink:0}
+.ai-foot-chip .ic{flex-shrink:0;color:var(--primary)}
+/* ---- v7 · exam question page: two clean buttons + one quiet bottom line ---- */
+.qnav{display:flex;gap:8px;margin:12px 14px 6px}
+.qnav .btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-weight:500;font-size:12px;padding:9px 12px;border-radius:999px;background:var(--card);color:var(--text);border:1px solid var(--line2)}
+.qnav .btn:hover{border-color:var(--primary)}
+.qnav .ic{color:var(--primary)}
+.qfoot{position:sticky;bottom:0;z-index:5;display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;align-items:center;margin:10px 0 0;padding:9px 14px;background:var(--card);border-top:1px solid var(--line2);scrollbar-width:none}
+.qfoot::-webkit-scrollbar{display:none}
+.qfoot .btn{font-weight:400;font-size:11px;padding:5px 10px;color:var(--text-weak);background:var(--card);border:1px solid var(--line2);white-space:nowrap;flex-shrink:0;display:inline-flex;align-items:center;gap:5px}
+.qfoot .btn:hover{border-color:var(--primary);color:var(--primary)}
+.qfoot .ic{color:var(--primary)}
+.qfoot.result-foot{position:static;margin:12px 0 4px;background:transparent;border-top:0}
+
+</style>
+</head>
+<body>
+<header class="top">
+  <div>
+    <h1>طرح رابط کاربری — دور هفتم <span class="ver">DESIGN v7 · REVIEW</span></h1>
+    <p>بازآفرینی ۱۰۰٪ بخشهای اصلی میمو <b>از روی کد/مهندسی معکوس</b> · <b>دور هفتم:</b> گرههای مربعی یادگیری دقیقاً از کد بازسازی شدند (تیک بنفش با سایهٔ سهبعدی، حلقهٔ سفید/پلی، حلقهٔ ½، قفل، اتور گردگوشه، نقطهچین و دکمهٔ شناور واژهنامه)؛ <b>گرههای رعدوبرق → «تمرین مبحث تا همان فصل»</b>، <b>جدا از هاب آزمون کنکور</b>؛ نوار بالای AI مرتب با «اضافه کردن فایل» و «زنجیره گفت و گو»؛ خط پایین AI تکخط و ریز؛ صفحهٔ سؤال دو دکمهٔ تمیز قبل/بعد + کنترلهای کمرنگ در یک خط؛ لیدربورد بدون Promotion Zone؛ <b>تب ششم کمسر و صدای «روتین روزانه»</b> فقط با سیستم امتیازدهی Habitica. اسکرینشاتها فقط چک بصری.</p>
+  </div>
+  <div style="display:flex;gap:7px;flex-wrap:wrap">
+    <button class="btn" id="themeBtn">🌙 حالت شب</button>
+    <button class="btn" id="dirBtn">↔ فارسی / RTL</button>
+    <a class="btn" href="DESIGN_NOTES.fa.md">📄 یادداشتهای طراحی</a>
+    <a class="btn" href="CODE_GEOMETRY.json">🧬 هندسهٔ کد</a>
+    <a class="btn" href="LEARN_CODE_GEOMETRY.json">📚 شواهد زیرصفحات یادگیری</a>
+    <a class="btn" href="NODE_CODE_GEOMETRY.json">🔷 هندسهٔ گرهها v7</a>
+    <a class="btn" href="HABITICA_SCORING.json">⚖️ قواعد امتیازدهی روتین</a>
+    <a class="btn" href="../wireframes.html">← وایرفریم v1</a>
+  </div>
+</header>
+
+<div class="layout">
+  <div class="canvas">
+    <div class="switcher" id="switcher">
+      <button data-go="learn" class="on">۱ · یادگیری (گرههای دقیق)</button>
+      <button data-go="select-path">۲ · انتخاب مسیر / درسها</button>
+      <button data-go="path-overview">۳ · نمای مسیر + گواهی</button>
+      <button data-go="section-detail">۴ · داخل مبحث (فصلها)</button>
+      <button data-go="chapter">۵ · کارت شروع فصل</button>
+      <button data-go="lesson">۶ · صفحهٔ درس</button>
+      <button data-go="section-practice">۷ · تمرین مبحث (رعدوبرق)</button>
+      <button data-go="leaderboard">۸ · لیدربورد + اطلاعات من</button>
+      <button data-go="user-profile">۹ · پروفایل کاربر</button>
+      <button data-go="profile">۱۰ · پروفایل</button>
+      <button data-go="routine">۱۱ · روتین روزانه</button>
+      <button data-go="exam-hub">۱۲ · هاب آزمونها</button>
+      <button data-go="exam-run">۱۳ · اجرای آزمون</button>
+      <button data-go="exam-result">۱۴ · صفحهٔ آخر آزمون</button>
+      <button data-go="ai">۱۵ · چت AI</button>
+    </div>
+
+    <div class="phone" id="phone">
+      <div class="statusbar">
+        <span>9:41&nbsp; ☾</span>
+        <span class="sb-r"><span class="sb-sig"><i style="height:4px"></i><i style="height:6px"></i><i style="height:8px"></i><i style="height:11px"></i></span><span class="sb-wifi"></span><span class="sb-bat"><i style="width:80%"></i></span></span>
+      </div>
+
+      <!-- ============ 1. LEARN / PATH MAP = v7 exact node geometry from code ============ -->
+      <section class="screen mimo on" data-screen="learn">
+        <div class="mimo-hdr l6">
+          <div class="pill"><span data-icon="ic_coin" data-size="26"></span><b>1,272</b></div>
+          <div class="pill"><span data-icon="ic_key" data-size="24"></span><span class="inf" data-icon="ic_infinity" data-size="20" data-mono="1"></span></div>
+          <div class="pill"><span data-icon="ic_streak_active" data-size="26"></span><b>0</b></div>
+        </div>
+        <div class="coursebar l6">
+          <button class="lst" id="pathSwitchBtn" data-nav="select-path" title="ic_list_bulleted → select_path / track_switcher_title"><span data-icon="ic_list_bulleted" data-size="24" data-mono="1"></span></button>
+          <b data-fa="کنکور تجربی">Back-End Developer</b>
+        </div>
+        <button class="overview-card" id="overviewEntry" data-nav="path-overview" title="ViewsKt$OverviewEntryPointHeader → path_see_course_overview">
+          <span class="oc-kicker" data-fa="مسیر شغلی">Career path</span>
+          <span class="oc-title" data-fa="۳. سلول و بافت">3. Arrays &amp; Functions</span>
+          <span class="oc-bar"><i style="width:43%"></i></span>
+        </button>
+        <div class="pathwrap l6 l7">
+          <svg class="connector" viewBox="0 0 392 560" preserveAspectRatio="none">
+            <path d="M196 68 H270 Q314 68 314 112 V130 Q314 174 270 174 H240 Q196 174 196 218 V236 Q196 280 152 280 H122 Q78 280 78 324 V342 Q78 386 122 386 H148 Q196 386 196 430 V448 Q196 492 240 492 H270 Q314 492 314 448" fill="none" stroke="var(--progress)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/>
+            <path d="M196 68 H270 Q314 68 314 112 V130 Q314 174 270 174 H240 Q196 174 196 218 V236 Q196 280 152 280 H122 Q78 280 78 324 V342 Q78 386 122 386 H148 Q196 386 196 430 V448 Q196 492 240 492 H270 Q314 492 314 448" fill="none" stroke="var(--card)" stroke-width="4" stroke-dasharray="1 14" stroke-linecap="round" opacity=".6"/>
+          </svg>
+          <span class="node-start" data-fa="شروع">START</span>
+          <div class="node done l6n1 l7n1" data-icon="ic_check_white" data-size="44" data-mono="1" data-nav="chapter" title="PathMapScreenKt · completed chapter → chapter_toolbar.xml"></div>
+          <div class="node done l6n2 l7n2" data-icon="ic_check_white" data-size="44" data-mono="1" data-nav="chapter" title="completed chapter · start_lesson"></div>
+          <div class="node cur l6n3 l7n3" id="curNode" data-icon="ic_play" data-size="40" data-mono="1" data-nav="chapter" title="current chapter · white double ring · ic_play"></div>
+          <div class="node half l6n4 l7n4" data-nav="chapter" title="1/2 progress ring · glance_circular_progress_indicator.xml"><span class="hring"><b>1/2</b></span></div>
+          <div class="node locked l6n5 l7n5" data-icon="ic_lock_alt_02" data-size="38" data-mono="1" data-locked="1" title="alert_msg_section_setion_locked"></div>
+          <div class="node practice charged l7b1" data-icon="ic_bolt_charged" data-size="42" data-nav="section-practice" data-practice="3" title="bolt checkpoint → section practice up to section 3 · Fully charged!"></div>
+          <div class="node practice locked l7b2" data-icon="ic_bolt" data-size="42" data-mono="1" data-nav="section-practice" data-practice="5" title="bolt checkpoint → section practice up to section 5 · ic_practice_tab_locked"></div>
+          <div class="gloss-fab" data-glossary="1" title="floating book / glossary affordance · mimo-01"><span data-icon="ic_file" data-size="30" data-mono="1"></span><b class="ga">A</b></div>
+        </div>
+      </section>
+
+      <!-- ============ 2. SELECT PATH = the three-lines icon ============ -->
+      <section class="screen mimo" data-screen="select-path">
+        <div class="sp-top"><button class="x" data-nav="learn"><span data-icon="ic_close" data-size="24" data-mono="1"></span></button><b data-fa="انتخاب مسیر">Select Path</b></div>
+        <div class="sp-body">
+          <h3 id="careerHeading" data-fa="مسیرهای شغلی">Career Paths</h3>
+          <div id="careerCards"></div>
+          <h3 class="sub" id="courseHeading" data-fa="درسها">Courses</h3>
+          <div id="courseRows"></div>
+          <p class="note" style="margin-top:18px">همهٔ لیبلها از <span class="codechip2">track_switcher_*</span> / <span class="codechip2">courses</span> / <span class="codechip2">section</span> و وکتورها از <span class="codechip2">ic_badge_*</span>. حلقهها از <span class="codechip2">profile_certificate_view.xml</span> (اندازهٔ ۵۶dp، رنگ <span class="codechip2">progress_primary</span>). <span class="codechip2">track_switcher_title = Coding Path</span> · <span class="codechip2">track_switcher_early_access_label = Early access</span></p>
+        </div>
+      </section>
+
+      <!-- ============ 3. PATH OVERVIEW = certificate + numbered sections ============ -->
+      <section class="screen mimo" data-screen="path-overview">
+        <div class="po-top"><button class="x" data-nav="learn"><span data-icon="ic_close" data-size="24" data-mono="1"></span></button></div>
+        <div class="po-head">
+          <span class="kick" data-fa="مسیر شغلی">Career path</span>
+          <h1 data-fa="کنکور تجربی">Back-End Developer</h1>
+          <button class="sw" id="overviewSwitch" data-nav="select-path" title="ic_switch → select_path"><span data-icon="ic_switch" data-size="28"></span></button>
+        </div>
+        <div class="cert-card" id="certCard" data-modal="unfinishedModal" title="certificates_unfinished_track_dialog_*">
+          <span class="cb" data-icon="ic_badge_backend_professional" data-size="48"></span>
+          <div class="cc">
+            <b data-fa="گواهی حرفهای">Professional Certificate</b>
+            <div class="cbar"><i></i></div>
+            <div class="cm"><span data-fa="۲۲٪ تکمیل">22% Complete</span><span>2/9</span></div>
+          </div>
+        </div>
+        <div class="po-secs" id="sectionRows"></div>
+        <p class="note" style="margin:0 18px 22px">عنوان فصلها با <span class="codechip2">path_overview_section_ordinal = %d. %s</span> و نام/توضیح/تعداد درسها از <span class="codechip2">test-tracks.json :: tracks[].sections[]</span>. <span class="codechip2">path_overview_section_project_label = Section Project</span> · <span class="codechip2">path_section_coming_soon = Coming soon</span> · <span class="codechip2">alert_msg_section_setion_locked</span></p>
+      </section>
+
+      <!-- ============ 4. SECTION DETAIL = inside a topic ============ -->
+      <section class="screen mimo" data-screen="section-detail">
+        <div class="sd-top"><button class="x" data-nav="path-overview"><span data-icon="ic_arrow_back_24" data-size="24" data-mono="1"></span></button><b data-fa="مبحث">Section</b></div>
+        <div class="sd-hero">
+          <span class="kick" data-fa="فصل سوم">Section 3</span>
+          <h2 id="sdTitle" data-fa="سلول و بافت">Arrays &amp; Functions</h2>
+          <p id="sdDesc">Use arrays &amp; functions to build sophisticated programs</p>
+          <div class="cbar"><i></i></div>
+        </div>
+        <div class="sd-list" id="lessonRows"></div>
+        <button class="sd-cta" id="sdContinue" data-nav="chapter" data-fa="ادامه">Continue</button>
+        <button class="sd-link" id="sdOverview" data-nav="path-overview" data-fa="نمای دوره">See course overview</button>
+        <p class="sd-note" id="sdNote">فهرست درسها از <span class="codechip2">sections[2].tutorialIds</span> (۱۶ شناسهٔ واقعی داخل APK). لیبلها: <span class="codechip2">lesson_continue</span> · <span class="codechip2">lesson_skip</span> · <span class="codechip2">lesson_submit</span> · <span class="codechip2">path_overview_section_project_label</span> · <span class="codechip2">path_section_coming_soon_title</span> · <span class="codechip2">section_details_smart_practice_*</span></p>
+      </section>
+
+      <!-- ============ 3. LESSON = chapter_toolbar.xml ============ -->
+      <section class="screen mimo" data-screen="lesson">
+        <div class="lesson">
+          <div class="lesson-toolbar">
+            <span class="ib" data-icon="ic_close" data-size="24" data-mono="1" title="btn_lesson_close"></span>
+            <span class="heart"><span data-icon="ic_streak" data-size="30"></span><span class="inf" data-icon="ic_infinity" data-size="14"></span></span>
+            <span class="ib" data-icon="ic_flag" data-size="24" data-mono="1" title="btn_lesson_report"></span>
+          </div>
+          <div class="lprogress"><i></i></div>
+          <div class="lesson-body">
+            <p data-fa="گاهی لازم است متنها را با شکستن خطوط، خواناتر کنیم.">Sometimes we want to format paragraphs with line breaks.</p>
+            <p data-fa="مثلاً این جمله خیلی بهتر میشد اگر &lt;span class=&quot;codechip&quot;&gt;غضروف&lt;/span&gt; در یک خط و &lt;span class=&quot;codechip&quot;&gt;استخوان&lt;/span&gt; در خط بعدی قرار میگرفت.">For example, this song would look much better if <span class="codechip">Raindrops on roses</span> appeared on one line, <span class="codechip">Whiskers on kittens</span> on the next, and so on.</p>
+            <div class="browser">
+              <div class="browser-bar"><span data-icon="browser_view_header_dots" data-size="24"></span></div>
+              <div class="browser-in">
+                <h3 data-fa="بافتها">My favorite things</h3>
+                <p data-fa="بافت پوششی، بافت پیوندی، بافت ماهیچهای و بافت عصبی">Raindrops on roses Whiskers on kittens Bright copper kettles Warm woolen mittens</p>
+              </div>
+            </div>
+          </div>
+          <button class="continue-btn" data-nav="learn" data-fa="ادامه">Continue</button>
+        </div>
+      </section>
+
+      <!-- ============ 4. LEADERBOARD = Mimo + own info ============ -->
+      <section class="screen mimo" data-screen="leaderboard">
+        <div class="lb-title" data-fa="لیگ هفتگی">Weekly Leaderboard</div>
+        <div class="leagues">
+          <div class="league-b sel" data-icon="ic_leaderboard_league_1" data-size="60"></div>
+          <div class="league-b" data-icon="ic_leaderboard_league_locked" data-size="52"></div>
+          <div class="league-b" data-icon="ic_leaderboard_league_locked" data-size="52"></div>
+          <div class="league-b" data-icon="ic_leaderboard_league_locked" data-size="52"></div>
+          <div class="league-b" data-icon="ic_leaderboard_league_locked" data-size="52"></div>
+        </div>
+        <div class="league-row"><span data-fa="لیگ چوبی">Wooden League</span><span class="cd">6d 22h 38m</span></div>
+        <div class="lb-row"><span class="rk">13</span><span class="av" style="background:#3890FA">M</span><span class="nm">MIGUELBAOBAB</span><span class="xp"><span class="sp" data-icon="ic_flash_filled" data-size="18" data-mono="1"></span>350</span></div>
+        <div class="lb-row"><span class="rk">13</span><span class="av" style="background:#F4D055">m</span><span class="nm">mairi</span><span class="xp"><span class="sp" data-icon="ic_flash_filled" data-size="18" data-mono="1"></span>350</span></div>
+        <div class="lb-row"><span class="rk">18</span><span class="av" style="background:#8D60E2">A</span><span class="nm">Aska</span><span class="xp"><span class="sp" data-icon="ic_flash_filled" data-size="18" data-mono="1"></span>340</span></div>
+        <div class="lb-row me" id="myRow" title="tap → User Profile"><span class="rk">20</span><span class="av" style="background:#3BA55D">S</span><span class="nm">sarah</span><span class="xp"><span class="sp" data-icon="ic_flash_filled" data-size="18" data-mono="1"></span>330</span></div>
+        <div class="lb-row"><span class="rk">21</span><span class="av" style="background:#8D60E2">L</span><span class="nm">lucas correia</span><span class="xp"><span class="sp" data-icon="ic_flash_filled" data-size="18" data-mono="1"></span>310</span></div>
+        <div class="sec-h" data-fa="اطلاعات من">My stats</div>
+        <div class="statcards">
+          <div class="statcard"><span class="ic" data-icon="ic_streak_active" data-size="32"></span><b>1</b><small data-fa="روز متوالی">Day streak</small></div>
+          <div class="statcard"><span class="ic" data-icon="ic_flash_filled" data-size="32" data-mono="1" style="color:var(--yellow)"></span><b>480</b><small data-fa="امتیاز کل">XP total</small></div>
+          <div class="statcard"><span class="ic" data-icon="img_brain" data-size="32"></span><b data-fa="چوبی">Wooden</b><small data-fa="لیگ">League</small></div>
+        </div>
+        <div class="selfbox">
+          <h4 data-fa="آزمونها و امتیازات من">My exams &amp; scores</h4>
+          <div class="selfrow"><span data-fa="آزمون جامع تجربی">Comprehensive exam</span><b>۶۸٪ · رتبه ۱۲۴۰</b></div>
+          <div class="selfrow"><span data-fa="آزمون تکدرسی زیست">Biology single-subject</span><b>۸۲٪ · ۴۰ سؤال</b></div>
+          <div class="selfrow"><span data-fa="آزمون زماندار شیمی">Timed chemistry</span><b>۷۱٪ · ۳۰ دقیقه</b></div>
+          <div class="selfrow"><span data-fa="آزمون تحلیلی غلطها">Analytical / wrong answers</span><b>۴ غلط · ۵ نزده</b></div>
+          <div class="selfrow"><span data-fa="امتیاز این هفته">Weekly XP</span><b>330 ⚡</b></div>
+        </div>
+      </section>
+
+      <!-- ============ 5. USER PROFILE = public_profile_fragment.xml ============ -->
+      <section class="screen mimo" data-screen="user-profile">
+        <div class="up-head"><span class="bk" data-nav="leaderboard">‹ Back</span><b data-fa="پروفایل کاربر">User Profile</b><span data-icon="ic_user_alert" data-size="22" data-mono="1"></span></div>
+        <div class="up-body">
+          <div class="up-av"></div>
+          <h3 data-fa="سارا">malibu</h3>
+          <p data-fa="هنوز اطلاعاتی از سارا ثبت نشده است">We don't know anything about malibu</p>
+          <button class="follow" data-fa="دنبال کردن">Follow</button>
+        </div>
+        <div class="statcards" style="margin-top:14px">
+          <div class="statcard"><span class="ic" data-icon="ic_streak_active" data-size="32"></span><b>1</b><small>Day streak</small></div>
+          <div class="statcard"><span class="ic" data-icon="ic_flash_filled" data-size="32" data-mono="1" style="color:var(--yellow)"></span><b>480</b><small>XP total</small></div>
+          <div class="statcard"><span class="ic" data-icon="img_brain" data-size="32"></span><b>Wooden</b><small>League</small></div>
+        </div>
+        <div class="sec-h">Playgrounds</div>
+        <div class="dash"><div class="boxmascot"><div class="bt"><i></i><i></i></div><div class="bx"></div></div><b data-fa="هیچ آزمونی نیست">No playgrounds</b><p data-fa="برای ساختن آزمون تازه، روی «ساخت آزمون» بزن">There are no Playgrounds on malibu's profile</p></div>
+      </section>
+
+      <!-- ============ 6. PROFILE = profile_fragment.xml ============ -->
+      <section class="screen mimo" data-screen="profile">
+        <div class="prof-head"><b data-fa="پروفایل">Profile</b><span class="gear" data-icon="ic_settings" data-size="24" data-mono="1" title="settings"></span></div>
+        <div class="prof-course">
+          <span class="badge" data-icon="ic_cap_filled" data-size="52" data-mono="1" style="color:var(--progress-weak)"></span>
+          <b data-fa="زیستشناسی">HTML</b><span class="pct">0%</span>
+        </div>
+        <div class="sec-h" data-fa="جامهای لیگ">Leaderboard Trophies</div>
+        <div class="dash">
+          <span style="display:flex;justify-content:center"><span data-icon="ic_leaderboard_locked" data-size="80"></span></span>
+          <b data-fa="هنوز جامی ندارید">No trophies yet</b>
+          <p data-fa="به بالای لیدربورد برسید تا جام بگیرید">Get to the top of your Leaderboard and win a trophy</p>
+        </div>
+        <div class="plink"><span data-fa="آزمونهای من">Playgrounds</span><span data-sheet="playgroundSheet" data-fa="＋ ساخت آزمون">＋ PLAYGROUNDS</span></div>
+        <div class="dash">
+          <div class="boxmascot"><div class="bt"><i></i><i></i></div><div class="bx"></div></div>
+          <b data-fa="ایدههایتان را کاوش کنید">Explore Your Ideas</b>
+          <p data-fa="آزمون بسازید، تست بزنید و نتیجه را از گوشی دنبال کنید">Code, test, and share projects seamlessly from your phone</p>
+        </div>
+      </section>
+
+<!-- ============ 8. EXAM HUB (new section) ============ -->
+      <section class="screen konkur" data-screen="exam-hub">
+        <div class="appbar"><b>آزمونها</b><div class="left"><button class="iconbtn" data-help="هاب آزمون">؟</button></div></div>
+        <div class="hint">📜 همهچیز در همین یک صفحهٔ قابلاسکرول. هر بخش <b>لیبل عنوان</b> و <b>قالب فیلد مشخص</b> دارد. ✅ تایمر فقط داخل آزمون است.</div>
+        <div class="chips"><span class="chip on">همه</span><span class="chip">جامع</span><span class="chip">زماندار</span><span class="chip">تکدرسی</span><span class="chip">مبحثی</span><span class="chip">این ماه</span><span class="chip">تحلیلی</span><span class="chip">جمع بندی</span></div>
+        <div class="sec">۱ · آزمونهای جامع</div>
+        <div class="cat-meta">قالب ثابت: <b>زمان ثابت ۲۷۰ دقیقه</b> · ۲۰۰–۴۰۰ سؤال · نمرهٔ منفی ⅓ · «زمان خالص آزمون» · پاسخنامه در پایان آزمون باز میشود</div>
+        <div class="grid3"><div><div class="nodek" data-exam="آزمون جامع کنکور" data-kind="comprehensive">◇<span class="mini">۲۰۰ سؤال</span></div><div class="label">آزمون جامع<br>کنکور</div></div><div><div class="nodek" data-exam="آزمون جامع تجربی" data-kind="comprehensive">◇<span class="mini">زمان ثابت</span></div><div class="label">جامع<br>تجربی</div></div><div><div class="nodek" data-exam="آزمون جامع ریاضی" data-kind="comprehensive">◇<span class="mini">زمان ثابت</span></div><div class="label">جامع<br>ریاضی</div></div></div>
+        <div class="sec">۲ · آزمونهای زماندار</div>
+        <div class="cat-meta">قالب: <b>مدت قابلتنظیم</b> (کلیک روی تایمر داخل آزمون ← عدد ← شروع) · ۵–۴۰۰ سؤال · پاسخبرگ + پاسخنامه حین آزمون</div>
+        <div class="grid3"><div><div class="nodek" data-exam="آزمون زماندار ۳۰ دقیقه" data-kind="timed">⏱<span class="mini">۳۰ د</span></div><div class="label">زماندار<br>۳۰ دقیقه</div></div><div><div class="nodek" data-exam="آزمون سرعتی" data-kind="timed">⏱<span class="mini">۱۰ د</span></div><div class="label">سرعتی<br>۱۰ دقیقه</div></div><div><div class="nodek" data-exam="پومودورو تست" data-kind="timed">⏱<span class="mini">۲۵ د</span></div><div class="label">پومودورو<br>تست</div></div></div>
+        <div class="sec">۳ · تکدرسی و مبحثی</div>
+        <div class="cat-meta">قالب: ۲۰–۶۰ سؤال · ۴۵–۹۰ دقیقه · ضریب درس ×۲ · پاسخبرگ + پاسخنامه حین آزمون · نتیجه و تحلیل</div>
+        <div class="grid3"><div><div class="nodek" data-exam="آزمون تکدرسی زیست" data-kind="normal">◇<span class="mini">۲۰ سؤال</span></div><div class="label">تکدرسی<br>زیست</div></div><div><div class="nodek" data-exam="آزمون مبحثی سمها" data-kind="normal">✓<span class="mini">انجام شد</span></div><div class="label">مبحثی<br>سمها</div></div><div><div class="nodek" data-exam="آزمون فصل ۱ شیمی" data-kind="normal">◇<span class="mini">۴۰ سؤال</span></div><div class="label">فصل ۱<br>شیمی</div></div></div>
+        <div class="sec">۴ · آزمونهای این ماه</div>
+        <div class="cat-meta">قالب: تقویم ماه · تراز و رتبه · قفل تا زمان انتشار · پاسخنامه بعد از اتمام · پاداش ماهانه</div>
+        <div class="grid3"><div><div class="nodek" data-exam="آزمون این ماه" data-kind="normal">◇<span class="mini">جدید</span></div><div class="label">آزمون<br>این ماه</div></div><div><div class="nodek" data-exam="آزمون هفتۀ سوم" data-kind="normal">◇<span class="mini">تراز</span></div><div class="label">هفتۀ<br>سوم</div></div><div><div class="nodek" data-exam="آزمون ماه قبل" data-kind="normal">✓<span class="mini">انجام شد</span></div><div class="label">ماه<br>قبل</div></div></div>
+        <div class="sec">۵ · آزمونهای تحلیلی</div>
+        <div class="cat-meta">قالب: <b>پاسخبرگ + پاسخنامه حین و بعد</b> · شبیهسازی «اگر غلطها نزده میذاشتی» · نقشهٔ ضعف · تحلیل مبحثبهمبحث</div>
+        <div class="grid3"><div><div class="nodek" data-exam="آزمون تحلیلی زیست" data-kind="analytical">◇<span class="mini">تحلیل</span></div><div class="label">تحلیلی<br>زیست</div></div><div><div class="nodek" data-exam="تحلیل آزمون جامع" data-kind="analytical">◇<span class="mini">گزارش</span></div><div class="label">تحلیل<br>جامع</div></div><div><div class="nodek" data-exam="تحلیل غلطها" data-kind="analytical">◇<span class="mini">گزارش</span></div><div class="label">تحلیل<br>غلطها</div></div></div>
+        <div class="sec">۶ · جمع بندی و دوره</div>
+        <div class="cat-meta">قالب: <b>بدون پاسخنامه حین آزمون</b> (زمان خالص آزمون) · پاسخنامه در پایان آزمون باز میشود</div>
+        <div class="grid3"><div><div class="nodek" data-exam="آزمون جمع بندی" data-kind="review">◇<span class="mini">زمان خالص</span></div><div class="label">جمع بندی<br>فصلها</div></div><div><div class="nodek" data-exam="دورۀ فشرده" data-kind="review">◇<span class="mini">زمان خالص</span></div><div class="label">دورۀ<br>فشرده</div></div><div><div class="nodek" data-exam="آزمون نهایی" data-kind="review">🔒<span class="mini">قفل</span></div><div class="label">آزمون<br>نهایی</div></div></div>
+        <div class="sec">۷ · مرور غلطها / آزمون دوباره / تشریحی</div>
+        <div class="cat-meta">قالب: فقط غلطهای ذخیرهشده · پاسخنامهٔ تشریحی · «تعویض سوال» · تصحیح دستی برای تشریحی</div>
+        <div class="grid3"><div><div class="nodek" data-exam="آزمون دوباره" data-kind="normal">◇<span class="mini">فقط غلطها</span></div><div class="label">آزمون<br>دوباره</div></div><div><div class="nodek" data-exam="مرور غلطها" data-kind="normal">◇<span class="mini">مرور</span></div><div class="label">مرور<br>غلطها</div></div><div><div class="nodek" data-exam="آزمون تشریحی" data-kind="normal">◇<span class="mini">تشریحی</span></div><div class="label">آزمون<br>تشریحی</div></div></div>
+        <div class="progress"><i style="width:62%"></i></div>
+        <p class="note">⬇️ بخشهای تازه بعداً به همین صفحه با همان لیبل/قالب اضافه میشوند؛ نیازی به صفحهٔ تازه نیست. روی هر گره کلیک کنید ← اجرای آزمون.</p>
+      </section>
+
+      <!-- ============ 9. EXAM RUN ============ -->
+      <section class="screen konkur" data-screen="exam-run">
+        <div class="appbar"><div class="left"><button class="iconbtn" data-nav="exam-hub">→</button><b id="examTitle">آزمون جامع کنکور</b></div><button class="timerchip" id="timerChip">⏱ <span id="timerLabel">تنظیم زمان</span></button></div>
+        <div id="examFinished"></div>
+        <div class="qmeta"><span>سؤال ۳ از ۲۰</span><span id="timerStateText">زمان تنظیم نشده</span></div>
+        <div class="qtext" id="qText">کدامیک از گزینههای زیر دربارهٔ «سمها» درست است؟ اگر پاسخ را نمیدانید میتوانید علامت بزنید و بعداً برگردید.</div>
+        <div class="opt" data-opt="1"><span>۱</span> گزینهٔ اول</div><div class="opt" data-opt="2"><span>۲</span> گزینهٔ دوم</div><div class="opt" data-opt="3"><span>۳</span> گزینهٔ سوم</div><div class="opt" data-opt="4"><span>۴</span> گزینهٔ چهارم</div>
+        <div class="qnav">
+          <button class="btn" id="prevQ"><span data-icon="ic_arrow_left" data-size="16" data-mono="1"></span>سؤال قبل</button>
+          <button class="btn" id="nextQ">سؤال بعد<span data-icon="ic_arrow_right" data-size="16" data-mono="1"></span></button>
+        </div>
+        <div class="hint" id="policyHint">سیاست: <b>عادی / زماندار / تحلیلی</b> ← «پاسخبرگ» (گزینههای زدهشده) و «پاسخنامه» (جواب تشریحی + توضیحات) حین آزمون؛ <b>جامع / جمع بندی / نهایی</b> ← زمان خالص آزمون، و در پایان آزمون صفحهٔ پاسخنامه باز میشود.</div>
+        <div class="hint">💡 تنها ایدهٔ جزیی گرفتهشده از EPM: یک دکمهٔ «توضیح با هوش مصنوعی» در همین صفحهٔ سؤالات — بدون پنل یا داک تازه. همان دکمه در صفحهٔ آخر آزمون، صورت اشتباهات + پاسخهای شما + صورت سؤالها را به چت مینیمال منتقل میکند.</div>
+        <div class="hint">تایمر معکوس فقط داخل آزمون: کلیک روی chip بالا ← عدد دقیقه ← شروع ← شمارش معکوس. توقف/ادامه و ثبت خودکار در صفر.</div>
+        <div class="qfoot">
+          <button class="btn" id="answerSheetBtn" data-sheet="paletteSheet">پاسخبرگ</button>
+          <button class="btn" id="answerKeyBtn" data-sheet="keySheet">پاسخنامه</button>
+          <button class="btn" data-sheet="exitSheet">خروج</button>
+          <button class="btn" id="endExam">اتمام آزمون</button>
+          <button class="btn" id="askAiBtn"><span data-icon="ic_magic_wand" data-size="15" data-mono="1"></span>توضیح با هوش مصنوعی</button>
+          <button class="btn" id="timerPause" style="display:none">توقف</button>
+          <button class="btn" id="timerReset" style="display:none">تنظیم مجدد</button>
+        </div>
+      </section>
+
+      <!-- ============ 10. EXAM RESULT ============ -->
+      <section class="screen konkur" data-screen="exam-result">
+        <div class="appbar"><div class="left"><button class="iconbtn" data-nav="exam-hub">→</button><b>نتیجهٔ آزمون</b></div><span class="tag" id="resultKind">جامع</span></div>
+        <div class="card">
+          <b>نتیجه و تحلیل</b>
+          <div class="kv"><span>درصد با نمرهٔ منفی</span><span>۶۸٪</span></div>
+          <div class="kv"><span>اگر غلطها نزده میذاشتی</span><span>۷۴٪</span></div>
+          <div class="kv"><span>غلط / نزده</span><span>۴ / ۵</span></div>
+          <div class="kv"><span>رتبه / تراز</span><span>۱۲۴۰ / ۶۲۰۰</span></div>
+        </div>
+        <div class="card">
+          <b>صورت اشتباهات (منتقلشونده به AI)</b>
+          <div class="wrong">سؤال ۲ · زیست / سمها — صورت سؤال: «کدام گزینه دربارهٔ سمها درست است؟» · پاسخ شما: گزینهٔ ۴ · پاسخ صحیح: گزینهٔ ۱</div>
+          <div class="wrong">سؤال ۴ · شیمی / تعادل — صورت سؤال: «ثابت تعادل در دمای ثابت…» · پاسخ شما: نزده · پاسخ صحیح: گزینهٔ ۴</div>
+          <div class="wrong">سؤال ۹ · فیزیک / ترمودینامیک — صورت سؤال: «کار انجامشده در فرایند همحجم…» · پاسخ شما: گزینهٔ ۲ · پاسخ صحیح: گزینهٔ ۳</div>
+        </div>
+        <div class="qfoot result-foot">
+          <button class="btn" id="resultBargBtn" data-sheet="paletteSheet">پاسخبرگ</button>
+          <button class="btn" id="resultKeyBtn" data-sheet="keySheet">پاسخنامه</button>
+          <button class="btn" id="askAiResultBtn"><span data-icon="ic_magic_wand" data-size="15" data-mono="1"></span>توضیح با هوش مصنوعی</button>
+        </div>
+        <p class="note">همان تکدکمهٔ صفحهٔ سؤالات؛ اینجا <b>صورت اشتباهات + پاسخهای انتخابشده + صورت سؤال</b> را به چت مینیمال منتقل میکند تا جواب تشریحی بگیرید.</p>
+      </section>
+
+      <!-- ============ 11. AI CHAT ============ -->
+      <section class="screen konkur" data-screen="ai">
+        <div class="appbar"><div class="ai-head"><div class="mascot" data-icon="ic_ai_tutor" data-size="20"></div><div><b>دستیار هوشمند</b><div class="note" style="margin:0">ai_tutor_chat_header · پوستهٔ میمو</div></div></div><button class="iconbtn" data-sheet="historySheet">🕘</button></div>
+        <div class="krow ai-top" style="justify-content:space-between;margin:0 0 6px">
+          <div class="ai-top-left">
+            <button class="fchip ai-chip" data-lh="Import notes..."><span data-icon="attachment" data-size="14" data-mono="1"></span><b>اضافه کردن فایل</b><span class="lh">Import notes...</span></button>
+            <button class="fchip ai-chip" data-lh="Chains"><span data-icon="ic_link_external" data-size="14" data-mono="1"></span><b>زنجیره گفت و گو</b><span class="lh">Chains</span></button>
+          </div><span class="cost" data-lh="Cost $0.01">$0.01</span>
+        </div>
+        <div class="thread" id="chatThread">
+          <div class="ctx" id="aiContext" hidden></div>
+          <div class="bubble">سلام! روی کدوم مبحث میخوای کار کنیم؟ <span class="lh">ai_tutor_start_message</span></div>
+          <div class="bubble me">مشتقات رو برام توضیح بده</div>
+          <div class="bubble">اول ببینیم از کجا شروع کنیم. یه مثال ساده حل میکنیم، بعدش میریم سراغ تست.</div>
+          <div class="typing" id="typing" hidden>در حال نوشتن…</div>
+        </div>
+        <div class="composer">
+          <div class="in"><input id="aiInput" placeholder="What do you want to learn? · ai_tutor_input_placeholder"><button class="send" id="aiSend">↩</button></div>
+          <div class="foot ai-foot">
+            <span class="mode" id="mode"><button class="on" data-mode="TEACH" data-fa="آموزش">TEACH <span class="lh">TEACH</span></button><button data-mode="PRACTICE" data-fa="تمرین">PRACTICE <span class="lh">PRACTICE</span></button></span>
+            <button class="fchip ai-foot-chip" data-lh="Dictate"><span data-icon="ic_microphone" data-size="13" data-mono="1"></span>دیکته <span class="lh">Dictate</span></button>
+            <button class="fchip ai-foot-chip" data-lh="Model picker">gemini-flash-lite-latest <span data-icon="ic_chevron_down" data-size="11" data-mono="1"></span></button>
+            <button class="fchip ai-foot-chip" data-lh="Effort">medium <span data-icon="ic_chevron_down" data-size="11" data-mono="1"></span></button>
+          </div>
+          <div class="composer-note">پاسخها از LearnHarness میآیند · <span class="lh">/max</span></div>
+        </div>
+        <p class="note">✅ چت ساده و مینیمال + تاریخچه + ۸ دکمهٔ پنل اصلی LH. 📌 «وارد کردن کلید API» در تنظیمات فقط یادداشت/الزام است؛ <b>الان در UI طراحی نشده</b>.</p>
+      </section>
+
+      <!-- ============ v7 · SECTION PRACTICE = bolt checkpoint quiz (LEARN ONLY) ============ -->
+      <section class="screen mimo" data-screen="section-practice" data-scope="learn-practice" data-isolated="exam">
+        <div class="sp-top"><button class="x" data-nav="learn"><span data-icon="ic_arrow_left" data-size="22" data-mono="1"></span></button><b data-fa="تمرین مبحث">Section practice</b></div>
+        <div class="sd-hero">
+          <span class="kick">SECTION · PRACTICE</span>
+          <h2 id="spTitle">HTML Basics</h2>
+          <p>Sharpen your skills with hands-on practice exercises and projects</p>
+          <span class="sp-scope" id="spScope">تا فصل ۳ · ۰ درس</span>
+          <div class="cbar"><i style="width:43%"></i></div>
+        </div>
+        <div class="sp-list" id="practiceQuestions"></div>
+        <div id="practiceResult"></div>
+        <button class="sd-cta" id="practiceStart">Start lesson</button>
+        <button class="sd-link" data-modal="practiceModal">Fully charged!</button>
+        <p class="sd-note" data-fa="تمرینهای این مبحث و فصلهای پیش از آن">Practice exercises for this section and everything before it.</p>
+      </section>
+
+      <!-- ============ v7 · DAILY ROUTINE = Habitica scoring ONLY, Mimo skin ============ -->
+      <section class="screen mimo" data-screen="routine" data-scope="routine-only" data-isolated="exam learn leaderboard">
+        <div class="rt-head">
+          <div><b>روتین روزانه</b><small>Daily goal</small></div>
+          <span class="rt-ic" data-icon="ic_calendar" data-size="34" data-mono="1"></span>
+        </div>
+        <div class="rt-card">
+          <div class="rt-stats">
+            <div class="rt-stat"><span class="ic" data-icon="ic_sparks" data-size="20"></span><b id="rtXp">0</b><small>XP</small></div>
+            <div class="rt-stat"><span class="ic" data-icon="ic_coin" data-size="20"></span><b id="rtGp">0</b><small>GP</small></div>
+            <div class="rt-stat"><span class="ic" data-icon="ic_streak_active" data-size="20"></span><b id="rtStreak">0</b><small>Streak</small></div>
+            <div class="rt-stat"><span class="ic" data-icon="ic_task_completed" data-size="20"></span><b id="rtLvl">1</b><small>Level</small></div>
+          </div>
+          <div class="rt-bar"><i id="rtBar" style="width:0%"></i></div>
+          <div class="rt-meta"><span id="rtNext">سطح ۲: ۲۵ XP</span><span id="rtHp">سلامت ۵۰ / ۵۰</span></div>
+        </div>
+        <div class="rt-list" id="rtTasks"></div>
+        <div class="rt-foot" id="rtFoot"></div>
+        <p class="sd-note" data-fa="هدف روزانه؛ تمرین کم و هرروزه مؤثرترین راه است">Daily goal · practicing little every day is the most effective.</p>
+      </section>
+
+      <!-- ============ sheets & modal ============ -->
+      <div class="sheet" id="timerSheet"><div class="handle"></div><h4>تنظیم زمان آزمون</h4>
+        <div class="field"><label>مدت (دقیقه)</label><input type="number" id="timerMinutes" min="1" max="300" value="30"></div>
+        <p class="note" id="timerFixedHint">عدد دلخواه بین ۱ تا ۳۰۰ دقیقه.</p>
+        <div class="krow" style="margin:0 0 10px"><button class="mini-btn" data-min="15">۱۵</button><button class="mini-btn" data-min="30">۳۰</button><button class="mini-btn" data-min="45">۴۵</button><button class="mini-btn" data-min="60">۶۰</button><button class="mini-btn" data-min="90">۹۰</button><button class="mini-btn" data-min="120">۱۲۰</button></div>
+        <div class="hint">شمارش معکوس؛ در صفر پاسخها خودکار ثبت میشوند.</div>
+        <div class="krow" style="margin:0"><button class="btn primary" id="timerStart">شروع آزمون ⏱</button><button class="btn" data-close="timerSheet">انصراف</button></div>
+      </div>
+      <div class="sheet" id="paletteSheet"><div class="handle"></div><h4>پاسخبرگ</h4>
+        <p class="note">شمارهٔ سؤالها و <b>گزینهای که زدهاید</b>. پاسخهای صحیح تا «اتمام آزمون» نمایش داده نمیشوند.</p>
+        <div class="palette" id="palette"></div>
+        <div class="krow" style="margin:12px 0 0"><button class="btn primary" data-close="paletteSheet">بستن</button><button class="btn" id="submitExam">ثبت پاسخها و پایان</button></div>
+      </div>
+      <div class="sheet" id="keySheet"><div class="handle"></div><h4>پاسخنامه · جواب تشریحی و توضیحات سؤال</h4>
+        <div class="keytabs" id="keytabs"><button data-key="keyDescSheet" class="on">پاسخ تشریحی</button><button data-key="keyTestSheet">پاسخ تستی</button></div>
+        <div class="keypanel on" id="keyDescSheet">
+          <div class="wrong"><b>سؤال ۲ · زیست / سمها:</b> پاسخ صحیح گزینهٔ ۱ است، چون… (پاسخ تشریحی کامل + ارجاع به مبحث و صفحهٔ کتاب).</div>
+          <div class="wrong"><b>سؤال ۴ · شیمی / تعادل:</b> نزده مانده؛ توضیح گامبهگام + نکتۀ پرتکرار.</div>
+          <div class="wrong"><b>سؤال ۹ · فیزیک / ترمودینامیک:</b> گزینهٔ ۳؛ فرمول و توضیح مرحلهبهمرحله.</div>
+          <div class="note">قابلیتها: «پاسخ تشریحی»، «تعویض سوال»، «تعداد غلط»؛ منبع: همدرس + EPM WrongView.</div>
+        </div>
+        <div class="keypanel" id="keyTestSheet">
+          <div>سؤال ۱ ← <b>گزینهٔ ۳</b> · پاسخ شما: ۳ ✓</div><div>سؤال ۲ ← <b>گزینهٔ ۱</b> · پاسخ شما: ۴ ✗</div>
+          <div>سؤال ۳ ← <b>گزینهٔ ۲</b> · پاسخ شما: ۲ ✓</div><div>سؤال ۴ ← <b>گزینهٔ ۴</b> · نزده</div>
+          <div>… تا سؤال ۲۰ · کلید نسخهٔ <span class="lh">answerKeyVersion</span></div>
+        </div>
+        <div class="krow" style="margin:12px 0 0"><button class="btn primary" data-close="keySheet">بستن</button></div>
+      </div>
+      <div class="sheet" id="exitSheet"><div class="handle"></div><h4>خروج از آزمون؟</h4><p class="note">پاسخهای تا این لحظه ذخیره میشوند.</p><div class="krow" style="margin:0"><button class="btn primary" data-close="exitSheet" data-nav="exam-hub">خروج و ذخیره</button><button class="btn" data-close="exitSheet">ادامهٔ آزمون</button></div></div>
+      <div class="sheet" id="historySheet"><div class="handle"></div><h4>تاریخچهٔ گفتگوها</h4><div id="histList"></div><div class="krow" style="margin:10px 0 0"><button class="btn primary" id="newChat">＋ گفتگوی تازه</button><button class="btn" data-close="historySheet">بستن</button></div></div>
+      <div class="sheet mimo" id="playgroundSheet"><div class="handle"></div>
+        <div style="display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:14px"><span style="position:absolute;left:0;cursor:pointer" data-close="playgroundSheet" data-icon="ic_close" data-size="22" data-mono="1"></span><b style="font:700 18px/1 system-ui,sans-serif">Create Playground</b></div>
+        <div class="lbl" style="color:var(--text-weak);font:700 14px/1 system-ui,sans-serif;margin-bottom:12px">Select a Template</div>
+        <div class="tpl-row"><div class="tpl-thumb"><span data-icon="ic_code_playground_template_python" data-size="40"></span></div><div><b>Python</b><p>Python environment for experimentation and prototyping</p></div></div>
+        <div class="tpl-row"><div class="tpl-thumb"><span data-icon="ic_code_playground_template_js_only" data-size="40"></span></div><div><b>JavaScript</b><p>JavaScript environment for experimentation and prototyping</p></div></div>
+        <div class="tpl-row"><div class="tpl-thumb"><span data-icon="ic_code_playground_template_website" data-size="40"></span></div><div><b>Static website</b><p>Basic HTML, CSS, and JS starter for static sites</p></div></div>
+        <div class="tpl-row"><div class="tpl-thumb"><span data-icon="ic_code_playground_template_react" data-size="40"></span></div><div><b>React app</b><p>React starter for dynamic single-page applications</p></div></div>
+      </div>
+      <div class="modal" id="unfinishedModal"><div class="modal-card ut-card">
+        <span class="utx" data-modal-close="unfinishedModal"><span data-icon="ic_close" data-size="22" data-mono="1"></span></span>
+        <div class="ut-art"><span data-icon="ic_mimo_mascot" data-size="104"></span></div>
+        <h2 data-fa="مسیر ناتمام">Unfinished track</h2>
+        <p data-fa="مسیر را تمام کنید تا گواهی شخصیشدهاقتان را بگیرید">Finish the track and receive your personalised certificate</p>
+        <button class="utok" data-modal-close="unfinishedModal" data-fa="باشه">Ok</button>
+      </div></div>
+      <div class="modal" id="practiceModal"><div class="modal-card ut-card">
+        <span class="utx" data-modal-close="practiceModal"><span data-icon="ic_close" data-size="22" data-mono="1"></span></span>
+        <div class="ut-art"><span data-icon="ic_mascot_practice" data-size="104"></span></div>
+        <h2 id="practiceModalTitle">Fully charged!</h2>
+        <p id="practiceModalText">Practicing little every day is proved to be the most effective.</p>
+        <button class="utok" data-modal-close="practiceModal">Practice anyway</button>
+      </div></div>
+      <div class="modal" id="chapterModal"><div class="modal-card">
+        <div class="mtop"><span class="lbl" data-fa="یادگیری">Learn</span><span class="cap" data-icon="ic_cap_filled" data-size="44" data-mono="1"></span></div>
+        <h2 data-fa="ساختار سلول و بافت">Structuring Text with Tags</h2>
+        <div class="chapter-row"><span data-fa="فصل">Chapter</span><span>0/2</span></div>
+        <div class="mprogress"><i></i></div>
+        <button class="startbtn" id="startLearning"><span data-fa="شروع یادگیری">Start learning</span><span class="circ"></span></button>
+        <div class="krow" style="margin:10px 0 0;justify-content:center"><button class="btn" data-close="chapterModal">بستن</button></div>
+      </div></div>
+
+      <!-- ============ BOTTOM NAV = 6 tabs (v7 explicit override; MAX forbidden) ============ -->
+      <div class="tabs" id="tabs">
+        <div class="tab on" data-tab="Learn"><span class="ir i-off" data-icon="ic_cap" data-size="22" data-mono="1"></span><span class="ir i-on" data-icon="ic_cap_filled" data-size="22" data-mono="1"></span><span data-fa="یادگیری">Learn</span></div>
+        <div class="tab" data-tab="Practice"><span class="ir i-off" data-icon="ic_flash" data-size="22" data-mono="1"></span><span class="ir i-on" data-icon="ic_flash_filled" data-size="22" data-mono="1"></span><span data-fa="تمرین">Practice</span></div>
+        <div class="tab" data-tab="AI"><span class="ir i-off" data-icon="ic_magic_wand" data-size="22" data-mono="1"></span><span class="ir i-on" data-icon="ic_magic_wand_filled" data-size="22" data-mono="1"></span><span>AI</span></div>
+        <div class="tab" data-tab="Leaderboard"><span class="ir i-off" data-icon="ic_trophy" data-size="22" data-mono="1"></span><span class="ir i-on" data-icon="ic_trophy_filled" data-size="22" data-mono="1"></span><span data-fa="لیدربورد">Leaderboard</span></div>
+        <div class="tab" data-tab="Profile"><span class="ir i-off" data-icon="ic_user_circle" data-size="22" data-mono="1"></span><span class="ir i-on" data-icon="ic_user_circle_filled" data-size="22" data-mono="1"></span><span data-fa="پروفایل">Profile</span></div>
+        <div class="tab" data-tab="Routine"><span class="ir i-off" data-icon="ic_calendar" data-size="22" data-mono="1"></span><span class="ir i-on" data-icon="ic_task_completed" data-size="22" data-mono="1"></span><span>روتین روزانه</span></div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="spec">
+    <h3>دور هفتم: گرهها، تمرین مبحث و روتین روزانه</h3>
+    <ul>
+      <li><b>ابزار تازه:</b> <code>tools/extract_mimo_nodes_v7.py</code> → <code>DESIGN/NODE_CODE_GEOMETRY.json</code> + <code>CATALOGS/MIMO_PATH_NODES.csv</code> (<span id="nodeStats">شمارش…</span>).</li>
+      <li><b>منابع خواندهشده:</b> <code>values/values/string.xml</code> (۱۴۱ رشته)، <code>res/drawable/*.xml</code> (۵۵ وکتور <code>pathData</code>), <code>res/layout/*.xml</code> (۱۷ لایه)، <code>res/anim/rc_checkpoint_window_*.xml</code>، <code>res/raw/practice.riv</code>، <code>test-tracks.json</code> (۱۵ فصل / ۲۲۳ <code>tutorialId</code>) و <code>dex/UI_CLASSES.json</code> (۳۸۰ کلاس مرتبط).</li>
+      <li><b>گره دقیق:</b> مربع ۹۲px / شعاع ۲۶dp / لبهٔ سهبعدی ۸px (<code>button_primary_highlight</code>)؛ تیک بنفش <code>ic_check_white</code>؛ فعلی = کارت سفید + حلقهٔ دوتایی + <code>ic_play</code>؛ حلقهٔ ½ از <code>glance_circular_progress_indicator.xml</code>؛ قفل = <code>card_disabled</code> + <code>ic_lock_alt_02</code>؛ اتور <b>گردگوشه Q</b> (نه منحنی بزیه)؛ نقطهچین ۲۶px؛ دکمهٔ شناور واژهنامه (<code>ic_file</code> + A)؛ برچسب START.</li>
+      <li><b>چک بصری فقط:</b> <code>mimo-01</code> (تیک/پلی/قفل/دو گره رعدوبرق/کتاب)، <code>mimo-02</code> (حلقهٔ ½)، <code>mimo-10</code> (اتور گردگوشه + گره رعدوبرق فعال) — کد ملاک است.</li>
+      <li><b>دیالوگهای Smart Practice:</b> <code>section_details_smart_practice_charged_dialog_title = Fully charged!</code>، <code>mastered_dialog_title = You’ve mastered the section!</code>، <code>practice_anyway = Practice anyway</code>، <code>ic_mascot_practice</code>، <code>ModalData$SmartPracticeChargedModal/MasteredModal</code>.</li>
+      <li><b>شواهد قبلی:</b> <code>DESIGN/LEARN_CODE_GEOMETRY.json</code> (<span id="learnStats">شمارش…</span>) و <code>DESIGN/CODE_GEOMETRY.json</code> همچنان پابرجا؛ <b>DESIGN v6</b> بایگانی شد.</li>
+    </ul>
+    <h3>جریان کلیک (همه از کد)</h3>
+    <ul>
+      <li>سهخط <code>ic_list_bulleted</code> ← <b>Select Path</b> ← نمای مسیر ← داخل مبحث ← کارت شروع فصل ← صفحهٔ درس (همان دور ششم).</li>
+      <li>کلیک روی <b>هر گرهٔ درس</b> ← کارت «Start learning» (<code>chapter_toolbar.xml</code> + <code>start_lesson</code>)؛ گرهٔ قفل ← toast <code>alert_msg_section_setion_locked</code>.</li>
+      <li><b>گره رعدوبرق ← «تمرین مبحث»</b>: صورت سؤالها از <code>sections[].tutorialIds</code> <b>تا همان فصل</b>؛ فیدبک Mimo + دیالوگ Fully charged / mastered؛ <b>هیچ ارتباطی با هاب آزمون کنکور ندارد</b>.</li>
+      <li>تب <b>روتین روزانه</b> ← امتیازدهی خلاصهشدهٔ Habitica در پوستهٔ کمسر و صدای میمو؛ MAX ممنوع.</li>
+    </ul>
+    <h3>تفکیک سهگانه (نباید قاتی شود)</h3>
+    <ul>
+      <li><b>تمرین مبحث</b> = <code>data-screen=section-practice</code>، پوستهٔ <code>mimo</code>، بدون تایمر / پاسخبرگ / پاسخنامه / ۲۷۰ دقیقه / POLICY.</li>
+      <li><b>آزمون کنکور</b> = <code>exam-hub / exam-run / exam-result</code>، پوستهٔ <code>konkur</code>، ۷ بخش لیبلدار، تایمر فقط داخل آزمون، پاسخبرگ ≠ پاسخنامه، جامع ۲۷۰ دقیقهٔ ثابت.</li>
+      <li><b>روتین روزانه</b> = <code>data-screen=routine</code>، فقط قواعد امتیازدهی؛ امتیازاتش به هیچجای دیگر وصل نیست. جدول کامل: <code>CATALOGS/PRACTICE_VS_EXAM.csv</code>.</li>
+    </ul>
+    <h3>روتین روزانه: فقط سیستم امتیازدهی Habitica</h3>
+    <ul>
+      <li><span id="habStats">شمارش…</span></li>
+      <li><b>قواعد:</b> <code>delta = 0.9747 ^ value</code> · <code>EXP = round(delta × (1+INT×0.025) × priority × crit × 6)</code> · <code>GP = ceil(delta × priority × crit × (1+PER×0.02) × (streak/100+1))</code> · <code>HP</code> با <code>CON</code> · <code>crit</code> تصادفی قطعی · <code>toNextLevel</code> · <code>diminishingReturns</code> · Perfect Day / ۲۱ روز.</li>
+      <li><b>چهار نوع کار:</b> عادت / روزانه / کار امروز / پاداش؛ ضریب سختی <code>0.1 / 1 / 1.5 / 2</code> بهصورت چیپ ریز.</li>
+      <li><b>حقوقی:</b> کد Habitica GPL-3.0 و داراییها CC-BY-NC-SA؛ <b>هیچ کد/دارایی/رشته/فونت/رنگی کپی نشده</b>، فقط قواعد به زبان خودمان + SHA-256 سورسها (<code>CATALOGS/HABITICA_SOURCES.csv</code>).</li>
+      <li><b>پوسته:</b> همان توکنهای میمو (<code>card / primary / progress / TextLabel</code>) و وکتورهای استخراجشده؛ بدون پیکسلآرت، آواتار، آیکون RPG، رنگ/فونت/شعاع/آیکون تازه؛ «زیادی تو چشم نزنه».</li>
+    </ul>
+    <h3>تغییرات ریز دور هفتم</h3>
+    <ul>
+      <li><b>نوار بالای AI:</b> ایموجی زنجیر/import حذف → <code>attachment</code> (گیرهٔ کاغذ) + «اضافه کردن فایل» و <code>ic_link_external</code> + «زنجیره گفت و گو»؛ ردیف مرتب، آیکونهای متمایز.</li>
+      <li><b>خط پایین AI:</b> «آموزش / TEACH» و «تمرین / PRACTICE» ریز و <b>همان یک خط</b> با <code>Dictate</code> (میکروفن، ویس — جدا نشده)، <code>gemini-flash-lite-latest</code> و <code>medium</code>.</li>
+      <li><b>صفحهٔ سؤال:</b> دو دکمهٔ تمیز «سؤال قبل» + «سؤال بعد»؛ پایینش «پاسخبرگ» و بقیهٔ کنترلها در <b>یک خط کمضخامت</b>، بدون bold و بدون حجیمسازی.</li>
+      <li><b>لیدربورد:</b> «منطقهٔ صعود / Promotion Zone» حذف شد طبق دستور.</li>
+      <li><b>تبها:</b> ششمین تب «روتین روزانه» به دستور صریح اضافه شد؛ حکم قبلی ۵ تب (ناظر به تب MAX) بهروزرسانی شد و MAX همچنان ممنوع.</li>
+    </ul>
+    <h3>حفظشده از دور قبل</h3>
+    <ul>
+      <li>هاب تکصفحهای ۷ بخش · تایمر فقط داخل آزمون · ۲۷۰ دقیقهٔ ثابت · «پاسخبرگ» ≠ «پاسخنامه» · دکمهٔ «توضیح با هوش مصنوعی» در سؤالات و نتیجه · لیدربورد اطلاعات خود فرد · ۸ دکمهٔ LH · چت مینیمال + تاریخچه · مشاوره PARKED · بدون Pro/پرداخت/MAX · صفحهٔ ورود حذفشده.</li>
+    </ul>
+    <h3>توکنهای کد (نمونه)</h3>
+    <ul>
+      <li><b>bg</b> <code>#F6F7FB</code> / شب <code>#252746</code> · <b>button</b> <code>#7E4BDE</code></li>
+      <li><b>progress_chapter</b> <code>#8D60E2</code> · <b>icon_weak</b> <code>#A3A5C3</code></li>
+      <li><b>TextH1</b> 24sp · <b>TextP2</b> 16sp · <b>TextLabel3</b> 12sp</li>
+      <li><b>toolbar</b> 56dp · <b>lesson_progressbar</b> 6dp · <b>card_radius</b> 12dp</li>
+    </ul>
+    <h3>یادداشتها (بدون طراحی UI)</h3>
+    <ul><li>تنظیمات ← <b>وارد کردن کلید API</b> چت <code>/max</code></li><li>بخش مشاوره = PARKED تا اطلاع ثانوی</li></ul>
+    <h3>وضعیت</h3>
+    <ul><li><b>DESIGN v7 · REVIEW</b> — منتظر تأیید نهایی</li><li>بعد از تأیید ← مرحلهٔ پیادهمسازی</li><li>هیچ کد محصولی نوشته نشده</li></ul>
+  </aside>
+</div>
+
+<footer class="foot-note">
+⚠️ این <b>طرح دور هفتم v7</b> است، نه محصول. گرههای مسیر یادگیری، گرههای رعدوبرق/تمرین مبحث، لیبلها و وکتورها مستقیماً از جداول منبع Mimo 9.35 (<code>ARSC</code>، <code>pathData</code>، <code>AXML</code>، <code>anim</code>، <code>test-tracks.json</code> و DEX) بازتولید شدند؛ ۱۴ اسکرینشات فقط <b>چک بصری</b>اند. «روتین روزانه» تنها <b>سیستم امتیازدهی</b> Habitica را بهصورت خلاصهشده و ایزوله بهکار میبرد: هیچ کد، دارایی، رشته، فونت یا رنگی از آن کپی نشده است. تنها نام درسها/فصلها/مباحث کنکوری شد. هیچ کد محصولی نوشته نشده است.
+</footer>
+<div class="toast" id="toast"></div>
+
+<script>/*__GEO__*/</script>
+<script>/*__LEARN__*/</script>
+<script>/*__NODE__*/</script>
+<script>/*__HAB__*/</script>
+<script>
+(function(){
+  "use strict";
+  var q=function(s,r){return (r||document).querySelector(s)};
+  var qa=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+  var toastEl=q("#toast"),tt;
+  function toast(m){toastEl.textContent=m;toastEl.classList.add("on");clearTimeout(tt);tt=setTimeout(function(){toastEl.classList.remove("on")},2300)}
+  function fa(n){return String(n).replace(/\d/g,function(d){return "۰۱۲۳۴۵۶۷۸۹"[+d]})}
+  /* ---------- ARGB -> CSS ---------- */
+  function ac(c){
+    if(!c||c.charAt(0)!=="#")return "currentColor";
+    if(c.length===9){var a=parseInt(c.slice(1,3),16)/255;if(a===0)return "none";
+      return "rgba("+parseInt(c.slice(3,5),16)+","+parseInt(c.slice(5,7),16)+","+parseInt(c.slice(7,9),16)+","+(+a.toFixed(3))+")";}
+    if(c.length===7)return c; return "currentColor";
+  }
+  function icon(name,size,mono){
+    var v=GEO.vectors[name];if(!v||!v.paths)return "";
+    var h=Math.max(1,Math.round(size*v.viewport[1]/v.viewport[0]));
+    var s='<svg class="ic" width="'+size+'" height="'+h+'" viewBox="0 0 '+v.viewport[0]+' '+v.viewport[1]+'" aria-hidden="true">';
+    v.paths.forEach(function(p){
+      var f=mono?"currentColor":ac(p.fill);
+      if(f==="currentColor"&&!p.fill)f="currentColor";
+      s+='<path d="'+p.d+'" fill="'+f+'"'+(p.fillType==="1"?' fill-rule="evenodd"':'')+(p.alpha?' fill-opacity="'+p.alpha+'"':'')+'/>';
+    });
+    return s+"</svg>";
+  }
+  function paintIcons(root){
+    qa("[data-icon]",root||document).forEach(function(el){
+      if(el.dataset.painted)return;
+      el.innerHTML=icon(el.dataset.icon,+(el.dataset.size||24),el.dataset.mono==="1");
+      el.dataset.painted="1";
+    });
+  }
+  paintIcons();
+  var gs=q("#geoStats");
+  if(gs)gs.innerHTML="<b>شمارش:</b> "+Object.keys(GEO.vectors).length+" وکتور · "+Object.keys(GEO.colors).length+" رنگ · "+Object.keys(GEO.dimens).length+" دایمنشن · "+Object.keys(GEO.styles).length+" استایل · "+Object.keys(GEO.strings).length+" رشته · "+Object.keys(GEO.layouts).length+" لایه · "+GEO.compose_path_class_count+" کلاس Composeی مسیر";
+
+  /* ---------- navigation ---------- */
+  var tabMap={learn:"Learn",chapter:"Learn",lesson:"Learn","select-path":"Learn","path-overview":"Learn","section-detail":"Learn","section-practice":"Learn",leaderboard:"Leaderboard","user-profile":"Leaderboard",profile:"Profile","exam-hub":"Practice","exam-run":"Practice","exam-result":"Practice",ai:"AI",routine:"Routine"};
+  var tabScreen={Learn:"learn",Practice:"exam-hub",AI:"ai",Leaderboard:"leaderboard",Profile:"profile",Routine:"routine"};
+  function go(name){
+    var prev=q(".screen.on");var prevName=prev?prev.dataset.screen:"learn";
+    qa(".screen").forEach(function(s){s.classList.toggle("on",s.dataset.screen===name)});
+    qa("#switcher button").forEach(function(b){b.classList.toggle("on",b.dataset.go===name)});
+    qa("#tabs .tab").forEach(function(t){t.classList.toggle("on",t.dataset.tab===tabMap[name])});
+    if(name!=="exam-run"){qa(".sheet").forEach(function(s){s.classList.remove("on")})}
+    if(name!=="chapter"){qa(".modal").forEach(function(m){m.classList.remove("on")})}
+    if(name==="chapter"){go(prevName);q("#chapterModal").classList.add("on");qa("#switcher button").forEach(function(b){b.classList.toggle("on",b.dataset.go==="chapter")});return}
+    var sc=q('.screen[data-screen="'+name+'"]');if(sc)sc.scrollTop=0;
+  }
+  document.addEventListener("click",function(e){
+    var g=e.target.closest("[data-go]");if(g){go(g.dataset.go);return}
+    var n=e.target.closest("[data-nav]");if(n){go(n.dataset.nav);return}
+    var sh=e.target.closest("[data-sheet]");if(sh){var t=q("#"+sh.dataset.sheet);if(t)t.classList.add("on");return}
+    var cl=e.target.closest("[data-close]");if(cl){var c=q("#"+cl.dataset.close);if(c)c.classList.remove("on");return}
+    var h=e.target.closest("[data-help]");if(h){toast("راهنمای «"+h.dataset.help+"»: گامبهگام، همان الگوی helpcenter");return}
+    var lh=e.target.closest("[data-lh]");if(lh){toast("LearnHarness ← "+lh.dataset.lh);return}
+    var kt=e.target.closest("#keytabs button");if(kt){qa("#keytabs button").forEach(function(b){b.classList.remove("on")});kt.classList.add("on");qa(".keypanel").forEach(function(p){p.classList.toggle("on",p.id===kt.dataset.key)});return}
+    if(e.target.closest("#curNode")){q("#chapterModal").classList.add("on");return}
+    if(e.target.closest("#myRow")){go("user-profile");return}
+    if(e.target.closest("#startLearning")){q("#chapterModal").classList.remove("on");go("lesson");return}
+  });
+  qa("#tabs .tab").forEach(function(t){t.addEventListener("click",function(){go(tabScreen[t.dataset.tab]);toast("تب "+t.dataset.tab+" · ناوبری ۶ تب (۵ تب میمو + روتین روزانه)")})});
+  q("#themeBtn").addEventListener("click",function(){document.body.classList.toggle("night");this.textContent=document.body.classList.contains("night")?"☀️ حالت روز":"🌙 حالت شب"});
+  var rtl=false;
+  q("#dirBtn").addEventListener("click",function(){
+    rtl=!rtl;var ph=q("#phone");ph.style.direction=rtl?"rtl":"ltr";
+    qa(".mimo",ph).forEach(function(s){s.style.direction=rtl?"rtl":"ltr"});
+    qa("[data-fa]",ph).forEach(function(el){
+      if(el.dataset.enhtml===undefined)el.dataset.enhtml=el.innerHTML;
+      el.innerHTML=rtl?el.dataset.fa:el.dataset.enhtml;
+    });
+    this.textContent=rtl?"↔ English / LTR":"↔ فارسی / RTL";
+    toast(rtl?"آینهٔ RTL + لیبلهای فارسی":"نمای ۱۰۰٪ میمو (LTR)");
+  });
+
+  /* ---------- exam policy: پاسخبرگ / پاسخنامه ---------- */
+  var POLICY={
+    comprehensive:{label:"جامع · زمان خالص آزمون · پاسخنامه در پایان",during:false,keyDuring:false},
+    review:{label:"جمع بندی / نهایی · زمان خالص آزمون",during:false,keyDuring:false},
+    normal:{label:"عادی · پاسخبرگ + پاسخنامه حین آزمون",during:true,keyDuring:true},
+    timed:{label:"زماندار · پاسخبرگ + پاسخنامه حین آزمون",during:true,keyDuring:true},
+    analytical:{label:"تحلیلی · پاسخبرگ + پاسخنامه حین و بعد",during:true,keyDuring:true}
+  };
+  var EXAM_KIND="comprehensive";
+  function applyPolicy(){
+    var p=POLICY[EXAM_KIND]||POLICY.normal;
+    q("#answerSheetBtn").style.display=p.during?"":"none";
+    q("#answerKeyBtn").style.display=p.keyDuring?"":"none";
+    q("#resultKind").textContent=EXAM_KIND==="comprehensive"?"جامع":p.label.split(" · ")[0];
+    q("#policyHint").innerHTML=p.during
+      ? "سیاست: <b>پاسخبرگ</b> (گزینههای زدهشده) و <b>پاسخنامه</b> (جواب تشریحی + توضیحات) حین آزمون در دسترساند؛ بعد از اتمام، هر دو + تحلیل کامل."
+      : "سیاست: <b>زمان خالص آزمون</b> — حین آزمون هیچ پاسخنامهای نیست؛ <b>در پایان آزمون صفحهٔ پاسخنامه بهصورت خودکار باز میشود</b> (پاسخ تستی + تشریحی + تحلیل).";
+  }
+  qa(".nodek[data-exam]").forEach(function(n){n.addEventListener("click",function(){
+    EXAM_KIND=n.dataset.kind||"normal";q("#examTitle").textContent=n.dataset.exam;
+    q("#examFinished").innerHTML="";resetOptions();T.state="idle";clearInterval(T.timer);T.timer=null;
+    applyPolicy();go("exam-run");toast("وارد «"+n.dataset.exam+"» شدید — "+(POLICY[EXAM_KIND]||POLICY.normal).label);
+  })});
+  applyPolicy();
+
+  /* ---------- timer state machine ---------- */
+  var T={state:"idle",remaining:0,total:0,timer:null,endAt:0};
+  var chip=q("#timerChip"),label=q("#timerLabel"),stateText=q("#timerStateText");
+  function fmt(s){var m=Math.floor(s/60),x=s%60;return fa(("0"+m).slice(-2))+":"+fa(("0"+x).slice(-2))}
+  function render(){
+    chip.classList.remove("running","finished");
+    if(T.state==="idle"){label.textContent="تنظیم زمان";stateText.textContent="زمان تنظیم نشده";q("#timerPause").style.display="none";q("#timerReset").style.display="none"}
+    else if(T.state==="setting"){label.textContent="تنظیم زمان";stateText.textContent="در حال تنظیم"}
+    else if(T.state==="running"){label.textContent=fmt(T.remaining);chip.classList.add("running");stateText.textContent="زمان معکوس در حال اجرا";q("#timerPause").style.display="";q("#timerReset").style.display="";q("#timerPause").textContent="توقف"}
+    else if(T.state==="paused"){label.textContent=fmt(T.remaining);stateText.textContent="متوقف شده";q("#timerPause").style.display="";q("#timerReset").style.display="";q("#timerPause").textContent="ادامه"}
+    else if(T.state==="finished"){label.textContent=fmt(0);chip.classList.add("finished");stateText.textContent="زمان تمام شد";q("#timerPause").style.display="none";q("#timerReset").style.display=""}
+  }
+  function tick(){if(T.state!=="running")return;T.remaining=Math.max(0,Math.ceil((T.endAt-Date.now())/1000));if(T.remaining===0)finishExam("زمان تمام شد (ثبت خودکار)");render()}
+  function finishExam(reason){
+    T.state="finished";clearInterval(T.timer);T.timer=null;
+    q("#examFinished").innerHTML='<div class="banner warn">'+reason+' — گزینهها قفل و پاسخها ثبت شدند.</div>';
+    qa(".opt").forEach(function(o){o.style.pointerEvents="none";o.style.opacity=".55"});
+    go("exam-result");render();
+    var p=POLICY[EXAM_KIND]||POLICY.normal;
+    if(!p.during){q("#keySheet").classList.add("on");toast("پایان آزمون: صفحهٔ پاسخنامه باز شد")}
+    else toast("آزمون به پایان رسید — پاسخبرگ و پاسخنامه آمادهاند");
+  }
+  chip.addEventListener("click",function(){
+    if(T.state==="running"||T.state==="paused"){toast("تایمر در حال اجراست؛ از «تنظیم مجدد» استفاده کنید");return}
+    q("#timerSheet").classList.add("on");T.state="setting";
+    if(EXAM_KIND==="comprehensive"){q("#timerMinutes").value=270;q("#timerMinutes").readOnly=true;q("#timerFixedHint").textContent="زمان ثابت ۲۷۰ دقیقه (آزمون جامع) — غیرقابل تغییر"}
+    else{q("#timerMinutes").readOnly=false;q("#timerFixedHint").textContent="عدد دلخواه بین ۱ تا ۳۰۰ دقیقه"}
+    render();
+  });
+  qa("[data-min]").forEach(function(b){b.addEventListener("click",function(){q("#timerMinutes").value=b.dataset.min;qa("[data-min]").forEach(function(x){x.classList.remove("on")});b.classList.add("on")})});
+  q("#timerStart").addEventListener("click",function(){
+    var m=parseInt(q("#timerMinutes").value,10);if(!m||m<1||m>300){toast("عددی بین ۱ تا ۳۰۰ دقیقه وارد کنید");return}
+    T.total=m*60;T.remaining=T.total;T.endAt=Date.now()+T.total*1000;T.state="running";
+    clearInterval(T.timer);T.timer=setInterval(tick,250);
+    q("#timerSheet").classList.remove("on");q("#examFinished").innerHTML="";resetOptions();
+    toast("شروع شد: "+fa(m)+" دقیقه معکوس");render();
+  });
+  q("#timerPause").addEventListener("click",function(){
+    if(T.state==="running"){T.remaining=Math.max(0,Math.ceil((T.endAt-Date.now())/1000));T.state="paused";clearInterval(T.timer);T.timer=null;toast("تایمر متوقف شد")}
+    else if(T.state==="paused"){T.endAt=Date.now()+T.remaining*1000;T.state="running";T.timer=setInterval(tick,250);toast("ادامهٔ تایمر")}render();
+  });
+  q("#timerReset").addEventListener("click",function(){
+    clearInterval(T.timer);T.timer=null;T.state="idle";T.remaining=0;T.total=0;
+    q("#examFinished").innerHTML="";resetOptions();q("#timerSheet").classList.add("on");toast("زمان پاک شد — دوباره عدد بدهید");render();
+  });
+  function resetOptions(){qa(".opt").forEach(function(o){o.style.pointerEvents="";o.style.opacity="";o.classList.remove("on")})}
+  qa(".opt").forEach(function(o){o.addEventListener("click",function(){if(T.state==="finished")return;qa(".opt").forEach(function(x){x.classList.remove("on")});o.classList.add("on")})});
+  q("#nextQ").addEventListener("click",function(){toast("سؤال بعدی (همان چیدمان lesson_interactive میمو)")});
+  q("#prevQ").addEventListener("click",function(){toast("سؤال قبل (همان چیدمان lesson_interactive میمو)")});
+  q("#submitExam").addEventListener("click",function(){q("#paletteSheet").classList.remove("on");finishExam("پاسخها ثبت شد")});
+  q("#endExam").addEventListener("click",function(){finishExam("آزمون به پایان رسید")});
+  var pal=q("#palette");for(var i=1;i<=20;i++){
+    var d=document.createElement("div");d.innerHTML="<span>"+fa(i)+"</span>"+(i<15?"<small>"+fa((i%4)+1)+"</small>":"<small>—</small>");
+    if(i<15)d.className="done";if(i===3)d.className="cur";pal.appendChild(d);
+  }
+
+  /* ---------- ONE AI button: exam questions page + exam final page ---------- */
+  var WRONG=[
+    {q:"سؤال ۲ · زیست / سمها — «کدام گزینه دربارهٔ سمها درست است؟»",a:"پاسخ شما: گزینهٔ ۴",k:"پاسخ صحیح: گزینهٔ ۱"},
+    {q:"سؤال ۴ · شیمی / تعادل — «ثابت تعادل در دمای ثابت…»",a:"پاسخ شما: نزده",k:"پاسخ صحیح: گزینهٔ ۴"},
+    {q:"سؤال ۹ · فیزیک / ترمودینامیک — «کار انجامشده در فرایند همحجم…»",a:"پاسخ شما: گزینهٔ ۲",k:"پاسخ صحیح: گزینهٔ ۳"}
+  ];
+  function setCtx(txt,summary){
+    var c=q("#aiContext");c.hidden=false;c.textContent=txt;
+    var th=q("#chatThread");
+    qa(".ctx-detail",th).forEach(function(x){x.remove()});
+    if(summary){var d=document.createElement("div");d.className="bubble ctx-detail";d.innerHTML=summary;th.insertBefore(d,q("#typing"));th.scrollTop=th.scrollHeight}
+  }
+  q("#askAiBtn").addEventListener("click",function(){
+    var chosen=(q(".opt.on")||{}).textContent||"هنوز انتخاب نشده";
+    setCtx("زمینه: "+q("#examTitle").textContent+" · سؤال ۳ · "+q("#qText").textContent+" · پاسخ شما: "+chosen.trim(),null);
+    go("ai");toast("صورت سؤال و پاسخ شما به چت مینیمال منتقل شد");
+  });
+  q("#askAiResultBtn").addEventListener("click",function(){
+    var s="<b>صورت اشتباهات + پاسخهای من + صورت سؤالها:</b><br>";
+    WRONG.forEach(function(w){s+="• "+w.q+" | "+w.a+" | "+w.k+"<br>"});
+    setCtx("زمینه: نتیجهٔ "+q("#examTitle").textContent+" · ۳ سؤال غلط (همراه پاسخ و صورت سؤال)",s);
+    go("ai");toast("اشتباهات، پاسخها و صورت سؤالها به AI منتقل شد");
+  });
+
+  /* ---------- minimal chat ---------- */
+  var HIST=[{t:"مشتق و کاربرد آن",m:"دیروز · ۴ پیام"},{t:"سمها — زیست یازدهم",m:"۲ روز پیش · ۶ پیام"},{t:"تحلیل آزمون جامع",m:"۳ روز پیش · ۳ پیام"}];
+  function histRender(){var box=q("#histList");box.innerHTML="";HIST.forEach(function(h){var d=document.createElement("div");d.className="hist-item";var s=document.createElement("small");s.textContent=h.m;d.appendChild(document.createTextNode(h.t));d.appendChild(s);d.addEventListener("click",function(){q("#historySheet").classList.remove("on");toast("گفتگو باز شد: "+h.t)});box.appendChild(d)})}
+  function addBubble(txt,me){var d=document.createElement("div");d.className="bubble"+(me?" me":"");d.textContent=txt;var th=q("#chatThread");th.insertBefore(d,q("#typing"));th.scrollTop=th.scrollHeight;return d}
+  q("#aiSend").addEventListener("click",function(){
+    var v=q("#aiInput").value.trim();if(!v){toast("یک پیام بنویسید");return}
+    addBubble(v,true);q("#aiInput").value="";q("#typing").hidden=false;
+    setTimeout(function(){q("#typing").hidden=true;addBubble("بیا قدمبهقدم جلو بریم: اول صورت سؤال رو با هم مرور میکنیم، بعد یه تست مشابه میزنیم.","")},700);
+    toast("ارسال به LearnHarness (/max)");
+  });
+  q("#aiInput").addEventListener("keydown",function(e){if(e.key==="Enter")q("#aiSend").click()});
+  q("#newChat").addEventListener("click",function(){
+    var th=q("#chatThread");qa(".bubble",th).forEach(function(x){x.remove()});
+    q("#aiContext").hidden=true;addBubble("سلام! روی کدوم مبحث میخوای کار کنیم؟","");
+    q("#historySheet").classList.remove("on");toast("گفتگوی تازه شروع شد");
+  });
+  qa("#mode button").forEach(function(b){b.addEventListener("click",function(){qa("#mode button").forEach(function(x){x.classList.remove("on")});b.classList.add("on");toast("حالت "+b.dataset.mode+" انتخاب شد")})});
+
+  /* ============ v6 · Learn sub-screens rendered from extracted code data ============ */
+  function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+  var LS=LEARN.strings, CM=LEARN.contentModel;
+  var FA={
+    "Full-Stack Developer":"همهٔ دروس کنکور","Python Developer":"کنکور ریاضی",
+    "Back-End Developer":"کنکور تجربی","Front-End Developer":"کنکور انسانی",
+    "TypeScript":"زیستشناسی","React":"شیمی","HTML":"فیزیک","SQL":"ریاضی",
+    "CSS":"ادبیات","Python":"عربی",
+    "JS required":"پیشنیاز: زیست پایه","HTML, CSS and JS requi…":"پیشنیاز: زیست و شیمی و فیزیک…",
+    "Career Paths":"مسیرهای شغلی","Courses":"درسها","SECTION":"فصل",
+    "Section Project":"پروژهٔ مبحث","Coming soon":"بهزودی"
+  };
+  function fabtn(en){return FA[en]?' data-fa="'+esc(FA[en])+'"':""}
+  /* Career Paths cards — badge vectors are the exact ic_badge_* / ic_code_lang_* drawables */
+  var CAREERS=[
+    {name:"Full-Stack Developer",sec:"1/20",pct:5,icons:["ic_code_lang_html","ic_badge_js","ic_code_lang_css","ic_badge_react","ic_badge_backend","ic_badge_sql"],sel:false},
+    {name:"Python Developer",sec:"2/9",pct:22,icons:["ic_badge_python_dev"],sel:false},
+    {name:"Back-End Developer",sec:"2/9",pct:22,icons:["ic_badge_js","ic_badge_backend","ic_badge_sql"],sel:true},
+    {name:"Front-End Developer",sec:"1/20",pct:5,icons:["ic_code_lang_html","ic_badge_js","ic_code_lang_css","ic_badge_react"],sel:false}
+  ];
+  var CC=q("#careerCards");
+  CAREERS.forEach(function(c){
+    var b=document.createElement("button");
+    b.className="career-card"+(c.sel?" sel":"");
+    if(!c.sel)b.dataset.modal="unfinishedModal";else b.dataset.nav="path-overview";
+    var badges=c.icons.map(function(i){return '<span data-icon="'+i+'" data-size="24"></span>'}).join("");
+    b.innerHTML='<span class="badges">'+badges+'</span>'
+      +'<h4'+fabtn(c.name)+'>'+esc(c.name)+'</h4>'
+      +'<span class="cr"><span data-fa="فصل">SECTION</span><span>'+c.sec+'</span></span>'
+      +'<span class="cbar"><i style="width:'+c.pct+'%"></i></span>';
+    CC.appendChild(b);
+  });
+  /* Courses rows — labels from track_switcher_typescript_label / react_label */
+  var COURSES=[
+    {n:"TypeScript",v:"ic_badge_ts",d:LS.track_switcher.track_switcher_typescript_label,ring:"0/4",part:false},
+    {n:"React",v:"ic_badge_react",d:"HTML, CSS and JS requi…",ring:"0/3",part:false},
+    {n:"HTML",v:"ic_badge_html",d:"",ring:"0/5",part:false},
+    {n:"SQL",v:"ic_badge_sql",d:"",ring:"0/6",part:false},
+    {n:"CSS",v:"ic_badge_css",d:"",ring:"0/4",part:false},
+    {n:"Python",v:"ic_badge_python",d:"",ring:"6/14",part:true}
+  ];
+  var CR=q("#courseRows");
+  COURSES.forEach(function(c){
+    var b=document.createElement("button");b.className="course-row";b.dataset.nav="section-detail";
+    b.innerHTML='<span class="cbadge" data-icon="'+c.v+'" data-size="38"></span>'
+      +'<span class="ctxt"><b'+fabtn(c.n)+'>'+esc(c.n)+'</b>'+(c.d?'<small'+fabtn(c.d)+'>'+esc(c.d)+'</small>':'')+'</span>'
+      +'<span class="cring'+(c.part?" part":"")+'"><b>'+c.ring+'</b></span>';
+    CR.appendChild(b);
+  });
+  /* Path Overview sections — ordinal/name/description from test-tracks.json */
+  var SR=q("#sectionRows");
+  CM.sections.slice(2,7).forEach(function(s,i){
+    var ord=i+3, pct=i===0?43:0;
+    var b=document.createElement("button");
+    b.className="po-sec"+(i===0?" active":"");
+    b.dataset.section=String(ord);b.dataset.nav="section-detail";
+    var faName=FA[s.name]||{"JavaScript Basics":"سلول و بافت","HTML Intermediate":"بافتهای گیاهی","Semantic HTML":"بافتهای جانوری","CSS Intermediate":"دستگاه گردش خون","Types and Comparisons":"دستگاه تنفس"}[s.name]||s.name;
+    b.innerHTML='<span class="ring'+(pct?" part":"")+'"><b>'+pct+'%</b></span>'
+      +'<span class="st"><b data-fa="'+ord+'. '+esc(faName)+'">'+ord+'. '+esc(s.name)+'</b>'
+      +'<p data-fa="'+esc(faName)+' — '+s.tutorialCount+' درس">'+esc(s.description)+'</p>'
+      +(i===1?'<span class="proj" data-fa="پروژهٔ مبحث">Section Project</span>':'')
+      +(i===4?'<span class="soon" data-fa="بهزودی">Coming soon</span>':'')+'</span>';
+    SR.appendChild(b);
+  });
+  /* Section detail — chapters from sections[2].tutorialIds */
+  var LR=q("#lessonRows"), ids=CM.sections[2].tutorialIds.slice(0,7);
+  ids.forEach(function(id,i){
+    var b=document.createElement("button");
+    b.className="sd-row "+(i<2?"done":i===2?"cur":"locked");
+    b.dataset.nav="chapter";
+    b.innerHTML='<span class="sr" data-icon="'+(i<2?"ic_check_white":i===2?"ic_play":"ic_lock_alt_02")+'" data-size="18" data-mono="1"></span>'
+      +'<span class="stx"><b data-fa="درس '+fa(i+1)+'">Lesson '+(i+1)+'</b><small>tutorialId '+id+' · '+esc(CM.source.split("/").pop())+'</small></span>'
+      +'<span class="si" data-icon="ic_arrow_right" data-size="18" data-mono="1"></span>';
+    LR.appendChild(b);
+  });
+  var proj=document.createElement("button");proj.className="sd-row";proj.dataset.nav="chapter";
+  proj.innerHTML='<span class="sr" data-icon="ic_badge_backend" data-size="20"></span><span class="stx"><b data-fa="پروژهٔ مبحث">Section Project</b><small data-fa="پروژهٔ پایانی مبحث">path_overview_section_project_label</small></span><span class="si" data-icon="ic_arrow_right" data-size="18" data-mono="1"></span>';
+  LR.appendChild(proj);
+  var soon=document.createElement("button");soon.className="sd-row locked";soon.dataset.modal="unfinishedModal";
+  soon.innerHTML='<span class="sr" data-icon="ic_lock_outline" data-size="18" data-mono="1"></span><span class="stx"><b data-fa="بهزودی">Coming soon</b><small data-fa="برای باز شدن، مبحث قبل را تمام کنید">Unlock this section by finishing the previous one</small></span><span class="si" data-icon="ic_arrow_right" data-size="18" data-mono="1"></span>';
+  LR.appendChild(soon);
+  /* clicking a section row opens Section detail with that section's own data */
+  qa("#sectionRows .po-sec").forEach(function(b){
+    b.addEventListener("click",function(){
+      var s=CM.sections[+b.dataset.section-1];
+      if(!s)return;
+      q("#sdTitle").textContent=s.name;
+      q("#sdDesc").textContent=s.description;
+      q("#sdNote").innerHTML='فهرست درسها از <span class="codechip2">sections['+(+b.dataset.section-1)+'].tutorialIds</span> ('+s.tutorialCount+' شناسهٔ واقعی داخل APK). لیبلها: <span class="codechip2">lesson_continue</span> · <span class="codechip2">lesson_skip</span> · <span class="codechip2">path_overview_section_project_label</span> · <span class="codechip2">alert_msg_section_setion_locked</span>';
+    });
+  });
+  /* generic modal open/close (Unfinished track) */
+  document.addEventListener("click",function(e){
+    var m=e.target.closest("[data-modal]");if(m){var t=q("#"+m.dataset.modal);if(t)t.classList.add("on");return}
+    var c=e.target.closest("[data-modal-close]");if(c){var t2=q("#"+c.dataset.modalClose);if(t2)t2.classList.remove("on");return}
+  });
+  paintIcons();
+  var l6=q("#learnStats");
+  if(l6)l6.innerHTML="<b>شواهد دور ششم:</b> "+LEARN.counts.strings+" رشتهٔ ARSC · "+LEARN.counts.vectors+" وکتور pathData · "+LEARN.counts.layouts+" لایهٔ AXML · "+CM.sections.length+" فصل واقعی · "+LEARN.counts.dex_classes+" کلاس DEX · "+LEARN.counts.catalog_rows+" ردیف کاتالوگ";
+
+
+  /* ============ v7 · bolt nodes -> isolated section-practice checkpoint quiz ============ */
+  var NS=NODE.strings, NCM=NODE.contentModel, PRACTICE_SECTION=3;
+  var P_STEMS=[
+    "کدام گزینه تعریف درست این مبحث را میدهد؟",
+    "کدام نکته دربارهٔ درسهای تا این فصل صحیح است؟",
+    "کدام حالت، نتیجهٔ درست تمرین قبل است؟"
+  ];
+  function practiceScope(n){
+    var arr=NCM.sections.slice(0,n), ids=[];
+    arr.forEach(function(s){ids=ids.concat(s.tutorialIds)});
+    return {sections:arr,ids:ids};
+  }
+  function renderPractice(n){
+    PRACTICE_SECTION=n;
+    var sc=practiceScope(n), sec=NCM.sections[Math.min(n,NCM.sections.length)-1];
+    q("#spTitle").textContent=sec.name;
+    q("#spScope").textContent="تا فصل "+fa(n)+" · "+fa(sc.ids.length)+" درس";
+    var box=q("#practiceQuestions");box.innerHTML="";
+    P_STEMS.forEach(function(stem,i){
+      var d=document.createElement("div");d.className="sp-q";d.dataset.q=String(i);
+      var sname=sc.sections[i%sc.sections.length].name;
+      var tid=sc.ids[i%sc.ids.length]||0;
+      var opts=[1,2,3,4].map(function(o){return '<button class="sp-opt" data-o="'+o+'">'+fa(o)+'</button>'}).join("");
+      d.innerHTML='<div class="sp-stem"><b>'+fa(i+1)+'. '+esc(stem)+'</b><small>'+esc(sname)+' · tutorialId '+fa(tid)+'</small></div><div class="sp-opts">'+opts+'</div>';
+      box.appendChild(d);
+    });
+    q("#practiceResult").innerHTML="";
+    q("#practiceStart").textContent="شروع تمرین";
+    q("#practiceModalTitle").textContent=NS.practice.section_details_smart_practice_charged_dialog_title;
+    q("#practiceModalText").textContent=NS.practice.section_details_smart_practice_charged_dialog_description;
+    paintIcons(box);
+  }
+  q("#practiceStart").addEventListener("click",function(){
+    var qs=qa("#practiceQuestions .sp-q"),answered=0,correct=0;
+    qs.forEach(function(x,i){var s=q(".sp-opt.on",x);if(s){answered++;if(+s.dataset.o===(i%4)+1)correct++}});
+    q("#practiceResult").innerHTML='<div class="sp-fb"><b>'+fa(answered)+' / '+fa(qs.length)+'</b> پاسخ ثبت شد · '+esc(NS.path_nodes.lesson_feedback_keep_going||"Let's keep it going.")+'</div>';
+    if(answered===qs.length){
+      q("#practiceModalTitle").textContent=NS.practice.section_details_smart_practice_mastered_dialog_title;
+      q("#practiceModalText").textContent=NS.practice.section_details_smart_practice_mastered_dialog_description;
+      q("#practiceModal").classList.add("on");
+      toast(NS.practice.you_finished_all_practice_sessions);
+    }else toast("چند سؤال هنوز پاسخ ندادهاند");
+  });
+
+  /* ============ v7 · daily routine: Habitica SCORING RULES only, Mimo skin ============ */
+  var HC=HAB.constants;
+  var RS={xp:0,gp:0,hp:HC.MAX_HEALTH,lvl:1,streak:0,int:0,per:0,str:0,con:0};
+  var RT_META={habit:"مرور کوتاه روزانه",daily:"حل ۵ سؤال",todo:"پایان یک فصل",reward:"استراحت ۱۰ دقیقهای"};
+  function toNext(l){return l<5?25*l:l===5?150:Math.round((l*l*0.25+10*l+139.75)/10)*10}
+  function critMul(s){var x=Math.sin(1+s*0.37)*10000,r=x-Math.floor(x);return r<=HC.CRIT_BASE_CHANCE*(1+s/100)?HC.CRIT_BASE_MULTIPLIER+(4*s)/(s+200):1}
+  function diminish(b,mx){return mx*b/(b+mx/2)}
+  function scoreTask(dir,pri,kind){
+    if(dir==="buy"){if(RS.gp<HC.DEFAULT_REWARD_VALUE){toast("سکهٔ روتین کافی نیست");return}RS.gp-=HC.DEFAULT_REWARD_VALUE;toast("پاداش: "+fa(HC.DEFAULT_REWARD_VALUE)+" سکهٔ روتین");return}
+    var d=Math.pow(HC.DELTA_BASE,0)*(dir==="down"?-1:1);
+    var c=critMul(RS.str);
+    var ex=Math.round(d*(1+RS.int*0.025)*pri*c*HC.EXP_MULTIPLIER);
+    var gp=Math.ceil(d*pri*c*(1+RS.per*0.02)*(RS.streak/100+1));
+    if(dir==="down"){
+      var con=Math.max(0.1,1-Math.min(RS.con,100)/250);
+      RS.hp=Math.max(0,Math.min(HC.MAX_HEALTH,RS.hp+d*con*pri*HC.HP_MULTIPLIER));
+      toast("امتیاز منفی ثبت شد");
+    }else{
+      RS.xp+=ex;RS.gp=Math.max(0,RS.gp+gp);
+      if(kind==="daily"){
+        RS.streak++;
+        if(RS.streak%HC.PERFECT_DAY_STREAK_DAYS===0)toast("نشان «روز کامل» · "+fa(HC.PERFECT_DAY_STREAK_DAYS)+" روز پیاپی");
+      }
+      toast("+ "+fa(ex)+" XP · + "+fa(gp)+" سکهٔ روتین");
+    }
+    while(RS.xp>=toNext(RS.lvl)){
+      RS.xp-=toNext(RS.lvl);RS.lvl++;RS.hp=HC.MAX_HEALTH;
+      if(RS.lvl>=HC.MAX_LEVEL)break;
+    }
+  }
+  function rtUpdate(){
+    var need=toNext(RS.lvl);
+    q("#rtXp").textContent=fa(RS.xp);q("#rtGp").textContent=fa(RS.gp);
+    q("#rtStreak").textContent=fa(RS.streak);q("#rtLvl").textContent=fa(RS.lvl);
+    q("#rtBar").style.width=Math.min(100,Math.round(RS.xp/need*100))+"%";
+    q("#rtNext").textContent="سطح "+fa(RS.lvl+1)+": "+fa(need)+" XP";
+    q("#rtHp").textContent="سلامت "+fa(Math.round(RS.hp))+" / "+fa(HC.MAX_HEALTH);
+  }
+  var RL=q("#rtTasks");RL.innerHTML="";
+  HAB.taskTypes.forEach(function(tt){
+    var d=document.createElement("div");d.className="rt-task";d.dataset.rt=tt.id;d.dataset.pri=tt.priority;
+    var acts=tt.id==="habit"
+      ? '<button class="rt-btn" data-rt-act="down">−</button><button class="rt-btn on" data-rt-act="up">+</button>'
+      : tt.id==="reward"
+        ? '<button class="rt-btn buy" data-rt-act="buy">'+fa(HC.DEFAULT_REWARD_VALUE)+' سکه</button>'
+        : '<button class="rt-btn on" data-rt-act="up"><span data-icon="ic_check_white" data-size="16" data-mono="1"></span></button>';
+    d.innerHTML='<span class="rt-ic" data-icon="'+tt.icon+'" data-size="22" data-mono="1"></span>'
+      +'<span class="rt-tx"><b>'+esc(tt.fa)+'</b><small>'+esc(RT_META[tt.id])+'</small></span>'
+      +'<span class="rt-pri">'+tt.priority+'</span>'+acts;
+    RL.appendChild(d);
+  });
+  paintIcons(RL);
+  q("#rtFoot").innerHTML='<span data-icon="ic_sparks_alt" data-size="16" data-mono="1"></span> '
+    +esc(HAB.rules[16].rule.split(";")[0]);
+  paintIcons(q("#rtFoot"));
+  rtUpdate();
+  renderPractice(3);
+
+  /* v7 delegated interactions: bolt nodes, locked node, glossary, practice options, routine */
+  document.addEventListener("click",function(e){
+    var b=e.target.closest("[data-practice]");
+    if(b){
+      var n=+b.dataset.practice;
+      if(!n){toast(NS.section.alert_msg_section_setion_locked);return}
+      renderPractice(n);
+      toast("تمرین مبحث: تا فصل "+fa(n)+" (جدا از آزمون کنکور)");
+      return;
+    }
+    var lk=e.target.closest("[data-locked]");
+    if(lk){toast(NS.section.alert_msg_section_setion_locked);return}
+    var gl=e.target.closest("[data-glossary]");
+    if(gl){toast("واژهنامهٔ مبحث (affordance شناور میمو)");return}
+    var o=e.target.closest(".sp-opt");
+    if(o){qa(".sp-opt",o.parentNode).forEach(function(x){x.classList.remove("on")});o.classList.add("on");return}
+    var a=e.target.closest("[data-rt-act]");
+    if(a){
+      var row=a.closest("[data-rt]");
+      scoreTask(a.dataset.rtAct,+row.dataset.pri,row.dataset.rt);
+      rtUpdate();return;
+    }
+  });
+
+  var n7=q("#nodeStats");
+  if(n7)n7.innerHTML="<b>شواهد دور هفتم:</b> "+NODE.counts.strings+" رشتهٔ ARSC · "+NODE.counts.vectors+" وکتور · "+NODE.counts.layouts+" لایه · "+NODE.counts.sections+" فصل / "+NODE.counts.tutorial_ids+" شناسهٔ درس · "+NODE.counts.dex_classes+" کلاس DEX · "+NODE.counts.catalog_rows+" ردیف کاتالوگ";
+  var h7=q("#habStats");
+  if(h7)h7.innerHTML="<b>شواهد امتیازدهی:</b> Habitica <code>develop@"+HAB.commit.slice(0,12)+"</code> · "+HAB.counts.sources+" فایل منبع با SHA-256 · "+HAB.counts.rules+" قاعده · "+HAB.counts.task_types+" نوع کار · "+HAB.counts.isolation_rules+" قانون ایزولاسیون";
+  paintIcons();
+
+  histRender();render();
+})();
+</script>
+</body>
+</html>

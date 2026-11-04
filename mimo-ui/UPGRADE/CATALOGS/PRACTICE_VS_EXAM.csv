@@ -1,0 +1,13 @@
+row_id,aspect,learn_bolt_practice,konkur_exam,isolation_rule
+PV-01,surface,data-screen=section-practice (class=screen mimo),data-screen=exam-hub / exam-run / exam-result (class=screen konkur),"two separate screens, two skins"
+PV-02,entry,lightning-bolt node inside the Learn path map,5th bottom tab Practice + exam hub cards,no shared entry point
+PV-03,scope,quiz from tutorialIds of the topic UP TO that section,full Konkur exam with 7 labelled sections / field templates,ازمون از مبحث تا اون بخشه
+PV-04,timer,"no timer chip, no countdown, no auto-submit","click chip -> number -> start -> reverse countdown, pause/resume, auto-submit",timer ONLY inside exam
+PV-05,answer sheet,no پاسخبرگ / no پاسخنامه,پاسخبرگ (chosen options) + پاسخنامه (descriptive + test key),policy split is exam-only
+PV-06,answer key,inline Mimo lesson feedback bottom sheet,test key + descriptive explanations; pure-time opens key at finish,no POLICY object in practice
+PV-07,duration,"short checkpoint, no 270 min",comprehensive fixed 270 min,fixed time belongs to exam
+PV-08,AI button,none (Mimo lesson feedback),one توضیح با هوش مصنوعی on question + same on result,no transfer of practice to AI chat
+PV-09,dialogs,Fully charged! / You've mastered the section! / Practice anyway,پاسخبرگ / پاسخنامه / خروج / اتمام آزمون,Mimo smart-practice dialogs only
+PV-10,data,test-tracks.json sections[].tutorialIds,EXAM_SECTION_TEMPLATES.csv + EXAM_TYPES.csv,separate data sources
+PV-11,routine,bolt practice is NOT a daily routine task,routine scoring is ONLY in data-screen=routine,three-way isolation
+PV-12,code evidence,PathMapScreenKt / SmartPractice* / ic_bolt* / rc_checkpoint_window_*,"Konkur plan catalogs (design-only, no Mimo code)",code-first vs plan-first

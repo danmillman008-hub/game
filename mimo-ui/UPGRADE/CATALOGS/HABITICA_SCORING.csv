@@ -1,0 +1,23 @@
+rule_id,group,rule,upstream_file,mimo_mapping
+HS-01,task-types,"Four task types: habit (plus/minus), daily (checkbox + streak), todo (one-shot + checklist), reward (costs currency, no value change).",website/common/script/libs/taskDefaults.js,روتین روزانه: عادت / روزانه / کار امروز / پاداش
+HS-02,defaults,"Default task: priority=1 (Easy), value=0, attribute=str; reward starts at value=10; daily streak starts at 0.",website/common/script/libs/taskDefaults.js,مقادیر پیشفرض داخل تب روتین
+HS-03,priority,"Priority multipliers: Trivial 0.1, Easy 1, Medium 1.5, Hard 2 (per API enum), applied to delta/EXP/GP/HP.",website/server/controllers/api-v3/tasks.js,چیپهای ریز «سختی» روی هر کار
+HS-04,value-clamp,"task.value clamped to [MIN_TASK_VALUE=-47.27, MAX_TASK_VALUE=21.27] before delta.",website/common/script/ops/scoreTask.js,محدودکنندهٔ امتیاز، داخل منطق
+HS-05,delta,"delta = 0.9747 ** clamp(task.value), signed by direction: up=+delta, down=-delta; unchecking reverses the same delta.",website/common/script/ops/scoreTask.js,امتیازدهی نزولی/صعودی نرم
+HS-06,checklist,Checklist partial credit: daily down and todo up scale delta by completed/total (and by 1/total when shrinking); scores can be split.,website/common/script/ops/scoreTask.js,چکلیستهای کوچک داخل کارها
+HS-07,exp,exp += round(delta * (1 + INT*0.025) * priority * crit * 6); INT bonus only when positive delta.,website/common/script/ops/scoreTask.js,نوار XP روتین
+HS-08,gp,gp += ceil(delta * priority * crit * (1 + PER*0.02) * streakBonus); streakBonus = currStreak/100 + 1 (min +1).,website/common/script/ops/scoreTask.js,شمارندهٔ سکهٔ روتین (جدا از سکههای Learn)
+HS-09,hp,"On down: hp += delta * (1 - min(CON,100)/250 clamped >=0.1) * priority * 2, result at most -1; hp bounded by MAX_HEALTH=50.",website/common/script/ops/scoreTask.js,نوار سلامت خیلی کم رنگ، بدون RPG
+HS-10,crit,crit chance = 0.03 * (1 + STR/100); crit multiplier = 1.5 + (4*STR)/(STR+200); deterministic predictableRandom(user).,website/common/script/fns/crit.js,یک «ضریب شانس» کمSer و اختیاری
+HS-11,predictable-random,"predictableRandom uses a deterministic sin-based seed from user id + task id + date, so scoring is reproducible (no real RNG).",website/common/script/fns/predictableRandom.js,منطق قابل تکرار، بدون شانس واقعی
+HS-12,level,toNextLevel(lvl) = 25*lvl for lvl<5; 150 at lvl=5; round((lvl^2*0.25 + 10*lvl + 139.75)/10)*10 afterwards.,website/common/script/statHelpers.js,سطح روتین و نوار پیشرفت
+HS-13,level-up,"On crossing toNextLevel: level+1, HP restored to 50, XP subtracts threshold, +1 stat point (capped 100).",website/common/script/fns/updateStats.js,افزایش سطح، بدون بنر پر زرقوبرق
+HS-14,diminishing-returns,"diminishingReturns(bonus,max,halfway=max/2) = max*bonus/(bonus+halfway): higher bonuses saturate.",website/common/script/statHelpers.js,جلوگیری از انفجار امتیازات
+HS-15,mp,"MP gain on positive delta, capped by statsComputed(user).maxMP; used for skill unlocks (not exposed in Mimo skin).",website/common/script/ops/scoreTask.js,فقط ثبت شده؛ در UI نمیآید
+HS-16,daily-streak,Completing a daily increments its streak; each 21 consecutive days grants an achievement; cron resets streaks for missed dailies.,website/common/script/cron.js,شمارندهٔ «روز پیاپی» Mimo
+HS-17,perfect-day,"Perfect Day (all dailies done) grants a buff / achievement; MP buffer = max(10, 0.1*maxMP) * dailyChecked/(dailyDueUnchecked + dailyChecked).",website/server/libs/cron.js,یک نشان ریز «روز کامل»
+HS-18,missed-daily,"Cron applies missed-daily damage at dayStart (custom dayStart, multiDaysCountAsOneDay=true); HP loss uses same priority scaling.",website/server/libs/cron.js,منطق پسزمینه، بدون اعلان پر سر و صدا
+HS-19,reward,"Reward task: gp -= value (default 10), no delta/EXP/HP change; value stays constant.",website/common/script/ops/scoreTask.js,پاداش کوچک با سکهٔ روتین
+HS-20,isolation,"All Habitica-derived rules live ONLY inside data-screen=routine; they are not wired to exam scores, leaderboard XP, Learn coins or lesson progress.",DESIGN/index.html,هیچی قرار نیست قاتی بشه با اپلیکیشن خود ما
+HS-21,licensing,"Habitica code is GPL-3.0 and HabitRPG assets/content are CC-BY-NC-SA 3.0; only abstract rules + SHA-256 digests are recorded, no code/assets copied.",LICENSE,پاکسازی حقوقی / clean-room
+HS-22,mimo-skin,"Routine tab uses ONLY Mimo tokens (card/button_primary/progress/TextLabel) and extracted Mimo vectors; no pixel art, avatars, RPG icons or new colours/fonts/radii.",CATALOGS/DESIGN_TOKENS.json,فکر کنن برای میمو هست، زیادی تو چشم نزنه
