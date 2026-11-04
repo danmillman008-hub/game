@@ -1,0 +1,55 @@
+{
+  "round": "v12.3",
+  "decision": "REJECT v12.2 four-model exam-page redesign; ROLL BACK to the v12.1 exam-run structure (commit d356963), keep only the emblem change + RTL arrow fix",
+  "user_feedback": "اون ساختار قبل از تغییرات صفحه ازمون ... اون رفرنس خوبیه / پاسخبرگ رو آوردی گذاشتی بالا کلا قاتی پاتی شده / بعدی نوک پیکان باید به سمت چپ باشه برای قبلی به سمت راست",
+  "reference_of_record": {
+    "file": "tools/design_v12_1_template.html",
+    "commit": "d356963",
+    "exam_run": "chapter_toolbar 52dp (X | title+6dp progress | timer | flag) → ScrollView question stem + 4 choice_list_item cards → feedback bottom sheet → quiet tool chips → ONE full-width purple CTA + two 48dp squares + lesson_skip",
+    "answer_sheet": "BOTTOM SHEET #paletteSheet opened from #answerSheetBtn or the flag button — never inline above the question",
+    "answer_key": "BOTTOM SHEET #keySheet with keyTestSheet / keyDescSheet, per-kind policy; never mixed into the question body"
+  },
+  "what_was_wrong_in_v12_2": [
+    "a 20-bubble inline answer-sheet card was inserted ABOVE the stem, between the step row and the subject chip — it crowded and confused the question body",
+    "four swapped footers and a quick 4-bubble row duplicated the option cards and made the page incoherent",
+    "the model picker and model badges added review scaffolding to a page that was already accepted",
+    "directional arrows stayed LTR: NEXT pointed right, PREVIOUS/BACK pointed left"
+  ],
+  "rtl_arrow_rule": {
+    "statement": "In an RTL (Persian/Arabic) interface NEXT/FORWARD points LEFT (←) and PREVIOUS/BACK points RIGHT (→)",
+    "sources": [
+      "https://simplelocalize.io/blog/posts/rtl-design-guide-developers/",
+      "https://localization.saudisoft.com/rtl-design/",
+      "https://www.codestan.com/insights/ux-design-tips-arabic-rtl-2026",
+      "https://www.shaheermalik.com/blog/arabic-website-design-rtl"
+    ],
+    "decoded_vectors": {
+      "ic_arrow_left": "M21,11.25H5.31...L3.325,11.115 -> arrowhead LEFT",
+      "ic_arrow_right": "M20.675,11.115L14.53,4.97...H3 -> arrowhead RIGHT",
+      "ic_arrow_back_24": "M20,11H7.83...l-8,8 -> arrowhead LEFT"
+    },
+    "applied": {
+      "nextQ": "ic_arrow_right -> ic_arrow_left (data-arrow=next)",
+      "prevQ": "ic_arrow_back_24 -> ic_arrow_right (data-arrow=prev)",
+      "exam-result back": "ic_arrow_back_24 -> ic_arrow_right (data-arrow=back)",
+      "all_other_arrows": "[dir=rtl] mirrors LTR-authored ic_arrow_* icons; [dir=ltr] mirrors the three explicitly RTL-authored ones"
+    }
+  },
+  "chinese_repo_crosscheck": {
+    "repos": [
+      "https://github.com/mindskip/xzs",
+      "https://github.com/iiSee/uexam"
+    ],
+    "name": "学之思在线考试系统 (xzs / uexam)",
+    "file_read": "source/vue/xzs-student/src/views/exam/paper/do.vue",
+    "findings": [
+      "the answering page keeps a CLEAN question body: el-card per question, QuestionEdit for the options",
+      "question-number tags + 剩余时间 (remaining time) live in a separate compact sticky header row, NOT as a big card inside the question body",
+      "one primary 提交 (Submit) button at the end of the paper, plus 取消",
+      "answer / 解析 / correct answer are shown AFTER submission in read.vue and QuestionAnswerShow.vue, and in 错题本 (wrong-question book) — not during the exam"
+    ],
+    "conclusion": "confirms the v12.1 shape: answer sheet and answer key are separate sheets/panels, the question body stays uncluttered, and correctness is revealed after the exam",
+    "usage": "UNDERSTANDING / cross-check only — no code, assets or layout copied into this design prototype"
+  },
+  "sources_policy": "decoded APK resources remain the source of truth for the Mimo skin; web + Chinese repo are cross-checks only; screenshots VISUAL_CROSSCHECK_ONLY"
+}
