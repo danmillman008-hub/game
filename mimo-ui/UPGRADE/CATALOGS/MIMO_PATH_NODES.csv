@@ -71,3 +71,19 @@ V8-19,lock,locked lesson rows removed from section detail,user round-8,DESIGN/in
 V8-20,lock,Coming soon label kept in path overview (not a lock),path_section_coming_soon,SOURCE/values/values/string.xml,code
 V8-21,code,title tooltips converted to data-code audit attributes,no visible code annotations in UI,DESIGN/index.html,decision
 V8-22,code,visible .lh debug labels removed; data-lh audit kept,8 LH capabilities remain behind /max,CATALOGS/AI_PANEL_SPEC.csv,decision
+V9-01,layout,single vertical line / axis x=196 / no zigzag,PathMapScreenKt + user round-9,DESIGN/NODE_CODE_GEOMETRY.json::nodeGeometry.layout,decision
+V9-02,layout,node gap 12dp from spacing_s (not ad-hoc 106dp),dimen.xml spacing_s = 12.000000dip,SOURCE/values/values/dimen.xml,code
+V9-03,geometry,corner radius 16dp (was inferred 26dp),glance_component_btn_square.xml -> @dimen/glance_component_square_icon_button_corners,SOURCE/res/drawable/glance_component_btn_square.xml,code
+V9-04,geometry,connector stroke 6dp (was inferred 10dp),dimen.xml lesson_progressbar_height = 6.000000dip,SOURCE/values/values/dimen.xml,code
+V9-05,geometry,"progress bar is a 100dp-radius pill, 3 layer-list items",progress_bar_chapter.xml background/weak/primary,SOURCE/res/drawable/progress_bar_chapter.xml,code
+V9-06,connector,ONE continuous straight path M196 0 V620,user: قوس نده / گرهها در یک خط,DESIGN/NODE_CODE_GEOMETRY.json::nodeGeometry.connector_paths,decision
+V9-07,connector,hard linearGradient stop at current node (0.4161),progress_chapter_primary -> progress_chapter_background,DESIGN/index.html#learn,code
+V9-08,connector,NO Q/C/S curve commands anywhere in node geometry,regex-verified zero curve commands,tools/verify_upgrade.py,code
+V9-09,state,bolt active = ic_bolt_charged (yellow #FFFFDA1B / #FFFFAB00),res/drawable/ic_bolt_charged.xml pathData,SOURCE/res/drawable/ic_bolt_charged.xml,code
+V9-10,state,bolt optional = ic_bolt_mastered (48dp vector with sparkles),res/drawable/ic_bolt_mastered.xml pathData,SOURCE/res/drawable/ic_bolt_mastered.xml,code
+V9-11,state,"done = ic_check_white, current = ic_play + 1/2 ring",ic_check_white.xml / ic_play.xml / bg_circular.xml,SOURCE/res/drawable/,code
+V9-12,state,"next = ic_square_rounded, light and UNLOCKED (no lock glyph)",ic_square_rounded.xml squircle pathData,SOURCE/res/drawable/ic_square_rounded.xml,code
+V9-13,state,linear progression done/done/current/next/bolt/bolt,PathMapViewModel$onTutorialClick,SOURCE/dex/UI_CLASSES.json,code
+V9-14,timing,checkpoint enter 220ms / exit 400ms,rc_checkpoint_window_enter.xml / _exit.xml,SOURCE/res/anim/,code
+V9-15,shape,node shape pathData from ic_square_rounded (18x18 on 24 viewport),"android:pathData M18.25,21H5.75...",SOURCE/res/drawable/ic_square_rounded.xml,code
+V9-16,lock,still ZERO Learn locks; one exam-hub lock untouched,user round-8 + round-9,DESIGN/index.html#exam-hub,decision

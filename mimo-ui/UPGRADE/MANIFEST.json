@@ -2,31 +2,32 @@
   "round": "konkur-upgrade-planning",
   "branch": "arena/aebb90b7-game",
   "date": "2026-11-04",
-  "status": "PLAN_ONLY + DESIGN v8 REVIEW (no product implementation)",
+  "status": "PLAN_ONLY + DESIGN v9 REVIEW (no product implementation)",
   "goal": "Upgrade Mimo 9.35 into an Iranian Konkur learning app with strict fidelity to Mimo UI/mechanism/navigation",
   "deliverables": {
-    "persian_docs": 21,
+    "persian_docs": 22,
     "csv_catalogs": 20,
     "wireframes_html": 2,
     "source_apps": 2,
-    "extracted_assets_files": 1914,
-    "total_bytes": 20586667,
+    "extracted_assets_files": 1919,
+    "total_bytes": 20833975,
     "craft_anything": "vendored docs + 33-id agent adapter + 13 evidence records",
     "verification": "PASS",
     "phases": 8,
     "phase_status": "P0..P4/P6/P7 PLANNED · P5 PARKED (counseling) · awaiting final design approval",
     "interactive_design_prototype": 1,
-    "verification_checks": 179,
-    "design_round": "v8 (REVIEW)",
+    "verification_checks": 185,
+    "design_round": "v9 (REVIEW)",
     "code_first_geometry": "DESIGN/CODE_GEOMETRY.json (46 vectors / 41 colors / 36 dims / 13 styles / 45 strings / 19 AXML layouts / 80 Compose path classes)",
     "mimo_reference_screenshots": 14,
     "learn_code_evidence": "DESIGN/LEARN_CODE_GEOMETRY.json (150 ARSC strings / 41 vectors / 16 AXML layouts / 1 nav graph / 15 real sections / 272 DEX classes / 68 colors / 62 dimens / 213 styles) + CATALOGS/MIMO_LEARN_SUBSCREENS.csv (868 rows)",
     "design_views": 14,
     "design_svg_vectors": 93,
-    "node_code_evidence": "DESIGN/NODE_CODE_GEOMETRY.json v8 (58 vectors / 90 ARSC strings / 10 AXML shapes / 18 colors / 15 dimens / 92 PathMap DEX classes / 15 sections / 223 tutorialIds / machine-readable nodeGeometry) + CATALOGS/MIMO_PATH_NODES.csv (72 rows)",
+    "node_code_evidence": "DESIGN/NODE_CODE_GEOMETRY.json v9 (single_vertical_line / axis x=196 / 16dp corners / 6dp connector / 12dp gap / 48dp icons / 0 curves / 1 continuous path / 58 vectors / 92 PathMap DEX classes / 223 tutorialIds) + CATALOGS/MIMO_PATH_NODES.csv (88 rows)",
     "bottom_nav_tabs": 5,
     "reference_screenshots_role": "14 Mimo screenshots, VISUAL_CROSSCHECK_ONLY",
-    "v8_changes": "exact code-driven Learn nodes; NO locked node (one exam-hub exception); routine/Habitica removed; Dictate removed; no UI annotations; exam Mimo skin only"
+    "v8_changes": "exact code-driven Learn nodes; NO locked node (one exam-hub exception); routine/Habitica removed; Dictate removed; no UI annotations; exam Mimo skin only",
+    "v9_changes": "re-reviewed node code; ONE straight vertical line (no curve/zigzag); corrected 7 code-derived numbers; real charged/mastered bolt vectors; linear unlocked state sequence"
   },
   "source_hashes": {
     "Mimo_9.35": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
@@ -81,7 +82,11 @@
     "v8: all design/policy/EPM/timer/code annotations removed from the phone UI; exam-hub labels/templates and descriptive answer text KEPT",
     "v8: ZERO locked nodes in Learn/section-detail/practice; only the pre-existing exam-hub «آزمون نهایی / دو هفتگی» lock remains",
     "v8: MAIN TASK — Learn nodes rebuilt data-driven from NODE_CODE_GEOMETRY.json (92dp squares, 26dp corners, 8dp 3D lip, white double ring + 1/2 progress, rounded-elbow Q connector, dotted grid, bolt states, floating book)",
-    "v8: exam surfaces Mimo-ified in APPEARANCE ONLY (real Mimo vectors + ARSC colours/radii/type); no architecture/timer/policy change"
+    "v8: exam surfaces Mimo-ified in APPEARANCE ONLY (real Mimo vectors + ARSC colours/radii/type); no architecture/timer/policy change",
+    "v9: node architecture re-reviewed from dimen.xml / drawable shapes / anim resources; 7 v8 inferred numbers corrected (16dp corner, 6dp line, 12dp gap, 48dp icon, 3-layer progress, real squircle pathData, real bolt vectors)",
+    "v9: ALL 6 Learn nodes on ONE vertical axis (x=196); ONE continuous straight connector M196 0 V620; ZERO Q/C/S curve commands; hard gradient stop at the current node",
+    "v9: linear state sequence done/done/current/next(unlocked)/ic_bolt_charged/ic_bolt_mastered; still ZERO Learn locks (one exam-hub lock untouched)",
+    "v9: 220ms enter / 400ms exit node transitions from rc_checkpoint_window_enter.xml / _exit.xml"
   ],
   "reproduce": [
     "python3 tools/extract_source_apps.py <google_drive_dir> .",
@@ -92,7 +97,10 @@
     "python3 tools/verify_upgrade.py .",
     "python3 tools/extract_mimo_nodes_v8.py .",
     "python3 tools/build_design_v8.py .",
-    "python3 tools/finalize_v8.py ."
+    "python3 tools/finalize_v8.py .",
+    "python3 tools/extract_mimo_nodes_v9.py .",
+    "python3 tools/build_design_v9.py .",
+    "python3 tools/finalize_v9.py ."
   ],
   "limitations": [
     "no runtime/device/screenshots",
@@ -229,7 +237,7 @@
     "revoked": "روتین روزانه / Habitica scoring removed entirely by explicit user order in round 8"
   },
   "design_round_8": {
-    "status": "DESIGN v8 · REVIEW — awaiting final approval (CURRENT)",
+    "status": "DESIGN v8 · SUPERSEDED by v9 (single-line node layout) — archived audit trail",
     "trigger": "user: روتین روزانه رو کلا حدف کن / دیکته حدف کن / توضیحات داخل UI نیاز نیست / هیچ بخش قفلی جز یکی / نودها رو واقعاً درست کن / ظاهر آزمونها شبیهتر به میمو",
     "main_task": "exact Learn path-map NODES from code (NODE_CODE_GEOMETRY.json v8)",
     "method": "CODE_FIRST / extract_mimo_nodes_v8.py -> NODE_CODE_GEOMETRY.json -> build_design_v8.py -> DESIGN/index.html",
@@ -250,6 +258,39 @@
     ],
     "exam_appearance": "real Mimo vectors (ic_trophy, ic_clock_black_24dp, ic_task_completed, ic_lock_alt_02, ic_file, ic_target, ic_sparks_alt, ic_arrow_back_24, ic_help) + ARSC colours/radii/type; NO architecture change",
     "final_log": "20_DESIGN_ROUND_8.md",
+    "design_notes": "DESIGN/DESIGN_NOTES.fa.md",
+    "final_approval": "PENDING — no product implementation until user says the design is final"
+  },
+  "design_round_9": {
+    "status": "DESIGN v9 · REVIEW — awaiting final approval (CURRENT)",
+    "trigger": "user: معماری گرهها همچنان نیاز به توجه داره / قوس نده و گرهها رو در یک خط عمومی قرار بده / بازم کدش رو بازبینی کن و بهتر شبیهسازی کن",
+    "interpretation": "خط عمومی = محور عمودی صاف واحد؛ ثبتشده بهعنوان فرض U10 در OPEN_QUESTIONS.csv",
+    "main_task": "re-review node code + single straight vertical line + better simulation",
+    "method": "CODE_FIRST / extract_mimo_nodes_v9.py -> NODE_CODE_GEOMETRY.json -> build_design_v9.py -> DESIGN/index.html",
+    "layout": {
+      "mode": "single_vertical_line",
+      "axis_x": 196,
+      "gap_dp": 12,
+      "connector_paths": 1,
+      "curve_commands": 0,
+      "connector_d": "M196 0 V620",
+      "corner_radius_dp": 16,
+      "stroke_dp": 6,
+      "icon_dp": 48
+    },
+    "code_corrections": 7,
+    "interactive_prototype": "DESIGN/index.html (14 views / 5 tabs / 93 SVG vectors / 133 painted icons / 6 nodes / 0 Learn locks / 0 jsdom errors)",
+    "unchanged": [
+      "5 tabs / no MAX",
+      "routine + Habitica removed",
+      "Dictate removed",
+      "no UI annotations",
+      "7 labelled exam sections + descriptive answer text",
+      "exam architecture / timer / 270 min / پاسخبرگ≠پاسخنامه",
+      "one pre-existing exam-hub lock",
+      "bolt section-practice isolated"
+    ],
+    "final_log": "21_DESIGN_ROUND_9.md",
     "design_notes": "DESIGN/DESIGN_NOTES.fa.md",
     "final_approval": "PENDING — no product implementation until user says the design is final"
   }

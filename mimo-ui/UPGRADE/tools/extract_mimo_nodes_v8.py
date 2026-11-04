@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ARCHIVED (round 9): superseded by extract_mimo_nodes_v9.py / build_design_v9.py / finalize_v9.py.
 # -*- coding: utf-8 -*-
 """extract_mimo_nodes_v8.py — DEEP code-first reconstruction of Mimo path-map NODES.
 

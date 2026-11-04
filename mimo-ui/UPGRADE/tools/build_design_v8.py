@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ARCHIVED (round 9): superseded by extract_mimo_nodes_v9.py / build_design_v9.py / finalize_v9.py.
 # -*- coding: utf-8 -*-
 """build_design_v8.py — DESIGN v8 from code-extracted Mimo 9.35 geometry.
 
