@@ -1,0 +1,241 @@
+{
+  "source": {
+    "apk": "Mimo_9.35 (1).apk",
+    "arsc": "mimo-ui/SOURCE/values/values/string.xml (1,721 strings)",
+    "dex": "12 DEX string_id tables"
+  },
+  "currency_layers": {
+    "XP": {
+      "visible_unit": true,
+      "strings": {
+        "xp": "XP",
+        "total_xp": "Total xp",
+        "xp_earned": "XP Earned",
+        "sparks_daily_goal": "%1$d/%2$d XP",
+        "streak_drawer_daily_xp": "%1$d / %2$d XP",
+        "leaderboard_join": "Compete with learners around the world for most weekly XP. The more you learn, the more XP you earn!"
+      },
+      "dex": [
+        "UserXpInformation(xpFormatted=",
+        "DOUBLE_XP_GAIN",
+        "xpHelper",
+        "CurrentStatus(xp="
+      ],
+      "role": "daily goal + weekly leaderboard + lifetime total"
+    },
+    "Sparks": {
+      "internal_name_for_xp_gain": true,
+      "dex": [
+        "rewardedSparksForCorrectAnswer",
+        "dailySparksGoal",
+        "earnedSparks",
+        "formattedSparks",
+        "sparksCount",
+        "sparksGoal",
+        "DailySparksProgress",
+        "double_sparks_24h",
+        "getDailySparksGoal"
+      ],
+      "role": "per-answer / per-lesson gain; daily goal progress"
+    },
+    "Coins": {
+      "endpoints": [
+        "/v1/user/coins"
+      ],
+      "dex": [
+        "dailyGoalCoinReward",
+        "dailyGoalCoinsReward",
+        "dailyGoalRewardCoins",
+        "missedCoins",
+        "userCoins",
+        "ACTIVE_COIN_COUNT",
+        "Coins(coins=",
+        "coinPrice"
+      ],
+      "strings": {
+        "goal_reached": "You earned %1$d coins!",
+        "store": "Hint: exchange your coins for fun rewards in the Mimo Store."
+      },
+      "role": "Mimo Store currency, earned on daily-goal completion"
+    },
+    "Keys": {
+      "endpoints": [
+        "/v1/user/keys",
+        "/v1/user/keys/consume"
+      ],
+      "dex": [
+        "PathToolbarKt$RowWithKeys",
+        "ObservePathToolbarState$flowOfKeys$1",
+        "RefreshPathToolbarState$refreshKeysFlow$1"
+      ],
+      "role": "toolbar currency / unlocks (semantics still UNKNOWN)"
+    }
+  },
+  "daily_goal": {
+    "levels": {
+      "1": "Casual",
+      "2": "Regular",
+      "3": "Serious"
+    },
+    "settings": [
+      "Settings(dailySparksGoal=",
+      "setDailyGoal",
+      "getUserDailyGoal",
+      "onboarding_set_daily_goal"
+    ],
+    "states": [
+      "DAILY_GOAL_REACHED",
+      "DAILY_GOAL_NOT_REACHED",
+      "DAILY_GOAL_ALREADY_REACHED_EARLIER_TODAY"
+    ],
+    "screen": "OnboardingSetDailyGoalFragment / DailySparksGoalProgressView / ChapterFinishedDailyGoalProgressView"
+  },
+  "streak": {
+    "model": [
+      "activeStreakLength",
+      "longestStreakLength",
+      "bestStreak",
+      "userCurrentStreak",
+      "userLongestStreak",
+      "streakLength",
+      "streakType",
+      "streakChainType"
+    ],
+    "endpoints": [
+      "/v1/user/activity"
+    ],
+    "features": {
+      "freeze": [
+        "STREAK_FREEZE",
+        "WEEKEND_FREEZE",
+        "weekend_streak_freeze",
+        "streak_freeze"
+      ],
+      "repair": [
+        "STREAK_REPAIR",
+        "FREE_STREAK_REPAIR",
+        "monthly_streak_repair",
+        "streak_repair_modal"
+      ],
+      "challenges": [
+        "streak_challenge_3d_free",
+        "streak_challenge_5d_free",
+        "streak_challenge_7d",
+        "streak_challenge_7d_free"
+      ]
+    },
+    "widgets": [
+      "streak_widget_small_refresh",
+      "streak_widget_medium_refresh",
+      "streak_widget_large_refresh",
+      "streak_widget_immediate_hydration"
+    ],
+    "strings": {
+      "started": "You’ve started a streak!",
+      "freeze": "Streak Freeze automatically keeps your Streak going if you have 24 hours of inactivity",
+      "repair": "Repair the most recent day of inactivity and get back on track. Available only once per month."
+    }
+  },
+  "leaderboard": {
+    "league_tiers": {
+      "1": "Wooden League",
+      "2": "Stone League",
+      "3": "Bronze League",
+      "4": "Silver League",
+      "5": "Golden League"
+    },
+    "league_short": {
+      "1": "Wooden",
+      "2": "Stone",
+      "3": "Bronze",
+      "4": "Silver",
+      "5": "Golden"
+    },
+    "rule_strings": {
+      "promotion": "Finish in the top 15 to advance to a higher league.",
+      "danger": "danger zone",
+      "demotion": "Get out of the %1$s to stay in your league.",
+      "protection": "Protect yourself from dropping to a lower league the next time you finish in the danger zone."
+    },
+    "endpoints": [
+      "/v1/leaderboards/latest",
+      "/v1/leaderboards/friends",
+      "/v1/leaderboards/{leaderboardId}/userrank"
+    ],
+    "dex": [
+      "RemoteLeaderboardState$Active",
+      "RemoteLeaderboardState$NotEnrolled",
+      "LeaderboardLeague",
+      "LeaderboardRank",
+      "ProfileTrophy(league=",
+      "hasActiveLeagueFreeze",
+      "hasActiveLeagueProtection"
+    ],
+    "animations": [
+      "res/raw/trophy_icon.json",
+      "res/raw/streak_icon.json",
+      "res/raw/streak_animation.json"
+    ]
+  },
+  "rewards": {
+    "endpoints": [
+      "/v1/user/rewards/next",
+      "/v1/user/rewards/{rewardId}/confirm"
+    ],
+    "dex": [
+      "Reward(rewardId=",
+      "rewardAmount",
+      "rewardMultiplier",
+      "rewardType",
+      "rewardEntitlementId",
+      "rewardVerificationEnabled",
+      "rewardVirtualCurrencyAmount",
+      "rewardVirtualCurrencyCode",
+      "Confirmed reward with id"
+    ],
+    "animations": [
+      "res/raw/reward_mini.json",
+      "res/raw/reward_medium.json",
+      "res/raw/reward_maxi.json"
+    ],
+    "strings": {
+      "choose_box": "Choose a box",
+      "tap": "Tap to open it"
+    },
+    "note": "Server-issued and server-confirmed: client cannot award itself."
+  },
+  "store_products": {
+    "store_product_double_xp_gain_description": "Receive 2x XP for the next 24 hours to improve your Leaderboard position",
+    "store_product_double_xp_gain_title": "Double XP Gain",
+    "store_product_free_streak_repair_description": "Get one Streak Repair for free every month!",
+    "store_product_free_streak_repair_title": "Free Streak Repair",
+    "store_product_league_protection_description": "Protect yourself from dropping to a lower league the next time you finish in the danger zone.",
+    "store_product_league_protection_title": "League Protection",
+    "store_product_streak_challenge_description": "Challenge yourself to maintain a streak for 7 days and win.",
+    "store_product_streak_challenge_progress": "Day %1$d of %2$d",
+    "store_product_streak_challenge_title": "Streak Challenge",
+    "store_product_streak_freeze_description": "Streak Freeze automatically keeps your Streak going if you have 24 hours of inactivity",
+    "store_product_streak_freeze_title": "Streak Freeze",
+    "store_product_streak_repair_description": "Repair the most recent day of inactivity and get back on track. Available only once per month.",
+    "store_product_streak_repair_title": "Streak Repair",
+    "store_product_unlimited_playgrounds_description": "Create as many Playgrounds as you want with Mimo Pro",
+    "store_product_unlimited_playgrounds_title": "Unlimited Playgrounds",
+    "store_product_weekend_freeze_description": "Purchase before the weekend starts to protect your streak and have a break.",
+    "store_product_weekend_freeze_title": "Free Weekend Ticket"
+  },
+  "progress_endpoints": [
+    "/v1/tutorials/{tutorialId}/progress",
+    "/v1/tutorials/{tutorialId}/lessons/{lessonIdentityId}/report",
+    "/v1/tracks/{trackId}/completion",
+    "/v1/tracks/completion/lastInteracted",
+    "/v1/tracks/{trackId}/eta",
+    "/v1/practice/statistics"
+  ],
+  "unknowns": [
+    "exact XP per correct answer / per lesson / per chapter",
+    "daily-goal numeric thresholds for Casual/Regular/Serious",
+    "weekly leaderboard reset time and cohort size",
+    "coin prices for each store product",
+    "formula that maps sparks -> XP -> leaderboard rank"
+  ]
+}
