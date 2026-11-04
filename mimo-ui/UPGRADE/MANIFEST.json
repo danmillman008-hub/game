@@ -2,27 +2,27 @@
   "round": "konkur-upgrade-planning",
   "branch": "arena/aebb90b7-game",
   "date": "2026-11-04",
-  "status": "PLAN_ONLY + DESIGN v12.1 REVIEW (v12 code-bug fix pass; no product implementation)",
+  "status": "PLAN_ONLY + DESIGN v12.2 REVIEW (four exam-page models; no product implementation)",
   "goal": "Upgrade Mimo 9.35 into an Iranian Konkur learning app with strict fidelity to Mimo UI/mechanism/navigation",
   "deliverables": {
     "persian_docs": 25,
     "csv_catalogs": 21,
     "wireframes_html": 2,
     "source_apps": 2,
-    "extracted_assets_files": 1940,
-    "total_bytes": 23366040,
+    "extracted_assets_files": 1944,
+    "total_bytes": 23917274,
     "craft_anything": "vendored docs + 33-id agent adapter + 13 evidence records",
     "verification": "PASS",
     "phases": 8,
     "phase_status": "P0..P4/P6/P7 PLANNED · P5 PARKED (counseling) · awaiting final design approval",
     "interactive_design_prototype": 1,
-    "verification_checks": 234,
-    "design_round": "v12.1 (REVIEW)",
+    "verification_checks": 245,
+    "design_round": "v12.2 (REVIEW)",
     "code_first_geometry": "DESIGN/CODE_GEOMETRY.json (46 vectors / 41 colors / 36 dims / 13 styles / 45 strings / 19 AXML layouts / 80 Compose path classes)",
     "mimo_reference_screenshots": 14,
     "learn_code_evidence": "DESIGN/LEARN_CODE_GEOMETRY.json (150 ARSC strings / 41 vectors / 16 AXML layouts / 1 nav graph / 15 real sections / 272 DEX classes / 68 colors / 62 dimens / 213 styles) + CATALOGS/MIMO_LEARN_SUBSCREENS.csv (868 rows)",
     "design_views": 14,
-    "design_svg_vectors": 93,
+    "design_svg_vectors": 94,
     "node_code_evidence": "DESIGN/NODE_CODE_GEOMETRY.json v10 (original_curved_zigzag / 3 lanes 80-196-312 / 24dp gaps / 32dp Q elbows / 2 coloured segments / 92 PathMap DEX classes / 15 sections / 223 tutorialIds / 106 catalog rows) + CATALOGS/MIMO_PATH_NODES.csv",
     "bottom_nav_tabs": 5,
     "reference_screenshots_role": "14 Mimo screenshots, VISUAL_CROSSCHECK_ONLY",
@@ -30,7 +30,7 @@
     "v9_changes": "re-reviewed node code; ONE straight vertical line (no curve/zigzag); corrected 7 code-derived numbers; real charged/mastered bolt vectors; linear unlocked state sequence",
     "v10_changes": "REVERTED v9 single straight line; restored original curved zigzag with real gaps; deeper DEX/test-tracks code review; corrected 2 wrong number attributions",
     "v11_content": "KONKUR_CURRICULUM.json / KONKUR_CURRICULUM.csv (12 courses x 5 chapters x 3 lessons = 12/60/180) + 10 fortnight dates 1 Aban..15 Esfand + 3 big Mimo-icon cards + My-status-only leaderboard + zero programming emblems",
-    "v12_exam_ui": "EXAM_UI_CODE_EVIDENCE.json — single full-width CTA, no equal prev/next pill pair, no separate konkur skin; v12.1 fixes 7 code bugs (scroll / row click / filters / 20-question bank / RTL / row meta)"
+    "v12_exam_ui": "EXAM_UI_CODE_EVIDENCE.json + EXAM_PAGE_MODELS.json — v12.2 FOUR exam-page models (konkur / practice / analytical / descriptive), single full-width CTA per model, no equal prev/next pill pair, no separate konkur skin; ic_survey / ic_cap emblems"
   },
   "source_hashes": {
     "Mimo_9.35": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
@@ -108,7 +108,10 @@
     "v12.1: BUG FIX — Mimo list rows were clickable only on the 44dp icon; whole row + keyboard activation now opens the exam and resets the question index",
     "v12.1: BUG FIX — 8 exam-hub filter chips were inert spans; now real buttons filtering the 7 labelled sections",
     "v12.1: BUG FIX — counter said 20 while QBANK had 5 (stems silently repeated); 20 distinct questions + one QTOTAL + dynamic AI question number",
-    "v12.1: BUG FIX — RTL/LTR toggle skipped exv12 screens; hidden .mini badges moved into row labels; per-question bookmarks"
+    "v12.1: BUG FIX — RTL/LTR toggle skipped exv12 screens; hidden .mini badges moved into row labels; per-question bookmarks",
+    "v12.2: FOUR distinct exam-page models replace the single generic exam-run sheet — konkur (inline 20-bubble answer sheet + quick sp-opts bubbles + real prev/next + no grading), practice (Mimo SUBMIT->feedback->CONTINUE), analytical (feedback + live analysis + both nav directions), descriptive (written answer + تعویض سوال / تصحیح دستی)",
+    "v12.2: exam-hub emblem changed from Mimo mascot to ic_survey.xml (the APK's real quiz illustration); exam-result uses ic_cap; GEO.vectors now 94",
+    "v12.2: model chosen by each exam card's data-kind; 4-button reviewer picker outside the phone; Konkur structure (answer sheet during exam, key after) reconciled with Mimo practice grammar"
   ],
   "reproduce": [
     "python3 tools/extract_source_apps.py <google_drive_dir> .",
@@ -131,7 +134,9 @@
     "python3 tools/build_design_v12.py .",
     "python3 tools/finalize_v12.py .",
     "python3 tools/fix_design_v12_1.py .",
-    "python3 tools/finalize_v12_1.py ."
+    "python3 tools/finalize_v12_1.py .",
+    "python3 tools/build_exam_models_v12_2.py .",
+    "python3 tools/finalize_v12_2.py ."
   ],
   "limitations": [
     "no runtime/device/screenshots",
@@ -477,7 +482,7 @@
     "final_approval": "PENDING — no product implementation until user says the design is final"
   },
   "design_round_12": {
-    "status": "DESIGN v12 · REVIEW — superseded only by the v12.1 code-bug fix pass (CURRENT)",
+    "status": "DESIGN v12 · REVIEW — superseded only by v12.1 fixes and the v12.2 four-model pass (CURRENT)",
     "trigger": "user: پروتوتایپ بخش آزمون خیلی بد و جدا از اپلیکیشن است، شبیهترش کن به پروتوتایپ اصلی میمو؛ دکمهٔ سؤال بعدی/قبلی را اشتباه گذاشتی؛ ساختار دکمهها و بقیه را از روی اپ اصلی بساز؛ اجازهٔ تغییرات زیاد و حتی ساختارشکنی (نهایت برمیگردیم عقب)",
     "method": "CODE_FIRST / decoded APK layouts, dimens, colors, styles, strings; screenshots VISUAL_CROSSCHECK_ONLY",
     "evidence_file": "DESIGN/EXAM_UI_CODE_EVIDENCE.json",
@@ -539,6 +544,25 @@
       "evidence": "DESIGN/EXAM_UI_CODE_EVIDENCE.json :: bugfixes_v12_1",
       "tests": "check_v12_1.js (108 checks / 0 errors) + verify_upgrade.py PASS 234/234",
       "unchanged": "v12 single CTA / Mimo skin / all v11.1 acceptances / rollback snapshot"
+    },
+    "exam_page_models_v12_2": {
+      "status": "APPLIED, awaiting final approval",
+      "trigger": "user: صفحهٔ اجرای آزمون یک مدل کافی نیست؛ تحلیلی «بررسی پاسخ» میخواهد، زماندار «سؤال بعدی/قبلی» و «پاسخنامه»؛ دیزاینهای قبلی + بخش تمرین میمو + ساختار کنکور را ببین و چند مدل بساز",
+      "script": "tools/build_exam_models_v12_2.py (runs on tools/design_v12_1_template.html)",
+      "spec": "DESIGN/EXAM_PAGE_MODELS.json",
+      "models": [
+        "konkur (comprehensive/timed/review)",
+        "practice (normal)",
+        "analytical",
+        "descriptive"
+      ],
+      "emblem": {
+        "hub": "ic_survey.xml (quiz_introduction_fragment.xml)",
+        "result": "ic_cap.xml",
+        "removed": "ic_mimo_mascot from both exam surfaces"
+      },
+      "tests": "check_v12_2.js (137 checks / 0 errors) + verify_upgrade.py PASS 245/245",
+      "unchanged": "all v11.1 acceptances + v12 single-CTA grammar per model + rollback snapshot"
     }
   }
 }

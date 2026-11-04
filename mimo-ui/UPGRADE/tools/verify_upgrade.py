@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Fail-closed verification of the Konkur-upgrade planning deliverable (v12.1)."""
+"""Fail-closed verification of the Konkur-upgrade planning deliverable (v12.2)."""
 from __future__ import annotations
 import csv, hashlib, json, re, sys
 from pathlib import Path
@@ -15,10 +15,10 @@ docs = ["README.md", "00_START_HERE.md", "01_CRAFT_ANYTHING_INSTALL.md",
         "13_DESIGN_ROUND_2.md", "14_DESIGN_ROUND_3.md", "15_DESIGN_ROUND_4.md",
         "16_DESIGN_ROUND_5.md", "17_DESIGN_ROUND_6.md",
         "18_DESIGN_ROUND_7.md", "20_DESIGN_ROUND_8.md", "21_DESIGN_ROUND_9.md", "22_DESIGN_ROUND_10.md", "23_DESIGN_ROUND_11.md", "24_DESIGN_ROUND_12.md", "wireframes.html"]
-csvs = {"UI_FIDELITY_RULES.csv": 42, "FEATURE_MAP.csv": 17, "EXAM_TYPES.csv": 11,
+csvs = {"UI_FIDELITY_RULES.csv": 43, "FEATURE_MAP.csv": 17, "EXAM_TYPES.csv": 11,
         "HADAF_TEMPLATES.csv": 7, "GAMIFICATION_MAP.csv": 13, "PHASES.csv": 8,
         "LEARNHARNESS_ACTIONS.csv": 32, "EVIDENCE_LEDGER.csv": 10, "OPEN_QUESTIONS.csv": 13,
-        "DESIGN_FEEDBACK.csv": 66, "SCOPE_DECISIONS.csv": 46,
+        "DESIGN_FEEDBACK.csv": 67, "SCOPE_DECISIONS.csv": 47,
         "AI_PANEL_SPEC.csv": 27, "EPM_MINOR_OPTIONS.csv": 7,
         "EXAM_SECTION_TEMPLATES.csv": 7,
         "MIMO_CODE_GEOMETRY.csv": 200, "MIMO_SCREENSHOT_CROSSWALK.csv": 14,
@@ -127,7 +127,8 @@ ck("design:build-tools", all((ROOT / "tools" / f).is_file() for f in
     "extract_mimo_nodes_v10.py", "build_design_v10.py", "design_v10_template.html", "finalize_v10.py",
     "design_v10_full.html", "build_design_v11.py", "design_v11_template.html", "finalize_v11.py",
     "design_v11_full.html", "build_design_v12.py", "design_v12_template.html", "finalize_v12.py",
-    "fix_design_v12_1.py", "design_v12_1_template.html"]),
+    "fix_design_v12_1.py", "design_v12_1_template.html", "build_exam_models_v12_2.py",
+    "design_v12_2_template.html", "finalize_v12_2.py"]),
    "reproducible extract -> build pipeline (v5..v11 archived + v12 current)")
 
 # ---- 14 Mimo reference screenshots (visual cross-check only) ----
@@ -442,7 +443,7 @@ ck("design:v12.1:row-click", all(x in dt for x in
 ck("design:v12.1:filters", dt.count('data-filter="') == 8 and "ehGroups" in dt
    and 'data-filter="all"' in dt and 'data-filter="5,6"' in dt,
    "8 filter chips wired to the 7 labelled sections")
-ck("design:v12.1:qbank", "var QTOTAL=QBANK.length,QI=0,QCHECKED=false,MARKS={};" in dt
+ck("design:v12.1:qbank", "var QTOTAL=QBANK.length,QI=0,QCHECKED=false,MARKS={},ANSWERS={};" in dt
    and dt.count('\n    ["') == 20 and "var i=1;i<=20;i++" in dt
    and 'q("#examStep").textContent="سؤال "+fa(QI+1)+" از "+fa(QTOTAL)' in dt,
    "20 distinct questions + one QTOTAL + palette of 20 (no more hardcoded 3-of-20)")
@@ -468,8 +469,60 @@ ck("scope:v12.1:catalogs", "F-66" in (ROOT / "CATALOGS/DESIGN_FEEDBACK.csv").rea
    and "F42" in (ROOT / "CATALOGS/UI_FIDELITY_RULES.csv").read_text(encoding="utf-8"),
    "bug-fix round recorded in feedback / decisions / fidelity rules")
 man121 = json.loads((ROOT / "MANIFEST.json").read_text(encoding="utf-8"))
-ck("manifest:v12.1", "v12.1" in man121["status"] and any("fix_design_v12_1.py" in c for c in man121["reproduce"]),
+ck("manifest:v12.1", ("v12.1" in man121["status"] or "v12.2" in man121["status"])
+   and "bugfixes_v12_1" in man121["design_round_12"]
+   and any("fix_design_v12_1.py" in c for c in man121["reproduce"]),
    "MANIFEST advertises the v12.1 fix pass + reproduce command")
+
+# ---- DESIGN v12.2: FOUR exam-page models + a new exam emblem ----
+spec122 = json.loads((D / "EXAM_PAGE_MODELS.json").read_text(encoding="utf-8"))
+geo122 = json.loads(re.search(r"<script>var GEO=(.*?);</script>", dt, re.S).group(1))
+eh122 = re.search(r'<section class="screen exv12" data-screen="exam-hub".*?</section>', dt, re.S).group(0)
+er122 = re.search(r'<section class="screen exv12" data-screen="exam-result".*?</section>', dt, re.S).group(0)
+ck("design:v12.2:models", spec122["round"] == "v12.2" and len(spec122["models"]) == 4
+   and dt.count('class="mf" data-exmodel=') == 4 and dt.count('data-open-model="') == 4
+   and "MODEL_BY_KIND" in dt and "applyExamModel" in dt,
+   "4 distinct exam-page models + reviewer picker")
+ck("design:v12.2:emblem", 'data-icon="ic_survey"' in eh122 and 'data-icon="ic_cap"' in er122
+   and 'data-icon="ic_mimo_mascot"' not in eh122 and 'data-icon="ic_mimo_mascot"' not in er122
+   and len(geo122["vectors"].get("ic_survey", {}).get("paths", [])) >= 20,
+   "Mimo mascot replaced by the APK's ic_survey quiz illustration + ic_cap")
+ck("design:v12.2:model-konkur", all(x in dt for x in
+   ["#ksStrip", "#ksQuick", "prevK", "nextK", "markK", "skipK", "recordAnswer", "updateStrip", "answeredCount"])
+   and "سؤال بعد" in dt and spec122["models"]["konkur"]["feedback"] is False,
+   "Konkur model: inline answer sheet + quick bubbles + real prev/next, no grading")
+ck("design:v12.2:model-practice", all(x in dt for x in
+   ["submitOrContinue", "btn_submit", "btn_continue_big", "nextQLabel", "exFeedback"])
+   and spec122["models"]["practice"]["feedback"] is True,
+   "practice model: exact Mimo SUBMIT -> feedback -> CONTINUE")
+ck("design:v12.2:model-analytical", all(x in dt for x in
+   ["maAnalysis", "submitA", "prevA", "nextA", "toggleAnalysis", "نقشهٔ ضعف"]),
+   "analytical model: feedback + live analysis + both nav directions")
+ck("design:v12.2:model-descriptive", all(x in dt for x in
+   ["mdAnswer", "mdCount", "swapD", "gradeD", 'data-kind="descriptive"', "تعویض سوال", "تصحیح دستی"])
+   and 'descriptive:{label:' in dt,
+   "descriptive model: written answer + تعویض سوال / تصحیح دستی")
+ck("design:v12.2:policy", "during:false" in dt and "during:true" in dt
+   and "keyDuring" in dt and "EXAM_KIND_BY_MODEL" in dt,
+   "per-kind answer-sheet / answer-key policy retained per model")
+ck("design:v12.2:contract", dt.count('class="cat-meta"') == 7
+   and dt.count('data-tab="') == 5 and "زمان ثابت ۲۷۰ دقیقه" in dt
+   and "M242 70 H280 Q312 70 312 102 V140" in dt
+   and dt.count('id="askAiBtn"') == 1 and dt.count('id="askAiResultBtn"') == 1
+   and dt.count('data-icon="ic_lock_alt_02"') == 1,
+   "four models did not break the accepted v11.1 / v12 contract")
+ck("docs:v12.2:log", "v12.2" in (ROOT / "24_DESIGN_ROUND_12.md").read_text(encoding="utf-8")
+   and "چهار مدل" in (ROOT / "24_DESIGN_ROUND_12.md").read_text(encoding="utf-8"),
+   "round-12 log documents the four models")
+ck("scope:v12.2:catalogs", "F-67" in (ROOT / "CATALOGS/DESIGN_FEEDBACK.csv").read_text(encoding="utf-8")
+   and "D47" in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encoding="utf-8")
+   and "F43" in (ROOT / "CATALOGS/UI_FIDELITY_RULES.csv").read_text(encoding="utf-8"),
+   "four-model round recorded in feedback / decisions / fidelity rules")
+man122 = json.loads((ROOT / "MANIFEST.json").read_text(encoding="utf-8"))
+ck("manifest:v12.2", "v12.2" in man122["status"]
+   and any("build_exam_models_v12_2.py" in c for c in man122["reproduce"])
+   and "EXAM_PAGE_MODELS.json" in man122["deliverables"].get("v12_exam_ui", ""),
+   "MANIFEST advertises v12.2 + its reproduce command")
 
 # ---- docs / catalogs ----
 ck("docs:v10:22", "DESIGN v10" in (ROOT / "22_DESIGN_ROUND_10.md").read_text(encoding="utf-8")
