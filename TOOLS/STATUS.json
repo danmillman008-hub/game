@@ -1,0 +1,67 @@
+{
+  "phase": "temporary analysis toolchain — isolated from mimo-ui/UPGRADE",
+  "branch": "arena/aebb90b7-game",
+  "isolation": {
+    "in_upgrade_zip": false,
+    "in_manifest": false,
+    "in_verify_upgrade_py": false,
+    "in_v12_drive_plan": false,
+    "in_design_index_html": false
+  },
+  "repos_in_separate_github_folder": {
+    "TOOLS/ghidra": {
+      "upstream": "https://github.com/NationalSecurityAgency/ghidra.git",
+      "branch": "master",
+      "pinned_commit": "4cfb27ded8c4d62ccf177e08fa7a3699cc672072",
+      "tree_files": 20655,
+      "tree_bytes_approx": 376438784,
+      "kind": "git submodule (full source tree at pinned commit)"
+    },
+    "TOOLS/rea": {
+      "upstream": "https://github.com/morluto/rea.git",
+      "branch": "main",
+      "pinned_commit": "71f680d7c1aa7a45ba0325fe87b104744b0c105f",
+      "tree_files": 7152,
+      "tree_bytes_approx": 105906176,
+      "kind": "git submodule (full source tree at pinned commit)"
+    }
+  },
+  "proxy_channels": {
+    "github_actions_workflow": ".github/workflows/mimo-re-toolchain.yml",
+    "github_actions_role": "downloads official Ghidra 12.2 release ZIP + JADX jar, fully installs Ghidra, runs analyzeHeadless on the original Mimo DEX, commits text evidence to ANALYSIS/GHIDRA",
+    "npm_registry": ["jadx-mcp@1.4.1", "apktool-jar@2.4.1", "@mishguru/jadx-node@3.1.0", "rea-agents@6.7.0"],
+    "pypi": ["jdk4py==25.0.2.1", "androguard==4.1.4"],
+    "blocked_from_sandbox": ["release-assets.githubusercontent.com", "objects.githubusercontent.com", "services.gradle.org", "downloads.gradle.org", "repo1.maven.org", "drive.google.com", "raw.githubusercontent.com", "uploads.github.com"]
+  },
+  "engines": {
+    "jadx_mcp_jar_bytes": 43756715,
+    "jadx_mcp_loaded_classes": 24022,
+    "jadx_mcp_loaded_methods": 129071,
+    "jadx_mcp_loaded_instructions": 7426450,
+    "jadx_mcp_decode_stats": "classes=24022, errors=0, warnings=0 (class-level); some Kotlin coroutine methods hit JADX DecodeException 'newPosition > limit' and are emitted as 'Method not decompiled' stubs — recorded honestly",
+    "apktool_jar_bytes": 17661172,
+    "jdk": "jdk4py 25.0.2.1 (java.compiler present, jdk.compiler/javac absent)",
+    "ghidra_release": "ghidra_12.2_PUBLIC_20261016.zip, 569712708 bytes, asset id 665189215",
+    "jadx_headless_mcp_jar": "v0.7.1, 42619858 bytes, asset id 571963366"
+  },
+  "original_drive_file": {
+    "folder_id": "1yU1PN1GhTZlDeu91H4FSS0JsOT5MjpxB",
+    "segments": [
+      {"name": "Mimo_9.35 (1).z01", "bytes": 52428800, "sha256": "1e3a41159ebe531121f0b04f146791fe900605c7ac15cc9cf54b1501d3b93b18"},
+      {"name": "Mimo_9.35 (1).z02", "bytes": 52428800, "sha256": "1ac22ab2c916f302d8ba0fd42317f1cb79ea53eb6045061d0a174993a634f539"},
+      {"name": "Mimo_9.35 (1).zip", "bytes": 31069368, "sha256": "91c670864fc66d852b371ed83c1f6d260ab4075c078030f74b29620807ffa2b7"}
+    ],
+    "combined_bytes": 135926968,
+    "zip_member": "Mimo_9.35 (1).apk",
+    "zip_member_bytes": 142353499,
+    "zip_member_crc32": "0x94bc6bf2",
+    "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+    "verification": "all 3 segment sha256 match Drive metadata; reassembled ZIP lists exactly one member whose CRC32 equals the CRC32 of the local APK; APK sha256 matches the previously audited hash"
+  },
+  "claims_not_made": [
+    "no VPN service was configured",
+    "no runtime/emulator execution or live server behaviour observed",
+    "no approval of any REVIEW answer",
+    "no new product structure or design code built"
+  ]
+}
