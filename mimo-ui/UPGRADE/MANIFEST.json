@@ -2,22 +2,22 @@
   "round": "konkur-upgrade-planning",
   "branch": "arena/aebb90b7-game",
   "date": "2026-11-04",
-  "status": "PLAN_ONLY + DESIGN v12.4 REVIEW (v12.3 rollback to v12.1 + extra exam buttons removed + one-chip timer)",
+  "status": "PLAN_ONLY + DESIGN v12.5 REVIEW (v12.3 RTL arrows + v12.4 cleanup kept; AI chip restored to its v12.1 place/style, manual timer minutes for EVERY exam kind, three exit options with a partial کارنامه)",
   "goal": "Upgrade Mimo 9.35 into an Iranian Konkur learning app with strict fidelity to Mimo UI/mechanism/navigation",
   "deliverables": {
     "persian_docs": 25,
     "csv_catalogs": 21,
     "wireframes_html": 2,
     "source_apps": 2,
-    "extracted_assets_files": 1947,
-    "total_bytes": 24324456,
+    "extracted_assets_files": 1950,
+    "total_bytes": 24833951,
     "craft_anything": "vendored docs + 33-id agent adapter + 13 evidence records",
     "verification": "PASS",
     "phases": 8,
     "phase_status": "P0..P4/P6/P7 PLANNED · P5 PARKED (counseling) · awaiting final design approval",
     "interactive_design_prototype": 1,
-    "verification_checks": 249,
-    "design_round": "v12.4 (REVIEW)",
+    "verification_checks": 259,
+    "design_round": "v12.5 (REVIEW)",
     "code_first_geometry": "DESIGN/CODE_GEOMETRY.json (46 vectors / 41 colors / 36 dims / 13 styles / 45 strings / 19 AXML layouts / 80 Compose path classes)",
     "mimo_reference_screenshots": 14,
     "learn_code_evidence": "DESIGN/LEARN_CODE_GEOMETRY.json (150 ARSC strings / 41 vectors / 16 AXML layouts / 1 nav graph / 15 real sections / 272 DEX classes / 68 colors / 62 dimens / 213 styles) + CATALOGS/MIMO_LEARN_SUBSCREENS.csv (868 rows)",
@@ -30,7 +30,7 @@
     "v9_changes": "re-reviewed node code; ONE straight vertical line (no curve/zigzag); corrected 7 code-derived numbers; real charged/mastered bolt vectors; linear unlocked state sequence",
     "v10_changes": "REVERTED v9 single straight line; restored original curved zigzag with real gaps; deeper DEX/test-tracks code review; corrected 2 wrong number attributions",
     "v11_content": "KONKUR_CURRICULUM.json / KONKUR_CURRICULUM.csv (12 courses x 5 chapters x 3 lessons = 12/60/180) + 10 fortnight dates 1 Aban..15 Esfand + 3 big Mimo-icon cards + My-status-only leaderboard + zero programming emblems",
-    "v12_exam_ui": "EXAM_UI_CODE_EVIDENCE.json + EXAM_PAGE_REFERENCES.json — v12.4: exam tool row reduced to پاسخبرگ / پاسخنامه only; X exits; end exam from پاسخبرگ; AI in پاسخنامه; one-chip timer with inline pause/play + stop; no radio circle; accepted v12.1 structure intact"
+    "v12_exam_ui": "EXAM_PAGE_REFERENCES.json + EXAM_UI_CODE_EVIDENCE.json — v12.5: THREE quiet chips (پاسخبرگ / پاسخنامه / توضیح با هوش مصنوعی, exactly the v12.1 style), no duplicate AI in #keySheet; one-chip timer with editable minutes in every exam kind (270 = preset only); #exitSheet with three options, real save/resume state and a partial درصد computed from answered-so-far; accepted v12.1 structure + v12.3 RTL arrows intact"
   },
   "source_hashes": {
     "Mimo_9.35": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
@@ -114,7 +114,10 @@
     "v12.3: cross-checked against mindskip/xzs (学之思) student exam page do.vue — clean question body, separate compact number/time bar, single submit, answers/解析 only after submit; used for understanding only, nothing copied",
     "v12.4: extra exam chips (AI / اتمام آزمون / خروج / توقف / تنظیم مجدد), the flag next to the timer, «رد کردن سؤال», the duplicate «زمان تنظیم نشده» line and the option radio circles were removed at the user's request",
     "v12.4: the timer is ONE chip — tap to set / pause / resume; while running it grows an inline pause-play + stop pair next to the countdown, no separate control chips",
-    "v12.4: options start with their number (۱.) and the whole card changes colour on selection; AI explanation relocated into the پاسخنامه bottom sheet"
+    "v12.4: options start with their number (۱.) and the whole card changes colour on selection; AI explanation relocated into the پاسخنامه bottom sheet",
+    "v12.5: the AI explanation chip was restored as the third exam-body .lb-chip in its exact v12.1/v12.3 position and style (ic_magic_wand 16dp mono); the v12.4 duplicate inside #keySheet was removed; the one-AI-button rule still holds",
+    "v12.5: #timerMinutes is editable in EVERY exam kind — no readOnly, no readonly attribute, no max ceiling and no «غیرقابل تغییر» anywhere; 270 is only the comprehensive default/preset, the six quick presets stay and 270:00 renders correctly",
+    "v12.5: #exitSheet has three options — خروج و ذخیره now snapshots the question index, answers, marks and timer and can be resumed later (finishing after resume yields the full کارنامه), ادامهٔ آزمون is unchanged, and پایان آزمون و دیدن کارنامه / خروج و دیدن درصد shows a partial percentage computed only from answers given so far"
   ],
   "reproduce": [
     "python3 tools/extract_source_apps.py <google_drive_dir> .",
@@ -141,7 +144,9 @@
     "python3 tools/build_exam_v12_3.py .",
     "python3 tools/finalize_v12_3.py .",
     "python3 tools/build_exam_v12_4.py .",
-    "python3 tools/finalize_v12_4.py ."
+    "python3 tools/finalize_v12_4.py .",
+    "python3 tools/build_exam_v12_5.py .",
+    "python3 tools/finalize_v12_5.py ."
   ],
   "limitations": [
     "no runtime/device/screenshots",
@@ -487,7 +492,7 @@
     "final_approval": "PENDING — no product implementation until user says the design is final"
   },
   "design_round_12": {
-    "status": "DESIGN v12 · REVIEW — superseded by v12.1 fixes, the v12.3 rollback and the v12.4 button cleanup (CURRENT)",
+    "status": "DESIGN v12 · REVIEW — superseded by v12.1 fixes, the v12.3 rollback, the v12.4 button cleanup and the v12.5 user corrections (CURRENT)",
     "trigger": "user: پروتوتایپ بخش آزمون خیلی بد و جدا از اپلیکیشن است، شبیهترش کن به پروتوتایپ اصلی میمو؛ دکمهٔ سؤال بعدی/قبلی را اشتباه گذاشتی؛ ساختار دکمهها و بقیه را از روی اپ اصلی بساز؛ اجازهٔ تغییرات زیاد و حتی ساختارشکنی (نهایت برمیگردیم عقب)",
     "method": "CODE_FIRST / decoded APK layouts, dimens, colors, styles, strings; screenshots VISUAL_CROSSCHECK_ONLY",
     "evidence_file": "DESIGN/EXAM_UI_CODE_EVIDENCE.json",
@@ -580,6 +585,31 @@
       "ai": "moved into #keySheet (پاسخنامه); #askAiResultBtn unchanged",
       "tests": "check_v12_4.js (132 checks / 0 errors) + verify_upgrade.py PASS 249/249",
       "unchanged": "all v11.1 acceptances + v12.1 bug fixes + v12.3 RTL arrows + rollback snapshots"
+    },
+    "v12_5_corrections": {
+      "status": "APPLIED, awaiting final approval",
+      "trigger": "user: فقط اون گزینه توضیح با هوش مصنوعی رو به استباه حزف کردی دقیقا جایی که بود قبلا … پاسخبرگ و پاسخنامه هم کنار اون … مثل قبل / اون مدت دقیقا رو فابل تغییر بزاری … در کل در همه ازمونها قابل زمان دادن دستی / یه گزینه پایان آزمون و دیدن کارنامه … گزینه سوم / در خروج و ذخیره تا جایی که مونده … کارنامه دربیاره و در خروج و دیدن درصد تا جایی که زده",
+      "script": "tools/build_exam_v12_5.py (runs on tools/design_v12_4_template.html)",
+      "restored": [
+        "third .lb-chip #askAiBtn (ic_magic_wand / 16dp / mono, beside پاسخبرگ and پاسخنامه)",
+        "editable #timerMinutes in every exam kind, 270 as comprehensive preset only",
+        "editable 270:00 timer rendering (fmt 3-digit fix)"
+      ],
+      "removed": [
+        "duplicate #askAiBtn inside #keySheet",
+        "readOnly=true",
+        "غیرقابل تغییر",
+        "max=300 ceiling",
+        "stale fixed-270 data-code / footer / hub labels"
+      ],
+      "added": [
+        "#exitSaveBtn real save/resume snapshot (ANSWERS / CHECKED / SAVED / timer)",
+        "#resumeBar + #resumeBtn in exam-hub",
+        "#exitFinishBtn third exit option (پایان آزمون و دیدن کارنامه / خروج و دیدن درصد)",
+        "score() + renderReport(partial) + #resPartial / dynamic result fields"
+      ],
+      "tests": "check_v12_5.js (150 checks / 0 errors) + verify_upgrade.py PASS 259/259 + diag12.js 185 clicks / 0 errors",
+      "unchanged": "all v11.1 acceptances + v12.1 bug fixes + v12.3 RTL arrows + v12.4 removals (except AI) + rollback snapshots"
     }
   }
 }

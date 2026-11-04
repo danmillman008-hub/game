@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>طرح رابط کاربری v12.4 — حذف دکمههای اضافی صفحهٔ آزمون + تایمر تکدکمهای (Design Review)</title>
+<title>طرح رابط کاربری v12.5 — بازگشت چیپ AI + مدت دستی در همهٔ آزمونها + گزینهٔ سوم خروج و کارنامه (Design Review)</title>
 <style>
 :root{
 --bg:#F6F7FB;
@@ -626,6 +626,13 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
 .exv12 .lb-tools{display:flex;flex-wrap:wrap;gap:6px;margin:18px 0 4px;padding-top:14px;border-top:1px solid var(--line)}
 .exv12 .lb-chip{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);background:var(--card);color:var(--text-weak);border-radius:999px;padding:5px 10px;font:400 11px/1.3 Tahoma,system-ui,sans-serif}
 .exv12 .lb-chip:hover{border-color:var(--primary);color:var(--primary)}
+/* v12.5 · three stacked exit choices + the hidden "resume saved exam" bar */
+#exitSheet .exit-actions{flex-direction:column;align-items:stretch;gap:8px}
+#exitSheet .exit-actions .btn{width:100%;text-align:center;padding:9px 13px}
+#exitSheet .exit-actions small{display:block;font:400 10px/1.4 Tahoma,system-ui,sans-serif;color:var(--text-weak);margin-top:2px}
+.exv12 .resume-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:0 14px 10px;padding:10px 12px;border:1px solid var(--line2);border-radius:12px;background:var(--card);font:400 11px/1.5 Tahoma,system-ui,sans-serif}
+.exv12 .resume-bar .btn{white-space:nowrap}
+.exv12 .screen [hidden],.exv12 [hidden]{display:none!important}
 /* interaction_keyboard_view.xml : 1dp border + 48dp squares + FULL-WIDTH primary CTA */
 .exv12 .lk{flex:0 0 auto;background:var(--card);border-top:1px solid var(--line);padding:10px 16px 8px;display:flex;flex-direction:column;gap:6px}
 .exv12 .lk-row{display:flex;align-items:center;gap:10px}
@@ -684,8 +691,8 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
 <body>
 <header class="top">
   <div>
-    <h1>طرح رابط کاربری — دور دوازدهم <span class="ver">DESIGN v12.4 · REVIEW</span></h1>
-    <p>بازآفرینی ۱۰۰٪ بخشهای اصلی میمو <b>از روی کد/مهندسی معکوس</b> · <b>دور دوازدهم:</b> سطوح آزمون از روی لایههای واقعی میمو بازسازی شدند: <code>chapter_toolbar.xml</code> (X + نوار پیشرفت ۶dp + پرچم)، <code>lesson_interactive_multiplechoice_fragment.xml</code>، <code>choice_list_item.xml</code> و <code>interaction_keyboard_view.xml</code> (<b>یک دکمهٔ بنفش تمامعرض CONTINUE</b> + دکمههای مربعی ۴۸dp). دو دکمهٔ هموزن «سؤال قبل / سؤال بعد» و نوار ۷ دکمهای حذف شدند؛ پاسخبرگ، پاسخنامه، AI و تایمر در ردیف چیپهای آرام و پاسخنامهٔ تشریحی بهصورت پنل feedback میمو نمایش داده میشوند. معماری اورجینال قوسدار، ۵ تب، ۷ بخش آزمون، ۲۷۰ دقیقهٔ ثابت و قفلها دستنخوردهاند. اسکرینشاتها فقط چک بصری.</p>
+    <h1>طرح رابط کاربری — دور دوازدهم <span class="ver">DESIGN v12.5 · REVIEW</span></h1>
+    <p>بازآفرینی ۱۰۰٪ بخشهای اصلی میمو <b>از روی کد/مهندسی معکوس</b> · <b>دور دوازدهم:</b> سطوح آزمون از روی لایههای واقعی میمو بازسازی شدند: <code>chapter_toolbar.xml</code> (X + نوار پیشرفت ۶dp + پرچم)، <code>lesson_interactive_multiplechoice_fragment.xml</code>، <code>choice_list_item.xml</code> و <code>interaction_keyboard_view.xml</code> (<b>یک دکمهٔ بنفش تمامعرض CONTINUE</b> + دکمههای مربعی ۴۸dp). دو دکمهٔ هموزن «سؤال قبل / سؤال بعد» و نوار ۷ دکمهای حذف شدند؛ چیپهای «پاسخبرگ»، «پاسخنامه» و «توضیح با هوش مصنوعی» دقیقاً کنار هم در بدنهٔ آزموناند و پاسخنامهٔ تشریحی بهصورت پنل feedback میمو نمایش داده میشود. معماری اورجینال قوسدار، ۵ تب، ۷ بخش آزمون، ۲۷۰ دقیقه بهعنوان پیشفرضِ قابل تغییر و قفلها دستنخوردهاند. اسکرینشاتها فقط چک بصری.</p>
   </div>
   <div style="display:flex;gap:7px;flex-wrap:wrap">
     <button class="btn" id="themeBtn">🌙 حالت شب</button>
@@ -896,9 +903,10 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
           <button type="button" class="chip" data-filter="4">تحلیلی</button>
           <button type="button" class="chip" data-filter="5,6">جمع بندی</button>
         </div>
+        <div class="resume-bar" id="resumeBar" hidden data-code="v12.5 · خروج و ذخیره → resume the same exam from the saved question"><span id="resumeText">آزمون ذخیرهشده</span><button class="btn primary" id="resumeBtn">ادامهٔ آزمون ذخیرهشده</button></div>
         <div class="sec">۱ · آزمونهای جامع</div>
-        <div class="cat-meta">قالب ثابت: <b>زمان ثابت ۲۷۰ دقیقه</b> · ۲۰۰–۴۰۰ سؤال · نمرهٔ منفی ⅓ · «زمان خالص آزمون» · پاسخنامه در پایان آزمون باز میشود</div>
-        <div class="grid3"><div><div class="nodek" data-exam="آزمون جامع کنکور" data-kind="comprehensive"><span data-icon="ic_trophy" data-size="28" data-mono="1"></span><span class="mini">۲۰۰ سؤال</span></div><div class="label">آزمون جامع<br>کنکور</div></div><div><div class="nodek" data-exam="آزمون جامع تجربی" data-kind="comprehensive"><span data-icon="ic_trophy" data-size="28" data-mono="1"></span><span class="mini">زمان ثابت</span></div><div class="label">جامع<br>تجربی</div></div><div><div class="nodek" data-exam="آزمون جامع ریاضی" data-kind="comprehensive"><span data-icon="ic_trophy" data-size="28" data-mono="1"></span><span class="mini">زمان ثابت</span></div><div class="label">جامع<br>ریاضی</div></div></div>
+        <div class="cat-meta">قالب: <b>زمان ثابت ۲۷۰ دقیقه</b> بهعنوان پیشفرض (مدت در تنظیم زمان، برای همهٔ آزمونها قابل تغییر است) · ۲۰۰–۴۰۰ سؤال · نمرهٔ منفی ⅓ · «زمان خالص آزمون» · پاسخنامه در پایان آزمون باز میشود</div>
+        <div class="grid3"><div><div class="nodek" data-exam="آزمون جامع کنکور" data-kind="comprehensive"><span data-icon="ic_trophy" data-size="28" data-mono="1"></span><span class="mini">۲۰۰ سؤال</span></div><div class="label">آزمون جامع<br>کنکور</div></div><div><div class="nodek" data-exam="آزمون جامع تجربی" data-kind="comprehensive"><span data-icon="ic_trophy" data-size="28" data-mono="1"></span><span class="mini">قابل تغییر</span></div><div class="label">جامع<br>تجربی</div></div><div><div class="nodek" data-exam="آزمون جامع ریاضی" data-kind="comprehensive"><span data-icon="ic_trophy" data-size="28" data-mono="1"></span><span class="mini">قابل تغییر</span></div><div class="label">جامع<br>ریاضی</div></div></div>
         <div class="sec">۲ · آزمونهای زماندار</div>
         <div class="cat-meta">قالب: <b>مدت قابلتنظیم</b> (کلیک روی تایمر داخل آزمون ← عدد ← شروع) · ۵–۴۰۰ سؤال · پاسخبرگ + پاسخنامه حین آزمون</div>
         <div class="grid3"><div><div class="nodek" data-exam="آزمون زماندار ۳۰ دقیقه" data-kind="timed"><span data-icon="ic_clock_black_24dp" data-size="28" data-mono="1"></span><span class="mini">۳۰ د</span></div><div class="label">زماندار<br>۳۰ دقیقه</div></div><div><div class="nodek" data-exam="آزمون سرعتی" data-kind="timed"><span data-icon="ic_clock_black_24dp" data-size="28" data-mono="1"></span><span class="mini">۱۰ د</span></div><div class="label">سرعتی<br>۱۰ دقیقه</div></div><div><div class="nodek" data-exam="پومودورو تست" data-kind="timed"><span data-icon="ic_clock_black_24dp" data-size="28" data-mono="1"></span><span class="mini">۲۵ د</span></div><div class="label">پومودورو<br>تست</div></div></div>
@@ -926,7 +934,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
         <div class="ln" data-code="chapter_toolbar.xml · lesson_progress_navbar_height=52dp · pb_chapter=6dp">
           <button class="ln-x" data-sheet="exitSheet" aria-label="خروج"><span data-icon="ic_close" data-size="24" data-mono="1"></span></button>
           <div class="ln-mid"><b id="examTitle">آزمون جامع کنکور</b><div class="ln-prog" data-code="ProgressBarChapter / progress_bar_chapter.xml"><i id="examProgress" style="width:5%"></i></div></div>
-          <div class="timerchip ln-timer" id="timerWrap" data-code="timer ONLY inside exam · ONE chip: tap to set / pause / resume · comprehensive fixed 270 min">
+          <div class="timerchip ln-timer" id="timerWrap" data-code="timer ONLY inside exam · ONE chip: tap to set / pause / resume · manual minutes for EVERY exam kind · 270 = comprehensive preset only">
             <button class="tm-main" id="timerChip" aria-label="تنظیم زمان"><span data-icon="ic_clock_black_24dp" data-size="16" data-mono="1"></span><span id="timerLabel">تنظیم زمان</span></button>
             <span class="tm-controls" id="timerControls" hidden>
               <button class="tm-btn" id="timerPause" aria-label="توقف تایمر"><span class="tm-bars"></span><span class="tm-play" data-icon="ic_play" data-size="12" data-mono="1" hidden></span></button>
@@ -953,9 +961,10 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
           </div>
           <div id="examFinished"></div>
           <div class="hint" id="policyHint" hidden></div>
-          <div class="lb-tools" data-code="only پاسخبرگ / پاسخنامه chips remain · exit via chapter-toolbar X · end exam via پاسخبرگ · AI via پاسخنامه">
+          <div class="lb-tools" data-code="v12.5 · THREE quiet chips exactly as v12.1: پاسخبرگ / پاسخنامه / توضیح با هوش مصنوعی · exit via chapter-toolbar X · end exam via پاسخبرگ or exitSheet">
             <button class="lb-chip" id="answerSheetBtn" data-sheet="paletteSheet"><span data-icon="ic_list_bulleted" data-size="16" data-mono="1"></span>پاسخبرگ</button>
             <button class="lb-chip" id="answerKeyBtn" data-sheet="keySheet"><span data-icon="ic_file" data-size="16" data-mono="1"></span>پاسخنامه</button>
+            <button class="lb-chip" id="askAiBtn"><span data-icon="ic_magic_wand" data-size="16" data-mono="1"></span>توضیح با هوش مصنوعی</button>
           </div>
         </div>
 
@@ -978,16 +987,17 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
         </div>
         <div class="rf-hero" data-code="chapter finished celebration · full-width CTA at bottom">
           <div class="rf-art" data-code="res/drawable/ic_cap.xml"><span data-icon="ic_cap" data-size="52" data-mono="1"></span></div>
-          <h2>آزمون تمام شد!</h2>
-          <p>۳ سؤال نیاز به مرور دارد. پاسخنامهٔ تشریحی آماده است.</p>
+          <h2 id="resTitle">آزمون تمام شد!</h2>
+          <p id="resSub">۳ سؤال نیاز به مرور دارد. پاسخنامهٔ تشریحی آماده است.</p>
         </div>
         <div class="card">
           <b>نتیجه و تحلیل</b>
-          <div class="kv"><span>درصد با نمرهٔ منفی</span><span>۶۸٪</span></div>
-          <div class="kv"><span>اگر غلطها نزده میذاشتی</span><span>۷۴٪</span></div>
-          <div class="kv"><span>غلط / نزده</span><span>۴ / ۵</span></div>
-          <div class="kv"><span>رتبه / تراز</span><span>۱۲۴۰ / ۶۲۰۰</span></div>
+          <div class="kv"><span id="resPctLabel">درصد با نمرهٔ منفی</span><span id="resPct">۶۸٪</span></div>
+          <div class="kv"><span>اگر غلطها نزده میذاشتی</span><span id="resPctNoNeg">۷۴٪</span></div>
+          <div class="kv"><span>غلط / نزده</span><span id="resWrongBlank">۴ / ۵</span></div>
+          <div class="kv"><span>رتبه / تراز</span><span id="resRank">۱۲۴۰ / ۶۲۰۰</span></div>
         </div>
+        <div class="banner warn" id="resPartial" hidden data-code="v12.5 · خروج و دیدن درصد: computed only from answered-so-far"></div>
         <div class="card">
           <b>صورت اشتباهات (منتقلشونده به AI)</b>
           <div class="wrong">سؤال ۲ · زیست / سمها — صورت سؤال: «کدام گزینه دربارهٔ سمها درست است؟» · پاسخ شما: گزینهٔ ۴ · پاسخ صحیح: گزینهٔ ۱</div>
@@ -1045,8 +1055,8 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
 
       <!-- ============ sheets & modal ============ -->
       <div class="sheet" id="timerSheet"><div class="handle"></div><h4>تنظیم زمان آزمون</h4>
-        <div class="field"><label>مدت (دقیقه)</label><input type="number" id="timerMinutes" min="1" max="300" value="30"></div>
-        <p class="note" id="timerFixedHint">عدد دلخواه بین ۱ تا ۳۰۰ دقیقه.</p>
+        <div class="field"><label>مدت (دقیقه)</label><input type="number" id="timerMinutes" min="1" step="1" value="270" inputmode="numeric" data-code="v12.5 · editable in EVERY exam kind · 270 = comprehensive preset only"></div>
+        <p class="note" id="timerHint">مدت دلخواه به دقیقه — در همهٔ آزمونها، حتی جامع، قابل تغییر است.</p>
         <div class="krow" style="margin:0 0 10px"><button class="mini-btn" data-min="15">۱۵</button><button class="mini-btn" data-min="30">۳۰</button><button class="mini-btn" data-min="45">۴۵</button><button class="mini-btn" data-min="60">۶۰</button><button class="mini-btn" data-min="90">۹۰</button><button class="mini-btn" data-min="120">۱۲۰</button></div>
         <div class="krow" style="margin:0"><button class="btn primary" id="timerStart">شروع آزمون ⏱</button><button class="btn" data-close="timerSheet">انصراف</button></div>
       </div>
@@ -1067,9 +1077,9 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
           <div>سؤال ۳ ← <b>گزینهٔ ۲</b> · پاسخ شما: ۲ ✓</div><div>سؤال ۴ ← <b>گزینهٔ ۴</b> · نزده</div>
           <div>… تا سؤال ۲۰ · کلید نسخهٔ </div>
         </div>
-        <div class="krow" style="margin:12px 0 0"><button class="btn primary" data-close="keySheet">بستن</button><button class="btn" id="askAiBtn"><span data-icon="ic_magic_wand" data-size="14" data-mono="1"></span>توضیح با هوش مصنوعی</button></div>
+        <div class="krow" style="margin:12px 0 0"><button class="btn primary" data-close="keySheet">بستن</button></div>
       </div>
-      <div class="sheet" id="exitSheet"><div class="handle"></div><h4>خروج از آزمون؟</h4><p class="note">پاسخهای تا این لحظه ذخیره میشوند.</p><div class="krow" style="margin:0"><button class="btn primary" data-close="exitSheet" data-nav="exam-hub">خروج و ذخیره</button><button class="btn" data-close="exitSheet">ادامهٔ آزمون</button></div></div>
+      <div class="sheet" id="exitSheet"><div class="handle"></div><h4>خروج از آزمون؟</h4><p class="note">پاسخها تا این لحظه ذخیره میشوند. «خروج و ذخیره» بعداً از همان سؤال قابل ادامه است و در انتها کارنامه میدهد؛ گزینهٔ سوم همانجا درصد پاسخهای زدهشده را نشان میدهد.</p><div class="krow exit-actions" style="margin:0"><button class="btn primary" id="exitSaveBtn" data-close="exitSheet" data-nav="exam-hub">خروج و ذخیره</button><button class="btn" data-close="exitSheet">ادامهٔ آزمون</button><button class="btn" id="exitFinishBtn">پایان آزمون و دیدن کارنامه<small>خروج و دیدن درصد تا همینجا</small></button></div></div>
       <div class="sheet" id="historySheet"><div class="handle"></div><h4>تاریخچهٔ گفتگوها</h4><div id="histList"></div><div class="krow" style="margin:10px 0 0"><button class="btn primary" id="newChat">＋ گفتگوی تازه</button><button class="btn" data-close="historySheet">بستن</button></div></div>
       <div class="sheet mimo" id="playgroundSheet"><div class="handle"></div>
         <div style="display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:14px"><span style="position:absolute;left:0;cursor:pointer" data-close="playgroundSheet" data-icon="ic_close" data-size="22" data-mono="1"></span><b style="font:700 18px/1 system-ui,sans-serif">Create Playground</b></div>
@@ -1190,7 +1200,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
 </div>
 
 <footer class="foot-note">
-⚠️ این <b>طرح دور دوازدهم v12.4</b> است، نه محصول. گرههای مسیر یادگیری مستقیماً از <code>NODE_CODE_GEOMETRY.json</code> (جداول ARSC، <code>pathData</code>، شِیپها، <code>test-tracks.json</code> و ۹۲ کلاس PathMap DEX) رندر شدند؛ ۱۴ اسکرینشات فقط <b>چک بصری</b>اند. روتین روزانه و ایدهٔ امتیازدهیاش بهکل حذف شد، دیکته حذف شد، یادداشتهای توضیحی داخل UI پاک شدند و ظاهر آزمونها فقط با آیکون/رنگ میمو نزدیکتر شد. در دور دهم درخواست خط صاف پس گرفته شد و <b>معماری اورجینال قوسدار</b> با کاوش عمیقتر کد بازسازی شد. در دور یازدهم محتوای لیدربورد/مسیرها/کورسها کنکوری و بدون نشانهای برنامهنویسی شد. در دور دوازدهم سطوح آزمون با معماری واقعی صفحهٔ درس/کوییز میمو هماهنگ شدند. <b>v12.3:</b> چهارمدل v12.2 بهدلیل قاتیشدن پاسخبرگ با بدنهٔ سؤال <b>رد و به همان ساختار v12.1 برگردانده شد</b>؛ پاسخبرگ و پاسخنامه همچنان <b>کشوی پایین صفحه</b>اند، و فلشها در RTL اصلاح شدند (بعدی ←، قبلی/بازگشت →). <b>v12.4:</b> چیپهای «توضیح با هوش مصنوعی / اتمام آزمون / خروج / توقف / تنظیم مجدد»، پرچم کنار تایمر، «رد کردن سؤال»، متن تکراری «زمان تنظیم نشده» و دایرهٔ رادیویی گزینهها حذف شدند؛ تایمر حالا <b>یک دکمهٔ واحد</b> است که کنار زمانش علامت توقف/پلی و استاپ میگیرد. نسخههای <b>DESIGN v6</b> و <b>DESIGN v7</b> بایگانی حسابرسیاند. «وارد کردن کلید API» فقط یک یادداشت است و هیچ صفحۀ تنظیماتی طراحی نشده. هیچ کد محصولی نوشته نشده است.
+⚠️ این <b>طرح دور دوازدهم v12.5</b> است، نه محصول. گرههای مسیر یادگیری مستقیماً از <code>NODE_CODE_GEOMETRY.json</code> (جداول ARSC، <code>pathData</code>، شِیپها، <code>test-tracks.json</code> و ۹۲ کلاس PathMap DEX) رندر شدند؛ ۱۴ اسکرینشات فقط <b>چک بصری</b>اند. روتین روزانه و ایدهٔ امتیازدهیاش بهکل حذف شد، دیکته حذف شد، یادداشتهای توضیحی داخل UI پاک شدند و ظاهر آزمونها فقط با آیکون/رنگ میمو نزدیکتر شد. در دور دهم درخواست خط صاف پس گرفته شد و <b>معماری اورجینال قوسدار</b> با کاوش عمیقتر کد بازسازی شد. در دور یازدهم محتوای لیدربورد/مسیرها/کورسها کنکوری و بدون نشانهای برنامهنویسی شد. در دور دوازدهم سطوح آزمون با معماری واقعی صفحهٔ درس/کوییز میمو هماهنگ شدند. <b>v12.3:</b> چهارمدل v12.2 بهدلیل قاتیشدن پاسخبرگ با بدنهٔ سؤال <b>رد و به همان ساختار v12.1 برگردانده شد</b>؛ پاسخبرگ و پاسخنامه همچنان <b>کشوی پایین صفحه</b>اند، و فلشها در RTL اصلاح شدند (بعدی ←، قبلی/بازگشت →). <b>v12.4:</b> چیپهای «توضیح با هوش مصنوعی / اتمام آزمون / خروج / توقف / تنظیم مجدد»، پرچم کنار تایمر، «رد کردن سؤال»، متن تکراری «زمان تنظیم نشده» و دایرهٔ رادیویی گزینهها حذف شدند؛ تایمر حالا <b>یک دکمهٔ واحد</b> است که کنار زمانش علامت توقف/پلی و استاپ میگیرد. <b>v12.5:</b> چیپ «توضیح با هوش مصنوعی» دقیقاً به همان جایگاه و استایل قبل، کنار «پاسخبرگ / پاسخنامه» برگشت و کپی اضافهٔ داخل پاسخنامه حذف شد؛ مدت آزمون در <b>همهٔ</b> آزمونها (حتی جامع ۲۷۰ دقیقه) دستی و قابل تغییر است؛ کشوی خروج گزینهٔ سوم «پایان آزمون و دیدن کارنامه / خروج و دیدن درصد» گرفت که درصد پاسخهای زدهشده تا همان لحظه را نشان میدهد، و «خروج و ذخیره» پیشرفت را نگه میدارد تا بعداً ادامه شود و در پایان کارنامه بدهد. نسخههای <b>DESIGN v6</b> و <b>DESIGN v7</b> بایگانی حسابرسیاند. «وارد کردن کلید API» فقط یک یادداشت است و هیچ صفحۀ تنظیماتی طراحی نشده. هیچ کد محصولی نوشته نشده است.
 </footer>
 <div class="toast" id="toast"></div>
 
@@ -1292,9 +1302,13 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
   }
   /* v12.1 B2: the WHOLE Mimo list row is clickable, not just the 44dp icon */
   function openExam(n){
+    if(SAVED&&SAVED.exam===n.dataset.exam){resumeExam();return}
     EXAM_KIND=n.dataset.kind||"normal";q("#examTitle").textContent=n.dataset.exam;
-    QI=0;MARKS={};q("#examFinished").innerHTML="";resetOptions();renderQuestion();
+    QI=0;MARKS={};ANSWERS={};CHECKED={};q("#examFinished").innerHTML="";resetOptions();renderQuestion();
     T.state="idle";clearInterval(T.timer);T.timer=null;render();
+    /* 270 is a preset, NOT a lock: the same field stays editable for every kind */
+    q("#timerMinutes").value=EXAM_KIND==="comprehensive"?270:30;
+    q("#timerMinutes").readOnly=false;
     applyPolicy();go("exam-run");toast("وارد «"+n.dataset.exam+"» شدید — "+(POLICY[EXAM_KIND]||POLICY.normal).label);
   }
   var ehRows=qa('[data-screen="exam-hub"] .grid3 > div');
@@ -1326,10 +1340,10 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
   });
   applyPolicy();
 
-  /* ---------- timer state machine · v12.4: ONE chip, no extra control chips ---------- */
+  /* ---------- timer state machine · v12.5: ONE chip, manual minutes for EVERY exam kind ---------- */
   var T={state:"idle",remaining:0,total:0,timer:null,endAt:0};
   var wrap=q("#timerWrap"),chip=q("#timerChip"),label=q("#timerLabel"),ctl=q("#timerControls");
-  function fmt(s){var m=Math.floor(s/60),x=s%60;return fa(("0"+m).slice(-2))+":"+fa(("0"+x).slice(-2))}
+  function fmt(s){var m=Math.floor(s/60),x=s%60;return fa(m>=100?String(m):("0"+m).slice(-2))+":"+fa(("0"+x).slice(-2))}
   function pauseOrResume(){
     if(T.state==="running"){T.remaining=Math.max(0,Math.ceil((T.endAt-Date.now())/1000));T.state="paused";clearInterval(T.timer);T.timer=null;toast("تایمر متوقف شد")}
     else if(T.state==="paused"){T.endAt=Date.now()+T.remaining*1000;T.state="running";T.timer=setInterval(tick,250);toast("ادامهٔ تایمر")}
@@ -1348,34 +1362,39 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
     } else if(T.state==="finished"){label.textContent=fmt(0);wrap.classList.add("finished");ctl.hidden=true}
   }
   function tick(){if(T.state!=="running")return;T.remaining=Math.max(0,Math.ceil((T.endAt-Date.now())/1000));if(T.remaining===0)finishExam("زمان تمام شد (ثبت خودکار)");render()}
-  function finishExam(reason){
+  function finishExam(reason,partial){
     T.state="finished";clearInterval(T.timer);T.timer=null;
     q("#examFinished").innerHTML='<div class="banner warn">'+reason+' — گزینهها قفل و پاسخها ثبت شدند.</div>';
     qa(".opt").forEach(function(o){o.style.pointerEvents="none";o.style.opacity=".55"});
-    go("exam-result");render();
+    /* the exam is over: no saved run is left behind, the کارنامه is the result screen */
+    SAVED=null;q("#resumeBar").hidden=true;
+    go("exam-result");render();renderReport(!!partial);
     var p=POLICY[EXAM_KIND]||POLICY.normal;
-    if(!p.during){q("#keySheet").classList.add("on");toast("پایان آزمون: صفحهٔ پاسخنامه باز شد")}
+    if(partial){toast("کارنامهٔ تا این لحظه — درصد پاسخهای زدهشده")}
+    else if(!p.during){q("#keySheet").classList.add("on");toast("پایان آزمون: صفحهٔ پاسخنامه باز شد")}
     else toast("آزمون به پایان رسید — پاسخبرگ و پاسخنامه آمادهاند");
   }
   chip.addEventListener("click",function(){
     if(T.state==="running"||T.state==="paused"){pauseOrResume();return}
     q("#timerSheet").classList.add("on");T.state="setting";
-    if(EXAM_KIND==="comprehensive"){q("#timerMinutes").value=270;q("#timerMinutes").readOnly=true;q("#timerFixedHint").textContent="زمان ثابت ۲۷۰ دقیقه (آزمون جامع) — غیرقابل تغییر"}
-    else{q("#timerMinutes").readOnly=false;q("#timerFixedHint").textContent="عدد دلخواه بین ۱ تا ۳۰۰ دقیقه"}
+    /* v12.5: manual minutes in EVERY exam kind — the field is never locked.
+       270 is only the comprehensive preset, assigned once in openExam(). */
+    var fld=q("#timerMinutes");fld.readOnly=false;fld.removeAttribute("readonly");
+    q("#timerHint").textContent="مدت دلخواه به دقیقه — در همهٔ آزمونها قابل تغییر است"+(EXAM_KIND==="comprehensive"?" (پیشفرض جامع: ۲۷۰ دقیقه)":"");
     render();
   });
   qa("[data-min]").forEach(function(b){b.addEventListener("click",function(){q("#timerMinutes").value=b.dataset.min;qa("[data-min]").forEach(function(x){x.classList.remove("on")});b.classList.add("on")})});
   q("#timerStart").addEventListener("click",function(){
-    var m=parseInt(q("#timerMinutes").value,10);if(!m||m<1||m>300){toast("عددی بین ۱ تا ۳۰۰ دقیقه وارد کنید");return}
+    var m=parseInt(q("#timerMinutes").value,10);if(!m||m<1){toast("مدت آزمون را به دقیقه وارد کنید");return}
     T.total=m*60;T.remaining=T.total;T.endAt=Date.now()+T.total*1000;T.state="running";
     clearInterval(T.timer);T.timer=setInterval(tick,250);
-    q("#timerSheet").classList.remove("on");q("#examFinished").innerHTML="";resetOptions();
+    q("#timerSheet").classList.remove("on");q("#examFinished").innerHTML="";resetOptions();restoreAnswer();
     toast("شروع شد: "+fa(m)+" دقیقه معکوس");render();
   });
   q("#timerPause").addEventListener("click",function(e){e.stopPropagation();pauseOrResume()});
   q("#timerReset").addEventListener("click",function(e){
     e.stopPropagation();clearInterval(T.timer);T.timer=null;T.state="idle";T.remaining=0;T.total=0;
-    q("#examFinished").innerHTML="";resetOptions();q("#timerSheet").classList.remove("on");
+    q("#examFinished").innerHTML="";resetOptions();restoreAnswer();q("#timerSheet").classList.remove("on");
     toast("تایمر پاک شد");render();
   });
   function resetOptions(){qa(".opt").forEach(function(o){o.style.pointerEvents="";o.style.opacity="";o.classList.remove("on","correct","wrong")})}
@@ -1407,6 +1426,9 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
   ];
   var QBANK=QRAW.map(function(r){return {sub:r[0],stem:r[1],opts:r[2],ok:r[3],expl:r[4]}});
   var QTOTAL=QBANK.length,QI=0,QCHECKED=false,MARKS={};
+  /* v12.5 · prototype-only in-memory state: chosen option per question, whether its
+     feedback was shown, and the snapshot taken by «خروج و ذخیره». */
+  var ANSWERS={},CHECKED={},SAVED=null;
   function renderQuestion(){
     var item=QBANK[QI%QBANK.length];
     q("#examStep").textContent="سؤال "+fa(QI+1)+" از "+fa(QTOTAL);
@@ -1420,7 +1442,8 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
     q("#qText").textContent=item.stem;
     qa("#exChoices .opt").forEach(function(o,i){o.querySelector(".opt-txt").textContent=item.opts[i]});
     resetOptions();q("#exFeedback").hidden=true;QCHECKED=false;
-    q("#nextQLabel").textContent="ادامه";
+    restoreAnswer();paintPalette();
+    q("#nextQLabel").textContent=(q(".opt.on")&&!QCHECKED)?"بررسی پاسخ":"ادامه";
     q("#examProgress").style.width=Math.min(100,((QI+1)/QTOTAL)*100)+"%";
     q("#markQ").classList.toggle("marked",!!MARKS[QI]);
   }
@@ -1428,14 +1451,14 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
   qa(".opt").forEach(function(o){o.addEventListener("click",function(){
     if(T.state==="finished")return;
     qa(".opt").forEach(function(x){x.classList.remove("on","correct","wrong")});
-    o.classList.add("on");QCHECKED=false;q("#exFeedback").hidden=true;setCtaLabel();
+    o.classList.add("on");ANSWERS[QI]=+o.dataset.opt;CHECKED[QI]=false;QCHECKED=false;q("#exFeedback").hidden=true;setCtaLabel();
   })});
   q("#nextQ").addEventListener("click",function(){
     var chosen=q(".opt.on");
     if(chosen&&!QCHECKED){
       var item=QBANK[QI%QBANK.length];
       var ok=+chosen.dataset.opt-1===item.ok;
-      QCHECKED=true;
+      ANSWERS[QI]=+chosen.dataset.opt;CHECKED[QI]=true;QCHECKED=true;
       chosen.classList.remove("on");chosen.classList.add(ok?"correct":"wrong");
       var fb=q("#exFeedback");fb.classList.toggle("bad",!ok);fb.hidden=false;
       q("#exFeedbackTitle").textContent=ok?"پاسخ درست است":"پاسخ نادرست است";
@@ -1457,6 +1480,97 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
     var d=document.createElement("div");d.innerHTML="<span>"+fa(i)+"</span>"+(i<15?"<small>"+fa((i%4)+1)+"</small>":"<small>—</small>");
     if(i<15)d.className="done";if(i===3)d.className="cur";pal.appendChild(d);
   }
+  paintPalette();
+
+  /* ---------- v12.5 · answer state, save/resume, partial & full کارنامه ---------- */
+  function restoreAnswer(){
+    var a=ANSWERS[QI];if(!a)return;
+    var pick=null;qa("#exChoices .opt").forEach(function(o){if(+o.dataset.opt===a)pick=o});
+    if(!pick)return;
+    var item=QBANK[QI%QBANK.length];
+    if(CHECKED[QI]){
+      var ok=a-1===item.ok;
+      pick.classList.add(ok?"correct":"wrong");QCHECKED=true;
+      var fb=q("#exFeedback");fb.classList.toggle("bad",!ok);fb.hidden=false;
+      q("#exFeedbackTitle").textContent=ok?"پاسخ درست است":"پاسخ نادرست است";
+      q("#exFeedbackText").textContent=item.expl;
+    }else pick.classList.add("on");
+  }
+  function paintPalette(){
+    /* keep the v12.1 static 20-cell demo sheet until a real answer is recorded */
+    if(!Object.keys(ANSWERS).length)return;
+    var cells=qa("#palette > div");if(cells.length!==20)return;
+    cells.forEach(function(c,i){var a=ANSWERS[i];c.className=i===QI?"cur":(a?"done":"");
+      var sm=c.querySelector("small");if(sm)sm.textContent=a?fa(a):"—"});
+  }
+  function score(){
+    var correct=0,wrong=0,answered=0;
+    Object.keys(ANSWERS).forEach(function(k){
+      var i=+k,a=ANSWERS[k];if(!a)return;
+      answered++;if(a-1===QBANK[i%QBANK.length].ok)correct++;else wrong++;
+    });
+    return {correct:correct,wrong:wrong,blank:QTOTAL-answered,answered:answered,
+            pct:answered?Math.max(0,Math.round((correct-wrong/3)/answered*100)):0,
+            pctNoNeg:answered?Math.round(correct/answered*100):0};
+  }
+  /* partial = «پایان آزمون و دیدن کارنامه / خروج و دیدن درصد»;
+     full    = «ثبت پاسخها و پایان» / اتمام تایمر، حتی بعد از ادامهٔ آزمون ذخیرهشده */
+  function renderReport(partial){
+    var s=score();
+    if(partial){
+      q("#resTitle").textContent="کارنامهٔ تا این لحظه";
+      q("#resSub").textContent="پایان زودهنگام · "+fa(s.answered)+" پاسخ زدهشده محاسبه شد"+(s.answered?"":" (هنوز پاسخی ثبت نشده است)");
+      q("#resPctLabel").textContent="درصد تا این لحظه (با نمرهٔ منفی)";
+      q("#resPct").textContent=fa(s.pct)+"٪";
+      q("#resPctNoNeg").textContent=fa(s.pctNoNeg)+"٪";
+      q("#resWrongBlank").textContent=fa(s.wrong)+" / "+fa(s.blank);
+      q("#resRank").textContent="—";
+      q("#resultKind").textContent="تا این لحظه";
+      var b=q("#resPartial");b.hidden=false;
+      b.textContent="خروج و دیدن درصد: این عدد فقط از "+fa(s.answered)+" پاسخی که تا همینجا زدهاید بهدست آمد ("+fa(s.correct)+" درست · "+fa(s.wrong)+" غلط)؛ "+fa(s.blank)+" سؤال نزده ماندهاند.";
+    }else{
+      q("#resTitle").textContent="آزمون تمام شد!";
+      q("#resSub").textContent="۳ سؤال نیاز به مرور دارد. پاسخنامهٔ تشریحی آماده است.";
+      q("#resPctLabel").textContent="درصد با نمرهٔ منفی";
+      q("#resPct").textContent="۶۸٪";
+      q("#resPctNoNeg").textContent="۷۴٪";
+      q("#resWrongBlank").textContent="۴ / ۵";
+      q("#resRank").textContent="۱۲۴۰ / ۶۲۰۰";
+      q("#resultKind").textContent=EXAM_KIND==="comprehensive"?"جامع":(POLICY[EXAM_KIND]||POLICY.normal).label.split(" · ")[0];
+      q("#resPartial").hidden=true;
+    }
+  }
+  function saveExam(){
+    if(T.state==="running"){
+      T.remaining=Math.max(0,Math.ceil((T.endAt-Date.now())/1000));
+      clearInterval(T.timer);T.timer=null;T.state="paused";render();
+    }
+    SAVED={exam:q("#examTitle").textContent,kind:EXAM_KIND,qi:QI,
+      answers:Object.assign({},ANSWERS),checked:Object.assign({},CHECKED),marks:Object.assign({},MARKS),
+      minutes:q("#timerMinutes").value,
+      timer:{state:T.state,remaining:T.remaining,total:T.total}};
+    q("#resumeBar").hidden=false;
+    q("#resumeText").textContent="«"+SAVED.exam+"» · سؤال "+fa(QI+1)+" از "+fa(QTOTAL)+" ذخیره شد";
+    toast("پیشرفت ذخیره شد — بعداً از همان سؤال ادامه میدهید");
+  }
+  function resumeExam(){
+    if(!SAVED)return;
+    var sv=SAVED;
+    EXAM_KIND=sv.kind;q("#examTitle").textContent=sv.exam;
+    QI=sv.qi;ANSWERS=Object.assign({},sv.answers);CHECKED=Object.assign({},sv.checked);MARKS=Object.assign({},sv.marks);
+    q("#timerMinutes").value=sv.minutes;q("#timerMinutes").readOnly=false;
+    T.state=sv.timer.state;T.remaining=sv.timer.remaining;T.total=sv.timer.total;
+    T.endAt=Date.now()+T.remaining*1000;clearInterval(T.timer);T.timer=null;
+    if(T.state==="running")T.state="paused"; /* ادامه با همان پلی داخل چیپ تایمر */
+    q("#examFinished").innerHTML="";renderQuestion();render();applyPolicy();go("exam-run");
+    q("#resumeBar").hidden=true;SAVED=null;
+    toast("ادامهٔ آزمون ذخیرهشده · سؤال "+fa(QI+1));
+  }
+  q("#exitSaveBtn").addEventListener("click",saveExam);
+  q("#exitFinishBtn").addEventListener("click",function(){
+    q("#exitSheet").classList.remove("on");finishExam("پایان آزمون و دیدن کارنامه",true);
+  });
+  q("#resumeBtn").addEventListener("click",resumeExam);
 
   /* ---------- ONE AI button: exam questions page + exam final page ---------- */
   var WRONG=[

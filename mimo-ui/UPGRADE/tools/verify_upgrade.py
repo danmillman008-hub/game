@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Fail-closed verification of the Konkur-upgrade planning deliverable (v12.4)."""
+"""Fail-closed verification of the Konkur-upgrade planning deliverable (v12.5)."""
 from __future__ import annotations
 import csv, hashlib, json, re, sys
 from pathlib import Path
@@ -15,10 +15,10 @@ docs = ["README.md", "00_START_HERE.md", "01_CRAFT_ANYTHING_INSTALL.md",
         "13_DESIGN_ROUND_2.md", "14_DESIGN_ROUND_3.md", "15_DESIGN_ROUND_4.md",
         "16_DESIGN_ROUND_5.md", "17_DESIGN_ROUND_6.md",
         "18_DESIGN_ROUND_7.md", "20_DESIGN_ROUND_8.md", "21_DESIGN_ROUND_9.md", "22_DESIGN_ROUND_10.md", "23_DESIGN_ROUND_11.md", "24_DESIGN_ROUND_12.md", "wireframes.html"]
-csvs = {"UI_FIDELITY_RULES.csv": 44, "FEATURE_MAP.csv": 17, "EXAM_TYPES.csv": 11,
+csvs = {"UI_FIDELITY_RULES.csv": 45, "FEATURE_MAP.csv": 17, "EXAM_TYPES.csv": 11,
         "HADAF_TEMPLATES.csv": 7, "GAMIFICATION_MAP.csv": 13, "PHASES.csv": 8,
         "LEARNHARNESS_ACTIONS.csv": 32, "EVIDENCE_LEDGER.csv": 10, "OPEN_QUESTIONS.csv": 13,
-        "DESIGN_FEEDBACK.csv": 68, "SCOPE_DECISIONS.csv": 48,
+        "DESIGN_FEEDBACK.csv": 69, "SCOPE_DECISIONS.csv": 49,
         "AI_PANEL_SPEC.csv": 27, "EPM_MINOR_OPTIONS.csv": 7,
         "EXAM_SECTION_TEMPLATES.csv": 7,
         "MIMO_CODE_GEOMETRY.csv": 200, "MIMO_SCREENSHOT_CROSSWALK.csv": 14,
@@ -129,7 +129,8 @@ ck("design:build-tools", all((ROOT / "tools" / f).is_file() for f in
     "design_v11_full.html", "build_design_v12.py", "design_v12_template.html", "finalize_v12.py",
     "fix_design_v12_1.py", "design_v12_1_template.html", "build_exam_v12_3.py",
     "design_v12_3_template.html", "finalize_v12_3.py", "build_exam_v12_4.py",
-    "design_v12_4_template.html", "finalize_v12_4.py"]),
+    "design_v12_4_template.html", "finalize_v12_4.py", "build_exam_v12_5.py",
+    "design_v12_5_template.html", "finalize_v12_5.py"]),
    "reproducible extract -> build pipeline (v5..v11 archived + v12 current)")
 
 # ---- 14 Mimo reference screenshots (visual cross-check only) ----
@@ -514,11 +515,16 @@ ck("manifest:v12.3", "v12.3" in man123["status"]
    "MANIFEST advertises v12.3 + its reproduce command")
 
 # ---- DESIGN v12.4: remove the extra exam buttons / ONE timer chip ----
-ck("design:v12.4:chip-cleanup", bool(erb) and dt.count('class="lb-chip"') == 2
+# v12.5 correction: «توضیح با هوش مصنوعی» is back as the THIRD quiet chip, exactly
+# where / how it was in v12.1 & v12.3, beside پاسخبرگ / پاسخنامه.
+ck("design:v12.5:chip-row-restored", bool(erb) and dt.count('class="lb-chip"') == 3
+   and all(x in erb for x in ['id="answerSheetBtn"', 'id="answerKeyBtn"', 'id="askAiBtn"'])
+   and erb.index('id="answerSheetBtn"') < erb.index('id="answerKeyBtn"') < erb.index('id="askAiBtn"')
+   and 'data-icon="ic_magic_wand" data-size="16" data-mono="1"' in erb
    and all(x not in erb for x in ['id="endExam"', 'id="skipQ"', 'id="timerStateText"',
                                   'class="ln-report"', 'class="lk-skip"'])
    and 'data-sheet="exitSheet"' not in erb.split('class="lb-tools"')[1].split('</div>')[0],
-   "only پاسخبرگ / پاسخنامه chips; no AI / end / exit / pause / reset / skip / duplicate status")
+   "THREE quiet chips in the v12.1 order: پاسخبرگ / پاسخنامه / توضیح با هوش مصنوعی")
 ck("design:v12.4:one-timer-chip", bool(erb) and all(x in erb for x in
    ['id="timerWrap"', 'id="timerControls"', 'id="timerPause"', 'id="timerReset"',
     'class="tm-bars"', 'class="tm-play"', 'class="tm-square"'])
@@ -528,10 +534,11 @@ ck("design:v12.4:no-radio", 'opt-radio' not in dt
    and dt.count('<span class="opt-num">') == 4
    and '.opt.on .opt-num{color:var(--primary)}' in dt,
    "option starts with its number; the whole card changes colour, no radio circle")
-ck("design:v12.4:ai-relocated", dt.count('id="askAiBtn"') == 1
-   and dt.index('<div class="sheet" id="keySheet"') < dt.index('id="askAiBtn"') < dt.index('<div class="sheet" id="exitSheet"')
-   and 'id="askAiResultBtn"' in dt,
-   "AI explanation lives in the پاسخنامه sheet; one AI button in two places")
+ks = dt.split('<div class="sheet" id="keySheet"')[1].split('<div class="sheet" id="exitSheet"')[0]
+ck("design:v12.5:ai-restored-body", dt.count('id="askAiBtn"') == 1
+   and dt.index('class="lb-tools"') < dt.index('id="askAiBtn"') < dt.index('<div class="sheet" id="keySheet"')
+   and 'askAiBtn' not in ks and 'id="askAiResultBtn"' in dt,
+   "AI chip restored in the exam body; the v12.4 duplicate inside #keySheet is removed")
 ck("design:v12.4:no-duplicate-timer-text", "timerStateText" not in dt
    and erb.count('تنظیم زمان') >= 1 and dt.count('id="timerLabel"') == 1,
    "the timer label appears once; no «زمان تنظیم نشده» duplicate")
@@ -547,6 +554,54 @@ ck("manifest:v12.4", "v12.4" in man124["status"]
    and any("build_exam_v12_4.py" in c for c in man124["reproduce"])
    and "v12.4" in json.dumps(man124.get("design_round_12", {}), ensure_ascii=False),
    "MANIFEST advertises v12.4 + its reproduce command")
+
+
+# ---- DESIGN v12.5: editable minutes for ALL exams / three exit options / partial کارنامه ----
+ck("design:v12.5:timer-manual", 'readOnly=true' not in dt and 'غیرقابل تغییر' not in dt
+   and 'id="timerMinutes"' in dt and 'id="timerHint"' in dt
+   and not re.search(r'id="timerMinutes"[^>]*\smax=', dt)
+   and 'fld.removeAttribute("readonly")' in dt
+   and 'q("#timerMinutes").value=EXAM_KIND==="comprehensive"?270:30' in dt
+   and 'قابل تغییر' in dt,
+   "#timerMinutes is editable in EVERY exam kind; 270 is only a preset, never a lock")
+ck("design:v12.5:timer-presets", all('data-min="%d"' % m in dt for m in [15, 30, 45, 60, 90, 120])
+   and 'm<1||m>300' not in dt,
+   "the six quick presets ۱۵/۳۰/۴۵/۶۰/۹۰/۱۲۰ stay; the 300-minute ceiling is gone")
+ck("design:v12.5:timer-3digit", 'm>=100?String(m):("0"+m).slice(-2)' in dt,
+   "270 minutes renders as ۲۷۰:۰۰, not ۷۰:۰۰")
+ex = dt.split('<div class="sheet" id="exitSheet"')[1].split('<div class="sheet" id="historySheet"')[0]
+ck("design:v12.5:exit-three", ex.count('<button') == 3
+   and all(x in ex for x in ['id="exitSaveBtn"', 'id="exitFinishBtn"', 'خروج و ذخیره',
+                             'ادامهٔ آزمون', 'پایان آزمون و دیدن کارنامه', 'خروج و دیدن درصد'])
+   and dt.count('<p class="note"') == 3,
+   "#exitSheet has THREE options; no new .note annotation (still only 3 microcopy lines)")
+ck("design:v12.5:save-resume", all(x in dt for x in
+   ['var ANSWERS={},CHECKED={},SAVED=null;', 'function saveExam()', 'function resumeExam()',
+    'id="resumeBar"', 'id="resumeBtn"', 'id="resumeText"', 'if(SAVED&&SAVED.exam===n.dataset.exam)'])
+   and 'SAVED={exam:' in dt,
+   "«خروج و ذخیره» really snapshots QI / answers / marks / timer and can be resumed later")
+ck("design:v12.5:partial-report", all(x in dt for x in
+   ['function score()', 'function renderReport(partial)', 'id="resPartial"', 'id="resPct"',
+    'renderReport(!!partial)', 'finishExam("پایان آزمون و دیدن کارنامه",true)',
+    'q("#resRank").textContent="—"']),
+   "the third exit option computes a partial درصد from answered-so-far; a full finish restores the whole کارنامه")
+ck("design:v12.5:no-stale-v12.4-text", all(x not in dt for x in
+   ['comprehensive fixed 270 min', 'AI via پاسخنامه', 'timerFixedHint', 'قالب ثابت:'])
+   and 'v12.5' in dt,
+   "stale v12.4 labels/hints (fixed 270, relocated AI, 270 دقیقهٔ ثابت) are superseded")
+ck("docs:v12.5:log", "v12.5" in (ROOT / "24_DESIGN_ROUND_12.md").read_text(encoding="utf-8")
+   and "v12.5" in (D / "DESIGN_NOTES.fa.md").read_text(encoding="utf-8")
+   and "DESIGN v12.5" in (ROOT / "wireframes.html").read_text(encoding="utf-8"),
+   "round-12 §10 + design notes §10 + wireframes link document the v12.5 corrections")
+ck("scope:v12.5:catalogs", "F-70" in (ROOT / "CATALOGS/DESIGN_FEEDBACK.csv").read_text(encoding="utf-8")
+   and "D50" in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encoding="utf-8")
+   and "F46" in (ROOT / "CATALOGS/UI_FIDELITY_RULES.csv").read_text(encoding="utf-8"),
+   "v12.5 correction round recorded in feedback / decisions / fidelity rules")
+man125 = json.loads((ROOT / "MANIFEST.json").read_text(encoding="utf-8"))
+ck("manifest:v12.5", "v12.5" in man125["status"]
+   and any("build_exam_v12_5.py" in c for c in man125["reproduce"])
+   and "v12_5_corrections" in man125["design_round_12"],
+   "MANIFEST advertises v12.5 + its reproduce command + the correction record")
 
 # ---- docs / catalogs ----
 ck("docs:v10:22", "DESIGN v10" in (ROOT / "22_DESIGN_ROUND_10.md").read_text(encoding="utf-8")

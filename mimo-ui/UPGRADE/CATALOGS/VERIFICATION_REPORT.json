@@ -1,7 +1,7 @@
 {
   "verdict": "PASS",
-  "checks": 249,
-  "passed": 249,
+  "checks": 259,
+  "passed": 259,
   "failed": [],
   "details": [
     {
@@ -127,7 +127,7 @@
     {
       "check": "doc:24_DESIGN_ROUND_12.md",
       "status": "PASS",
-      "detail": "21682"
+      "detail": "27085"
     },
     {
       "check": "doc:wireframes.html",
@@ -137,7 +137,7 @@
     {
       "check": "csv:UI_FIDELITY_RULES.csv",
       "status": "PASS",
-      "detail": "44 rows"
+      "detail": "45 rows"
     },
     {
       "check": "csv:FEATURE_MAP.csv",
@@ -182,12 +182,12 @@
     {
       "check": "csv:DESIGN_FEEDBACK.csv",
       "status": "PASS",
-      "detail": "68 rows"
+      "detail": "69 rows"
     },
     {
       "check": "csv:SCOPE_DECISIONS.csv",
       "status": "PASS",
-      "detail": "48 rows"
+      "detail": "49 rows"
     },
     {
       "check": "csv:AI_PANEL_SPEC.csv",
@@ -262,7 +262,7 @@
     {
       "check": "design:index",
       "status": "PASS",
-      "detail": "408357 chars"
+      "detail": "416448 chars"
     },
     {
       "check": "design:v12-header",
@@ -357,7 +357,7 @@
     {
       "check": "design:js-ids",
       "status": "PASS",
-      "detail": "0 used / 90 defined; missing=[]"
+      "detail": "0 used / 103 defined; missing=[]"
     },
     {
       "check": "design:notes",
@@ -552,7 +552,7 @@
     {
       "check": "design:v6:build-bytes",
       "status": "PASS",
-      "detail": "408357 chars"
+      "detail": "416448 chars"
     },
     {
       "check": "design:v10:nodes",
@@ -722,7 +722,7 @@
     {
       "check": "design:v8:build-bytes",
       "status": "PASS",
-      "detail": "408357 chars"
+      "detail": "416448 chars"
     },
     {
       "check": "design:v11:leaderboard",
@@ -930,9 +930,9 @@
       "detail": "MANIFEST advertises v12.3 + its reproduce command"
     },
     {
-      "check": "design:v12.4:chip-cleanup",
+      "check": "design:v12.5:chip-row-restored",
       "status": "PASS",
-      "detail": "only پاسخبرگ / پاسخنامه chips; no AI / end / exit / pause / reset / skip / duplicate status"
+      "detail": "THREE quiet chips in the v12.1 order: پاسخبرگ / پاسخنامه / توضیح با هوش مصنوعی"
     },
     {
       "check": "design:v12.4:one-timer-chip",
@@ -945,9 +945,9 @@
       "detail": "option starts with its number; the whole card changes colour, no radio circle"
     },
     {
-      "check": "design:v12.4:ai-relocated",
+      "check": "design:v12.5:ai-restored-body",
       "status": "PASS",
-      "detail": "AI explanation lives in the پاسخنامه sheet; one AI button in two places"
+      "detail": "AI chip restored in the exam body; the v12.4 duplicate inside #keySheet is removed"
     },
     {
       "check": "design:v12.4:no-duplicate-timer-text",
@@ -968,6 +968,56 @@
       "check": "manifest:v12.4",
       "status": "PASS",
       "detail": "MANIFEST advertises v12.4 + its reproduce command"
+    },
+    {
+      "check": "design:v12.5:timer-manual",
+      "status": "PASS",
+      "detail": "#timerMinutes is editable in EVERY exam kind; 270 is only a preset, never a lock"
+    },
+    {
+      "check": "design:v12.5:timer-presets",
+      "status": "PASS",
+      "detail": "the six quick presets ۱۵/۳۰/۴۵/۶۰/۹۰/۱۲۰ stay; the 300-minute ceiling is gone"
+    },
+    {
+      "check": "design:v12.5:timer-3digit",
+      "status": "PASS",
+      "detail": "270 minutes renders as ۲۷۰:۰۰, not ۷۰:۰۰"
+    },
+    {
+      "check": "design:v12.5:exit-three",
+      "status": "PASS",
+      "detail": "#exitSheet has THREE options; no new .note annotation (still only 3 microcopy lines)"
+    },
+    {
+      "check": "design:v12.5:save-resume",
+      "status": "PASS",
+      "detail": "«خروج و ذخیره» really snapshots QI / answers / marks / timer and can be resumed later"
+    },
+    {
+      "check": "design:v12.5:partial-report",
+      "status": "PASS",
+      "detail": "the third exit option computes a partial درصد from answered-so-far; a full finish restores the whole کارنامه"
+    },
+    {
+      "check": "design:v12.5:no-stale-v12.4-text",
+      "status": "PASS",
+      "detail": "stale v12.4 labels/hints (fixed 270, relocated AI, 270 دقیقهٔ ثابت) are superseded"
+    },
+    {
+      "check": "docs:v12.5:log",
+      "status": "PASS",
+      "detail": "round-12 §10 + design notes §10 + wireframes link document the v12.5 corrections"
+    },
+    {
+      "check": "scope:v12.5:catalogs",
+      "status": "PASS",
+      "detail": "v12.5 correction round recorded in feedback / decisions / fidelity rules"
+    },
+    {
+      "check": "manifest:v12.5",
+      "status": "PASS",
+      "detail": "MANIFEST advertises v12.5 + its reproduce command + the correction record"
     },
     {
       "check": "docs:v10:22",
@@ -1237,7 +1287,7 @@
     {
       "check": "manifest:checks",
       "status": "PASS",
-      "detail": "verification_checks=249 expected 249"
+      "detail": "verification_checks=259 expected 259"
     },
     {
       "check": "docs:no-cjk",
@@ -1247,8 +1297,8 @@
     {
       "check": "sums",
       "status": "PASS",
-      "detail": "1948 files hashed"
+      "detail": "1951 files hashed"
     }
   ],
-  "files_hashed": 1948
+  "files_hashed": 1951
 }
