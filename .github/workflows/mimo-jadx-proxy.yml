@@ -36,6 +36,11 @@ jobs:
           distribution: temurin
           java-version: '21'
 
+      - name: Prepare output directory (tee needs it to exist before the pipeline starts)
+        run: |
+          mkdir -p ANALYSIS/DECOMPILED
+          : > ANALYSIS/DECOMPILED/run.log
+
       - name: Download, decompile, package (all diagnostics captured)
         shell: bash
         run: |
