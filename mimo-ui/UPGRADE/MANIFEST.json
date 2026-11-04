@@ -2,22 +2,22 @@
   "round": "konkur-upgrade-planning",
   "branch": "arena/aebb90b7-game",
   "date": "2026-11-04",
-  "status": "PLAN_ONLY + DESIGN v11 REVIEW (no product implementation)",
+  "status": "PLAN_ONLY + DESIGN v12 REVIEW (no product implementation)",
   "goal": "Upgrade Mimo 9.35 into an Iranian Konkur learning app with strict fidelity to Mimo UI/mechanism/navigation",
   "deliverables": {
-    "persian_docs": 24,
+    "persian_docs": 25,
     "csv_catalogs": 21,
     "wireframes_html": 2,
     "source_apps": 2,
-    "extracted_assets_files": 1931,
-    "total_bytes": 21987748,
+    "extracted_assets_files": 1937,
+    "total_bytes": 22901989,
     "craft_anything": "vendored docs + 33-id agent adapter + 13 evidence records",
     "verification": "PASS",
     "phases": 8,
     "phase_status": "P0..P4/P6/P7 PLANNED · P5 PARKED (counseling) · awaiting final design approval",
     "interactive_design_prototype": 1,
-    "verification_checks": 206,
-    "design_round": "v11 (REVIEW)",
+    "verification_checks": 222,
+    "design_round": "v12 (REVIEW)",
     "code_first_geometry": "DESIGN/CODE_GEOMETRY.json (46 vectors / 41 colors / 36 dims / 13 styles / 45 strings / 19 AXML layouts / 80 Compose path classes)",
     "mimo_reference_screenshots": 14,
     "learn_code_evidence": "DESIGN/LEARN_CODE_GEOMETRY.json (150 ARSC strings / 41 vectors / 16 AXML layouts / 1 nav graph / 15 real sections / 272 DEX classes / 68 colors / 62 dimens / 213 styles) + CATALOGS/MIMO_LEARN_SUBSCREENS.csv (868 rows)",
@@ -29,7 +29,8 @@
     "v8_changes": "exact code-driven Learn nodes; NO locked node (one exam-hub exception); routine/Habitica removed; Dictate removed; no UI annotations; exam Mimo skin only",
     "v9_changes": "re-reviewed node code; ONE straight vertical line (no curve/zigzag); corrected 7 code-derived numbers; real charged/mastered bolt vectors; linear unlocked state sequence",
     "v10_changes": "REVERTED v9 single straight line; restored original curved zigzag with real gaps; deeper DEX/test-tracks code review; corrected 2 wrong number attributions",
-    "v11_content": "KONKUR_CURRICULUM.json / KONKUR_CURRICULUM.csv (12 courses x 5 chapters x 3 lessons = 12/60/180) + 10 fortnight dates 1 Aban..15 Esfand + 3 big Mimo-icon cards + My-status-only leaderboard + zero programming emblems"
+    "v11_content": "KONKUR_CURRICULUM.json / KONKUR_CURRICULUM.csv (12 courses x 5 chapters x 3 lessons = 12/60/180) + 10 fortnight dates 1 Aban..15 Esfand + 3 big Mimo-icon cards + My-status-only leaderboard + zero programming emblems",
+    "v12_exam_ui": "EXAM_UI_CODE_EVIDENCE.json (chapter_toolbar / lesson_interactive_multiplechoice / choice_list_item / interaction_keyboard_view / run_button_view) — single full-width CTA, no equal prev/next pill pair, no separate konkur skin"
   },
   "source_hashes": {
     "Mimo_9.35": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
@@ -97,7 +98,12 @@
     "v11: Career Paths -> یادگیری برنامه محور; Courses -> یادگیری مبحثی; 3 big program cards only (duplicate topic card removed); 12 courses = 4 subjects x 3 grades",
     "v11: Path Overview relabelled مدرک پایان دوره / ۲۲ درصد کامل شده / 2-9; 10 biweekly slots from 1 Aban to 15 Esfand (5 months) with دروس: زیست، شیمی، ریاضی، فیزیک",
     "v11: course overviews use 60 فصل / 180 درس from the repo Konkur curriculum instead of JavaScript/HTML/CSS sections; U12 records the naming assumption",
-    "v11: ZERO programming emblems — ic_badge_*, ic_code_lang_*, ic_code_playground_template_* replaced by decoded Mimo vectors; everything else stays in place"
+    "v11: ZERO programming emblems — ic_badge_*, ic_code_lang_*, ic_code_playground_template_* replaced by decoded Mimo vectors; everything else stays in place",
+    "v12: exam surfaces (hub/run/result) rebuilt code-first from decoded Mimo lesson layouts; separate 'konkur' skin removed, all three now use the same ARSC tokens/vectors/type as the rest of the prototype",
+    "v12: WRONG equal-weight prev/next pill pair (.qnav) and 7-button scrolling .qfoot REMOVED; one full-width purple CONTINUE/SUBMIT CTA (#nextQ) + 48dp square back (#prevQ) + 48dp bookmark + lesson_skip link, per interaction_keyboard_view.xml / run_button_view.xml",
+    "v12: real question cycle — choice selection -> lesson_submit (بررسی پاسخ) -> multiplechoice correct/wrong feedback bottom sheet with topic explanation -> lesson_continue (ادامه) -> next question",
+    "v12: exam hub converted to Mimo list rows + quiz_introduction hero; result converted to Mimo celebration screen; 7 labelled sections, fixed 270 min, one exam-hub lock, one AI button and isolated section-practice all preserved",
+    "v12: rollback snapshot kept at tools/design_v11_full.html (user allowed structural break, 'at worst we go back')"
   ],
   "reproduce": [
     "python3 tools/extract_source_apps.py <google_drive_dir> .",
@@ -116,7 +122,9 @@
     "python3 tools/build_design_v10.py .",
     "python3 tools/finalize_v10.py .",
     "python3 tools/build_design_v11.py .",
-    "python3 tools/finalize_v11.py ."
+    "python3 tools/finalize_v11.py .",
+    "python3 tools/build_design_v12.py .",
+    "python3 tools/finalize_v12.py ."
   ],
   "limitations": [
     "no runtime/device/screenshots",
@@ -379,7 +387,7 @@
     "final_approval": "PENDING — no product implementation until user says the design is final"
   },
   "design_round_11": {
-    "status": "DESIGN v11 · REVIEW — awaiting final approval (CURRENT)",
+    "status": "DESIGN v11 · SUPERSEDED by round 12 (exam surfaces only) — leaderboard/tracks/cards KEPT",
     "trigger": "user: بخش ۸ لیدربورد؛ حذف بلوک Wooden League و ۵ ردیف رقیب (فقط my status)؛ یادگیری برنامه محور / یادگیری مبحثی؛ ۴ آیکون درشت؛ ۱۲ کورس؛ مدرک پایان دوره؛ ۲۲ درصد؛ تاریخهای دو هفتهای ۵ ماهه؛ دروس؛ فصل/درس؛ بدون آرم برنامهنویسی",
     "geometry": "UNCHANGED — original_curved_zigzag (v10), 3 lanes 80/196/312, 24dp gaps, 32dp Q elbows, 2 coloured segments",
     "leaderboard": "MY_STATUS_ONLY (Wooden League + countdown + 5 rival rows + league badges removed)",
@@ -460,5 +468,53 @@
     "final_log": "23_DESIGN_ROUND_11.md",
     "design_notes": "DESIGN/DESIGN_NOTES.fa.md",
     "final_approval": "PENDING — no product implementation until user says the design is final"
+  },
+  "design_round_12": {
+    "status": "DESIGN v12 · REVIEW — awaiting final approval (CURRENT)",
+    "trigger": "user: پروتوتایپ بخش آزمون خیلی بد و جدا از اپلیکیشن است، شبیهترش کن به پروتوتایپ اصلی میمو؛ دکمهٔ سؤال بعدی/قبلی را اشتباه گذاشتی؛ ساختار دکمهها و بقیه را از روی اپ اصلی بساز؛ اجازهٔ تغییرات زیاد و حتی ساختارشکنی (نهایت برمیگردیم عقب)",
+    "method": "CODE_FIRST / decoded APK layouts, dimens, colors, styles, strings; screenshots VISUAL_CROSSCHECK_ONLY",
+    "evidence_file": "DESIGN/EXAM_UI_CODE_EVIDENCE.json",
+    "screens_rebuilt": [
+      "exam-hub",
+      "exam-run",
+      "exam-result"
+    ],
+    "skin": "separate `konkur` class removed from all exam screens; new `exv12` uses the same Mimo tokens",
+    "navbar": "chapter_toolbar.xml — 52dp: ic_close | pb_chapter 6dp + examTitle | timerChip | ic_flag; 1dp line_primary",
+    "question_body": "lesson_interactive_multiplechoice_fragment.xml — ScrollView, LessonDescriptionView (TextH2/P1), tv_multiplechoice_hint, rv_multiplechoice_options with 4 choice_list_item cards (12dp radius, 48dp min, selected/correct/wrong backgrounds)",
+    "footer": "interaction_keyboard_view.xml / run_button_view.xml — 68dp, 1dp top border, two 48dp square buttons (prevQ=btn_undo, markQ=btn_reset), ONE full-width primary CTA nextQ (btn_continue_big / btn_submit), lesson_skip link",
+    "button_correction": {
+      "before": "two equal-weight pill buttons «سؤال قبل» + «سؤال بعد» in .qnav, plus 7-button scrolling .qfoot",
+      "after": "single full-width purple CTA + 48dp icon-only back square; secondary actions collapse into a quiet chip row"
+    },
+    "flow": [
+      "interaction_hint_single_choice",
+      "select option",
+      "lesson_submit = بررسی پاسخ",
+      "lesson_interactive_feedback_bottom_sheet_dialog (correct/wrong + توضیح مبحث)",
+      "lesson_continue = ادامه → سؤال بعدی",
+      "lesson_skip = رد کردن سؤال"
+    ],
+    "hub": "quiz_introduction_fragment.xml hero + Mimo list rows; 7 labelled cat-meta sections, 21 tiles, exactly ONE lock",
+    "result": "lesson_awesome_fragment / chapter_finished celebration + stats + 3-button row; descriptive answer + AI transfer kept",
+    "unchanged": [
+      "original curved zigzag path map (v10)",
+      "5 tabs / no MAX",
+      "leaderboard My-status-only (v11)",
+      "3 program cards + 12 topic courses (v11.1)",
+      "zero programming emblems",
+      "7 labelled exam sections + templates + descriptive answer",
+      "fixed 270 min",
+      "timer only inside exam",
+      "پاسخبرگ≠پاسخنامه",
+      "one pre-existing exam-hub lock",
+      "one AI button in two places",
+      "no UI annotations",
+      "isolated section-practice"
+    ],
+    "rollback": "tools/design_v11_full.html (exact v11.1 output before this round)",
+    "final_log": "24_DESIGN_ROUND_12.md",
+    "design_notes": "DESIGN/DESIGN_NOTES.fa.md",
+    "final_approval": "PENDING — no product implementation until the user says the design is final"
   }
 }

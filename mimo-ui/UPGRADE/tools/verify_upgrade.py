@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Fail-closed verification of the Konkur-upgrade planning deliverable (v11)."""
+"""Fail-closed verification of the Konkur-upgrade planning deliverable (v12)."""
 from __future__ import annotations
 import csv, hashlib, json, re, sys
 from pathlib import Path
@@ -14,11 +14,11 @@ docs = ["README.md", "00_START_HERE.md", "01_CRAFT_ANYTHING_INSTALL.md",
         "11_EVIDENCE_AND_CROSSWALK.md", "12_RISKS_UNKNOWN_AND_QUESTIONS.md",
         "13_DESIGN_ROUND_2.md", "14_DESIGN_ROUND_3.md", "15_DESIGN_ROUND_4.md",
         "16_DESIGN_ROUND_5.md", "17_DESIGN_ROUND_6.md",
-        "18_DESIGN_ROUND_7.md", "20_DESIGN_ROUND_8.md", "21_DESIGN_ROUND_9.md", "22_DESIGN_ROUND_10.md", "23_DESIGN_ROUND_11.md", "wireframes.html"]
-csvs = {"UI_FIDELITY_RULES.csv": 38, "FEATURE_MAP.csv": 17, "EXAM_TYPES.csv": 11,
+        "18_DESIGN_ROUND_7.md", "20_DESIGN_ROUND_8.md", "21_DESIGN_ROUND_9.md", "22_DESIGN_ROUND_10.md", "23_DESIGN_ROUND_11.md", "24_DESIGN_ROUND_12.md", "wireframes.html"]
+csvs = {"UI_FIDELITY_RULES.csv": 41, "FEATURE_MAP.csv": 17, "EXAM_TYPES.csv": 11,
         "HADAF_TEMPLATES.csv": 7, "GAMIFICATION_MAP.csv": 13, "PHASES.csv": 8,
-        "LEARNHARNESS_ACTIONS.csv": 32, "EVIDENCE_LEDGER.csv": 10, "OPEN_QUESTIONS.csv": 12,
-        "DESIGN_FEEDBACK.csv": 62, "SCOPE_DECISIONS.csv": 42,
+        "LEARNHARNESS_ACTIONS.csv": 32, "EVIDENCE_LEDGER.csv": 10, "OPEN_QUESTIONS.csv": 13,
+        "DESIGN_FEEDBACK.csv": 65, "SCOPE_DECISIONS.csv": 45,
         "AI_PANEL_SPEC.csv": 27, "EPM_MINOR_OPTIONS.csv": 7,
         "EXAM_SECTION_TEMPLATES.csv": 7,
         "MIMO_CODE_GEOMETRY.csv": 200, "MIMO_SCREENSHOT_CROSSWALK.csv": 14,
@@ -54,13 +54,13 @@ ck("wireframe:tokens", all(x in t for x in ["#7E4BDE", "#F6F7FB", "#E4E6F1", "#6
 ck("wireframe:legacy-tabs", t.count('class="tab') >= 4 and "<div class=\"tab\">Learn</div>" in t,
    "archived v1 wireframe renders its legacy tabs")
 ck("wireframe:3col-grid", "repeat(3,minmax(0,1fr))" in t, "exam node grid")
-ck("wireframe:v1-banner", "DESIGN/index.html" in t and "DESIGN v11" in t, "v1 archived, points to v11")
+ck("wireframe:v1-banner", "DESIGN/index.html" in t and "DESIGN v12" in t, "v1 archived, points to v12")
 
 # ---- DESIGN v8 interactive prototype ----
 D = ROOT / "DESIGN"
 dt = (D / "index.html").read_text(encoding="utf-8") if (D / "index.html").is_file() else ""
 ck("design:index", len(dt) > 20000, "%d chars" % len(dt))
-ck("design:v11-header", "DESIGN v11" in dt and "دور یازدهم" in dt, "design round 11 review")
+ck("design:v12-header", "DESIGN v12" in dt and "دور دوازدهم" in dt, "design round 12 review")
 ck("design:v7-archived", "DESIGN v7" in dt, "v7 archive line kept in spec")
 ck("design:v6-archived", "DESIGN v6" in dt, "v6 archive line kept in spec")
 ck("design:no-hub-timer", "exam-hub" in dt and "⏱ ۱۲:۴۵" not in dt, "timer removed from exam hub")
@@ -125,8 +125,9 @@ ck("design:build-tools", all((ROOT / "tools" / f).is_file() for f in
     "extract_mimo_nodes_v8.py", "build_design_v8.py", "design_v8_template.html", "finalize_v8.py",
     "extract_mimo_nodes_v9.py", "build_design_v9.py", "design_v9_template.html", "finalize_v9.py",
     "extract_mimo_nodes_v10.py", "build_design_v10.py", "design_v10_template.html", "finalize_v10.py",
-    "design_v10_full.html", "build_design_v11.py", "design_v11_template.html", "finalize_v11.py"]),
-   "reproducible extract -> build pipeline (v5..v10 archived + v11 current)")
+    "design_v10_full.html", "build_design_v11.py", "design_v11_template.html", "finalize_v11.py",
+    "design_v11_full.html", "build_design_v12.py", "design_v12_template.html", "finalize_v12.py"]),
+   "reproducible extract -> build pipeline (v5..v11 archived + v12 current)")
 
 # ---- 14 Mimo reference screenshots (visual cross-check only) ----
 shots = ["mimo-01-learn-path-play.jpg","mimo-02-learn-path-half.jpg",
@@ -314,10 +315,10 @@ ck("design:v8:exam-skin", all(x in dt for x in
    and '--radius-card:' in dt and '--primary:' in dt and "var(--primary)" in dt
    and "border-radius:12px" in dt and "border-radius:16px" in dt,
    "real Mimo vectors + ARSC colours/radii/type; exam architecture untouched")
-ck("design:v8:exam-architecture", all(x in dt for x in
-   ["prevQ","nextQ","qnav","qfoot","result-foot","ic_arrow_left","ic_arrow_right","timerChip","answerSheetBtn","answerKeyBtn"])
-   and "زمان ثابت ۲۷۰ دقیقه" in dt and "POLICY" in dt,
-   "timer / answer sheets / 270 min / prev-next / AI button all unchanged")
+ck("design:v12:exam-architecture", all(x in dt for x in
+   ["prevQ","nextQ","lk-cta","lk-square","result-foot","ic_arrow_left","ic_arrow_right","timerChip","answerSheetBtn","answerKeyBtn","exFeedback","QBANK","renderQuestion"])
+   and "زمان ثابت ۲۷۰ دقیقه" in dt and "POLICY" in dt and "btn_continue_big" in dt,
+   "single full-width CTA + one 48dp back square / answer sheets / 270 min / AI / question flow")
 lb = re.search(r'<section class="screen mimo" data-screen="leaderboard".*?</section>', dt, re.S)
 ck("design:v8:no-promo", bool(lb) and "Promotion Zone" not in lb.group(0) and "منطقهٔ صعود" not in lb.group(0) and 'class="promo"' not in lb.group(0),
    "Promotion Zone removed from leaderboard UI")
@@ -383,6 +384,51 @@ ck("design:v11:geometry-unchanged", "M242 70 H280 Q312 70 312 102 V140" in dt
    and 'data-screen="exam-hub"' in dt and dt.count('data-tab="') == 5,
    "original curved zigzag + 5 tabs + exam architecture untouched")
 
+# ---- DESIGN v12: exam surfaces on real Mimo lesson UI ----
+erm = re.search(r'<section class="screen exv12" data-screen="exam-run".*?</section>', dt, re.S)
+erb = erm.group(0) if erm else ""
+ck("design:v12:code-evidence", (D / "EXAM_UI_CODE_EVIDENCE.json").is_file(), "EXAM_UI_CODE_EVIDENCE.json present")
+ev = json.loads((D / "EXAM_UI_CODE_EVIDENCE.json").read_text(encoding="utf-8"))
+ck("design:v12:evidence-layouts", ev["round"] == "v12" and all(k in ev["layouts"] for k in
+   ["chapter_toolbar.xml", "lesson_interactive_multiplechoice_fragment.xml", "choice_list_item.xml",
+    "interaction_keyboard_view.xml", "run_button_view.xml", "lesson_interactive_feedback_bottom_sheet_dialog.xml"]),
+   "evidence lists every decoded layout used")
+ck("design:v12:no-konkur-exam-skin", all('class="screen konkur" data-screen="'+n+'"' not in dt for n in
+   ["exam-hub","exam-run","exam-result"]) and dt.count('class="screen exv12"') == 3,
+   "the separate konkur skin is GONE from all 3 exam screens")
+ck("design:v12:mimo-navbar", bool(erb) and all(x in erb for x in
+   ["chapter_toolbar.xml","lesson_progress_navbar_height=52dp",'class="ln"','class="ln-x"',
+    'data-icon="ic_close"','class="ln-prog"','id="examProgress"','data-icon="ic_flag"','id="timerChip"']),
+   "chapter_toolbar.xml: X | 6dp progress | flag | timer, 52dp")
+ck("design:v12:choice-cards", bool(erb) and all(x in erb for x in
+   ["lesson_interactive_multiplechoice_fragment.xml","rv_multiplechoice_options","choice_list_item.xml",
+    "layout_choice_card_item.xml",'class="lb-choices"','class="opt-radio"',
+    "interaction_hint_single_choice"])
+   and "multiplechoice_background_selected.xml" in ev["drawables"],
+   "ChoiceView + choice_list_item cards + TextInteractionHint")
+ck("design:v12:feedback", bool(erb) and "lesson_interactive_feedback_bottom_sheet_dialog" in erb
+   and 'id="exFeedback"' in erb and "multiplechoice_background_correct.xml" in ev["drawables"],
+   "inline correct/wrong feedback panel from the real bottom-sheet layout")
+ck("design:v12:single-cta", bool(erb) and all(x in erb for x in
+   ["interaction_keyboard_view.xml","run_button_view.xml","btn_continue_big","btn_submit",
+    "lesson_continue","lesson_skip",'class="lk-cta"','id="nextQ"','class="lk-square"','id="prevQ"','id="markQ"'])
+   and all(x not in erb for x in ['class="qnav"',"سؤال قبل</button>","سؤال بعد</button>",'class="qfoot"']),
+   "ONE full-width CTA + 48dp squares; the wrong equal prev/next pill pair is gone")
+ck("design:v12:question-flow", all(x in dt for x in
+   ["QBANK","renderQuestion","lesson_submit","lesson_skip","exFeedbackTitle","nextQLabel","examProgress"]),
+   "select -> submit -> feedback -> continue -> next question")
+ck("design:v12:hub-and-result", "quiz_introduction_fragment.xml" in dt and 'class="eh-hero"' in dt
+   and "lesson_awesome_fragment.xml" in dt and 'class="rf-hero"' in dt
+   and dt.count('class="cat-meta"') == 7 and 'data-icon="ic_lock_alt_02"' in dt,
+   "Mimo quiz-intro hub rows + celebration result; 7 labelled sections + one lock kept")
+ck("design:v12:contract-kept", dt.count('data-tab="') == 5 and 'data-tab="MAX"' not in dt
+   and "زمان ثابت ۲۷۰ دقیقه" in dt and "M242 70 H280 Q312 70 312 102 V140" in dt
+   and "askAiBtn" in dt and "askAiResultBtn" in dt and 'data-isolated="exam"' in dt,
+   "5 tabs / no MAX / 270 min / curved zigzag / one AI button / isolated practice")
+ck("design:v12:rollback", (ROOT / "tools/design_v11_full.html").is_file()
+   and "V11_ROLLBACK_SNAPSHOT_V12" in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encoding="utf-8"),
+   "v11.1 snapshot kept as an explicit rollback path")
+
 # ---- docs / catalogs ----
 ck("docs:v10:22", "DESIGN v10" in (ROOT / "22_DESIGN_ROUND_10.md").read_text(encoding="utf-8")
    and "Q312 70" in (ROOT / "22_DESIGN_ROUND_10.md").read_text(encoding="utf-8"),
@@ -400,6 +446,13 @@ ck("docs:v11:notes", "DESIGN v11" in (D / "DESIGN_NOTES.fa.md").read_text(encodi
    and "KONKUR_CURRICULUM.json" in (D / "DESIGN_NOTES.fa.md").read_text(encoding="utf-8"), "v11 design notes")
 ck("docs:v11:banners", sum("<!-- v11-banner -->" in (ROOT / d).read_text(encoding="utf-8") for d in docs if d.endswith(".md")) >= 22,
    "archived docs carry v11 superseded banner")
+ck("docs:v12:24", "DESIGN v12" in (ROOT / "24_DESIGN_ROUND_12.md").read_text(encoding="utf-8")
+   and "interaction_keyboard_view.xml" in (ROOT / "24_DESIGN_ROUND_12.md").read_text(encoding="utf-8"),
+   "v12 final log + decoded-layout evidence")
+ck("docs:v12:notes", "DESIGN v12" in (D / "DESIGN_NOTES.fa.md").read_text(encoding="utf-8")
+   and "EXAM_UI_CODE_EVIDENCE.json" in (D / "DESIGN_NOTES.fa.md").read_text(encoding="utf-8"), "v12 design notes")
+ck("docs:v12:banners", sum("<!-- v12-banner -->" in (ROOT / d).read_text(encoding="utf-8") for d in docs if d.endswith(".md")) >= 23,
+   "archived docs carry v12 superseded banner")
 ck("docs:v7:18", "DESIGN v7" in (ROOT / "18_DESIGN_ROUND_7.md").read_text(encoding="utf-8"), "v7 log archived")
 ck("scope:v8", all(x in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encoding="utf-8") for x in
    ["REMOVED_ENTIRELY_V8","FIVE_TABS_RESTORED","DICTATE_REMOVED","NO_ANNOTATIONS_IN_UI","ONE_LOCK_ONLY","NODE_CODE_FIRST_V8"]),
@@ -412,6 +465,11 @@ ck("scope:v9", all(x in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encodi
    and all(x in (ROOT / "CATALOGS/DESIGN_FEEDBACK.csv").read_text(encoding="utf-8") for x in
    ["F-53","F-54","F-55"]),
    "all 3 round-9 decisions + 3 round-9 corrections recorded")
+ck("scope:v12", all(x in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encoding="utf-8") for x in
+   ["EXAM_SURFACES_CODE_FIRST_V12","SINGLE_FULLWIDTH_CTA_V12","V11_ROLLBACK_SNAPSHOT_V12"])
+   and all(x in (ROOT / "CATALOGS/DESIGN_FEEDBACK.csv").read_text(encoding="utf-8") for x in
+   ["F-63","F-64","F-65"]) and "U13" in (ROOT / "CATALOGS/OPEN_QUESTIONS.csv").read_text(encoding="utf-8"),
+   "3 round-12 decisions + 3 corrections + rollback question recorded")
 ck("scope:v11", all(x in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encoding="utf-8") for x in
    ["MY_STATUS_ONLY_V11","PROGRAM_AND_TOPIC_TRACKS_V11","NO_PROGRAMMING_EMBLEMS_V11","THREE_CARDS_ONLY_V11"])
    and all(x in (ROOT / "CATALOGS/DESIGN_FEEDBACK.csv").read_text(encoding="utf-8") for x in
@@ -478,14 +536,13 @@ ck("craft:phases", len(json.loads((ca / "workspace/plan.json").read_text(encodin
 
 # MANIFEST coherence
 man = json.loads((ROOT / "MANIFEST.json").read_text(encoding="utf-8"))
-ck("manifest:v11", "DESIGN v11" in man["status"] and man["deliverables"]["design_round"] == "v11 (REVIEW)"
+ck("manifest:v12", "DESIGN v12" in man["status"] and man["deliverables"]["design_round"] == "v12 (REVIEW)"
    and man["deliverables"]["design_views"] == 14 and man["deliverables"]["csv_catalogs"] == 21
-   and man["deliverables"]["persian_docs"] == 24 and "design_round_11" in man
-   and man["design_round_10"]["status"].startswith("DESIGN v10 · SUPERSEDED")
-   and man["design_round_11"]["leaderboard"] == "MY_STATUS_ONLY (Wooden League + countdown + 5 rival rows + league badges removed)"
-   and man["design_round_11"]["curriculum"]["chapters"] == 60
-   and man["design_round_11"]["geometry"].startswith("UNCHANGED"),
-   "MANIFEST advertises v11: 14 views / 21 CSVs / 24 docs / curved geometry kept / 60 فصل")
+   and man["deliverables"]["persian_docs"] == 25 and "design_round_12" in man
+   and man["design_round_11"]["status"].startswith("DESIGN v11 · SUPERSEDED")
+   and man["design_round_12"]["button_correction"]["after"].startswith("single full-width purple CTA")
+   and man["design_round_12"]["rollback"].startswith("tools/design_v11_full.html"),
+   "MANIFEST advertises v12: 14 views / 21 CSVs / 25 docs / single CTA / rollback snapshot")
 # +3 = this check itself + docs:no-cjk + sums (the three checks after this point)
 EXPECTED_CHECKS = len(checks) + 3
 ck("manifest:checks", man["deliverables"]["verification_checks"] == EXPECTED_CHECKS,

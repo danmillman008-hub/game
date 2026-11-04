@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>طرح رابط کاربری v10 — معماری اورجینال قوسدار مسیر یادگیری (Design Review)</title>
+<title>طرح رابط کاربری v12 — سطوح آزمون بر اساس lesson_interactive میمو (Design Review)</title>
 <style>
 :root{
 --bg:#F6F7FB;
@@ -521,10 +521,6 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
 .ai-foot-chip{font-size:9px;padding:3px 7px;white-space:nowrap;gap:3px;flex-shrink:0}
 .ai-foot-chip .ic{flex-shrink:0;color:var(--primary)}
 /* ---- v7 · exam question page: two clean buttons + one quiet bottom line ---- */
-.qnav{display:flex;gap:8px;margin:12px 14px 6px}
-.qnav .btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-weight:500;font-size:12px;padding:9px 12px;border-radius:999px;background:var(--card);color:var(--text);border:1px solid var(--line2)}
-.qnav .btn:hover{border-color:var(--primary)}
-.qnav .ic{color:var(--primary)}
 .qfoot{position:sticky;bottom:0;z-index:5;display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;align-items:center;margin:10px 0 0;padding:9px 14px;background:var(--card);border-top:1px solid var(--line2);scrollbar-width:none}
 .qfoot::-webkit-scrollbar{display:none}
 .qfoot .btn{font-weight:400;font-size:11px;padding:5px 10px;color:var(--text-weak);background:var(--card);border:1px solid var(--line2);white-space:nowrap;flex-shrink:0;display:inline-flex;align-items:center;gap:5px}
@@ -565,47 +561,115 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
 .gloss-fab .book{width:27px;height:31px;border:2px solid var(--text);border-radius:5px;position:relative;display:flex;align-items:center;justify-content:center}
 .gloss-fab .book:before{content:"";position:absolute;left:4px;top:0;bottom:0;width:2px;background:var(--text);opacity:.55}
 .gloss-fab .book b{font:700 13px/1 system-ui,sans-serif;margin-left:4px;color:var(--text)}
-/* ---- v10 · exam surfaces (unchanged): MORE Mimo, skin only ---- */
- (unchanged from v8): MORE Mimo, skin only ---- */
- MORE Mimo (icons/colours/radii/type ONLY) ---- */
-.konkur .appbar{background:var(--card);border-bottom:1px solid var(--line2);padding:0 16px;height:var(--toolbar);min-height:56px;margin-bottom:10px}
+/* ---- v12 · the separate "konkur exam skin" is GONE; AI screen keeps only these tokens ---- */
+.konkur .appbar{background:var(--card);border-bottom:1px solid var(--line);padding:0 16px;height:var(--toolbar);min-height:56px}
 .konkur .appbar b{font:700 18px/1.2 system-ui,sans-serif;color:var(--text)}
-.konkur .chips .chip{background:var(--card-pressed);border:0;border-radius:999px;padding:6px 13px;font:700 11px/1 system-ui,sans-serif;color:var(--text-weak)}
-.konkur .chips .chip.on{background:var(--primary);color:#fff;box-shadow:0 3px 0 var(--primary-hi)}
-.konkur .sec{font:700 13px/1.2 system-ui,sans-serif;color:var(--primary);letter-spacing:.3px;margin:16px 14px 8px}
-.konkur .cat-meta{background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:8px 11px;font:400 10px/1.8 system-ui,sans-serif;color:var(--text-weak);margin:0 14px 10px}
-.konkur .cat-meta b{color:var(--text)}
-.konkur .grid3{gap:12px}
-.konkur .nodek{background:var(--card-pressed);border:2px solid var(--line2);border-radius:20px;height:88px;box-shadow:0 4px 0 var(--card-pressed);color:var(--primary)}
-.konkur .nodek:hover{border-color:var(--primary)}
-.konkur .nodek .ic{width:30px;height:30px}
-.konkur .nodek .mini{background:var(--card);border:1px solid var(--line2);border-radius:999px;padding:2px 7px;font:700 9px/1.2 system-ui,sans-serif;color:var(--primary)}
-.konkur .label{font:700 12px/1.35 system-ui,sans-serif;color:var(--text)}
-.konkur .card{background:var(--card);border:1px solid var(--line2);border-radius:16px;box-shadow:0 3px 0 var(--card-pressed)}
-.konkur .card b{color:var(--text);font:700 15px/1.3 system-ui,sans-serif}
-.konkur .timerchip{border:1px solid var(--primary);background:var(--card-pressed);color:var(--primary);border-radius:999px;font:700 12px/1 system-ui,sans-serif;gap:5px}
-.konkur .opt{background:var(--card);border:2px solid var(--line2);border-radius:16px;padding:11px 13px}
-.konkur .opt span{background:var(--card-pressed);color:var(--primary);font-weight:700}
-.konkur .opt.on{border-color:var(--primary);background:var(--card-pressed)}
-.konkur .qtext{font:700 15px/1.9 system-ui,sans-serif;color:var(--text)}
-.konkur .qnav .btn,.konkur .qfoot .btn{border:1px solid var(--line2);background:var(--card);border-radius:999px;color:var(--text-weak)}
-.konkur .qnav .btn{font:700 12px/1 system-ui,sans-serif;color:var(--text)}
+.konkur .iconbtn{background:var(--card-pressed);border:1px solid var(--line);color:var(--primary)}
 .konkur .tag{background:var(--card-pressed);border:1px solid var(--primary);color:var(--primary);border-radius:999px}
-.konkur .wrong{background:var(--card-pressed);border:1px solid var(--line2);border-radius:12px}
-.konkur .palette div{border-radius:12px;border:1px solid var(--line2)}
-.konkur .palette div.done{background:var(--card-pressed);border-color:var(--primary)}
-.konkur .iconbtn{background:var(--card-pressed);border:1px solid var(--line2);color:var(--primary)}
-.konkur .keytabs button,.konkur .mini-btn,.konkur .field input{border-radius:12px}
 /* ---- v8 · no visible code/design annotations in the phone UI ---- */
 .screen .hint[data-hidden],.screen [hidden]{display:none!important}
+
+
+/* ---- v12 · EXAM surfaces rebuilt from decoded Mimo lesson layouts ---- */
+.exv12{direction:rtl;background:var(--bg);display:none;flex-direction:column;overflow:hidden}
+.exv12.on{display:flex}
+.exv12 *{scrollbar-width:thin}
+/* chapter_toolbar.xml : 52dp */
+.exv12 .ln{height:52px;min-height:52px;display:flex;align-items:center;gap:6px;padding:0 10px;background:var(--card);border-bottom:1px solid var(--line);position:relative;z-index:3;flex:0 0 52px}
+.exv12 .ln-x,.exv12 .ln-report{width:40px;height:40px;flex:0 0 40px;border:0;background:transparent;color:var(--weak-icon);display:inline-flex;align-items:center;justify-content:center;padding:0}
+.exv12 .ln-x:hover,.exv12 .ln-report:hover{color:var(--primary)}
+.exv12 .ln-mid{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;align-items:center}
+.exv12 .ln-mid b{font:700 11px/1.2 Tahoma,system-ui,sans-serif;color:var(--text-weak);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.exv12 .ln-prog{width:100%;height:6px;border-radius:999px;background:var(--progress-bg);overflow:hidden}
+.exv12 .ln-prog i{display:block;height:100%;border-radius:999px;background:var(--progress);transition:width .22s ease}
+.exv12 .ln-timer{flex:0 0 auto;font:700 10px/1 Tahoma,system-ui,sans-serif;padding:5px 8px;gap:4px}
+.exv12 .tag{font:700 10px/1 Tahoma,system-ui,sans-serif;padding:4px 9px}
+/* lesson body / ScrollView */
+.exv12 .lb-body{flex:1;overflow:auto;padding:8px 16px 16px}
+.exv12 .lb-step{display:flex;justify-content:space-between;align-items:center;gap:10px;font:400 11px/1.5 Tahoma,system-ui,sans-serif;color:var(--text-weak);margin:8px 0 14px}
+.exv12 .lb-subject{display:inline-flex;align-items:center;gap:6px;font:700 11px/1.3 Tahoma,system-ui,sans-serif;color:var(--primary);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 10px;margin:0 0 14px}
+.exv12 .lb-dot{width:6px;height:6px;border-radius:999px;background:var(--progress)}
+.exv12 .lb-sep{color:var(--weak-icon)}
+.exv12 .qtext{font:400 18px/1.8 Tahoma,system-ui,sans-serif;color:var(--text);margin:0 0 16px;letter-spacing:0}
+/* TextInteractionHint */
+.exv12 .lb-hint{display:flex;align-items:center;gap:6px;font:400 12px/1.5 Tahoma,system-ui,sans-serif;color:var(--text-weak);margin:0 0 10px}
+/* choice_list_item.xml : 48dp min, 12dp radius, 16dp/12dp padding */
+.exv12 .lb-choices{display:flex;flex-direction:column;gap:8px}
+.exv12 .opt{width:100%;min-height:52px;margin:0;padding:12px 14px;border:2px solid transparent;border-radius:12px;background:var(--card);box-shadow:0 1px 2px rgba(37,39,70,.10);display:flex;align-items:center;gap:10px;text-align:right;font:400 15px/1.5 Tahoma,system-ui,sans-serif;color:var(--text)}
+.exv12 .opt:hover{background:var(--card-pressed)}
+.exv12 .opt-radio{width:20px;height:20px;flex:0 0 20px;border:2px solid var(--weak-icon);border-radius:999px;display:inline-flex;align-items:center;justify-content:center}
+.exv12 .opt-txt{flex:1}
+.exv12 .opt-num{font:700 12px/1 Tahoma,system-ui,sans-serif;color:var(--text-weak);background:var(--card-pressed);border-radius:999px;padding:4px 7px;flex:0 0 auto}
+.exv12 .opt.on{border-color:var(--blue);background:var(--card-pressed)}
+.exv12 .opt.on .opt-radio{border-color:var(--blue);background:var(--blue)}
+.exv12 .opt.on .opt-radio:after{content:"";width:8px;height:8px;border-radius:999px;background:#fff}
+.exv12 .opt.correct{border-color:var(--success);background:var(--card)}
+.exv12 .opt.correct .opt-radio{border-color:var(--success);background:var(--success)}
+.exv12 .opt.correct .opt-radio:after{content:"";width:8px;height:8px;border-radius:999px;background:#fff}
+.exv12 .opt.wrong{border-color:var(--error);background:var(--card)}
+.exv12 .opt.wrong .opt-radio{border-color:var(--error);background:var(--error)}
+.exv12 .opt.wrong .opt-radio:after{content:"";width:8px;height:8px;border-radius:999px;background:#fff}
+/* lesson_interactive_feedback_bottom_sheet_dialog.xml */
+.exv12 .lb-feedback{display:flex;gap:10px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-right:4px solid var(--success);border-radius:12px;padding:12px;margin:14px 0 0;box-shadow:0 2px 0 var(--card-pressed)}
+.exv12 .lb-feedback.bad{border-right-color:var(--error)}
+.exv12 .lb-feedback .fb-ic{width:30px;height:30px;flex:0 0 30px;border-radius:999px;background:var(--success);color:#fff;display:inline-flex;align-items:center;justify-content:center}
+.exv12 .lb-feedback.bad .fb-ic{background:var(--error)}
+.exv12 .lb-feedback b{font:700 13px/1.4 Tahoma,system-ui,sans-serif;color:var(--text)}
+.exv12 .lb-feedback p{margin:4px 0 0;font:400 12px/1.8 Tahoma,system-ui,sans-serif;color:var(--text-weak)}
+/* quiet utility chip row (secondary exam actions, NOT a scrolling button bar) */
+.exv12 .lb-tools{display:flex;flex-wrap:wrap;gap:6px;margin:18px 0 4px;padding-top:14px;border-top:1px solid var(--line)}
+.exv12 .lb-chip{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);background:var(--card);color:var(--text-weak);border-radius:999px;padding:5px 10px;font:400 11px/1.3 Tahoma,system-ui,sans-serif}
+.exv12 .lb-chip:hover{border-color:var(--primary);color:var(--primary)}
+/* interaction_keyboard_view.xml : 1dp border + 48dp squares + FULL-WIDTH primary CTA */
+.exv12 .lk{flex:0 0 auto;background:var(--card);border-top:1px solid var(--line);padding:10px 16px 8px;display:flex;flex-direction:column;gap:6px}
+.exv12 .lk-row{display:flex;align-items:center;gap:10px}
+.exv12 .lk-square{width:48px;height:48px;flex:0 0 48px;border:1px solid var(--line);background:var(--card);border-radius:16px;color:var(--text-weak);display:inline-flex;align-items:center;justify-content:center;padding:0}
+.exv12 .lk-square:hover{border-color:var(--primary);color:var(--primary)}
+.exv12 .lk-square.marked{border-color:var(--yellow);color:var(--primary);background:var(--card-pressed)}
+.exv12 .lk-cta{flex:1;min-width:140px;height:52px;border:0;border-radius:12px;background:var(--primary);color:#fff;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 3px 0 var(--primary-hi);font:700 16px/1 Tahoma,system-ui,sans-serif}
+.exv12 .lk-cta:active{transform:translateY(2px);box-shadow:0 1px 0 var(--primary-hi)}
+.exv12 .lk-cta b{font-weight:700;letter-spacing:.5px}
+.exv12 .lk-skip{align-self:center;border:0;background:transparent;color:var(--text-weak);font:400 11px/1 Tahoma,system-ui,sans-serif;text-decoration:underline;padding:2px 6px}
+/* ---- exam hub: Mimo list rows instead of a detached 3-column node grid ---- */
+.exv12 .appbar{background:var(--card);border-bottom:1px solid var(--line);padding:0 16px;height:56px;min-height:56px;margin:0;display:flex;align-items:center;justify-content:space-between}
+.exv12 .appbar b{font:700 18px/1.2 Tahoma,system-ui,sans-serif;color:var(--text)}
+.exv12 .iconbtn{background:var(--card-pressed);border:1px solid var(--line);color:var(--primary);border-radius:999px;width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center}
+.exv12 .eh-hero{display:flex;align-items:center;gap:14px;margin:14px 16px 6px;padding:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 2px 0 var(--card-pressed)}
+.exv12 .eh-art{width:64px;height:64px;flex:0 0 64px;border-radius:999px;background:var(--card-pressed);display:flex;align-items:center;justify-content:center;color:var(--primary)}
+.exv12 .eh-hero b{font:700 18px/1.3 Tahoma,system-ui,sans-serif;color:var(--text)}
+.exv12 .eh-hero p{margin:4px 0 0;font:400 12px/1.6 Tahoma,system-ui,sans-serif;color:var(--text-weak)}
+.exv12 .chips{padding:4px 16px 10px}
+.exv12 .chip{font:700 11px/1 Tahoma,system-ui,sans-serif}
+.exv12 .sec{font:700 13px/1.3 Tahoma,system-ui,sans-serif;color:var(--text);margin:18px 16px 2px}
+.exv12 .cat-meta{background:transparent;border:0;border-radius:0;padding:0;font:400 11px/1.75 Tahoma,system-ui,sans-serif;color:var(--text-weak);margin:0 16px 10px}
+.exv12 .cat-meta b{color:var(--primary)}
+.exv12 .grid3{display:flex;flex-direction:column;gap:8px;padding:0 16px}
+.exv12 .grid3>div{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;box-shadow:0 2px 0 var(--card-pressed);cursor:pointer}
+.exv12 .grid3>div:hover{border-color:var(--primary)}
+.exv12 .nodek{width:44px;height:44px;flex:0 0 44px;border-radius:12px;background:var(--card-pressed);border:0;box-shadow:none;display:flex;align-items:center;justify-content:center;color:var(--primary);position:static;padding:0}
+.exv12 .nodek .mini{position:static;display:none}
+.exv12 .label{text-align:right;font:700 12px/1.4 Tahoma,system-ui,sans-serif;color:var(--text);margin:0;min-height:0;flex:1}
+.exv12 .progress{margin:14px 16px}
+/* ---- exam result: Mimo celebration ---- */
+.exv12 .rf-hero{text-align:center;padding:20px 16px 6px}
+.exv12 .rf-art{width:104px;height:104px;margin:0 auto 10px;border-radius:999px;background:var(--card-pressed);display:flex;align-items:center;justify-content:center;color:var(--primary)}
+.exv12 .rf-hero h2{margin:0;font:700 24px/1.4 Tahoma,system-ui,sans-serif;color:var(--text)}
+.exv12 .rf-hero p{margin:6px 0 0;font:400 13px/1.7 Tahoma,system-ui,sans-serif;color:var(--text-weak)}
+.exv12 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 16px;box-shadow:0 2px 0 var(--card-pressed)}
+.exv12 .card b{font:700 14px/1.4 Tahoma,system-ui,sans-serif;color:var(--text)}
+.exv12 .kv{font:400 12px/1.5 Tahoma,system-ui,sans-serif}
+.exv12 .wrong{background:var(--card-pressed);border:1px solid var(--line);border-radius:12px;padding:9px 11px;font:400 11.5px/1.9 Tahoma,system-ui,sans-serif}
+.exv12 .qfoot{position:static;display:flex;flex-wrap:wrap;gap:8px;overflow:visible;margin:14px 16px;padding:0;background:transparent;border:0}
+.exv12 .qfoot .btn{font:700 12px/1 Tahoma,system-ui,sans-serif;padding:10px 14px;border-radius:12px;color:var(--text);background:var(--card);border:1px solid var(--line);white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+.exv12 .qfoot .btn:hover{border-color:var(--primary);color:var(--primary)}
 
 </style>
 </head>
 <body>
 <header class="top">
   <div>
-    <h1>طرح رابط کاربری — دور یازدهم <span class="ver">DESIGN v11 · REVIEW</span></h1>
-    <p>بازآفرینی ۱۰۰٪ بخشهای اصلی میمو <b>از روی کد/مهندسی معکوس</b> · <b>دور یازدهم:</b> لیدربورد رقابتی حذف و فقط «وضعیت من» ماند؛ سرتیترها به <b>«یادگیری برنامه محور»</b> و <b>«یادگیری مبحثی»</b> تبدیل شدند؛ سه کارت درشت با آیکونهای واقعی میمو (بدون هیچ نشان برنامهنویسی)، ۱۲ کورس «درس × پایه»، <b>مدرک پایان دوره</b> با «۲۲ درصد کامل شده»، و زیرمباحث <b>دو هفتهای</b> از ۱ آبان تا ۱۵ اسفند (۵ ماه) با «دروس: زیست، شیمی، ریاضی، فیزیک». معماری اورجینال قوسدار دور دهم، پنج تب، ۷ بخش آزمون، تایمر و قفلها دستنخوردهاند. اسکرینشاتها فقط چک بصری.</p>
+    <h1>طرح رابط کاربری — دور دوازدهم <span class="ver">DESIGN v12 · REVIEW</span></h1>
+    <p>بازآفرینی ۱۰۰٪ بخشهای اصلی میمو <b>از روی کد/مهندسی معکوس</b> · <b>دور دوازدهم:</b> سطوح آزمون از روی لایههای واقعی میمو بازسازی شدند: <code>chapter_toolbar.xml</code> (X + نوار پیشرفت ۶dp + پرچم)، <code>lesson_interactive_multiplechoice_fragment.xml</code>، <code>choice_list_item.xml</code> و <code>interaction_keyboard_view.xml</code> (<b>یک دکمهٔ بنفش تمامعرض CONTINUE</b> + دکمههای مربعی ۴۸dp). دو دکمهٔ هموزن «سؤال قبل / سؤال بعد» و نوار ۷ دکمهای حذف شدند؛ پاسخبرگ، پاسخنامه، AI و تایمر در ردیف چیپهای آرام و پاسخنامهٔ تشریحی بهصورت پنل feedback میمو نمایش داده میشوند. معماری اورجینال قوسدار، ۵ تب، ۷ بخش آزمون، ۲۷۰ دقیقهٔ ثابت و قفلها دستنخوردهاند. اسکرینشاتها فقط چک بصری.</p>
   </div>
   <div style="display:flex;gap:7px;flex-wrap:wrap">
     <button class="btn" id="themeBtn">🌙 حالت شب</button>
@@ -800,8 +864,12 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
       </section>
 
 <!-- ============ 8. EXAM HUB (new section) ============ -->
-      <section class="screen konkur" data-screen="exam-hub">
+      <section class="screen exv12" data-screen="exam-hub" data-code="quiz_introduction_fragment.xml">
         <div class="appbar"><b>آزمونها</b><div class="left"><button class="iconbtn" data-help="هاب آزمون"><span data-icon="ic_help" data-size="18" data-mono="1"></span></button></div></div>
+        <div class="eh-hero" data-code="quiz_introduction_fragment.xml · iv_quiz_introduction / TextH1 / TextP1">
+          <div class="eh-art"><span data-icon="ic_mimo_mascot" data-size="48"></span></div>
+          <div><b>آزمونها</b><p>هر آزمون، یک قدم نزدیکتر به هدف کنکور</p></div>
+        </div>
         <div class="chips"><span class="chip on">همه</span><span class="chip">جامع</span><span class="chip">زماندار</span><span class="chip">تکدرسی</span><span class="chip">مبحثی</span><span class="chip">این ماه</span><span class="chip">تحلیلی</span><span class="chip">جمع بندی</span></div>
         <div class="sec">۱ · آزمونهای جامع</div>
         <div class="cat-meta">قالب ثابت: <b>زمان ثابت ۲۷۰ دقیقه</b> · ۲۰۰–۴۰۰ سؤال · نمرهٔ منفی ⅓ · «زمان خالص آزمون» · پاسخنامه در پایان آزمون باز میشود</div>
@@ -827,32 +895,68 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
         <div class="progress"><i style="width:62%"></i></div>
       </section>
 
-      <!-- ============ 9. EXAM RUN ============ -->
-      <section class="screen konkur" data-screen="exam-run">
-        <div class="appbar"><div class="left"><button class="iconbtn" data-nav="exam-hub"><span data-icon="ic_arrow_back_24" data-size="20" data-mono="1"></span></button><b id="examTitle">آزمون جامع کنکور</b></div><button class="timerchip" id="timerChip"><span data-icon="ic_clock_black_24dp" data-size="16" data-mono="1"></span><span id="timerLabel">تنظیم زمان</span></button></div>
-        <div id="examFinished"></div>
-        <div class="qmeta"><span>سؤال ۳ از ۲۰</span><span id="timerStateText">زمان تنظیم نشده</span></div>
-        <div class="qtext" id="qText">کدامیک از گزینههای زیر دربارهٔ «سمها» درست است؟ اگر پاسخ را نمیدانید میتوانید علامت بزنید و بعداً برگردید.</div>
-        <div class="opt" data-opt="1"><span>۱</span> گزینهٔ اول</div><div class="opt" data-opt="2"><span>۲</span> گزینهٔ دوم</div><div class="opt" data-opt="3"><span>۳</span> گزینهٔ سوم</div><div class="opt" data-opt="4"><span>۴</span> گزینهٔ چهارم</div>
-        <div class="qnav">
-          <button class="btn" id="prevQ"><span data-icon="ic_arrow_left" data-size="16" data-mono="1"></span>سؤال قبل</button>
-          <button class="btn" id="nextQ">سؤال بعد<span data-icon="ic_arrow_right" data-size="16" data-mono="1"></span></button>
+      <!-- ============ 9. EXAM RUN · Mimo lesson_interactive_multiplechoice (v12) ============ -->
+      <section class="screen exv12" data-screen="exam-run" data-code="lesson_interactive_multiplechoice_fragment.xml">
+        <!-- chapter_toolbar.xml : 52dp · btn_lesson_close / pb_chapter / btn_lesson_report -->
+        <div class="ln" data-code="chapter_toolbar.xml · lesson_progress_navbar_height=52dp · pb_chapter=6dp">
+          <button class="ln-x" data-sheet="exitSheet" aria-label="خروج"><span data-icon="ic_close" data-size="24" data-mono="1"></span></button>
+          <div class="ln-mid"><b id="examTitle">آزمون جامع کنکور</b><div class="ln-prog" data-code="ProgressBarChapter / progress_bar_chapter.xml"><i id="examProgress" style="width:15%"></i></div></div>
+          <button class="timerchip ln-timer" id="timerChip" data-code="timer ONLY inside exam · comprehensive fixed at 270 min"><span data-icon="ic_clock_black_24dp" data-size="16" data-mono="1"></span><span id="timerLabel">تنظیم زمان</span></button>
+          <button class="ln-report" data-sheet="paletteSheet" aria-label="پاسخبرگ"><span data-icon="ic_flag" data-size="22" data-mono="1"></span></button>
         </div>
-        <div class="hint" id="policyHint" hidden></div>
-        <div class="qfoot">
-          <button class="btn" id="answerSheetBtn" data-sheet="paletteSheet">پاسخبرگ</button>
-          <button class="btn" id="answerKeyBtn" data-sheet="keySheet">پاسخنامه</button>
-          <button class="btn" data-sheet="exitSheet">خروج</button>
-          <button class="btn" id="endExam">اتمام آزمون</button>
-          <button class="btn" id="askAiBtn"><span data-icon="ic_magic_wand" data-size="15" data-mono="1"></span>توضیح با هوش مصنوعی</button>
-          <button class="btn" id="timerPause" style="display:none">توقف</button>
-          <button class="btn" id="timerReset" style="display:none">تنظیم مجدد</button>
+
+        <!-- ScrollView nsv_multiplechoice_lesson_content / LessonDescriptionView / ChoiceView -->
+        <div class="lb-body" data-code="nsv_multiplechoice_lesson_content · layout_lesson_description · lesson_multiplechoice_view">
+          <div class="lb-step"><span id="examStep">سؤال ۳ از ۲۰</span><span id="timerStateText">زمان تنظیم نشده</span></div>
+          <div class="lb-subject" id="examSubject"><span class="lb-dot"></span>زیست<span class="lb-sep">·</span>سمها<span class="lb-sep">·</span>دشواری متوسط</div>
+          <h2 class="qtext" id="qText" data-code="LessonDescriptionView · TextH2 20sp / TextP1 18sp">کدامیک از گزینههای زیر دربارهٔ «سمها» درست است؟ اگر پاسخ را نمیدانید میتوانید علامت بزنید و بعداً برگردید.</h2>
+          <div class="lb-hint" data-code="tv_multiplechoice_hint · interaction_hint_single_choice = Tap the correct answer"><span data-icon="ic_help" data-size="14" data-mono="1"></span>گزینهٔ درست را انتخاب کنید</div>
+          <div class="lb-choices" id="exChoices" data-code="rv_multiplechoice_options · choice_list_item.xml · layout_choice_card_item.xml">
+            <button class="opt" data-opt="1"><span class="opt-radio"></span><span class="opt-txt">گزینهٔ اول</span><span class="opt-num">۱</span></button>
+            <button class="opt" data-opt="2"><span class="opt-radio"></span><span class="opt-txt">گزینهٔ دوم</span><span class="opt-num">۲</span></button>
+            <button class="opt" data-opt="3"><span class="opt-radio"></span><span class="opt-txt">گزینهٔ سوم</span><span class="opt-num">۳</span></button>
+            <button class="opt" data-opt="4"><span class="opt-radio"></span><span class="opt-txt">گزینهٔ چهارم</span><span class="opt-num">۴</span></button>
+          </div>
+          <div class="lb-feedback" id="exFeedback" hidden data-code="lesson_interactive_feedback_bottom_sheet_dialog.xml">
+            <span class="fb-ic" data-icon="ic_check_white" data-size="18" data-mono="1"></span>
+            <div><b id="exFeedbackTitle">پاسخ درست است</b><p id="exFeedbackText">توضیح مبحث و ارجاع به کتاب درسی.</p></div>
+          </div>
+          <div id="examFinished"></div>
+          <div class="hint" id="policyHint" hidden></div>
+          <div class="lb-tools" data-code="lesson_skip / report_lesson / exam utilities (quiet chips, not a scrolling button bar)">
+            <button class="lb-chip" id="answerSheetBtn" data-sheet="paletteSheet"><span data-icon="ic_list_bulleted" data-size="16" data-mono="1"></span>پاسخبرگ</button>
+            <button class="lb-chip" id="answerKeyBtn" data-sheet="keySheet"><span data-icon="ic_file" data-size="16" data-mono="1"></span>پاسخنامه</button>
+            <button class="lb-chip" id="askAiBtn"><span data-icon="ic_magic_wand" data-size="16" data-mono="1"></span>توضیح با هوش مصنوعی</button>
+            <button class="lb-chip" id="endExam"><span data-icon="ic_task_completed" data-size="16" data-mono="1"></span>اتمام آزمون</button>
+            <button class="lb-chip" id="timerPause" style="display:none"><span data-icon="ic_play" data-size="16" data-mono="1"></span><span id="timerPauseLabel">توقف</span></button>
+            <button class="lb-chip" id="timerReset" style="display:none"><span data-icon="ic_settings" data-size="16" data-mono="1"></span>تنظیم مجدد</button>
+            <button class="lb-chip" data-sheet="exitSheet"><span data-icon="ic_close" data-size="16" data-mono="1"></span>خروج</button>
+          </div>
+        </div>
+
+        <!-- interaction_keyboard_view.xml / run_button_view.xml : NO prev/next pill pair -->
+        <div class="lk" data-code="interaction_keyboard_view.xml · interaction_keyboard_height=68dp · run_button_view.xml">
+          <div class="lk-row">
+            <button class="lk-square" id="prevQ" aria-label="سؤال قبل" data-code="btn_undo · 48dp square"><span data-icon="ic_arrow_back_24" data-size="22" data-mono="1"></span></button>
+            <button class="lk-square" id="markQ" aria-label="علامتگذاری" data-code="btn_reset · 48dp square"><span data-icon="bookmark" data-size="20" data-mono="1"></span></button>
+            <button class="lk-cta" id="nextQ" data-code="btn_continue_big / btn_submit · lesson_continue=Continue · lesson_submit=Submit"><b id="nextQLabel">ادامه</b><span data-icon="ic_arrow_right" data-size="18" data-mono="1"></span></button>
+          </div>
+          <button class="lk-skip" id="skipQ" data-code="lesson_skip=Skip">رد کردن سؤال</button>
         </div>
       </section>
 
-      <!-- ============ 10. EXAM RESULT ============ -->
-      <section class="screen konkur" data-screen="exam-result">
-        <div class="appbar"><div class="left"><button class="iconbtn" data-nav="exam-hub"><span data-icon="ic_arrow_back_24" data-size="20" data-mono="1"></span></button><b>نتیجهٔ آزمون</b></div><span class="tag" id="resultKind">جامع</span></div>
+      <!-- ============ 10. EXAM RESULT · Mimo chapter-finished (v12) ============ -->
+      <section class="screen exv12" data-screen="exam-result" data-code="lesson_awesome_fragment.xml / chapter_finished_leaderboard_fragment.xml">
+        <div class="ln">
+          <button class="ln-x" data-nav="exam-hub" aria-label="بازگشت"><span data-icon="ic_arrow_back_24" data-size="22" data-mono="1"></span></button>
+          <div class="ln-mid"><b>نتیجهٔ آزمون</b><div class="ln-prog"><i style="width:100%"></i></div></div>
+          <span class="tag" id="resultKind">جامع</span>
+        </div>
+        <div class="rf-hero" data-code="chapter finished celebration · full-width CTA at bottom">
+          <div class="rf-art"><span data-icon="ic_mimo_mascot" data-size="72"></span></div>
+          <h2>آزمون تمام شد!</h2>
+          <p>۳ سؤال نیاز به مرور دارد. پاسخنامهٔ تشریحی آماده است.</p>
+        </div>
         <div class="card">
           <b>نتیجه و تحلیل</b>
           <div class="kv"><span>درصد با نمرهٔ منفی</span><span>۶۸٪</span></div>
@@ -867,8 +971,8 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
           <div class="wrong">سؤال ۹ · فیزیک / ترمودینامیک — صورت سؤال: «کار انجامشده در فرایند همحجم…» · پاسخ شما: گزینهٔ ۲ · پاسخ صحیح: گزینهٔ ۳</div>
         </div>
         <div class="qfoot result-foot">
-          <button class="btn" id="resultBargBtn" data-sheet="paletteSheet">پاسخبرگ</button>
-          <button class="btn" id="resultKeyBtn" data-sheet="keySheet">پاسخنامه</button>
+          <button class="btn" id="resultBargBtn" data-sheet="paletteSheet"><span data-icon="ic_list_bulleted" data-size="15" data-mono="1"></span>پاسخبرگ</button>
+          <button class="btn" id="resultKeyBtn" data-sheet="keySheet"><span data-icon="ic_file" data-size="15" data-mono="1"></span>پاسخنامه</button>
           <button class="btn" id="askAiResultBtn"><span data-icon="ic_magic_wand" data-size="15" data-mono="1"></span>توضیح با هوش مصنوعی</button>
         </div>
       </section>
@@ -986,6 +1090,15 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
   </div>
 
   <aside class="spec">
+    <h3>دور دوازدهم · آزمونها روی معماری واقعی صفحهٔ درس میمو</h3>
+    <ul>
+      <li><b>کد مبنا:</b> <code>chapter_toolbar.xml</code> (۵۲dp: <code>btn_lesson_close</code> / <code>pb_chapter</code> ۶dp / <code>btn_lesson_report</code>)، <code>lesson_interactive_multiplechoice_fragment.xml</code>، <code>choice_view.xml</code>، <code>choice_list_item.xml</code>، <code>layout_choice_card_item.xml</code>، <code>interaction_keyboard_view.xml</code>، <code>run_button_view.xml</code>، <code>lesson_interactive_feedback_bottom_sheet_dialog.xml</code>، <code>quiz_introduction_fragment.xml</code>. شواهد کامل: <code>DESIGN/EXAM_UI_CODE_EVIDENCE.json</code>.</li>
+      <li><b>اصلاح دکمهها:</b> دو دکمهٔ هموزن <code>.qnav</code> («سؤال قبل» + «سؤال بعد») و نوار ۷ دکمهای <code>.qfoot</code> بطور کامل حذف شدند. حالا <b>یک دکمهٔ بنفش تمامعرض</b> (<code>btn_continue_big</code> / <code>btn_submit</code>) + یک دکمهٔ مربعی ۴۸dp برای «سؤال قبل» (<code>btn_undo</code>) + یک مربع ۴۸dp علامتگذاری (<code>btn_reset</code>) داخل فوتر ۶۸dp قرار دارند؛ «رد کردن سؤال» هم از <code>lesson_skip</code> آمده.</li>
+      <li><b>چرخهٔ واقعی:</b> انتخاب گزینه ← «بررسی پاسخ» (<code>lesson_submit</code>) ← پنل feedback سبز/قرمز با توضیح مبحث ← «ادامه» (<code>lesson_continue</code>) ← سؤال بعد. گزینهها همان <code>multiplechoice_background_selected/correct/wrong</code> با شعاع ۱۲dp و حاشیهٔ ۲dpاند.</li>
+      <li><b>هماهنگی پوسته:</b> کلاس جداگانهٔ <code>konkur</code> از سه صفحهٔ آزمون برداشته شد؛ همان توکنهای ARSC، همان وکتورها، همان تایپوگرافی. هاب آزمونها به ردیفهای لیستی میمو + کارت معرفی <code>quiz_introduction</code> تبدیل شد و نتیجه به صفحهٔ celebration میمو.</li>
+      <li><b>بدون تغییر:</b> ۵ تب و <code>MAX</code> ممنوع · ۷ بخش لیبلدار + قالبها + پاسخنامهٔ تشریحی · تنها قفل «آزمون نهایی / دو هفتگی» · ۲۷۰ دقیقهٔ ثابت · تایمر فقط داخل آزمون · «پاسخبرگ»≠«پاسخنامه» · تکدکمهٔ AI · <code>section-practice</code> جدا · معماری قوسدار اورجینال.</li>
+      <li>اسکرینشات <code>mimo-04-lesson-continue.jpg</code> فقط <b>چک بصری</b>؛ حکم نهایی از XML/DEX/ARSC است. در صورت نپسندیدن، <code>tools/design_v11_full.html</code> مسیر برگشت است.</li>
+    </ul>
     <h3>دور یازدهم · لیدربورد «وضعیت من»، مسیرهای برنامهمحور و کورسهای مبحثی</h3>
     <ul>
       <li>بلوک <code>Wooden League / 6d 22h 38m</code> و <b>همهٔ ۵ ردیف رقیب</b> بطور کامل حذف شد؛ فقط <b>My status / وضعیت من</b> و کارتهای آمار و «آزمونها و امتیازات من» ماند.</li>
@@ -1053,7 +1166,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
 </div>
 
 <footer class="foot-note">
-⚠️ این <b>طرح دور یازدهم v11</b> است، نه محصول. گرههای مسیر یادگیری مستقیماً از <code>NODE_CODE_GEOMETRY.json</code> (جداول ARSC، <code>pathData</code>، شِیپها، <code>test-tracks.json</code> و ۹۲ کلاس PathMap DEX) رندر شدند؛ ۱۴ اسکرینشات فقط <b>چک بصری</b>اند. روتین روزانه و ایدهٔ امتیازدهیاش بهکل حذف شد، دیکته حذف شد، یادداشتهای توضیحی داخل UI پاک شدند و ظاهر آزمونها فقط با آیکون/رنگ میمو نزدیکتر شد. در دور دهم درخواست خط صاف پس گرفته شد و <b>معماری اورجینال قوسدار</b> با کاوش عمیقتر کد بازسازی شد. در دور یازدهم محتوای لیدربورد/مسیرها/کورسها کنکوری و بدون نشانهای برنامهنویسی شد. نسخههای <b>DESIGN v6</b> و <b>DESIGN v7</b> بایگانی حسابرسیاند. «وارد کردن کلید API» فقط یک یادداشت است و هیچ صفحۀ تنظیماتی طراحی نشده. هیچ کد محصولی نوشته نشده است.
+⚠️ این <b>طرح دور دوازدهم v12</b> است، نه محصول. گرههای مسیر یادگیری مستقیماً از <code>NODE_CODE_GEOMETRY.json</code> (جداول ARSC، <code>pathData</code>، شِیپها، <code>test-tracks.json</code> و ۹۲ کلاس PathMap DEX) رندر شدند؛ ۱۴ اسکرینشات فقط <b>چک بصری</b>اند. روتین روزانه و ایدهٔ امتیازدهیاش بهکل حذف شد، دیکته حذف شد، یادداشتهای توضیحی داخل UI پاک شدند و ظاهر آزمونها فقط با آیکون/رنگ میمو نزدیکتر شد. در دور دهم درخواست خط صاف پس گرفته شد و <b>معماری اورجینال قوسدار</b> با کاوش عمیقتر کد بازسازی شد. در دور یازدهم محتوای لیدربورد/مسیرها/کورسها کنکوری و بدون نشانهای برنامهنویسی شد. در دور دوازدهم سطوح آزمون با معماری واقعی صفحهٔ درس/کوییز میمو هماهنگ شدند. نسخههای <b>DESIGN v6</b> و <b>DESIGN v7</b> بایگانی حسابرسیاند. «وارد کردن کلید API» فقط یک یادداشت است و هیچ صفحۀ تنظیماتی طراحی نشده. هیچ کد محصولی نوشته نشده است.
 </footer>
 <div class="toast" id="toast"></div>
 
@@ -1155,7 +1268,7 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
   }
   qa(".nodek[data-exam]").forEach(function(n){n.addEventListener("click",function(){
     EXAM_KIND=n.dataset.kind||"normal";q("#examTitle").textContent=n.dataset.exam;
-    q("#examFinished").innerHTML="";resetOptions();T.state="idle";clearInterval(T.timer);T.timer=null;
+    q("#examFinished").innerHTML="";resetOptions();renderQuestion();T.state="idle";clearInterval(T.timer);T.timer=null;
     applyPolicy();go("exam-run");toast("وارد «"+n.dataset.exam+"» شدید — "+(POLICY[EXAM_KIND]||POLICY.normal).label);
   })});
   applyPolicy();
@@ -1168,8 +1281,8 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
     chip.classList.remove("running","finished");
     if(T.state==="idle"){label.textContent="تنظیم زمان";stateText.textContent="زمان تنظیم نشده";q("#timerPause").style.display="none";q("#timerReset").style.display="none"}
     else if(T.state==="setting"){label.textContent="تنظیم زمان";stateText.textContent="در حال تنظیم"}
-    else if(T.state==="running"){label.textContent=fmt(T.remaining);chip.classList.add("running");stateText.textContent="زمان معکوس در حال اجرا";q("#timerPause").style.display="";q("#timerReset").style.display="";q("#timerPause").textContent="توقف"}
-    else if(T.state==="paused"){label.textContent=fmt(T.remaining);stateText.textContent="متوقف شده";q("#timerPause").style.display="";q("#timerReset").style.display="";q("#timerPause").textContent="ادامه"}
+    else if(T.state==="running"){label.textContent=fmt(T.remaining);chip.classList.add("running");stateText.textContent="زمان معکوس در حال اجرا";q("#timerPause").style.display="";q("#timerReset").style.display="";q("#timerPauseLabel").textContent="توقف"}
+    else if(T.state==="paused"){label.textContent=fmt(T.remaining);stateText.textContent="متوقف شده";q("#timerPause").style.display="";q("#timerReset").style.display="";q("#timerPauseLabel").textContent="ادامه"}
     else if(T.state==="finished"){label.textContent=fmt(0);chip.classList.add("finished");stateText.textContent="زمان تمام شد";q("#timerPause").style.display="none";q("#timerReset").style.display=""}
   }
   function tick(){if(T.state!=="running")return;T.remaining=Math.max(0,Math.ceil((T.endAt-Date.now())/1000));if(T.remaining===0)finishExam("زمان تمام شد (ثبت خودکار)");render()}
@@ -1205,10 +1318,66 @@ body.night footer.foot-note{background:#4A3A22;color:#F5D9A8;border-color:#8A6A3
     clearInterval(T.timer);T.timer=null;T.state="idle";T.remaining=0;T.total=0;
     q("#examFinished").innerHTML="";resetOptions();q("#timerSheet").classList.add("on");toast("زمان پاک شد — دوباره عدد بدهید");render();
   });
-  function resetOptions(){qa(".opt").forEach(function(o){o.style.pointerEvents="";o.style.opacity="";o.classList.remove("on")})}
-  qa(".opt").forEach(function(o){o.addEventListener("click",function(){if(T.state==="finished")return;qa(".opt").forEach(function(x){x.classList.remove("on")});o.classList.add("on")})});
-  q("#nextQ").addEventListener("click",function(){toast("سؤال بعدی (همان چیدمان lesson_interactive میمو)")});
-  q("#prevQ").addEventListener("click",function(){toast("سؤال قبل (همان چیدمان lesson_interactive میمو)")});
+  function resetOptions(){qa(".opt").forEach(function(o){o.style.pointerEvents="";o.style.opacity="";o.classList.remove("on","correct","wrong")})}
+  /* ============ v12 · Mimo lesson_interactive question flow ============
+     ChoiceView selection -> btn_submit (بررسی پاسخ) -> feedback bottom sheet
+     -> btn_continue_big (ادامه) -> next question.  btn_undo = سؤال قبل (48dp square).
+     No equal-weight prev/next pill pair any more (interaction_keyboard_view.xml). */
+  var QBANK=[
+    {sub:"زیست · سمها · دشواری متوسط",stem:"کدامیک از گزینههای زیر دربارهٔ «سمها» درست است؟",
+     opts:["سمها همواره تنها در کبد ساخته میشوند","سمها میتوانند با اتصال به آنزیمها، فعالیت آنها را مهار کنند","همهٔ سمها در بدن به گلوکز تبدیل میشوند","سمها فقط از راه پوست وارد بدن میشوند"],ok:1,
+     expl:"سمها با اتصال به جایگاه فعال آنزیمها میتوانند آنها را مهار کنند؛ زیست یازدهم، فصل سمها و بیماریها."},
+    {sub:"شیمی · تعادل شیمیایی · دشواری متوسط",stem:"ثابت تعادل یک واکنش برگشتپذیر در دمای ثابت، با افزایش غلظت یکی از واکنشدهندهها…",
+     opts:["کاهش مییابد","افزایش مییابد","تغییر نمیکند","صفر میشود"],ok:2,
+     expl:"Kc فقط تابع دماست؛ تغییر غلظت، سامانه را جابهجا میکند ولی مقدار ثابت تعادل ثابت میماند (اصل لوشاتلیه)."},
+    {sub:"فیزیک · ترمودینامیک · دشواری سخت",stem:"کار انجامشده توسط گاز در یک فرایند همحجم برابر است با…",
+     opts:["PΔV","صفر","nRΔT","ΔU"],ok:1,
+     expl:"در فرایند همحجم ΔV=۰ است، پس W=PΔV=۰ و تمام گرما صرف تغییر انرژی درونی میشود."},
+    {sub:"ریاضی · مشتق · دشواری متوسط",stem:"مشتق تابع f(x)=x³-3x در x=۱ کدام است؟",
+     opts:["۰","۱","۳","۶"],ok:0,
+     expl:"f′(x)=3x²-3، پس f′(1)=0؛ نقطهٔ بحرانی و اکسترمم نسبی."},
+    {sub:"زیست · ژنتیک · دشواری آسان",stem:"در قانون دوم مندل (تفکیک)، نسبت ژنوتیپی نسل F₂ برای یک صفت تکژنی چیست؟",
+     opts:["۳:۱","۱:۲:۱","۹:۳:۳:۱","۱:۱"],ok:1,
+     expl:"نسبت فنوتیپی ۳:۱ و نسبت ژنوتیپی ۱:۲:۱ است (AA:Aa:aa)."}
+  ];
+  var QI=2,QCHECKED=false;
+  function renderQuestion(){
+    var item=QBANK[QI%QBANK.length];
+    q("#examStep").textContent="سؤال "+fa(QI+1)+" از ۲۰";
+    q("#examSubject").innerHTML='<span class="lb-dot"></span>'+esc(item.sub.split(" · ")[0])+'<span class="lb-sep">·</span>'+esc(item.sub.split(" · ")[1])+'<span class="lb-sep">·</span>'+esc(item.sub.split(" · ")[2]);
+    q("#qText").textContent=item.stem;
+    qa("#exChoices .opt").forEach(function(o,i){o.querySelector(".opt-txt").textContent=item.opts[i]});
+    resetOptions();q("#exFeedback").hidden=true;QCHECKED=false;
+    q("#nextQLabel").textContent="ادامه";
+    q("#examProgress").style.width=Math.min(100,((QI+1)/20)*100)+"%";
+    q("#markQ").classList.remove("marked");
+    paintIcons(q("#examSubject"));
+  }
+  function setCtaLabel(){q("#nextQLabel").textContent=(q(".opt.on")&&!QCHECKED)?"بررسی پاسخ":"ادامه"}
+  qa(".opt").forEach(function(o){o.addEventListener("click",function(){
+    if(T.state==="finished")return;
+    qa(".opt").forEach(function(x){x.classList.remove("on","correct","wrong")});
+    o.classList.add("on");QCHECKED=false;q("#exFeedback").hidden=true;setCtaLabel();
+  })});
+  q("#nextQ").addEventListener("click",function(){
+    var chosen=q(".opt.on");
+    if(chosen&&!QCHECKED){
+      var item=QBANK[QI%QBANK.length];
+      var ok=+chosen.dataset.opt-1===item.ok;
+      QCHECKED=true;
+      chosen.classList.remove("on");chosen.classList.add(ok?"correct":"wrong");
+      var fb=q("#exFeedback");fb.classList.toggle("bad",!ok);fb.hidden=false;
+      q("#exFeedbackTitle").textContent=ok?"پاسخ درست است":"پاسخ نادرست است";
+      q("#exFeedbackText").textContent=item.expl;
+      q("#nextQLabel").textContent="ادامه";toast(ok?"درست ✔ پاسخنامهٔ تشریحی نشان داده شد":"نادرست ✕ توضیح مبحث نشان داده شد");
+      return;
+    }
+    QI=Math.min(19,QI+1);renderQuestion();toast("سؤال بعدی · "+fa(QI+1)+" از ۲۰");
+  });
+  q("#prevQ").addEventListener("click",function(){QI=Math.max(0,QI-1);renderQuestion();toast("سؤال قبل · "+fa(QI+1)+" از ۲۰")});
+  q("#skipQ").addEventListener("click",function(){QI=Math.min(19,QI+1);renderQuestion();toast("سؤال رد شد")});
+  q("#markQ").addEventListener("click",function(){q("#markQ").classList.toggle("marked");toast(q("#markQ").classList.contains("marked")?"سؤال علامتگذاری شد":"علامت برداشته شد")});
+  renderQuestion();
   q("#submitExam").addEventListener("click",function(){q("#paletteSheet").classList.remove("on");finishExam("پاسخها ثبت شد")});
   q("#endExam").addEventListener("click",function(){finishExam("آزمون به پایان رسید")});
   var pal=q("#palette");for(var i=1;i<=20;i++){

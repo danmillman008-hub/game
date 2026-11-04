@@ -1,0 +1,158 @@
+{
+  "round": "v12",
+  "method": "CODE_FIRST / decoded APK resources; screenshots VISUAL_CROSSCHECK_ONLY",
+  "apk": "com.getmimo 9.35 / versionCode 1792759685",
+  "principle": "The exam screens must look like the SAME app as the Learn screens. No separate 'konkur' skin, no bespoke button pairs.",
+  "layouts": {
+    "chapter_toolbar.xml": "52dp nav: btn_lesson_close(ic_close) | pb_chapter(6dp ProgressBarChapter) | btn_lesson_report(ic_flag) | v_line 1dp line_primary",
+    "lesson_interactive_fragment.xml": "FrameLayout container_lesson_interactive, paddingTop=lesson_progress_navbar_height",
+    "lesson_interactive_multiplechoice_fragment.xml": "LinearLayout vertical, background_primary; ScrollView nsv_multiplechoice_lesson_content (weight 1) with LessonDescriptionView + LessonOutputView + ChoiceView; InteractionKeyboardContainerView pinned at bottom",
+    "choice_view.xml": "tv_multiplechoice_hint (TextInteractionHint) + rv_multiplechoice_options RecyclerView",
+    "choice_list_item.xml": "TextView TextP1 18sp, minHeight 48dp, margin 4dp/12dp, padding 16dp/12dp, elevation 1dp, background multiplechoice_background_unselected",
+    "layout_choice_card_item.xml": "MaterialRadioButton + tv_choice_card_item_name (TextP2 16sp), padding 12dp",
+    "interaction_keyboard_view.xml": "68dp; border_top 1dp line_primary; btn_reset/btn_undo 48dp squares on left; RunButton with btn_play / btn_continue_big / btn_submit full-width on right",
+    "run_button_view.xml": "btn_play 48dp, btn_continue_big (0dp full width, min 140dp), btn_submit (same)",
+    "lesson_interactive_feedback_bottom_sheet_dialog.xml": "drawer_bottom_sheet_background, maxWidth 496dp; compose feedback content = correct / wrong explanation",
+    "quiz_introduction_fragment.xml": "ic_survey illustration + TextH1 title + TextP1 description + btn_start_quiz / btn_not_now full-width buttons",
+    "lesson_awesome_fragment.xml / chapter_finished_leaderboard_fragment.xml": "celebration hero + stats + one full-width bottom CTA"
+  },
+  "dimens_dp": {
+    "lesson_progress_navbar_height": 52,
+    "lesson_progressbar_height": 6,
+    "lesson_content_margin_top": 8,
+    "lesson_content_margin_bottom": 16,
+    "interaction_keyboard_height": 68,
+    "interaction_keyboard_button_margin_bottom": 12,
+    "interaction_keyboard_button_width": 140,
+    "multiplechoice_elevation": 1,
+    "cardview_corner_radius_large": 12,
+    "spacing_xxs": 4,
+    "spacing_xs": 8,
+    "spacing_s": 12,
+    "spacing_m": 16,
+    "spacing_l": 24,
+    "spacing_xl": 32,
+    "toolbar_height": 56
+  },
+  "colors": {
+    "background_primary": "#FFF6F7FB",
+    "navbar_background": "#FFFFFFFF",
+    "text_primary": "#FF252746",
+    "text_weak": "#FF4A4D85",
+    "navbar_icon": "#FF626596",
+    "line_primary": "#FFEDEEF6",
+    "button_primary": "#FF7E4BDE",
+    "button_primary_highlight": "#FF6E3EC8",
+    "selection_enabled": "#FFFFFFFF",
+    "selection_selected": "#FFEDEEF6",
+    "support_green": "#FF66BC5A",
+    "support_blue": "#FF3890FA",
+    "support_coral": "#FFF05A6E",
+    "progress_chapter_primary": "#FF8D60E2",
+    "progress_chapter_background": "#FFE4E6F1"
+  },
+  "styles": {
+    "TextH1": 24,
+    "TextH2": 20,
+    "TextP1": 18,
+    "TextP2": 16,
+    "TextLabel1": 14,
+    "TextButton1": 18,
+    "TextButton2": 16,
+    "TextInteractionHint": "text_weak + ic_info_circle drawableStartCompat + spacing_l top"
+  },
+  "strings": {
+    "lesson_continue": "Continue",
+    "lesson_submit": "Submit",
+    "lesson_skip": "Skip",
+    "continue_next": "Continue next",
+    "start_quiz": "Start quiz",
+    "interaction_hint_single_choice": "Tap the correct answer",
+    "interaction_hint_multiple_choice": "Tap the correct answers"
+  },
+  "drawables": [
+    "multiplechoice_background_unselected.xml",
+    "multiplechoice_background_selected.xml",
+    "multiplechoice_background_correct.xml",
+    "multiplechoice_background_wrong.xml",
+    "progress_bar_chapter.xml",
+    "drawer_bottom_sheet_background.xml",
+    "ic_close.xml",
+    "ic_flag.xml",
+    "ic_info_circle.xml"
+  ],
+  "ui_mapping": [
+    {
+      "apk": "btn_lesson_close (ic_close)",
+      "prototype": ".ln-x → exitSheet"
+    },
+    {
+      "apk": "pb_chapter (SpringAnimatingProgressBar 6dp)",
+      "prototype": ".ln-prog > i #examProgress"
+    },
+    {
+      "apk": "btn_lesson_report (ic_flag)",
+      "prototype": ".ln-report → paletteSheet"
+    },
+    {
+      "apk": "LessonDescriptionView / TextH1-H2",
+      "prototype": ".qtext #qText"
+    },
+    {
+      "apk": "tv_multiplechoice_hint (TextInteractionHint)",
+      "prototype": ".lb-hint"
+    },
+    {
+      "apk": "rv_multiplechoice_options / choice_list_item",
+      "prototype": ".lb-choices > .opt"
+    },
+    {
+      "apk": "multiplechoice_background_selected/correct/wrong",
+      "prototype": ".opt.on / .correct / .wrong"
+    },
+    {
+      "apk": "lesson_interactive_feedback_bottom_sheet_dialog",
+      "prototype": "#exFeedback"
+    },
+    {
+      "apk": "btn_undo 48dp square",
+      "prototype": "#prevQ .lk-square (سؤال قبل)"
+    },
+    {
+      "apk": "btn_reset 48dp square",
+      "prototype": "#markQ .lk-square (علامتگذاری)"
+    },
+    {
+      "apk": "btn_continue_big / btn_submit FULL-WIDTH primary",
+      "prototype": "#nextQ .lk-cta"
+    },
+    {
+      "apk": "lesson_skip",
+      "prototype": "#skipQ .lk-skip"
+    },
+    {
+      "apk": "lesson_awesome_fragment celebration",
+      "prototype": ".rf-hero (exam-result)"
+    }
+  ],
+  "button_correction": {
+    "before_v11": "two equal-weight pill buttons .qnav: «سؤال قبل» (left) + «سؤال بعد» (right), plus a 7-button horizontally-scrolling .qfoot toolbar",
+    "after_v12": "ONE full-width purple CONTINUE/SUBMIT CTA + one 48dp icon-only back square + one 48dp bookmark square, all inside a 68dp Mimo interaction keyboard; secondary tools collapse into a quiet chip row above the footer",
+    "reason": "decoded interaction_keyboard_view.xml / run_button_view.xml + mimo-04 screenshot"
+  },
+  "screenshots_visual_crosscheck_only": [
+    "DESIGN/REFERENCE/mimo-04-lesson-continue.jpg"
+  ],
+  "unchanged_contract": [
+    "5 tabs / no MAX",
+    "7 labelled exam sections + templates + descriptive answer",
+    "fixed 270 min for comprehensive",
+    "timer only inside exam",
+    "پاسخبرگ≠پاسخنامه",
+    "exactly one exam-hub lock",
+    "one AI button (two places)",
+    "isolated section-practice",
+    "original curved zigzag path map",
+    "no UI annotation notes"
+  ]
+}
