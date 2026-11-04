@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Fail-closed verification of the Konkur-upgrade planning deliverable (v7)."""
+"""Fail-closed verification of the Konkur-upgrade planning deliverable (v8)."""
 from __future__ import annotations
 import csv, hashlib, json, re, sys
 from pathlib import Path
@@ -14,17 +14,16 @@ docs = ["README.md", "00_START_HERE.md", "01_CRAFT_ANYTHING_INSTALL.md",
         "11_EVIDENCE_AND_CROSSWALK.md", "12_RISKS_UNKNOWN_AND_QUESTIONS.md",
         "13_DESIGN_ROUND_2.md", "14_DESIGN_ROUND_3.md", "15_DESIGN_ROUND_4.md",
         "16_DESIGN_ROUND_5.md", "17_DESIGN_ROUND_6.md",
-        "18_DESIGN_ROUND_7.md", "19_HABITICA_ROUTINE_SPEC.md", "wireframes.html"]
-csvs = {"UI_FIDELITY_RULES.csv": 24, "FEATURE_MAP.csv": 17, "EXAM_TYPES.csv": 11,
+        "18_DESIGN_ROUND_7.md", "20_DESIGN_ROUND_8.md", "wireframes.html"]
+csvs = {"UI_FIDELITY_RULES.csv": 28, "FEATURE_MAP.csv": 17, "EXAM_TYPES.csv": 11,
         "HADAF_TEMPLATES.csv": 7, "GAMIFICATION_MAP.csv": 13, "PHASES.csv": 8,
-        "LEARNHARNESS_ACTIONS.csv": 32, "EVIDENCE_LEDGER.csv": 10, "OPEN_QUESTIONS.csv": 7,
-        "DESIGN_FEEDBACK.csv": 44, "SCOPE_DECISIONS.csv": 26,
-        "AI_PANEL_SPEC.csv": 25, "EPM_MINOR_OPTIONS.csv": 7,
+        "LEARNHARNESS_ACTIONS.csv": 32, "EVIDENCE_LEDGER.csv": 10, "OPEN_QUESTIONS.csv": 9,
+        "DESIGN_FEEDBACK.csv": 52, "SCOPE_DECISIONS.csv": 32,
+        "AI_PANEL_SPEC.csv": 27, "EPM_MINOR_OPTIONS.csv": 7,
         "EXAM_SECTION_TEMPLATES.csv": 7,
         "MIMO_CODE_GEOMETRY.csv": 200, "MIMO_SCREENSHOT_CROSSWALK.csv": 14,
         "ANSWER_SHEET_POLICY.csv": 5, "MIMO_LEARN_SUBSCREENS.csv": 868,
-        "MIMO_PATH_NODES.csv": 50, "HABITICA_SOURCES.csv": 13,
-        "HABITICA_SCORING.csv": 22, "PRACTICE_VS_EXAM.csv": 12}
+        "MIMO_PATH_NODES.csv": 72, "PRACTICE_VS_EXAM.csv": 12}
 checks, problems = [], []
 
 
@@ -49,20 +48,20 @@ for name, n in csvs.items():
 
 # wireframe uses real tokens and states the legacy tabs
 t = (ROOT / "wireframes.html").read_text(encoding="utf-8")
-ck("wireframe:tokens", all(x in t for x in ["#7E4BDE", "#FFF6F7FB".replace("FF", ""), "#F6F7FB", "#E4E6F1", "#66BC5A", "#F05A6E"]),
+ck("wireframe:tokens", all(x in t for x in ["#7E4BDE", "#F6F7FB", "#E4E6F1", "#66BC5A", "#F05A6E"]),
    "Mimo palette present")
 ck("wireframe:legacy-tabs", t.count('class="tab') >= 4 and "<div class=\"tab\">Learn</div>" in t,
    "archived v1 wireframe renders its legacy tabs")
 ck("wireframe:3col-grid", "repeat(3,minmax(0,1fr))" in t, "exam node grid")
-ck("wireframe:v1-banner", "DESIGN/index.html" in t and "DESIGN v7" in t, "v1 archived, points to v7")
+ck("wireframe:v1-banner", "DESIGN/index.html" in t and "DESIGN v8" in t, "v1 archived, points to v8")
 
-# ---- DESIGN v7 interactive prototype ----
+# ---- DESIGN v8 interactive prototype ----
 D = ROOT / "DESIGN"
 dt = (D / "index.html").read_text(encoding="utf-8") if (D / "index.html").is_file() else ""
 ck("design:index", len(dt) > 20000, "%d chars" % len(dt))
-ck("design:v7-header", "DESIGN v7" in dt and "دور هفتم" in dt, "design round 7 review")
+ck("design:v8-header", "DESIGN v8" in dt and "دور هشتم" in dt, "design round 8 review")
+ck("design:v7-archived", "DESIGN v7" in dt, "v7 archive line kept in spec")
 ck("design:v6-archived", "DESIGN v6" in dt, "v6 archive line kept in spec")
-ck("design:v5-archived", "DESIGN v5" not in dt or "DESIGN v6" in dt, "v5 superseded")
 ck("design:no-hub-timer", "exam-hub" in dt and "⏱ ۱۲:۴۵" not in dt, "timer removed from exam hub")
 ck("design:timer-states", all(x in dt for x in ["timerSheet","timerStart","timerPause","timerReset","finished"]), "click-number-start-countdown")
 ck("design:counseling-removed",
@@ -73,12 +72,15 @@ ck("design:ai-minimal", all(x in dt for x in
 ck("design:ai-no-clutter", all(x not in dt for x in
    ["lhDock","sessList","Knowledge graph","BACKGROUND AGENTS"]), "no 32-button dock / sessions sidebar")
 ck("design:lh-buttons", all(x in dt for x in
-   ["Chains","Import notes","Dictate","gemini-flash-lite-latest","medium","TEACH","PRACTICE"]), "8 LH panel buttons restored")
-ck("design:epm-link", "askAi" in dt and "EPM" in dt, "minor EPM idea in exam")
-ck("design:15views", dt.count('<button data-go=') == 15, "15 design views: +section-practice +routine")
-ck("design:6tabs", dt.count('data-tab="') == 6 and all(x in dt for x in
-   ['data-tab="Learn"','data-tab="Practice"','data-tab="AI"','data-tab="Leaderboard"','data-tab="Profile"','data-tab="Routine"']),
-   "six tabs: 5 Mimo tabs + روتین روزانه (MAX forbidden)")
+   ["Chains","Import notes","gemini-flash-lite-latest","medium","TEACH","PRACTICE"])
+   and not re.search(r'<button[^>]*data-lh="Dictate"', dt) and "ic_microphone\" data-size=\"18\"" not in dt,
+   "LH buttons restored, Dictate removed")
+ck("design:epm-link", "askAi" in dt and "EPM" in dt, "minor EPM idea referenced in audit panel only")
+ck("design:14views", dt.count('<button data-go=') == 14, "14 design views (routine view removed)")
+ck("design:5tabs", dt.count('data-tab="') == 5 and all(x in dt for x in
+   ['data-tab="Learn"','data-tab="Practice"','data-tab="AI"','data-tab="Leaderboard"','data-tab="Profile"'])
+   and 'data-tab="MAX"' not in dt and 'data-tab="Routine"' not in dt,
+   "5 Mimo tabs restored; MAX and روتین روزانه forbidden")
 ck("design:learn", 'data-screen="learn"' in dt and "PathMapScreenKt" in dt and "overview-card" in dt and '<section class="screen mimo on" data-screen="learn">' in dt and dt.split('data-screen="learn"')[1].split("</section>")[0].count("path-note") == 0,
    "Learn rebuilt clean: 3 pills + overview header card, annotations removed")
 ck("design:leaderboard", 'data-screen="leaderboard"' in dt and "selfbox" in dt and "آزمونها و امتیازات من" in dt,
@@ -118,8 +120,9 @@ if gp.is_file():
 ck("design:build-tools", all((ROOT / "tools" / f).is_file() for f in
    ["extract_mimo_geometry.py", "build_design_v5.py", "design_v5_template.html",
     "extract_mimo_learn_v6.py", "build_design_v6.py", "design_v6_template.html",
-    "extract_mimo_nodes_v7.py", "write_habitica_spec.py", "build_design_v7.py",
-    "design_v7_template.html", "finalize_v7.py"]), "reproducible extract -> build pipeline (v5 + v6 + v7)")
+    "extract_mimo_nodes_v7.py", "build_design_v7.py", "design_v7_template.html", "finalize_v7.py",
+    "extract_mimo_nodes_v8.py", "build_design_v8.py", "design_v8_template.html", "finalize_v8.py"]),
+   "reproducible extract -> build pipeline (v5/v6/v7 archived + v8 current)")
 
 # ---- 14 Mimo reference screenshots (visual cross-check only) ----
 shots = ["mimo-01-learn-path-play.jpg","mimo-02-learn-path-half.jpg",
@@ -132,14 +135,12 @@ shots = ["mimo-01-learn-path-play.jpg","mimo-02-learn-path-half.jpg",
          "mimo-14-unfinished-track-dialog.jpg"]
 ck("design:14screenshots", all((D / "REFERENCE" / s).is_file() and (D / "REFERENCE" / s).stat().st_size > 10000 for s in shots),
    "%d Mimo screenshots archived" % len(shots))
-ck("design:screenshot", (D / "REFERENCE/learnharness-ui-user-screenshot.png").is_file()
-   and (D / "REFERENCE/learnharness-ui-user-screenshot.png").stat().st_size > 10000, "user LH screenshot")
-ck("design:screenshot2", (D / "REFERENCE/learnharness-main-panel-user-screenshot.png").is_file()
-   and (D / "REFERENCE/learnharness-main-panel-user-screenshot.png").stat().st_size > 10000, "user LH main-panel screenshot")
-ck("design:screenshot3", (D / "REFERENCE/lh-composer-user-screenshot.png").is_file()
-   and (D / "REFERENCE/lh-composer-user-screenshot.png").stat().st_size > 5000, "LH composer screenshot")
-ck("design:screenshot4", (D / "REFERENCE/lh-topbar-user-screenshot.png").is_file()
-   and (D / "REFERENCE/lh-topbar-user-screenshot.png").stat().st_size > 3000, "LH topbar screenshot")
+for i, (f, minsz) in enumerate([("learnharness-ui-user-screenshot.png", 10000),
+                                ("learnharness-main-panel-user-screenshot.png", 10000),
+                                ("lh-composer-user-screenshot.png", 5000),
+                                ("lh-topbar-user-screenshot.png", 3000)], 1):
+    p = D / "REFERENCE" / f
+    ck("design:screenshot" + (str(i) if i > 1 else ""), p.is_file() and p.stat().st_size > minsz, f)
 xw = (ROOT / "CATALOGS/MIMO_SCREENSHOT_CROSSWALK.csv").read_text(encoding="utf-8")
 ck("design:screenshot-role", xw.count("VISUAL_CROSSCHECK_ONLY") == 14, "all 14 screenshots marked visual cross-check only")
 
@@ -171,9 +172,9 @@ ck("design:v6:certificate", all(x in dt for x in ["Professional Certificate","22
 ck("design:v6:sections-from-code", all(x in dt for x in ["sectionRows","path_overview_section_ordinal","tutorialIds","Section Project","Coming soon"]),
    "numbered sections + tutorial ids rendered from shipped JSON")
 ck("design:v6:no-max-tab", 'data-tab="MAX"' not in dt and "tabMap" in dt,
-   "MAX tab forbidden; 6 tabs with روتین روزانه kept")
-ck("design:v6:clean-learn", all(x in dt for x in ["1,272","ic_key","ic_infinity","overview-card","l6n1"]),
-   "clean Learn: 3 pills + overview card + exact nodes")
+   "MAX tab forbidden; 5 tabs restored")
+ck("design:v6:clean-learn", all(x in dt for x in ["1,272","ic_key","ic_infinity","overview-card","l8n1"]),
+   "clean Learn: 3 pills + overview card + code-derived nodes")
 lp = D / "LEARN_CODE_GEOMETRY.json"
 ck("design:v6:learn-geometry", lp.is_file(), "LEARN_CODE_GEOMETRY.json present")
 if lp.is_file():
@@ -194,84 +195,133 @@ lsub = ROOT / "CATALOGS/MIMO_LEARN_SUBSCREENS.csv"
 ck("design:v6:sub-catalog", lsub.is_file() and len(rows(lsub)) - 1 == 868, "868 code-evidence rows")
 ck("design:v6:build-bytes", len(dt) > 200000, "%d chars" % len(dt))
 
-# ---- DESIGN v7: exact nodes, bolt practice, AI tidy, exam controls, routine ----
-ck("design:v7:nodes", all(x in dt for x in
-   ["l7n1","l7n2","l7n3","l7n4","l7n5","l7b1","l7b2","node-start","gloss-fab","hring","Q314"]),
-   "exact Mimo node states: done/cur/half/locked/bolt + elbow connector + glossary")
-ck("design:v7:node-geometry", (D / "NODE_CODE_GEOMETRY.json").is_file(), "NODE_CODE_GEOMETRY.json present")
+# ---- MAIN TASK: exact code-driven node geometry (v8) ----
+ck("design:v8:nodes", all(x in dt for x in
+   ["l8n1","l8n2","l8n3","l8n4","l8n5","l8n6","gloss-fab","hring","Q312 70 312 102","nodeGeometry"]),
+   "6 data-driven nodes, rounded Q elbow connector, 1/2 ring, floating book")
+ck("design:v8:node-states", all(x in dt for x in
+   ["node done","node cur","node bolt active","node bolt optional","curInner","ic_check_white","ic_flash"]),
+   "done / current double-ring / active+optional bolt states")
+ck("design:v8:no-locked-learn", not re.search(r'class="node locked|data-locked=|id="l8n\d+"[^>]*locked', dt)
+   and 'class="sd-row locked' not in dt and 'node-start' not in dt,
+   "ZERO locked Learn/section-detail nodes; START bubble removed")
+ck("design:v8:one-lock-only", dt.count('data-icon="ic_lock_alt_02"') == 1
+   and 'data-screen="exam-hub"' in dt,
+   "exactly one lock: the pre-existing exam-hub biweekly/final exam card")
 np_ = D / "NODE_CODE_GEOMETRY.json"
+ck("design:v8:node-geometry", np_.is_file(), "NODE_CODE_GEOMETRY.json v8 present")
 if np_.is_file():
     ng = json.loads(np_.read_text(encoding="utf-8"))
-    ck("design:v7:node-vectors", len(ng["vectors"]) >= 50 and all(v["paths"] for v in ng["vectors"].values()),
-       "%d vectors with pathData" % len(ng["vectors"]))
-    ck("design:v7:node-strings", sum(len(v) for v in ng["strings"].values()) >= 130,
+    ck("design:v8:node-vectors", len(ng["vectors"]) >= 55 and all(v["paths"] for v in ng["vectors"].values()),
+       "%d vectors with pathData / %d misses" % (len(ng["vectors"]), ng["counts"]["vector_misses"]))
+    ck("design:v8:node-strings", sum(len(v) for v in ng["strings"].values()) >= 85,
        "%d ARSC strings" % sum(len(v) for v in ng["strings"].values()))
-    ck("design:v7:node-content", len(ng["contentModel"]["sections"]) >= 15
+    ck("design:v8:node-dex", ng["counts"]["pathmap_classes"] >= 90 and len(ng["dex"]["literals"]) >= 20,
+       "%d PathMap DEX classes / %d literals" % (ng["counts"]["pathmap_classes"], len(ng["dex"]["literals"])))
+    ck("design:v8:node-content", len(ng["contentModel"]["sections"]) >= 15
        and sum(s["tutorialCount"] for s in ng["contentModel"]["sections"]) >= 200,
        "%d sections / %d tutorialIds" % (len(ng["contentModel"]["sections"]),
                                          sum(s["tutorialCount"] for s in ng["contentModel"]["sections"])))
-    ck("design:v7:node-method", "CODE_FIRST" in ng["method"] and len(ng["animations"]) >= 2,
-       "code-first + checkpoint window animations")
-    ck("design:v7:node-isolation", len(ng["isolation"]) >= 4 and "var NODE=" in dt,
-       "isolation contract + injected NODE payload")
+    geom = ng["nodeGeometry"]
+    ck("design:v8:machine-geometry", geom["node"]["size_dp"] == 92 and geom["node"]["corner_radius_dp"] == 26
+       and geom["node"]["lip_dp"] == 8 and geom["viewBox"] == [392, 620] and len(geom["nodes"]) == 6
+       and len(geom["connector_paths"]) == 2 and "Q" in geom["connector_paths"][0]["d"],
+       "92dp/26dp/8dp + 392x620 viewBox + 6 nodes + 2 Q connector paths")
+    ck("design:v8:states-removed", len(geom["states_removed"]) >= 4
+       and "locked lesson" in geom["states_removed"][0],
+       "locked/START/stray ring/debug chips listed as removed")
+    ck("design:v8:lock-policy", "ZERO" in geom["lock_policy"] and len(ng["isolation"]) >= 4,
+       "zero-lock policy + isolation contract")
+    ck("design:v8:node-method", "CODE_FIRST" in ng["method"] and "VISUAL_CROSSCHECK_ONLY" in ng["method"],
+       "code-first, screenshots cross-check only")
 pcat = ROOT / "CATALOGS/MIMO_PATH_NODES.csv"
-ck("design:v7:node-catalog", pcat.is_file() and len(rows(pcat)) - 1 == 50, "50 node code-evidence rows")
-ck("design:v7:section-practice", all(x in dt for x in
+ck("design:v8:node-catalog", pcat.is_file() and len(rows(pcat)) - 1 == 72, "72 node code-evidence rows")
+ck("design:v8:NODE-payload", "var NODE=" in dt and "NODE.nodeGeometry" in dt and "G.nodes.forEach" in dt,
+   "prototype HTML rendered from the injected machine-readable geometry")
+
+# ---- v8: routine & Habitica idea fully removed ----
+ck("design:v8:no-routine-tab", 'data-tab="Routine"' not in dt and 'data-screen="routine"' not in dt
+   and "var HAB=" not in dt and "HAB.constants" not in dt and "rtTasks" not in dt
+   and dt.count('data-tab="') == 5,
+   "tab/screen/payload removed from the prototype; 5 tabs only")
+ck("design:v8:no-habitica-files", not (ROOT / "19_HABITICA_ROUTINE_SPEC.md").exists()
+   and not (D / "HABITICA_SCORING.json").exists()
+   and not (ROOT / "CATALOGS/HABITICA_SOURCES.csv").exists()
+   and not (ROOT / "CATALOGS/HABITICA_SCORING.csv").exists()
+   and not (ROOT / "tools/write_habitica_spec.py").exists(),
+   "all Habitica / routine deliverable artifacts deleted")
+ck("design:v8:no-dictate-in-ui", not re.search(r'<button[^>]*data-lh="Dictate"', dt)
+   and "دیکته / Dictate" not in dt.split('<section class="screen konkur" data-screen="ai"')[1].split("</section>")[0],
+   "Dictate button gone from AI composer")
+
+# ---- v8: NO annotations inside the phone UI ----
+ck("design:v8:no-policy-notes", all(x not in dt for x in
+   ["زمان خالص آزمون</b> — حین آزمون", "تنها ایدهٔ جزیی گرفتهشده از EPM", "تایمر معکوس فقط داخل آزمون"])
+   and 'q("#policyHint").innerHTML' not in dt
+   and '<div class="hint" id="policyHint" hidden></div>' in dt,
+   "the 3 quoted exam annotations removed; policyHint stays empty+hidden")
+ui_vis = re.sub(r'<[^>]*\shidden\b[^>]*>', '', dt.split("</style>")[-1].split("<aside")[0])
+note_texts = re.findall(r'<p class="note"[^>]*>(.*?)</p>', ui_vis, re.S)
+banned_note = ["POLICY", "EPM", "ایدهٔ جزیی", "تایمر معکوس فقط", "زمان خالص آزمون",
+               "DESIGN v", "ARSC", "pathData", "codechip", "data-screen"]
+ck("design:v8:no-ui-annotations", all(x not in ui_vis for x in
+   ['class="composer-note"', 'class="path-note"', 'class="sd-note"', 'class="hint"', 'class="lh"', 'codechip2'])
+   and not re.search(r'\btitle="', dt)
+   and len(note_texts) <= 3
+   and all(w not in " ".join(note_texts) for w in banned_note),
+   "no design/policy/EPM/timer/code annotations inside the phone UI (3 functional microcopy lines kept)")
+ck("design:v8:inline-evidence", dt.count("data-code=") >= 15 and dt.count("data-lh=") >= 7,
+   "evidence moved to invisible data-code / data-lh attributes")
+ck("design:v8:exam-labels-kept", dt.count('class="cat-meta"') == 7
+   and "قالب: تقویم ماه" in dt and "پاسخنامهٔ تشریحی" in dt and "تعویض سوال" in dt,
+   "7 labelled exam sections + templates + descriptive answer text preserved")
+ck("design:v8:exam-skin", all(x in dt for x in
+   ["ic_trophy","ic_clock_black_24dp","ic_task_completed","ic_lock_alt_02","ic_file","ic_target","ic_sparks_alt","ic_arrow_back_24","ic_help"])
+   and '--radius-card:' in dt and '--primary:' in dt and "var(--primary)" in dt
+   and "border-radius:12px" in dt and "border-radius:16px" in dt,
+   "real Mimo vectors + ARSC colours/radii/type; exam architecture untouched")
+ck("design:v8:exam-architecture", all(x in dt for x in
+   ["prevQ","nextQ","qnav","qfoot","result-foot","ic_arrow_left","ic_arrow_right","timerChip","answerSheetBtn","answerKeyBtn"])
+   and "زمان ثابت ۲۷۰ دقیقه" in dt and "POLICY" in dt,
+   "timer / answer sheets / 270 min / prev-next / AI button all unchanged")
+lb = re.search(r'<section class="screen mimo" data-screen="leaderboard".*?</section>', dt, re.S)
+ck("design:v8:no-promo", bool(lb) and "Promotion Zone" not in lb.group(0) and "منطقهٔ صعود" not in lb.group(0) and 'class="promo"' not in lb.group(0),
+   "Promotion Zone removed from leaderboard UI")
+ck("design:v8:section-practice", all(x in dt for x in
    ['data-screen="section-practice"','data-scope="learn-practice"','practiceQuestions','practiceModal','practiceStart','Fully charged','Practice anyway']),
    "bolt nodes open an isolated Learn checkpoint quiz")
 sp = re.search(r'<section class="screen mimo" data-screen="section-practice".*?</section>', dt, re.S)
-ck("design:v7:practice-isolation", bool(sp) and all(x not in sp.group(0) for x in
+ck("design:v8:practice-isolation", bool(sp) and all(x not in sp.group(0) for x in
    ["timerChip","پاسخبرگ","پاسخنامه","POLICY","270","exam-hub","توضیح با هوش مصنوعی"]),
    "section practice has NO exam controls / timer / answer sheets")
-ck("design:v7:ai-header", all(x in dt for x in
+ck("design:v8:ai-header", all(x in dt for x in
    ["اضافه کردن فایل","زنجیره گفت و گو","attachment","ic_link_external","ai-top-left"]),
    "tidy AI top row: file icon + short label + conversation chain")
-ck("design:v7:ai-footer", all(x in dt for x in
-   ["ai-foot","ic_microphone",'data-lh="Dictate"','data-mode="TEACH"','data-mode="PRACTICE"',"flex-wrap:nowrap"]),
-   "TEACH/PRACTICE tiny on same single bottom line; Dictate (voice) kept")
-ck("design:v7:exam-controls", all(x in dt for x in
-   ["prevQ","nextQ","qnav","qfoot","result-foot","ic_arrow_left","ic_arrow_right"]),
-   "two clean prev/next buttons + quiet one-line bottom controls")
-lb = re.search(r'<section class="screen mimo" data-screen="leaderboard".*?</section>', dt, re.S)
-ck("design:v7:no-promo", bool(lb) and "Promotion Zone" not in lb.group(0) and "منطقهٔ صعود" not in lb.group(0) and 'class="promo"' not in lb.group(0),
-   "Promotion Zone removed from leaderboard UI")
-ck("design:v7:routine-tab", all(x in dt for x in
-   ['data-tab="Routine"','data-screen="routine"',"روتین روزانه","ic_calendar","ic_task_completed"])
-   and 'data-tab="MAX"' not in dt,
-   "6th low-key Mimo tab روتین روزانه; MAX still forbidden")
-ck("design:v7:routine-isolation", all(x in dt for x in
-   ['data-scope="routine-only"','data-isolated="exam learn leaderboard"',"var HAB=","HAB.constants","rtTasks"]),
-   "Habitica scoring rules injected but isolated from exam/learn/leaderboard")
-hp_ = D / "HABITICA_SCORING.json"
-ck("design:v7:habitica-json", hp_.is_file(), "HABITICA_SCORING.json present")
-if hp_.is_file():
-    hg = json.loads(hp_.read_text(encoding="utf-8"))
-    ck("design:v7:habitica-rules", len(hg["rules"]) >= 22 and len(hg["sources"]) >= 13,
-       "%d rules / %d upstream sources" % (len(hg["rules"]), len(hg["sources"])))
-    ck("design:v7:habitica-license", "GPL-3.0" in hg["license"] and "CC-BY-NC-SA" in hg["license"],
-       "upstream licence recorded; no code/assets copied")
-    ck("design:v7:habitica-commit", len(hg["commit"]) == 40 and "no code or assets copied" in hg["method"],
-       "develop commit pinned, clean-room method stated")
-hs = ROOT / "CATALOGS/HABITICA_SOURCES.csv"
-ck("design:v7:habitica-hashes", hs.is_file() and len(rows(hs)) - 1 == 13
-   and all(re.fullmatch(r"[0-9a-f]{64}", r[3]) for r in rows(hs)[1:]),
-   "13 upstream files with real SHA-256 digests")
+ck("design:v8:ai-footer", all(x in dt for x in
+   ["ai-foot","data-mode=\"TEACH\"","data-mode=\"PRACTICE\"","flex-wrap:nowrap","gemini-flash-lite-latest","medium"]),
+   "TEACH/PRACTICE/model/medium on one tiny line, no Dictate")
+ck("design:v8:build-bytes", len(dt) > 300000, "%d chars" % len(dt))
+
+# ---- docs / catalogs ----
+ck("docs:v8:20", "DESIGN v8" in (ROOT / "20_DESIGN_ROUND_8.md").read_text(encoding="utf-8")
+   and "NODE_CODE_GEOMETRY.json" in (ROOT / "20_DESIGN_ROUND_8.md").read_text(encoding="utf-8"),
+   "v8 final log + code-geometry reference")
+ck("docs:v8:notes", "DESIGN v8" in (D / "DESIGN_NOTES.fa.md").read_text(encoding="utf-8")
+   and "NODE_CODE_GEOMETRY.json" in (D / "DESIGN_NOTES.fa.md").read_text(encoding="utf-8"), "v8 design notes")
+ck("docs:v8:banners", sum("<!-- v8-banner -->" in (ROOT / d).read_text(encoding="utf-8") for d in docs if d.endswith(".md")) >= 19,
+   "archived docs carry v8 superseded banner")
+ck("docs:v7:18", "DESIGN v7" in (ROOT / "18_DESIGN_ROUND_7.md").read_text(encoding="utf-8"), "v7 log archived")
+ck("scope:v8", all(x in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encoding="utf-8") for x in
+   ["REMOVED_ENTIRELY_V8","FIVE_TABS_RESTORED","DICTATE_REMOVED","NO_ANNOTATIONS_IN_UI","ONE_LOCK_ONLY","NODE_CODE_FIRST_V8"]),
+   "all 6 round-8 decisions recorded")
+ck("scope:feedback-v8", all(x in (ROOT / "CATALOGS/DESIGN_FEEDBACK.csv").read_text(encoding="utf-8") for x in
+   ["F-45","F-46","F-47","F-48","F-49","F-50","F-51","F-52"]),
+   "all 8 round-8 corrections recorded")
 pv = ROOT / "CATALOGS/PRACTICE_VS_EXAM.csv"
-ck("design:v7:practice-vs-exam", pv.is_file() and len(rows(pv)) - 1 == 12
-   and "learn_bolt_practice" in pv.read_text(encoding="utf-8"),
-   "12-row three-way isolation table")
-ck("design:v7:no-habitica-assets", not re.search(r'(habitica|habitrpg)[^"\']*\.(png|jpg|webp|svg|woff|ttf)', dt, re.I),
-   "no Habitica asset files referenced in prototype")
-ck("design:v7:build-bytes", len(dt) > 300000, "%d chars" % len(dt))
-ck("docs:v7:18", "DESIGN v7" in (ROOT / "18_DESIGN_ROUND_7.md").read_text(encoding="utf-8"), "v7 final log")
-ck("docs:v7:19", "Habitica" in (ROOT / "19_HABITICA_ROUTINE_SPEC.md").read_text(encoding="utf-8")
-   and "GPL-3.0" in (ROOT / "19_HABITICA_ROUTINE_SPEC.md").read_text(encoding="utf-8"), "Habitica scoring spec")
-ck("docs:v7:notes", "DESIGN v7" in (D / "DESIGN_NOTES.fa.md").read_text(encoding="utf-8"), "v7 design notes")
-ck("docs:v7:banners", sum("<!-- v7-banner -->" in (ROOT / d).read_text(encoding="utf-8") for d in docs if d.endswith(".md")) >= 19,
-   "archived docs carry v7 superseded banner")
-ck("scope:6tabs", "SIX_TABS_ROUTINE" in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encoding="utf-8"),
-   "explicit v7 6-tab decision")
-ck("csv:practice-vs-exam", "konkur_exam" in pv.read_text(encoding="utf-8"), "exam column present")
+ck("csv:practice-vs-exam", pv.is_file() and len(rows(pv)) - 1 == 12
+   and "learn_bolt_practice" in pv.read_text(encoding="utf-8")
+   and "konkur_exam" in pv.read_text(encoding="utf-8"),
+   "12-row two-way isolation table, no routine column")
 
 # ---- docs cross-references ----
 ck("docs:v6:17", "DESIGN v6" in (ROOT / "17_DESIGN_ROUND_6.md").read_text(encoding="utf-8"), "v6 log archived")
@@ -282,7 +332,7 @@ ck("docs:v4:02", "حکم محصول ۵ تب" in (ROOT / "02_UI_FIDELITY_CONTRACT
 ck("docs:v4:08", "۵ تب" in (ROOT / "08_NAVIGATION_AND_IA.md").read_text(encoding="utf-8"), "5-tab IA (archived)")
 ck("docs:v4:03", "سیاست بر اساس نوع آزمون" in (ROOT / "03_EXAM_HUB.md").read_text(encoding="utf-8"), "answer sheet policy")
 ck("docs:v4:04", "دکمههای LH در چت مینیمال" in (ROOT / "04_AI_LEARN_HARNESS.md").read_text(encoding="utf-8"), "LH buttons in chat")
-ck("scope:5tabs", "FIVE_TABS" in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encoding="utf-8"), "archived 5-tab decision")
+ck("scope:5tabs", "FIVE_TABS" in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encoding="utf-8"), "restored 5-tab decision")
 ck("scope:code-first", "CODE_FIRST" in (ROOT / "CATALOGS/SCOPE_DECISIONS.csv").read_text(encoding="utf-8"), "code-first decision")
 ck("csv:exam-policy", "answer_sheet_policy" in (ROOT / "CATALOGS/EXAM_TYPES.csv").read_text(encoding="utf-8"), "policy column")
 ck("docs:v3:14", "تصمیمات دامنهای" in (ROOT / "14_DESIGN_ROUND_3.md").read_text(encoding="utf-8"), "v3 log")
@@ -323,10 +373,11 @@ ck("craft:phases", len(json.loads((ca / "workspace/plan.json").read_text(encodin
 
 # MANIFEST coherence
 man = json.loads((ROOT / "MANIFEST.json").read_text(encoding="utf-8"))
-ck("manifest:v7", "DESIGN v7" in man["status"] and man["deliverables"]["design_round"] == "v7 (REVIEW)"
-   and man["deliverables"]["design_views"] == 15 and man["deliverables"]["csv_catalogs"] == 22
-   and man["deliverables"]["persian_docs"] == 21 and "design_round_7" in man,
-   "MANIFEST advertises v7: 15 views / 22 CSVs / 21 docs")
+ck("manifest:v8", "DESIGN v8" in man["status"] and man["deliverables"]["design_round"] == "v8 (REVIEW)"
+   and man["deliverables"]["design_views"] == 14 and man["deliverables"]["csv_catalogs"] == 20
+   and man["deliverables"]["persian_docs"] == 21 and "design_round_8" in man
+   and man["design_round_7"]["status"].startswith("DESIGN v7 · SUPERSEDED"),
+   "MANIFEST advertises v8: 14 views / 20 CSVs / 21 docs / v7 superseded")
 # +3 = this check itself + docs:no-cjk + sums (the three checks after this point)
 EXPECTED_CHECKS = len(checks) + 3
 ck("manifest:checks", man["deliverables"]["verification_checks"] == EXPECTED_CHECKS,

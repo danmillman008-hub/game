@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# ARCHIVED / REVOKED (round 8): the routine tab and the Habitica scoring idea were removed entirely.
+# Kept only as a v7 audit-trail builder. Use tools/build_design_v8.py + tools/finalize_v8.py instead.
 # -*- coding: utf-8 -*-
 """Generate DESIGN/index.html (v7) from code-extracted Mimo 9.35 geometry.
 

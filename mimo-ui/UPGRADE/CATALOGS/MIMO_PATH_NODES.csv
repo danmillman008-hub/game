@@ -1,51 +1,73 @@
-row_id,kind,item,visual,icon,code_crosswalk,click_target,source_path,role
-PN-01,section-header,overview-card: kicker + title + 8px bar,ic_badge_backend,ViewsKt$OverviewEntryPointHeader; progress_bar_mimo.xml,path-overview,res/values/values/string.xml:path_see_course_overview,SECTION header card
-PN-02,section-header,circular 12% ring on older Mimo builds,ic_badge_backend_professional,profile_certificate_view.xml CircularProgressIndicator 56dp,path-overview,res/layout/profile_certificate_view.xml,ring token: indicatorColor=progress_primary
-PN-03,node,"done: 92px rounded square, purple gradient, 8px dark lip",ic_check_white,PathMapScreenKt; cardview_corner_radius_large; button_primary_highlight,chapter,res/drawable/ic_check_white.xml,3D lip from box-shadow 0 8px 0
-PN-04,node,"current: white card, double purple ring, play triangle",ic_play,chapter_toolbar.xml; progress_bar_mimo.xml,chapter,res/drawable/ic_play.xml,cur node: border 3px + 7px + 10px ring
-PN-05,node,current alt: white card with 1/2 conic progress ring,ic_play,glance_circular_progress_indicator.xml,chapter,res/layout/glance_circular_progress_indicator.xml,1/2 state from screenshot mimo-02
-PN-06,node,locked: disabled card with white padlock,ic_lock_alt_02,alert_msg_section_setion_locked; card_disabled,locked,res/drawable/ic_lock_alt_02.xml,toast: Unlock this section by finishing the previous one
-PN-07,node,bolt checkpoint: purple square with dark lightning,ic_flash,ic_bolt.xml; ic_bolt_charged.xml; ic_bolt_mastered.xml,section-practice,res/drawable/ic_bolt_mastered.xml,round-7: separate LEARN checkpoint quiz
-PN-08,node,bolt checkpoint locked: disabled with white bolt,ic_bolt,ic_practice_tab_locked.xml; res/raw/practice.riv,section-practice,res/drawable/ic_practice_tab_locked.xml,not yet charged
-PN-09,node,bolt checkpoint mastered: gold mastered bolt,ic_bolt_mastered,ModalData$SmartPracticeMasteredModal,section-practice,res/drawable/ic_bolt_mastered.xml,You've mastered the section!
-PN-10,connector,"rounded elbow path (right/down/left/down), not a bezier S",,PathMapScreenKt 73 classes; progress_chapter_primary,,SOURCE/dex/UI_CLASSES.json,SVG path with Q elbows
-PN-11,connector,dotted 26px grid behind nodes,,"radial-gradient(circle,var(--line2) 1.6px,transparent 1.7px)",,res/values/values/color.xml:line_secondary,visual cross-check only
-PN-12,chapter-start,LEARN / CHAPTER 0/2 / START LEARNING card,ic_cap_filled,chapter_activity.xml; chapter_toolbar.xml; start_lesson,lesson,res/layout/chapter_activity.xml,clicking ANY lesson node opens this
-PN-13,chapter-start,6dp chapter progress bar,,chapter_toolbar.xml @id/pb_chapter; lesson_progressbar_height,,res/layout/chapter_toolbar.xml,style=ProgressBarChapter
-PN-14,checkpoint,checkpoint window enter/exit animations,,rc_checkpoint_window_enter.xml / exit (alpha 220ms),section-practice,res/anim/rc_checkpoint_window_enter.xml,checkpoint = bolt node
-PN-15,checkpoint,flash bar / dropdown UI for practice,,flash_bar_view.xml; flashbar_dropdown_layout.xml,,res/layout/flash_bar_view.xml,Mimo practice chrome
-PN-16,practice-quiz,single-choice question + 4 options,,lesson_interactive_multiplechoice_fragment.xml,,res/layout/lesson_interactive_multiplechoice_fragment.xml,"Mimo lesson interaction, NOT exam"
-PN-17,practice-quiz,option row layout,,lesson_interaction_selection_item_layout.xml,,res/layout/lesson_interaction_selection_item_layout.xml,Mimo tokens only
-PN-18,practice-quiz,feedback bottom sheet,,lesson_interactive_feedback_bottom_sheet_dialog.xml,,res/layout/lesson_interactive_feedback_bottom_sheet_dialog.xml,lesson_feedback_* strings
-PN-19,practice-quiz,Fully charged! / Practice anyway,ic_mascot_practice,section_details_smart_practice_charged_dialog_*; ModalData$SmartPracticeChargedModal,,res/values/values/string.xml,smart practice charged modal
-PN-20,practice-quiz,You've mastered the section!,ic_bolt_mastered,section_details_smart_practice_mastered_dialog_*; ModalData$SmartPracticeMasteredModal,,res/values/values/string.xml,smart practice mastered modal
-PN-21,practice-quiz,Practice more / Continue practicing / Practice optional,,practice_more; continue_practicing; practice_optional,,res/values/values/string.xml,real ARSC labels
-PN-22,practice-quiz,Practice intro title + description,ic_mascot_practice,practice_intro_title; practice_intro_description,,res/values/values/string.xml,Sharpen your skills with hands-on practice
-PN-23,practice-quiz,Practice multiplier / no exercises yet,,level_practice_multiplier; no_practice_exercises_yet,,res/values/values/string.xml,practice states
-PN-24,practice-quiz,quiz stem derived from tutorialIds up to section,,test-tracks.json sections[].tutorialIds,,SOURCE/assets/ui/testdata/test-tracks.json,ازمون از مبحث تا اون بخش
-PN-25,isolation,NO timer chip in section practice,,timer chip belongs to exam-run only,,DESIGN/index.html,نباید قاتی شه با بخش آزمون
-PN-26,isolation,NO پاسخبرگ / پاسخنامه in section practice,,answer sheets belong to exam-run/exam-result,,DESIGN/index.html,policy split preserved
-PN-27,isolation,NO exam hub / exam kind / 270 min in practice,,"exam-hub, POLICY, EXAM_KIND are exam-only",,DESIGN/index.html,separate data-screen
-PN-28,isolation,section practice uses class=screen mimo (Mimo skin),,"class=""screen mimo""",,DESIGN/index.html,not class=screen konkur
-PN-29,dex,PathMapScreenKt Compose node classes,,Lcom/getmimo/ui/path/map/PathMapScreenKt*,,SOURCE/dex/UI_CLASSES.json,73 classes matched
-PN-30,dex,GetPathMapState / GetPathMapDialogs,,Lcom/getmimo/interactors/path/GetPathMap*,,SOURCE/dex/UI_CLASSES.json,path state + dialogs
-PN-31,dex,SmartPracticeChargedModal / MasteredModal,,Lcom/getmimo/ui/introduction/ModalData$SmartPractice*,,SOURCE/dex/UI_CLASSES.json,2 modal data classes
-PN-32,dex,practice level literals,,PRACTICE_LEVEL_1 / _2 / _3,,SOURCE/dex/UI_STRING_LITERALS.txt,practice progression
-PN-33,dex,practice redo / progress literals,,isPracticeProgress; isPracticeRedo,,SOURCE/dex/UI_STRING_LITERALS.txt,practice state flags
-PN-34,dex,section / chapter index literals,,sectionIndex; chapterIndexInSection; sectionTitle,,SOURCE/dex/UI_STRING_LITERALS.txt,node ordering
-PN-35,routine-tab,6th bottom tab روتین روزانه,ic_calendar,ic_calendar.xml; ic_task_completed.xml; daily_goal,routine,res/drawable/ic_calendar.xml,explicit round-7 instruction
-PN-36,routine-tab,streak / sparks / coin Mimo icons,ic_streak_active,ic_streak_active; ic_sparks; ic_coin,,res/drawable/ic_streak_active.xml,no Habitica assets
-PN-37,routine-tab,daily goal progress view,,daily_sparks_goal_progress_view.xml; daily_goal,,res/layout/daily_sparks_goal_progress_view.xml,Mimo skin
-PN-38,ai-top,attach file: paperclip icon + short label,attachment,attachment.xml; ic_file.xml,Import notes...,res/drawable/attachment.xml,اضافه کردن فایل
-PN-39,ai-top,conversation chain: link icon + clear label,ic_link_external,ic_link_external.xml; ic_chat_bubble.xml,Chains,res/drawable/ic_link_external.xml,زنجیره گفت و گو
-PN-40,ai-bottom,"voice dictate: microphone icon, kept in one row",ic_microphone,ic_microphone.xml,Dictate,res/drawable/ic_microphone.xml,دیکته برای ویس
-PN-41,ai-bottom,model / effort chevrons,ic_chevron_down,ic_chevron_down.xml,Model picker / Effort,res/drawable/ic_chevron_down.xml,tiny single line
-PN-42,exam-page,سؤال قبل / سؤال بعد clean pair,ic_arrow_left,ic_arrow_left.xml; ic_arrow_right.xml,prevQ / nextQ,res/drawable/ic_arrow_left.xml,دو تا دکمه تر و تمیز
-PN-43,exam-page,"bottom single line: پاسخبرگ + بقیه, not bold",,"btn ghost, font-weight 400",,DESIGN/index.html,اونها پایین باشند
-PN-44,leaderboard,Promotion Zone removed per user,,leaderboard_promotion_divider.xml archived only,,res/layout/leaderboard_promotion_divider.xml,نیاز نیست
-PN-45,screenshot,mimo-01 play node / mimo-02 1/2 ring,,PathMapScreenKt + progress_bar_mimo.xml,,DESIGN/REFERENCE/mimo-01-learn-path-play.jpg,VISUAL_CROSSCHECK_ONLY
-PN-46,screenshot,mimo-10 active bolt node + elbow path,,ic_bolt* + PathMapScreenKt,,DESIGN/REFERENCE/mimo-10-path-map-current.jpg,VISUAL_CROSSCHECK_ONLY
-PN-47,screenshot,mimo-03 chapter start card,,chapter_toolbar.xml + start_lesson,,DESIGN/REFERENCE/mimo-03-chapter-start-dialog.jpg,VISUAL_CROSSCHECK_ONLY
-PN-48,screenshot,mimo-05 promotion zone archived,,leaderboard_promotion_divider.xml,,DESIGN/REFERENCE/mimo-05-weekly-leaderboard.jpg,VISUAL_CROSSCHECK_ONLY
-PN-49,floating,circular A-book / glossary affordance,ic_file,ic_file.xml + bookmark_no_fill.xml; circular card radius,glossary,res/drawable/ic_file.xml,"Mimo floating affordance, visual cross-check mimo-01"
-PN-50,screenshot,mimo-02 half-progress ring + locked square,,glance_circular_progress_indicator.xml; card_disabled,,DESIGN/REFERENCE/mimo-02-learn-path-half.jpg,VISUAL_CROSSCHECK_ONLY
+row_id,kind,item,code_crosswalk,source_path,visual_crosscheck
+PN-01,geometry,node 92dp / corner 26dp / 3D lip 8dp,PathMapScreenKt + cardview_corner_radius_large + button_primary_highlight,DESIGN/NODE_CODE_GEOMETRY.json::nodeGeometry.node,mimo-10
+PN-02,geometry,done node: gradient progress_chapter_primary -> button_primary,ARSC progress_chapter_primary #FF8D60E2 / button_primary #FF7E4BDE,CATALOGS/DESIGN_TOKENS.json,mimo-10
+PN-03,geometry,3D lip uses button_primary_highlight #FF6E3EC8,box-shadow 0 8px 0 var(--primary-hi),CATALOGS/DESIGN_TOKENS.json,mimo-01
+PN-04,geometry,dotted grid: 1.6dp dot / 26dp spacing,"radial-gradient(circle,var(--line2)...)/26px",line_secondary #FFE4E6F1,mimo-01
+PN-05,connector,"rounded Q elbows radius 32dp, stroke 10dp",M242 70 H280 Q312 70 312 102 V130,progress_chapter_primary,mimo-10
+PN-06,connector,upcoming part is light lavender,progress_chapter_background #FFE4E6F1,CATALOGS/DESIGN_TOKENS.json,mimo-01
+PN-07,node,done state: white ic_check_white 44dp,ic_check_white.xml pathData,res/drawable/ic_check_white.xml,mimo-01/02/10
+PN-08,node,current state: white card + 3dp purple border + 7dp gap + 3dp outer ring,border + double box-shadow,glance_circular_progress_indicator.xml,mimo-01/02
+PN-09,node,current inner thin 2dp line_secondary outline,::before inset 6px,line_secondary,mimo-01/02
+PN-10,node,"current 1/2 progress ring: 60dp circle, 8dp stroke, 55% arc","conic-gradient(from -90deg,var(--progress) 0 55%)",glance_circular_progress_indicator.xml,mimo-02
+PN-11,node,current play variant: dark navy ic_play,ic_play.xml fill #FF252746,res/drawable/ic_play.xml,mimo-01
+PN-12,node,bolt_active: purple 3D node with dark navy ic_flash,ic_flash.xml fill #FF252746,res/drawable/ic_flash.xml,mimo-10
+PN-13,node,bolt_optional: card_disabled node with white ic_bolt,ic_bolt.xml mono white,res/drawable/ic_bolt.xml,mimo-01/02
+PN-14,node,charged/mastered bolt vectors archived in code,ic_bolt_charged / ic_bolt_mastered / ic_bolt_mastered 48dp,res/drawable/*.xml,code-only
+PN-15,affordance,floating circular book/dictionary with A,ic_file.xml + bookmark_no_fill.xml + CSS outline,res/drawable/ic_file.xml,mimo-01/02
+PN-16,toolbar,"3 pills: coin 1,272 / key infinity / streak 0",PathToolbarKt$RowWithKeys + PathToolbarButtonType,SOURCE/dex/UI_CLASSES.json,mimo-10
+PN-17,toolbar,course bar with ic_list_bulleted three-lines,ic_list_bulleted.xml + track_switcher_title,res/drawable/ic_list_bulleted.xml,mimo-10
+PN-18,header,overview card: kicker + section title + 8px bar,ViewsKt$OverviewEntryPointHeader + progress_bar_mimo.xml,res/layout/progress_bar_mimo.xml,mimo-10
+PN-19,header,older chapter pill with 12% ring archived,profile_certificate_view.xml CircularProgressIndicator 56dp,res/layout/profile_certificate_view.xml,mimo-01/02
+PN-20,state,NO locked node: done/current/bolt only,user round-8 explicit order,18_DESIGN_ROUND_7.md / 20_DESIGN_ROUND_8.md,decision
+PN-21,state,NO START bubble on path,chapter start is a modal (chapter_toolbar.xml),res/layout/chapter_toolbar.xml,decision
+PN-22,state,NO debug chips / gray dot,visual cleanliness per user,mimo-10,decision
+PN-23,lock,only lock kept: exam-hub آزمون نهایی / دو هفتگی (section ۶),"pre-existing design, untouched",DESIGN/index.html#exam-hub,user exception
+PN-24,chapter,clicking any lesson node opens Start learning card,start_lesson / chapter_toolbar.xml / 6dp progress,SOURCE/values/values/string.xml,mimo-03
+PN-25,practice,bolt node opens section-practice up to that section,sections[].tutorialIds (publishSetVersion 52),SOURCE/assets/ui/testdata/test-tracks.json,user v7
+PN-26,practice,fully charged dialog,section_details_smart_practice_charged_dialog_title,SOURCE/values/values/string.xml,code
+PN-27,practice,mastered dialog,section_details_smart_practice_mastered_dialog_title,SOURCE/values/values/string.xml,code
+PN-28,practice,practice anyway CTA,section_details_smart_practice_practice_anyway,SOURCE/values/values/string.xml,code
+PN-29,practice,checkpoint window animation 220ms alpha,rc_checkpoint_window_enter/exit + RcCheckpointWindowAnimation,res/anim/*.xml,code
+PN-30,practice,practice.riv animation asset,res/raw/practice.riv,SOURCE/res/raw/practice.riv,code
+PN-31,dex,PathMapScreenKt composables,Lcom/getmimo/ui/path/map/PathMapScreenKt*,SOURCE/dex/UI_CLASSES.json,code
+PN-32,dex,PathMapViewModel onTutorialClick / onNextSectionShown,Lcom/getmimo/ui/path/map/PathMapViewModel*,SOURCE/dex/UI_CLASSES.json,code
+PN-33,dex,GetPathMapState / GetPathMapDialogs,Lcom/getmimo/interactors/path/GetPathMap*,SOURCE/dex/UI_CLASSES.json,code
+PN-34,dex,PracticeOptionalIntroKt / TutorialSpotlightKt,Lcom/getmimo/ui/path/map/PracticeOptionalIntroKt*,SOURCE/dex/UI_CLASSES.json,code
+PN-35,dex,PathToolbarButtonType enum,Lcom/getmimo/ui/path/map/PathToolbarButtonType,SOURCE/dex/UI_CLASSES.json,code
+PN-36,dex,SmartPractice modal data,ModalData$SmartPracticeChargedModal / MasteredModal,SOURCE/dex/UI_CLASSES.json,code
+PN-37,dex,isCompleted / practiceOptional literals,UI_STRING_LITERALS.txt,SOURCE/dex/UI_STRING_LITERALS.txt,code
+PN-38,shape,rounded_background_primary 12dp,res/drawable/rounded_background_primary.xml,SOURCE/res/drawable,code
+PN-39,shape,progress_bar_chapter 100dp corners,res/drawable/progress_bar_chapter.xml,SOURCE/res/drawable,code
+PN-40,shape,ic_square_rounded 24dp rounded square,res/drawable/ic_square_rounded.xml,SOURCE/res/drawable,code
+PN-41,shape,bg_circular ring shape,res/drawable/bg_circular.xml,SOURCE/res/drawable,code
+PN-42,shape,shadow_bottom gradient,res/drawable/shadow_bottom.xml + shadow_color,SOURCE/res/drawable,code
+PN-43,color,support_shadow #FF252746,CATALOGS/DESIGN_TOKENS.json,CATALOGS/DESIGN_TOKENS.json,code
+PN-44,color,progress_chapter_weak #339C75E6 ring,CATALOGS/DESIGN_TOKENS.json,CATALOGS/DESIGN_TOKENS.json,code
+PN-45,screenshot,mimo-01: done + play + 2 bolts + book,VISUAL_CROSSCHECK_ONLY,DESIGN/REFERENCE/mimo-01-learn-path-play.jpg,cross-check
+PN-46,screenshot,mimo-02: done + double ring + 1/2 ring + 2 bolts + book,VISUAL_CROSSCHECK_ONLY,DESIGN/REFERENCE/mimo-02-learn-path-half.jpg,cross-check
+PN-47,screenshot,mimo-10: 4 done checks + active bolt + elbow connector,VISUAL_CROSSCHECK_ONLY,DESIGN/REFERENCE/mimo-10-path-map-current.jpg,cross-check
+PN-48,screenshot,mimo-03: Start learning chapter card,VISUAL_CROSSCHECK_ONLY,DESIGN/REFERENCE/mimo-03-chapter-start-dialog.jpg,cross-check
+PN-49,screenshot,mimo-05: leaderboard (promotion zone archived),VISUAL_CROSSCHECK_ONLY,DESIGN/REFERENCE/mimo-05-weekly-leaderboard.jpg,cross-check
+PN-50,screenshot,mimo-13/14: path overview + unfinished track,VISUAL_CROSSCHECK_ONLY,DESIGN/REFERENCE/*.jpg,cross-check
+V8-01,decision,روتین روزانه / Habitica scoring idea fully removed,user: کلا حدف کن به درد نیمخوره / ایدهاش اشتباه بود,20_DESIGN_ROUND_8.md,decision
+V8-02,decision,bottom nav back to 5 tabs; MAX still forbidden,user round-8,DESIGN/index.html#tabs,decision
+V8-03,decision,Dictate removed from AI composer,user round-8,DESIGN/index.html#ai,decision
+V8-04,decision,all design/policy/EPM/timer annotation notes removed from phone UI,user round-8,DESIGN/index.html,decision
+V8-05,decision,exam-hub labels/templates + descriptive answer text KEPT,user: اون توضحاتی که در بخش ازمونها هست رو میتونی نگه داری,DESIGN/index.html#exam-hub,decision
+V8-06,decision,"exam appearance Mimo-ified (icons + colours only, no architecture change)",user round-8,DESIGN/index.html,decision
+V8-07,decision,exam architecture/timer/answer sheets/270 min UNCHANGED,user: چهارچوبش الان عالیه,DESIGN/index.html,decision
+V8-08,ai,"attachment + زنجیره گفت و گو top row kept, tidy",res/drawable/attachment.xml + ic_link_external.xml,CATALOGS/AI_PANEL_SPEC.csv,code
+V8-09,ai,TEACH/PRACTICE + model + medium on one tiny bottom line,ic_chevron_down.xml,CATALOGS/AI_PANEL_SPEC.csv,code
+V8-10,exam-icon,◇ replaced by real Mimo vectors per exam kind,ic_trophy / ic_file / ic_target / ic_sparks_alt,SOURCE/res/drawable/*.xml,code
+V8-11,exam-icon,⏱ replaced by ic_clock_black_24dp,res/drawable/ic_clock_black_24dp.xml,SOURCE/res/drawable,code
+V8-12,exam-icon,✓ replaced by ic_task_completed,res/drawable/ic_task_completed.xml,SOURCE/res/drawable,code
+V8-13,exam-icon,🔒 (only allowed lock) replaced by ic_lock_alt_02,res/drawable/ic_lock_alt_02.xml,SOURCE/res/drawable,code
+V8-14,exam-icon,back arrow / help replaced by Mimo vectors,ic_arrow_back_24 / ic_help,SOURCE/res/drawable,code
+V8-15,exam-style,"cat-meta restyled as Mimo card (12dp radius, no dashed line)",cardview_corner_radius_large,CATALOGS/DESIGN_TOKENS.json,code
+V8-16,exam-style,"nodek restyled as Mimo square card (20dp, 2px line, 4dp lip)",glance_component_square_icon_button_corners,CATALOGS/DESIGN_TOKENS.json,code
+V8-17,exam-style,chips restyled as Mimo pills (card-pressed / primary),glance_component_button_corners 24dp,CATALOGS/DESIGN_TOKENS.json,code
+V8-18,exam-style,Mimo TextH2/TextLabel1 typography + toolbar 56dp,toolbar_height 56dp / TextH2 20sp,CATALOGS/DESIGN_TOKENS.json,code
+V8-19,lock,locked lesson rows removed from section detail,user round-8,DESIGN/index.html#section-detail,decision
+V8-20,lock,Coming soon label kept in path overview (not a lock),path_section_coming_soon,SOURCE/values/values/string.xml,code
+V8-21,code,title tooltips converted to data-code audit attributes,no visible code annotations in UI,DESIGN/index.html,decision
+V8-22,code,visible .lh debug labels removed; data-lh audit kept,8 LH capabilities remain behind /max,CATALOGS/AI_PANEL_SPEC.csv,decision

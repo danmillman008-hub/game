@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# ARCHIVED / REVOKED (round 8): the routine tab and the Habitica scoring idea were removed entirely.
+# Kept only as a v7 audit-trail builder. Use tools/build_design_v8.py + tools/finalize_v8.py instead.
 # -*- coding: utf-8 -*-
 """finalize_v7.py — append v7 catalogs, write v7 docs/banners/MANIFEST.
 
