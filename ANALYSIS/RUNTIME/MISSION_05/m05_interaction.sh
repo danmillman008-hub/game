@@ -161,6 +161,44 @@ for I in $(seq 1 $MAX); do
 done
 log "interaction_chain_finished steps_captured=$(grep -c '^step=' "$TRACE")"
 
+# ---- 4b. Lesson interaction: correct / wrong answer states --------------
+# Only if the chain actually reached an interactive exercise with options.
+LOPTS=$(python3 ANALYSIS/RUNTIME/MISSION_05/lesson_options.py "$BASE" 2>/dev/null)
+log "LESSON_PHASE detected_options=$(printf '%s\n' "$LOPTS" | grep -c OPTION)"
+if printf '%s\n' "$LOPTS" | grep -q OPTION; then
+  K=0
+  printf '%s\n' "$LOPTS" | grep 'OPTION' | head -4 | while read -r OX OY OKIND OTXT; do
+    K=$((K+1))
+    N=$(printf 'LESSON-WRONG-%02d' "$K")
+    log "$N action=input_tap x=$OX y=$OY option=$OTXT"
+    adb shell input tap "$OX" "$OY" >> "$TRACE" 2>&1
+    sleep 3
+    capture "$N" "answer_option_$OTXT" >/dev/null
+  done
+  CTA=$(printf '%s\n' "$LOPTS" | grep 'CTA' | head -1)
+  if [ -n "$CTA" ]; then
+    CX=$(printf '%s' "$CTA" | awk '{print $1}'); CY=$(printf '%s' "$CTA" | awk '{print $2}')
+    log "LESSON-CONTINUE action=input_tap x=$CX y=$CY"
+    adb shell input tap "$CX" "$CY" >> "$TRACE" 2>&1
+    sleep 4
+    capture LESSON-CONTINUE "after_cta" >/dev/null
+  fi
+  # capture one more CTA if the feedback screen exposes one
+  LAST=$(ls -1 "$R"/UI_HIERARCHY/LESSON-*.xml 2>/dev/null | tail -1)
+  if [ -n "$LAST" ]; then
+    CTA2=$(python3 ANALYSIS/RUNTIME/MISSION_05/lesson_options.py "$LAST" 2>/dev/null | grep 'CTA' | head -1)
+    if [ -n "$CTA2" ]; then
+      C2X=$(printf '%s' "$CTA2" | awk '{print $1}'); C2Y=$(printf '%s' "$CTA2" | awk '{print $2}')
+      log "LESSON-AFTER action=input_tap x=$C2X y=$C2Y"
+      adb shell input tap "$C2X" "$C2Y" >> "$TRACE" 2>&1
+      sleep 4
+      capture LESSON-AFTER "after_feedback_cta" >/dev/null
+    fi
+  fi
+else
+  log "LESSON_PHASE skipped: no clickable quiz options in the final state"
+fi
+
 # ---- 5. Bounded offline dependency probe ---------------------------------
 log "OFFLINE_PHASE begin: isolate network, then COLD START the real app offline"
 {
