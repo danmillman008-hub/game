@@ -12,6 +12,11 @@
 # purchases/payments, no TLS/pinning bypass. Stops at the login boundary.
 
 set +e
+# MISSION 08: unified core-architecture investigation. ONE lightweight
+# orchestrator reusing the proven M07 Frida/bridge/DB/UI tools.
+if grep -q "M08-UNIFIED-RUN" ANALYSIS/RUNTIME/_DISPATCH_TRIGGER 2>/dev/null; then
+  exec bash ANALYSIS/RUNTIME/MISSION_08/m08_runtime.sh
+fi
 # MISSION 07: LIVE runtime reconstruction. Root/Frida/private-DB experiments
 # run in their own dispatcher and never touch M03/M04/M05 evidence paths.
 if grep -q "M07-RUNTIME-RUN" ANALYSIS/RUNTIME/_DISPATCH_TRIGGER 2>/dev/null; then

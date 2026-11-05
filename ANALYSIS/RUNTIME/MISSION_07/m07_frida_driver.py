@@ -5,7 +5,7 @@ name (measured: frida-ps -U -> 3407 Mimo; adb shell pidof com.getmimo -> 3407).
 Therefore attach by PID, never by get_process('com.getmimo'). Android is
 'jailed' for Frida so spawn() is unsupported; attach is the correct mode.
 """
-import sys, json, time, subprocess, pathlib
+import sys, json, time, subprocess, pathlib, os
 import frida
 
 if len(sys.argv) < 4:
@@ -34,7 +34,7 @@ def device_pid():
 dev = frida.get_usb_device(timeout=30)
 write({'kind': 'driver_start', 'frida': frida.__version__, 'pidof_com.getmimo': device_pid(),
        'frida_ps_mimo': host_env(), 'timestamp_utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())})
-pid = device_pid()
+pid = int(os.environ['M08_TARGET_PID']) if os.environ.get('M08_TARGET_PID') else device_pid()
 proc = None
 for p in dev.enumerate_processes():
     if (pid is not None and p.pid == pid) or p.name in ('Mimo', 'com.getmimo'):
