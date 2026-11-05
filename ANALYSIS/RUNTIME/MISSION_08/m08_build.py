@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """MISSION 08 — build EXACTLY the seven requested core deliverables.
 
-Reads only real workspace evidence: M05/M06/M07 artefacts, both M08 unified
-timelines, both navigation graphs, private-state snapshots and Frida traces.
+Reads only real workspace evidence: M05/M06/M07 artefacts, all four M08 unified
+timelines, all navigation graphs, private-state snapshots and Frida traces.
 No value is invented; anything not observed stays UNKNOWN.
 """
 import collections
@@ -67,6 +67,7 @@ if _cur_lines:
 RAW.sort(key=lambda t: t[2])
 PHASE_RUNS = {ph: run for _, run, ph in RAW}
 P3_RUN = PHASE_RUNS.get(3, 'n/a')
+P4_RUN = PHASE_RUNS.get(4, 'n/a')
 events = []
 for path, run, phase in RAW:
     for o in jlines(path):
@@ -134,6 +135,7 @@ PHASE_COUNTS = {ph: sum(1 for o in events if o.get('phase') == ph) for _, _, ph 
 P1_COUNT = PHASE_COUNTS.get(1, 0)
 P2_COUNT = PHASE_COUNTS.get(2, 0)
 P3_COUNT = PHASE_COUNTS.get(3, 0)
+P4_COUNT = PHASE_COUNTS.get(4, 0)
 by_source = collections.Counter(o.get('source') for o in filtered)
 by_event = collections.Counter(o.get('event') for o in filtered)
 by_class = collections.Counter(o.get('evidence_class') for o in filtered)
@@ -157,8 +159,8 @@ for gp in sorted((R8 / 'EXPERIMENTS').glob('PHASE*_NAV_GRAPH_*.json')):
     if m:
         graphs.append((jload(gp, {}), m.group(2), int(m.group(1))))
 _live_nav = jload(R8 / 'EXPERIMENTS' / 'NAV_GRAPH.json', {})
-if _live_nav and not any(ph == 3 for _, _, ph in graphs):
-    graphs.append((_live_nav, P3_RUN, 3))
+if _live_nav and not any(ph == 4 for _, _, ph in graphs):
+    graphs.append((_live_nav, P4_RUN, 4))
 screen_xml = {}
 for o in filtered:
     if o.get('event') == 'screen' and o.get('screen_id'):
@@ -457,7 +459,8 @@ system_map = {
         'E10': 'ANALYSIS/MISSION_06/10_LEARNING_PROGRESSION.md, 11_LOCAL_PERSISTENCE.md, 13_UI_NAVIGATION_AND_RUNTIME.md, 14_NATIVE_LIBRARIES_AND_JNI.md, 15_OFFLINE_BEHAVIOR_SPECIFICATION.md, 16_RECONSTRUCTED_ALGORITHMS.md',
         'E11': 'ANALYSIS/RUNTIME/MISSION_08/TIMELINE/PHASE1_TIMELINE_42042312640.jsonl + UI/ + STATE/ (run 42042312640)',
         'E12': 'ANALYSIS/RUNTIME/MISSION_08/TIMELINE/PHASE2_TIMELINE_42046336206.jsonl + TRACES/ (Frida/DI/Fragments/Room SQL/Settings/network)',
-        'E21': 'ANALYSIS/RUNTIME/MISSION_08/TIMELINE/PHASE3_TIMELINE_*.jsonl + ENV/M08_PHASE3_RESTORE.txt (natural-state restore, main screens)',
+        'E21': 'ANALYSIS/RUNTIME/MISSION_08/TIMELINE/PHASE3_TIMELINE_42049141553.jsonl + ENV/PHASE3_RESTORE_42049141553.txt (natural-state restore)',
+        'E22': 'ANALYSIS/RUNTIME/MISSION_08/TIMELINE/PHASE4_TIMELINE_*.jsonl (final targeted main-screen run)',
         'E13': 'ANALYSIS/RUNTIME/MISSION_08/STATE/SNAPSHOT_*.json',
         'E14': 'ANALYSIS/RUNTIME/MISSION_08/UI/*.xml',
         'E15': 'ANALYSIS/RUNTIME/MISSION_08/EXPERIMENTS/PHASE1_NAV_GRAPH_42042312640.json + EXPERIMENTS/NAV_GRAPH.json',
@@ -678,7 +681,8 @@ txt(OUT / 'MIMO_CORE_FLOW.mmd', mmd)
 # ---------------------------------------------------------------------------
 T = {
     '@@P1@@': str(P1_COUNT), '@@P2@@': str(P2_COUNT), '@@P3@@': str(P3_COUNT),
-    '@@P3RUN@@': str(P3_RUN), '@@TOTAL@@': str(len(filtered)),
+    '@@P4@@': str(P4_COUNT), '@@P3RUN@@': str(P3_RUN), '@@P4RUN@@': str(P4_RUN),
+    '@@TOTAL@@': str(len(filtered)),
     '@@COLLAPSED@@': str(collapsed_total),
     '@@SCREENS@@': str(len(screens)), '@@EDGES@@': str(len(edges)),
     '@@FRIDA@@': str(len(frida_events)), '@@HOOKS@@': str(len(hook_installed)),
@@ -704,13 +708,14 @@ class catalogue. Every major claim below carries an evidence reference `E##` res
 No backend, no credentials, no fabricated server responses, and no replacement application.
 
 **Evidence base:** M01–M07 (APK/DEX, Androguard, curriculum decoder, Room SQL, Frida 17 Java
-bridge, stage-6 runtime traces, 202-entry evidence DB) plus three M08 controlled runs:
+bridge, stage-6 runtime traces, 202-entry evidence DB) plus four M08 controlled runs:
 `42042312640` (broad navigation/DB, @@P1@@ events), `42046336206` (Frida/DI/onboarding,
-@@P2@@ events) and `@@P3RUN@@` (natural-state restore to hook the main screens, @@P3@@ events).
+@@P2@@ events), `@@P3RUN@@` (natural-state restore, @@P3@@ events) and `@@P4RUN@@`
+(final targeted main-screen attempt, @@P4@@ events).
 The single unified stream `MIMO_RUNTIME_TIMELINE.jsonl` contains @@TOTAL@@ correlated events
 (@@COLLAPSED@@ repetitive machine events collapsed). Classification mix: @@BYCLASS@@.
 `MIMO_NAVIGATION_GRAPH.json` holds @@SCREENS@@ measured screens and @@EDGES@@ transitions.
-All three runs used the SAME orchestrator, the SAME curated 63-hook agent and the SAME
+All four runs used the SAME orchestrator, the SAME curated 63-hook agent and the SAME
 experiment/action ID scheme; the timeline carries `run_id`, `phase`, `experiment_id` and
 `action_id` on every event so cross-run correlation is explicit rather than implicit.
 
@@ -1067,7 +1072,8 @@ not guessed from bytecode. `SERVER CONFIRMED = 0`. Evidence codes resolve in
 |---|---|
 | Broad run | `42042312640`, @@P1@@ events, SUCCESS, no Frida method events (server binary not pushed); reached MainActivity, ChapterActivity, FTG code editor and quit dialog |
 | Targeted run 2 | `42046336206`, @@P2@@ events, Frida attach OK (3 processes), 63 hooks per process, live DI / Fragments / Room SQL / Settings / network URLs; onboarding stalled on a Compose screen |
-| Targeted run 3 | `@@P3RUN@@`, @@P3@@ events; natural post-onboarding state restored to hook the main screens (technique switch, not a repeat) |
+| Targeted run 3 | `@@P3RUN@@`, @@P3@@ events; natural post-onboarding state restored (82 files, 2 `lesson_progress` rows, `local_coins=200`) but the app still opened the IntroSlides carousel; the route loop hit a keyword collision and aborted |
+| Final run 4 | `@@P4RUN@@`, @@P4@@ events; bounded, state-aware "Get started" navigation to reach MainActivity, keyword collision fixed |
 | Unified stream | `MIMO_RUNTIME_TIMELINE.jsonl` — @@TOTAL@@ events, @@COLLAPSED@@ repetitive events collapsed |
 | Navigation | @@SCREENS@@ screens / @@EDGES@@ edges in `MIMO_NAVIGATION_GRAPH.json` |
 | State snapshots | @@SNAPS@@ natural (non-synthetic) Room/preferences snapshots |
@@ -1102,9 +1108,10 @@ synthetic state without exposing the algorithm).
 stage 6 proved the WebView letter exercise uses `U()/H()` **instead** [E06]. **Missing:** a
 submitted native `validatedInput` / `fillTheGap` / `selection` answer that actually reaches
 `onLessonRun$1`, with the resulting LiveData feedback object and UI. Phase 1 reached the
-fill-the-gap code-editor lesson but its exploration stalled on `btn_lesson_close`; phase 2
-targeted the measured `<button>Like</button>` snippet. If no `V/W/X` entry appears in the
-unified timeline, this remains `UNKNOWN`.
+fill-the-gap code-editor lesson and located the measured `<button>Like</button>` snippet
+(`S151_onboard_23_after.xml`), but its exploration stalled on `btn_lesson_close`; phases 2–4
+never reached a native lesson. If no `V/W/X` entry appears in the unified timeline, this
+remains `UNKNOWN`.
 
 ## 4. Chapter / tutorial completion transitions
 
