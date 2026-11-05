@@ -17,7 +17,7 @@ observed and are listed separately so they are never confused with Mimo backend 
 
 ## 1. Verb resolution (M09 correction — VERIFIED_STATIC)
 
-MISSION 02's `MIMO_RETROFIT_ENDPOINTS.json` inferred verbs from R8 annotation **names**
+MISSION 02's `ANALYSIS/MIMO_RETROFIT_ENDPOINTS.json` inferred verbs from R8 annotation **names**
 (`f=GET, o=POST, n=PUT, p=DELETE, b=POST/other`). `ANALYSIS/HTTP_VERBS_RESOLVED.json`
 decoded the actual Retrofit `RequestFactory$Builder` (`Lge0/r0;->a @0xabb18`) and paired
 each instance-of annotation check with its adjacent verb const-string:

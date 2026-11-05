@@ -29,6 +29,8 @@ M6 = ROOT / 'ANALYSIS' / 'MISSION_06'
 M7 = ROOT / 'ANALYSIS' / 'MISSION_07'
 M8 = ROOT / 'ANALYSIS' / 'MISSION_08'
 APK_SHA = '48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a'
+# Overridable at reproduction time; default is the real deliverables commit.
+FINAL_COMMIT = os.environ.get('M09_FINAL_COMMIT_HASH', '9e6ec9ac')
 CLASSES = ['VERIFIED_STATIC', 'VERIFIED_RUNTIME', 'VERIFIED_ASSET', 'VERIFIED_DATABASE',
            'VERIFIED_NETWORK_OBSERVATION', 'INFERRED', 'UNKNOWN', 'SERVER_DEPENDENT']
 OUT.mkdir(parents=True, exist_ok=True)
@@ -1517,7 +1519,7 @@ observed and are listed separately so they are never confused with Mimo backend 
 
 ## 1. Verb resolution (M09 correction — VERIFIED_STATIC)
 
-MISSION 02's `MIMO_RETROFIT_ENDPOINTS.json` inferred verbs from R8 annotation **names**
+MISSION 02's `ANALYSIS/MIMO_RETROFIT_ENDPOINTS.json` inferred verbs from R8 annotation **names**
 (`f=GET, o=POST, n=PUT, p=DELETE, b=POST/other`). `ANALYSIS/HTTP_VERBS_RESOLVED.json`
 decoded the actual Retrofit `RequestFactory$Builder` (`Lge0/r0;->a @0xabb18`) and paired
 each instance-of annotation check with its adjacent verb const-string:
@@ -2775,7 +2777,8 @@ and deterministic offline fallbacks, not left as open-ended investigation.
 '''
 FINAL = (FINAL.replace('@@RUN@@', M9_RUN)
          .replace('@@MERGED@@', str(len(merged)))
-         .replace('@@SHA@@', APK_SHA))
+         .replace('@@SHA@@', APK_SHA)
+         .replace('@@COMMIT@@', FINAL_COMMIT))
 write('MISSION_09_FINAL_REPORT.md', FINAL)
 
 # ===========================================================================
