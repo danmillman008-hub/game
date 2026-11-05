@@ -85,12 +85,21 @@ PY
 # returned "null root node". That is recorded honestly; here we additionally
 # wake/unlock the device, wait for the launcher, and retry the hierarchy dump.
 # --------------------------------------------------------------------------
-adb shell input keyevent 26 > /dev/null 2>&1   # wake
-sleep 2
-adb shell input keyevent 82 > /dev/null 2>&1   # dismiss keyguard
-sleep 2
-adb shell input keyevent 3  > /dev/null 2>&1   # HOME
-sleep 15
+if [ "${R##*/}" = "MISSION_04" ]; then
+  # MISSION 04: WAKEUP (224) is idempotent; never toggle power (26) and never
+  # send HOME (3) before launching Mimo - HOME can trigger a launcher ANR.
+  adb shell input keyevent 224 > /dev/null 2>&1   # WAKEUP
+  sleep 2
+  adb shell input keyevent 82  > /dev/null 2>&1   # dismiss keyguard
+  sleep 20                                        # let the launcher settle (avoid launcher ANR)
+else
+  adb shell input keyevent 26 > /dev/null 2>&1    # wake
+  sleep 2
+  adb shell input keyevent 82 > /dev/null 2>&1    # dismiss keyguard
+  sleep 2
+  adb shell input keyevent 3  > /dev/null 2>&1    # HOME
+  sleep 15
+fi
 
 {
   echo "MIMO MISSION 03 - DISPLAY / WINDOW STATE"
@@ -394,10 +403,40 @@ else
       adb shell ps -A 2>/dev/null | tr -d '\r' | grep -i "$M04_PKG" | head -10
     } >> "$R/APPLICATION_LAUNCH.txt" 2>&1
 
+    # ---- dismiss a possible system ANR overlay (e.g. "Pixel Launcher
+    #       isn't responding") by tapping its "Wait" button, parsed from the
+    #       ORIGINAL uiautomator XML. No app behaviour is modified.
+    XML="$R/UI_HIERARCHY/TEST-003_initial_screen.xml"
+    : > "$R/LOGS/ANR_DISMISSAL.txt"
+    for ATT in 1 2 3; do
+      adb shell uiautomator dump --compressed /sdcard/window.xml >/dev/null 2>&1
+      adb pull /sdcard/window.xml "$XML" >/dev/null 2>&1
+      NODE=$(grep -o '<node[^>]*aerr_wait[^>]*>' "$XML" 2>/dev/null | head -1)
+      B=$(printf '%s' "$NODE" | grep -o 'bounds="\[[0-9]*,[0-9]*\]\[[0-9]*,[0-9]*\]"' | head -1)
+      if [ -n "$B" ]; then
+        NUMS=$(printf '%s' "$B" | grep -oE '[0-9]+' | tr '\n' ' ')
+        set -- $NUMS
+        CX=$(( ( $1 + $3 ) / 2 )); CY=$(( ( $2 + $4 ) / 2 ))
+        echo "anr_dialog_attempt_$ATT present tap=$CX,$CY bounds=$B" >> "$R/LOGS/ANR_DISMISSAL.txt"
+        adb shell input tap "$CX" "$CY" >> "$R/LOGS/ANR_DISMISSAL.txt" 2>&1
+        sleep 3
+      else
+        echo "anr_dialog_attempt_$ATT none" >> "$R/LOGS/ANR_DISMISSAL.txt"
+        break
+      fi
+    done
+    adb shell dumpsys window 2>/dev/null | tr -d '\r' \
+      | grep -m1 -i 'mCurrentFocus' >> "$R/LOGS/ANR_DISMISSAL.txt" 2>&1
+    sleep 3
+
     # ---- SCREENSHOT -----------------------------------------------------
     adb exec-out screencap -p > "$R/SCREENSHOTS/TEST-003_initial_screen.png" 2>/dev/null
-    echo "screenshot_bytes=$(stat -c %s "$R/SCREENSHOTS/TEST-003_initial_screen.png" 2>/dev/null || echo 0)" \
-      > "$R/LOGS/SCREENSHOT_INFO.txt"
+    cp "$R/SCREENSHOTS/TEST-003_initial_screen.png" "$R/SCREENSHOTS/TEST-004_first_usable_screen.png" 2>/dev/null
+    {
+      echo "TEST-003_initial_screen.png bytes=$(stat -c %s "$R/SCREENSHOTS/TEST-003_initial_screen.png" 2>/dev/null || echo 0)"
+      echo "TEST-004_first_usable_screen.png bytes=$(stat -c %s "$R/SCREENSHOTS/TEST-004_first_usable_screen.png" 2>/dev/null || echo 0)"
+      echo "TEST-002_splash.png bytes=$(stat -c %s "$R/SCREENSHOTS/TEST-002_splash.png" 2>/dev/null || echo 0)"
+    } > "$R/LOGS/SCREENSHOT_INFO.txt"
 
     # ---- UI HIERARCHY (original XML, never edited) ----------------------
     adb shell uiautomator dump --compressed /sdcard/window.xml > "$R/LOGS/uiautomator_M04.txt" 2>&1
