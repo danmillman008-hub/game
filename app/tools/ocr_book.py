@@ -19,13 +19,14 @@ from tesserocr import PyTessBaseAPI, PSM, OEM, RIL
 _W = {}
 
 
-def init_worker(pdf, out, dpi, tessdata, psm, lang):
+def init_worker(pdf, out, dpi, tessdata, psm, lang, boxes_only=False):
     _W['doc'] = pymupdf.open(pdf)
     _W['out'] = out
     _W['dpi'] = dpi
     _W['tessdata'] = tessdata
     _W['psm'] = psm
     _W['lang'] = lang
+    _W['boxes_only'] = boxes_only
     _W['api'] = PyTessBaseAPI(path=tessdata, lang=lang, psm=psm, oem=OEM.LSTM_ONLY)
     _W['api'].SetVariable('preserve_interword_spaces', '1')
 
@@ -48,7 +49,7 @@ def ocr_page(n):
     # reconstruct the book's TWO-COLUMN layout during structuring.
     words = []
     try:
-        for row in api.GetTSVText().splitlines()[1:]:
+        for row in api.GetTSVText(0).splitlines()[1:]:
             c = row.split('\t')
             if len(c) < 12 or c[11].strip() == '' or c[0] != '5':
                 continue
@@ -72,6 +73,35 @@ def ocr_page(n):
             'chars': len(text), 'seconds': round(time.time() - t0, 1)}
 
 
+
+def boxes_page(n):
+    """Second pass: word boxes only, for column-aware structuring.
+    Does NOT touch the already-extracted page text or the manifest."""
+    doc, api = _W['doc'], _W['api']
+    dest = os.path.join(_W['out'], 'pages', f'page-{n:04d}.boxes.json')
+    if os.path.isfile(dest) and not _W.get('force'):
+        return {'page': n, 'status': 'skipped'}
+    page = doc[n - 1]
+    pix = page.get_pixmap(dpi=_W['dpi'], colorspace=pymupdf.csGRAY, alpha=False)
+    img = Image.frombytes('L', (pix.width, pix.height), pix.samples)
+    api.SetImage(img)
+    words = []
+    for row in api.GetTSVText(0).splitlines()[1:]:
+        c = row.split('\t')
+        if len(c) < 12 or not c[11].strip() or c[0] != '5':
+            continue
+        words.append({'text': c[11], 'conf': float(c[10]),
+                      'bbox': [int(c[6]), int(c[7]), int(c[8]), int(c[9])],
+                      'block': int(c[2]), 'par': int(c[3]), 'line': int(c[4])})
+    tmp = dest + '.tmp'
+    with open(tmp, 'w', encoding='utf-8') as f:
+        json.dump({'page': n, 'width': pix.width, 'height': pix.height,
+                   'words': words}, f, ensure_ascii=False)
+    os.replace(tmp, dest)
+    return {'page': n, 'status': 'ok', 'words': len(words), 'chars': 0, 'confidence': None}
+
+
+
 def sha256(path, chunk=8 * 1024 * 1024):
     h = hashlib.sha256()
     with open(path, 'rb') as f:
@@ -92,6 +122,8 @@ def main():
     ap.add_argument('--lang', default='fas')
     ap.add_argument('--tessdata', default='/home/user/_work/ocr_data/tessdata')
     ap.add_argument('--force', action='store_true')
+    ap.add_argument('--boxes-only', action='store_true',
+                    help='only generate word boxes (second pass); leave text/manifest intact')
     a = ap.parse_args()
 
     doc = pymupdf.open(a.pdf)
@@ -100,6 +132,20 @@ def main():
     doc.close()
     os.makedirs(os.path.join(a.out, 'pages'), exist_ok=True)
     pages = list(range(a.start, min(end, total) + 1))
+
+    if a.boxes_only:
+        t0 = time.time(); done = 0
+        ctx = mp.get_context('fork')
+        worker = boxes_page
+        with ctx.Pool(a.workers, initializer=init_worker,
+                      initargs=(a.pdf, a.out, a.dpi, a.tessdata, a.psm, a.lang, True)) as pool:
+            for r in pool.imap_unordered(worker, pages, chunksize=1):
+                done += 1
+                if done % 20 == 0:
+                    print(f'[boxes {done}/{len(pages)}] page {r["page"]} {r["status"]} '
+                          f'words={r.get("words")} elapsed={round(time.time()-t0)}s', flush=True)
+        print('BOXES DONE', done, 'pages in', round(time.time()-t0, 1), 's', flush=True)
+        return 0
 
     manifest = {
         'pdf': os.path.abspath(a.pdf), 'pdf_sha256': sha256(a.pdf),

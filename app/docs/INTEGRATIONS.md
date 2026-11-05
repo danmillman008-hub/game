@@ -75,8 +75,8 @@
 
 ## ۴. کتاب (تمام ۸۴۸ صفحه، یک پاس)
 
-- OCR کامل با `tools/ocr_book.py` در حال اجراست (resumable، خروجی خارج از گیت).
-- `tools/structure_book.py` **تمام صفحات OCRشده را یکجا** به پیشنویس
+- OCR کامل با `tools/ocr_book.py` **انجام شد**: ۸۴۸/۸۴۸ صفحه، conf 78.1 (resumable، خروجی خارج از گیت). پاس bboxها در حال اجراست.
+- `tools/structure_book.py` **همهٔ ۸۴۸ صفحه را یکجا** به پیشنویس
   فرممحور تبدیل میکند: سؤالها، گزینهها، صفحهٔ مبدأ، confidence، و
   `correctIndex: null` وقتی پاسخنامهای یافت نشود (هیچ پاسخی جعل نمیشود).
 - خروجی `content/source/…/draft-package.json` با `validate_content.py`

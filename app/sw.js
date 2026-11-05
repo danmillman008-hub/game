@@ -1,6 +1,6 @@
 /* Offline shell cache. Network-first so development edits are always fresh;
    cached copies keep the app usable when the device is completely offline. */
-const CACHE = 'mimo-offline-v1';
+const CACHE = 'mimo-offline-v2';
 const SHELL = [
   './', './index.html', './assets/proto.css', './assets/motion.css', './assets/node-match.css',
   './assets/proto-data.js', './assets/proto-ui.js',
