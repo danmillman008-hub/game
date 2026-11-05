@@ -89,6 +89,7 @@ log "pid=$(adb shell pidof "$PKG" 2>/dev/null | tr -d '\r')"
 LAST_XML=""
 NO_CHANGE=0
 AVOID=""
+STATEFILE="$R/LOGS/.capture_state"
 capture(){
   N="$1"; LABEL="$2"
   XML="$R/UI_HIERARCHY/$N.xml"
@@ -118,17 +119,28 @@ n,l,h,d,m,p,f,r,t=sys.argv[1:10]
 print(json.dumps(dict(step=n,label=l,xml_sha256=h,uiautomator_exit=d,
                       mimo_nodes=int(m or 0),pid=p,focus=f,resumed=r,texts=t),ensure_ascii=False))
 PY
-  if [ "$H" = "$LAST_XML" ] && [ -n "$H" ]; then NO_CHANGE=$((NO_CHANGE+1)); else NO_CHANGE=0; fi
-  LAST_XML="$H"
+  # capture() runs inside $(...) -> a subshell. Persist state to a file instead
+  # of relying on shell globals (M05 run 42002808217 bug: they never propagated).
+  PREV=$(cat "$STATEFILE" 2>/dev/null | head -1)
+  if [ "$H" = "$PREV" ] && [ -n "$H" ]; then N=$(( $(cat "$STATEFILE" 2>/dev/null | tail -1) + 1 )); else N=0; fi
+  printf '%s\n%s\n' "$H" "$N" > "$STATEFILE"
   echo "$XML"
 }
 
 # ---- 4. Baseline + bounded real interaction chain ------------------------
 BASE=$(capture STEP-00 "onboarding_baseline")
-MAX=16
+MAX=24
 for I in $(seq 1 $MAX); do
   N=$(printf 'STEP-%02d' "$I")
   TAP=$(python3 ANALYSIS/RUNTIME/MISSION_05/choose_tap.py "$BASE" "$AVOID" 2>/dev/null | head -1)
+  case "$TAP" in
+    NONE*)
+      # a transient loading screen: retry once after a short wait
+      log "$N first_choice=$TAP -> retry after 5s"
+      sleep 5
+      BASE=$(capture "$N" "loading_retry")
+      TAP=$(python3 ANALYSIS/RUNTIME/MISSION_05/choose_tap.py "$BASE" "$AVOID" 2>/dev/null | head -1) ;;
+  esac
   log "$N choose_tap=$TAP"
   case "$TAP" in
     NONE*|'') log "$N stop_reason=$TAP"; break ;;
@@ -138,9 +150,13 @@ for I in $(seq 1 $MAX); do
   TXT=$(printf '%s' "$TAP" | awk '{print $3}')
   log "$N action=input_tap x=$X y=$Y target=$TXT"
   adb shell input tap "$X" "$Y" >> "$TRACE" 2>&1
-  AVOID="${AVOID:+$AVOID;}$X,$Y"
+  AVOID="$X,$Y"
+  PREV_HASH=$(head -1 "$STATEFILE" 2>/dev/null)
   sleep 4
   BASE=$(capture "$N" "after_tap_$I")
+  NEW_HASH=$(head -1 "$STATEFILE" 2>/dev/null)
+  NO_CHANGE=$(tail -1 "$STATEFILE" 2>/dev/null); NO_CHANGE=${NO_CHANGE:-0}
+  if [ "$NEW_HASH" != "$PREV_HASH" ]; then AVOID=""; fi
   if [ "$NO_CHANGE" -ge 2 ]; then log "$N stop_reason=two_identical_consecutive_hierarchies"; break; fi
 done
 log "interaction_chain_finished steps_captured=$(grep -c '^step=' "$TRACE")"
@@ -187,7 +203,7 @@ done
 rm -f "$R/UI_HIERARCHY/.anr2.xml"
 OFFBASE=$(capture OFFLINE-00 "cold_start_with_network_disabled")
 OFFAVOID=""
-for J in 1 2 3; do
+for J in 1 2 3 4 5 6; do
   ON=$(printf 'OFFLINE-%02d' "$J")
   TAP2=$(python3 ANALYSIS/RUNTIME/MISSION_05/choose_tap.py "$OFFBASE" "$OFFAVOID" 2>/dev/null | head -1)
   log "$ON choose_tap=$TAP2"
@@ -197,9 +213,12 @@ for J in 1 2 3; do
   X2=$(printf '%s' "$TAP2" | awk '{print $1}'); Y2=$(printf '%s' "$TAP2" | awk '{print $2}')
   log "$ON action=input_tap x=$X2 y=$Y2 target=$(printf '%s' "$TAP2" | awk '{print $3}')"
   adb shell input tap "$X2" "$Y2" >> "$TRACE" 2>&1
-  OFFAVOID="${OFFAVOID:+$OFFAVOID;}$X2,$Y2"
+  OFFAVOID="$X2,$Y2"
+  OLDH=$(head -1 "$STATEFILE" 2>/dev/null)
   sleep 4
   OFFBASE=$(capture "$ON" "offline_after_tap_$J")
+  NEWH=$(head -1 "$STATEFILE" 2>/dev/null)
+  if [ "$NEWH" != "$OLDH" ]; then OFFAVOID=""; fi
 done
 {
   echo "== restore =="
