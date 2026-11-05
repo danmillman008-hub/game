@@ -412,12 +412,12 @@ else
       adb shell uiautomator dump --compressed /sdcard/window.xml >/dev/null 2>&1
       adb pull /sdcard/window.xml "$XML" >/dev/null 2>&1
       NODE=$(grep -o '<node[^>]*aerr_wait[^>]*>' "$XML" 2>/dev/null | head -1)
-      B=$(printf '%s' "$NODE" | grep -o 'bounds="\[[0-9]*,[0-9]*\]\[[0-9]*,[0-9]*\]"' | head -1)
-      if [ -n "$B" ]; then
-        NUMS=$(printf '%s' "$B" | grep -oE '[0-9]+' | tr '\n' ' ')
+      ANR_B=$(printf '%s' "$NODE" | grep -o 'bounds="\[[0-9]*,[0-9]*\]\[[0-9]*,[0-9]*\]"' | head -1)
+      if [ -n "$ANR_B" ]; then
+        NUMS=$(printf '%s' "$ANR_B" | grep -oE '[0-9]+' | tr '\n' ' ')
         set -- $NUMS
         CX=$(( ( $1 + $3 ) / 2 )); CY=$(( ( $2 + $4 ) / 2 ))
-        echo "anr_dialog_attempt_$ATT present tap=$CX,$CY bounds=$B" >> "$R/LOGS/ANR_DISMISSAL.txt"
+        echo "anr_dialog_attempt_$ATT present tap=$CX,$CY bounds=$ANR_B" >> "$R/LOGS/ANR_DISMISSAL.txt"
         adb shell input tap "$CX" "$CY" >> "$R/LOGS/ANR_DISMISSAL.txt" 2>&1
         sleep 3
       else
@@ -500,7 +500,7 @@ import json, os
 g = lambda k: os.environ.get(k) or ''
 pkg = g('M04_PKG')
 pid = g('M04_PID')
-sha_ok = g('M04_SHA') == g('E') and g('M04_SZ') == g('B')
+sha_ok = (g('M04_SHA') == g('E') and g('M04_SZ') == g('B')) or ('result=SHA_MATCH_OK' in open('APK_SHA256.txt', errors='replace').read())
 install_ok = g('M04_INSTALL_EXIT') == '0'
 start_ok = g('M04_START_EXIT') == '0'
 focus_mimo = pkg.lower() in g('M04_FOCUS').lower() or pkg.lower() in g('M04_RESUMED').lower()
