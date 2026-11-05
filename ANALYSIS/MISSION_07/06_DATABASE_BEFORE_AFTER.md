@@ -99,3 +99,21 @@ rows grow offline (local queue); no server response was observed.
 files. `mimo_dev_prefs.xml` was **not** observed in these runs (M07 static decode
 shows `sk/a` would create it for developer switches). No `mimo_dev_prefs` value
 is therefore claimed.
+
+## Stage 5 (run `42030594857`) — the requested correct-answer before/after diff
+| Snapshot | `lesson_progress` rows | detail |
+|---|---|---|
+| `S5_1_C_BEFORE_ANSWER` | 1 | `151410` (slide), `in_queue=1` |
+| `S5_1_D1_AFTER_WRONG_OPTION` | 1 | unchanged — wrong WebView letter has no DB effect |
+| `S5_1_E1_AFTER_CORRECT_OPTION` | 1 | unchanged — `Correct!` shown inside the WebView |
+| `S5_1_F_AFTER_CORRECT_SUBMIT` | **2** | **new row `151403`**: `['151403','1793883744787','1793883713744','1','904','161','219','753','1','0','1']` |
+| `S5_G_BEFORE_FORCESTOP` | 2 | both rows present |
+| `S5_H_OFFLINE_COLD_START` / `S5_I_OFFLINE_RESTORED` | **0** | both `in_queue=1` rows deleted offline |
+
+`chapter_completions = 0` in every stage-5 snapshot; `tutorial_completions =
+868` unchanged; `room_master_table` hash unchanged. The stage-5 online Frida
+trace contains 1,346 SQL / 236 SQLiteStatement events but no `entry`/`exit`
+hook records after 12:58:01 (app process restart), so the INSERT itself is
+evidenced by the row diff, not by a hook. `LOGS/STAGE5_SUMMARY.json` confirms
+`online_frida_messages=1685`, `offline_frida_messages=1219`,
+`server_confirmed=0`.

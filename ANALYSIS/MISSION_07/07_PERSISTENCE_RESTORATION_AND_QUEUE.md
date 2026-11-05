@@ -54,3 +54,15 @@ and `shared_prefs/*.xml` are captured byte-for-byte in
 `DB/SNAPSHOT_*/private/`. No `mimo_dev_prefs.xml` was present. Exact key/value
 semantics of the protobuf DataStore were not decoded (`UNKNOWN`); its presence,
 size and hash are `VERIFIED_RUNTIME`.
+
+## Stage 5 repetition (run `42030594857`)
+`EXPERIMENTS/S5_OFFLINE_ISOLATION.txt` again proves `Active default network:
+none` / `Network is unreachable` / `airplane_mode_on=1`.
+`S5_G` had **2** `lesson_progress` rows (151410 and 151403, both `in_queue=1`);
+`S5_H_OFFLINE_COLD_START` and `S5_I_OFFLINE_RESTORED` had **0**.
+`tutorial_completions=868` and the Room identity hash were unchanged. This
+reproduces the stage-4 queue-deletion result with the row created by a real
+correct answer, and strengthens the conclusion that `in_queue=1` rows are not
+restored after an offline cold start on this build. Offline Frida trace
+`TRACES/STAGE5_OFFLINE.jsonl` records 24 `net_isOnline` / 24 `net_isOnline_b`
+calls and 903 SQL events.

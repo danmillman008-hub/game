@@ -37,15 +37,26 @@ Whitespace includes tabs/newlines. This is the exact normalizer used for the
 "normalized-only → partial match" branch, so `D O G`, `dog`, `DOG` and
 `  d o g  ` all normalise to `dog`.
 
-## E2 — `km.f.b(List)` selection validator — `PARTIALLY VERIFIED`
+## E2 — `km.f.b(List)` selection validator — `VERIFIED_BOTH`
 Static M06: returns `true` when the selected/correct flags of every `sm.a`
-item agree (selection exercise). Runtime: the `empty` list case returned
-`true` (vacuous truth). All 7 constructed cases failed with
-`Error: a(): argument types do not match any of: .overload('java.lang.CharSequence','boolean','boolean','boolean')`
-— a Frida argument-coercion problem with `sm.a.<init>(CharSequence,Z,Z,Z)`,
-not an app result. Stage 4 replaces the JS string with an explicit
-`java.lang.String`; until it succeeds the non-empty truth table is `UNKNOWN`.
-No conclusion is drawn from the failed cases.
+item agree. Stage 3's seven constructed cases failed with a Frida
+argument-coercion error (`sm.a.<init>(CharSequence,Z,Z,Z)`); passing an
+explicit `java.lang.String` fixed it and stage 4 measured all 8 cases:
+
+| case | items (selected/correct) | `km.f.b` |
+|---|---|---|
+| `empty` | `[]` | `true` (vacuous) |
+| `one_match_true_true` | `(true,true)` | `true` |
+| `one_mismatch_true_false` | `(true,false)` | `false` |
+| `one_mismatch_false_true` | `(false,true)` | `false` |
+| `one_false_false` | `(false,false)` | `true` |
+| `three_all_match` | `(T,T),(F,F),(T,T)` | `true` |
+| `three_one_wrong` | `(T,T),(T,F),(T,T)` | `false` |
+| `three_one_missing` | `(T,T),(F,T),(T,T)` | `false` |
+
+Exact runtime predicate: **`∀ item: item.selected == item.correct`** (an all-
+match/XNOR fold), independent of item text. Reproduced identically online and
+offline (8 cases each).
 
 ## E3 — `LessonProgress.isSolvedCorrectly()` — `VERIFIED_RUNTIME`
 20 real `LessonProgress` objects (`lessonId=151403, tutorialId=904,
@@ -68,12 +79,16 @@ With a real `ActivityThread.currentApplication()` context and network ONLINE:
 calls; `a()`/`b()` are two distinct checks (naming `INFERRED`). Offline values
 are measured in `09_OFFLINE_EXECUTION_RESULTS.md`.
 
-## E5 — `te.c.b(String)` XML/DSL parser — `UNKNOWN` (stage-3 attempt)
+## E5 — `te.c.b(String)` XML/DSL parser — `VERIFIED_BOTH`
 `te.c.<init>(te.d,te.a,te.e,te.g,te.b,pe.a)` cannot be constructed with null
-dependencies: `java.lang.NullPointerException: … getClass() on a null object
-reference`. Stage 4 instead uses `Java.choose('te.c')` to call `b()` on a live
-DI-created parser instance. Until that succeeds, the six module parsers remain
-`VERIFIED_STATIC` only (M06).
+dependencies (NPE). At initial online attach no `te.c` instance existed in the
+heap (`experiment_error`), but after app restart the offline session found a
+live DI-created parser with `Java.choose('te.c')` and returned real module lists
+for 5 controlled XML strings. Full table in
+`10_CODE_EDITOR_AND_WEBVIEW_BOUNDARY.md`. `VERIFIED_RUNTIME`:
+`Paragraph`, `Code(language,name,content,interactions,output,visibilty,collapsibleLines)`,
+`Selection`/`SelectionItem`, `Image`; unknown tags dropped; malformed XML →
+empty list.
 
 ## E6 — `gm.h.a(List)` interaction-type selector — `PARTIALLY VERIFIED`
 `emptyList` → `None(interactionTypeName=slide)` (the "slide"/non-interactive
@@ -112,7 +127,9 @@ experiments: `assets/lessons-en/tracks/tutorial-904.json` lesson 151403 WebView
 selection questions with their correct/wrong item texts is at
 `ANALYSIS/MISSION_07/RUNTIME_TRACE/SHIPPED_CONTENT/SELECTION_ANSWERS.json`.
 
-**Not yet VERIFIED:** live `onLessonRun$1` dispatch for a real answer, the
-`lesson_progress` row written by `e0()`, and the resulting correct/wrong UI.
-Those are targeted by the stage-4 controlled experiment; see
-`05_ANSWER_STATE_TRANSITIONS.md` and `06_DATABASE_BEFORE_AFTER.md`.
+**Stage 5 `VERIFIED_RUNTIME`:** a real wrong `Q` then correct `D` in shipped
+lesson 151403 produced `Try again` → `Correct!` / `D O G` → next lesson and a
+**new `lesson_progress` row for lesson 151403** (`tries=1, attempts=1,
+in_queue=1`). See `05_ANSWER_STATE_TRANSITIONS.md` and
+`06_DATABASE_BEFORE_AFTER.md`. The native `V()/W()/X()` dispatch for
+*validatedInput/selection* exercises remains `UNKNOWN` (stage 6 targets it).

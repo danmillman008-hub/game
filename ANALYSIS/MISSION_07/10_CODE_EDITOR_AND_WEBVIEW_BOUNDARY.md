@@ -79,3 +79,17 @@ evaluation and no scoring.
 A future stage should hook `android.webkit.WebView.addJavascriptInterface`,
 `System.loadLibrary`, and the app's JS bridge object before claiming where code
 is evaluated. Nothing here asserts a server-side executor.
+
+## Stage 5 — correct WebView letter measured (`VERIFIED_RUNTIME`)
+`UI/S5_1_E1_AFTER_CORRECT_OPTION.xml` after `input tap 683 1017`:
+`["Hypertext Markup Language…", "On top of HTML…", "Correct!", "D O G",
+"dog_yawn", "Q", "R", "D", "Continue"]`. The shipped JS's `Correct!` branch,
+the `D O G` word replacement and the `dog_yawn` image are therefore confirmed
+on device. `UI/S5_1_F_AFTER_CORRECT_SUBMIT.xml` then shows the next lesson — a
+**code editor**: `This is the code editor where we'll write code. Let's jump in
+and start coding.`, `Click on <button>Like</button> to add the HTML code …`,
+`Tap the snippets below`, `index.html`, `W`, `<button>Like</button>`.
+This is a real code-editor boundary UI; whether its snippets are evaluated
+locally or remotely remains `UNKNOWN` (no JS-interface/native hook evidence).
+Stage 6 installs `android.webkit.WebView.addJavascriptInterface` hooks to
+record the bridge object class if one is registered.

@@ -69,3 +69,34 @@ expectedInput, true, E)` partial match, `jm/o` wrong (7 booleans incl.
 `solutionFeedbackWrong`, `solutionFeedbackTryAgain`). `q` LiveData carries
 them. M06 `setupViews$2` @10985684 maps exact/normalised-only/mismatch to
 `V/W/X`. No XP arithmetic in `d0()` (M07 static decode).
+
+## STAGE 5 — full wrong → correct → persist chain (`VERIFIED_RUNTIME`, run `42030594857`)
+`EXPERIMENTS/S5_ANSWER_LOG.jsonl` and `UI/S5_1_*.xml`:
+
+| step | operation | measured UI | `lesson_progress` |
+|---|---|---|---|
+| `S5_1_C_BEFORE_ANSWER` | lesson 151403 opened (after 42 measured onboarding taps) | `Guess the letter`, `_ O G`, `Q R D`, `Continue` | 1 row (slide 151410) |
+| `S5_1_D1_AFTER_WRONG_OPTION` | `input tap 398 1017` = wrong `Q` | `Try again`, `_ O G`, Q disabled, R/D enabled | 1 row (unchanged) |
+| `S5_1_E1_AFTER_CORRECT_OPTION` | `input tap 683 1017` = correct `D` | **`Correct!`**, **`D O G`**, `dog_yawn` image loaded | 1 row (unchanged) |
+| `S5_1_F_AFTER_CORRECT_SUBMIT` | `input tap 540 2238` = `Continue` | next lesson: `This is the code editor where we'll write code`, `Click on <button>Like</button>`, `index.html`, snippets | **2 rows** — new row for lesson 151403 |
+
+New row (verbatim, 11 columns):
+```
+151403  1793883744787  1793883713744  1  904  161  219  753  1  0  1
+```
+i.e. `lesson_id=151403`, `completed_at=13:02:24Z`, `started_at=13:01:53Z`,
+`tries=1`, `attempts=1`, `in_queue=1`, `publishSetVersion=753`,
+`isPracticeProgress=0`. `tries=1` ⇒ `isSolvedCorrectly()=true` by E3.
+
+**Interpretation (careful):** the correct-letter feedback is produced by the
+shipped WebView JS, and the row is written when the lesson is *proceeded past*,
+not at the instant of the `D` tap. The stage-5 Frida session attached at
+12:55:18 went silent after 12:58:01 because onboarding restarted the app
+process; therefore the `V()`/`W()` native dispatch for this WebView exercise is
+**not** claimed. What is `VERIFIED_RUNTIME` is the full observable chain from a
+shipped-correct answer to a persisted `LessonProgress` row. Stage 6 attaches
+Frida at the answer moment and targets a native selection lesson to test the
+`onLessonRun$1 → V()/X()` path.
+
+`second_lesson_not_found` is recorded honestly: the post-answer search did not
+reach a second classified lesson; no selection-answer claim is made from it.

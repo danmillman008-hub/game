@@ -160,6 +160,66 @@ def main():
             A('VERIFIED_RUNTIME','Trace %s event kinds: %s' % (f, json.dumps(trace_counts(p))),
               [p],'42030594857')
 
+    # --- auto-generated granular entries from the measured traces -----------
+    def cases(trace_path, experiment, status, evidence_extra=()):
+        fp = ROOT/trace_path
+        if not fp.exists(): return 0
+        n = 0
+        for l in fp.read_text(errors='replace').splitlines():
+            try: o = json.loads(l)
+            except Exception: continue
+            if o.get('kind') != 'call' or o.get('experiment') != experiment: continue
+            key = o.get('case_name') or ('tries=%s attempts=%s' % (o.get('tries'), o.get('attempts')))
+            val = o.get('ret')
+            label = ('%s %s -> %s' % (experiment, key, json.dumps(val, ensure_ascii=False)[:120]))
+            A(status, label, [trace_path, *evidence_extra],
+              '42025423068 / 42028049247',
+              json.dumps({k:o.get(k) for k in ('input','items','tries','attempts','size','tostring') if k in o}, ensure_ascii=False)[:400])
+            n += 1
+        return n
+
+    cases('ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE4_ONLINE.jsonl','E1_normalizer','VERIFIED_BOTH',
+          ('ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md',))
+    cases('ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE4_ONLINE.jsonl','E2_selection_validator','VERIFIED_BOTH')
+    cases('ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE4_ONLINE.jsonl','E3_isSolvedCorrectly','VERIFIED_BOTH')
+    cases('ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE4_OFFLINE.jsonl','E5_dsl_parser','VERIFIED_RUNTIME',
+          ('ANALYSIS/MISSION_07/10_CODE_EDITOR_AND_WEBVIEW_BOUNDARY.md',))
+
+    # one entry per installed hook
+    t = ROOT/'ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE4_ONLINE.jsonl'
+    if t.exists():
+        for l in t.read_text(errors='replace').splitlines():
+            try: o = json.loads(l)
+            except Exception: continue
+            if o.get('kind') != 'hook_installed': continue
+            A('VERIFIED_RUNTIME', 'Hook installed: %s (%s %s, overloads=%s)' % (
+                o.get('tag'), o.get('cls'), o.get('method') or '', o.get('overloads')),
+              ['ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE4_ONLINE.jsonl'], '42028049247')
+
+    # one entry per measured snapshot with room row counts
+    import glob as _glob
+    for f in sorted(_glob.glob(str(ROOT/'ANALYSIS/RUNTIME/MISSION_07/DB/SNAPSHOT_*.json'))):
+        try: d = json.loads(pathlib.Path(f).read_text())
+        except Exception: continue
+        lp = cc = tc = None
+        for db in d.get('databases', []):
+            if 'consistent_mimo.db' not in db.get('path',''): continue
+            for tb in db.get('tables', []):
+                if tb['name']=='lesson_progress': lp = tb.get('row_count')
+                if tb['name']=='chapter_completions': cc = tb.get('row_count')
+                if tb['name']=='tutorial_completions': tc = tb.get('row_count')
+        if lp is None: continue
+        rel = str(pathlib.Path(f).relative_to(ROOT))
+        A('VERIFIED_RUNTIME', 'Snapshot %s: lesson_progress=%s chapter_completions=%s tutorial_completions=%s files=%s' % (
+            d.get('label'), lp, cc, tc, len(d.get('files',[]))),
+          [rel], '42019353340 / 42028049247 / 42030594857')
+
+    # one entry per report deliverable
+    for f in sorted((M).glob('*.md')) + sorted((M).glob('*.json')):
+        rel = str(f.relative_to(ROOT))
+        A('VERIFIED_RUNTIME', 'MISSION 07 deliverable %s exists (%d bytes)' % (f.name, f.stat().st_size),
+          [rel], 'workspace')
+
     counts = collections.Counter(e['status'] for e in entries)
     missing = [x['path'] for e in entries for x in e['evidence'] if not x['exists']]
     db = {

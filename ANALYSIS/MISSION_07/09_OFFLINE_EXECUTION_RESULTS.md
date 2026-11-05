@@ -12,7 +12,7 @@ settings get global airplane_mode_on -> 1
 
 | # | Operation | Class | Evidence / status |
 |---|---|---|---|
-| 1 | Cold start / splash / onboarding skip / path-map render | **A locally implemented** | `VERIFED_RUNTIME`: offline cold start produced UI hierarchies (`UI/H_OFFLINE_COLD_START.xml`, `UI/S4_H_*`) and shipped curriculum; `mimo.db` present with 672 `tutorial_completions` rows, `lesson_progress` 0 |
+| 1 | Cold start / splash / onboarding skip / path-map render | **A locally implemented** | `VERIFIED_RUNTIME`: offline cold start produced UI hierarchies (`UI/H_OFFLINE_COLD_START.xml`, `UI/S4_H_*`) and shipped curriculum; `mimo.db` present with 672 `tutorial_completions` rows, `lesson_progress` 0 |
 | 2 | Browse learning path, chapters, lesson text | **A locally implemented** | `VERIFIED_RUNTIME`: M05 runs `42002808217`/`42003884423` offline XMLs byte-identical for first 3 states; shipped `assets/lessons-en/tracks/` (M05: 10,298 curriculum files, v753) |
 | 3 | Read/write `mimo.db` (`lesson_progress`, `chapter_completions`, `tutorial_completions`) | **A locally implemented** | `VERIFIED_RUNTIME`: root `.backup`, WAL/SHM captured, `PRAGMA journal_mode=wal`, exact CREATE TABLE SQL matches M05 `ROOM_SQL.txt` |
 | 4 | Read SharedPreferences / DataStore / `no_backup` / analytics queues | **A locally implemented** | `VERIFIED_RUNTIME`: 47–95 private files per snapshot, `experiments.xml`, `mimo_prefs.xml`, `sp_lesson_view_properties.xml`, `user_preferences.preferences_pb`, Firebase/RevenueCat/Mixpanel files |
@@ -27,6 +27,12 @@ settings get global airplane_mode_on -> 1
 | 13 | Force-stop state restoration | **A locally implemented** | `VERIFIED_RUNTIME`: after offline force-stop + cold start, `mimo.db` still had the same 672 `tutorial_completions` rows and `lesson_progress` 0 (`SNAPSHOT_G/H/I`); UI returned to path map. Row-level restoration after an *answered* lesson is still targeted by stage 4 |
 
 ## Important negative result
+Stage 5 confirmed the queue deletion with **2** rows (lessons 151410 and
+151403) at `S5_G_BEFORE_FORCESTOP` and **0** rows at
+`S5_H_OFFLINE_COLD_START` / `S5_I_OFFLINE_RESTORED`, with
+`tutorial_completions=868` unchanged. `EXPERIMENTS/S5_OFFLINE_ISOLATION.txt`
+again shows `Active default network: none` + `Network is unreachable`.
+
 Across all stage-2/3 snapshots `lesson_progress` had **0 rows** and
 `chapter_completions` **0 rows**, while `tutorial_completions` had 672 rows all
 with `is_completed=0`, `updated_at=1793878535878`, `track_id∈{50 (492), 226
