@@ -113,6 +113,16 @@ def main():
           bm['honest'] == {'llm': False, 'network': False, 'generatedText': False,
                            'externalProvider': 'not-configured', 'serverConfirmed': False})
     check('build manifest declares native controller', bm.get('controller') == 'src/native.js')
+    check('build manifest declares the structured content layer',
+          bm.get('content', {}).get('layoutDemoTextUsedAsLesson') is False
+          and 'content-engine.js' in bm.get('bundledModules', [])
+          and 'content-package.js' in bm.get('bundledModules', []))
+    check('native content engine + 120 micro-lessons are bundled',
+          all(x in text for x in ['/* ---- src/content-engine.js ---- */',
+                                  'STRUCTURED_PACKAGE', 'nl-answerkey',
+                                  'native-chapter-row', 'publishSetVersion']))
+    check('prototype layout-demo text is NOT read into lesson content',
+          'const lessonParas' not in text and 'browserBits' not in text)
 
     start = (DIST / 'START_HERE.txt').read_text(encoding='utf-8')
     check('Persian quick-start covers all three subsystems',

@@ -235,7 +235,15 @@ START_HERE = """میمو · خروجی آفلاین (ناوبری بومی ۹٫�
    درسنامهٔ نهایی پس از تحویل منابع از «وارد کردن بستهٔ محتوا» جایگزین میشود.
 ۵) ساختار توکنها: سه معنا (طراحی CSS / پاداش و دفتر توکنها / زمینه و هزینهٔ
    هوش مصنوعی) همگی زنده، قابل خروجی و ذخیرهشده روی همین دستگاهاند.
-۶) بخش هوش مصنوعی: چهار فاز LearnHarness (سنجش/برنامه/آموزش/تمرین)، گراف
+۶) ساختار محتوا: بستهٔ ساختاریافتهای به شکل بومی میمو (مسیر ← فصل ←
+   درسنامه ← مبحث ← ریزدرس ← بلوکهای تایپشده) با ۲۰ درسنامه، ۱۲۰ ریزدرس،
+   ۱۶۰ بلوک و ۲۰ پرسش چهارگزینهای دارای پاسخ و پاسخنامه. موتور درس DSL،
+   ۹ خانوادهٔ رندرر، ولیدیتورهای A6–A11 و ردیفهای LessonProgress را پیاده میکند.
+   متن نمایشی چیدمان پروتوتایپ دیگر بهعنوان درسنامه استفاده نمیشود. پیشنویس
+   پردازششدهٔ کتاب (word boxes + پاسخنامه) خارج از اپ و «بازبینینشده» است.
+   درسنامهٔ نهایی پس از تأیید منابع جایگزین میشود.
+
+۷) بخش هوش مصنوعی: چهار فاز LearnHarness (سنجش/برنامه/آموزش/تمرین)، گراف
    دانش، وارد کردن بسته، و شمارش توکن زمینه — کاملاً محلی.
    !!! بدون مدل زبانی، بدون اینترنت، بدون کلید API و بدون تولید متن !!!
    متنها عیناً از بستهٔ محتوا خوانده میشوند. ارائهدهندهٔ خارجی: not-configured.
@@ -313,6 +321,15 @@ manifest = {
     'sourceSlot': SLOT,
     'honest': {'llm': False, 'network': False, 'generatedText': False,
                'externalProvider': 'not-configured', 'serverConfirmed': False},
+    'content': {
+        'package': 'app/content/STRUCTURED_PACKAGE.json',
+        'engine': 'src/content-engine.js',
+        'shape': 'track -> sections -> tutorialIds -> chapters -> micro-lessons -> typed blocks',
+        'rendererFamilies': ['text', 'strong', 'MultipleChoice', 'fillTheGap', 'feedback'],
+        'bookProcessor': 'app/tools/process_book.py',
+        'bookDraft': 'unreviewed, NOT wired into the app',
+        'layoutDemoTextUsedAsLesson': False,
+    },
     'files': files,
 }
 (DIST / 'BUILD_MANIFEST.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n',

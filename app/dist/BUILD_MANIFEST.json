@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-05T21:49:23",
+  "generatedAt": "2026-11-05T22:11:06",
   "generator": "app/tools/build_output.py (MIMO NATIVE)",
   "entry": {
     "oneFile": "Mimo.html",
@@ -11,6 +11,8 @@
   "shell": "app/native/index.html",
   "controller": "src/native.js",
   "bundledModules": [
+    "content-package.js",
+    "content-engine.js",
     "design-tokens.js",
     "engine.js",
     "templates.js",
@@ -49,22 +51,37 @@
     "externalProvider": "not-configured",
     "serverConfirmed": false
   },
+  "content": {
+    "package": "app/content/STRUCTURED_PACKAGE.json",
+    "engine": "src/content-engine.js",
+    "shape": "track -> sections -> tutorialIds -> chapters -> micro-lessons -> typed blocks",
+    "rendererFamilies": [
+      "text",
+      "strong",
+      "MultipleChoice",
+      "fillTheGap",
+      "feedback"
+    ],
+    "bookProcessor": "app/tools/process_book.py",
+    "bookDraft": "unreviewed, NOT wired into the app",
+    "layoutDemoTextUsedAsLesson": false
+  },
   "files": {
     "Mimo.html": {
-      "sha256": "0f8bb45132fa45f55e241bd2046bc3417a3fc7407bdd0b9e9377a9e3bf3da721",
-      "bytes": 1495874
+      "sha256": "c6f8cbfbb3c7ee5628cd1f0e7763c9f95ff852d3ce22bc48fa30d691423b2435",
+      "bytes": 1863312
     },
     "Mimo.zip": {
-      "sha256": "de4177fdd81537ecb5635373d4d5b8a60be45aa2d6d99e8553b8f5256dbcaf2d",
-      "bytes": 816969
+      "sha256": "13c85dc0ca2d21239f5ae415fcf57005db996f18bc0afe1a4f0f746fa5c0ea07",
+      "bytes": 910509
     },
     "README-fa.md": {
-      "sha256": "5c76a602e0480f638f6db2360dcaece20f3cf7d18e70ccc72fbbdb43c0b4b358",
-      "bytes": 9634
+      "sha256": "7e76596d363f2ce571566ded091d741a6893550375c7924801f6d5a1769bd88a",
+      "bytes": 10978
     },
     "START_HERE.txt": {
-      "sha256": "5e37b8705f9da909db1769f2d5e1e10161f9a0dee1c2504ee6971b46660f2f91",
-      "bytes": 2463
+      "sha256": "2c54e3cd7d357f3324a86c2800e585b1e75d9fb68664c01d3ea485cfbb63155c",
+      "bytes": 3321
     },
     "icons/icon-192.png": {
       "sha256": "0e8809c7480029b1ec586102122125f59fb7cdc771f855cd6ad62b2a28086622",
@@ -79,8 +96,8 @@
       "bytes": 3394
     },
     "index.html": {
-      "sha256": "c44b99b4a89a63b28d9de90c4799c473f4c375c7086621adf4f9a62272ff2278",
-      "bytes": 1496166
+      "sha256": "27b238be984879ced74fd68b5d84ca50fc9cf9abc017bd9d0f4ed5bda435270f",
+      "bytes": 1863604
     },
     "launcher.html": {
       "sha256": "96a1773e2a23e4b6015c739b77118939bfeb71376080b57dc4f2cffeb192fdb8",

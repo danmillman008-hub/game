@@ -244,3 +244,41 @@
 /* Small helpers */
 .native-hidden { display:none !important }
 .native-fill { flex:1 }
+
+/* ---------------------------------------------------------------------------
+   Structured content layer — chapter micro-lesson list and typed lesson blocks.
+   All colours / radii / fonts come from the approved v12.5-fa tokens.
+   --------------------------------------------------------------------------- */
+.native-chapter-list { max-height: 210px; overflow-y: auto; margin: 12px 0;
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line) }
+.native-chapter-meta { font-size: 11px; color: var(--text-weak);
+  padding: 8px 2px; line-height: 1.7 }
+.native-chapter-row { display: flex; align-items: center; gap: 10px;
+  padding: 8px 2px; border-top: 1px solid var(--line) }
+.native-chapter-row .ncr-n { flex: none; width: 24px; height: 24px; border-radius: 8px;
+  background: var(--card-pressed); color: var(--text); display: flex;
+  align-items: center; justify-content: center; font-size: 12px; font-weight: 700 }
+.native-chapter-row .ncr-t { flex: 1; min-width: 0 }
+.native-chapter-row .ncr-t b { display: block; font-size: 13px; color: var(--text) }
+.native-chapter-row .ncr-t small { display: block; font-size: 10px;
+  color: var(--text-weak); direction: ltr; text-align: right; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis }
+
+.native-lesson .nl-role { display: flex; justify-content: space-between;
+  align-items: center; font-size: 11px; color: var(--text-weak); margin-bottom: 8px }
+.native-lesson .nl-role span:first-child { background: var(--code-bg);
+  border-radius: 8px; padding: 3px 8px; color: var(--text) }
+.native-lesson .nl-title { font-size: 20px; color: var(--text); margin: 0 0 14px }
+.native-lesson .nl-prose { font-size: 16px; line-height: 1.95 }
+.native-lesson .nl-key { display: inline-block; background: var(--progress-weak);
+  border-radius: var(--radius-card); padding: 8px 14px; font-weight: 700;
+  color: var(--text); margin: 0 0 12px }
+.native-lesson .nl-answerkey { background: var(--card-pressed);
+  border: 1px solid var(--line); border-radius: var(--radius-card);
+  padding: 10px var(--sp-m); margin-top: 12px; font-size: 12px;
+  line-height: 1.9; color: var(--text-weak) }
+.native-lesson .nl-answerkey div + div { border-top: 1px solid var(--line);
+  margin-top: 6px; padding-top: 6px }
+.native-lesson .nl-body .native-ctx { font-size: 10px; color: var(--text-weak);
+  direction: ltr; text-align: right; margin-top: 10px; word-break: break-all }
+.native-lesson .nl-foot .native-cta:disabled { opacity: .55; cursor: default }

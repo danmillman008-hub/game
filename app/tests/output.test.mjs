@@ -77,7 +77,7 @@ test('one-file HTML boots from BOTH https and file:// with no errors', () => {
   }
 });
 
-test('Learn is Mimo 9.35 PathMap -> ChapterActivity -> Lesson -> Celebration', () => {
+test('Learn is Mimo 9.35 PathMap -> ChapterActivity -> 6 typed micro-lessons -> Celebration', () => {
   const a = boot(); const M = a.w.MIMO;
   assert.equal(M.state().screen, 'learn');
   const nodes = a.qa('[data-screen="learn"] .pathwrap .node');
@@ -88,34 +88,118 @@ test('Learn is Mimo 9.35 PathMap -> ChapterActivity -> Lesson -> Celebration', (
 
   a.click(nodes[0]);
   assert.ok(a.q('#chapterModal').classList.contains('on'), 'chapter modal opened');
-  assert.ok(a.q('#chapterModal h2').textContent.length > 3);
+  assert.equal(a.qa('#chapterLessonList .native-chapter-row').length, 6,
+    'chapter shows its real micro-lesson list, not the layout-demo text');
+  assert.match(a.q('#chapterLessonList').textContent, /MultipleChoice|fillTheGap/);
+
   a.click('#startLearning');
   assert.equal(M.state().screen, 'lesson');
   assert.ok(a.q('#phone').dataset.fullscreen === '1', 'ChapterActivity hides bottom tabs');
-  assert.equal(M.state().lessonSteps, 4, 'slide / multiple choice / gap / reveal');
+  assert.equal(M.state().lessonSteps, 6, 'hook / check / feedback / explain / practice / recap');
   assert.ok(a.q('.nl-prog i').style.width, 'Mimo 6dp progress bar');
-  assert.ok(a.q('#nlBody .nl-panel'), 'interactive lesson panel');
+  assert.ok(a.q('.nl-role'), 'pedagogical role header');
+  assert.ok(a.q('.nl-prose'), 'real درسنامه text, not the prototype layout demo');
+  assert.equal(M.contentStats().microLessons, 120);
+  assert.equal(M.contentStats().questions, 20);
+  assert.equal(M.contentStats().knownAnswers, 20);
 
+  // 2. CHECK — a real 4-option question with a real answer key
   a.click('[data-n="lesson:next"]');
-  assert.equal(a.qa('#nlBody .nl-choice').length, 4, 'a real 4-option question');
+  assert.equal(a.qa('#nlBody .nl-choice').length, 4);
+  assert.equal(a.q('#nlContinue').disabled, true, 'SUBMIT_DISABLED until an option is chosen');
+  const before = M.contentEngine.progress().length;
   a.click('#nlBody .nl-choice');
-  assert.match(a.q('#nlFeedback').textContent, /درست|پاسخ/);
+  assert.match(a.q('#nlFeedback').textContent, /درست|امتحان/);
+  assert.equal(a.q('#nlContinue').disabled, false, 'CONTINUE enabled after feedback');
+  assert.equal(M.contentEngine.progress().length, before + 1, 'LessonProgress row created');
+  assert.ok(M.contentEngine.progress().every((r) => r.publishSetVersion === 753 && r.inQueue === true));
+
+  // 3. FEEDBACK — پاسخنامه with per-option status
   a.click('[data-n="lesson:next"]');
-  assert.equal(a.qa('#nlBody .nl-snip').length, 4, 'fill-the-gap snippets');
+  assert.ok(a.q('#nlBody .nl-answerkey'), 'per-option answer key');
+  assert.equal(a.qa('#nlBody .nl-answerkey div').length, 4);
+  // 4. EXPLAIN — درسنامه from the verbatim explanation
+  a.click('[data-n="lesson:next"]');
+  assert.ok(a.q('#nlBody .nl-prose'), 'typed text block');
+  assert.match(a.q('.nl-role').textContent, /درسنامه/);
+  // 5. PRACTICE — fillTheGap with ordered-token validator
+  a.click('[data-n="lesson:next"]');
+  assert.equal(a.qa('#nlBody .nl-snip').length, 4);
   a.click('#nlBody .nl-snip');
+  assert.ok(a.q('#nlFeedback').textContent.length > 5);
+  // 6. RECAP + completion
   a.click('[data-n="lesson:next"]');
-  assert.ok(a.q('#nlBody .native-banner'), 'real explanation, not generated text');
-  const before = M.economy.snapshot().ledger.length;
+  const ledgerBefore = M.economy.snapshot().ledger.length;
   a.click('[data-n="lesson:next"]');
   assert.equal(M.state().screen, 'native-done');
   assert.equal(M.state().progress.done, 1, 'lesson completion persisted');
-  assert.ok(M.economy.snapshot().ledger.length > before, 'token economy wired to lessons');
-  assert.ok(a.q('#doneStats').textContent.includes('امتیاز تجربه'));
+  assert.ok(M.economy.snapshot().ledger.length > ledgerBefore, 'token economy wired to lessons');
+  assert.ok(a.q('#doneText').textContent.includes('ریزدرس'));
   a.click('[data-screen="native-done"] [data-nav="learn"]');
   assert.equal(M.state().screen, 'learn');
   assert.ok(nodes[0].classList.contains('done'), 'completed node turns purple');
   assert.equal(a.q('#phone').dataset.fullscreen, '0');
   assert.deepEqual(a.errors, []);
+  a.close();
+});
+
+test('content engine implements the measured DSL parser and validators A6–A11', () => {
+  const a = boot(); const C = a.w.MIMO.content;
+  const dsl = '<html><body><p>Hello</p><unknown>x</unknown>'
+    + '<selection multiple="multiple"><item correct="true">A</item><item correct="false">B</item></selection>'
+    + '<interaction type="fillTheGap">gap</interaction></body></html>';
+  const mods = C.parseDSL(dsl);
+  assert.equal(mods.length, 3, 'unknown tags are skipped exactly like Lte/c.b');
+  assert.deepEqual(JSON.parse(JSON.stringify(mods.map((m) => m.kind))),
+    ['Paragraph', 'Selection', 'Interaction']);
+  assert.deepEqual(JSON.parse(JSON.stringify(C.parseDSL(''))), [], 'malformed/empty DSL yields a slide');
+  assert.equal(C.interactionType([]), 'None');
+  assert.equal(C.interactionType([{ kind: 'Interaction', type: 'fillTheGap' }]), 'FillTheGap');
+  assert.equal(C.validateAnswer('MultipleChoice', { selected: [1] },
+    { renderer: 'MultipleChoice', options: ['a', 'b', 'c', 'd'], correctIndex: 1 }), true);
+  assert.equal(C.validateAnswer('MultipleChoice', { selected: [0] },
+    { renderer: 'MultipleChoice', options: ['a', 'b', 'c', 'd'], correctIndex: 1 }), false);
+  assert.equal(C.validateAnswer('FillTheGap', { tokens: ['x', 'y'] },
+    { correctTokens: ['x', 'y'] }), true);
+  assert.equal(C.validateAnswer('FillTheGap', { tokens: ['y', 'x'] },
+    { correctTokens: ['x', 'y'] }), false, 'A6 is order-sensitive');
+  assert.equal(C.validateAnswer('Selection', { selected: [0, 1] },
+    { items: [{ correct: true }, { correct: true }, { correct: false }] }), true);
+  assert.equal(C.validateAnswer('ValidatedInput', { text: '  A B ! ' },
+    { expectedText: 'ab' }), true, 'A9 normalizer drops whitespace and punctuation');
+  assert.equal(C.validateAnswer('executableFiles', { files: ['<b>Hi</b>'] },
+    { solvedContent: ['<b>Hi</b>'] }), true);
+  assert.equal(C.validateAnswer('Reveal', {}, {}), true, 'Reveal has no validation');
+  assert.deepEqual(a.errors, []);
+  a.close();
+});
+
+test('the structured package is a native-Mimo hierarchy with honest provenance', () => {
+  const a = boot(); const e = a.w.MIMO.contentEngine;
+  const st = e.stats();
+  assert.equal(st.tracks, 1);
+  assert.equal(st.sections, 4);
+  assert.equal(st.tutorials, 20);
+  assert.equal(st.microLessons, 120);
+  assert.equal(st.knownAnswers, 20);
+  assert.equal(st.externalProvider, 'not-configured');
+  assert.equal(st.generatesText, false);
+  assert.equal(st.serverConfirmed, false);
+  assert.equal(st.reviewStatus, 'unreviewed');
+  assert.ok(st.rendererFamilies.includes('MultipleChoice'));
+  assert.ok(st.rendererFamilies.includes('fillTheGap'));
+  for (const t of e.tutorials()) {
+    for (const c of t.chapters) {
+      assert.ok(['practiceLevel1', 'practiceLevel2', 'practiceLevel3',
+        'challengeLevel0', 'challengeLevel1', 'challengeLevel2'].includes(c.type));
+      for (const l of c.lessons) {
+        assert.ok(l.blocks.length >= 1, 'every micro-lesson has typed blocks');
+        assert.ok(l.trace.sourceRef, 'every sentence has a source reference');
+      }
+    }
+  }
+  assert.ok(e.questions().every((q) => q.correctIndex !== null
+    && q.explanationFa && q.trace.reviewStatus === 'unreviewed'));
   a.close();
 });
 

@@ -21,6 +21,7 @@ import { createHarness, LEARNHARNESS, EXTERNAL_PROVIDER_CONTRACT } from './harne
 import { createOutputKit } from './output-kit.js';
 import { DESIGN_TOKENS } from './design-tokens.js';
 import { STARTER_PACKAGE, STARTER_SUMMARY } from './starter-package.js';
+import { createContentEngine, parseDSL, interactionType, validateAnswer } from './content-engine.js';
 
 const win = window;
 const doc = document;
@@ -38,11 +39,16 @@ catch (_) { storage = memoryStorage(); }
 const store = createStore(storage);
 const economy = createEconomy(store);
 const learningPath = createLearningPath(store, economy, PROTO, STARTER_PACKAGE.questions);
+const contentEngine = createContentEngine({ store });
 let harness = createHarness({ store, contentPackage: STARTER_PACKAGE });
 
 /* ---------------------------------------------------------------------------
    Local, content-driven AI studio (four LearnHarness phases). No LLM.
    --------------------------------------------------------------------------- */
+const STRUCTURED_QUESTIONS = contentEngine.questions().map((q) => ({
+  stem: q.stemFa, opts: q.options, ok: q.correctIndex,
+  expl: q.explanationFa, id: q.id, difficulty: q.difficulty,
+}));
 const aiStudio = (() => {
   let phase = 'measure';
   let measureAnswers = {};
@@ -52,8 +58,7 @@ const aiStudio = (() => {
   let chosenGoal = '';
 
   const PHASE_FA = LEARNHARNESS.phaseFa;
-  const QUESTIONS = (PROTO && PROTO.questions && PROTO.questions.length
-    ? PROTO.questions : STARTER_PACKAGE.questions).slice(0, 5);
+  const QUESTIONS = STRUCTURED_QUESTIONS.slice(0, 5);
 
   function sourceQuestions() {
     return (PROTO && PROTO.questions && PROTO.questions.length ? PROTO.questions
@@ -269,9 +274,8 @@ phone.appendChild(quit);
 /* Lesson player replaces ONLY the runtime content of the approved lesson screen. */
 const lessonScreen = $('[data-screen="lesson"]');
 const ORIGINAL_LESSON = lessonScreen ? lessonScreen.innerHTML : '';
-const lessonParas = $$('[data-screen="lesson"] .lesson-body p').map((p) => p.textContent.trim()).filter(Boolean);
-const browserBits = $$('[data-screen="lesson"] .browser-in h3, [data-screen="lesson"] .browser-in p')
-  .map((p) => p.textContent.trim()).filter(Boolean);
+/* The approved lesson screen's own paragraphs are a LAYOUT DEMO and are
+   intentionally NOT read into the product: the runtime replaces them. */
 if (lessonScreen) {
   lessonScreen.className = 'screen native';
   lessonScreen.innerHTML = `<div class="native-lesson">
@@ -384,35 +388,66 @@ function renderLeaderboard() {
 /* ---------------------------------------------------------------------------
    Chapter modal + lesson renderer (ChapterActivity / ViewPager)
    --------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------
+   Chapter + Lesson — now driven by the NATIVE-MIMO content package.
+
+   The prototype's lesson markup is a LAYOUT DEMO ("گاهی لازم است متنها را با
+   شکستن خطوط…"). It is deliberately NOT used as lesson text any more. Every
+   sentence shown in a lesson now comes from a typed block of the structured
+   package, with provenance, a renderer family and a real answer key.
+   --------------------------------------------------------------------------- */
+const ROLE_FA = { hook: 'ورود به مفهوم', explain: 'درسنامه', check: 'بازیابی',
+  practice: 'تمرین', feedback: 'پاسخنامه', recap: 'جمعبندی', challenge: 'چالش' };
+const CHAPTER_LIST_ID = 'chapterLessonList';
+
+function chapterRefFor(id) {
+  const tuts = contentEngine.tutorials();
+  if (!tuts.length) return null;
+  const key = String(id || '').split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+  const tut = tuts[key % tuts.length];
+  const ch = tut.chapters[0];
+  return { tut, ch, trackId: 1, lessonId: id };
+}
+
 function setChapterModal(id) {
-  const ls = learningPath.byId(id);
-  const c = curriculumCourse();
+  const ref = chapterRefFor(id);
   const modal = $('#chapterModal');
-  if (!modal) return;
-  const h = $('h2', modal); if (h && ls) { h.textContent = ls.title; h.dataset.fa = ls.title; }
+  if (!modal || !ref) return;
+  const h = $('h2', modal);
+  if (h) { h.textContent = ref.tut.title; h.dataset.fa = ref.tut.title; }
   const row = $('.chapter-row', modal);
-  if (row) {
-    const p = learningPath.progress();
-    row.innerHTML = `<span>${esc(c ? c.name : 'فصل')}</span><span>${fa(p.done)}/${fa(p.total)}</span>`;
-  }
+  if (row) row.innerHTML = `<span>${esc(ref.tut.descriptionContent)}</span><span>${fa(ref.ch.lessons.length)} ریزدرس</span>`;
   const bar = $('.mprogress i', modal);
-  if (bar) bar.style.width = `${learningPath.progress().percent}%`;
+  if (bar) bar.style.width = `${Math.round(contentEngine.progress().length / Math.max(1, ref.ch.lessons.length) * 100)}%`;
+  let list = $('#' + CHAPTER_LIST_ID, modal);
+  if (!list) {
+    list = doc.createElement('div');
+    list.id = CHAPTER_LIST_ID;
+    list.className = 'native-chapter-list';
+    const card = $('.modal-card', modal);
+    card.insertBefore(list, $('#startLearning', modal));
+  }
+  const done = contentEngine.progress().length;
+  list.innerHTML = `<div class="native-chapter-meta">${esc(ref.ch.type)} · ${esc(ref.tut.shortDescriptionContent)} · ${fa(done)} ردیف پیشرفت</div>`
+    + ref.ch.lessons.map((l, i) => `<div class="native-chapter-row">
+        <span class="ncr-n">${fa(i + 1)}</span>
+        <span class="ncr-t"><b>${esc(l.title)}</b><small>${esc(ROLE_FA[l.pedagogicalRole] || l.pedagogicalRole)} · ${esc(l.blocks.map((b) => b.renderer).join(' + '))}</small></span>
+      </div>`).join('');
 }
 
 function lessonSteps(id) {
-  const q = learningPath.questionFor(id);
-  const ls = learningPath.byId(id);
-  const c = curriculumCourse();
-  const ch = ls ? c.chapters.find((x) => x.id === ls.chapterId) : null;
-  return [
-    { kind: 'slide', title: ls ? ls.title : 'درس', course: c ? c.name : '', chapter: ch ? ch.name : '' },
-    { kind: 'choice', q },
-    { kind: 'gap', q },
-    { kind: 'reveal', q },
-  ];
+  const ref = chapterRefFor(id);
+  if (!ref) return [];
+  /* one micro-lesson per pager page — the measured Mimo unit (~21 words) */
+  return ref.ch.lessons.map((l, i) => ({ kind: 'micro', micro: l, index: i, ref }));
 }
 
 function optionText(o) { return String(o == null ? '' : o); }
+
+function interactionBlock(step) {
+  return (step.micro.blocks || []).find((b) => b.renderer === 'MultipleChoice'
+    || b.renderer === 'fillTheGap' || b.renderer === 'validatedInput');
+}
 
 function renderStep() {
   const step = lesson.steps[lesson.index];
@@ -421,80 +456,94 @@ function renderStep() {
   const btn = $('#nlContinue');
   const prog = $('#nlProg');
   if (!step || !body) return;
-  if (prog) prog.style.width = `${Math.round(((lesson.index + 1) / lesson.steps.length) * 100)}%`;
+  const total = lesson.steps.length;
+  if (prog) prog.style.width = `${Math.round(((lesson.index + 1) / total) * 100)}%`;
   fb.className = 'nl-feedback native-hidden';
   fb.innerHTML = '';
   lesson.selected = null;
-  btn.disabled = false;
-  btn.textContent = lesson.index === lesson.steps.length - 1 ? 'پایان درس' : 'ادامه';
-
-  if (step.kind === 'slide') {
-    body.innerHTML = `${lessonParas.map((t) => `<p>${esc(t)}</p>`).join('')}
-      <div class="nl-panel"><h3>${esc(step.title)}</h3>
-        <div class="nl-gap">${esc(step.course)}</div>
-        <p style="font-size:14px;color:var(--text-weak)">${esc(step.chapter)}</p></div>
-      ${browserBits.length ? `<div class="nl-file">${ic('ic_file', 16, 1)}<span>${esc(browserBits[0])}</span></div>
-        <div class="nl-editor">${esc(browserBits.slice(1).join(' · '))}</div>` : ''}`;
-    return;
+  lesson.submitted = false;
+  const ib = interactionBlock(step);
+  btn.disabled = Boolean(ib);
+  btn.textContent = lesson.index === total - 1 ? 'پایان درس' : 'ادامه';
+  const m = step.micro;
+  const head = `<div class="nl-role"><span>${esc(ROLE_FA[m.pedagogicalRole] || m.pedagogicalRole)}</span>
+      <span>${fa(lesson.index + 1)} / ${fa(total)}</span></div>
+    <h3 class="nl-title">${esc(m.title)}</h3>`;
+  const parts = (m.blocks || []).map((b, bi) => {
+    if (b.renderer === 'text') return `<p class="nl-prose">${esc(b.contentFa)}</p>`;
+    if (b.renderer === 'strong') return `<div class="nl-key">${esc(b.contentFa)}</div>`;
+    if (b.renderer === 'feedback') {
+      return `<div class="nl-panel"><h3>پاسخنامهٔ تشریحی</h3>
+          <p style="font-size:14px;line-height:1.9">${esc(b.contentFa)}</p></div>
+        <div class="nl-answerkey">${(b.options || []).map((o) => `<div>${esc(o)}</div>`).join('')}</div>`;
+    }
+    if (b.renderer === 'MultipleChoice') {
+      return `<p class="nl-prose">${esc(b.contentFa)}</p>
+        <div class="nl-hint">${ic('ic_help', 16, 1)}<span>گزینهٔ درست را انتخاب کنید</span></div>
+        <div class="nl-choices">${(b.options || []).map((o, i) => `<button type="button" class="nl-choice" data-n="lesson:option" data-o="${i}">
+          <span class="nl-num">${esc(fa(i + 1))}</span><span>${esc(optionText(o))}</span></button>`).join('')}</div>`;
+    }
+    if (b.renderer === 'fillTheGap') {
+      return `<p class="nl-prose">${esc(b.contentFa)}</p>
+        <div class="nl-hint">${ic('ic_help', 16, 1)}<span>جاهای خالی را بهترتیب پر کنید</span></div>
+        <div class="nl-panel"><h3>جاهای خالی</h3><div class="nl-gap">＿＿＿＿</div>
+          <div class="nl-snips">${(b.options || []).map((o, i) => `<button type="button" class="nl-snip" data-n="lesson:option" data-o="${i}">${esc(optionText(o).slice(0, 18))}</button>`).join('')}</div></div>`;
+    }
+    return `<p class="nl-prose">${esc(b.contentFa)}</p>`;
+  });
+  body.innerHTML = head + parts.join('');
+  if (ib && ib.explanationFa) {
+    body.insertAdjacentHTML('beforeend',
+      `<button type="button" class="native-chip" data-n="lesson:ai">توضیح با هوش مصنوعی (محلی)</button>`);
   }
-  const q = step.q;
-  if (!q) { body.innerHTML = '<p>محتوای این درس هنوز ثبت نشده است.</p>'; return; }
-  const opts = q.options || q.opts || [];
-  if (step.kind === 'choice') {
-    body.innerHTML = `<p>${esc(q.stem || q.stemFa || '')}</p>
-      <div class="nl-hint">${ic('ic_help', 16, 1)}<span>گزینهٔ درست را انتخاب کنید</span></div>
-      <div class="nl-choices">${opts.map((o, i) => `<button type="button" class="nl-choice" data-n="lesson:option" data-o="${i}">
-        <span class="nl-num">${esc(fa(i + 1))}</span><span>${esc(optionText(o))}</span></button>`).join('')}</div>`;
-  } else if (step.kind === 'gap') {
-    body.innerHTML = `<p>${esc(q.stem || q.stemFa || '')}</p>
-      <div class="nl-hint">${ic('ic_help', 16, 1)}<span>پاسخ درست را از قطعهها انتخاب کنید</span></div>
-      <div class="nl-panel"><h3>جاهای خالی</h3><div class="nl-gap">＿＿＿＿</div>
-        <div class="nl-snips">${opts.map((o, i) => `<button type="button" class="nl-snip" data-n="lesson:option" data-o="${i}">${esc(optionText(o).slice(0, 14))}</button>`).join('')}</div></div>`;
-  } else {
-    const ok = q.correctIndex !== undefined ? q.correctIndex : q.ok;
-    body.innerHTML = `<p><strong>${esc(q.stem || q.stemFa || '')}</strong></p>
-      <div class="nl-panel"><h3>توضیح درس</h3><p style="font-size:14px;line-height:1.9">${esc(q.explanation || q.expl || '')}</p>
-      <div class="nl-gap">${esc(optionText(opts[ok] || ''))}</div></div>
-      <div class="native-banner">پاسخ درست: گزینهٔ ${fa(Number(ok) + 1)} · ${esc(q.ref || 'prototype:v12.5-fa')}</div>
-      <button type="button" class="native-chip" data-n="lesson:ai">توضیح با هوش مصنوعی</button>`;
-  }
+  const q = ib && ib.questionId ? contentEngine.question(ib.questionId) : null;
+  if (q) body.insertAdjacentHTML('beforeend',
+    `<div class="native-ctx">منبع: ${esc(q.trace.sourceRef)} · دشواری ${esc(q.difficulty)} · وضعیت ${esc(q.trace.reviewStatus)}</div>`);
 }
 
 function openLesson(id) {
   if (!id) id = learningPath.nextId();
-  const ls = learningPath.byId(id);
-  if (!ls) return;
   currentLessonId = id;
   lesson = { id, steps: lessonSteps(id), index: 0, selected: null, correct: false,
-    before: economy.read() };
+    submitted: false, before: economy.read() };
+  if (!lesson.steps.length) { toast('بستهای از محتوا ثبت نشده است'); return; }
   renderStep();
   PROTO.go('lesson');
 }
 
 function checkAnswer(oi, el) {
   const step = lesson.steps[lesson.index];
-  const q = step && step.q;
-  if (!q) return;
-  const ok = q.correctIndex !== undefined ? q.correctIndex : q.ok;
+  if (!step || lesson.submitted) return;
+  const ib = interactionBlock(step);
+  if (!ib) return;
+  const answer = ib.renderer === 'fillTheGap'
+    ? { tokens: [ib.options[oi]] }
+    : { selected: [oi] };
+  const res = contentEngine.submit({
+    lessonRef: {
+      lessonId: step.micro.id, lessonIndex: step.index,
+      chapterId: step.ref.ch.id, tutorialId: step.ref.tut.id,
+      tutorialTitle: step.ref.tut.title, trackId: 1,
+    },
+    block: ib, answer,
+  });
   lesson.selected = oi;
-  const correct = oi === Number(ok);
-  if (step.kind === 'choice') {
-    $$('#nlBody .nl-choice').forEach((b, i) => {
-      b.classList.toggle('correct', i === Number(ok));
-      b.classList.toggle('wrong', i === oi && !correct);
-      b.classList.remove('selected');
-    });
-  } else {
-    $$('#nlBody .nl-snip').forEach((b, i) => {
-      b.classList.toggle('correct', i === Number(ok));
-      b.classList.toggle('wrong', i === oi && !correct);
-    });
-  }
-  if (correct) lesson.correct = true;
+  lesson.submitted = true;
+  if (res.ok) lesson.correct = true;
+  const correctIndex = ib.correctIndex;
+  $$('#nlBody .nl-choice, #nlBody .nl-snip').forEach((b, i) => {
+    b.classList.toggle('correct', i === Number(correctIndex));
+    b.classList.toggle('wrong', i === oi && !res.ok);
+    b.classList.toggle('selected', i === oi);
+  });
   const fb = $('#nlFeedback');
-  fb.className = `nl-feedback ${correct ? 'ok' : 'no'}`;
-  fb.innerHTML = `<b>${correct ? 'درست!' : 'پاسخ درست گزینهٔ ' + fa(Number(ok) + 1)}</b>
-    <p>${esc(q.explanation || q.expl || '')}</p>`;
+  fb.className = `nl-feedback ${res.ok ? 'ok' : 'no'}`;
+  const q = ib.questionId ? contentEngine.question(ib.questionId) : null;
+  fb.innerHTML = `<b>${res.ok ? 'درست!' : 'دوباره امتحان کن · پاسخ درست گزینهٔ ' + fa(Number(correctIndex) + 1)}</b>
+    <p>${esc(res.feedback)}</p>
+    <div class="native-ctx">تلاش ${fa(res.progress.attempts)} · tries=${fa(res.progress.tries)} · ${res.isSolvedCorrectly ? 'حلشده' : 'در صف تمرین'} · ${esc(q ? q.trace.sourceRef : 'بستهٔ محلی')}</div>`;
+  const btn = $('#nlContinue');
+  if (btn) { btn.disabled = false; btn.textContent = lesson.index === lesson.steps.length - 1 ? 'پایان درس' : 'ادامه'; }
   void el;
 }
 
@@ -505,16 +554,25 @@ function finishLesson() {
   const dxp = Math.max(0, after.xp - before.xp);
   const dcoin = Math.max(0, after.coins - before.coins);
   const p = learningPath.progress();
+  const cs = contentEngine.stats();
   const stats = $('#doneStats');
   if (stats) stats.innerHTML = `<div><b>+${fa(dxp)}</b><small>امتیاز تجربه</small></div>
-    <div><b>+${fa(dcoin)}</b><small>سکه</small></div><div><b>${fa(p.done)}/${fa(p.total)}</b><small>درس</small></div>`;
+    <div><b>+${fa(dcoin)}</b><small>سکه</small></div><div><b>${fa(contentEngine.progress().length)}</b><small>ردیف پیشرفت</small></div>`;
   const txt = $('#doneText');
-  if (txt) txt.textContent = `گام بعدی «${curriculumCourse().name}» باز شد.`;
+  if (txt) txt.textContent = `${fa(cs.microLessons)} ریزدرس و ${fa(cs.questions)} پرسش در بستهٔ ساختاریافته · ${fa(contentEngine.reviewQueue().length)} مورد در صف مرور.`;
   renderLearn(); renderProfile(); renderLeaderboard();
   PROTO.go('native-done');
 }
 
 function nextStep() {
+  const step = lesson.steps[lesson.index];
+  if (step && !lesson.submitted && !interactionBlock(step)) {
+    contentEngine.advance({ lessonRef: {
+      lessonId: step.micro.id, lessonIndex: step.index,
+      chapterId: step.ref.ch.id, tutorialId: step.ref.tut.id,
+      tutorialTitle: step.ref.tut.title, trackId: 1,
+    } });
+  }
   if (lesson.index < lesson.steps.length - 1) { lesson.index += 1; renderStep(); return; }
   finishLesson();
 }
@@ -769,7 +827,8 @@ PROTO.go(start);
 /* Public, read-only-ish surface for tests and debugging. */
 win.MIMO = {
   version: '2.0.0-native+mimo935',
-  store, economy, learningPath, aiStudio, outputKit, proto: PROTO,
+  store, economy, learningPath, contentEngine, aiStudio, outputKit, proto: PROTO,
+  content: { parseDSL, interactionType, validateAnswer },
   harnessRef: () => harness, harnessStatus: () => harness.getStatus(),
   mountContentPackage, curriculum: learningPath.curriculum, starter: STARTER_SUMMARY,
   routes: { learn: 'PathMap', chapter: 'ChapterActivity', lesson: 'LessonRenderer',
@@ -780,6 +839,7 @@ win.MIMO = {
     phase: aiStudio.phase, guest: store.get('identity.guest') !== false,
     progress: learningPath.progress() }),
   openLesson, renderLearn, renderHeader, renderTokens, renderOutput, renderStudio,
+  contentStats: () => contentEngine.stats(),
   originalLessonHtml: ORIGINAL_LESSON,
 };
 win.APP = win.MIMO; // compatibility with the earlier verifier/tests
