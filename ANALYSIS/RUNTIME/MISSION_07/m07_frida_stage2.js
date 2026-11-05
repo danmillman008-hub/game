@@ -63,9 +63,11 @@ hook._n = 0;
 function hookSQL() {
   try {
     var D = Java.use('android.database.sqlite.SQLiteDatabase');
-    ['execSQL','insert','insertWithOnConflict','update','updateWithOnConflict',
-     'delete','rawQueryWithFactory','rawQuery','beginTransaction','setTransactionSuccessful',
-     'endTransaction'].forEach(function (mn) {
+    ['execSQL','insert','insertWithOnConflict','insertOrThrow','replace','replaceOrThrow',
+     'update','updateWithOnConflict','delete','rawQueryWithFactory','rawQuery',
+     'beginTransaction','beginTransactionNonExclusive','beginTransactionWithListener',
+     'beginTransactionWithListenerNonExclusive','setTransactionSuccessful','endTransaction',
+     'compileStatement','query','queryWithFactory'].forEach(function (mn) {
       var m = D[mn];
       if (!m || !m.overloads) return;
       m.overloads.forEach(function (ov) {
@@ -84,6 +86,24 @@ function hookSQL() {
     });
     emit({kind:'hook_installed', tag:'sql', cls:'android.database.sqlite.SQLiteDatabase'});
   } catch (e) { emit({kind:'hook_error', tag:'sql', error:safe(e)}); }
+  // Room executes compiled statements through SQLiteStatement; record those too.
+  try {
+    var ST = Java.use('android.database.sqlite.SQLiteStatement');
+    ['execute','executeInsert','executeUpdateDelete','simpleQueryForLong','simpleQueryForString'].forEach(function (mn) {
+      var m = ST[mn];
+      if (!m || !m.overloads) return;
+      m.overloads.forEach(function (ov) {
+        try {
+          ov.implementation = function () {
+            emit({kind:'sql_statement', method:mn, args:argsOf(arguments),
+                  this_fields:dumpFields(this, 8)});
+            return ov.apply(this, arguments);
+          };
+        } catch (e) { emit({kind:'hook_error', tag:'sql_statement', method:mn, error:safe(e)}); }
+      });
+    });
+    emit({kind:'hook_installed', tag:'sql_statement', cls:'android.database.sqlite.SQLiteStatement'});
+  } catch (e) { emit({kind:'hook_error', tag:'sql_statement', error:safe(e)}); }
 }
 
 /* LiveData / MutableLiveData posts: feedback + progress state objects. */
@@ -154,7 +174,8 @@ Java.perform(function () {
   /* ---------- 2. selection validator: constructed sm/a objects ------------- */
   try {
     var A = Java.use('sm.a'), F = Java.use('km.f'), AL = Java.use('java.util.ArrayList');
-    function mk(text, selected, correct) { return A.$new(text, selected, correct, false); }
+    var JS = Java.use('java.lang.String');
+    function mk(text, selected, correct) { return A.$new(JS.$new(text), selected, correct, false); }
     function run(name, items) {
       var list = AL.$new();
       items.forEach(function (i) { list.add(mk(i[0], i[1], i[2])); });
@@ -198,23 +219,32 @@ Java.perform(function () {
           method:'b', context:safe(app), ret:nu.b()});
   } catch (e) { emit({kind:'experiment_error', experiment:'E4_network_gate', error:safe(e)}); }
 
-  /* ---------- 5. DSL parser Lte/c.b(String) on controlled DSL -------------- */
+  /* ---------- 5. DSL parser Lte/c.b(String) on a LIVE DI instance ---------- */
   try {
-    var P = Java.use('te.c');
-    var parser = P.$new(null, null, null, null, null, null);
     var samples = [
       ['only_paragraph', '<html><body><p>Hello <strong>world</strong></p></body></html>'],
       ['paragraph_and_code', '<html><body><p>Intro</p><code version="2" codelang="html" name="index.html" visible-if="always"><content><text value="&lt;h1&gt;Hi&lt;/h1&gt;" /></content></code></body></html>'],
+      ['selection', '<html><body><p>Pick</p><selection multiple="multiple"><item value="1" correct="true">Yes</item><item value="2" correct="false">No</item></selection></body></html>'],
       ['unknown_tag', '<html><body><foo>a</foo><p>ok</p></body></html>'],
       ['malformed', '<p>unclosed']
     ];
-    samples.forEach(function (s) {
-      try {
-        var out = parser.b(s[1]);
-        emit({kind:'call', experiment:'E5_dsl_parser', cls:'te.c', method:'b',
-              case_name:s[0], input:s[1], size:out === null ? -1 : out.size(),
-              ret:safe(out)});
-      } catch (e) { emit({kind:'call_error', experiment:'E5_dsl_parser', case_name:s[0], error:safe(e)}); }
+    var found = 0;
+    Java.choose('te.c', {
+      onMatch: function (parser) {
+        found++;
+        samples.forEach(function (sp) {
+          try {
+            var out = parser.b(sp[1]);
+            emit({kind:'call', experiment:'E5_dsl_parser', cls:'te.c', method:'b',
+                  case_name:sp[0], input:sp[1], size:out === null ? -1 : out.size(),
+                  ret:safe(out), parser_fields:dumpFields(parser, 20)});
+          } catch (e) { emit({kind:'call_error', experiment:'E5_dsl_parser', case_name:sp[0], error:safe(e)}); }
+        });
+      },
+      onComplete: function () {
+        if (!found) emit({kind:'experiment_error', experiment:'E5_dsl_parser',
+                          error:'no live te.c instance in heap at attach time'});
+      }
     });
   } catch (e) { emit({kind:'experiment_error', experiment:'E5_dsl_parser', error:safe(e)}); }
 

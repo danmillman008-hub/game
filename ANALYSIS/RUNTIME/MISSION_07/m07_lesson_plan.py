@@ -6,8 +6,15 @@ the ORIGINAL APK's shipped `assets/lessons-en/tracks/` interactiveContent:
   tutorial-1103.json lesson 123420  -> <selection> correct item value=1
 Outputs JSON only; never invents coordinates (all from uiautomator bounds).
 """
-import sys, re, json, xml.etree.ElementTree as ET
+import sys, re, json, xml.etree.ElementTree as ET, html, pathlib
 xml_path = sys.argv[1]
+ANSWERS = {}
+_ap = pathlib.Path(__file__).resolve().parents[2] / 'ANALYSIS/MISSION_07/RUNTIME_TRACE/SHIPPED_CONTENT/SELECTION_ANSWERS.json'
+if not _ap.exists():
+    _ap = pathlib.Path('ANALYSIS/MISSION_07/RUNTIME_TRACE/SHIPPED_CONTENT/SELECTION_ANSWERS.json')
+if _ap.exists():
+    try: ANSWERS = json.loads(_ap.read_text(encoding='utf-8')).get('by_question', {})
+    except Exception: pass
 try: root = ET.parse(xml_path).getroot()
 except Exception as e:
     print(json.dumps({'type':'PARSE_ERROR','error':str(e)})); sys.exit(0)
@@ -60,19 +67,37 @@ if 'Guess the letter' in raw or '_ O G' in raw:
                    explanation='webview JS sets correctLetter=D; wrong tap disables that button')
     else:
         out.update(type='WEBVIEW_LETTER_UNRESOLVED')
-elif 'What do computers use variables for' in raw:
-    correct = find('To store information for later use')
-    wrong = find('To display information on the screen')
-    if correct and wrong:
-        out.update(type='SELECTION_123420', shipped_ref='assets/lessons-en/tracks/tutorial-1103.json lesson 123420',
-                   correct_text='To store information for later use',
-                   wrong=wrong, correct=correct, cta=cta(),
-                   explanation='<selection multiple="multiple"> item value=1 correct="true"')
-    else:
-        out.update(type='SELECTION_UNRESOLVED')
 else:
-    # Generic short-option lesson (no shipped answer available -> UNKNOWN, no guess)
-    opts = [n for n in nodes if n['clickable'] and n['enabled'] and re.fullmatch(r'[A-Za-z0-9]{1,3}', n['label'])]
-    out.update(type='UNCLASSIFIED_LESSON', option_labels=[n['label'] for n in opts],
-               note='no shipped correct-answer evidence: do NOT guess')
+    # General selection lesson: match a shipped question against the LIVE XML.
+    # uiautomator stores visible strings in ATTRIBUTES, not between tags.
+    texts = re.findall(r'(?:text|content-desc)="([^"]*)"', raw)
+    plain = html.unescape(' '.join(texts))
+    plain = re.sub(r'\s+', ' ', plain).lower()
+    matched = None
+    for q, meta in ANSWERS.items():
+        if len(q) < 12: continue
+        if q.lower() in plain:
+            matched = (q, meta); break
+    if matched:
+        q, meta = matched
+        correct = None; wrong = None
+        for t in meta['correct']:
+            correct = find(t)
+            if correct: break
+        for t in meta['wrong']:
+            wrong = find(t)
+            if wrong: break
+        if correct and wrong:
+            out.update(type='SELECTION_SHIPPED', shipped_ref=meta['tutorial_file']+' lesson '+str(meta['lesson_id']),
+                       question=q, correct_text=meta['correct'], wrong_texts=meta['wrong'],
+                       multiple=meta.get('multiple'), wrong=wrong, correct=correct, cta=cta(),
+                       explanation='shipped <selection> item correct="true"')
+        else:
+            out.update(type='SELECTION_SHIPPED_UNRESOLVED', question=q,
+                       shipped_ref=meta['tutorial_file']+' lesson '+str(meta['lesson_id']))
+    else:
+        # Generic short-option lesson (no shipped answer available -> UNKNOWN, no guess)
+        opts = [n for n in nodes if n['clickable'] and n['enabled'] and re.fullmatch(r'[A-Za-z0-9]{1,3}', n['label'])]
+        out.update(type='UNCLASSIFIED_LESSON', option_labels=[n['label'] for n in opts],
+                   note='no shipped correct-answer evidence: do NOT guess')
 print(json.dumps(out, indent=1, ensure_ascii=False))
