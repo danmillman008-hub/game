@@ -1,0 +1,2147 @@
+{
+ "document": "MIMO 9.35 — COMPLETE SYSTEM MAP (MISSION 09)",
+ "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+ "server_confirmed": 0,
+ "evidence_index": {
+  "E01": "ANALYSIS/MISSION_06/SCHEMAS/METHOD_CATALOG_MIMO.json (12,851 methods)",
+  "E02": "ANALYSIS/MISSION_06/03_APPLICATION_ARCHITECTURE.md + 04_DEPENDENCY_INJECTION_AND_COMPONENT_GRAPH.md",
+  "E03": "ANALYSIS/MISSION_05/EVIDENCE/ROOM_SQL.txt",
+  "E04": "ANALYSIS/MIMO_RETROFIT_ENDPOINTS.json + ANALYSIS/HTTP_VERBS_RESOLVED.json",
+  "E05": "ANALYSIS/MISSION_07/03_INTERACTIVE_LESSON_VIEWMODEL_RUNTIME.md",
+  "E06": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE6_ONLINE.jsonl (run 42033599909)",
+  "E07": "ANALYSIS/MISSION_07/15_ANSWER_TO_SCORING_RECONSTRUCTION.md",
+  "E08": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
+  "E09": "ANALYSIS/MISSION_06/05_CONTENT_PIPELINE.md, 06_CONTENT_SCHEMA_AND_DSL.md, 08_INTERACTION_VALIDATION.md, 12_CODE_EDITOR_AND_EXECUTABLE_LESSONS.md",
+  "E10": "ANALYSIS/MISSION_06/10_LEARNING_PROGRESSION.md, 11_LOCAL_PERSISTENCE.md, 13_UI_NAVIGATION_AND_RUNTIME.md, 14_NATIVE_LIBRARIES_AND_JNI.md, 15_OFFLINE_BEHAVIOR_SPECIFICATION.md, 16_RECONSTRUCTED_ALGORITHMS.md",
+  "E11": "ANALYSIS/RUNTIME/MISSION_08/TIMELINE/PHASE1_TIMELINE_42042312640.jsonl + UI/ + STATE/ (run 42042312640)",
+  "E12": "ANALYSIS/RUNTIME/MISSION_08/TIMELINE/PHASE2_TIMELINE_42046336206.jsonl + TRACES/ (Frida/DI/Fragments/Room SQL/Settings/network)",
+  "E21": "ANALYSIS/RUNTIME/MISSION_08/TIMELINE/PHASE3_TIMELINE_42049141553.jsonl + ENV/PHASE3_RESTORE_42049141553.txt (natural-state restore)",
+  "E22": "ANALYSIS/RUNTIME/MISSION_08/TIMELINE/PHASE4_TIMELINE_*.jsonl (final targeted main-screen run)",
+  "E13": "ANALYSIS/RUNTIME/MISSION_08/STATE/SNAPSHOT_*.json",
+  "E14": "ANALYSIS/RUNTIME/MISSION_08/UI/*.xml",
+  "E15": "ANALYSIS/RUNTIME/MISSION_08/EXPERIMENTS/PHASE1_NAV_GRAPH_42042312640.json + EXPERIMENTS/NAV_GRAPH.json",
+  "E16": "ANALYSIS/RUNTIME/MISSION_08/ENV/PHASE1_FRIDA_SETUP_42042312640.txt + ENV/M08_FRIDA_SETUP.txt",
+  "E17": "ANALYSIS/MISSION_07/16_EVIDENCE_DATABASE.json (202 entries)",
+  "E18": "ANALYSIS/RUNTIME/MISSION_07/RUNTIME_TRACE/SHIPPED_CONTENT/SELECTION_ANSWERS.json",
+  "E19": "ANALYSIS/MISSION_07/12_UI_STATE_MACHINE.md",
+  "E20": "ANALYSIS/MISSION_07/08_PROGRESSION_AND_UNLOCK_LOGIC.md + 11_SCORING_AND_REWARD_LOGIC.md",
+  "E23": "ANALYSIS/MISSION_09/COMPLETE_CURRICULUM_GRAPH.json (10,298 tutorial assets validated)",
+  "E24": "ANALYSIS/MISSION_05/SCHEMAS/SHIPPED_CONTENT_STATS.json + SAMPLES/ (lesson DSL, WebView bridge JS)",
+  "E25": "ANALYSIS/MISSION_06/16_RECONSTRUCTED_ALGORITHMS.md (A–O static pseudocode)",
+  "E26": "ANALYSIS/MISSION_07/07_PERSISTENCE_RESTORATION_AND_QUEUE.md + 09_OFFLINE_EXECUTION_RESULTS.md",
+  "E27": "ANALYSIS/MISSION_05/EVIDENCE/ROOM_SQL.txt (DAO statements, migrations, DELETE/UPDATE queue SQL)",
+  "E28": "ANALYSIS/MISSION_07/08_PROGRESSION_AND_UNLOCK_LOGIC.md + 11_SCORING_AND_REWARD_LOGIC.md",
+  "E29": "ANALYSIS/RUNTIME/MISSION_09/TIMELINE/M09_RUNTIME_TIMELINE.jsonl (MISSION 09 runtime run)",
+  "E30": "ANALYSIS/RUNTIME/MISSION_09/ENV/M09_ACTIVITY_INVENTORY.txt + M09_FRIDA_SETUP.txt",
+  "E31": "ANALYSIS/MISSION_06/SCHEMAS/METHOD_CATALOG_MIMO.json + CLASS_CATALOG_MIMO.json + OBFUSCATION_MAP.json",
+  "E32": "ANALYSIS/MISSION_07/RUNTIME_TRACE/STATIC_DECODE/*.smali.txt (V/W/X/d0/canopen/pathstate)",
+  "E33": "ANALYSIS/MISSION_05/SAMPLES/lesson-webview.js + bridge_message_lesson.txt"
+ },
+ "classification_vocabulary": [
+  "VERIFIED_STATIC",
+  "VERIFIED_RUNTIME",
+  "VERIFIED_ASSET",
+  "VERIFIED_DATABASE",
+  "VERIFIED_NETWORK_OBSERVATION",
+  "INFERRED",
+  "UNKNOWN",
+  "SERVER_DEPENDENT"
+ ],
+ "modules": [
+  {
+   "id": "startup_di",
+   "name": "Process entry and dependency container",
+   "classes": [
+    "com.getmimo.App",
+    "com.getmimo.ui.SplashActivity_default",
+    "Lhm/b;"
+   ],
+   "methods": [
+    "Lcom/getmimo/App;-><init>()V",
+    "Lcom/getmimo/App;->a()Li9/a;",
+    "Lcom/getmimo/App;->attachBaseContext(Landroid/content/Context;)V",
+    "Lcom/getmimo/App;->b()Ljava/lang/Object;",
+    "Lcom/getmimo/App;->c()V",
+    "Lcom/getmimo/App;->onCreate()V",
+    "Lcom/getmimo/App$onCreate$1;-><init>(Lcom/getmimo/App; Ld70/b;)V",
+    "Lcom/getmimo/App$onCreate$1;->create(Ljava/lang/Object; Ld70/b;)Ld70/b;",
+    "Lcom/getmimo/App$onCreate$1;->invoke(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;",
+    "Lcom/getmimo/App$onCreate$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;"
+   ],
+   "responsibility": "Application.onCreate assembles the object graph; ViewModels receive a 13-Object-slot container Lhm/b (a..m) cast at use sites.",
+   "di_framework": "UNKNOWN — no @Inject / Hilt / Koin metadata decoded; constructor-injection shape is INFERRED",
+   "evidence": [
+    "E01",
+    "E02",
+    "E12"
+   ],
+   "evidence_class": "VERIFIED_STATIC + INFERRED"
+  },
+  {
+   "id": "content",
+   "name": "Shipped curriculum and lesson DSL",
+   "classes": [
+    "Lye/b;",
+    "Lye/d;",
+    "tracks/b; DefaultTrackLoader",
+    "tracks/c; DefaultTracksRepository",
+    "Lte/c;",
+    "Lgm/h;",
+    "com.getmimo.data.content.lessonparser.interactive.model.LessonModule"
+   ],
+   "methods": [],
+   "responsibility": "AssetManager.open(\"lessons-<lang>/tracks/tutorial-<id>.json\") -> kotlinx.serialization models -> XmlPullParser DSL -> LessonModule list -> gm.h.a() interaction type.",
+   "shipped_content": {
+    "publish_set_version": 753,
+    "tracks": 19,
+    "sections": 144,
+    "tutorials": 1029,
+    "chapters": 1947,
+    "lessons": 18272,
+    "selection_answers": 2855
+   },
+   "evidence": [
+    "E09",
+    "E18"
+   ],
+   "evidence_class": "VERIFIED_BOTH"
+  },
+  {
+   "id": "navigation_ui",
+   "name": "Activities, bottom navigation and ViewModels",
+   "classes": [
+    "com.getmimo.ui.main.MainActivity",
+    "com.getmimo.ui.main.d (MainViewModel)",
+    "com.getmimo.ui.navigation.NavigationBar",
+    "com.getmimo.ui.path.map.j (PathMapViewModel)",
+    "com.getmimo.ui.chapter.ChapterActivity",
+    "com.getmimo.ui.chapter.ChapterViewModel",
+    "com.getmimo.ui.lesson.interactive.base.b/c"
+   ],
+   "methods": [
+    "Lcom/getmimo/ui/main/MainActivity;-><init>()V",
+    "Lcom/getmimo/ui/main/MainActivity;->B()Lcom/getmimo/ui/main/d;",
+    "Lcom/getmimo/ui/main/MainActivity;->C()V",
+    "Lcom/getmimo/ui/main/MainActivity;->onCreate(Landroid/os/Bundle;)V",
+    "Lcom/getmimo/ui/main/MainActivity;->onResume()V",
+    "Lcom/getmimo/ui/main/MainActivity;->onSupportNavigateUp()Z",
+    "Lcom/getmimo/ui/path/map/j;-><init>(Lcom/getmimo/interactors/path/a; Lcom/getmimo/interactors/path/f; Lcom/getmimo/interactors/path/c; Lcom/getmimo/interactors/path/d; Lcom/getmimo/interactors/authentication/b; Lcom/getmimo/interactors/certificates/b; Lnp/h; Lnp/d; Lye/g; Lzf/a; Lcom/getmimo/analytics/a; La4/i; Lkf/d; Lye/e; Ldf/d; Lcom/getmimo/data/local/a; La90/f; Lce/c; Lcom/getmimo/interactors/eta/a; Lcom/getmimo/data/source/remote/iap/purchase/a;)V",
+    "Lcom/getmimo/ui/path/map/j;->E(Lua0/e;)Lua0/i;",
+    "Lcom/getmimo/ui/path/map/j;->F(Lcom/getmimo/ui/path/map/j; Ljava/lang/Throwable;)V",
+    "Lcom/getmimo/ui/path/map/j;->G(J J)V",
+    "Lcom/getmimo/ui/path/map/j;->H(Lvn/c;)V",
+    "Lcom/getmimo/ui/path/map/j;->I()V",
+    "Lcom/getmimo/ui/chapter/ChapterActivity;-><init>()V",
+    "Lcom/getmimo/ui/chapter/ChapterActivity;->A(Landroid/content/Intent;)V",
+    "Lcom/getmimo/ui/chapter/ChapterActivity;->B()Lcom/getmimo/ui/chapter/ChapterViewModel;",
+    "Lcom/getmimo/ui/chapter/ChapterActivity;->C(Ldj/n0;)V",
+    "Lcom/getmimo/ui/chapter/ChapterActivity;->D(I)V",
+    "Lcom/getmimo/ui/chapter/ChapterActivity;->E(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;"
+   ],
+   "responsibility": "Four-tab bottom bar (track/practice/leaderboard/profile); MainActivity -> PathMapViewModel -> ChapterActivity -> per-interaction Fragment + ViewModel; Compose + Orbit MVI for path map/executable lessons.",
+   "evidence": [
+    "E02",
+    "E10",
+    "E11",
+    "E14"
+   ],
+   "evidence_class": "VERIFIED_BOTH"
+  },
+  {
+   "id": "lesson_engine",
+   "name": "Lesson session state machine and validators",
+   "classes": [
+    "com.getmimo.ui.lesson.interactive.base.c",
+    "Lim/d;",
+    "Lkm/f;",
+    "Lpm/b;",
+    "Lqm/i;",
+    "Lqm/d;",
+    "com.getmimo.ui.lesson.executable.q",
+    "com.getmimo.ui.common.runbutton.RunButton$State"
+   ],
+   "methods": [],
+   "responsibility": "Y(Z) double-run guard; onLessonRun$1 dispatches V()/X(); U() for auto-advance; H(tries,attempts) creates LessonProgress; e0()/queue store; f0(false,isSolvedCorrectly()) analytics; N() resets input.",
+   "validators": {
+    "validatedInput": "qm/i.a: lowercase(Locale.US) + keep letters/digits and < > ( ) : { } , . ; setupViews$2 gives CORRECT / PARTIAL / INCORRECT",
+    "selection": "km/f.b(List): all { selected == correct }",
+    "fillTheGap": "im/d.E0(): ordered, case-sensitive token equality vs correctTokens; answer joined with spaces; Y(boolean)",
+    "spell": "pm/b.E0(): token equality joined without separator",
+    "executable": "q.I(): ArrayList.equals(userFileContents, shipped solvedContent)",
+    "isSolvedCorrectly": "tries >= 1",
+    "webview_letter": "shipped lesson-webview.js correctLetter=\"D\"; try again otherwise; no native validator hook fired"
+   },
+   "evidence": [
+    "E05",
+    "E06",
+    "E08",
+    "E09",
+    "E17"
+   ],
+   "evidence_class": "VERIFIED_BOTH"
+  },
+  {
+   "id": "learner_state",
+   "name": "Room / SQLite / WAL / SharedPreferences / DataStore",
+   "classes": [
+    "com.getmimo.data.source.local.room.Database",
+    "Database_Impl",
+    "Lcg/a; LessonProgressDao",
+    "com.getmimo.data.source.remote.progress.LessonProgressRepository",
+    "com.getmimo.data.source.remote.progress.LessonProgressQueue",
+    "com.getmimo.data.local.a DataStoreUserPreferences"
+   ],
+   "methods": [
+    "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;-><clinit>()V",
+    "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;-><init>(Lze/a; Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;)V",
+    "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->access$updateCorrectAnswersCount(Lcom/getmimo/data/source/remote/progress/LessonProgressQueue; Ld70/b;)Ljava/lang/Object;",
+    "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->clear(Ld70/b;)Ljava/lang/Object;",
+    "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->getAnswersInChapter()Lua0/y;",
+    "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->getCorrectLessonProgressCount(Ld70/b;)Ljava/lang/Object;",
+    "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;-><init>(Lcom/getmimo/data/source/remote/progress/LessonProgressApi; Lye/g; Lye/c; Lnp/d; Lri/d; Lcom/getmimo/data/source/local/completion/a; Lcg/a;)V",
+    "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->access$getLessonProgressApi$p(Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;)Lcom/getmimo/data/source/remote/progress/LessonProgressApi;",
+    "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->access$getLessonProgressDao$p(Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;)Lcg/a;",
+    "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->access$toLessonProgressSyncResult(Lcom/getmimo/data/source/remote/progress/LessonProgressRepository; Lcom/getmimo/data/model/progress/PostProgressResponse;)Lcg/e;",
+    "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->access$toProgressList(Lcom/getmimo/data/source/remote/progress/LessonProgressRepository; Ljava/util/List;)Ljava/util/List;",
+    "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->addOrUpdateLessonProgressInQueue(Ljava/util/List; Z Ld70/b;)Ljava/lang/Object;"
+   ],
+   "responsibility": "local-only progress rows (in_queue=1), answer counters, streak detector, guest coins/favourites in mimo_prefs.xml, protobuf DataStore flags, WAL journal.",
+   "evidence": [
+    "E03",
+    "E10",
+    "E11",
+    "E13"
+   ],
+   "evidence_class": "VERIFIED_BOTH"
+  },
+  {
+   "id": "progression",
+   "name": "Path map, unlock and completion",
+   "classes": [
+    "com.getmimo.interactors.path.d GetPathMapState",
+    "com.getmimo.interactors.chapter.a CanOpenChapterWithKeys",
+    "com.getmimo.interactors.path.sections.a",
+    "Lcc/b;",
+    "Lds/w.c;",
+    "com.getmimo.data.source.remote.keys.a DefaultKeysRepository"
+   ],
+   "methods": [
+    "Lcom/getmimo/interactors/path/d;-><clinit>()V",
+    "Lcom/getmimo/interactors/path/d;-><init>(Lye/g; Lcom/getmimo/data/source/local/completion/a; Lcom/getmimo/data/source/remote/iap/purchase/a; Lze/a; Lcc/b; Lds/w; Lcom/getmimo/interactors/path/b; Lcom/getmimo/interactors/upgrade/inventory/a; Lri/d; Lcom/getmimo/data/source/remote/keys/a; Lxf/f; La90/f; Lcom/getmimo/data/local/a;)V",
+    "Lcom/getmimo/interactors/path/d;->a(I Z Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+    "Lcom/getmimo/interactors/path/d;->b(J I Lvn/i0; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+    "Lcom/getmimo/interactors/chapter/a;-><init>(Lcom/getmimo/data/source/remote/keys/a;)V",
+    "Lcom/getmimo/interactors/chapter/a;->a(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;"
+   ],
+   "responsibility": "sequential required-tutorial prerequisite; Completed/Locked/Unlocked/UnlockedButNoKeys states; key \"<trackId>:<tutorialId>:<chapterId>\" membership; section state from cc/b.y completion floats.",
+   "evidence": [
+    "E10",
+    "E20"
+   ],
+   "evidence_class": "VERIFIED_STATIC (live unlock boolean UNKNOWN)"
+  },
+  {
+   "id": "gamification",
+   "name": "Coins, XP, streak, goals, rewards, keys, leaderboard",
+   "classes": [
+    "com.getmimo.core.model.coins.Coins",
+    "com.getmimo.data.source.remote.coins.a DefaultCoinsRepository",
+    "com.getmimo.data.user.streak.a",
+    "com.getmimo.data.source.remote.reward.a",
+    "com.getmimo.data.settings.a SettingsRepository",
+    "com.getmimo.ui.main.d MainViewModel"
+   ],
+   "methods": [
+    "Lcom/getmimo/core/model/coins/Coins;-><clinit>()V",
+    "Lcom/getmimo/core/model/coins/Coins;-><init>(I)V",
+    "Lcom/getmimo/core/model/coins/Coins;->component1()I",
+    "Lcom/getmimo/core/model/coins/Coins;->copy$default(Lcom/getmimo/core/model/coins/Coins; I I Ljava/lang/Object;)Lcom/getmimo/core/model/coins/Coins;",
+    "Lcom/getmimo/core/model/coins/Coins;->copy(I)Lcom/getmimo/core/model/coins/Coins;",
+    "Lcom/getmimo/core/model/coins/Coins;->equals(Ljava/lang/Object;)Z",
+    "Lcom/getmimo/data/source/remote/coins/a;-><init>(Ltf/a; Lqg/a; Lcom/getmimo/analytics/a; Lnp/d;)V",
+    "Lcom/getmimo/data/source/remote/coins/a;->a()Lua0/r;",
+    "Lcom/getmimo/data/source/remote/coins/a;->b(Lkotlin/coroutines/jvm/internal/SuspendLambda;)Ljava/lang/Object;",
+    "Lcom/getmimo/ui/main/d;-><init>(Lcom/getmimo/data/source/remote/iap/purchase/a; Lnp/h; Lmg/a; Lcom/getmimo/analytics/a; Lye/c; Lcom/getmimo/data/settings/a; Lkf/d; Lch/b; Lcom/getmimo/data/source/remote/progress/LessonProgressRepository; Lph/a; Lze/a; Lcom/getmimo/data/source/remote/reward/a; Lcom/getmimo/interactors/path/sections/a; Lcom/getmimo/data/source/remote/customerio/a; Lcom/getmimo/data/source/remote/friends/a; Lcom/getmimo/ui/contentexperiment/a; Lcom/getmimo/data/source/remote/iap/inventory/b; Lei/a; Lcom/getmimo/data/source/remote/analytics/a; Lcom/getmimo/interactors/settings/a; Lnp/d; Lcom/getmimo/data/source/local/completion/a; Lcom/getmimo/interactors/path/a; La4/i; Lke/a; Lri/d; Lcom/getmimo/data/source/remote/iap/b; Lzg/a; Lnp/g; Lcom/getmimo/data/source/remote/iap/b; Ldf/d; Lcom/getmimo/data/source/remote/keys/a; La4/m; Lcom/getmimo/interactors/practice/c;)V",
+    "Lcom/getmimo/ui/main/d;->E(Lcom/getmimo/data/model/reward/Reward;)V",
+    "Lcom/getmimo/ui/main/d;->F(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+    "Lcom/getmimo/ui/main/d;->G(Lcom/getmimo/data/model/reward/Reward;)Z",
+    "Lcom/getmimo/ui/main/d;->H(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+    "Lcom/getmimo/ui/main/d;->I(Z)V"
+   ],
+   "responsibility": "local_coins guest balance (200 observed), getCorrectLessonProgressCount / getCorrectLessonsFirstTryCount / updateCorrectAnswersCount / updateLessonStreakDetector; remote reward/keys/leaderboard DTOs; daily goal from SettingsRepository.",
+   "measured_algorithm": "getCorrectLessonProgressCount = queued.count{isSolvedCorrectly()}; getCorrectLessonsFirstTryCount = queued.count{isSolvedCorrectly() && attempts == 1}; AnswersInChapter(correct,total)",
+   "evidence": [
+    "E10",
+    "E20",
+    "E11",
+    "E12"
+   ],
+   "evidence_class": "VERIFIED_STATIC + VERIFIED_RUNTIME (no absolute XP formula)"
+  },
+  {
+   "id": "media_native",
+   "name": "WebView, code editor, Rive and native libraries",
+   "classes": [
+    "android.webkit.WebView",
+    "assets/lesson-webview.js",
+    "EmbeddedLessonWebView",
+    "com.getmimo.ui.codeeditor.view.b CodeEditViewModel",
+    "com.getmimo.ui.codeeditor.highlight.a",
+    "app.rive.runtime.kotlin"
+   ],
+   "responsibility": "WebView exercises use shipped JS + mimo.activity.* messages; executable lessons compare against shipped solvedContent offline; Rive animation runtime; 12 arm64 .so libraries.",
+   "native_libraries": [
+    "libsigner.so",
+    "libdatastore_shared_counter.so",
+    "libyrf.so",
+    "librive-android.so",
+    "libandroidx.graphics.path.so",
+    "libc++_shared.so",
+    "libimage_processing_util_jni.so",
+    "libbugsnag-ndk.so",
+    "libbugsnag-plugin-android-anr.so",
+    "libsqlcipher.so",
+    "libbarhopper_v3.so",
+    "libmlkit_google_ocr_pipeline.so"
+   ],
+   "evidence": [
+    "E09",
+    "E10",
+    "E08"
+   ],
+   "evidence_class": "VERIFIED_STATIC + INFERRED (JNI internals UNKNOWN)"
+  },
+  {
+   "id": "network_sync",
+   "name": "Retrofit APIs, connectivity gate, offline queue",
+   "classes": [
+    "com.getmimo.network.a",
+    "com.getmimo.data.source.remote.progress.LessonProgressApi",
+    "com.getmimo.data.source.remote.progress.CompletionApi",
+    "com.getmimo.data.source.remote.progress.TrackEtaApi"
+   ],
+   "responsibility": "POST /v1/tutorials/{tutorialId}/progress; network.a.a() gate; offline throws NoConnectionException; queue rows deleted at cold start.",
+   "endpoints": [
+    {
+     "path": "/v1/code/runfiles",
+     "verb_inferred": "POST",
+     "annotation": "@o",
+     "source_file": "hg/c.java",
+     "signature": "Object c(@a CodePlaygroundExecutionBody codePlaygroundExecutionBody, d70.b<? super CodePlaygroundExecutionResponse> bVar);",
+     "annotations": [
+      "@o(\"/v1/code/runfiles\")",
+      "@b",
+      "@k({\"Content-Type: application/json\"})"
+     ]
+    },
+    {
+     "path": "/v1/code/{savedCodeId}/runfiles",
+     "verb_inferred": "POST",
+     "annotation": "@o",
+     "source_file": "hg/c.java",
+     "signature": "Object d(@s(\"savedCodeId\") long j5, @a CodePlaygroundExecutionBody codePlaygroundExecutionBody, d70.b<? super CodePlaygroundExecutionResponse> bVar);",
+     "annotations": [
+      "@o(\"/v1/code/{savedCodeId}/runfiles\")",
+      "@b",
+      "@k({\"Content-Type: application/json\"})"
+     ]
+    },
+    {
+     "path": "/v1/leaderboards/friends",
+     "verb_inferred": "GET",
+     "annotation": "@f",
+     "source_file": "ug/a.java",
+     "signature": "Object c(d70.b<? super Friends> bVar);",
+     "annotations": [
+      "@f(\"/v1/leaderboards/friends\")",
+      "@b",
+      "@k({\"Content-Type: application/json\"})"
+     ]
+    },
+    {
+     "path": "/v1/leaderboards/latest",
+     "verb_inferred": "GET",
+     "annotation": "@f",
+     "source_file": "ch/a.java",
+     "signature": "Object a(d70.b<? super o0<Leaderboard>> bVar);",
+     "annotations": [
+      "@f(\"/v1/leaderboards/latest\")",
+      "@b",
+      "@k({\"Content-Type: application/json\"})"
+     ]
+    },
+    {
+     "path": "/v1/leaderboards/{leaderboardId}/userrank",
+     "verb_inferred": "GET",
+     "annotation": "@f",
+     "source_file": "ch/a.java",
+     "signature": "Object b(@s(\"leaderboardId\") long j5, d70.b<? super LeaderboardUserResult> bVar);",
+     "annotations": [
+      "@f(\"/v1/leaderboards/{leaderboardId}/userrank\")",
+      "@b",
+      "@k({\"Content-Type: application/json\"})"
+     ]
+    },
+    {
+     "path": "/v1/preview/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/runFiles",
+     "verb_inferred": "POST",
+     "annotation": "@o",
+     "source_file": "hg/c.java",
+     "signature": "Object a(@s(\"trackId\") long j5, @s(\"tutorialId\") long j10, @s(\"chapterId\") long j11, @s(\"lessonId\") long j12, @t(\"publishSetVersion\") long j13, @a ExecuteFilesBody executeFilesBody, d70.b<? super ExecuteFilesResponse> bVar);",
+     "annotations": [
+      "@o(\"/v1/preview/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/runFiles\")",
+      "@b",
+      "@k({\"Content-Type: application/json\"})"
+     ]
+    },
+    {
+     "path": "/v1/tracks/completion/lastInteracted",
+     "verb_inferred": "GET",
+     "annotation": "@f",
+     "source_file": "com/getmimo/data/source/remote/progress/CompletionApi.java",
+     "signature": "Object getLastInteractedTrack(d70.b<? super LastInteractedTrackResponse> bVar);",
+     "annotations": [
+      "@f(\"/v1/tracks/completion/lastInteracted\")",
+      "@b",
+      "@k({\"Content-Type: application/json\"})"
+     ]
+    },
+    {
+     "path": "/v1/tracks/{trackId}/completion",
+     "verb_inferred": "GET",
+     "annotation": "@f",
+     "source_file": "com/getmimo/data/source/remote/progress/CompletionApi.java",
+     "signature": "Object getTrackCompletion(@s(\"trackId\") long j5, @t(\"trackVersion\") long j10, d70.b<? super TrackCompletionResponse> bVar);",
+     "annotations": [
+      "@f(\"/v1/tracks/{trackId}/completion\")",
+      "@b",
+      "@k({\"Content-Type: application/json\"})"
+     ]
+    },
+    {
+     "path": "/v1/tracks/{trackId}/eta",
+     "verb_inferred": "GET",
+     "annotation": "@f",
+     "source_file": "com/getmimo/data/source/remote/progress/TrackEtaApi.java",
+     "signature": "Object getTrackEta(@s(\"trackId\") long j5, @t(\"trackVersion\") long j10, d70.b<? super TrackEtaResponse> bVar);",
+     "annotations": [
+      "@f(\"/v1/tracks/{trackId}/eta\")",
+      "@b",
+      "@k({\"Content-Type: application/json\"})"
+     ]
+    },
+    {
+     "path": "/v1/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/runFiles",
+     "verb_inferred": "POST",
+     "annotation": "@o",
+     "source_file": "hg/c.java",
+     "signature": "Object b(@s(\"trackId\") long j5, @s(\"tutorialId\") long j10, @s(\"chapterId\") long j11, @s(\"lessonId\") long j12, @t(\"publishSetVersion\") long j13, @t(\"suppressConsoleOutput\") boolean z2, @t(\"language\") String str, @a ExecuteFilesBody executeFilesBody, d70.b<? super ExecuteFilesResponse> bVar);",
+     "annotations": [
+      "@o(\"/v1/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/runFiles\")",
+      "@b",
+      "@k({\"Content-Type: application/json\"})"
+     ]
+    },
+    {
+     "path": "/v1/tutorials/{tutorialId}/progress",
+     "verb_inferred": "POST",
+     "annotation": "@o",
+     "source_file": "com/getmimo/data/source/remote/progress/LessonProgressApi.java",
+     "signature": "Object postProgress(@s(\"tutorialId\") long j5, @a PostProgressRequestBody postProgressRequestBody, d70.b<? super PostProgressResponse> bVar);",
+     "annotations": [
+      "@o(\"/v1/tutorials/{tutorialId}/progress\")",
+      "@b",
+      "@k({\"Content-Type: application/json\"})"
+     ]
+    },
+    {
+     "path": "/v1/user/activity",
+     "verb_inferred": "GET",
+     "annotation": "@f",
+     "source_file": "sh/h.java",
+     "signature": "Object a(@t(\"from\") String str, @t(\"to\") String str2, d70.b<? super UserActivityResponse> bVar);",
+     "annotations": [
+      "@f(\"/v1/user/activity\")",
+      "@b",
+      "@k({\"Content-Type: application/json\"})"
+     ]
+    },
+    {
+     "path": "/v1/user/coins",
+     "verb_inferred": "GET",
+     "annotation": "@f",
+     "source_file": "qg/a.java",
+     "signature": "Object a(d70.b<? super Coins> bVar);",
+     "annotations": [
+      "@f(\"/v1/user/coins\")",
+      "@b",
+      "@k({\"Content-Type: application/json\"})"
+     ]
+    },
+    {
+     "path": "/v1/user/favorites/tracks",
+     "verb_inferred": "GET",
+     "annotation": "@f",
+     "source_file": "xe/a.java",
+     "signature": "Object a(d70.b<? super FavoriteTracks> bVar);",
+     "annotations": [
+      "@f(\"/v1/user/favorites/tracks\")",
+      "@b",
+      "@k({\"Content-Type: application/json\"})"
+     ]
+    },
+    {
+     "path": "/v1/user/favorites/tracks/{trackId}",
+     "verb_inferred": "POST",
+     "annotation": "@o",
+     "source_file": "xe/a.java",
+     "signature": "Object b(@s(\"trackId\") long j5, d70.b<? super FavoriteTracks> bVar);",
+     "annotations": [
+      "@o(\"/v1/user/favorites/tracks/{trackId}\")",
+      "@b",
+      "@k({\"Content-Type: application/json\"})"
+     ]
+    },
+    {
+     "path": "/v1/user/keys",
+     "verb_inferred": "GET",
+     "annotation": "@f",
+     "source_file": "bh/a.java",
+     "signature": "Object b(@i(\"Time-Zone\") String str, d70.b<? super UserKeys> bVar);",
+     "annotations": [
+      "@f(\"/v1/user/keys\")",
+      "@b",
+      "@k({\"Content-Type: application/json\"})"
+     ]
+    },
+    {
+     "path": "/v1/user/keys/consume",
+     "verb_inferred": "POST",
+     "annotation": "@o",
+     "source_file": "bh/a.java",
+     "signature": "Object a(d70.b<? super UserKeys> bVar);",
+     "annotations": [
+      "@o(\"/v1/user/keys/consume\")",
+      "@b",
+      "@k({\"Content-Type: application/json\"})"
+     ]
+    },
+    {
+     "path": "/v1/user/rewards/next",
+     "verb_inferred": "GET",
+     "annotation": "@f",
+     "source_file": "lh/a.java",
+     "signature": "Object b(d70.b<? super Rewards> bVar);",
+     "annotations": [
+      "@f(\"/v1/user/rewards/next\")",
+      "@b",
+      "@k({\"Content-Type: application/json\"})"
+     ]
+    },
+    {
+     "path": "/v1/user/rewards/{rewardId}/confirm",
+     "verb_inferred": "POST",
+     "annotation": "@o",
+     "source_file": "lh/a.java",
+     "signature": "Object a(@s(\"rewardId\") long j5, d70.b<? super q> bVar);",
+     "annotations": [
+      "@o(\"/v1/user/rewards/{rewardId}/confirm\")",
+      "@b",
+      "@k({\"Content-Type: application/json\"})"
+     ]
+    },
+    {
+     "path": "/v1/user/settings",
+     "verb_inferred": "GET",
+     "annotation": "@f",
+     "source_file": "kf/a.java",
+     "signature": "Object c(d70.b<? super Settings> bVar);",
+     "annotations": [
+      "@f(\"/v1/user/settings\")",
+      "@b",
+      "@k({\"Content-Type: application/json\"})"
+     ]
+    },
+    {
+     "path": "/v1/user/settings",
+     "verb_inferred": "PUT",
+     "annotation": "@n",
+     "source_file": "kf/a.java",
+     "signature": "Object a(@ie0.a Settings settings, d70.b<? super Settings> bVar);",
+     "annotations": [
+      "@n(\"/v1/user/settings\")",
+      "@b",
+      "@k({\"Content-Type: application/json\"})"
+     ]
+    },
+    {
+     "path": "/v1/user/settings/avatar",
+     "verb_inferred": "POST",
+     "annotation": "@o",
+     "source_file": "kf/a.java",
+     "signature": "Object e(d70.b<? super AvatarUpdateResponse> bVar);",
+     "annotations": [
+      "@o(\"/v1/user/settings/avatar\")"
+     ]
+    },
+    {
+     "path": "/v1/user/settings/avatar/{uploadId}",
+     "verb_inferred": "DELETE",
+     "annotation": "@p",
+     "source_file": "kf/a.java",
+     "signature": "Object d(@s(\"uploadId\") String str, @ie0.a ConfirmAvatarUploadBody confirmAvatarUploadBody, d70.b<? super q> bVar);",
+     "annotations": [
+      "@p(\"/v1/user/settings/avatar/{uploadId}\")",
+      "@b"
+     ]
+    },
+    {
+     "path": "/v1/user/visits",
+     "verb_inferred": "POST",
+     "annotation": "@o",
+     "source_file": "hg/a.java",
+     "signature": "Object a(@ie0.a AppName appName, d70.b<? super q> bVar);",
+     "annotations": [
+      "@o(\"/v1/user/visits\")",
+      "@b",
+      "@k({\"Content-Type: application/json\"})"
+     ]
+    }
+   ],
+   "evidence": [
+    "E04",
+    "E07",
+    "E08",
+    "E10",
+    "E11"
+   ],
+   "evidence_class": "VERIFIED_STATIC + VERIFIED_RUNTIME"
+  },
+  {
+   "id": "background",
+   "name": "Workers and services",
+   "classes": [
+    "com.getmimo.data.source.remote.authentication.PostVisitWorker",
+    "com.getmimo.ui.widget.StreakWidgetRefreshWorker",
+    "AccountDeleteWork",
+    "AsyncRequestWorker",
+    "com.getmimo.data.notification.MimoFirebaseMessagingService",
+    "com.getmimo.data.source.remote.savedcode.AutoSaveCodeService"
+   ],
+   "responsibility": "visit posting, streak widget refresh, push token handling, saved-code autosave.",
+   "triggers": "UNKNOWN",
+   "evidence": [
+    "E02",
+    "E10"
+   ],
+   "evidence_class": "VERIFIED_STATIC (names) / UNKNOWN (triggers)"
+  }
+ ],
+ "decision_logic": [
+  {
+   "id": "D1",
+   "decision": "advance to next lesson / persist progress",
+   "input": "Continue or shipped-WebView correct answer",
+   "logic": "base/c.U() -> H(1,1) -> LessonProgressRepository.createLessonProgress(LessonBundle) -> e0() -> LessonProgressQueue.storeLessonProgress -> Room INSERT OR REPLACE (in_queue=1) -> f0(false,true) -> N() -> next page",
+   "output": "11-column lesson_progress row; LiveData next-page index",
+   "evidence": [
+    "E05",
+    "E06",
+    "E07"
+   ],
+   "evidence_class": "VERIFIED_RUNTIME"
+  },
+  {
+   "id": "D2",
+   "decision": "is the lesson solved?",
+   "logic": "LessonProgress.isSolvedCorrectly() = tries >= 1; tries = (C == Boolean.TRUE) ? 0 : 1 after d++",
+   "output": "boolean used by f0 analytics and answer counters",
+   "evidence": [
+    "E08",
+    "E07"
+   ],
+   "evidence_class": "VERIFIED_BOTH"
+  },
+  {
+   "id": "D3",
+   "decision": "correct-answer counting for chapter/rewards",
+   "logic": "AnswersInChapter(correct=queued.count{isSolvedCorrectly()}, total=queued.size); firstTry = count{isSolvedCorrectly() && attempts == 1}",
+   "output": "_answersInChapter StateFlow; consumed by ChapterFinishedViewModel",
+   "evidence": [
+    "E10"
+   ],
+   "evidence_class": "VERIFIED_STATIC"
+  },
+  {
+   "id": "D4",
+   "decision": "unlock a chapter",
+   "logic": "ds/w.c(Set<String>,trackId,tutorialId,chapterId) = Set.contains(\"<a>:<b>:<c>\"); CanOpenChapterWithKeys$invoke$1 consumes boolean; path-map requires previous REQUIRED tutorial completed",
+   "output": "Lvn/d0 Completed / Lvn/e0 Locked / Lvn/g0 Unlocked / Lvn/h0 UnlockedButNoKeys",
+   "evidence": [
+    "E10",
+    "E20"
+   ],
+   "evidence_class": "VERIFIED_STATIC (exact live boolean UNKNOWN)"
+  },
+  {
+   "id": "D5",
+   "decision": "sync progress to backend",
+   "logic": "storeAndPostAllLessonProgress -> moveLessonProgressFromQueue (in_queue=0) -> postUnsyncedLessonProgress -> if !network.a() throw NoConnectionException else LessonProgressApi.postProgress",
+   "output": "POST /v1/tutorials/{tutorialId}/progress; response body UNKNOWN",
+   "evidence": [
+    "E04",
+    "E07",
+    "E10"
+   ],
+   "evidence_class": "VERIFIED_BOTH"
+  },
+  {
+   "id": "D6",
+   "decision": "cold-start queue retention",
+   "logic": "measured: in_queue=1 rows disappeared at process restart (phase1 S8_AFTER_RESUME, online); M07 stage6 also measured offline cold start 2 -> 0",
+   "output": "lesson_progress rows deleted",
+   "evidence": [
+    "E11",
+    "E07"
+   ],
+   "evidence_class": "VERIFIED_RUNTIME (competition between successful POST and DELETE not isolated; SERVER CONFIRMED=0)"
+  },
+  {
+   "id": "D7",
+   "decision": "Practice tab access",
+   "logic": "guest (Skip at AuthenticationActivity) -> Practice renders \"Create a profile to access practice content\" instead of practice list",
+   "output": "auth gate screen",
+   "evidence": [
+    "E11",
+    "E14"
+   ],
+   "evidence_class": "VERIFIED_RUNTIME"
+  }
+ ],
+ "dependencies": {
+  "language": "Kotlin (coroutines, kotlinx.serialization)",
+  "ui": [
+   "Android Views + Fragments",
+   "Jetpack Compose",
+   "Orbit MVI"
+  ],
+  "lifecycle": [
+   "androidx.lifecycle ViewModel/LiveData (R8-minified m0)",
+   "SavedStateHandle"
+  ],
+  "persistence": [
+   "Room / SQLite WAL",
+   "Jetpack DataStore (protobuf)",
+   "SharedPreferences",
+   "libsqlcipher.so (INFERRED)"
+  ],
+  "network": [
+   "Retrofit-style annotated interfaces",
+   "OkHttp (R8 obfuscated)",
+   "Firebase Remote Config / Crashlytics / Analytics",
+   "RevenueCat IAP",
+   "Mixpanel",
+   "Adjust",
+   "Customer.io"
+  ],
+  "media": [
+   "android.webkit.WebView",
+   "app.rive.runtime.kotlin / librive-android.so",
+   "ML Kit / CameraX"
+  ],
+  "background": [
+   "WorkManager CoroutineWorker",
+   "Firebase Messaging"
+  ],
+  "evidence": [
+   "E01",
+   "E02",
+   "E04",
+   "E10",
+   "E13"
+  ],
+  "evidence_class": "VERIFIED_STATIC + INFERRED"
+ },
+ "client_server_boundary": {
+  "client_owned": [
+   "shipped curriculum v753",
+   "lesson DSL parsing and rendering",
+   "all answer validation",
+   "LessonProgress rows and answer counters",
+   "guest coins local_coins",
+   "offline WebView preview",
+   "executable solvedContent comparison",
+   "unlock state shape",
+   "connectivity gate"
+  ],
+  "server_owned_or_unknown": [
+   "absolute XP / streak / daily-goal / leaderboard award formulas",
+   "PostProgressResponse / Progress / TrackEtaResponse bodies",
+   "keys and rewards balances",
+   "remote code runner result",
+   "subscription tier gating",
+   "chapter/tutorial completion acknowledgement"
+  ],
+  "server_confirmed": 0,
+  "evidence": [
+   "E07",
+   "E10",
+   "E20"
+  ],
+  "evidence_class": "VERIFIED_STATIC + UNKNOWN"
+ },
+ "algorithm_inventory": [
+  {
+   "id": "A1",
+   "name": "onLessonRun double-run guard",
+   "original_method": "Lcom/getmimo/ui/lesson/interactive/base/c;->Y(Z)V",
+   "inputs": "Boolean",
+   "outputs": "Unit",
+   "state": "runInProgress",
+   "pseudocode": "if runInProgress==TRUE return; set TRUE; launch { V/X; nextPage=chapterIndex; set FALSE }",
+   "evidence_class": "VERIFIED_STATIC",
+   "evidence": "E25 §A",
+   "edge_cases_or_limits": "M07 stage6 did not fire onLessonRun$1",
+   "confidence": "MEDIUM"
+  },
+  {
+   "id": "A2",
+   "name": "lesson solved correctly",
+   "original_method": "Lcom/getmimo/ui/lesson/interactive/base/c;->V(...)",
+   "inputs": "Continuation",
+   "outputs": "Object",
+   "state": "attempts, wrongLatch, LessonBundle",
+   "pseudocode": "awaitBrowserOutput(); wrongLatch=FALSE; attempts++; tries = wrongLatch?0:1; createLessonProgress(tries,attempts); storeInMemory(); showCorrect(); analytics; resetInput",
+   "evidence_class": "VERIFIED_STATIC",
+   "evidence": "E25 §B; E32 V.smali.txt",
+   "edge_cases_or_limits": "H()/U() path observed instead at runtime",
+   "confidence": "MEDIUM"
+  },
+  {
+   "id": "A3",
+   "name": "lesson solved incorrectly",
+   "original_method": "Lcom/getmimo/ui/lesson/interactive/base/c;->X(...)",
+   "inputs": "Continuation",
+   "outputs": "Object",
+   "state": "attempts, wrongLatch",
+   "pseudocode": "attempts++; wrongLatch=TRUE; createLessonProgress(0,attempts); storeInMemory(); showWrongFeedbackBlock()",
+   "evidence_class": "VERIFIED_STATIC",
+   "evidence": "E25 §C",
+   "edge_cases_or_limits": "no runtime X() event in M07/M08",
+   "confidence": "MEDIUM"
+  },
+  {
+   "id": "A4",
+   "name": "create LessonProgress row",
+   "original_method": "LessonProgressRepository.createLessonProgress",
+   "inputs": "LessonBundle, tries, attempts",
+   "outputs": "LessonProgress",
+   "state": "tracksRepository.currentPublishSetVersion()",
+   "pseudocode": "completedAt=Instant.now(); if(completedAt<startedAt) log; construct 11-field row with inQueue=true",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence": "E25 §D; E06 STAGE6_ONLINE",
+   "edge_cases_or_limits": "stage6 row 151403 measured",
+   "confidence": "HIGH"
+  },
+  {
+   "id": "A5",
+   "name": "isSolvedCorrectly",
+   "original_method": "Lcom/getmimo/data/model/room/LessonProgress;->isSolvedCorrectly()Z",
+   "inputs": "LessonProgress",
+   "outputs": "Boolean",
+   "state": "tries",
+   "pseudocode": "return tries >= 1",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence": "E25 §E; M07 04",
+   "edge_cases_or_limits": "20-object runtime truth table",
+   "confidence": "HIGH"
+  },
+  {
+   "id": "A6",
+   "name": "fillTheGap ordered tokens",
+   "original_method": "Lim/d;->E0()",
+   "inputs": "state.placedTokens, state.correctTokens",
+   "outputs": "Boolean",
+   "state": "placed flags",
+   "pseudocode": "selected = placed.filter{placed}; ok = size equal && selected[i].text == correct[i].text; answer=join(\" \"); b0(answer); Y(ok)",
+   "evidence_class": "VERIFIED_STATIC",
+   "evidence": "E25 §F",
+   "edge_cases_or_limits": "comparison result enum AFTER exact-match check, NOT case-insensitive",
+   "confidence": "MEDIUM"
+  },
+  {
+   "id": "A7",
+   "name": "selection validator",
+   "original_method": "Lkm/f;->b(Ljava/util/List;)Z",
+   "inputs": "List<SelectionItem>",
+   "outputs": "Boolean",
+   "state": "selected / isCorrect",
+   "pseudocode": "return list.all{ it.selected == it.isCorrect }",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence": "E25 §G; M07 04",
+   "edge_cases_or_limits": "runtime truth table observed",
+   "confidence": "HIGH"
+  },
+  {
+   "id": "A8",
+   "name": "spell validator",
+   "original_method": "Lpm/b;->E0()",
+   "inputs": "typed tokens, expected tokens",
+   "outputs": "Boolean",
+   "state": "token order",
+   "pseudocode": "ok = size equal && typed[i].text == expected[i].text; answer=join(\"\"); b0; Y(ok)",
+   "evidence_class": "VERIFIED_STATIC",
+   "evidence": "E25 §H",
+   "edge_cases_or_limits": "no runtime spell dispatch observed",
+   "confidence": "MEDIUM"
+  },
+  {
+   "id": "A9",
+   "name": "validatedInput normalizer",
+   "original_method": "Lqm/i;->a(Ljava/lang/String;)Ljava/lang/String;",
+   "inputs": "String",
+   "outputs": "String",
+   "state": "Locale.US",
+   "pseudocode": "lower = s.toLowerCase(Locale.US); keep c if letterOrDigit or c in [< > ( ) : { } , .]; else drop",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence": "E25 §I; M07 04",
+   "edge_cases_or_limits": "21 normalizer cases measured",
+   "confidence": "HIGH"
+  },
+  {
+   "id": "A10",
+   "name": "validatedInput result",
+   "original_method": "setupViews$2.invokeSuspend",
+   "inputs": "user input, expected",
+   "outputs": "qm/e | qm/f | qm/g",
+   "state": "normalizer",
+   "pseudocode": "if normalize(user)!=normalize(expected) -> g(wrong); else if user==expected -> e(exact); else f(partial)",
+   "evidence_class": "VERIFIED_STATIC",
+   "evidence": "E25 §J",
+   "edge_cases_or_limits": "onValidatedInputExecuted$1: delay(300) then e->V(), f->W(), g->X()",
+   "confidence": "MEDIUM"
+  },
+  {
+   "id": "A11",
+   "name": "executable content validator",
+   "original_method": "Lq;->I()",
+   "inputs": "codeFiles.content, executable.files.solvedContent",
+   "outputs": "state / errorState",
+   "state": "shipped solvedContent",
+   "pseudocode": "return if (userList == answerList) state else errorState + IncorrectSolutionException",
+   "evidence_class": "VERIFIED_STATIC",
+   "evidence": "E25 §K",
+   "edge_cases_or_limits": "offline-capable; remote runner UNKNOWN",
+   "confidence": "MEDIUM"
+  },
+  {
+   "id": "A12",
+   "name": "chapter answer counters",
+   "original_method": "LessonProgressQueue.updateCorrectAnswersCount()",
+   "inputs": "queued rows",
+   "outputs": "Unit",
+   "state": "_answersInChapter StateFlow",
+   "pseudocode": "queued=repo.getAllLessonProgressInQueue(); correct=queued.count{isSolvedCorrectly()}; emit AnswersInChapter(correct, queued.size)",
+   "evidence_class": "VERIFIED_STATIC",
+   "evidence": "E25 §L",
+   "edge_cases_or_limits": "consumer/reward formula UNKNOWN",
+   "confidence": "MEDIUM"
+  },
+  {
+   "id": "A13",
+   "name": "connectivity gate",
+   "original_method": "Lcom/getmimo/network/a;->a()Z",
+   "inputs": "ConnectivityManager",
+   "outputs": "Boolean",
+   "state": "WIFI|CELLULAR transport",
+   "pseudocode": "getActiveNetwork(); hasTransport(WIFI) || hasTransport(CELLULAR); b() = !a()",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence": "E25 §M; M07 09",
+   "edge_cases_or_limits": "online a=true/b=false; offline a=false/b=true",
+   "confidence": "HIGH"
+  },
+  {
+   "id": "A14",
+   "name": "offline progress POST",
+   "original_method": "LessonProgressRepository.postUnsyncedLessonProgress",
+   "inputs": "in_queue=1 rows",
+   "outputs": "Unit / NoConnectionException",
+   "state": "network gate",
+   "pseudocode": "if(!net.a()){ log(\"No internet connection, not posting unsynced lesson progress\"); throw NoConnectionException } else launch{POST}",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence": "E25 §M; E26",
+   "edge_cases_or_limits": "throw captured in M07 stage4/5 offline",
+   "confidence": "HIGH"
+  },
+  {
+   "id": "A15",
+   "name": "DSL parsing",
+   "original_method": "Lte/c;->b(Ljava/lang/String;)Ljava/util/List;",
+   "inputs": "lesson HTML/XML string",
+   "outputs": "List<LessonModule>",
+   "state": "XmlPullParserFactory",
+   "pseudocode": "p->d.a | code->a.a | selection->e.a | img->c.a | webview->g.a | database->b.a | html/body/unknown->skip",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence": "E25 §N; M07 04",
+   "edge_cases_or_limits": "20 parse cases; malformed XML returns []",
+   "confidence": "HIGH"
+  },
+  {
+   "id": "A16",
+   "name": "interaction type selector",
+   "original_method": "Lgm/h;->a(Ljava/util/List;)",
+   "inputs": "List<LessonModule>",
+   "outputs": "LessonInteractionType",
+   "state": "module types",
+   "pseudocode": "selects one of InteractiveWebView/FillTheGap/Spell/Selection/ValidatedInput/SingleChoice/MultipleChoice/Reveal/None",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence": "M07 04; M06 06/07",
+   "edge_cases_or_limits": "gm.h.a(nonEmpty)=FillTheGap measured",
+   "confidence": "HIGH"
+  },
+  {
+   "id": "A17",
+   "name": "path map state",
+   "original_method": "GetPathMapState$invoke$3 @10129608",
+   "inputs": "Track, sections, completions, tier, keys",
+   "outputs": "vn/n state",
+   "state": "SubscriptionTier, dev prefs",
+   "pseudocode": "for tutorials (excluding Challenge): Completed | Locked | UnlockedButNoKeys | Unlocked; exact boolean UNKNOWN",
+   "evidence_class": "VERIFIED_STATIC",
+   "evidence": "E25 §O; E28",
+   "edge_cases_or_limits": "659 instructions; exact predicate NOT reconstructed",
+   "confidence": "MEDIUM"
+  },
+  {
+   "id": "A18",
+   "name": "unlock key membership",
+   "original_method": "Lds/w;->c(Ljava/util/Set;JJJ)Z",
+   "inputs": "Set<String>, trackId, tutorialId, chapterId",
+   "outputs": "Boolean",
+   "state": "remote key set",
+   "pseudocode": "return set.contains(\"<trackId>:<tutorialId>:<chapterId>\")",
+   "evidence_class": "VERIFIED_STATIC",
+   "evidence": "E28; E32 canopen.smali.txt",
+   "edge_cases_or_limits": "key values UNKNOWN / SERVER_DEPENDENT",
+   "confidence": "MEDIUM"
+  },
+  {
+   "id": "A19",
+   "name": "queue cleanup (destructive)",
+   "original_method": "LessonProgressDao (DEX literal @2223460)",
+   "inputs": "in_queue=1 rows",
+   "outputs": "Unit",
+   "state": "startup",
+   "pseudocode": "DELETE FROM lesson_progress WHERE in_queue = 1",
+   "evidence_class": "VERIFIED_STATIC + VERIFIED_RUNTIME",
+   "evidence": "E27; E26",
+   "edge_cases_or_limits": "observed executing at offline cold start M07 stage4/5",
+   "confidence": "HIGH"
+  },
+  {
+   "id": "A20",
+   "name": "queue cleanup (non-destructive)",
+   "original_method": "LessonProgressDao (DEX literal @2984647)",
+   "inputs": "in_queue=1 rows",
+   "outputs": "Unit",
+   "state": "sync success path",
+   "pseudocode": "UPDATE lesson_progress SET in_queue = 0 WHERE in_queue = 1",
+   "evidence_class": "VERIFIED_STATIC",
+   "evidence": "E27",
+   "edge_cases_or_limits": "competes with A19; which runs when is UNKNOWN",
+   "confidence": "MEDIUM"
+  }
+ ],
+ "method_catalog_probe": {
+  "total_methods": "see E31",
+  "samples": {
+   "createLessonProgress": [
+    {
+     "class_name": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;",
+     "descriptor": "(Lcom/getmimo/ui/lesson/interactive/LessonBundle; Lorg/joda/time/Instant; I I)Lcom/getmimo/data/model/room/LessonProgress;",
+     "dex": "classes.dex",
+     "code_offset": 10063916
+    }
+   ],
+   "postUnsyncedLessonProgress": [
+    {
+     "class_name": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$postUnsyncedLessonProgress$2;",
+     "descriptor": "(Lcom/getmimo/data/source/remote/progress/LessonProgressRepository; Ld70/b;)V",
+     "dex": "classes.dex",
+     "code_offset": 10061232
+    },
+    {
+     "class_name": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$postUnsyncedLessonProgress$2;",
+     "descriptor": "(Ljava/lang/Object; Ld70/b;)Ld70/b;",
+     "dex": "classes.dex",
+     "code_offset": 10061332
+    },
+    {
+     "class_name": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$postUnsyncedLessonProgress$2;",
+     "descriptor": "(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;",
+     "dex": "classes.dex",
+     "code_offset": 10061396
+    },
+    {
+     "class_name": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$postUnsyncedLessonProgress$2;",
+     "descriptor": "(Lra0/y; Ld70/b;)Ljava/lang/Object;",
+     "dex": "classes.dex",
+     "code_offset": 10061516
+    },
+    {
+     "class_name": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$postUnsyncedLessonProgress$2;",
+     "descriptor": "(Ljava/lang/Object;)Ljava/lang/Object;",
+     "dex": "classes.dex",
+     "code_offset": 10061604
+    },
+    {
+     "class_name": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;",
+     "descriptor": "(Ld70/b;)Ljava/lang/Object;",
+     "dex": "classes.dex",
+     "code_offset": 10065264
+    }
+   ],
+   "isSolvedCorrectly": [
+    {
+     "class_name": "Lcom/getmimo/data/model/room/LessonProgress;",
+     "descriptor": "()Z",
+     "dex": "classes.dex",
+     "code_offset": 9913532
+    }
+   ],
+   "getCoins": [
+    {
+     "class_name": "Lcom/getmimo/core/model/coins/Coins;",
+     "descriptor": "()I",
+     "dex": "classes.dex",
+     "code_offset": 9622072
+    },
+    {
+     "class_name": "Lcom/getmimo/data/source/remote/coins/DefaultCoinsRepository$getCoins$1;",
+     "descriptor": "(Lcom/getmimo/data/source/remote/coins/a; Ld70/b;)V",
+     "dex": "classes.dex",
+     "code_offset": 10012660
+    },
+    {
+     "class_name": "Lcom/getmimo/data/source/remote/coins/DefaultCoinsRepository$getCoins$1;",
+     "descriptor": "(Ljava/lang/Object; Ld70/b;)Ld70/b;",
+     "dex": "classes.dex",
+     "code_offset": 10012716
+    },
+    {
+     "class_name": "Lcom/getmimo/data/source/remote/coins/DefaultCoinsRepository$getCoins$1;",
+     "descriptor": "(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;",
+     "dex": "classes.dex",
+     "code_offset": 10012788
+    },
+    {
+     "class_name": "Lcom/getmimo/data/source/remote/coins/DefaultCoinsRepository$getCoins$1;",
+     "descriptor": "(Ljava/lang/Object;)Ljava/lang/Object;",
+     "dex": "classes.dex",
+     "code_offset": 10012900
+    }
+   ],
+   "getPathMapState": [
+    {
+     "class_name": "Lcom/getmimo/interactors/path/GetPathMapState$getProBannerState$1;",
+     "descriptor": "(Lcom/getmimo/interactors/path/d; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V",
+     "dex": "classes.dex",
+     "code_offset": 10128640
+    },
+    {
+     "class_name": "Lcom/getmimo/interactors/path/GetPathMapState$getProBannerState$1;",
+     "descriptor": "(Ljava/lang/Object;)Ljava/lang/Object;",
+     "dex": "classes.dex",
+     "code_offset": 10128688
+    },
+    {
+     "class_name": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$1;",
+     "descriptor": "(Lcom/getmimo/interactors/path/d; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V",
+     "dex": "classes.dex",
+     "code_offset": 10128776
+    },
+    {
+     "class_name": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$1;",
+     "descriptor": "(Ljava/lang/Object;)Ljava/lang/Object;",
+     "dex": "classes.dex",
+     "code_offset": 10128844
+    },
+    {
+     "class_name": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$2;",
+     "descriptor": "(Lcom/getmimo/interactors/path/d; Lcom/getmimo/data/content/model/track/Track; Ld70/b;)V",
+     "dex": "classes.dex",
+     "code_offset": 10128932
+    },
+    {
+     "class_name": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$2;",
+     "descriptor": "(Ljava/lang/Object; Ld70/b;)Ld70/b;",
+     "dex": "classes.dex",
+     "code_offset": 10129040
+    },
+    {
+     "class_name": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$2;",
+     "descriptor": "(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;",
+     "dex": "classes.dex",
+     "code_offset": 10129096
+    },
+    {
+     "class_name": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$2;",
+     "descriptor": "(Ljava/lang/Object;)Ljava/lang/Object;",
+     "dex": "classes.dex",
+     "code_offset": 10129204
+    }
+   ]
+  },
+  "note": "Signatures are copied from ANALYSIS/MISSION_06/SCHEMAS/METHOD_CATALOG_MIMO.json; none are invented."
+ },
+ "mission_09_runtime": {
+  "run_id": "42077425594",
+  "conclusion": "SUCCESS",
+  "timeline_events": 691,
+  "instrumentation_proof": {
+   "seq": 689,
+   "ts_mono_ms": 284854.774,
+   "ts_utc": "2026-11-05T17:52:13.776Z",
+   "experiment_id": "EXP-M09-005",
+   "action_id": "ACT-0031",
+   "source": "orchestrator",
+   "event": "instrumentation_proof",
+   "server_active": true,
+   "attach_ok": true,
+   "hook_installed_events": 181,
+   "nav_events": 28,
+   "entry_events": 72,
+   "webview_events": 0,
+   "real_target_method_executed": true,
+   "evidence": "M09 timeline (this run)",
+   "run_id": "42077425594",
+   "phase": 9,
+   "mission": "M09",
+   "global_seq": 1899,
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence_class": "VERIFIED_RUNTIME"
+  },
+  "entry_tag_histogram": {
+   "settings_get": 3,
+   "settings_write": 3,
+   "mainActivity_viewModel": 23,
+   "net_isOnline": 22,
+   "mainViewModel_F": 1,
+   "mainViewModel_I": 1,
+   "sections_unlockState": 1,
+   "coins_sync": 1,
+   "keys_consume": 1,
+   "keys_gate": 1,
+   "streak_getData": 2,
+   "repo_postUnsynced": 1,
+   "mainActivity_onResume": 1,
+   "mainViewModel_H": 2,
+   "reward_retrieve": 1,
+   "pathCoinsState": 1,
+   "postVisitWorker": 1,
+   "pathMapState_b": 1,
+   "coins_value": 3,
+   "nav_setActive": 1,
+   "pathMapState_a": 1
+  },
+  "queue_delete_sql_observed": true,
+  "real_target_method_count": 72,
+  "main_activity_reached": {
+   "seq": 395,
+   "ts_mono_ms": 186334.805,
+   "ts_utc": "2026-11-05T17:50:35.256Z",
+   "experiment_id": "EXP-M09-001",
+   "action_id": "ACT-0021",
+   "source": "orchestrator",
+   "event": "main_activity_reached",
+   "reached": true,
+   "activity": "topResumedActivity=ActivityRecord{119342566 u0 com.getmimo/.ui.main.MainActivity t9}",
+   "technique": "explicit_intent_or_failed",
+   "run_id": "42077425594",
+   "phase": 9,
+   "mission": "M09",
+   "global_seq": 1605,
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence_class": "VERIFIED_RUNTIME"
+  },
+  "onboarding_chain": {
+   "reached": false,
+   "reached_at_step": null
+  },
+  "route_tour": {
+   "seq": 506,
+   "ts_mono_ms": 243444.276,
+   "ts_utc": "2026-11-05T17:51:32.366Z",
+   "experiment_id": "EXP-M09-002",
+   "action_id": "ACT-0029",
+   "source": "orchestrator",
+   "event": "route_tour_result",
+   "routes": [
+    {
+     "route": "Learn",
+     "activity": "topResumedActivity=ActivityRecord{119342566 u0 com.getmimo/.ui.main.MainActivity t9}",
+     "texts": [
+      "0",
+      "-",
+      "Full-Stack Developer",
+      "1. Intro to Web Development",
+      "Learn",
+      "Practice",
+      "Leaderboard",
+      "Profile"
+     ]
+    },
+    {
+     "route": "Practice",
+     "activity": "topResumedActivity=ActivityRecord{228384577 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+     "texts": [
+      "What do you find the most interesting?",
+      "Web apps",
+      "Games",
+      "Data science",
+      "AI / Machine learning",
+      "Automating tasks",
+      "I'm not sure"
+     ]
+    },
+    {
+     "route": "Leaderboard",
+     "activity": "topResumedActivity=ActivityRecord{228384577 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+     "texts": [
+      "Which aspect of coding captivates you?",
+      "How things look (appearance)",
+      "How things work (logic)",
+      "I’m intrigued by both"
+     ]
+    },
+    {
+     "route": "Profile",
+     "activity": "topResumedActivity=ActivityRecord{228384577 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+     "texts": [
+      "Which aspect of coding captivates you?",
+      "How things look (appearance)",
+      "How things work (logic)",
+      "I’m intrigued by both"
+     ]
+    }
+   ],
+   "run_id": "42077425594",
+   "phase": 9,
+   "mission": "M09",
+   "global_seq": 1716,
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence_class": "VERIFIED_RUNTIME"
+  },
+  "lesson_matrix": {
+   "seq": 526,
+   "ts_mono_ms": 258667.306,
+   "ts_utc": "2026-11-05T17:51:47.589Z",
+   "experiment_id": "EXP-M09-003",
+   "action_id": "ACT-0031",
+   "source": "orchestrator",
+   "event": "lesson_entry_result",
+   "reached_chapter": false,
+   "run_id": "42077425594",
+   "phase": 9,
+   "mission": "M09",
+   "global_seq": 1736,
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence_class": "VERIFIED_RUNTIME"
+  },
+  "offline_queue_observation": {
+   "seq": 683,
+   "ts_mono_ms": 281238.243,
+   "ts_utc": "2026-11-05T17:52:10.160Z",
+   "experiment_id": "EXP-M09-004",
+   "action_id": "ACT-0031",
+   "source": "orchestrator",
+   "event": "queue_anomaly_observation",
+   "before": {},
+   "after": {},
+   "rows_deleted": false,
+   "reason": "ISOLATION NOT CLAIMED: no server response observed; SERVER CONFIRMED=0",
+   "note": "compares with M07 stage6 / M08 phase1 (2->0) and M08 run4 (2->2)",
+   "run_id": "42077425594",
+   "phase": 9,
+   "mission": "M09",
+   "global_seq": 1893,
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence_class": "VERIFIED_RUNTIME"
+  },
+  "auth_exception": "Error: java.io.IOException: com.getmimo.data.source.remote.authentication.AccessTokenUnavailableException",
+  "webview_events": 0,
+  "server_confirmed": 0,
+  "evidence": "E29, E30"
+ },
+ "network_endpoint_contract": {
+  "count": 53,
+  "verb_mapping_source": "ANALYSIS/HTTP_VERBS_RESOLVED.json (Lge0/r0;->a @0xabb18)",
+  "verb_mapping": {
+   "@b": "DELETE",
+   "@f": "GET",
+   "@n": "PATCH",
+   "@o": "POST",
+   "@p": "PUT",
+   "@m": "OPTIONS",
+   "@g": "HEAD"
+  },
+  "corrections_vs_m02": {
+   "@n": "PUT -> PATCH",
+   "@p": "DELETE -> PUT",
+   "@b": "POST/other -> DELETE"
+  },
+  "endpoints": [
+   {
+    "path": "/api/sendCustomerIoData",
+    "annotation": "@o",
+    "verb_inferred_m05": "POST",
+    "verb_resolved_m09": "POST",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "hg/b.java",
+    "signature": "Object a(@a CustomerIoData customerIoData, d70.b<? super q> bVar);",
+    "annotations": [
+     "@o(\"/api/sendCustomerIoData\")",
+     "@ri.b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/click/{linkId}",
+    "annotation": "@o",
+    "verb_inferred_m05": "POST",
+    "verb_resolved_m09": "POST",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "ph/b.java",
+    "signature": "Object a(@s(\"linkId\") String str, d70.b<? super q> bVar);",
+    "annotations": [
+     "@o(\"/click/{linkId}\")"
+    ]
+   },
+   {
+    "path": "/push/events",
+    "annotation": "@o",
+    "verb_inferred_m05": "POST",
+    "verb_resolved_m09": "POST",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "hg/d.java",
+    "signature": "Object a(@a PushNotificationDelivered pushNotificationDelivered, b<? super q> bVar);",
+    "annotations": [
+     "@o(\"/push/events\")"
+    ]
+   },
+   {
+    "path": "/v1/account/email",
+    "annotation": "@n",
+    "verb_inferred_m05": "PUT",
+    "verb_resolved_m09": "PATCH",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "hg/a.java",
+    "signature": "Object d(@ie0.a ChangeEmailRequestBody changeEmailRequestBody, d70.b<? super o0<q>> bVar);",
+    "annotations": [
+     "@n(\"/v1/account/email\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/aiTutor/conversations/messages/count",
+    "annotation": "@f",
+    "verb_inferred_m05": "GET",
+    "verb_resolved_m09": "GET",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "jg/a.java",
+    "signature": "Object a(d70.b<? super AiTutorialConversationMessageCount> bVar);",
+    "annotations": [
+     "@f(\"/v1/aiTutor/conversations/messages/count\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/code",
+    "annotation": "@f",
+    "verb_inferred_m05": "GET",
+    "verb_resolved_m09": "GET",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "mh/c.java",
+    "signature": "Object c(d70.b<? super List<SavedCode>> bVar);",
+    "annotations": [
+     "@f(\"/v1/code\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/code",
+    "annotation": "@o",
+    "verb_inferred_m05": "POST",
+    "verb_resolved_m09": "POST",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "mh/c.java",
+    "signature": "Object d(@a SaveCodeRequestBody saveCodeRequestBody, d70.b<? super SavedCode> bVar);",
+    "annotations": [
+     "@o(\"/v1/code\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/code/runfiles",
+    "annotation": "@o",
+    "verb_inferred_m05": "POST",
+    "verb_resolved_m09": "POST",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "hg/c.java",
+    "signature": "Object c(@a CodePlaygroundExecutionBody codePlaygroundExecutionBody, d70.b<? super CodePlaygroundExecutionResponse> bVar);",
+    "annotations": [
+     "@o(\"/v1/code/runfiles\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/code/{savedCodeId}",
+    "annotation": "@n",
+    "verb_inferred_m05": "PUT",
+    "verb_resolved_m09": "PATCH",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "mh/c.java",
+    "signature": "Object a(@s(\"savedCodeId\") long j5, @a SaveCodeRequestBody saveCodeRequestBody, d70.b<? super SavedCode> bVar);",
+    "annotations": [
+     "@n(\"/v1/code/{savedCodeId}\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/code/{savedCodeId}/remixes",
+    "annotation": "@o",
+    "verb_inferred_m05": "POST",
+    "verb_resolved_m09": "POST",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "mh/c.java",
+    "signature": "Object b(@s(\"savedCodeId\") long j5, @a RemixCodeRequestBody remixCodeRequestBody, d70.b<? super SavedCode> bVar);",
+    "annotations": [
+     "@o(\"/v1/code/{savedCodeId}/remixes\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/code/{savedCodeId}/runfiles",
+    "annotation": "@o",
+    "verb_inferred_m05": "POST",
+    "verb_resolved_m09": "POST",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "hg/c.java",
+    "signature": "Object d(@s(\"savedCodeId\") long j5, @a CodePlaygroundExecutionBody codePlaygroundExecutionBody, d70.b<? super CodePlaygroundExecutionResponse> bVar);",
+    "annotations": [
+     "@o(\"/v1/code/{savedCodeId}/runfiles\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/invitations/{code}",
+    "annotation": "@o",
+    "verb_inferred_m05": "POST",
+    "verb_resolved_m09": "POST",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "ug/a.java",
+    "signature": "Object d(@s(\"code\") String str, d70.b<? super q> bVar);",
+    "annotations": [
+     "@o(\"/v1/invitations/{code}\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/leaderboards/friends",
+    "annotation": "@f",
+    "verb_inferred_m05": "GET",
+    "verb_resolved_m09": "GET",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "ug/a.java",
+    "signature": "Object c(d70.b<? super Friends> bVar);",
+    "annotations": [
+     "@f(\"/v1/leaderboards/friends\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/leaderboards/latest",
+    "annotation": "@f",
+    "verb_inferred_m05": "GET",
+    "verb_resolved_m09": "GET",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "ch/a.java",
+    "signature": "Object a(d70.b<? super o0<Leaderboard>> bVar);",
+    "annotations": [
+     "@f(\"/v1/leaderboards/latest\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/leaderboards/{leaderboardId}/userrank",
+    "annotation": "@f",
+    "verb_inferred_m05": "GET",
+    "verb_resolved_m09": "GET",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "ch/a.java",
+    "signature": "Object b(@s(\"leaderboardId\") long j5, d70.b<? super LeaderboardUserResult> bVar);",
+    "annotations": [
+     "@f(\"/v1/leaderboards/{leaderboardId}/userrank\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/package/preview",
+    "annotation": "@f",
+    "verb_inferred_m05": "GET",
+    "verb_resolved_m09": "GET",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "eh/a.java",
+    "signature": "Object a(d70.b<? super o0<ResponseBody>> bVar);",
+    "annotations": [
+     "@f(\"/v1/package/preview\")",
+     "@w",
+     "@b",
+     "@k({\"Content-Type: application/zip\"})"
+    ]
+   },
+   {
+    "path": "/v1/practice/statistics",
+    "annotation": "@f",
+    "verb_inferred_m05": "GET",
+    "verb_resolved_m09": "GET",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "hh/a.java",
+    "signature": "Object a(d70.b<? super PracticeStatsResponse> bVar);",
+    "annotations": [
+     "@f(\"/v1/practice/statistics\")",
+     "@b"
+    ]
+   },
+   {
+    "path": "/v1/preview/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/runFiles",
+    "annotation": "@o",
+    "verb_inferred_m05": "POST",
+    "verb_resolved_m09": "POST",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "hg/c.java",
+    "signature": "Object a(@s(\"trackId\") long j5, @s(\"tutorialId\") long j10, @s(\"chapterId\") long j11, @s(\"lessonId\") long j12, @t(\"publishSetVersion\") long j13, @a ExecuteFilesBody executeFilesBody, d70.b<? super ExecuteFilesResponse> bVar);",
+    "annotations": [
+     "@o(\"/v1/preview/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/runFiles\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/products/user",
+    "annotation": "@f",
+    "verb_inferred_m05": "GET",
+    "verb_resolved_m09": "GET",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "nh/c.java",
+    "signature": "Object b(d70.b<? super RawProducts> bVar);",
+    "annotations": [
+     "@f(\"/v1/products/user\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/products/user",
+    "annotation": "@o",
+    "verb_inferred_m05": "POST",
+    "verb_resolved_m09": "POST",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "nh/c.java",
+    "signature": "Object a(@i(\"Time-Zone\") String str, @a ProductTypeBody productTypeBody, @t(\"useCoins\") boolean z2, d70.b<? super RawPurchasedProduct> bVar);",
+    "annotations": [
+     "@o(\"/v1/products/user\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/tracks/completion/lastInteracted",
+    "annotation": "@f",
+    "verb_inferred_m05": "GET",
+    "verb_resolved_m09": "GET",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "com/getmimo/data/source/remote/progress/CompletionApi.java",
+    "signature": "Object getLastInteractedTrack(d70.b<? super LastInteractedTrackResponse> bVar);",
+    "annotations": [
+     "@f(\"/v1/tracks/completion/lastInteracted\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/tracks/{trackId}/certificates",
+    "annotation": "@f",
+    "verb_inferred_m05": "GET",
+    "verb_resolved_m09": "GET",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "og/a.java",
+    "signature": "Object b(@s(\"trackId\") long j5, @t(\"fullName\") String str, @t(\"trackVersion\") long j10, d70.b<? super o0<ResponseBody>> bVar);",
+    "annotations": [
+     "@f(\"/v1/tracks/{trackId}/certificates\")",
+     "@w",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/tracks/{trackId}/completion",
+    "annotation": "@f",
+    "verb_inferred_m05": "GET",
+    "verb_resolved_m09": "GET",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "com/getmimo/data/source/remote/progress/CompletionApi.java",
+    "signature": "Object getTrackCompletion(@s(\"trackId\") long j5, @t(\"trackVersion\") long j10, d70.b<? super TrackCompletionResponse> bVar);",
+    "annotations": [
+     "@f(\"/v1/tracks/{trackId}/completion\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/tracks/{trackId}/eta",
+    "annotation": "@f",
+    "verb_inferred_m05": "GET",
+    "verb_resolved_m09": "GET",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "com/getmimo/data/source/remote/progress/TrackEtaApi.java",
+    "signature": "Object getTrackEta(@s(\"trackId\") long j5, @t(\"trackVersion\") long j10, d70.b<? super TrackEtaResponse> bVar);",
+    "annotations": [
+     "@f(\"/v1/tracks/{trackId}/eta\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/runFiles",
+    "annotation": "@o",
+    "verb_inferred_m05": "POST",
+    "verb_resolved_m09": "POST",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "hg/c.java",
+    "signature": "Object b(@s(\"trackId\") long j5, @s(\"tutorialId\") long j10, @s(\"chapterId\") long j11, @s(\"lessonId\") long j12, @t(\"publishSetVersion\") long j13, @t(\"suppressConsoleOutput\") boolean z2, @t(\"language\") String str, @a ExecuteFilesBody executeFilesBody, d70.b<? super ExecuteFilesResponse> bVar);",
+    "annotations": [
+     "@o(\"/v1/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/runFiles\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/savefiles",
+    "annotation": "@o",
+    "verb_inferred_m05": "POST",
+    "verb_resolved_m09": "POST",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "dh/a.java",
+    "signature": "Object b(@s(\"trackId\") long j5, @s(\"tutorialId\") long j10, @s(\"chapterId\") long j11, @s(\"lessonId\") long j12, @t(\"publishSetVersion\") long j13, @ie0.a SaveLessonFilesBody saveLessonFilesBody, d70.b<? super q> bVar);",
+    "annotations": [
+     "@o(\"/v1/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/savefiles\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/savedFiles",
+    "annotation": "@f",
+    "verb_inferred_m05": "GET",
+    "verb_resolved_m09": "GET",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "dh/a.java",
+    "signature": "Object a(@s(\"trackId\") long j5, @s(\"tutorialId\") long j10, @s(\"chapterId\") long j11, @t(\"trackVersion\") long j12, d70.b<? super SavedLessonFilesBody> bVar);",
+    "annotations": [
+     "@f(\"/v1/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/savedFiles\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/tutorials/drafts/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/render",
+    "annotation": "@f",
+    "verb_inferred_m05": "GET",
+    "verb_resolved_m09": "GET",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "ng/a.java",
+    "signature": "Object a(@s(\"tutorialId\") long j5, @s(\"chapterId\") long j10, @s(\"lessonId\") long j11, d70.b<? super LessonDraftResponse> bVar);",
+    "annotations": [
+     "@f(\"/v1/tutorials/drafts/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/render\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/tutorials/{tutorialId}/lessons/{lessonIdentityId}/report",
+    "annotation": "@o",
+    "verb_inferred_m05": "POST",
+    "verb_resolved_m09": "POST",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "kh/a.java",
+    "signature": "Object a(@s(\"tutorialId\") long j5, @s(\"lessonIdentityId\") long j10, @ie0.a ReportLessonBody reportLessonBody, d70.b<? super q> bVar);",
+    "annotations": [
+     "@o(\"/v1/tutorials/{tutorialId}/lessons/{lessonIdentityId}/report\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/tutorials/{tutorialId}/progress",
+    "annotation": "@o",
+    "verb_inferred_m05": "POST",
+    "verb_resolved_m09": "POST",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "com/getmimo/data/source/remote/progress/LessonProgressApi.java",
+    "signature": "Object postProgress(@s(\"tutorialId\") long j5, @a PostProgressRequestBody postProgressRequestBody, d70.b<? super PostProgressResponse> bVar);",
+    "annotations": [
+     "@o(\"/v1/tutorials/{tutorialId}/progress\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/user/activity",
+    "annotation": "@f",
+    "verb_inferred_m05": "GET",
+    "verb_resolved_m09": "GET",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "sh/h.java",
+    "signature": "Object a(@t(\"from\") String str, @t(\"to\") String str2, d70.b<? super UserActivityResponse> bVar);",
+    "annotations": [
+     "@f(\"/v1/user/activity\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/user/coins",
+    "annotation": "@f",
+    "verb_inferred_m05": "GET",
+    "verb_resolved_m09": "GET",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "qg/a.java",
+    "signature": "Object a(d70.b<? super Coins> bVar);",
+    "annotations": [
+     "@f(\"/v1/user/coins\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/user/deviceTokens",
+    "annotation": "@o",
+    "verb_inferred_m05": "POST",
+    "verb_resolved_m09": "POST",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "hg/a.java",
+    "signature": "Object c(@ie0.a DeviceToken deviceToken, d70.b<? super q> bVar);",
+    "annotations": [
+     "@o(\"/v1/user/deviceTokens\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/user/events/subscribe",
+    "annotation": "@f",
+    "verb_inferred_m05": "GET",
+    "verb_resolved_m09": "GET",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "hg/a.java",
+    "signature": "Object b(d70.b<? super PusherChannelResponse> bVar);",
+    "annotations": [
+     "@f(\"/v1/user/events/subscribe\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/user/favorites/tracks",
+    "annotation": "@f",
+    "verb_inferred_m05": "GET",
+    "verb_resolved_m09": "GET",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "xe/a.java",
+    "signature": "Object a(d70.b<? super FavoriteTracks> bVar);",
+    "annotations": [
+     "@f(\"/v1/user/favorites/tracks\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/user/favorites/tracks/{trackId}",
+    "annotation": "@o",
+    "verb_inferred_m05": "POST",
+    "verb_resolved_m09": "POST",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "xe/a.java",
+    "signature": "Object b(@s(\"trackId\") long j5, d70.b<? super FavoriteTracks> bVar);",
+    "annotations": [
+     "@o(\"/v1/user/favorites/tracks/{trackId}\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/user/following/{userId}",
+    "annotation": "@p",
+    "verb_inferred_m05": "DELETE",
+    "verb_resolved_m09": "PUT",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "ih/a.java",
+    "signature": "Object f(@s(\"userId\") long j5, d70.b<? super o0<q>> bVar);",
+    "annotations": [
+     "@p(\"/v1/user/following/{userId}\")",
+     "@ri.b"
+    ]
+   },
+   {
+    "path": "/v1/user/following/{userId}",
+    "annotation": "@b",
+    "verb_inferred_m05": "POST/other",
+    "verb_resolved_m09": "DELETE",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "ih/a.java",
+    "signature": "Object a(@s(\"userId\") long j5, d70.b<? super o0<q>> bVar);",
+    "annotations": [
+     "@b(\"/v1/user/following/{userId}\")",
+     "@ri.b"
+    ]
+   },
+   {
+    "path": "/v1/user/invitations",
+    "annotation": "@f",
+    "verb_inferred_m05": "GET",
+    "verb_resolved_m09": "GET",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "ug/a.java",
+    "signature": "Object a(d70.b<? super InvitationsOverview> bVar);",
+    "annotations": [
+     "@f(\"/v1/user/invitations\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/user/keys",
+    "annotation": "@f",
+    "verb_inferred_m05": "GET",
+    "verb_resolved_m09": "GET",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "bh/a.java",
+    "signature": "Object b(@i(\"Time-Zone\") String str, d70.b<? super UserKeys> bVar);",
+    "annotations": [
+     "@f(\"/v1/user/keys\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/user/keys/consume",
+    "annotation": "@o",
+    "verb_inferred_m05": "POST",
+    "verb_resolved_m09": "POST",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "bh/a.java",
+    "signature": "Object a(d70.b<? super UserKeys> bVar);",
+    "annotations": [
+     "@o(\"/v1/user/keys/consume\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/user/rewards/next",
+    "annotation": "@f",
+    "verb_inferred_m05": "GET",
+    "verb_resolved_m09": "GET",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "lh/a.java",
+    "signature": "Object b(d70.b<? super Rewards> bVar);",
+    "annotations": [
+     "@f(\"/v1/user/rewards/next\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/user/rewards/{rewardId}/confirm",
+    "annotation": "@o",
+    "verb_inferred_m05": "POST",
+    "verb_resolved_m09": "POST",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "lh/a.java",
+    "signature": "Object a(@s(\"rewardId\") long j5, d70.b<? super q> bVar);",
+    "annotations": [
+     "@o(\"/v1/user/rewards/{rewardId}/confirm\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/user/settings",
+    "annotation": "@f",
+    "verb_inferred_m05": "GET",
+    "verb_resolved_m09": "GET",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "kf/a.java",
+    "signature": "Object c(d70.b<? super Settings> bVar);",
+    "annotations": [
+     "@f(\"/v1/user/settings\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/user/settings",
+    "annotation": "@n",
+    "verb_inferred_m05": "PUT",
+    "verb_resolved_m09": "PATCH",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "kf/a.java",
+    "signature": "Object a(@ie0.a Settings settings, d70.b<? super Settings> bVar);",
+    "annotations": [
+     "@n(\"/v1/user/settings\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/user/settings/avatar",
+    "annotation": "@o",
+    "verb_inferred_m05": "POST",
+    "verb_resolved_m09": "POST",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "kf/a.java",
+    "signature": "Object e(d70.b<? super AvatarUpdateResponse> bVar);",
+    "annotations": [
+     "@o(\"/v1/user/settings/avatar\")"
+    ]
+   },
+   {
+    "path": "/v1/user/settings/avatar/{uploadId}",
+    "annotation": "@p",
+    "verb_inferred_m05": "DELETE",
+    "verb_resolved_m09": "PUT",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "kf/a.java",
+    "signature": "Object d(@s(\"uploadId\") String str, @ie0.a ConfirmAvatarUploadBody confirmAvatarUploadBody, d70.b<? super q> bVar);",
+    "annotations": [
+     "@p(\"/v1/user/settings/avatar/{uploadId}\")",
+     "@b"
+    ]
+   },
+   {
+    "path": "/v1/user/visits",
+    "annotation": "@o",
+    "verb_inferred_m05": "POST",
+    "verb_resolved_m09": "POST",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "hg/a.java",
+    "signature": "Object a(@ie0.a AppName appName, d70.b<? super q> bVar);",
+    "annotations": [
+     "@o(\"/v1/user/visits\")",
+     "@b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/users/{userId}/code",
+    "annotation": "@f",
+    "verb_inferred_m05": "GET",
+    "verb_resolved_m09": "GET",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "ih/a.java",
+    "signature": "Object b(@s(\"userId\") long j5, d70.b<? super PublicUserCode> bVar);",
+    "annotations": [
+     "@f(\"/v1/users/{userId}/code\")",
+     "@ri.b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/users/{userId}/code/{savedCodeId}",
+    "annotation": "@f",
+    "verb_inferred_m05": "GET",
+    "verb_resolved_m09": "GET",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "ih/a.java",
+    "signature": "Object c(@s(\"userId\") long j5, @s(\"savedCodeId\") long j10, d70.b<? super SavedCode> bVar);",
+    "annotations": [
+     "@f(\"/v1/users/{userId}/code/{savedCodeId}\")",
+     "@ri.b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/users/{userId}/profile",
+    "annotation": "@f",
+    "verb_inferred_m05": "GET",
+    "verb_resolved_m09": "GET",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "ih/a.java",
+    "signature": "Object d(@s(\"userId\") long j5, d70.b<? super PublicUser> bVar);",
+    "annotations": [
+     "@f(\"/v1/users/{userId}/profile\")",
+     "@ri.b",
+     "@k({\"Content-Type: application/json\"})"
+    ]
+   },
+   {
+    "path": "/v1/users/{userId}/report",
+    "annotation": "@o",
+    "verb_inferred_m05": "POST",
+    "verb_resolved_m09": "POST",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "ih/a.java",
+    "signature": "Object e(@s(\"userId\") long j5, d70.b<? super o0<q>> bVar);",
+    "annotations": [
+     "@o(\"/v1/users/{userId}/report\")"
+    ]
+   },
+   {
+    "path": "/v2/client-config",
+    "annotation": "@f",
+    "verb_inferred_m05": "GET",
+    "verb_resolved_m09": "GET",
+    "verb_evidence": "DEX Lge0/r0;->a @0xabb18 (HTTP_VERBS_RESOLVED.json)",
+    "source_file": "lg/a.java",
+    "signature": "Object a(d70.b<? super d> bVar);",
+    "annotations": [
+     "@f(\"/v2/client-config\")",
+     "@b"
+    ]
+   }
+  ],
+  "third_party_hosts_observed": {
+   "graph.facebook.com": "Facebook SDK (model_asset, gatekeepers, activities)",
+   "api.mixpanel.com": "Mixpanel analytics",
+   "app.adjust.com / app.adjust.io": "Adjust attribution",
+   "firebaselogging-pa.googleapis.com / firebaselogging.googleapis.com": "Firebase logging",
+   "crashlyticsreports-pa.googleapis.com": "Crashlytics",
+   "api.revenuecat.com": "RevenueCat subscriptions (URL seen in M08, redacted)",
+   "customer.io": "Customer.io messaging (endpoint /api/sendCustomerIoData)"
+  },
+  "server_confirmed": 0
+ },
+ "mission_09_closures": [
+  "A: MainActivity.B -> MainViewModel live field graph; NavigationBar.setActive destination map",
+  "C: startup DELETE FROM lesson_progress WHERE in_queue = 1 captured online (SQL seq 260)",
+  "D: GetPathMapState live collaborators + PathMapViewModel call",
+  "E: coins/keys/reward/streak remote boundary; AccessTokenUnavailableException",
+  "F: 53 endpoints with DEX-resolved verbs; 0 Mimo /v1/ runtime URLs",
+  "H: API-36-safe direct Activity hooks (28 nav events); PostVisitWorker.a()",
+  "J: 10,298 curriculum assets validated; normalized graph built",
+  "L: instrumentation proof with 72 real target method entries"
+ ]
+}

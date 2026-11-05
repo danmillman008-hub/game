@@ -1,0 +1,579 @@
+{
+ "document": "MIMO 9.35 — COMPLETE EVIDENCE DATABASE (MISSION 09)",
+ "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+ "server_confirmed": 0,
+ "classification_vocabulary": [
+  "VERIFIED_STATIC",
+  "VERIFIED_RUNTIME",
+  "VERIFIED_ASSET",
+  "VERIFIED_DATABASE",
+  "VERIFIED_NETWORK_OBSERVATION",
+  "INFERRED",
+  "UNKNOWN",
+  "SERVER_DEPENDENT"
+ ],
+ "evidence_index": {
+  "E01": "ANALYSIS/MISSION_06/SCHEMAS/METHOD_CATALOG_MIMO.json (12,851 methods)",
+  "E02": "ANALYSIS/MISSION_06/03_APPLICATION_ARCHITECTURE.md + 04_DEPENDENCY_INJECTION_AND_COMPONENT_GRAPH.md",
+  "E03": "ANALYSIS/MISSION_05/EVIDENCE/ROOM_SQL.txt",
+  "E04": "ANALYSIS/MIMO_RETROFIT_ENDPOINTS.json + ANALYSIS/HTTP_VERBS_RESOLVED.json",
+  "E05": "ANALYSIS/MISSION_07/03_INTERACTIVE_LESSON_VIEWMODEL_RUNTIME.md",
+  "E06": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE6_ONLINE.jsonl (run 42033599909)",
+  "E07": "ANALYSIS/MISSION_07/15_ANSWER_TO_SCORING_RECONSTRUCTION.md",
+  "E08": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
+  "E09": "ANALYSIS/MISSION_06/05_CONTENT_PIPELINE.md, 06_CONTENT_SCHEMA_AND_DSL.md, 08_INTERACTION_VALIDATION.md, 12_CODE_EDITOR_AND_EXECUTABLE_LESSONS.md",
+  "E10": "ANALYSIS/MISSION_06/10_LEARNING_PROGRESSION.md, 11_LOCAL_PERSISTENCE.md, 13_UI_NAVIGATION_AND_RUNTIME.md, 14_NATIVE_LIBRARIES_AND_JNI.md, 15_OFFLINE_BEHAVIOR_SPECIFICATION.md, 16_RECONSTRUCTED_ALGORITHMS.md",
+  "E11": "ANALYSIS/RUNTIME/MISSION_08/TIMELINE/PHASE1_TIMELINE_42042312640.jsonl + UI/ + STATE/ (run 42042312640)",
+  "E12": "ANALYSIS/RUNTIME/MISSION_08/TIMELINE/PHASE2_TIMELINE_42046336206.jsonl + TRACES/ (Frida/DI/Fragments/Room SQL/Settings/network)",
+  "E21": "ANALYSIS/RUNTIME/MISSION_08/TIMELINE/PHASE3_TIMELINE_42049141553.jsonl + ENV/PHASE3_RESTORE_42049141553.txt (natural-state restore)",
+  "E22": "ANALYSIS/RUNTIME/MISSION_08/TIMELINE/PHASE4_TIMELINE_*.jsonl (final targeted main-screen run)",
+  "E13": "ANALYSIS/RUNTIME/MISSION_08/STATE/SNAPSHOT_*.json",
+  "E14": "ANALYSIS/RUNTIME/MISSION_08/UI/*.xml",
+  "E15": "ANALYSIS/RUNTIME/MISSION_08/EXPERIMENTS/PHASE1_NAV_GRAPH_42042312640.json + EXPERIMENTS/NAV_GRAPH.json",
+  "E16": "ANALYSIS/RUNTIME/MISSION_08/ENV/PHASE1_FRIDA_SETUP_42042312640.txt + ENV/M08_FRIDA_SETUP.txt",
+  "E17": "ANALYSIS/MISSION_07/16_EVIDENCE_DATABASE.json (202 entries)",
+  "E18": "ANALYSIS/RUNTIME/MISSION_07/RUNTIME_TRACE/SHIPPED_CONTENT/SELECTION_ANSWERS.json",
+  "E19": "ANALYSIS/MISSION_07/12_UI_STATE_MACHINE.md",
+  "E20": "ANALYSIS/MISSION_07/08_PROGRESSION_AND_UNLOCK_LOGIC.md + 11_SCORING_AND_REWARD_LOGIC.md",
+  "E23": "ANALYSIS/MISSION_09/COMPLETE_CURRICULUM_GRAPH.json (10,298 tutorial assets validated)",
+  "E24": "ANALYSIS/MISSION_05/SCHEMAS/SHIPPED_CONTENT_STATS.json + SAMPLES/ (lesson DSL, WebView bridge JS)",
+  "E25": "ANALYSIS/MISSION_06/16_RECONSTRUCTED_ALGORITHMS.md (A–O static pseudocode)",
+  "E26": "ANALYSIS/MISSION_07/07_PERSISTENCE_RESTORATION_AND_QUEUE.md + 09_OFFLINE_EXECUTION_RESULTS.md",
+  "E27": "ANALYSIS/MISSION_05/EVIDENCE/ROOM_SQL.txt (DAO statements, migrations, DELETE/UPDATE queue SQL)",
+  "E28": "ANALYSIS/MISSION_07/08_PROGRESSION_AND_UNLOCK_LOGIC.md + 11_SCORING_AND_REWARD_LOGIC.md",
+  "E29": "ANALYSIS/RUNTIME/MISSION_09/TIMELINE/M09_RUNTIME_TIMELINE.jsonl (MISSION 09 runtime run)",
+  "E30": "ANALYSIS/RUNTIME/MISSION_09/ENV/M09_ACTIVITY_INVENTORY.txt + M09_FRIDA_SETUP.txt",
+  "E31": "ANALYSIS/MISSION_06/SCHEMAS/METHOD_CATALOG_MIMO.json + CLASS_CATALOG_MIMO.json + OBFUSCATION_MAP.json",
+  "E32": "ANALYSIS/MISSION_07/RUNTIME_TRACE/STATIC_DECODE/*.smali.txt (V/W/X/d0/canopen/pathstate)",
+  "E33": "ANALYSIS/MISSION_05/SAMPLES/lesson-webview.js + bridge_message_lesson.txt"
+ },
+ "status_counts": {
+  "VERIFIED_DATABASE": 6,
+  "VERIFIED_ASSET": 5,
+  "VERIFIED_RUNTIME": 26,
+  "VERIFIED_STATIC": 10,
+  "UNKNOWN": 7,
+  "SERVER_DEPENDENT": 1,
+  "VERIFIED_NETWORK_OBSERVATION": 2
+ },
+ "total_entries": 46,
+ "previous_m07_entries": 202,
+ "previous_m07_entries_note": "MISSION 07 16_EVIDENCE_DATABASE.json (202 entries) is preserved verbatim and referenced through E17; it is not duplicated here.",
+ "entries": [
+  {
+   "id": "M09-C001",
+   "statement": "Original APK SHA-256 unchanged across MISSION 01-09",
+   "evidence_class": "VERIFIED_DATABASE",
+   "evidence_source": "ANALYSIS/MISSION_08/MIMO_CORE_ARCHITECTURE.md",
+   "exact_reference": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "confidence": "HIGH",
+   "related_unresolved": [],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C002",
+   "statement": "Shipped curriculum v753: 19 tracks / 144 sections / 1,029 tutorials / 1,947 chapters / 18,272 unique lessons",
+   "evidence_class": "VERIFIED_ASSET",
+   "evidence_source": "ANALYSIS/MISSION_09/COMPLETE_CURRICULUM_GRAPH.json",
+   "exact_reference": "counts",
+   "confidence": "HIGH",
+   "related_unresolved": [],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C003",
+   "statement": "All 10,298 tutorial-*.json curriculum assets across 10 locales parse as valid JSON; 0 parse failures",
+   "evidence_class": "VERIFIED_ASSET",
+   "evidence_source": "ANALYSIS/MISSION_09/COMPLETE_CURRICULUM_GRAPH.json",
+   "exact_reference": "integrity.parse_failures=[]",
+   "confidence": "HIGH",
+   "related_unresolved": [],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C004",
+   "statement": "Four locales (id, it, pl, tr) ship 2 extra tutorials (2433, 2441) absent from en",
+   "evidence_class": "VERIFIED_ASSET",
+   "evidence_source": "ANALYSIS/MISSION_09/COMPLETE_CURRICULUM_GRAPH.json",
+   "exact_reference": "integrity.locale_inconsistencies",
+   "confidence": "HIGH",
+   "related_unresolved": [],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C005",
+   "statement": "0 missing tutorial references, 0 orphan tutorial files, 0 duplicate lesson IDs, 0 section-range violations in en",
+   "evidence_class": "VERIFIED_ASSET",
+   "evidence_source": "ANALYSIS/MISSION_09/COMPLETE_CURRICULUM_GRAPH.json",
+   "exact_reference": "integrity",
+   "confidence": "HIGH",
+   "related_unresolved": [],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C006",
+   "statement": "Room lesson_progress has exactly 11 columns; PK(lesson_id,tutorial_id); WAL journal mode",
+   "evidence_class": "VERIFIED_DATABASE",
+   "evidence_source": "ANALYSIS/MISSION_05/EVIDENCE/ROOM_SQL.txt",
+   "exact_reference": "CREATE TABLE lesson_progress",
+   "confidence": "HIGH",
+   "related_unresolved": [],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C007",
+   "statement": "Room migration version user_version=2, identity hash 2b8ab6d303d9a501bd8c8fb78d8352fc",
+   "evidence_class": "VERIFIED_RUNTIME + VERIFIED_STATIC",
+   "evidence_source": "E12 sql events; E27",
+   "exact_reference": "PRAGMA user_version = 2; room_master_table",
+   "confidence": "HIGH",
+   "related_unresolved": [],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C008",
+   "statement": "Two competing queue SQL statements are shipped: DELETE FROM lesson_progress WHERE in_queue=1 and UPDATE lesson_progress SET in_queue=0 WHERE in_queue=1",
+   "evidence_class": "VERIFIED_STATIC",
+   "evidence_source": "ANALYSIS/MISSION_05/EVIDENCE/ROOM_SQL.txt",
+   "exact_reference": "offset=2223460 / 2984647",
+   "confidence": "HIGH",
+   "related_unresolved": [
+    "U-QUEUE-001"
+   ],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C009",
+   "statement": "Offline cold start executed DELETE FROM lesson_progress WHERE in_queue=1 (M07 stage 4/5), removing 1-2 queued rows",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence_source": "ANALYSIS/MISSION_07/07_PERSISTENCE_RESTORATION_AND_QUEUE.md",
+   "exact_reference": "STAGE4_OFFLINE.jsonl SQL hooks + snapshot diff",
+   "confidence": "HIGH",
+   "related_unresolved": [],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C010",
+   "statement": "M08 run 42050715150 retained 2 queued rows across cold start (all db_diff deltas empty)",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence_source": "ANALYSIS/RUNTIME/MISSION_08/TIMELINE/PHASE4_TIMELINE_42050715150.jsonl",
+   "exact_reference": "P3_S0_RESTORED -> P3_S4_AFTER_RESTART",
+   "confidence": "HIGH",
+   "related_unresolved": [
+    "U-QUEUE-001"
+   ],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C011",
+   "statement": "Offline gate: NetworkUtils.a() = hasTransport(WIFI)||hasTransport(CELLULAR); b() = !a(); postUnsyncedLessonProgress throws NoConnectionException offline",
+   "evidence_class": "VERIFIED_RUNTIME + VERIFIED_STATIC",
+   "evidence_source": "ANALYSIS/MISSION_06/16_RECONSTRUCTED_ALGORITHMS.md §M",
+   "exact_reference": "M07 E4 a=false/b=true offline",
+   "confidence": "HIGH",
+   "related_unresolved": [],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C012",
+   "statement": "Answer chain U()->H()->createLessonProgress->LessonProgressQueue->f0(false,true)->N() observed at the answer moment",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence_source": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE6_ONLINE.jsonl",
+   "exact_reference": "run 42033599909",
+   "confidence": "HIGH",
+   "related_unresolved": [],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C013",
+   "statement": "isSolvedCorrectly() = tries >= 1; tries and attempts are distinct fields",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence_source": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
+   "exact_reference": "20-object truth table",
+   "confidence": "HIGH",
+   "related_unresolved": [],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C014",
+   "statement": "Validators: fillTheGap ordered token equality; selection all selected==correct; validatedInput Locale.US normalizer keeps [A-Za-z0-9< >():{},.]; executable List.equals(solvedContent)",
+   "evidence_class": "VERIFIED_RUNTIME + VERIFIED_STATIC",
+   "evidence_source": "ANALYSIS/MISSION_06/16_RECONSTRUCTED_ALGORITHMS.md §F-K",
+   "exact_reference": "exact pseudocode A6-A11",
+   "confidence": "HIGH",
+   "related_unresolved": [],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C015",
+   "statement": "mimo_prefs.xml holds local_coins={\"coins\":200}, favorite_tracks, user_settings, user_profile_created_at",
+   "evidence_class": "VERIFIED_DATABASE",
+   "evidence_source": "ANALYSIS/MISSION_08/MIMO_LEARNER_STATE_SCHEMA.json",
+   "exact_reference": "key table",
+   "confidence": "HIGH",
+   "related_unresolved": [],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C016",
+   "statement": "No XP/score/streak/key column exists in mimo.db; d0()/f0() contain no XP arithmetic",
+   "evidence_class": "VERIFIED_STATIC + VERIFIED_DATABASE",
+   "evidence_source": "ANALYSIS/MISSION_07/11_SCORING_AND_REWARD_LOGIC.md",
+   "exact_reference": "schema + bytecode",
+   "confidence": "HIGH",
+   "related_unresolved": [
+    "U-ECON-001"
+   ],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C017",
+   "statement": "Absolute XP / streak / keys / reward / leaderboard formulas are SERVER_DEPENDENT and UNKNOWN",
+   "evidence_class": "UNKNOWN + SERVER_DEPENDENT",
+   "evidence_source": "ANALYSIS/MISSION_07/11_SCORING_AND_REWARD_LOGIC.md",
+   "exact_reference": "remote DTO census",
+   "confidence": "HIGH",
+   "related_unresolved": [
+    "U-ECON-001"
+   ],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C018",
+   "statement": "Unlock key shape ds/w.c(Set,J,J,J) = Set.contains(\"<trackId>:<tutorialId>:<chapterId>\")",
+   "evidence_class": "VERIFIED_STATIC",
+   "evidence_source": "ANALYSIS/MISSION_07/RUNTIME_TRACE/STATIC_DECODE/canopen.smali.txt",
+   "exact_reference": "@5303868",
+   "confidence": "HIGH",
+   "related_unresolved": [
+    "U-PROG-001"
+   ],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C019",
+   "statement": "GetPathMapState produces Completed/Locked/Unlocked/UnlockedButNoKeys; exact live boolean is UNKNOWN",
+   "evidence_class": "VERIFIED_STATIC + UNKNOWN",
+   "evidence_source": "ANALYSIS/MISSION_07/RUNTIME_TRACE/STATIC_DECODE/pathstate.smali.txt",
+   "exact_reference": "@10129608, 659 instructions",
+   "confidence": "MEDIUM",
+   "related_unresolved": [
+    "U-PROG-001"
+   ],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C020",
+   "statement": "53 Retrofit-annotated endpoints decoded; verbs resolved from DEX RequestFactory$Builder bytecode (f=GET,o=POST,n=PATCH,p=DELETE,b=HEAD/OPTIONS)",
+   "evidence_class": "VERIFIED_STATIC",
+   "evidence_source": "ANALYSIS/MIMO_RETROFIT_ENDPOINTS.json + ANALYSIS/HTTP_VERBS_RESOLVED.json",
+   "exact_reference": "builder Lge0/r0;->a @0xabb18",
+   "confidence": "MEDIUM",
+   "related_unresolved": [
+    "U-NET-001"
+   ],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C021",
+   "statement": "No Mimo backend /v1/... HTTP request or response was observed; only third-party analytics/subscription URLs",
+   "evidence_class": "VERIFIED_NETWORK_OBSERVATION",
+   "evidence_source": "E12, E22, E29 net events",
+   "exact_reference": "URL.openConnection hooks",
+   "confidence": "HIGH",
+   "related_unresolved": [
+    "U-NET-001"
+   ],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C022",
+   "statement": "Practice tab for a guest renders \"Create a profile to access practice content\" (client-side gate)",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence_source": "ANALYSIS/RUNTIME/MISSION_08/UI/S234_resume_02_after.xml",
+   "exact_reference": "anonymous_user_lock_view Compose view",
+   "confidence": "HIGH",
+   "related_unresolved": [],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C023",
+   "statement": "lesson-webview.js posts exactly 5 message kinds: gesture (decision/startedAt), activity (result: correct/wrong/completed), focus, height, ready",
+   "evidence_class": "VERIFIED_ASSET",
+   "evidence_source": "ANALYSIS/MISSION_05/SAMPLES/lesson-webview.js",
+   "exact_reference": "post({kind:...}) occurrences",
+   "confidence": "HIGH",
+   "related_unresolved": [
+    "U-WEB-001"
+   ],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C024",
+   "statement": "WebView.addJavascriptInterface produced zero events for lesson 151403 in M07 stage 6",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence_source": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE6_ONLINE.jsonl",
+   "exact_reference": "js_interface hook",
+   "confidence": "HIGH",
+   "related_unresolved": [
+    "U-WEB-001"
+   ],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C025",
+   "statement": "Chapter/tutorial completion transitions were never observed: chapter_completions stayed 0 rows, 868 tutorial_completions all is_completed=0",
+   "evidence_class": "VERIFIED_DATABASE + UNKNOWN",
+   "evidence_source": "ANALYSIS/MISSION_07/08_PROGRESSION_AND_UNLOCK_LOGIC.md",
+   "exact_reference": "every snapshot",
+   "confidence": "HIGH",
+   "related_unresolved": [
+    "U-PROG-002"
+   ],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C026",
+   "statement": "Onboarding is a single NavHostFragment inside OnboardingActivity with per-step Fragments/ViewModels",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence_source": "E12 liveData events",
+   "exact_reference": "NavHostFragment + SavedStateHandlesVM + NavControllerViewModel",
+   "confidence": "HIGH",
+   "related_unresolved": [],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C027",
+   "statement": "Jetpack DataStore user_preferences.preferences_pb present but protobuf contents NOT decoded",
+   "evidence_class": "VERIFIED_RUNTIME + UNKNOWN",
+   "evidence_source": "ANALYSIS/MISSION_08/MIMO_LEARNER_STATE_SCHEMA.json",
+   "exact_reference": "jetpack_datastore.parse_status",
+   "confidence": "HIGH",
+   "related_unresolved": [
+    "U-STATE-001"
+   ],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C028",
+   "statement": "WorkManager workers exist (PostVisitWorker, StreakWidgetRefreshWorker, AccountDeleteWork, AsyncRequestWorker) but no trigger/periodicity was observed",
+   "evidence_class": "VERIFIED_STATIC + UNKNOWN",
+   "evidence_source": "ANALYSIS/MISSION_06/13_UI_NAVIGATION_AND_RUNTIME.md",
+   "exact_reference": "class census",
+   "confidence": "MEDIUM",
+   "related_unresolved": [
+    "U-LIFE-001"
+   ],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C029",
+   "statement": "JNI/native internals of the 12 shipped .so libraries are UNKNOWN by explicit scope",
+   "evidence_class": "UNKNOWN",
+   "evidence_source": "ANALYSIS/MISSION_06/14_NATIVE_LIBRARIES_AND_JNI.md",
+   "exact_reference": "library inventory",
+   "confidence": "HIGH",
+   "related_unresolved": [
+    "U-NATIVE-001"
+   ],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C030",
+   "statement": "No server response or acknowledgement was ever observed: SERVER CONFIRMED = 0 across M01-M09",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence_source": "all mission summaries",
+   "exact_reference": "server_confirmed=0",
+   "confidence": "HIGH",
+   "related_unresolved": [],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C031",
+   "statement": "MISSION 09 instrumentation: {\"seq\": 689, \"ts_mono_ms\": 284854.774, \"ts_utc\": \"2026-11-05T17:52:13.776Z\", \"experiment_id\": \"EXP-M09-005\", \"action_id\": \"ACT-0031\", \"source\": \"orchestrator\", \"event\": \"instrumentation_proof\", \"server_active\": true, \"attach_ok\": true, \"hook_installed_events\": 181, \"nav_events\": 28, \"entry_events\": 72, \"webview_events\": 0, \"real_target_method_executed\": true, \"evidence\": \"M09 timeline (this run)\",",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence_source": "ANALYSIS/RUNTIME/MISSION_09/TIMELINE/M09_RUNTIME_TIMELINE.jsonl",
+   "exact_reference": "instrumentation_proof event (run 42077425594)",
+   "confidence": "HIGH",
+   "related_unresolved": [],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C032",
+   "statement": "MISSION 09 MainActivity reach result: {\"seq\": 395, \"ts_mono_ms\": 186334.805, \"ts_utc\": \"2026-11-05T17:50:35.256Z\", \"experiment_id\": \"EXP-M09-001\", \"action_id\": \"ACT-0021\", \"source\": \"orchestrator\", \"event\": \"main_activity_reached\", \"reached\": true, \"activity\": \"topResumedActivity=ActivityRecord{119342566 u0 com.getmimo/.ui.main.MainActivity t9}\", \"technique\": \"explicit_intent_or_failed\", \"run_id\": \"42077425594\", \"phase\": 9, \"mission\":",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence_source": "E29",
+   "exact_reference": "main_activity_reached (run 42077425594)",
+   "confidence": "HIGH",
+   "related_unresolved": [],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C033",
+   "statement": "MISSION 09 bottom-nav route tour: {\"seq\": 506, \"ts_mono_ms\": 243444.276, \"ts_utc\": \"2026-11-05T17:51:32.366Z\", \"experiment_id\": \"EXP-M09-002\", \"action_id\": \"ACT-0029\", \"source\": \"orchestrator\", \"event\": \"route_tour_result\", \"routes\": [{\"route\": \"Learn\", \"activity\": \"topResumedActivity=ActivityRecord{119342566 u0 com.getmimo/.ui.main.MainActivity t9}\", \"texts\": [\"0\", \"-\", \"Full-Stack Developer\", \"1. Intro to Web Development\", \"Learn\", \"Practice\", \"Leaderboard\", \"Profile\"]}, {\"route\": \"Practice\", \"activity\": \"topResumedActivity=ActivityRecord{228384577 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}\", \"texts\": [\"What do you",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence_source": "E29",
+   "exact_reference": "route_tour_result",
+   "confidence": "HIGH",
+   "related_unresolved": [],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C034",
+   "statement": "MISSION 09 lesson answer matrix: {\"seq\": 526, \"ts_mono_ms\": 258667.306, \"ts_utc\": \"2026-11-05T17:51:47.589Z\", \"experiment_id\": \"EXP-M09-003\", \"action_id\": \"ACT-0031\", \"source\": \"orchestrator\", \"event\": \"lesson_entry_result\", \"reached_chapter\": false, \"run_id\": \"42077425594\", \"phase\": 9, \"mission\": \"M09\", \"global_seq\": 1736, \"apk_sha256\": \"48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a\", \"evidence_class\": \"VERIFI",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence_source": "E29",
+   "exact_reference": "lesson_entry_result + answer_*_feedback",
+   "confidence": "HIGH",
+   "related_unresolved": [],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C035",
+   "statement": "MISSION 09 offline cold-start queue observation: {\"seq\": 683, \"ts_mono_ms\": 281238.243, \"ts_utc\": \"2026-11-05T17:52:10.160Z\", \"experiment_id\": \"EXP-M09-004\", \"action_id\": \"ACT-0031\", \"source\": \"orchestrator\", \"event\": \"queue_anomaly_observation\", \"before\": {}, \"after\": {}, \"rows_deleted\": false, \"reason\": \"ISOLATION NOT CLAIMED: no server response observed; SERVER CONFIRMED=0\", \"note\": \"compares with M07 stage6 / M08 phase1 (2->0) and M08 run4 (2->2)\", \"run_id\": \"42077425594\", \"phase\": 9, \"mission\": \"M09\", \"global_seq\": 1893, \"apk_sha256\": \"48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a\", \"evidence_class\": \"VERIFIED_RUNTIME",
+   "evidence_class": "VERIFIED_RUNTIME + UNKNOWN",
+   "evidence_source": "E29",
+   "exact_reference": "queue_anomaly_observation",
+   "confidence": "MEDIUM",
+   "related_unresolved": [
+    "U-QUEUE-001"
+   ],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C036",
+   "statement": "M09 instrumentation: server_active=true, attach_ok=true (pid 3348, Mimo), 181 hooks, 72 com.getmimo entry events, real_target_method_executed=true",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence_source": "ANALYSIS/RUNTIME/MISSION_09/TIMELINE/M09_RUNTIME_TIMELINE.jsonl",
+   "exact_reference": "instrumentation_proof seq 689; M09_FRIDA_SETUP.txt",
+   "confidence": "HIGH",
+   "related_unresolved": [],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C037",
+   "statement": "MainActivity.B() returns com.getmimo.ui.main.d (MainViewModel) with live fields A=network.a, B/E=remote iap.b, G=remote keys.a, I=practice.c, J/K/L/M=channels",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence_source": "E29",
+   "exact_reference": "entry/exit tag mainActivity_viewModel (23 entries)",
+   "confidence": "HIGH",
+   "related_unresolved": [],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C038",
+   "statement": "NavigationBar.setActive destination map: 2131361976=Path, 2131361974=Practice, 2131361973=Leaderboard, 2131361975=Profile(scrollToPlayground=false)",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence_source": "E29",
+   "exact_reference": "entry tag nav_setActive seq 365",
+   "confidence": "HIGH",
+   "related_unresolved": [],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C039",
+   "statement": "DELETE FROM lesson_progress WHERE in_queue = 1 executes at startup (captured online in M09 SQL seq 260); explains M07 deletion and M08 run4 retention (MainActivity never reached)",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence_source": "E29 + E26 + E27",
+   "exact_reference": "sql seq 260; db_diff run 42050715150 empty",
+   "confidence": "HIGH",
+   "related_unresolved": [],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C040",
+   "statement": "DefaultStreakRepository.getStreakMonthData throws IOException(AccessTokenUnavailableException) for a guest",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence_source": "E29",
+   "exact_reference": "throw tag streak_getData seq 287",
+   "confidence": "HIGH",
+   "related_unresolved": [],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C041",
+   "statement": "Coins.getCoins() returned 0 on fresh install; mimo_prefs.xml had no local_coins key; M08 had local_coins=200 -> state-dependent cached value",
+   "evidence_class": "VERIFIED_RUNTIME + VERIFIED_DATABASE",
+   "evidence_source": "E29 + E13",
+   "exact_reference": "entry tag coins_value x3; M09_S1_MAIN/private/shared_prefs/mimo_prefs.xml",
+   "confidence": "HIGH",
+   "related_unresolved": [
+    "U-ECON-001"
+   ],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C042",
+   "statement": "GetPathMapState live collaborator graph and PathMapViewModel call b(50,0,null,...) observed",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence_source": "E29",
+   "exact_reference": "entry tags pathMapState_a/b",
+   "confidence": "HIGH",
+   "related_unresolved": [
+    "U-PROG-001"
+   ],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C043",
+   "statement": "RefreshPathToolbarState drives remote coins.a.b() and keys.a.b(); reward.a.c(), sections.a.a(), PostVisitWorker.a(), MainViewModel.H() all executed",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence_source": "E29",
+   "exact_reference": "entry tags coins_sync, keys_consume, reward_retrieve, sections_unlockState, postVisitWorker, mainViewModel_H",
+   "confidence": "HIGH",
+   "related_unresolved": [
+    "U-ECON-001",
+    "U-LIFE-001"
+   ],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C044",
+   "statement": "M09 captured 17 net events, all third-party SDK URLs or bundled jar:file: resources; zero Mimo /v1/ requests",
+   "evidence_class": "VERIFIED_NETWORK_OBSERVATION",
+   "evidence_source": "E29",
+   "exact_reference": "net events seq 99-684",
+   "confidence": "HIGH",
+   "related_unresolved": [
+    "U-NET-001"
+   ],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C045",
+   "statement": "M09 onboarding chain reached=false (stalled step 4/20); MainActivity reached via explicit intent; lesson matrix NOT executed; Practice/Leaderboard/Profile route screens contaminated by incomplete OnboardingActivity back stack",
+   "evidence_class": "VERIFIED_RUNTIME",
+   "evidence_source": "E29",
+   "exact_reference": "onboarding_chain_result seq 223; lesson_matrix_not_executed seq 527; route_tour_result seq 506",
+   "confidence": "HIGH",
+   "related_unresolved": [
+    "U-NAV-001",
+    "U-LESSON-001"
+   ],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  },
+  {
+   "id": "M09-C046",
+   "statement": "M05-inferred HTTP verbs corrected from DEX: @n=PATCH, @p=PUT, @b=DELETE (previously PUT/DELETE/POST-other)",
+   "evidence_class": "VERIFIED_STATIC",
+   "evidence_source": "ANALYSIS/HTTP_VERBS_RESOLVED.json",
+   "exact_reference": "Lge0/r0;->a @0xabb18 offsets 0xabbce/0xabc12/0xabb6c",
+   "confidence": "HIGH",
+   "related_unresolved": [],
+   "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a"
+  }
+ ],
+ "unresolved_question_ids": [
+  "U-ECON-001",
+  "U-LESSON-001",
+  "U-LIFE-001",
+  "U-NATIVE-001",
+  "U-NAV-001",
+  "U-NET-001",
+  "U-PROG-001",
+  "U-PROG-002",
+  "U-QUEUE-001",
+  "U-STATE-001",
+  "U-WEB-001"
+ ]
+}

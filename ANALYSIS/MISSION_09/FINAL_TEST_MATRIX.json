@@ -1,0 +1,155 @@
+{
+ "document": "MIMO 9.35 — FINAL TEST MATRIX (MISSION 09)",
+ "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+ "server_confirmed": 0,
+ "mission_09_run_id": "42077425594",
+ "previous_runs": [
+  "42042312640",
+  "42046336206",
+  "42049141553",
+  "42050715150"
+ ],
+ "experiments": [
+  {
+   "experiment": "WP1 / EXP-M09-001",
+   "scenario": "Reach MainActivity reliably with fixed instrumentation",
+   "initial_state": "fresh install, no state restore, Frida attached with API-36-safe hooks",
+   "expected_behavior": "direct Activity/Fragment hooks fire and the measured 20-tap chain lands on .ui.main.MainActivity",
+   "actual_behavior": "onboarding_chain reached=false (stalled step 4/20); MainActivity reached=true via explicit intent; 181 hooks, 72 entries, instrumentation_proof=true",
+   "result": "PASS_WITH_LIMITATION",
+   "evidence": [
+    "E29",
+    "E30",
+    "E11"
+   ],
+   "limitation": "Natural onboarding completion not reproduced on this build"
+  },
+  {
+   "experiment": "WP1 / EXP-M09-002",
+   "scenario": "All four bottom-navigation tabs",
+   "initial_state": "MainActivity foreground",
+   "expected_behavior": "Learn/Practice/Leaderboard/Profile each resolve to a destination with measured resource IDs",
+   "actual_behavior": "4 route taps executed with measured targets/bounds. Learn -> MainActivity (Full-Stack Developer / 1. Intro to Web Development). Practice/Leaderboard/Profile resumed an incomplete OnboardingActivity back stack -> screen contents UNKNOWN. NavigationBar.setActive destination map captured.",
+   "result": "PARTIAL",
+   "evidence": [
+    "E29",
+    "E14"
+   ],
+   "limitation": "U-NAV-001; M08 S234_resume_02_after.xml still verifies the guest Practice gate"
+  },
+  {
+   "experiment": "WP2 / EXP-M09-003",
+   "scenario": "Wrong answer, corrected answer, Continue, FTG snippet",
+   "initial_state": "ChapterActivity, lesson 151403 letter exercise",
+   "expected_behavior": "wrong -> \"Try again\" with no new progress row; correct -> \"Correct!\" and LessonProgress update",
+   "actual_behavior": "lesson_entry_result.reached_chapter=false; lesson_matrix_not_executed (ChapterActivity not reached); no answers guessed. M07 stage5/6 runtime matrix remains authoritative.",
+   "result": "NOT_EXECUTED",
+   "evidence": [
+    "E29",
+    "E06",
+    "E18"
+   ],
+   "limitation": "U-LESSON-001, U-WEB-001"
+  },
+  {
+   "experiment": "WP3 / EXP-M09-004",
+   "scenario": "Offline transition, force-stop, cold restart, queue retention",
+   "initial_state": "queued lesson_progress rows present",
+   "expected_behavior": "observe whether in_queue=1 rows are deleted or retained; capture SQL",
+   "actual_behavior": "Active default network: none -> cold start IntroSlidesActivity -> reconnect 102; before/after had 0 queued rows; BUT startup SQL hook captured DELETE FROM lesson_progress WHERE in_queue = 1 (seq 260) and repo_postUnsynced entry (seq 272, COROUTINE_SUSPENDED). This explains M07 2->0 and M08 run4 2->2 (MainActivity never reached).",
+   "result": "PASS_WITH_LIMITATION",
+   "evidence": [
+    "E29",
+    "E26",
+    "E27"
+   ],
+   "limitation": "No queued row existed in M09 to observe being deleted"
+  },
+  {
+   "experiment": "WP2 / static A6-A11",
+   "scenario": "Validator correctness from DEX + M07 runtime truth tables",
+   "initial_state": "M06 static decode + M07 Frida direct invocations",
+   "expected_behavior": "exact ordered-token / selected==correct / normalizer / list-equality semantics",
+   "actual_behavior": "A6-A11 reconstructed in COMPLETE_SYSTEM_MAP.json -> algorithm_inventory",
+   "result": "PASS",
+   "evidence": [
+    "E25",
+    "E32",
+    "M07 04"
+   ]
+  },
+  {
+   "experiment": "WP9 / curriculum",
+   "scenario": "Validate all 10,298 extracted tutorial JSON assets",
+   "initial_state": "original APK assets, 10 locales",
+   "expected_behavior": "0 parse failures, 0 missing refs, deterministic Track->Lesson index",
+   "actual_behavior": "10298 files, 18272 lessons, 37183 placements",
+   "result": "PASS",
+   "evidence": [
+    "E23",
+    "E24"
+   ]
+  },
+  {
+   "experiment": "WP6 / network boundary",
+   "scenario": "Capture Mimo backend /v1/ requests and responses",
+   "initial_state": "online emulator",
+   "expected_behavior": "distinguish client contract from server response",
+   "actual_behavior": "only third-party URLs captured; no Mimo /v1/ request or response observed",
+   "result": "BOUNDARY_ESTABLISHED",
+   "evidence": [
+    "E12",
+    "E22",
+    "E29",
+    "E20"
+   ]
+  },
+  {
+   "experiment": "WP5 / economy",
+   "scenario": "Observe input->calculation->output->storage for XP/coins/streak",
+   "initial_state": "natural guest state local_coins=200",
+   "expected_behavior": "a measurable award formula",
+   "actual_behavior": "local_coins constant across 14 snapshots; no XP column; remote DTOs only",
+   "result": "SERVER_DEPENDENT_BOUNDARY_ESTABLISHED",
+   "evidence": [
+    "E28",
+    "E11",
+    "E13"
+   ]
+  },
+  {
+   "experiment": "WP7 / auth",
+   "scenario": "Guest vs authenticated feature access",
+   "initial_state": "AuthenticationActivity Skip (guest)",
+   "expected_behavior": "document gates without bypass",
+   "actual_behavior": "Practice gate measured; no credentials used, no auth attempted",
+   "result": "PASS (boundary)",
+   "evidence": [
+    "E14",
+    "E19"
+   ]
+  },
+  {
+   "experiment": "WP8 / WebView bridge",
+   "scenario": "Enumerate JS->native messages and native->JS callbacks",
+   "initial_state": "shipped lesson-webview.js",
+   "expected_behavior": "complete message schema",
+   "actual_behavior": "5 kinds enumerated from asset; native bridge object name/methods NOT observed at runtime",
+   "result": "PARTIAL",
+   "evidence": [
+    "E33",
+    "E06"
+   ]
+  }
+ ],
+ "result_counts": {
+  "PASS_WITH_LIMITATION": 2,
+  "PARTIAL": 2,
+  "NOT_EXECUTED": 1,
+  "PASS": 2,
+  "BOUNDARY_ESTABLISHED": 1,
+  "SERVER_DEPENDENT_BOUNDARY_ESTABLISHED": 1,
+  "PASS (boundary)": 1
+ },
+ "mission_09_run_conclusion": "SUCCESS: instrumentation repaired and 72 real target method entries captured; onboarding/lesson/route limitations recorded explicitly, never fabricated."
+}
