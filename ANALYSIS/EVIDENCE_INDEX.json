@@ -4199,12 +4199,12 @@
   },
   "server_confirmed": 0,
   "counts": {
-   "total": 102,
+   "total": 112,
    "VERIFIED_STATIC": 49,
-   "VERIFIED_RUNTIME": 39,
-   "VERIFIED_BOTH": 2,
+   "VERIFIED_RUNTIME": 46,
+   "VERIFIED_BOTH": 3,
    "INFERRED": 3,
-   "UNKNOWN": 9
+   "UNKNOWN": 11
   },
   "evidence": [
    {
@@ -5573,6 +5573,144 @@
     "source_paths": [
      "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/UI_HIERARCHY/STEP-20.xml",
      "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/UI_HIERARCHY/STEP-21.xml"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": ""
+   },
+   {
+    "id": "M05-103",
+    "claim": "Run 42005358012 SUCCESS: first answer-state probe",
+    "classification": "VERIFIED_RUNTIME",
+    "source_paths": [
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42005358012/LOGS/INTERACTION_TRACE.txt",
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42005358012/README.txt"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": ""
+   },
+   {
+    "id": "M05-104",
+    "claim": "Incorrect answer in the real \"Guess the letter\" lesson: tapping Q shows red \"Try again\", disables Q, keeps R/D and Continue for retry",
+    "classification": "VERIFIED_RUNTIME",
+    "source_paths": [
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42005358012/SCREENSHOTS/LESSON-WRONG-01.png",
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42005358012/UI_HIERARCHY/LESSON-WRONG-01.xml"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "texts include \"Try again\"",
+    "notes": ""
+   },
+   {
+    "id": "M05-105",
+    "claim": "After the wrong answer, Continue advances to the next lesson: \"This is the code editor where we will write code. Let us jump in and start coding.\" with index.html and snippet <button>Like</button>",
+    "classification": "VERIFIED_RUNTIME",
+    "source_paths": [
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42005358012/UI_HIERARCHY/LESSON-CONTINUE.xml",
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42005358012/SCREENSHOTS/LESSON-CONTINUE.png"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": ""
+   },
+   {
+    "id": "M05-106",
+    "claim": "Run 42006697783 SUCCESS (final run); lesson phase found no quiz options because onboarding selected a different path",
+    "classification": "VERIFIED_RUNTIME",
+    "source_paths": [
+     "ANALYSIS/RUNTIME/MISSION_05/LOGS/INTERACTION_TRACE.txt"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": "Honest negative result; correct-answer state remains UNKNOWN."
+   },
+   {
+    "id": "M05-107",
+    "claim": "Onboarding answers determine the learning path: different taps produced track 274 \"Automating Tasks with AI\" / \"1. Plugins & Scheduled Tasks\" instead of track 219 \"Front-End Developer\"",
+    "classification": "VERIFIED_RUNTIME",
+    "source_paths": [
+     "ANALYSIS/RUNTIME/MISSION_05/UI_HIERARCHY/OFFLINE-01.xml",
+     "ANALYSIS/MISSION_05/EVIDENCE/RUNTIME_STATIC_MATCH.json"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": ""
+   },
+   {
+    "id": "M05-108",
+    "claim": "Offline cold start again resumed at AuthenticationActivity with the chosen path; offline path again shows coins 200, keys ∞, streak -, \"Connect to the internet to progress further\"",
+    "classification": "VERIFIED_RUNTIME",
+    "source_paths": [
+     "ANALYSIS/RUNTIME/MISSION_05/UI_HIERARCHY/OFFLINE-00.xml",
+     "ANALYSIS/RUNTIME/MISSION_05/SCREENSHOTS/OFFLINE-01.png"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": ""
+   },
+   {
+    "id": "M05-109",
+    "claim": "Offline PRACTICE OPTIONAL chapter \"Find New Customers with ChatGPT\" (CHAPTER 0/1, Start practicing) opens and renders several AI lessons (Luma for Teams, ideal customer, challenge checklist)",
+    "classification": "VERIFIED_RUNTIME",
+    "source_paths": [
+     "ANALYSIS/RUNTIME/MISSION_05/UI_HIERARCHY/OFFLINE-02.xml",
+     "ANALYSIS/RUNTIME/MISSION_05/UI_HIERARCHY/OFFLINE-04.xml",
+     "ANALYSIS/RUNTIME/MISSION_05/UI_HIERARCHY/OFFLINE-05.xml",
+     "ANALYSIS/RUNTIME/MISSION_05/UI_HIERARCHY/OFFLINE-06.xml"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": ""
+   },
+   {
+    "id": "M05-110",
+    "claim": "tutorial-4648.json lesson 152473 and tutorial-4672.json lessons 152919/152920 render as the runtime AI/ChatGPT lesson pages; tracks.json track 274 renders as the offline path header",
+    "classification": "VERIFIED_BOTH",
+    "source_paths": [
+     "ANALYSIS/MISSION_05/EVIDENCE/RUNTIME_STATIC_MATCH.json"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": "Inline <strong> tags split prose; not dynamic content."
+   },
+   {
+    "id": "M05-111",
+    "claim": "Correct-answer state / correct-answer rewards were NOT observed at runtime",
+    "classification": "UNKNOWN",
+    "source_paths": [
+     "ANALYSIS/MISSION_05/OPEN_QUESTIONS.md"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": ""
+   },
+   {
+    "id": "M05-112",
+    "claim": "Whether an answer submitted offline writes Room lesson_progress and whether in_queue sync replays",
+    "classification": "UNKNOWN",
+    "source_paths": [
+     "ANALYSIS/MISSION_05/OPEN_QUESTIONS.md"
     ],
     "class_or_method": "",
     "address_or_offset": "",

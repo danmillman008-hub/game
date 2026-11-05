@@ -20,6 +20,17 @@ APK `48ce1740…7c7a`, `com.getmimo` 9.35, `SERVER CONFIRMED = 0`.
 display. No server response is required to render correct/wrong feedback for
 interactive lessons.
 
+**`VERIFIED_RUNTIME` incorrect-answer state (run `42005358012`):** in the real
+"Guess the letter" lesson (`tutorial-904.json` lesson 151403), tapping the wrong
+option `Q` produced a red **"Try again"** message, disabled the `Q` button and
+kept `R`/`D` and `Continue` available for retry —
+`ANALYSIS/RUNTIME/MISSION_05/RUN_42005358012/SCREENSHOTS/LESSON-WRONG-01.png`
+and `…/UI_HIERARCHY/LESSON-WRONG-01.xml`. `Continue` then advanced to the next
+lesson ("This is the code editor where we'll write code…") —
+`LESSON-CONTINUE.*`. **Correct-answer state remains `UNKNOWN`**: the follow-up
+run `42006697783` selected a different path with no quiz options, so no correct
+answer was submitted. No claim is made about correct-state rewards or scoring.
+
 `INFERRED`: `lessonSolvedCorrectlyWithPartialMatch$1` implies a
 partial-credit/partial-match path; its condition is `UNKNOWN`.
 

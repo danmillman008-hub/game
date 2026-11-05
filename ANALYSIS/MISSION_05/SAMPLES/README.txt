@@ -5,9 +5,13 @@ No sample was authored, rewritten or reconstructed. Source path is on the first
 line of each text sample; the full asset inventory with SHA-256 of every
 non-curriculum asset is EVIDENCE/ASSET_MANIFEST.txt.
 
-  tracks_json_head.json           first track object from assets/lessons-en/tracks/tracks.json (v753)
-  test_tracks_json_head.json      first part of assets/testdata/test-tracks.json (v52 TEST FIXTURE)
-  test_tutorial_json_head.json    assets/testdata/test-tutorial.json (v52 fixture)
+  tracks_json_head.json           VALID JSON wrapper with a verbatim truncated
+                                 preview of the first track object (v753)
+  test_tracks_json_head.json      wrapper with verbatim preview of the v52 fixture
+  test_tutorial_json_head.json    wrapper with verbatim preview of the v52 fixture
+                                 (the "*_head.json" files are previews, not
+                                 complete JSON documents; their `preview` field
+                                 holds the exact bytes)
   testdata_127-0-1.html          shipped fixture showing spell/selection/fillTheGap + visible-if
   validatedinput_lesson.txt      real v753 lesson with <interaction type="validatedInput">
   fillthegap_lesson.txt          real v753 lesson with fillTheGap + hardModeContent
@@ -18,3 +22,5 @@ non-curriculum asset is EVIDENCE/ASSET_MANIFEST.txt.
                                  (truncated at 6000 chars, marked)
   executable_lesson.json         real v753 executableContent incl. solvedContent
   lesson-webview.js              verbatim assets/lesson-webview.js (JS<->native bridge)
+  runtime_matched_lesson_151403.txt          shipped tutorial-904 lesson rendered at runtime STEP-24
+  runtime_matched_executable_lesson_63259.json  shipped tutorial-2199 lesson rendered OFFLINE-03/05

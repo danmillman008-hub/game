@@ -24,6 +24,8 @@ APK `48ce1740…7c7a`, `com.getmimo` 9.35, Android 16 / API 36 / `pixel_7`.
 | Built-in **`Skip`** on the signup screen → `MainActivity` "Welcome to your learning path!" → `ChapterActivity` → **real lesson** "Guess the letter" | M05 `42003884423` | `STEP-21..24.png/.xml` |
 | Offline cold start resumes at `AuthenticationActivity` (onboarding state persisted across `am force-stop`) | M05 `42003884423` | `OFFLINE-00.*` |
 | Offline learning path shows red banner **"Connect to the internet to progress further"**; practice-optional chapter and executable lesson still open | M05 `42003884423` | `OFFLINE-01..05.*` |
+| **Incorrect-answer state**: tapping wrong option `Q` → red "Try again", `Q` disabled, retry available; `Continue` → next lesson | M05 `42005358012` | `RUN_42005358012/SCREENSHOTS/LESSON-WRONG-01.png`, `…/LESSON-CONTINUE.*` |
+| Different onboarding answers select track 274 **"Automating Tasks with AI"**; offline AI/ChatGPT lessons render (Luma for Teams, ideal customer, challenge checklist) | M05 `42006697783` | `OFFLINE-01..06.*`, `STEP-22.*` |
 | System ANR dialog over dimmed Mimo (resolved automation failure) | `41997137033` | `LOGS/SCREENSHOT_RUN_41997137033_ANR_OVERLAY.png` |
 
 `VERIFIED_RUNTIME` **stops here for run 1** (`42001925381`): the tap-picker
@@ -156,7 +158,7 @@ last lesson --> ChapterFinishedFragment --> PathMapFragment   INFERRED
 
 | State concern | Evidence |
 |---|---|
-| Correct / incorrect | `lessonSolvedCorrectly$1`, `lessonSolvedIncorrectly$1`, `lessonSolvedCorrectlyWithPartialMatch$1`, `showWrongFeedbackBlock$1`; DSL `visible-if="correct"/"wrong"` |
+| Correct / incorrect | DSL `visible-if="correct"/"wrong"`; **incorrect state `VERIFIED_RUNTIME`** ("Try again", option disabled, retry) in run `42005358012`; static hooks `lessonSolvedCorrectly$1`, `lessonSolvedIncorrectly$1`, `lessonSolvedCorrectlyWithPartialMatch$1`, `showWrongFeedbackBlock$1`. Correct state `UNKNOWN` |
 | Retry | `showWrongFeedbackBlock` + `LessonProgress.tries/attempts` + `getCorrectLessonsFirstTryCount` |
 | Completion | `ChapterCompletion`, `TutorialCompletion` Room rows; `SELECT COUNT(DISTINCT chapter_id)` |
 | Locked/unlocked | `GetPathMapState$invoke$3` reads `isCompleted`, `isRequired`, `getType`; `ChapterActivity$showUnlockAnimation`; mapping `UNKNOWN` |

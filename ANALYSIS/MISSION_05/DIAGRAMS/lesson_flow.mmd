@@ -18,7 +18,7 @@ flowchart TD
   S4 --> RES
   S5 --> RES{"result"}
   RES -->|correct / hasPassed| OK["visible-if=correct<br/>lessonSolvedCorrectly<br/>storeLessonProgress(in_queue=1)"]
-  RES -->|wrong / partial| NO["visible-if=wrong (19,101)<br/>showWrongFeedbackBlock<br/>tries++ / attempts++"]
+  RES -->|wrong / partial| NO["visible-if=wrong (19,101)<br/>showWrongFeedbackBlock<br/>tries++ / attempts++<br/>VERIFIED_RUNTIME: Try again, Q disabled, retry (42005358012)"]
   RES -->|partial match| PART["lessonSolvedCorrectlyWithPartialMatch<br/>condition UNKNOWN"]
   NO --> INPUT
   OK --> NEXT{"more lessons in chapter?"}
@@ -32,5 +32,8 @@ flowchart TD
 ```
 
 `VERIFIED_STATIC` for all shipped data, class names, SQL and DSL attributes.
-`INFERRED` for control-flow order. No lesson answer was submitted at runtime in
-M05 → **no `VERIFIED_RUNTIME` answer-state claim**.
+`INFERRED` for control-flow order. **One answer was submitted at runtime**
+(run `42005358012`): a wrong option produced "Try again" with that option
+disabled and retry available (`VERIFIED_RUNTIME`). The **correct-answer state
+was not observed** — run `42006697783` selected a different path with no quiz
+options — so it remains `UNKNOWN`. `SERVER CONFIRMED = 0`.

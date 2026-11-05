@@ -25,11 +25,12 @@ that exists, and a concrete method that would resolve it. No answer is invented.
 
 | # | Question | Status | Method |
 |---:|---|---|---|
-| 13 | Does an interactive lesson run and accept a correct answer offline? | A real interactive lesson **renders** (`VERIFIED_RUNTIME` STEP-24) and lesson content renders offline; answer submission not yet observed | run `42005358012` taps the `Q/R/D` options |
+| 13 | Does an interactive lesson run and accept a correct answer offline? | **Incorrect state `VERIFIED_RUNTIME`** (`42005358012`): wrong option `Q` → red "Try again", `Q` disabled, retry available; `Continue` → next lesson. **Correct state and offline answer submission remain `UNKNOWN`** — run `42006697783` selected a different path with no quiz options | replay the exact 24-tap chain of `42003884423` deterministically, then tap `D` before any other option |
 | 14 | Does progress survive force-stop / cold restart? | **Onboarding selections do** (`VERIFIED_RUNTIME` 42003884423 OFFLINE-00: cold start resumed at `AuthenticationActivity` with the chosen path, intro slides did not reappear). Per-lesson progress `UNKNOWN` | repeat a lesson then cold-start; compare path XML |
 | 15 | What exactly happens when wifi+data are disabled at cold start? | **PARTIALLY RESOLVED** (`VERIFIED_RUNTIME`): run `42002808217` — intro + 3 onboarding states byte-identical to online; run `42003884423` — cold start resumes at `AuthenticationActivity` (persisted state), `Skip` → learning path with red **"Connect to the internet to progress further"** banner, practice-optional chapter card and a fully rendered executable lesson. Still `UNKNOWN`: whether progression is truly blocked, code execution offline, chapter-end offline | a session that submits an answer/code offline |
 | 16 | Are the 4,257 external lesson URLs actually fetched at runtime? | `UNKNOWN` (content strings only). The two lessons observed at runtime use **inline** `<webview>` HTML/CSS/JS with no external asset | logcat/`dumpsys netstats` while rendering an affected lesson |
 | 17 | Which native lib renders onboarding? | only 4 load lines observed; `librive-android.so` not observed on that path | `nativeloader` logcat at each screen |
+| 18 | What exactly does "Connect to the internet to progress further" gate? | `VERIFIED_RUNTIME` banner in two offline runs, while path/chapter/lesson content still rendered | submit an answer and reach chapter end offline; observe whether progress is written and replayed |
 
 ## C. Deliberately out of scope (per mission definition)
 
@@ -53,7 +54,7 @@ that exists, and a concrete method that would resolve it. No answer is invented.
   narrow `_DISPATCH_TRIGGER` push fallback is used instead.
 - Pinned `android-emulator-runner` splits `script:` lines into separate `sh -c`
   invocations — the workflow `script:` **must remain one line**.
-- M04 E2B token endpoint returned 403 (`e2b-traffic-access-token missing`);
+- M04 E2B token endpoint returned 403 (a required traffic-access header was missing);
   method 1 is disproved. Two-chunk Drive transfer is the working path.
 - M05 run `42001925381` tap-picker bug (Compose descendant labels) made 0 taps;
   fixed in `42002808217`. Exact reason logged, not hidden.

@@ -121,9 +121,18 @@ and navigable offline. **`UNKNOWN`:** whether progression is truly blocked by th
 banner, whether code execution works offline, whether offline progress survives,
 and what the chapter-end screen does offline.
 
-`VERIFIED_RUNTIME` boundary: no lesson answer or completion screen was observed
-in runs 1–3 (run `42005358012` probes answer states). Therefore **no claim of
-runtime-verified offline lesson completion** is made. `SERVER CONFIRMED = 0`.
+**Additional runtime evidence:** run `42005358012` captured the
+`VERIFIED_RUNTIME` **incorrect-answer state** ("Try again", wrong option
+disabled, retry available) in a real lesson; the correct-answer state remains
+`UNKNOWN` because run `42006697783` selected a different path with no quiz
+options. Run `42006697783` also showed that a second shipped track
+(**274 "Automating Tasks with AI"**) and its AI/ChatGPT lessons render fully
+offline, confirming the path choice is driven by onboarding answers and that the
+result is not specific to the Front-End Developer track.
+
+`VERIFIED_RUNTIME` boundary: no lesson answer was submitted **offline** and no
+completion screen was observed. Therefore **no claim of runtime-verified offline
+lesson completion** is made. `SERVER CONFIRMED = 0`.
 
 **Evidence:** `CONTENT_MODEL.md`, `LOCAL_STORAGE_MODEL.md`, `LEARNING_ENGINE.md`,
 `APPLICATION_STATE_MACHINE.md`, `NATIVE_LIBRARIES.md`,

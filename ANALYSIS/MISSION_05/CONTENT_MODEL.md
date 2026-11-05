@@ -349,6 +349,16 @@ clickable nodes in `UI_HIERARCHY/STEP-24.xml`, which is why `uiautomator` can
 interact with them. This also confirms §4.3(5): interactive exercises are
 **local WebView content**, not server-rendered.
 
+**Further matches (run `42006697783`, `VERIFIED_BOTH`):** `tutorial-4648.json`
+lesson 152473 ("What makes it an agent") and `tutorial-4672.json` lessons
+152919/152920 ("A new job from Luma", "Who to look for") produced the runtime
+AI/ChatGPT lesson pages **while offline**, and `tracks.json` track 274
+"Automating Tasks with AI" / section "Plugins & Scheduled Tasks" produced the
+offline path header. Inline `<strong>` tags split prose in the shipped DSL, so a
+naive full-string search misses these matches — **this is not evidence of
+dynamic content**. After stripping markup, every observed sentence is present
+in the APK. `EVIDENCE/RUNTIME_STATIC_MATCH.json` (MATCH-3/4/5).
+
 ## 7. What is still `UNKNOWN` here
 
 - Exact `validatedInput`/`fillTheGap` index → token-stream algorithm

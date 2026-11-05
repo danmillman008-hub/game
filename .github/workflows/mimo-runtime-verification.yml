@@ -315,7 +315,7 @@ jobs:
           R=ANALYSIS/RUNTIME
           mkdir -p "$R"
           echo "run_id=$GITHUB_RUN_ID ref=$GITHUB_REF sha=$GITHUB_SHA" > "$R/RUN_INFO.txt"
-          if [ -d "$R/MISSION_04" ]; then
+          if [ -d "$R/MISSION_04" ] && ! grep -q "M05-INTERACTION-RUN" ANALYSIS/RUNTIME/_DISPATCH_TRIGGER 2>/dev/null; then
             cp "$R/RUN_INFO.txt" "$R/MISSION_04/RUN_INFO.txt"
           fi
           for P in "$R"/SCREENSHOTS/*.png; do
