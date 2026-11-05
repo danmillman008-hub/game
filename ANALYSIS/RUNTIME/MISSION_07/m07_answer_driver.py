@@ -6,7 +6,7 @@ Every tap target comes from a measured uiautomator XML dump. Correct/wrong
 labels come verbatim from shipped `interactiveContent` (see m07_lesson_plan.py).
 No guessed answers, no server calls, no APK modification.
 """
-import subprocess, pathlib, json, time, sys, hashlib, re
+import subprocess, pathlib, json, time, sys, hashlib, re, os
 R = pathlib.Path('ANALYSIS/RUNTIME/MISSION_07')
 STAGE = sys.argv[1] if len(sys.argv) > 1 else 'S3'
 UI = R/'UI'; EXP = R/'EXPERIMENTS'; LOG = EXP/('%s_ANSWER_LOG.jsonl' % STAGE)
@@ -58,10 +58,10 @@ def snap(label, state):
 
 # Preferred onboarding answers: choose the WEB/HTML path when that question is
 # shown; otherwise accept the shipped default. Never tap auth/purchase actions.
-# No path-specific preference: the generic M05 chooser reproducibly selected
-# "Data science" (-> Python Developer path -> shipped selection lesson 123420)
-# in run 42019353340. Classified lessons are detected by shipped answers.
-PREFER = []
+# Preferred onboarding labels may be supplied via M07_PREFER (| separated).
+# Default is the generic M05 chooser; "Data science" leads to the Python
+# Developer path and shipped selection lesson 123420.
+PREFER = [x for x in os.environ.get('M07_PREFER','').split('|') if x.strip()]
 def forbidden_keys(path):
     '''Never tap lesson close/report buttons or bottom tabs: they abort the
     experiment. Coordinates come from the measured XML bounds.'''
@@ -85,7 +85,9 @@ for i in range(1, 61):
     if not st: rec({'event':'dump_failed','step':name}); time.sleep(3); continue
     p = plan(st['path'])
     if p.get('type') in CLASSIFIED:
-        lesson, lxml = p, st['path']; rec({'event':'lesson_detected','step':name,'plan':p}); break
+        lesson, lxml = p, st['path']; rec({'event':'lesson_detected','step':name,'plan':p})
+        (EXP/(STAGE+'_LESSON_READY')).write_text(json.dumps(p,ensure_ascii=False),encoding='utf-8')
+        break
     BASE_AVOID |= forbidden_keys(st['path'])
     c, raw = choose(st['path'], PREFER, AVOID | BASE_AVOID)
     rec({'event':'nav','step':name,'texts':st['texts'][:14],'choice':raw})
