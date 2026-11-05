@@ -59,7 +59,12 @@ def cta():
 
 out = {'source_xml':xml_path,'clickable_count':sum(1 for n in nodes if n['clickable']),
        'texts':[n['label'] for n in nodes if n['label']][:40]}
-if 'Guess the letter' in raw or '_ O G' in raw:
+if 'Try again' in raw and '_ O G' in raw:
+    q, d = find('Q'), find('D')
+    out.update(type='WEBVIEW_LETTER_WRONG_FEEDBACK', shipped_ref='tutorial-904.json lesson 151403 (wrong feedback state)',
+               correct_letter='D', wrong=q, correct=d, cta=cta(),
+               explanation='WebView JS disabled the wrong button; D remains enabled')
+elif 'Guess the letter' in raw or '_ O G' in raw:
     q, d = find('Q'), find('D')
     if q and d:
         out.update(type='WEBVIEW_LETTER_151403', shipped_ref='assets/lessons-en/tracks/tutorial-904.json lesson 151403',
@@ -100,4 +105,6 @@ else:
         opts = [n for n in nodes if n['clickable'] and n['enabled'] and re.fullmatch(r'[A-Za-z0-9]{1,3}', n['label'])]
         out.update(type='UNCLASSIFIED_LESSON', option_labels=[n['label'] for n in opts],
                    note='no shipped correct-answer evidence: do NOT guess')
+if 'cta' not in out:
+    out['cta'] = cta()
 print(json.dumps(out, indent=1, ensure_ascii=False))

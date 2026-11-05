@@ -104,44 +104,92 @@ if not lesson:
     rec({'event':'ABORT','reason':'no classified lesson reached'})
     sys.exit(0)
 
-# ---------------- controlled answer experiment -----------------------------
-snap(STAGE+'_C_BEFORE_ANSWER', {'phase':'C','lesson':lesson['type'],'shipped_ref':lesson.get('shipped_ref')})
-rec({'event':'experiment_start','hypothesis':'wrong then correct answer executes distinct runtime paths and writes lesson_progress',
-     'prepared_state':'fresh install, lesson opened, no prior answer','operation':'one wrong tap then one correct tap'})
+# ---------------- controlled answer experiment(s) ---------------------------
+WEBVIEW_TYPES = ('WEBVIEW_LETTER_151403','WEBVIEW_LETTER_WRONG_FEEDBACK')
+SELECTION_TYPES = ('SELECTION_123420','SELECTION_SHIPPED','SELECTION_SHIPPED_UNRESOLVED')
 
-# 1) WRONG option
-w = lesson['wrong']
-tap(w['x'],w['y'],'WRONG:'+w['label'])
-st = dump(STAGE+'_D1_AFTER_WRONG_OPTION'); rec({'event':'ui','label':STAGE+'_D1_AFTER_WRONG_OPTION','texts':st['texts'][:20] if st else []})
-snap(STAGE+'_D1_AFTER_WRONG_OPTION', {'phase':'D1','operation':'tap wrong option'})
-
-# 2) Submit/Continue CTA after wrong (if enabled)
-p2 = plan(UI/(STAGE+'_D1_AFTER_WRONG_OPTION.xml'))
-c2 = p2.get('cta')
-if c2 and c2.get('enabled'):
-    tap(c2['x'],c2['y'],'CTA_AFTER_WRONG')
-    st = dump(STAGE+'_D2_AFTER_WRONG_SUBMIT'); rec({'event':'ui','label':STAGE+'_D2_AFTER_WRONG_SUBMIT','texts':st['texts'][:20] if st else []})
-    snap(STAGE+'_D2_AFTER_WRONG_SUBMIT', {'phase':'D2','operation':'submit wrong answer'})
-else:
-    rec({'event':'cta_skipped','reason':'no enabled CTA after wrong option','cta':c2})
-
-# 3) CORRECT option — re-read the current UI so coordinates are measured, not assumed
-cur = dump(STAGE+'_E0_BEFORE_CORRECT')
-p3 = plan(cur['path']) if cur else {'type':'PLAN_ERROR'}
-co = p3.get('correct') if p3.get('type') == lesson['type'] else None
-if not co:
-    rec({'event':'correct_option_unresolved','reason':'current UI is not the same lesson',
-         'current_plan_type':p3.get('type')})
-if co:
+def run_experiment(lesson, prefix):
+    """One wrong answer then one correct answer, with a DB snapshot around each
+    single operation. Correct/wrong labels come from shipped content only."""
+    rec({'event':'experiment_start','prefix':prefix,'lesson':lesson['type'],
+         'shipped_ref':lesson.get('shipped_ref'),
+         'hypothesis':'wrong then correct answer executes distinct runtime paths and writes lesson_progress',
+         'prepared_state':'fresh install, lesson opened, no prior answer',
+         'operation':'one wrong tap then one correct tap'})
+    snap(prefix+'_C_BEFORE_ANSWER', {'phase':'C','lesson':lesson['type'],
+                                     'shipped_ref':lesson.get('shipped_ref')})
+    w = lesson.get('wrong')
+    if not w:
+        rec({'event':'wrong_option_unresolved','prefix':prefix}); return
+    tap(w['x'],w['y'],'WRONG:'+w['label'])
+    st = dump(prefix+'_D1_AFTER_WRONG_OPTION')
+    rec({'event':'ui','label':prefix+'_D1_AFTER_WRONG_OPTION','texts':st['texts'][:20] if st else []})
+    snap(prefix+'_D1_AFTER_WRONG_OPTION', {'phase':'D1','operation':'tap wrong option'})
+    p2 = plan(UI/(prefix+'_D1_AFTER_WRONG_OPTION.xml'))
+    if lesson['type'] in WEBVIEW_TYPES:
+        # WebView lesson 151403 handles a wrong letter INSIDE the WebView JS:
+        # it only disables that button and shows "Try again". Submitting here
+        # would leave the lesson, so go straight to the correct letter.
+        rec({'event':'wrong_feedback','prefix':prefix,'mechanism':'WebView JS (button.disabled=true, result=Try again)',
+             'plan_type_after_wrong':p2.get('type'),'ui_texts':st['texts'][:14] if st else []})
+        co = p2.get('correct') or lesson.get('correct')
+    else:
+        c2 = p2.get('cta')
+        if c2 and c2.get('enabled'):
+            tap(c2['x'],c2['y'],'CTA_AFTER_WRONG')
+            st = dump(prefix+'_D2_AFTER_WRONG_SUBMIT')
+            rec({'event':'ui','label':prefix+'_D2_AFTER_WRONG_SUBMIT','texts':st['texts'][:20] if st else []})
+            snap(prefix+'_D2_AFTER_WRONG_SUBMIT', {'phase':'D2','operation':'submit wrong answer'})
+        else:
+            rec({'event':'cta_skipped','prefix':prefix,'reason':'no enabled CTA after wrong option','cta':c2})
+        cur = dump(prefix+'_E0_BEFORE_CORRECT')
+        p3 = plan(cur['path']) if cur else {'type':'PLAN_ERROR'}
+        co = p3.get('correct') if p3.get('type') in (SELECTION_TYPES+WEBVIEW_TYPES) else None
+        if not co:
+            rec({'event':'correct_option_unresolved','prefix':prefix,
+                 'reason':'current UI is not a classified lesson','current_plan_type':p3.get('type')})
+    if not co:
+        rec({'event':'experiment_incomplete','prefix':prefix,'reason':'no correct option measured'})
+        return
     tap(co['x'],co['y'],'CORRECT:'+co['label'])
-    st = dump(STAGE+'_E1_AFTER_CORRECT_OPTION'); rec({'event':'ui','label':STAGE+'_E1_AFTER_CORRECT_OPTION','texts':st['texts'][:20] if st else []})
-    snap(STAGE+'_E1_AFTER_CORRECT_OPTION', {'phase':'E1','operation':'tap correct option'})
-    p4 = plan(UI/(STAGE+'_E1_AFTER_CORRECT_OPTION.xml'))
+    st = dump(prefix+'_E1_AFTER_CORRECT_OPTION')
+    rec({'event':'ui','label':prefix+'_E1_AFTER_CORRECT_OPTION','texts':st['texts'][:20] if st else []})
+    snap(prefix+'_E1_AFTER_CORRECT_OPTION', {'phase':'E1','operation':'tap correct option'})
+    p4 = plan(UI/(prefix+'_E1_AFTER_CORRECT_OPTION.xml'))
     c4 = p4.get('cta')
     if c4 and c4.get('enabled'):
         tap(c4['x'],c4['y'],'CTA_AFTER_CORRECT')
-        st = dump(STAGE+'_F_AFTER_CORRECT_SUBMIT'); rec({'event':'ui','label':STAGE+'_F_AFTER_CORRECT_SUBMIT','texts':st['texts'][:20] if st else []})
-        snap(STAGE+'_F_AFTER_CORRECT_SUBMIT', {'phase':'F','operation':'submit correct answer'})
+        st = dump(prefix+'_F_AFTER_CORRECT_SUBMIT')
+        rec({'event':'ui','label':prefix+'_F_AFTER_CORRECT_SUBMIT','texts':st['texts'][:20] if st else []})
+        snap(prefix+'_F_AFTER_CORRECT_SUBMIT', {'phase':'F','operation':'submit correct answer'})
     else:
-        rec({'event':'cta_skipped','reason':'no enabled CTA after correct option','cta':c4})
-rec({'event':'experiment_complete','lesson':lesson['type']})
+        rec({'event':'cta_skipped','prefix':prefix,'reason':'no enabled CTA after correct option','cta':c4})
+    rec({'event':'experiment_complete','prefix':prefix,'lesson':lesson['type']})
+
+first_type = lesson['type']
+run_experiment(lesson, STAGE+'_1')
+
+# Look for a SECOND, differently-typed classified lesson so both the WebView
+# JS->native boundary and the native selection validator are exercised.
+rec({'event':'second_lesson_search','after':first_type})
+second = None
+for i in range(1, 26):
+    name = STAGE+'NAV2-%02d' % i
+    st = dump(name)
+    if not st: time.sleep(3); continue
+    pl = plan(st['path'])
+    if pl.get('type') in CLASSIFIED and pl.get('type') != first_type and pl.get('wrong') and pl.get('correct'):
+        second = pl; rec({'event':'second_lesson_detected','step':name,'plan':pl}); break
+    BASE_AVOID |= forbidden_keys(st['path'])
+    c, raw = choose(st['path'], PREFER, AVOID | BASE_AVOID)
+    rec({'event':'nav2','step':name,'texts':st['texts'][:12],'choice':raw})
+    if not c: time.sleep(4); continue
+    x,y,lab,mode = c
+    tap(x,y,lab); AVOID.add('%d,%d'%(x,y))
+    nt = dump(name+'b')
+    if nt and nt['sha'] != st['sha']: AVOID.clear()
+if second:
+    run_experiment(second, STAGE+'_2')
+else:
+    rec({'event':'second_lesson_not_found','note':'recorded as UNKNOWN, not inferred'})
+rec({'event':'driver_done'})
