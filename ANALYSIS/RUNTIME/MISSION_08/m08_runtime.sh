@@ -4,6 +4,8 @@
 set +e
 R=ANALYSIS/RUNTIME/MISSION_08
 M7=ANALYSIS/RUNTIME/MISSION_07
+# git does not track empty dirs: create every output dir on the runner first.
+mkdir -p "$R"/{ENV,EXPERIMENTS,LOGS,TRACES,TIMELINE,STATE,UI,FRIDA}
 APK="${RUNNER_TEMP:-/tmp}/MIMO_ORIGINAL.apk"
 E="$EXPECTED_APK_SHA256"
 T="$R/EXPERIMENTS/M08_TRACE.txt"
@@ -87,3 +89,4 @@ print(json.dumps({'document':'MISSION 08 unified runtime timeline','timeline':st
 PY
 cat "$R/LOGS/M08_SUMMARY.json"
 log "MISSION 08 COMPLETE"
+exit 0
