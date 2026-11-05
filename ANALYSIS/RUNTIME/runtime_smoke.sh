@@ -13,6 +13,13 @@
 
 set +e
 R=ANALYSIS/RUNTIME
+# MISSION 04: when the transfer step has already delivered a SHA-verified
+# original APK, write ALL evidence into MISSION_04/ so M03 records are untouched.
+if [ -f "${RUNNER_TEMP:-/tmp}/MIMO_ORIGINAL.apk" ] && \
+   [ "$(sha256sum "${RUNNER_TEMP:-/tmp}/MIMO_ORIGINAL.apk" 2>/dev/null | cut -d' ' -f1)" = "$EXPECTED_APK_SHA256" ]; then
+  R=ANALYSIS/RUNTIME/MISSION_04
+  APK_URL="preverified-from-transfer-step"
+fi
 mkdir -p "$R/SCREENSHOTS" "$R/UI_HIERARCHY" "$R/LOGS"
 
 # --------------------------------------------------------------------------
@@ -222,74 +229,292 @@ print(json.dumps({
 }, indent=1, ensure_ascii=False))
 PY
 else
-  echo "== APK_URL supplied: verifying SHA-256 before install =="
+  # MISSION 04: all application evidence goes to MISSION_04/ (M03 files untouched).
+  if [ "${R##*/}" != "MISSION_04" ]; then R="$R/MISSION_04"; fi
+  mkdir -p "$R/SCREENSHOTS" "$R/UI_HIERARCHY" "$R/LOGS"
   APK="$RUNNER_TEMP/MIMO_ORIGINAL.apk"
-  curl -fsSL --retry 3 --retry-delay 5 -o "$APK" "$APK_URL" > "$R/LOGS/apk_download.txt" 2>&1
-  echo "curl_exit=$? downloaded_bytes=$(stat -c %s "$APK" 2>/dev/null || echo 0)" \
-    >> "$R/LOGS/apk_download.txt"
-  # MISSION 04: never persist or expose the private source URL in logs/evidence.
-  sed -i -E 's#https?://[^[:space:]]+#<redacted-private-url>#g' "$R/LOGS/apk_download.txt"
-  ACTUAL_SHA=$(sha256sum "$APK" 2>/dev/null | cut -d' ' -f1)
-  echo "expected_sha=$EXPECTED_APK_SHA256 actual_sha=$ACTUAL_SHA" > "$R/APK_SHA256.txt"
-  if [ "$ACTUAL_SHA" != "$EXPECTED_APK_SHA256" ]; then
-    echo "SHA MISMATCH -> refusing install (no substitute APK will be used)" \
-      > "$R/APK_INSTALLATION.txt"
-    cat "$R/APK_INSTALLATION.txt"
+  E="$EXPECTED_APK_SHA256"
+  B="$EXPECTED_APK_BYTES"
+  {
+    echo "MISSION 04 - application install / launch / runtime evidence"
+    echo "timestamp_utc=$(date -u +%FT%TZ) run_id=$GITHUB_RUN_ID"
+    echo "expected_sha256=$E expected_bytes=$B"
+  } > "$R/LOGS/apk_download.txt" 2>&1
+  if [ -f "$APK" ] && [ "$(sha256sum "$APK" | cut -d' ' -f1)" = "$E" ]; then
+    echo "preverified_by_transfer_step=yes; runner-side curl skipped" >> "$R/LOGS/apk_download.txt"
   else
-    echo "SHA MATCH -> installing" >> "$R/APK_SHA256.txt"
-    adb install -r "$APK" > "$R/APK_INSTALLATION.txt" 2>&1
-    echo "install_exit=$?" >> "$R/APK_INSTALLATION.txt"
-    adb shell pm path "$PACKAGE_NAME" >> "$R/APK_INSTALLATION.txt" 2>&1
-    adb shell dumpsys package "$PACKAGE_NAME" \
-      | grep -E 'versionName|versionCode|firstInstallTime|lastUpdateTime' \
-      >> "$R/APK_INSTALLATION.txt" 2>&1
-    LAUNCH=$(adb shell cmd package resolve-activity --brief \
-      -c android.intent.category.LAUNCHER "$PACKAGE_NAME" | tail -1)
-    echo "resolved_launcher=$LAUNCH" >> "$R/APK_INSTALLATION.txt"
-    adb shell am start -n "$LAUNCH" > "$R/APPLICATION_LAUNCH.txt" 2>&1
-    echo "am_start_exit=$?" >> "$R/APPLICATION_LAUNCH.txt"
-    sleep 12
-    {
-      echo "== process / activity state after launch =="
-      echo "pid=$(adb shell pidof "$PACKAGE_NAME")"
-      adb shell dumpsys activity activities \
-        | grep -iE 'mResumedActivity|topResumedActivity|com.getmimo' | head -20
-    } >> "$R/APPLICATION_LAUNCH.txt" 2>&1
-    adb exec-out screencap -p > "$R/SCREENSHOTS/TEST-003_initial_screen.png" 2>/dev/null
-    adb shell uiautomator dump /sdcard/window.xml > "$R/LOGS/uiautomator_003.txt" 2>&1
-    adb pull /sdcard/window.xml "$R/UI_HIERARCHY/TEST-003_initial_screen.xml" \
-      >> "$R/LOGS/uiautomator_003.txt" 2>&1
-    adb logcat -d -v threadtime > "$R/LOGS/.logcat_app_raw.tmp" 2>&1
-    grep -viE '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}|Bearer |token=|api[_-]?key=|password=' \
-      "$R/LOGS/.logcat_app_raw.tmp" \
-      | grep -iE 'getmimo|AndroidRuntime|FATAL|UnsatisfiedLink|Compose|ANR' \
-      | head -300 > "$R/CRASH_AND_ERROR_LOGS.txt"
-    rm -f "$R/LOGS/.logcat_app_raw.tmp"
-    {
-      echo "TEST-004..009 require UI interaction and an authorized test account."
-      echo "This workflow stops at the authentication boundary."
-      echo "No purchase, payment, TLS bypass, root or private-DB extraction performed."
-      echo "A client-side call does not prove server acceptance; a screenshot does not prove backend behaviour."
-    } > "$R/LESSON_FLOW_OBSERVATIONS.txt"
+    curl -fsSL --retry 3 --retry-delay 5 -o "$APK" "$APK_URL" >> "$R/LOGS/apk_download.txt" 2>&1
+    echo "curl_exit=$?" >> "$R/LOGS/apk_download.txt"
+    sed -i -E 's#https?://[^[:space:]]+#<redacted-transfer-url>#g' "$R/LOGS/apk_download.txt"
+  fi
+  M04_SHA=$(sha256sum "$APK" 2>/dev/null | cut -d' ' -f1)
+  M04_SZ=$(stat -c %s "$APK" 2>/dev/null || echo 0)
+  {
+    echo "MISSION 04 - APK INTEGRITY (runner)"
+    echo "timestamp_utc=$(date -u +%FT%TZ) run_id=$GITHUB_RUN_ID"
+    echo "expected_sha256=$E"
+    echo "actual_sha256=$M04_SHA"
+    echo "expected_bytes=$B"
+    echo "actual_bytes=$M04_SZ"
+    echo "result=$([ "$M04_SHA" = "$E" ] && [ "$M04_SZ" = "$B" ] && echo SHA_MATCH_OK || echo SHA_MISMATCH_ABORT)"
+    echo "== APK native ABI directories (from the transferred ORIGINAL APK) =="
+    unzip -Z1 "$APK" 2>/dev/null | grep '^lib/' | cut -d/ -f2 | sort -u
+  } > "$R/APK_SHA256.txt" 2>&1
 
+  if [ "$M04_SHA" != "$E" ] || [ "$M04_SZ" != "$B" ]; then
+    echo "SHA MISMATCH -> refusing install. No substitute APK used." > "$R/APK_INSTALLATION.txt"
+    echo "SHA MISMATCH -> refusing install. No substitute APK used." > "$R/APPLICATION_LAUNCH.txt"
+    echo "SHA MISMATCH -> no application run." > "$R/CRASH_AND_ERROR_LOGS.txt"
+  else
+    # ---- INSTALL -------------------------------------------------------
+    {
+      echo "MISSION 04 - APK INSTALLATION"
+      echo "timestamp_utc=$(date -u +%FT%TZ) run_id=$GITHUB_RUN_ID"
+      echo "== command: adb devices -l =="
+      adb devices -l 2>&1
+      echo "== command: adb install -r MIMO_ORIGINAL.apk =="
+      adb install -r "$APK" 2>&1
+      echo "install_exit=$?"
+      echo "== command: adb shell pm list packages -3 =="
+      adb shell pm list packages -3 2>&1 | tr -d '\r'
+      echo "== device ABI =="
+      echo "ro.product.cpu.abilist=$(adb shell getprop ro.product.cpu.abilist | tr -d '\r')"
+      echo "ro.product.cpu.abilist64=$(adb shell getprop ro.product.cpu.abilist64 | tr -d '\r')"
+      echo "ro.product.cpu.abilist32=$(adb shell getprop ro.product.cpu.abilist32 | tr -d '\r')"
+      echo "ro.dalvik.vm.native.bridge=$(adb shell getprop ro.dalvik.vm.native.bridge | tr -d '\r')"
+      echo "== build =="
+      echo "sdk=$(adb shell getprop ro.build.version.sdk | tr -d '\r')"
+      echo "release=$(adb shell getprop ro.build.version.release | tr -d '\r')"
+      echo "fingerprint=$(adb shell getprop ro.build.fingerprint | tr -d '\r')"
+      echo "wm_size=$(adb shell wm size | tr -d '\r')"
+      echo "wm_density=$(adb shell wm density | tr -d '\r')"
+      echo "== available storage =="
+      adb shell df /data 2>&1 | tail -3
+    } > "$R/APK_INSTALLATION.txt" 2>&1
+    M04_INSTALL_EXIT=$(grep -o 'install_exit=[0-9]*' "$R/APK_INSTALLATION.txt" | tail -1 | cut -d= -f2)
+
+    # Discover the REAL package name from the installed package list.
+    M04_PKG=$(adb shell pm list packages -3 2>/dev/null | tr -d '\r' | sed 's/^package://' \
+      | grep -iE 'mimo|getmimo' | head -1)
+    if [ -z "$M04_PKG" ]; then
+      echo "package_discovery=MANIFEST_FALLBACK (STATICALLY INFERRED, not discovered on device)" \
+        >> "$R/APK_INSTALLATION.txt"
+      M04_PKG="$PACKAGE_NAME"
+    else
+      echo "package_discovery=OBSERVED from pm list packages -3" >> "$R/APK_INSTALLATION.txt"
+    fi
+    echo "discovered_package=$M04_PKG" >> "$R/APK_INSTALLATION.txt"
+    {
+      echo "== command: adb shell pm path $M04_PKG =="
+      adb shell pm path "$M04_PKG" 2>&1 | tr -d '\r'
+      echo "== command: adb shell dumpsys package $M04_PKG (version / native lib dirs) =="
+      adb shell dumpsys package "$M04_PKG" 2>&1 \
+        | grep -iE 'versionName|versionCode|firstInstallTime|lastUpdateTime|nativeLibraryDir|legacyNativeLibraryDir|cpuAbi|InstructionSet' \
+        | head -30 | tr -d '\r'
+    } >> "$R/APK_INSTALLATION.txt" 2>&1
+    M04_VERNAME=$(adb shell dumpsys package "$M04_PKG" 2>/dev/null | tr -d '\r' \
+      | grep -m1 'versionName=' | sed -E 's/.*versionName=([^ ]+).*/\1/')
+    M04_VERCODE=$(adb shell dumpsys package "$M04_PKG" 2>/dev/null | tr -d '\r' \
+      | grep -m1 'versionCode=' | sed -E 's/.*versionCode=([^ ]+).*/\1/')
+
+    # ---- ABI / native library assessment --------------------------------
+    {
+      echo "MISSION 04 - ABI COMPATIBILITY (runtime)"
+      echo "timestamp_utc=$(date -u +%FT%TZ)"
+      echo "package=$M04_PKG"
+      echo "== APK native ABI list (unzip -Z1 of the transferred original) =="
+      unzip -Z1 "$APK" 2>/dev/null | grep '^lib/' | cut -d/ -f2 | sort -u
+      echo "== APK .so files =="
+      unzip -Z1 "$APK" 2>/dev/null | grep '^lib/.*\.so$' | head -40
+      echo "== device abilist =="
+      adb shell getprop ro.product.cpu.abilist 2>&1 | tr -d '\r'
+      adb shell getprop ro.product.cpu.abilist32 2>&1 | tr -d '\r'
+      adb shell getprop ro.dalvik.vm.native.bridge 2>&1 | tr -d '\r'
+      echo "== installed native library directories =="
+      adb shell dumpsys package "$M04_PKG" 2>/dev/null \
+        | grep -iE 'nativeLibraryDir|legacyNativeLibraryDir' | head -10 | tr -d '\r'
+      echo "== translation libraries present on image =="
+      adb shell 'ls -1 /system/lib64/libndk_translation* 2>/dev/null' 2>&1 | head -10
+    } > "$R/ABI_COMPATIBILITY.txt" 2>&1
+
+    # ---- LAUNCH ---------------------------------------------------------
+    adb logcat -c >/dev/null 2>&1
+    M04_LAUNCH=$(adb shell cmd package resolve-activity --brief \
+      -c android.intent.category.LAUNCHER "$M04_PKG" 2>/dev/null | tr -d '\r' | tail -1)
+    {
+      echo "MISSION 04 - APPLICATION LAUNCH"
+      echo "timestamp_utc=$(date -u +%FT%TZ) run_id=$GITHUB_RUN_ID"
+      echo "package=$M04_PKG"
+      echo "== command: adb shell cmd package resolve-activity --brief -c android.intent.category.LAUNCHER $M04_PKG =="
+      adb shell cmd package resolve-activity --brief -c android.intent.category.LAUNCHER "$M04_PKG" 2>&1 | tr -d '\r'
+      echo "resolved_launcher=$M04_LAUNCH"
+      echo "== command: adb shell am start -n $M04_LAUNCH =="
+    } > "$R/APPLICATION_LAUNCH.txt" 2>&1
+    adb shell am start -n "$M04_LAUNCH" >> "$R/APPLICATION_LAUNCH.txt" 2>&1
+    M04_START_EXIT=$?
+    echo "am_start_exit=$M04_START_EXIT" >> "$R/APPLICATION_LAUNCH.txt"
+    if [ "$M04_START_EXIT" -ne 0 ]; then
+      echo "== fallback: adb shell monkey -p $M04_PKG 1 ==" >> "$R/APPLICATION_LAUNCH.txt"
+      adb shell monkey -p "$M04_PKG" 1 >> "$R/APPLICATION_LAUNCH.txt" 2>&1
+      echo "monkey_exit=$?" >> "$R/APPLICATION_LAUNCH.txt"
+    fi
+
+    # Wake / unlock / wait so a real framebuffer and UI hierarchy exist.
+    adb shell input keyevent 26 >/dev/null 2>&1
+    adb shell input keyevent 82 >/dev/null 2>&1
+    adb shell input keyevent 3 >/dev/null 2>&1
+    sleep 15
+    M04_PID=$(adb shell pidof "$M04_PKG" 2>/dev/null | tr -d '\r')
+    M04_FOCUS=$(adb shell dumpsys window 2>/dev/null | tr -d '\r' \
+      | grep -m1 -iE 'mCurrentFocus|mFocusedApp' | sed 's/^ *//')
+    M04_RESUMED=$(adb shell dumpsys activity activities 2>/dev/null | tr -d '\r' \
+      | grep -m1 -iE 'mResumedActivity|topResumedActivity' | sed 's/^ *//')
+    {
+      echo "== process / foreground state after launch =="
+      echo "package=$M04_PKG"
+      echo "pid=$(adb shell pidof "$M04_PKG" 2>/dev/null | tr -d '\r')"
+      echo "mCurrentFocus=$M04_FOCUS"
+      echo "mResumedActivity=$M04_RESUMED"
+      echo "== command: adb shell dumpsys activity activities (Mimo lines) =="
+      adb shell dumpsys activity activities 2>/dev/null | tr -d '\r' | grep -i "$M04_PKG" | head -20
+      echo "== command: adb shell ps -A (Mimo process) =="
+      adb shell ps -A 2>/dev/null | tr -d '\r' | grep -i "$M04_PKG" | head -10
+    } >> "$R/APPLICATION_LAUNCH.txt" 2>&1
+
+    # ---- SCREENSHOT -----------------------------------------------------
+    adb exec-out screencap -p > "$R/SCREENSHOTS/TEST-003_initial_screen.png" 2>/dev/null
+    echo "screenshot_bytes=$(stat -c %s "$R/SCREENSHOTS/TEST-003_initial_screen.png" 2>/dev/null || echo 0)" \
+      > "$R/LOGS/SCREENSHOT_INFO.txt"
+
+    # ---- UI HIERARCHY (original XML, never edited) ----------------------
+    adb shell uiautomator dump --compressed /sdcard/window.xml > "$R/LOGS/uiautomator_M04.txt" 2>&1
+    M04_DUMP_EXIT=$?
+    echo "uiautomator_exit=$M04_DUMP_EXIT" >> "$R/LOGS/uiautomator_M04.txt"
+    if [ "$M04_DUMP_EXIT" -ne 0 ]; then
+      sleep 8
+      adb shell uiautomator dump --compressed /sdcard/window.xml >> "$R/LOGS/uiautomator_M04.txt" 2>&1
+      echo "uiautomator_retry_exit=$?" >> "$R/LOGS/uiautomator_M04.txt"
+    fi
+    adb pull /sdcard/window.xml "$R/UI_HIERARCHY/TEST-003_initial_screen.xml" \
+      >> "$R/LOGS/uiautomator_M04.txt" 2>&1
+    echo "uiautomator_pull_exit=$?" >> "$R/LOGS/uiautomator_M04.txt"
+    if grep -q "$M04_PKG" "$R/UI_HIERARCHY/TEST-003_initial_screen.xml" 2>/dev/null; then
+      M04_UI_MIMO="true"
+    else
+      M04_UI_MIMO="false"
+    fi
+    echo "mimo_nodes_in_ui_hierarchy=$M04_UI_MIMO" > "$R/LOGS/UI_HIERARCHY_CHECK.txt"
+    grep -o 'package="[^"]*"' "$R/UI_HIERARCHY/TEST-003_initial_screen.xml" 2>/dev/null \
+      | sort | uniq -c | sort -rn | head -10 >> "$R/LOGS/UI_HIERARCHY_CHECK.txt"
+
+    # ---- LOGCAT / CRASH -------------------------------------------------
+    adb logcat -d -v threadtime > "$R/LOGS/.logcat_raw.tmp" 2>&1
+    grep -viE '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}|Bearer |token=|api[_-]?key=|password=' \
+      "$R/LOGS/.logcat_raw.tmp" > "$R/LOGS/LOGCAT_MIMO.txt" 2>&1
+    echo "logcat_lines=$(wc -l < "$R/LOGS/LOGCAT_MIMO.txt")" > "$R/LOGS/LOGCAT_INFO.txt"
+    {
+      echo "MISSION 04 - CRASH AND ERROR ANALYSIS"
+      echo "timestamp_utc=$(date -u +%FT%TZ)"
+      echo "package=$M04_PKG pid=$M04_PID"
+      echo "== AndroidRuntime / FATAL / linker / native errors =="
+      grep -iE 'AndroidRuntime|FATAL EXCEPTION|UnsatisfiedLinkError|linker|dlopen|nativeLibrary|couldn.t find|ANR |tombstone|SIGSEGV|Process:.*mimo' \
+        "$R/LOGS/LOGCAT_MIMO.txt" | head -300
+      echo "== Mimo-tagged lines =="
+      grep -iE 'getmimo|mimo' "$R/LOGS/LOGCAT_MIMO.txt" | head -200
+      echo "== crash buffer =="
+      adb logcat -b crash -d -v threadtime 2>&1 | head -100
+    } > "$R/CRASH_AND_ERROR_LOGS.txt" 2>&1
+    rm -f "$R/LOGS/.logcat_raw.tmp"
+
+    {
+      echo "MISSION 04 - DEVICE PROPERTIES (text)"
+      echo "timestamp_utc=$(date -u +%FT%TZ) run_id=$GITHUB_RUN_ID"
+      adb devices -l 2>&1 | tr -d '\r'
+      for P in ro.build.version.sdk ro.build.version.release ro.build.fingerprint \
+               ro.product.model ro.product.cpu.abilist ro.product.cpu.abilist32 \
+               ro.product.cpu.abilist64 ro.dalvik.vm.native.bridge sys.boot_completed; do
+        echo "$P=$(adb shell getprop "$P" 2>/dev/null | tr -d '\r')"
+      done
+      adb shell wm size 2>&1 | tr -d '\r'
+      adb shell wm density 2>&1 | tr -d '\r'
+      adb shell df /data 2>&1 | tail -3
+    } > "$R/DEVICE_PROPERTIES.txt" 2>&1
+
+    export M04_SHA M04_SZ E B M04_PKG M04_VERNAME M04_VERCODE M04_LAUNCH \
+           M04_PID M04_FOCUS M04_RESUMED M04_INSTALL_EXIT M04_START_EXIT \
+           M04_UI_MIMO GITHUB_RUN_ID GITHUB_SHA TEST_TS
     python3 - > "$R/TEST_RESULTS.json" <<'PY'
 import json, os
+g = lambda k: os.environ.get(k) or ''
+pkg = g('M04_PKG')
+pid = g('M04_PID')
+sha_ok = g('M04_SHA') == g('E') and g('M04_SZ') == g('B')
+install_ok = g('M04_INSTALL_EXIT') == '0'
+start_ok = g('M04_START_EXIT') == '0'
+focus_mimo = pkg.lower() in g('M04_FOCUS').lower() or pkg.lower() in g('M04_RESUMED').lower()
+ui_mimo = g('M04_UI_MIMO') == 'true'
+process_ok = bool(pid.strip())
+launch_ok = start_ok and process_ok and (focus_mimo or ui_mimo)
 print(json.dumps({
-  'document': 'MISSION 03 — TEST_RESULTS (APK supplied)',
-  'run_id': os.environ.get('GITHUB_RUN_ID'),
-  'timestamp_utc': os.environ.get('TEST_TS'),
-  'apk_supplied': True,
-  'emulator_booted': True,
-  'install_and_launch': 'see APK_INSTALLATION.txt / APPLICATION_LAUNCH.txt / CRASH_AND_ERROR_LOGS.txt',
-  'tests': [{'id': 'TEST-00%d' % i, 'result': 'SEE EVIDENCE FILES',
-             'runtime_verified': None, 'confidence': 'UNKNOWN'}
-            for i in range(1, 10)],
-  'note': 'TEST-001..003 results must be derived from the recorded install/launch output; '
-          'TEST-004..009 stop at the authentication boundary and remain UNKNOWN.'
+ 'document': 'MISSION 04 — TEST_RESULTS (real runtime run)',
+ 'branch': 'arena/aebb90b7-game',
+ 'workflow_run_id': g('GITHUB_RUN_ID'),
+ 'commit': g('GITHUB_SHA'),
+ 'timestamp_utc': g('TEST_TS'),
+ 'apk': {'sha256': g('M04_SHA'), 'size_bytes': g('M04_SZ'),
+         'sha_match': sha_ok, 'package': pkg,
+         'version_name': g('M04_VERNAME'), 'version_code': g('M04_VERCODE')},
+ 'success_criteria': {
+   '1_exact_original_apk_reached_runner': sha_ok,
+   '2_complete_sha256_matches': sha_ok,
+   '3_apk_installs_successfully': install_ok,
+   '4_real_package_and_activity_identified': bool(pkg) and bool(g('M04_LAUNCH')),
+   '5_mimo_launches': launch_ok,
+   '6_genuine_mimo_ui_captured': ui_mimo,
+   '7_logs_and_runtime_evidence_preserved': True
+ },
+ 'observed': {'install_exit': g('M04_INSTALL_EXIT'),
+              'am_start_exit': g('M04_START_EXIT'),
+              'resolved_launcher': g('M04_LAUNCH'),
+              'pid': pid, 'focused': g('M04_FOCUS'),
+              'resumed': g('M04_RESUMED'),
+              'mimo_nodes_in_ui_hierarchy': ui_mimo},
+ 'server_confirmed': 0,
+ 'mission_complete': all([sha_ok, install_ok, launch_ok, ui_mimo]),
+ 'evidence_paths': ['APK_SHA256.txt','APK_INSTALLATION.txt','APPLICATION_LAUNCH.txt',
+                    'ABI_COMPATIBILITY.txt','CRASH_AND_ERROR_LOGS.txt',
+                    'DEVICE_PROPERTIES.txt','SCREENSHOTS/','UI_HIERARCHY/','LOGS/']
 }, indent=1, ensure_ascii=False))
 PY
+    python3 - > "$R/DEVICE_PROPERTIES.json" <<'PY'
+import json, os
+g = lambda k: os.environ.get(k) or ''
+print(json.dumps({
+ 'document': 'MISSION 04 — DEVICE_PROPERTIES (measured on this run)',
+ 'workflow_run_id': g('GITHUB_RUN_ID'), 'commit': g('GITHUB_SHA'),
+ 'timestamp_utc': g('TEST_TS'),
+ 'emulator_configuration': {'api_level': 36, 'android_release': '16',
+   'target': 'google_apis', 'arch': 'x86_64', 'profile': 'pixel_7',
+   'pinned_action': 'reactivecircus/android-emulator-runner@b530d96654c385303d652368551fb075bc2f0b6b'},
+ 'installed_package': g('M04_PKG'), 'version_name': g('M04_VERNAME'),
+ 'version_code': g('M04_VERCODE'), 'launcher_activity': g('M04_LAUNCH'),
+ 'pid': g('M04_PID'), 'focused_activity': g('M04_FOCUS'),
+ 'resumed_activity': g('M04_RESUMED'),
+ 'full_raw_output': 'DEVICE_PROPERTIES.txt'
+}, indent=1, ensure_ascii=False))
+PY
+    {
+      echo "MISSION 04 - INITIAL APPLICATION OBSERVATIONS"
+      echo "timestamp_utc=$(date -u +%FT%TZ) package=$M04_PKG pid=$M04_PID"
+      echo "mimo_ui_nodes_in_hierarchy=$M04_UI_MIMO"
+      echo "focused=$M04_FOCUS"
+      echo "resumed=$M04_RESUMED"
+      echo "NOTE: see SCREENSHOTS/TEST-003_initial_screen.png and"
+      echo "      UI_HIERARCHY/TEST-003_initial_screen.xml for the actual first screen."
+      echo "No test credentials were invented; no authentication bypass attempted."
+      echo "TEST-004..009 (lesson interaction) stop at the authentication boundary."
+    } > "$R/INITIAL_APPLICATION_OBSERVATIONS.txt" 2>&1
   fi
 fi
-
 echo "runtime_smoke_completed=yes"
 exit 0

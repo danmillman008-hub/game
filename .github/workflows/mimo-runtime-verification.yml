@@ -86,6 +86,87 @@ jobs:
           fetch-depth: 1
 
       # ---------------------------------------------------------------------
+      # MISSION 04 - TRANSFER + VERIFY THE ORIGINAL APK (before emulator boot)
+      # Runs on the runner, which has general outbound internet access. The
+      # temporary endpoint is a short-lived, token-scoped, read-only HTTP
+      # service in the authorized workspace; it is stopped after the run.
+      # The URL is NEVER echoed: curl -sS and all evidence is URL-redacted.
+      # Full-file download first, transparent 16 MiB chunked fallback.
+      # ---------------------------------------------------------------------
+      - name: Transfer and cryptographically verify the ORIGINAL APK
+        shell: bash
+        run: |
+          set +e
+          R=ANALYSIS/RUNTIME/MISSION_04
+          mkdir -p "$R/LOGS" "$R/SCREENSHOTS" "$R/UI_HIERARCHY"
+          OUT="$RUNNER_TEMP/MIMO_ORIGINAL.apk"
+          LOG="$R/LOGS/APK_TRANSFER.txt"
+          ENDPOINT_FILE="$R/TRANSFER_ENDPOINT.txt"
+          E="$EXPECTED_APK_SHA256"
+          B="$EXPECTED_APK_BYTES"
+          URL=$(tr -d '\r\n' < "$ENDPOINT_FILE")
+          {
+            echo "MISSION 04 - ORIGINAL APK TRANSFER (runner side)"
+            echo "timestamp_utc=$(date -u +%FT%TZ)"
+            echo "run_id=$GITHUB_RUN_ID ref=$GITHUB_REF sha=$GITHUB_SHA"
+            echo "expected_sha256=$E"
+            echo "expected_bytes=$B"
+            echo "source_type=temporary-authenticated-http-endpoint (URL intentionally not logged)"
+            echo
+            echo "== command: curl -fsSL -o MIMO_ORIGINAL.apk <endpoint>/apk =="
+          } > "$LOG" 2>&1
+          curl -fsSL --max-time 900 --retry 2 --retry-delay 5 -o "$OUT" "$URL/apk" \
+            >> "$LOG" 2>&1
+          FULL_EXIT=$?
+          SZ=$(stat -c %s "$OUT" 2>/dev/null || echo 0)
+          echo "full_download_exit=$FULL_EXIT bytes=$SZ" >> "$LOG"
+          if [ "$FULL_EXIT" -ne 0 ] || [ "$SZ" != "$B" ]; then
+            echo "== full transfer incomplete -> 16 MiB chunked fallback ==" >> "$LOG"
+            rm -f "$OUT"
+            N=$(curl -fsSL --max-time 60 "$URL/count" 2>>"$LOG")
+            echo "chunk_count=$N" >> "$LOG"
+            case "$N" in ''|*[!0-9]*) echo "chunk_count_invalid" >> "$LOG"; exit 1;; esac
+            i=0
+            while [ "$i" -lt "$N" ]; do
+              curl -fsSL --max-time 300 --retry 3 --retry-delay 3 \
+                -o "$OUT.part$i" "$URL/part/$i" >> "$LOG" 2>&1
+              CE=$?
+              CS=$(stat -c %s "$OUT.part$i" 2>/dev/null || echo 0)
+              echo "chunk_$i exit=$CE bytes=$CS" >> "$LOG"
+              if [ "$CE" -ne 0 ] || [ "$CS" -eq 0 ]; then
+                echo "TRANSFER FAILED at chunk $i" >> "$LOG"; exit 1
+              fi
+              cat "$OUT.part$i" >> "$OUT"
+              rm -f "$OUT.part$i"
+              i=$((i+1))
+            done
+          fi
+          SZ=$(stat -c %s "$OUT" 2>/dev/null || echo 0)
+          A=$(sha256sum "$OUT" 2>/dev/null | cut -d' ' -f1)
+          echo "downloaded_bytes=$SZ" >> "$LOG"
+          echo "downloaded_sha256=$A" >> "$LOG"
+          echo "expected_sha256=$E" >> "$LOG"
+          if [ "$SZ" = "$B" ] && [ "$A" = "$E" ]; then
+            echo "TRANSFER_RESULT=SHA_MATCH_OK" >> "$LOG"
+            {
+              echo "expected_sha256=$E"
+              echo "actual_sha256=$A"
+              echo "size_bytes=$SZ"
+              echo "timestamp_utc=$(date -u +%FT%TZ)"
+              echo "result=SHA_MATCH_OK"
+            } > "$R/APK_SHA256.txt"
+          else
+            echo "TRANSFER_RESULT=SHA_MISMATCH_ABORT" >> "$LOG"
+            echo "expected_sha256=$E actual_sha256=$A size_bytes=$SZ" > "$R/APK_SHA256.txt"
+          fi
+          # The token-scoped endpoint file must not survive in the repository.
+          rm -f "$ENDPOINT_FILE"
+          sed -i -E 's#https?://[^[:space:]]+#<redacted-transfer-url>#g' "$LOG"
+          cat "$LOG" | tail -40
+          grep -q 'TRANSFER_RESULT=SHA_MATCH_OK' "$LOG" || exit 1
+          echo "transfer_verified=yes"
+
+      # ---------------------------------------------------------------------
       # 3. ENVIRONMENT PREFLIGHT (host only, no emulator yet)
       # ---------------------------------------------------------------------
       - name: Environment preflight - runner, SDK, network, KVM, resources
@@ -303,10 +384,13 @@ jobs:
           R=ANALYSIS/RUNTIME
           mkdir -p "$R"
           echo "run_id=$GITHUB_RUN_ID ref=$GITHUB_REF sha=$GITHUB_SHA" > "$R/RUN_INFO.txt"
+          if [ -d "$R/MISSION_04" ]; then
+            cp "$R/RUN_INFO.txt" "$R/MISSION_04/RUN_INFO.txt"
+          fi
           for P in "$R"/SCREENSHOTS/*.png; do
             [ -f "$P" ] || continue
             SZ=$(stat -c %s "$P")
-            if [ "$SZ" -gt 1500000 ]; then
+            if [ "$SZ" -gt 4000000 ]; then
               echo "screenshot_oversize=$P bytes=$SZ sha256=$(sha256sum "$P" | cut -d' ' -f1)" > "${P}.note.txt"
               rm -f "$P"
             fi

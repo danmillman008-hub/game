@@ -1,0 +1,78 @@
+{
+  "document": "MISSION 04 — TEST_RESULTS",
+  "mission": "ORIGINAL APK INSTALLATION & RUNTIME EXECUTION",
+  "status_vocabulary": ["OBSERVED", "STATICALLY INFERRED", "RUNTIME VERIFIED", "SERVER CONFIRMED", "UNKNOWN", "BLOCKED"],
+  "workflow_run_id": "41991896800",
+  "workflow_run_type": "presence-only authorized-source probe; NO emulator was booted in MISSION 04",
+  "emulator_configuration_reference_run_id": "41951780483",
+  "branch": "arena/aebb90b7-game",
+  "commit_at_probe": "1ca5d6bc2c761c3555d189d5160e8f8316362fed",
+  "timestamp_utc": "2026-11-05T08:06:06Z",
+  "emulator_configuration": {
+    "api_level": 36,
+    "android_release": "16",
+    "target": "google_apis",
+    "arch": "x86_64",
+    "profile": "pixel_7",
+    "headless": true,
+    "disable_animations": false,
+    "emulator_boot_timeout": 900,
+    "pinned_action": "reactivecircus/android-emulator-runner@b530d96654c385303d652368551fb075bc2f0b6b",
+    "source": "MISSION 03 run 41951780483 — carried over, NOT re-measured in MISSION 04"
+  },
+  "apk_expected": {
+    "sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+    "size_bytes": 142353499,
+    "package": "com.getmimo",
+    "version": "9.35"
+  },
+  "success_criteria": [
+    {"id": 1, "name": "Android emulator boot", "result": "RUNTIME VERIFIED", "note": "Verified in MISSION 03 run 41951780483; deliberately NOT repeated in M04 per section 13."},
+    {"id": 2, "name": "Original APK source authorization", "result": "BLOCKED", "note": "No authorized private endpoint, secret, credential or artifact source; see APK_SOURCE_AND_AUTHORIZATION.fa.md."},
+    {"id": 3, "name": "Complete APK SHA-256 verification on the runner", "result": "BLOCKED", "note": "Local workspace copy hash matched EV-0001 (OBSERVED), but no APK reached the runner, so the retrieval checksum step never ran."},
+    {"id": 4, "name": "APK installation", "result": "BLOCKED", "note": "adb install -r was NOT executed."},
+    {"id": 5, "name": "Package and launcher Activity identification", "result": "BLOCKED", "note": "Package name is STATICALLY INFERRED from the manifest; resolve-activity was not run."},
+    {"id": 6, "name": "Actual Mimo application launch", "result": "BLOCKED", "note": "No com.getmimo process or Activity ever existed on the device."},
+    {"id": 7, "name": "Mimo UI observation (genuine screenshots + UI hierarchy)", "result": "BLOCKED", "note": "MISSION_04/SCREENSHOTS and UI_HIERARCHY are intentionally empty."},
+    {"id": 8, "name": "Crash and native library assessment from real runtime logs", "result": "BLOCKED", "note": "No application runtime logs exist; ABI compatibility remains UNKNOWN."},
+    {"id": 9, "name": "Initial navigation observation", "result": "BLOCKED", "note": "Section 8 applies only if the application launches successfully."},
+    {"id": 10, "name": "Backend confirmation", "result": "UNKNOWN", "note": "SERVER CONFIRMED = 0; never inferable from client execution."}
+  ],
+  "counts": {
+    "criteria_total": 10,
+    "criteria_runtime_verified": 1,
+    "criteria_blocked": 8,
+    "criteria_unknown": 1,
+    "criteria_satisfied_in_mission_04": 0,
+    "server_confirmed_responses": 0,
+    "mimo_application_screenshots": 0,
+    "mimo_application_ui_hierarchy_files": 0,
+    "mimo_runtime_verified_behaviours": 0,
+    "apk_install_commands_executed": 0,
+    "apk_launch_commands_executed": 0,
+    "authorized_source_candidates_probed": 37,
+    "authorized_source_candidates_present": 0
+  },
+  "chain": [
+    "authorized APK source -> BLOCKED",
+    "download -> BLOCKED",
+    "runner-side SHA-256 match -> BLOCKED",
+    "adb install -r -> BLOCKED",
+    "resolve-activity -> BLOCKED",
+    "am start -> BLOCKED",
+    "Mimo process / Activity -> BLOCKED",
+    "screenshot / uiautomator XML -> BLOCKED",
+    "crash / linker analysis -> BLOCKED",
+    "initial navigation -> BLOCKED"
+  ],
+  "exact_blocker": "No authorized, runner-reachable source for the ORIGINAL Mimo 9.35 APK (142353499 B, sha256 48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a). Actions secrets cannot be enumerated (HTTP 403), cannot be created (HTTP 403 on public-key), and 37 candidate secret/variable names were all ABSENT. No private endpoint, no matching Actions artifact, no full APK in Google Drive, 0 shared drives, and Drive split parts are owner-only (making them public is explicitly forbidden).",
+  "evidence_paths": [
+    "ANALYSIS/RUNTIME/MISSION_04/LOGS/SECRET_PRESENCE_PROBE.txt",
+    "ANALYSIS/RUNTIME/MISSION_04/LOGS/APK_SOURCE_INVESTIGATION.txt",
+    "ANALYSIS/RUNTIME/MISSION_04/PREFLIGHT.fa.md",
+    "ANALYSIS/RUNTIME/MISSION_04/APK_SOURCE_AND_AUTHORIZATION.fa.md",
+    "ANALYSIS/RUNTIME/MISSION_04/APK_INTEGRITY.fa.md",
+    "ANALYSIS/RUNTIME/DEVICE_PROPERTIES.json"
+  ],
+  "mission_complete": false
+}
