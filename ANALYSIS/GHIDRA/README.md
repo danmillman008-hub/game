@@ -1,6 +1,6 @@
 # Ghidra / REA chain — corrected run
 
-- run 41939776550 / commit 5faa971ccbd5816d99a89400a71810e84ff27f43 / 2026-11-05T00:15:55Z
+- run 41940117221 / commit 610eb1c91e78777aec2adcc3af80c27ba1b836fd / 2026-11-05T00:19:35Z
 - Ghidra fetch: success; coverage: success; auto analysis: success; REA doctor: success
 - corrections applied: ALL 12 DEX imported (not 3); Auto Analysis ENABLED (no -noanalysis); full JDK 21 for REA separate from JDK 25 for Ghidra
 
@@ -22,48 +22,108 @@ DEX classes9.dex language=Dalvik:LE:32:DEX_KitKat memory_blocks=3 symbols=10 fun
 
 ## Control flow / function report
 ```
+=== PROGRAM classes.dex language=Dalvik:LE:32:DEX_KitKat functions=54530 symbols=681976 memory_blocks=3 ===
+-- namespace inventory (path map / chapter finished / progress) --
+  SYM EXTERNAL.dex-3774::android::view::MotionEvent::getXPrecision @EXTERNAL:000009f1
+  SYM EXTERNAL.dex-31573::com::getmimo::data::source::remote::progress::LessonProgressApi::postProgress @EXTERNAL:0000143c
+  SYM EXTERNAL.dex-35596::com::getmimo::ui::leaderboard::LeaderboardResultItemState::a @EXTERNAL:0000144e
+  SYM EXTERNAL.dex-35597::com::getmimo::ui::leaderboard::LeaderboardResultItemState::b @EXTERNAL:0000144f
+  SYM EXTERNAL.dex-35598::com::getmimo::ui::leaderboard::LeaderboardResultItemState::c @EXTERNAL:00001450
+  SYM EXTERNAL.dex-35599::com::getmimo::ui::leaderboard::LeaderboardResultItemState::e @EXTERNAL:00001451
+  SYM EXTERNAL.dex-35600::com::getmimo::ui::leaderboard::LeaderboardResultItemState::f @EXTERNAL:00001452
+  SYM EXTERNAL.dex-35601::com::getmimo::ui::leaderboard::LeaderboardResultItemState::g @EXTERNAL:00001453
+  SYM EXTERNAL.dex-35602::com::getmimo::ui::leaderboard::LeaderboardResultItemState::h @EXTERNAL:00001454
+  SYM EXTERNAL.dex-39302::com::getmimo::ui::streaks::ArcProgressView::setProgress @EXTERNAL:00001465
+  SYM EXTERNAL.dex-39303::com::getmimo::ui::streaks::DailySparksGoalProgressView::setSparkProgress @EXTERNAL:00001466
+  SYM EXTERNAL.dex-39305::com::getmimo::ui::streaks::bottomsheet::StreakBottomSheetViewModel$fetchProfileData$1::<init> @EXTERNAL:00001467
+  SYM EXTERNAL.dex-39316::com::getmimo::ui::streaks::bottomsheet::a::<init> @EXTERNAL:00001468
+  SYM EXTERNAL.dex-39317::com::getmimo::ui::streaks::bottomsheet::a::w0 @EXTERNAL:00001469
+  SYM EXTERNAL.dex-39376::com::getmimo::ui::widget::StreakWidgetRefreshWorker$doWork$1::<init> @EXTERNAL:00001484
+  SYM EXTERNAL.dex-50988::kotlin::coroutines::jvm::internal::BaseContinuationImpl::invokeSuspend @EXTERNAL:00002211
+  SYM string_data::_does_not_match_a_known_view_type_in_LeaderboardAdapter! @0000159c
+  SYM string_data::$updatedLessonProgress @0000206c
+  SYM string_data::()Lcom/getmimo/core/model/streak/Streak; @000024a8
+  SYM string_data::()Lcom/getmimo/data/model/leaderboard/Leaderboard; @000024e8
+  SYM string_data::()Lcom/getmimo/data/model/leaderboard/LeaderboardUserResult; @000024ec
+  SYM string_data::()Lcom/getmimo/data/model/publicprofile/ProfileLeaderboardInfo; @000024f4
+  SYM string_data::(III)Lcom/getmimo/data/model/leaderboard/LeaderboardLeague; @0000270c
+  SYM string_data::(JLjava/lang/String;ILjava/lang/String;I)Lcom/getmimo/data/model/reward/Reward; @00002a10
+  SYM string_data::(Lcom/getmimo/core/model/streak/Streak;Lcom/getmimo/core/model/streak/Streak;Ljava/util/List;)V @00003010
+  SYM string_data::(Lcom/getmimo/data/model/leaderboard/Leaderboard;)V @0000309c
+  SYM string_data::(Lcom/getmimo/data/model/leaderboard/LeaderboardUserResult;Z)V @000030a0
+  SYM string_data::(Lcom/getmimo/data/model/reward/Reward;)V @000030ac
+  SYM string_data::(Lcom/getmimo/data/model/room/LessonProgress;Z)V @000030b0
+  SYM string_data::(Lcom/getmimo/data/model/room/LessonProgress;ZZLd70/b;)Ljava/lang/Object; @000030b4
+  SYM string_data::(Lcom/getmimo/data/source/remote/progress/LessonProgressApi;Lye/g;Lye/c;Lnp/d;Lri/d;Lcom/getmimo/data/source/local/completion/a;Lcg/a;)V @000030e4
+  SYM string_data::(Lcom/getmimo/ui/lesson/interactive/LessonBundle;Lorg/joda/time/Instant;II)Lcom/getmimo/data/model/room/LessonProgress; @0000310c
+  SYM string_data::(Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;)Lcom/getmimo/core/model/streak/UserActivity; @00003350
+  SYM string_data::(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZJIIIIIZLcom/getmimo/data/model/publicprofile/ProfileLeaderboardInfo;Ljava/util/List;Lcom/getmimo/core/model/inapp/Subscription$Type;)V @000033cc
+  SYM string_data::(Lra0/y;)Lcom/getmimo/core/model/coins/Coins; @00003638
+  SYM string_data::(Lra0/y;)Lcom/getmimo/data/model/leaderboard/LeaderboardUserResult; @0000365c
+  SYM string_data::(Lvn/p;ILcom/getmimo/core/model/coins/Coins;Lvn/r;Z)Lvn/q; @00003770
+  SYM string_data::(Lze/a;Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;)V @000037e8
+  SYM string_data::,_activeStreakLength= @00003b5c
+  SYM string_data::,_bestStreak= @00003c94
+  SYM string_data::,_coins= @00003eb8
+  SYM string_data::,_createLessonProgressWhenSwiping= @00003fb4
+  SYM string_data::,_currentStreakState= @00004020
+  SYM string_data::,_dailyGoalCoinReward= @0000404c
+  SYM string_data::,_dailyGoalCoinsReward= @00004050
+  SYM string_data::,_dailyGoalRewardCoins= @00004054
+  SYM string_data::,_dailyStreakDataList= @00004060
+  SYM string_data::,_daysUntilNextWeekReward= @00004088
+  SYM string_data::,_formattedSparks= @0000435c
+  SYM string_data::,_hasFetchedLeaderboardAlready= @0000440c
+  SYM string_data::,_invitationSubscriptionRewardDays= @000045c8
+  SYM string_data::,_isStreakGoalReached= @0000471c
+  SYM string_data::,_leaderboardChapterEndState= @000047ec
+  SYM string_data::,_leaderboardFirstPlaceCount= @000047f0
+  SYM string_data::,_leaderboardInfo= @000047f4
+  SYM string_data::,_leaderboardSecondPlaceCount= @000047f8
+  SYM string_data::,_leaderboardSize= @000047fc
+  SYM string_data::,_leaderboardThirdPlaceCount= @00004800
 ```
 
 ## run.log tail
 ```
-    Android DEX/CDEX Switch Table Markup       4.461 secs
------------------------------------------------------
-     Total Time   60 secs
------------------------------------------------------
- (AutoAnalysisManager)  
-INFO  REPORT: Analysis succeeded for file: file:///home/runner/work/game/game/ANALYSIS/_INPUT/classes.dex (HeadlessAnalyzer)  
-INFO  REPORT: Execute script: MimoControlFlow.java  (HeadlessAnalyzer)  
-ERROR MimoControlFlow.java:30: error: method getFunctionCount in interface ghidra.program.model.listing.FunctionManager cannot be applied to given types;
-        int funcs = fm.getFunctionCount(true);
-                      ^
-  required: no arguments
-  found:    boolean
-  reason: actual and formal argument lists differ in length
-skipping /home/runner/work/game/game/ANALYSIS/_TOOLCHAIN/ghidra_scripts/MimoControlFlow.java
- (HeadlessAnalyzer)  
-ERROR REPORT SCRIPT ERROR: MimoControlFlow.java : The class could not be found. It must be the public class of the .java file: MimoControlFlow not found by 5014f706 [1] (HeadlessAnalyzer) ghidra.app.script.GhidraScriptLoadException: The class could not be found. It must be the public class of the .java file: MimoControlFlow not found by 5014f706 [1]
-	at ghidra.app.script.JavaScriptProvider.getScriptInstance(JavaScriptProvider.java:114)
-	at ghidra.app.util.headless.HeadlessAnalyzer.runScriptsList(HeadlessAnalyzer.java:929)
-	at ghidra.app.util.headless.HeadlessAnalyzer.analyzeProgram(HeadlessAnalyzer.java:1107)
-	at ghidra.app.util.headless.HeadlessAnalyzer.processFileWithImport(HeadlessAnalyzer.java:1606)
-	at ghidra.app.util.headless.HeadlessAnalyzer.processWithLoader(HeadlessAnalyzer.java:1770)
-	at ghidra.app.util.headless.HeadlessAnalyzer.processWithImport(HeadlessAnalyzer.java:1705)
-	at ghidra.app.util.headless.HeadlessAnalyzer.processWithImport(HeadlessAnalyzer.java:1795)
-	at ghidra.app.util.headless.HeadlessAnalyzer.processLocal(HeadlessAnalyzer.java:464)
-	at ghidra.app.util.headless.AnalyzeHeadless.launch(AnalyzeHeadless.java:211)
-	at ghidra.GhidraLauncher.launch(GhidraLauncher.java:78)
-	at ghidra.Ghidra.main(Ghidra.java:41)
-Caused by: java.lang.ClassNotFoundException: MimoControlFlow not found by 5014f706 [1]
-	at org.apache.felix.framework.BundleWiringImpl.findClassOrResourceByDelegation(BundleWiringImpl.java:1591)
-	at org.apache.felix.framework.BundleWiringImpl.access$300(BundleWiringImpl.java:79)
-	at org.apache.felix.framework.BundleWiringImpl$BundleClassLoader.loadClass(BundleWiringImpl.java:1976)
-	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:490)
-	at org.apache.felix.framework.Felix.loadBundleClass(Felix.java:2116)
-	at org.apache.felix.framework.BundleImpl.loadClass(BundleImpl.java:986)
-	at ghidra.app.script.JavaScriptProvider.loadClass(JavaScriptProvider.java:166)
-	at ghidra.app.script.JavaScriptProvider.getScriptInstance(JavaScriptProvider.java:97)
-	... 10 more
- 
+  505a0c60  const_4 v5,0x1
+  505a0c62  invoke_static 0xc6da,v7
+  505a0c68  const_4 v5,0x3
+  505a0c6a  goto 0x505a0cbe
+  505a0c6c  const_4 v5,0x6
+  505a0c6e  const_string v5,0x9453
+  505a0c72  move_object v3,v5
+  505a0c74  invoke_static 0xf15a,v3
+  505a0c7a  const_4 v5,0x3
+  505a0c7c  const_4 v5,0x0
+  505a0c7e  move v3,v5
+  505a0c80  return_object v3
+  505a0c82  const_4 v5,0x3
+  505a0c84  invoke_static 0xc6da,v7
+  505a0c8a  const_4 v5,0x6
+  505a0c8c  iget_object v7,[v3:0x8b5]
+  505a0c90  const_4 v5,0x6
+  505a0c92  iget_object v7,[v7:0x8ee]
+  505a0c96  const_4 v5,0x2
+  505a0c98  if_eqz v7,0x505a0cbc
+  505a0c9c  const_4 v5,0x7
+  505a0c9e  iput_boolean v2,[v3:0x8b4]
+  505a0ca2  const_4 v5,0x2
+  505a0ca4  iget_object v1,[v3:0x8b6]
+  505a0ca8  const_4 v5,0x3
+  505a0caa  invoke_virtual 0x9dbd,v7,v1,v3
+  505a0cb0  move_result_object v5
+  505a0cb2  move_object v3,v5
+  505a0cb4  if_ne v3,v0,0x505a0cbc
+  505a0cb8  const_4 v5,0x6
+  505a0cba  return_object v0
+  505a0cbc  const_4 v5,0x2
+  505a0cbe  sget_object v3,0xa878
+  505a0cc2  const_4 v5,0x1
+  505a0cc4  return_object v3
+  [instructions_shown=45]
+SCANNED_FUNCS=54530 BRANCH_INSNS=5678 INVOKE_INSNS=0 DUMPED_FUNCS=40 INSTRUCTIONS_SHOWN=1887
+ (GhidraScript)  
 INFO  ANALYZING changes made by post scripts: file:///home/runner/work/game/game/ANALYSIS/_INPUT/classes.dex (HeadlessAnalyzer)  
 INFO  REPORT: Post-analysis succeeded for file: file:///home/runner/work/game/game/ANALYSIS/_INPUT/classes.dex (HeadlessAnalyzer)  
 INFO  /classes.dex: file created (runner) (LocalFileSystem)  
