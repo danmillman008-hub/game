@@ -121,7 +121,7 @@ jobs:
           echo "coverage_headless_exit=${PIPESTATUS[0]}"
           } 2>&1 | tee -a ANALYSIS/GHIDRA/run.log
 
-      - name: AUTO ANALYSIS — full Ghidra analysis of the primary DEX
+      - name: AUTO ANALYSIS — full Ghidra analysis of ALL 12 DEX
         id: analysis
         if: steps.gh.outcome == 'success'
         shell: bash
@@ -132,10 +132,13 @@ jobs:
           rm -rf "$RUNNER_TEMP/ghidra_an"
           mkdir -p "$RUNNER_TEMP/ghidra_an"
           : > ANALYSIS/GHIDRA/CONTROL_FLOW.txt
-          echo "== analyzeHeadless WITH auto analysis, NO -noanalysis =="
+          echo "== analyzeHeadless WITH auto analysis, NO -noanalysis, ALL 12 DEX =="
           java -version 2>&1 | head -1
+          ARGS=()
+          for f in ANALYSIS/_INPUT/classes*.dex; do ARGS+=("$f"); done
+          echo "auto-analysing ${#ARGS[@]} DEX files"
           "$D/support/analyzeHeadless" "$RUNNER_TEMP/ghidra_an" Mimo935Analysis \
-            -import ANALYSIS/_INPUT/classes.dex \
+            -import "${ARGS[@]}" \
             -analysisTimeoutPerFile 900 \
             -scriptPath "$GITHUB_WORKSPACE/ANALYSIS/_TOOLCHAIN/ghidra_scripts" \
             -postScript MimoControlFlow.java -deleteProject 2>&1 | tee ANALYSIS/GHIDRA/auto_analysis.log
@@ -184,7 +187,7 @@ jobs:
             echo
             echo "- run ${{ github.run_id }} / commit ${{ github.sha }} / $(date -u +%FT%TZ)"
             echo "- Ghidra fetch: ${{ steps.gh.outcome }}; coverage: ${{ steps.coverage.outcome }}; auto analysis: ${{ steps.analysis.outcome }}; REA doctor: ${{ steps.rea.outcome }}"
-            echo "- corrections applied: ALL 12 DEX imported (not 3); Auto Analysis ENABLED (no -noanalysis); full JDK 21 for REA separate from JDK 25 for Ghidra"
+            echo "- corrections applied: ALL 12 DEX imported (not 3); Auto Analysis ENABLED on ALL 12 DEX (no -noanalysis); full JDK 21 for REA separate from JDK 25 for Ghidra"
             echo
             echo '## All-12 DEX coverage'
             echo '```'
