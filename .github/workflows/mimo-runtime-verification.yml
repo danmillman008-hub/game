@@ -264,169 +264,10 @@ jobs:
           emulator-boot-timeout: 900
           disable-animations: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
-          script: |
-            set +e
-            R=ANALYSIS/RUNTIME
-            mkdir -p "$R/SCREENSHOTS" "$R/UI_HIERARCHY" "$R/LOGS"
+          # ONE LINE ONLY: the action's parseScript() splits on newlines and
+          # executes each line in a separate `sh -c` (see runtime_smoke.sh header).
+          script: bash ANALYSIS/RUNTIME/runtime_smoke.sh
 
-            # ---------- device properties (REAL emulator, not the host) ----------
-            {
-              echo "MIMO MISSION 03 - EMULATOR / DEVICE OBSERVATIONS"
-              echo "timestamp_utc=$(date -u +%FT%TZ) run_id=$GITHUB_RUN_ID"
-              echo "requested_api=$REQUESTED_API requested_target=$REQUESTED_TARGET requested_arch=$REQUESTED_ARCH"
-              echo "ACTUAL_API=$(adb shell getprop ro.build.version.sdk)"
-              echo "ACTUAL_ANDROID=$(adb shell getprop ro.build.version.release)"
-              echo "MODEL=$(adb shell getprop ro.product.model)"
-              echo "adb_devices:"; adb devices -l
-              echo "cpu_abilist=$(adb shell getprop ro.product.cpu.abilist)"
-              echo "cpu_abilist64=$(adb shell getprop ro.product.cpu.abilist64)"
-              echo "native_bridge=$(adb shell getprop ro.dalvik.vm.native.bridge)"
-              echo "wm_size=$(adb shell wm size)"
-              echo "wm_density=$(adb shell wm density)"
-              echo "== ARM native-bridge translation libraries on this image =="
-              adb shell 'ls -1 /system/lib64/libndk_translation* /system/lib/arm64/*ndk* 2>/dev/null' 2>&1 | head -20
-              echo "== Google Play Services present? =="
-              adb shell pm path com.google.android.gms 2>&1 | head -3
-              echo "boot_completed=$(adb shell getprop sys.boot_completed)"
-            } | tee "$R/DEVICE_PROPERTIES.txt"
-
-            python3 - > "$R/DEVICE_PROPERTIES.json" <<'PY'
-            import json, os, subprocess
-            def sh(c):
-                try:
-                    return subprocess.check_output(c, shell=True, stderr=subprocess.STDOUT,
-                                                   text=True, timeout=60).strip()
-                except Exception as e:
-                    return 'ERROR: %s' % e
-            print(json.dumps({
-              'document': 'MISSION 03 — emulator DEVICE properties (RUNTIME VERIFIED device facts)',
-              'status': 'OBSERVED (emulator running)',
-              'timestamp_utc': sh('date -u +%FT%TZ'),
-              'requested_api': os.environ.get('REQUESTED_API'),
-              'actual_api': sh('adb shell getprop ro.build.version.sdk'),
-              'actual_android_release': sh('adb shell getprop ro.build.version.release'),
-              'model': sh('adb shell getprop ro.product.model'),
-              'adb_devices': sh('adb devices -l'),
-              'cpu_abilist': sh('adb shell getprop ro.product.cpu.abilist'),
-              'cpu_abilist64': sh('adb shell getprop ro.product.cpu.abilist64'),
-              'native_bridge': sh('adb shell getprop ro.dalvik.vm.native.bridge'),
-              'wm_size': sh('adb shell wm size'),
-              'wm_density': sh('adb shell wm density'),
-              'boot_completed': sh('adb shell getprop sys.boot_completed'),
-              'gms_package_path': sh('adb shell pm path com.google.android.gms 2>&1 | head -2'),
-              'apk_native_abis': ['arm64-v8a', 'armeabi-v7a'],
-              'arm64_system_image_used': os.environ.get('REQUESTED_ARCH') == 'arm64-v8a',
-              'compatibility_note': 'If cpu_abilist lacks arm64-v8a and native_bridge is empty, '
-                                    'the 12 ARM-only .so libraries of the original APK cannot load. '
-                                    'This stays UNKNOWN until the APK is installed and launched.'
-            }, indent=1, ensure_ascii=False))
-            PY
-
-            # ---------- TEST-000: real screenshot + UI hierarchy of booted device ----------
-            adb exec-out screencap -p > "$R/SCREENSHOTS/TEST-000_emulator_home.png" 2>/dev/null
-            echo "screenshot_bytes=$(stat -c %s "$R/SCREENSHOTS/TEST-000_emulator_home.png" 2>/dev/null || echo 0)"
-            adb shell uiautomator dump /sdcard/window.xml > "$R/LOGS/uiautomator_000.txt" 2>&1
-            adb pull /sdcard/window.xml "$R/UI_HIERARCHY/TEST-000_emulator_home.xml" >> "$R/LOGS/uiautomator_000.txt" 2>&1
-            adb logcat -d -v threadtime > "$R/LOGS/LOGCAT_000_system_sanitized.txt.tmp" 2>&1
-            grep -viE '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}|Bearer |token=|api[_-]?key=|password=' \
-              "$R/LOGS/LOGCAT_000_system_sanitized.txt.tmp" \
-              | head -300 > "$R/LOGS/LOGCAT_000_system_sanitized.txt"
-            rm -f "$R/LOGS/LOGCAT_000_system_sanitized.txt.tmp"
-
-            # ---------- TEST-001..009 --------------------------------------------------
-            export TEST_TS="$(date -u +%FT%TZ)"
-            export TEST_ACTUAL_API="$(adb shell getprop ro.build.version.sdk | tr -d '\r')"
-            BLOCK_REASON='No authorized, runner-reachable URL for the ORIGINAL Mimo 9.35 APK was supplied. '
-            BLOCK_REASON+='The APK (142353499 B) is not in the repository and must NOT be committed; '
-            BLOCK_REASON+='the Drive split parts are private (owner-only permission) and no private '
-            BLOCK_REASON+='download credentials / secrets are configured for this workflow.'
-            export BLOCK_REASON
-
-            if [ -z "$APK_URL" ]; then
-              echo "== APK_URL empty: TEST-001..TEST-009 BLOCKED (emulator-only run) =="
-              python3 - > "$R/TEST_RESULTS.json" <<'PY'
-            import json, os
-            tests = [
-              ('TEST-001', 'Install the original application'),
-              ('TEST-002', 'Launch the application'),
-              ('TEST-003', 'Verify the initial screen'),
-              ('TEST-004', 'Navigate to Learning Path'),
-              ('TEST-005', 'Capture the complete visible learning path'),
-              ('TEST-006', 'Select an accessible learning node'),
-              ('TEST-007', 'Open a lesson'),
-              ('TEST-008', 'Observe lesson progression'),
-              ('TEST-009', 'Observe completion (authorized test account required)'),
-            ]
-            print(json.dumps({
-              'document': 'MISSION 03 — TEST_RESULTS',
-              'run_id': os.environ.get('GITHUB_RUN_ID'),
-              'timestamp_utc': os.environ.get('TEST_TS'),
-              'requested_api': os.environ.get('REQUESTED_API'),
-              'actual_api': os.environ.get('TEST_ACTUAL_API'),
-              'device_profile': 'pixel_7 / headless / -no-window -gpu swiftshader_indirect',
-              'apk_sha256_expected': os.environ.get('EXPECTED_APK_SHA256'),
-              'emulator_booted': True, 'apk_supplied': False,
-              'tests': [{'id': i, 'name': n, 'result': 'BLOCKED',
-                         'runtime_verified': False,
-                         'reason': 'No authorized APK source available on the runner',
-                         'screenshot': None, 'log': None, 'confidence': 'UNKNOWN'}
-                        for i, n in tests],
-              'blocking_prerequisite': os.environ.get('BLOCK_REASON', ''),
-              'six_success_criteria': {
-                'emulator_booted': True,
-                'sdk_adb_android_version_device_specs_proven': True,
-                'apk_installed': False, 'app_launched': False,
-                'ui_observed': False, 'user_interaction_tested': False,
-                'backend_behavior_verified': False
-              }
-            }, indent=1, ensure_ascii=False))
-            PY
-            else
-              echo "== APK_URL supplied: verifying SHA-256 before install =="
-              APK="$RUNNER_TEMP/MIMO_ORIGINAL.apk"
-              curl -fL --retry 3 --retry-delay 5 -o "$APK" "$APK_URL" \
-                > "$R/LOGS/apk_download.txt" 2>&1
-              echo "curl_exit=$? downloaded_bytes=$(stat -c %s "$APK" 2>/dev/null || echo 0)" \
-                >> "$R/LOGS/apk_download.txt"
-              ACTUAL_SHA=$(sha256sum "$APK" 2>/dev/null | cut -d' ' -f1)
-              echo "expected_sha=$EXPECTED_APK_SHA256 actual_sha=$ACTUAL_SHA" > "$R/APK_SHA256.txt"
-              if [ "$ACTUAL_SHA" != "$EXPECTED_APK_SHA256" ]; then
-                echo "SHA MISMATCH -> refusing install" | tee "$R/APK_INSTALLATION.txt"
-                exit 3
-              fi
-              echo "SHA MATCH -> installing" >> "$R/APK_SHA256.txt"
-              adb install -r "$APK" > "$R/APK_INSTALLATION.txt" 2>&1
-              echo "install_exit=$?" >> "$R/APK_INSTALLATION.txt"
-              adb shell pm path "$PACKAGE_NAME" >> "$R/APK_INSTALLATION.txt" 2>&1
-              adb shell dumpsys package "$PACKAGE_NAME" \
-                | grep -E 'versionName|versionCode|firstInstallTime|lastUpdateTime' \
-                >> "$R/APK_INSTALLATION.txt" 2>&1
-              LAUNCH=$(adb shell cmd package resolve-activity --brief -c android.intent.category.LAUNCHER "$PACKAGE_NAME" | tail -1)
-              echo "resolved_launcher=$LAUNCH" >> "$R/APK_INSTALLATION.txt"
-              adb shell am start -n "$LAUNCH" > "$R/APPLICATION_LAUNCH.txt" 2>&1
-              sleep 12
-              {
-                echo "== process / activity state after launch =="
-                adb shell pidof "$PACKAGE_NAME"
-                adb shell dumpsys activity activities | grep -iE 'mResumedActivity|topResumedActivity|com.getmimo' | head -20
-              } >> "$R/APPLICATION_LAUNCH.txt" 2>&1
-              adb exec-out screencap -p > "$R/SCREENSHOTS/TEST-003_initial_screen.png" 2>/dev/null
-              adb shell uiautomator dump /sdcard/window.xml > "$R/LOGS/uiautomator_003.txt" 2>&1
-              adb pull /sdcard/window.xml "$R/UI_HIERARCHY/TEST-003_initial_screen.xml" \
-                >> "$R/LOGS/uiautomator_003.txt" 2>&1
-              adb logcat -d -v threadtime > "$R/LOGS/LOGCAT_APP_RAW.tmp" 2>&1
-              grep -viE '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}|Bearer |token=|api[_-]?key=|password=' \
-                "$R/LOGS/LOGCAT_APP_RAW.tmp" | grep -iE 'getmimo|AndroidRuntime|FATAL|UnsatisfiedLink|Compose' \
-                | head -300 > "$R/LOGS/CRASH_AND_ERROR_LOGS.txt"
-              rm -f "$R/LOGS/LOGCAT_APP_RAW.tmp"
-              echo "NOTE: TEST-004..009 require UI interaction and an authorized account; "
-              echo "      this workflow stops at the authentication boundary." \
-                > "$R/LESSON_FLOW_OBSERVATIONS.txt"
-              echo "      No purchase, payment, TLS bypass, root or private-DB extraction performed." \
-                >> "$R/LESSON_FLOW_OBSERVATIONS.txt"
-            fi
-
-      # ---------------------------------------------------------------------
       # The runner (unlike this sandbox) can reach the GitHub log blob host.
       # Capture the failed step's exact output into committed evidence.
       # ---------------------------------------------------------------------
@@ -441,17 +282,12 @@ jobs:
           JOB_ID=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/jobs" \
             --jq '.jobs[0].id' 2>/dev/null)
           echo "job_id=$JOB_ID" > "$R/LOGS/EMULATOR_FAILURE_EXCERPT.txt"
-          LOC=$(gh api -i "repos/$GITHUB_REPOSITORY/actions/jobs/$JOB_ID/logs" 2>&1 \
-            | grep -oE 'https://productionresultssa[0-9]+\.blob\.core\.windows\.net/[^"[:space:]]+' | head -1)
-          if [ -n "$LOC" ]; then
-            curl -sSL -m 90 "$LOC" -o "$R/LOGS/JOB_LOG_FAILED.txt" 2>&1
-            echo "job_log_bytes=$(stat -c %s "$R/LOGS/JOB_LOG_FAILED.txt" 2>/dev/null || echo 0)" \
-              >> "$R/LOGS/EMULATOR_FAILURE_EXCERPT.txt"
-            grep -iE 'error|fail|fatal|not found|exception|exit code|emulator|avd|sdkmanager|kvm|libncurses' \
-              "$R/LOGS/JOB_LOG_FAILED.txt" | tail -160 >> "$R/LOGS/EMULATOR_FAILURE_EXCERPT.txt" 2>&1
-          else
-            echo "log_location_unavailable" >> "$R/LOGS/EMULATOR_FAILURE_EXCERPT.txt"
-          fi
+          gh api -i "repos/$GITHUB_REPOSITORY/actions/jobs/$JOB_ID/logs" \
+            > "$R/LOGS/JOB_LOG_FAILED.txt" 2>&1 || true
+          echo "job_log_bytes=$(stat -c %s "$R/LOGS/JOB_LOG_FAILED.txt" 2>/dev/null || echo 0)" \
+            >> "$R/LOGS/EMULATOR_FAILURE_EXCERPT.txt"
+          grep -iE 'error|fail|fatal|not found|exception|exit code|emulator|avd|sdkmanager|kvm|libncurses' \
+            "$R/LOGS/JOB_LOG_FAILED.txt" | tail -160 >> "$R/LOGS/EMULATOR_FAILURE_EXCERPT.txt" 2>&1
           cat "$R/LOGS/EMULATOR_FAILURE_EXCERPT.txt" | tail -60
 
       # ---------------------------------------------------------------------
