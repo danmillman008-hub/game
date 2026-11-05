@@ -1,13 +1,28 @@
 {
  "document": "MISSION 03 — TEST_RESULTS",
- "run_id": "41950695024",
- "timestamp_utc": "2026-11-05T01:49:19Z",
+ "run_id": "41951780483",
+ "timestamp_utc": "2026-11-05T01:58:26Z",
  "requested_api": "36",
  "actual_api": "36",
  "device_profile": "pixel_7 / headless / -no-window -gpu swiftshader_indirect",
  "apk_sha256_expected": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
  "emulator_booted": true,
  "apk_supplied": false,
+ "device_observation": {
+  "id": "TEST-000",
+  "result": "RUNTIME VERIFIED",
+  "name": "Boot emulator and observe the DEVICE (not the Mimo application)",
+  "api": "36",
+  "profile": "pixel_7",
+  "screenshot": "SCREENSHOTS/TEST-000_emulator_home.png",
+  "logs": [
+   "DEVICE_PROPERTIES.json",
+   "LOGS/DISPLAY_STATE.txt",
+   "LOGS/LOGCAT_000_system_sanitized.txt",
+   "LOGS/uiautomator_000.txt"
+  ],
+  "note": "System Pixel launcher observed; no com.getmimo UI was observed."
+ },
  "tests": [
   {
    "id": "TEST-001",
@@ -101,13 +116,14 @@
   }
  ],
  "blocking_prerequisite": "No authorized, runner-reachable URL for the ORIGINAL Mimo 9.35 APK was supplied. The APK (142353499 B) is not in the repository and must NOT be committed; the Google Drive split parts are private (owner-only permission, verified via Drive connector) and no private download credentials / Actions secrets are configured for this workflow. The GitHub release apk-latest contains unrelated stock-* test builds, not Mimo 9.35.",
+ "sdk_adb_android_version_device_specs_proven": true,
  "six_success_criteria": {
-  "emulator_booted": true,
-  "sdk_adb_android_version_device_specs_proven": true,
+  "emulator_booted_and_device_proven": true,
   "apk_installed": false,
   "app_launched": false,
-  "ui_observed": false,
+  "ui_observed": "PARTIAL: system launcher only, Mimo UI UNKNOWN",
   "user_interaction_tested": false,
   "backend_behavior_verified": false
- }
+ },
+ "label_note": "RUNTIME VERIFIED entries above refer ONLY to the runner/emulator device, never to Mimo application behaviour."
 }
