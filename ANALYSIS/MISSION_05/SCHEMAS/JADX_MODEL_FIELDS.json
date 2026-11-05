@@ -1,0 +1,1305 @@
+{
+ "content_model": {
+  "TracksJson.java": {
+   "private_fields": [
+    {
+     "type": "long",
+     "name": "publishSetVersion"
+    },
+    {
+     "type": "List<TrackJson>",
+     "name": "tracks"
+    }
+   ],
+   "static_fields": [
+    {
+     "type": "Companion",
+     "name": "INSTANCE"
+    }
+   ],
+   "constructors": [
+    "kotlin.jvm.internal.c r1",
+    "int r1, long r2, java.util.List r4, gb0.j1 r5"
+   ],
+   "enum_like": []
+  },
+  "TrackJson.java": {
+   "private_fields": [
+    {
+     "type": "String",
+     "name": "descriptionContent"
+    },
+    {
+     "type": "String",
+     "name": "iconBanner"
+    },
+    {
+     "type": "long",
+     "name": "id"
+    },
+    {
+     "type": "boolean",
+     "name": "isHidden"
+    },
+    {
+     "type": "boolean",
+     "name": "isNew"
+    },
+    {
+     "type": "List<SectionJson>",
+     "name": "sections"
+    },
+    {
+     "type": "String",
+     "name": "title"
+    },
+    {
+     "type": "long",
+     "name": "version"
+    }
+   ],
+   "static_fields": [
+    {
+     "type": "Companion",
+     "name": "INSTANCE"
+    }
+   ],
+   "constructors": [
+    "kotlin.jvm.internal.c r1",
+    "int r1, long r2, long r4, java.lang.String r6, java.lang.String r7, boolean r8, boolean r9, java.lang.String r10, java.util.List r11, gb0.j1 r12"
+   ],
+   "enum_like": []
+  },
+  "Track.java": {
+   "private_fields": [
+    {
+     "type": "String",
+     "name": "descriptionContent"
+    },
+    {
+     "type": "String",
+     "name": "iconBanner"
+    },
+    {
+     "type": "long",
+     "name": "id"
+    },
+    {
+     "type": "boolean",
+     "name": "isHidden"
+    },
+    {
+     "type": "boolean",
+     "name": "isNew"
+    },
+    {
+     "type": "List<Section>",
+     "name": "sections"
+    },
+    {
+     "type": "String",
+     "name": "title"
+    },
+    {
+     "type": "g",
+     "name": "tutorials"
+    },
+    {
+     "type": "long",
+     "name": "version"
+    }
+   ],
+   "static_fields": [
+    {
+     "type": "Companion",
+     "name": "INSTANCE"
+    }
+   ],
+   "constructors": [
+    "kotlin.jvm.internal.c r1",
+    "long r1, long r3, java.lang.String r5, java.lang.String r6, boolean r7, boolean r8, java.lang.String r9, java.util.List<com.getmimo.data.content.model.track.Section> r10"
+   ],
+   "enum_like": []
+  },
+  "Section.java": {
+   "private_fields": [
+    {
+     "type": "String",
+     "name": "description"
+    },
+    {
+     "type": "g",
+     "name": "hasProgress"
+    },
+    {
+     "type": "int",
+     "name": "index"
+    },
+    {
+     "type": "String",
+     "name": "name"
+    },
+    {
+     "type": "List<Tutorial>",
+     "name": "tutorials"
+    }
+   ],
+   "static_fields": [],
+   "constructors": [
+    "java.lang.String r1, java.lang.String r2, java.util.List<com.getmimo.data.content.model.track.Tutorial> r3, int r4",
+    "java.lang.String r1, java.lang.String r2, java.util.List r3, int r4, int r5, kotlin.jvm.internal.c r6"
+   ],
+   "enum_like": []
+  },
+  "SectionJson.java": {
+   "private_fields": [
+    {
+     "type": "String",
+     "name": "description"
+    },
+    {
+     "type": "int",
+     "name": "endIndex"
+    },
+    {
+     "type": "String",
+     "name": "name"
+    },
+    {
+     "type": "int",
+     "name": "startIndex"
+    },
+    {
+     "type": "List<Long>",
+     "name": "tutorialIds"
+    }
+   ],
+   "static_fields": [
+    {
+     "type": "Companion",
+     "name": "INSTANCE"
+    }
+   ],
+   "constructors": [
+    "kotlin.jvm.internal.c r1",
+    "int r1, java.lang.String r2, java.lang.String r3, int r4, int r5, java.util.List r6, gb0.j1 r7"
+   ],
+   "enum_like": []
+  },
+  "TutorialJson.java": {
+   "private_fields": [
+    {
+     "type": "Tutorial",
+     "name": "tutorial"
+    }
+   ],
+   "static_fields": [
+    {
+     "type": "Companion",
+     "name": "INSTANCE"
+    }
+   ],
+   "constructors": [
+    "kotlin.jvm.internal.c r1",
+    "int r1, com.getmimo.data.content.model.track.Tutorial r2, gb0.j1 r3"
+   ],
+   "enum_like": []
+  },
+  "Tutorial.java": {
+   "private_fields": [
+    {
+     "type": "List<Chapter>",
+     "name": "chapters"
+    },
+    {
+     "type": "CodeLanguage",
+     "name": "codeLanguage"
+    },
+    {
+     "type": "g",
+     "name": "hasProgress"
+    },
+    {
+     "type": "String",
+     "name": "iconBanner"
+    },
+    {
+     "type": "long",
+     "name": "id"
+    },
+    {
+     "type": "boolean",
+     "name": "isCompleted"
+    },
+    {
+     "type": "boolean",
+     "name": "showInTrack"
+    },
+    {
+     "type": "String",
+     "name": "title"
+    },
+    {
+     "type": "TutorialType",
+     "name": "type"
+    },
+    {
+     "type": "int",
+     "name": "version"
+    }
+   ],
+   "static_fields": [
+    {
+     "type": "Companion",
+     "name": "INSTANCE"
+    }
+   ],
+   "constructors": [
+    "kotlin.jvm.internal.c r1",
+    "int r1, long r2, int r4, com.getmimo.data.content.model.track.TutorialType r5, com.getmimo.data.content.model.track.CodeLanguage r6, java.lang.String r7, boolean r8, java.util.List r9, java.lang.String r10, boolean r11, gb0.j1 r12"
+   ],
+   "enum_like": []
+  },
+  "Chapter.java": {
+   "private_fields": [
+    {
+     "type": "long",
+     "name": "id"
+    },
+    {
+     "type": "boolean",
+     "name": "isCompleted"
+    },
+    {
+     "type": "List<Lesson>",
+     "name": "lessons"
+    },
+    {
+     "type": "String",
+     "name": "title"
+    },
+    {
+     "type": "ChapterType",
+     "name": "type"
+    }
+   ],
+   "static_fields": [
+    {
+     "type": "Parcelable.Creator<Chapter>",
+     "name": "CREATOR"
+    },
+    {
+     "type": "Companion",
+     "name": "INSTANCE"
+    }
+   ],
+   "constructors": [
+    "kotlin.jvm.internal.c r1",
+    ""
+   ],
+   "enum_like": []
+  },
+  "Lesson.java": {
+   "private_fields": [
+    {
+     "type": "LessonContentType",
+     "name": "contentType"
+    },
+    {
+     "type": "boolean",
+     "name": "hardModeSelected"
+    },
+    {
+     "type": "long",
+     "name": "id"
+    },
+    {
+     "type": "List<LessonImage>",
+     "name": "images"
+    },
+    {
+     "type": "String",
+     "name": "title"
+    }
+   ],
+   "static_fields": [
+    {
+     "type": "Parcelable.Creator<Lesson>",
+     "name": "CREATOR"
+    },
+    {
+     "type": "Companion",
+     "name": "INSTANCE"
+    }
+   ],
+   "constructors": [
+    "kotlin.jvm.internal.c r1",
+    ""
+   ],
+   "enum_like": []
+  },
+  "LessonContent.java": {
+   "private_fields": [
+    {
+     "type": "List<File>",
+     "name": "files"
+    },
+    {
+     "type": "String",
+     "name": "instructions"
+    },
+    {
+     "type": "int",
+     "name": "preselectedFileIndex"
+    },
+    {
+     "type": "CodeLanguage",
+     "name": "codeLanguage"
+    },
+    {
+     "type": "String",
+     "name": "content"
+    },
+    {
+     "type": "String",
+     "name": "name"
+    },
+    {
+     "type": "String",
+     "name": "solvedContent"
+    },
+    {
+     "type": "List<LessonModule>",
+     "name": "hardModeLessonModules"
+    },
+    {
+     "type": "List<LessonModule>",
+     "name": "lessonModules"
+    }
+   ],
+   "static_fields": [
+    {
+     "type": "Parcelable.Creator<Executable>",
+     "name": "CREATOR"
+    },
+    {
+     "type": "Companion",
+     "name": "INSTANCE"
+    },
+    {
+     "type": "Parcelable.Creator<File>",
+     "name": "CREATOR"
+    },
+    {
+     "type": "Companion",
+     "name": "INSTANCE"
+    },
+    {
+     "type": "Parcelable.Creator<Interactive>",
+     "name": "CREATOR"
+    }
+   ],
+   "constructors": [
+    "kotlin.jvm.internal.c r1",
+    ""
+   ],
+   "enum_like": []
+  },
+  "LessonImage.java": {
+   "private_fields": [
+    {
+     "type": "String",
+     "name": "id"
+    }
+   ],
+   "static_fields": [
+    {
+     "type": "Parcelable.Creator<LessonImage>",
+     "name": "CREATOR"
+    },
+    {
+     "type": "Companion",
+     "name": "INSTANCE"
+    }
+   ],
+   "constructors": [
+    "kotlin.jvm.internal.c r1",
+    ""
+   ],
+   "enum_like": []
+  },
+  "LessonIdentifier.java": {
+   "private_fields": [
+    {
+     "type": "long",
+     "name": "chapterId"
+    },
+    {
+     "type": "long",
+     "name": "lessonId"
+    },
+    {
+     "type": "long",
+     "name": "trackId"
+    },
+    {
+     "type": "long",
+     "name": "trackVersion"
+    },
+    {
+     "type": "long",
+     "name": "tutorialId"
+    }
+   ],
+   "static_fields": [
+    {
+     "type": "Parcelable.Creator<LessonIdentifier>",
+     "name": "CREATOR"
+    }
+   ],
+   "constructors": [
+    "",
+    "long r1, long r3, long r5, long r7, long r9"
+   ],
+   "enum_like": []
+  },
+  "TrackIdentifier.java": {
+   "private_fields": [
+    {
+     "type": "long",
+     "name": "trackId"
+    },
+    {
+     "type": "long",
+     "name": "trackVersion"
+    }
+   ],
+   "static_fields": [],
+   "constructors": [
+    "long r1, long r3"
+   ],
+   "enum_like": []
+  },
+  "ChapterIdentifier.java": {
+   "private_fields": [
+    {
+     "type": "long",
+     "name": "chapterId"
+    },
+    {
+     "type": "long",
+     "name": "trackId"
+    },
+    {
+     "type": "long",
+     "name": "tutorialId"
+    }
+   ],
+   "static_fields": [
+    {
+     "type": "Parcelable.Creator<ChapterIdentifier>",
+     "name": "CREATOR"
+    }
+   ],
+   "constructors": [
+    "",
+    "long r1, long r3, long r5"
+   ],
+   "enum_like": []
+  },
+  "TutorialType.java": {
+   "private_fields": [],
+   "static_fields": [
+    {
+     "type": "TutorialType",
+     "name": "Challenge"
+    },
+    {
+     "type": "Companion",
+     "name": "INSTANCE"
+    },
+    {
+     "type": "TutorialType",
+     "name": "GuidedProject"
+    },
+    {
+     "type": "TutorialType",
+     "name": "GuidedProjectOptional"
+    },
+    {
+     "type": "TutorialType",
+     "name": "Learn"
+    },
+    {
+     "type": "TutorialType",
+     "name": "MobileProject"
+    },
+    {
+     "type": "TutorialType",
+     "name": "PracticeOptional"
+    },
+    {
+     "type": "TutorialType",
+     "name": "PracticeRequired"
+    },
+    {
+     "type": "TutorialType",
+     "name": "Quiz"
+    },
+    {
+     "type": "TutorialType",
+     "name": "RecreateProject"
+    }
+   ],
+   "constructors": [
+    "kotlin.jvm.internal.c r1"
+   ],
+   "enum_like": []
+  },
+  "ChapterType.java": {
+   "private_fields": [
+    {
+     "type": "String",
+     "name": "typeName"
+    }
+   ],
+   "static_fields": [
+    {
+     "type": "ChapterType",
+     "name": "CHALLENGE_DIFFICULTY_0"
+    },
+    {
+     "type": "ChapterType",
+     "name": "CHALLENGE_DIFFICULTY_1"
+    },
+    {
+     "type": "ChapterType",
+     "name": "CHALLENGE_DIFFICULTY_2"
+    },
+    {
+     "type": "ChapterType",
+     "name": "CHALLENGE_DIFFICULTY_3"
+    },
+    {
+     "type": "ChapterType",
+     "name": "CHALLENGE_DIFFICULTY_4"
+    },
+    {
+     "type": "Companion",
+     "name": "INSTANCE"
+    },
+    {
+     "type": "ChapterType",
+     "name": "NONE"
+    },
+    {
+     "type": "ChapterType",
+     "name": "PRACTICE_LEVEL_1"
+    },
+    {
+     "type": "ChapterType",
+     "name": "PRACTICE_LEVEL_2"
+    },
+    {
+     "type": "ChapterType",
+     "name": "PRACTICE_LEVEL_3"
+    },
+    {
+     "type": "ChapterType",
+     "name": "QUIZ"
+    }
+   ],
+   "constructors": [
+    "kotlin.jvm.internal.c r1"
+   ],
+   "enum_like": []
+  },
+  "CodeLanguage.java": {
+   "private_fields": [
+    {
+     "type": "String",
+     "name": "defaultFileName"
+    },
+    {
+     "type": "String",
+     "name": "extension"
+    },
+    {
+     "type": "int",
+     "name": "icon"
+    },
+    {
+     "type": "String",
+     "name": "language"
+    },
+    {
+     "type": "String",
+     "name": "title"
+    }
+   ],
+   "static_fields": [
+    {
+     "type": "CodeLanguage",
+     "name": "BASH"
+    },
+    {
+     "type": "CodeLanguage",
+     "name": "CPP"
+    },
+    {
+     "type": "CodeLanguage",
+     "name": "CSHARP"
+    },
+    {
+     "type": "CodeLanguage",
+     "name": "CSS"
+    },
+    {
+     "type": "CodeLanguage",
+     "name": "CSV"
+    },
+    {
+     "type": "Companion",
+     "name": "INSTANCE"
+    },
+    {
+     "type": "CodeLanguage",
+     "name": "GIT"
+    },
+    {
+     "type": "CodeLanguage",
+     "name": "HTML"
+    },
+    {
+     "type": "CodeLanguage",
+     "name": "JAVA"
+    },
+    {
+     "type": "CodeLanguage",
+     "name": "JAVASCRIPT"
+    },
+    {
+     "type": "CodeLanguage",
+     "name": "JSON"
+    },
+    {
+     "type": "CodeLanguage",
+     "name": "JSX"
+    },
+    {
+     "type": "CodeLanguage",
+     "name": "KOTLIN"
+    },
+    {
+     "type": "CodeLanguage",
+     "name": "LUA"
+    },
+    {
+     "type": "CodeLanguage",
+     "name": "NODE"
+    },
+    {
+     "type": "CodeLanguage",
+     "name": "NONE"
+    },
+    {
+     "type": "CodeLanguage",
+     "name": "PHP"
+    },
+    {
+     "type": "CodeLanguage",
+     "name": "PYTHON"
+    },
+    {
+     "type": "CodeLanguage",
+     "name": "RUBY"
+    },
+    {
+     "type": "CodeLanguage",
+     "name": "R_LANG"
+    },
+    {
+     "type": "CodeLanguage",
+     "name": "SQL"
+    },
+    {
+     "type": "CodeLanguage",
+     "name": "SWIFT"
+    },
+    {
+     "type": "CodeLanguage",
+     "name": "TEXT"
+    },
+    {
+     "type": "CodeLanguage",
+     "name": "TYPESCRIPT"
+    }
+   ],
+   "constructors": [
+    "kotlin.jvm.internal.c r1",
+    "java.lang.String r1, int r2, java.lang.String r3, java.lang.String r4, int r5, java.lang.String r6, java.lang.String r7, int r8, kotlin.jvm.internal.c r9"
+   ],
+   "enum_like": []
+  },
+  "LessonContentType.java": {
+   "private_fields": [],
+   "static_fields": [
+    {
+     "type": "Companion",
+     "name": "INSTANCE"
+    },
+    {
+     "type": "LessonContentType",
+     "name": "EXECUTABLE_FILES"
+    },
+    {
+     "type": "LessonContentType",
+     "name": "INTERACTIVE"
+    }
+   ],
+   "constructors": [
+    "kotlin.jvm.internal.c r1"
+   ],
+   "enum_like": []
+  },
+  "ContentLocale.java": {
+   "private_fields": [
+    {
+     "type": "String",
+     "name": "languageString"
+    }
+   ],
+   "static_fields": [
+    {
+     "type": "Companion",
+     "name": "INSTANCE"
+    },
+    {
+     "type": "ContentLocale",
+     "name": "DE"
+    },
+    {
+     "type": "ContentLocale",
+     "name": "EN"
+    },
+    {
+     "type": "ContentLocale",
+     "name": "ES"
+    },
+    {
+     "type": "ContentLocale",
+     "name": "FR"
+    },
+    {
+     "type": "ContentLocale",
+     "name": "ID"
+    },
+    {
+     "type": "ContentLocale",
+     "name": "IT"
+    },
+    {
+     "type": "ContentLocale",
+     "name": "PL"
+    },
+    {
+     "type": "ContentLocale",
+     "name": "PT"
+    },
+    {
+     "type": "ContentLocale",
+     "name": "RU"
+    },
+    {
+     "type": "ContentLocale",
+     "name": "TR"
+    }
+   ],
+   "constructors": [
+    "kotlin.jvm.internal.c r1"
+   ],
+   "enum_like": []
+  },
+  "TrackEta.java": {
+   "private_fields": [
+    {
+     "type": "int",
+     "name": "currentPaceMinutesPerDay"
+    },
+    {
+     "type": "Map<Integer, DateTime>",
+     "name": "sectionEstimatedCompletionByIndex"
+    },
+    {
+     "type": "DateTime",
+     "name": "trackEstimatedCompletionAt"
+    }
+   ],
+   "static_fields": [],
+   "constructors": [
+    "int r1, org.joda.time.DateTime r2, java.util.Map<java.lang.Integer, org.joda.time.DateTime> r3"
+   ],
+   "enum_like": []
+  },
+  "FavoriteTracks.java": {
+   "private_fields": [
+    {
+     "type": "List<Long>",
+     "name": "favoriteTrackIds"
+    }
+   ],
+   "static_fields": [],
+   "constructors": [
+    "",
+    "java.util.List<java.lang.Long> r1"
+   ],
+   "enum_like": []
+  }
+ },
+ "lesson_parser_model": {
+  "g.java": {
+   "private_fields": [],
+   "static_fields": [],
+   "constructors": [],
+   "enum_like": []
+  },
+  "n.java": {
+   "private_fields": [],
+   "static_fields": [],
+   "constructors": [],
+   "enum_like": []
+  },
+  "WebviewType.java": {
+   "private_fields": [],
+   "static_fields": [
+    {
+     "type": "y",
+     "name": "f11655a"
+    },
+    {
+     "type": "WebviewType",
+     "name": "f11656b"
+    },
+    {
+     "type": "WebviewType",
+     "name": "f11657c"
+    },
+    {
+     "type": "WebviewType",
+     "name": "f11658d"
+    },
+    {
+     "type": "WebviewType",
+     "name": "f11659e"
+    },
+    {
+     "type": "WebviewType[]",
+     "name": "f11660f"
+    }
+   ],
+   "constructors": [],
+   "enum_like": []
+  },
+  "e.java": {
+   "private_fields": [],
+   "static_fields": [],
+   "constructors": [],
+   "enum_like": []
+  },
+  "ModuleVisibility.java": {
+   "private_fields": [],
+   "static_fields": [
+    {
+     "type": "x",
+     "name": "f11636b"
+    },
+    {
+     "type": "ModuleVisibility",
+     "name": "f11637c"
+    },
+    {
+     "type": "ModuleVisibility",
+     "name": "f11638d"
+    },
+    {
+     "type": "ModuleVisibility",
+     "name": "f11639e"
+    },
+    {
+     "type": "ModuleVisibility[]",
+     "name": "f11640f"
+    }
+   ],
+   "constructors": [
+    "java.lang.String r1, int r2, java.lang.String r3"
+   ],
+   "enum_like": []
+  },
+  "j.java": {
+   "private_fields": [],
+   "static_fields": [],
+   "constructors": [],
+   "enum_like": []
+  },
+  "k.java": {
+   "private_fields": [],
+   "static_fields": [],
+   "constructors": [],
+   "enum_like": []
+  },
+  "f.java": {
+   "private_fields": [],
+   "static_fields": [],
+   "constructors": [],
+   "enum_like": []
+  },
+  "SelectionItem.java": {
+   "private_fields": [],
+   "static_fields": [
+    {
+     "type": "Parcelable.Creator<SelectionItem>",
+     "name": "CREATOR"
+    }
+   ],
+   "constructors": [
+    "java.lang.CharSequence r1, boolean r2"
+   ],
+   "enum_like": []
+  },
+  "a.java": {
+   "private_fields": [],
+   "static_fields": [],
+   "constructors": [],
+   "enum_like": []
+  },
+  "LessonModule.java": {
+   "private_fields": [],
+   "static_fields": [
+    {
+     "type": "ue.a",
+     "name": "Companion"
+    },
+    {
+     "type": "z60.g",
+     "name": "f11617b"
+    },
+    {
+     "type": "Parcelable.Creator<Code>",
+     "name": "CREATOR"
+    },
+    {
+     "type": "Parcelable.Creator<Database>",
+     "name": "CREATOR"
+    },
+    {
+     "type": "Parcelable.Creator<Image>",
+     "name": "CREATOR"
+    },
+    {
+     "type": "Parcelable.Creator<Paragraph>",
+     "name": "CREATOR"
+    },
+    {
+     "type": "Parcelable.Creator<Selection>",
+     "name": "CREATOR"
+    },
+    {
+     "type": "Parcelable.Creator<Webview>",
+     "name": "CREATOR"
+    }
+   ],
+   "constructors": [
+    "java.lang.CharSequence r1, java.util.List r2, com.getmimo.data.content.lessonparser.interactive.model.Output r3, com.getmimo.data.content.lessonparser.interactive.model.ModuleVisibility r4, com.getmimo.data.content.model.track.CodeLanguage r5, java.lang.String r6, java.util.List ",
+    "java.util.ArrayList r1, com.getmimo.data.content.lessonparser.interactive.model.ModuleVisibility r2"
+   ],
+   "enum_like": []
+  },
+  "l.java": {
+   "private_fields": [],
+   "static_fields": [],
+   "constructors": [],
+   "enum_like": []
+  },
+  "CollapsibleLine.java": {
+   "private_fields": [],
+   "static_fields": [
+    {
+     "type": "Parcelable.Creator<CollapsibleLine>",
+     "name": "CREATOR"
+    }
+   ],
+   "constructors": [
+    "int r1, int r2"
+   ],
+   "enum_like": []
+  },
+  "d.java": {
+   "private_fields": [],
+   "static_fields": [],
+   "constructors": [],
+   "enum_like": []
+  },
+  "h.java": {
+   "private_fields": [],
+   "static_fields": [],
+   "constructors": [],
+   "enum_like": []
+  },
+  "m.java": {
+   "private_fields": [],
+   "static_fields": [],
+   "constructors": [],
+   "enum_like": []
+  },
+  "c.java": {
+   "private_fields": [],
+   "static_fields": [],
+   "constructors": [],
+   "enum_like": []
+  },
+  "Output.java": {
+   "private_fields": [],
+   "static_fields": [
+    {
+     "type": "Parcelable.Creator<ConsoleOutput>",
+     "name": "CREATOR"
+    },
+    {
+     "type": "Parcelable.Creator<TableOutput>",
+     "name": "CREATOR"
+    }
+   ],
+   "constructors": [
+    "java.lang.CharSequence r1",
+    "com.getmimo.data.content.lessonparser.interactive.model.Table r1"
+   ],
+   "enum_like": []
+  },
+  "Table.java": {
+   "private_fields": [],
+   "static_fields": [
+    {
+     "type": "Parcelable.Creator<Table>",
+     "name": "CREATOR"
+    },
+    {
+     "type": "Parcelable.Creator<Data>",
+     "name": "CREATOR"
+    },
+    {
+     "type": "Parcelable.Creator<Header>",
+     "name": "CREATOR"
+    }
+   ],
+   "constructors": [
+    "java.util.List r1",
+    "java.util.List r1"
+   ],
+   "enum_like": []
+  },
+  "Interaction.java": {
+   "private_fields": [],
+   "static_fields": [
+    {
+     "type": "Parcelable.Creator<FillTheGap>",
+     "name": "CREATOR"
+    },
+    {
+     "type": "Parcelable.Creator<Selection>",
+     "name": "CREATOR"
+    },
+    {
+     "type": "Parcelable.Creator<Spell>",
+     "name": "CREATOR"
+    },
+    {
+     "type": "Parcelable.Creator<ValidatedInput>",
+     "name": "CREATOR"
+    }
+   ],
+   "constructors": [
+    "java.util.List r1, boolean r2",
+    "boolean r1, int r2, int r3, java.util.List r4"
+   ],
+   "enum_like": []
+  },
+  "Attribute.java": {
+   "private_fields": [],
+   "static_fields": [
+    {
+     "type": "Attribute[]",
+     "name": "f11596a"
+    }
+   ],
+   "constructors": [],
+   "enum_like": []
+  },
+  "Option.java": {
+   "private_fields": [],
+   "static_fields": [
+    {
+     "type": "Parcelable.Creator<Option>",
+     "name": "CREATOR"
+    }
+   ],
+   "constructors": [
+    "boolean r1, java.lang.CharSequence r2, int r3, int r4"
+   ],
+   "enum_like": []
+  },
+  "b.java": {
+   "private_fields": [],
+   "static_fields": [],
+   "constructors": [],
+   "enum_like": []
+  },
+  "AttributeType.java": {
+   "private_fields": [],
+   "static_fields": [
+    {
+     "type": "AttributeType",
+     "name": "f11597b"
+    },
+    {
+     "type": "AttributeType[]",
+     "name": "f11598c"
+    }
+   ],
+   "constructors": [],
+   "enum_like": []
+  },
+  "Tag.java": {
+   "private_fields": [],
+   "static_fields": [
+    {
+     "type": "Tag[]",
+     "name": "f11654a"
+    }
+   ],
+   "constructors": [],
+   "enum_like": []
+  },
+  "i.java": {
+   "private_fields": [],
+   "static_fields": [],
+   "constructors": [],
+   "enum_like": []
+  }
+ },
+ "room_entities": {
+  "LessonProgress.java": {
+   "private_fields": [
+    {
+     "type": "int",
+     "name": "attempts"
+    },
+    {
+     "type": "Instant",
+     "name": "completedAt"
+    },
+    {
+     "type": "boolean",
+     "name": "inQueue"
+    },
+    {
+     "type": "boolean",
+     "name": "isPracticeProgress"
+    },
+    {
+     "type": "long",
+     "name": "lessonId"
+    },
+    {
+     "type": "long",
+     "name": "publishSetVersion"
+    },
+    {
+     "type": "Instant",
+     "name": "startedAt"
+    },
+    {
+     "type": "long",
+     "name": "trackId"
+    },
+    {
+     "type": "int",
+     "name": "tries"
+    },
+    {
+     "type": "long",
+     "name": "tutorialId"
+    },
+    {
+     "type": "int",
+     "name": "tutorialVersion"
+    }
+   ],
+   "static_fields": [],
+   "constructors": [
+    "long r1, org.joda.time.Instant r3, org.joda.time.Instant r4, int r5, long r6, int r8, long r9, long r11, int r13, boolean r14, boolean r15"
+   ],
+   "enum_like": []
+  },
+  "Converters.java": {
+   "private_fields": [],
+   "static_fields": [
+    {
+     "type": "Converters",
+     "name": "INSTANCE"
+    }
+   ],
+   "constructors": [],
+   "enum_like": []
+  },
+  "TutorialCompletion.java": {
+   "private_fields": [
+    {
+     "type": "boolean",
+     "name": "isCompleted"
+    },
+    {
+     "type": "long",
+     "name": "trackId"
+    },
+    {
+     "type": "long",
+     "name": "tutorialId"
+    },
+    {
+     "type": "Instant",
+     "name": "updatedAt"
+    }
+   ],
+   "static_fields": [],
+   "constructors": [
+    "long r1, boolean r3, org.joda.time.Instant r4, long r5"
+   ],
+   "enum_like": []
+  },
+  "ChapterCompletion.java": {
+   "private_fields": [
+    {
+     "type": "long",
+     "name": "chapterId"
+    },
+    {
+     "type": "Instant",
+     "name": "createdAt"
+    },
+    {
+     "type": "long",
+     "name": "trackId"
+    },
+    {
+     "type": "long",
+     "name": "tutorialId"
+    }
+   ],
+   "static_fields": [],
+   "constructors": [
+    "long r1, org.joda.time.Instant r3, long r4, long r6"
+   ],
+   "enum_like": []
+  }
+ }
+}

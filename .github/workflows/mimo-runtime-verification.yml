@@ -95,7 +95,7 @@ jobs:
       # ---------------------------------------------------------------------
       - name: Transfer and cryptographically verify the ORIGINAL APK
         shell: bash
-        run: bash ANALYSIS/RUNTIME/MISSION_04/transfer_apk.sh
+        run: if grep -q M05-INTERACTION-RUN ANALYSIS/RUNTIME/_DISPATCH_TRIGGER; then bash ANALYSIS/RUNTIME/MISSION_05/transfer_apk_m05.sh; else bash ANALYSIS/RUNTIME/MISSION_04/transfer_apk.sh; fi
 
       # ---------------------------------------------------------------------
       # 3. ENVIRONMENT PREFLIGHT (host only, no emulator yet)
