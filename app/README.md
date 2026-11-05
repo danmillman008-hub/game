@@ -109,6 +109,19 @@ app/
 - رندر پیکسلی در مرورگر واقعی با اسکرینشات تأیید نشده (محیط فاقد مرورگر است)؛
   وفاداری با مقایسهٔ بایتبهبایت CSS/مارکاپ/داده + تست DOM در jsdom سنجیده شده است.
 
+## مرحلهٔ بعد: محتوای واقعی (فرم اطلاعاتی)
+
+`app/content/` مقصد **تمام اطلاعات تازه** است. پیش از ورود هر محتوای کتاب،
+قرارداد آن ساخته شده است:
+
+- `MIMO_INFORMATION_FORM.json` — اسکیمای الزامی بستهٔ محتوا (همان فیلدهای عینی درسنامههای میمو + فیلدهای ردگیری)
+- `CONTENT_FORM_TEMPLATE.json` — فرم خالی قابل پر کردن
+- `MIMO_INFORMATION_FORM.md` — شرح فارسی فیلدها و قواعد عدم اختراع محتوا
+- `PEDAGOGY.md` + `PEDAGOGY_STATS.json` — پداگوژی استخراجشده از **تمام ۱۰٬۲۹۸ فایل درسنامه** میمو
+- `tools/analyze_mimo_lessons.py`, `tools/ocr_book.py`, `tools/validate_content.py`
+
+خروجی خام OCR کتاب در `content/source/` است و **وارد گیت نمیشود**.
+
 جزئیات بیشتر: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)،
 [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)، [docs/TESTING.md](docs/TESTING.md)،
 [APP_FINAL_REPORT.md](APP_FINAL_REPORT.md).
