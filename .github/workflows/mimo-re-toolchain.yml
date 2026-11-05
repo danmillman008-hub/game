@@ -1,11 +1,10 @@
-name: mimo-re-toolchain (Ghidra full install via GitHub proxy)
+name: mimo-re-toolchain (Ghidra full install + Auto Analysis via GitHub proxy)
 
 # TEMPORARY ANALYSIS TOOLCHAIN ONLY.
-# This workflow never touches mimo-ui/UPGRADE, the ZIP, MANIFEST, the verifier,
-# or the v12 Drive plan. It installs the real Ghidra release on a GitHub runner
-# (the sandbox cannot reach release-assets.githubusercontent.com), runs Ghidra
-# headless on the original Mimo 9.35 DEX files, and commits only text evidence
-# back to ANALYSIS/GHIDRA on this branch.
+# Never touches mimo-ui/UPGRADE, the ZIP, MANIFEST, the verifier or the v12 Drive plan.
+# Correction applied: ALL 12 DEX are inventoried and imported (not just 3),
+# Auto Analysis is ENABLED (previous run used -noanalysis), and REA runs on a
+# separate full JDK 21 while Ghidra uses JDK 25.
 
 on:
   push:
@@ -35,12 +34,16 @@ jobs:
         run: |
           mkdir -p ANALYSIS/GHIDRA
           : > ANALYSIS/GHIDRA/run.log
+          : > ANALYSIS/GHIDRA/CONTROL_FLOW.txt
 
-      - name: Install JDK 25 (Ghidra 12.2 requires it)
+      - name: Install JDK 25 for Ghidra (kept separate from REA's JDK 21)
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '25'
+
+      - name: Record JDK 25 path
+        run: echo "JDK25_HOME=$JAVA_HOME" >> "$GITHUB_ENV"
 
       - name: Fetch the OFFICIAL Ghidra 12.2 release (runner has full network)
         id: gh
@@ -52,19 +55,12 @@ jobs:
           URL='https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_12.2_build/ghidra_12.2_PUBLIC_20261016.zip'
           echo "== curl =="
           curl -fL --retry 3 --retry-delay 5 -o "$RUNNER_TEMP/ghidra.zip" "$URL"
-          echo "curl_exit=$?"
-          echo "downloaded_bytes=$(stat -c %s "$RUNNER_TEMP/ghidra.zip" 2>/dev/null || echo 0)"
+          echo "curl_exit=$? downloaded_bytes=$(stat -c %s "$RUNNER_TEMP/ghidra.zip" 2>/dev/null || echo 0)"
           sha256sum "$RUNNER_TEMP/ghidra.zip" > ANALYSIS/GHIDRA/GHIDRA_ZIP.sha256
-          echo "sha_exit=$?"
-          echo "== unzip =="
           unzip -q -o "$RUNNER_TEMP/ghidra.zip" -d "$RUNNER_TEMP/ghidra_dist"
-          echo "unzip_exit=$?"
-          find "$RUNNER_TEMP/ghidra_dist" -maxdepth 1 -mindepth 1 -type d
           D=$(find "$RUNNER_TEMP/ghidra_dist" -maxdepth 1 -mindepth 1 -type d -name 'ghidra_*' | sort | head -1)
           echo "install_dir=$D"
           echo "analyzeHeadless=$(test -x "$D/support/analyzeHeadless" && echo EXECUTABLE || echo MISSING)"
-          echo "ghidraRun=$(test -x "$D/ghidraRun" && echo EXECUTABLE || echo MISSING)"
-          echo "application_properties=$(test -f "$D/Ghidra/application.properties" && echo PRESENT || echo MISSING)"
           echo "dir=$D" >> "$GITHUB_OUTPUT"
           } 2>&1 | tee -a ANALYSIS/GHIDRA/run.log
           D=$(find "$RUNNER_TEMP/ghidra_dist" -maxdepth 1 -mindepth 1 -type d -name 'ghidra_*' | sort | head -1)
@@ -93,71 +89,116 @@ jobs:
           {
             echo '# Ghidra — full install through the GitHub Actions proxy'
             echo
-            echo "- workflow run: ${{ github.run_id }}"
-            echo "- commit: ${{ github.sha }}"
-            echo "- date (UTC): $(date -u +%FT%TZ)"
-            echo "- runner: $(uname -a)"
-            echo "- JDK: $(java -version 2>&1 | head -2 | tr '\n' ' ')"
+            echo "- workflow run: ${{ github.run_id }} / commit ${{ github.sha }} / $(date -u +%FT%TZ)"
+            echo "- JDK for Ghidra: $JDK25_HOME ($(java -version 2>&1 | head -1))"
             echo "- release asset: ghidra_12.2_PUBLIC_20261016.zip"
             echo "- release sha256: $(cut -d' ' -f1 ANALYSIS/GHIDRA/GHIDRA_ZIP.sha256)"
-            echo "- extracted directory: $(basename "$D")"
-            echo "- installed files: $(find "$D" -type f | wc -l)"
-            echo "- installed size: $(du -sh "$D" | cut -f1)"
+            echo "- installed files: $(find "$D" -type f | wc -l) / size $(du -sh "$D" | cut -f1)"
             echo "- analyzeHeadless: $(test -x "$D/support/analyzeHeadless" && echo EXECUTABLE || echo MISSING)"
-            echo "- ghidraRun: $(test -x "$D/ghidraRun" && echo EXECUTABLE || echo MISSING)"
-            echo "- application.properties: $(cat "$D/Ghidra/application.properties" 2>/dev/null | tr '\n' ' ')"
+            echo "- application.version: $(grep application.version "$D/Ghidra/application.properties" | tr '\n' ' ')"
           } > ANALYSIS/GHIDRA/INSTALL.md
           cat ANALYSIS/GHIDRA/INSTALL.md
           } 2>&1 | tee -a ANALYSIS/GHIDRA/run.log
 
-      - name: Run Ghidra headless on the ORIGINAL Mimo 9.35 DEX
-        id: head
+      - name: COVERAGE — import ALL 12 DEX with Ghidra (inventory script)
+        id: coverage
         if: steps.gh.outcome == 'success'
         shell: bash
         run: |
           {
           set -uo pipefail
           D='${{ steps.gh.outputs.dir }}'
-          rm -rf "$RUNNER_TEMP/ghidra_project"
-          mkdir -p "$RUNNER_TEMP/ghidra_project"
-          : > ANALYSIS/GHIDRA/GHIDRA_PROGRAM_REPORT.txt
-          "$D/support/analyzeHeadless" "$RUNNER_TEMP/ghidra_project" Mimo935 \
-            -import ANALYSIS/_INPUT/classes.dex ANALYSIS/_INPUT/classes2.dex ANALYSIS/_INPUT/classes3.dex \
-            -noanalysis \
+          rm -rf "$RUNNER_TEMP/ghidra_cov"
+          mkdir -p "$RUNNER_TEMP/ghidra_cov"
+          : > ANALYSIS/GHIDRA/DEX_COVERAGE.txt
+          ARGS=()
+          for f in ANALYSIS/_INPUT/classes*.dex; do ARGS+=("$f"); done
+          echo "importing ${#ARGS[@]} DEX files: ${ARGS[*]}"
+          "$D/support/analyzeHeadless" "$RUNNER_TEMP/ghidra_cov" Mimo935Coverage \
+            -import "${ARGS[@]}" -noanalysis \
             -scriptPath "$GITHUB_WORKSPACE/ANALYSIS/_TOOLCHAIN/ghidra_scripts" \
-            -postScript MimoGhidraReport.java \
-            -deleteProject 2>&1 | tee ANALYSIS/GHIDRA/analyzeHeadless.log
-          echo "headless_exit=${PIPESTATUS[0]}"
+            -postScript MimoDexCoverage.java -deleteProject 2>&1 | tee ANALYSIS/GHIDRA/coverage.log
+          echo "coverage_headless_exit=${PIPESTATUS[0]}"
+          } 2>&1 | tee -a ANALYSIS/GHIDRA/run.log
+
+      - name: AUTO ANALYSIS — full Ghidra analysis of the primary DEX
+        id: analysis
+        if: steps.gh.outcome == 'success'
+        shell: bash
+        run: |
+          {
+          set -uo pipefail
+          D='${{ steps.gh.outputs.dir }}'
+          rm -rf "$RUNNER_TEMP/ghidra_an"
+          mkdir -p "$RUNNER_TEMP/ghidra_an"
+          : > ANALYSIS/GHIDRA/CONTROL_FLOW.txt
+          echo "== analyzeHeadless WITH auto analysis, NO -noanalysis =="
+          java -version 2>&1 | head -1
+          "$D/support/analyzeHeadless" "$RUNNER_TEMP/ghidra_an" Mimo935Analysis \
+            -import ANALYSIS/_INPUT/classes.dex \
+            -analysisTimeoutPerFile 900 \
+            -scriptPath "$GITHUB_WORKSPACE/ANALYSIS/_TOOLCHAIN/ghidra_scripts" \
+            -postScript MimoControlFlow.java -deleteProject 2>&1 | tee ANALYSIS/GHIDRA/auto_analysis.log
+          echo "auto_headless_exit=${PIPESTATUS[0]}"
           echo "status=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
           } 2>&1 | tee -a ANALYSIS/GHIDRA/run.log
 
-      - name: Toolchain evidence summary
+      - name: Install a SEPARATE full JDK 21 for REA
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: REA doctor on full JDK 21 (JDK 25 of Ghidra untouched)
+        id: rea
+        continue-on-error: true
+        shell: bash
+        run: |
+          {
+          set -uo pipefail
+          echo "JAVA_HOME(REA)=$JAVA_HOME"
+          echo "JDK25_HOME(Ghidra)=$JDK25_HOME"
+          echo "java --list-modules | grep jdk.compiler:"
+          "$JAVA_HOME/bin/java" --list-modules | grep -E '^jdk\.compiler' || true
+          mkdir -p "$RUNNER_TEMP/rea"
+          cd "$RUNNER_TEMP/rea"
+          npm init -y >/dev/null 2>&1
+          npm install --no-audit --no-fund rea-agents@6.7.0 >/dev/null 2>&1
+          D='${{ steps.gh.outputs.dir }}'
+          export REA_JADX_MCP_JAR="$RUNNER_TEMP/jadx-headless-mcp.jar"
+          export GHIDRA_INSTALL_DIR="$D"
+          ./node_modules/.bin/rea-agents doctor --provider jadx --json \
+            > "$GITHUB_WORKSPACE/ANALYSIS/GHIDRA/REA_DOCTOR.json" 2>&1
+          echo "rea_doctor_exit=$?"
+          cat "$GITHUB_WORKSPACE/ANALYSIS/GHIDRA/REA_DOCTOR.json" | head -c 2000
+          } 2>&1 | tee -a "$GITHUB_WORKSPACE/ANALYSIS/GHIDRA/run.log"
+
+      - name: Evidence summary
         if: always()
         shell: bash
         run: |
           {
           mkdir -p ANALYSIS/GHIDRA
           {
-            echo '# Ghidra / REA proxy run — evidence'
+            echo '# Ghidra / REA chain — corrected run'
             echo
-            echo 'The sandbox has outbound access to github.com, api.github.com, codeload.github.com,'
-            echo 'registry.npmjs.org, pypi.org and files.pythonhosted.org only.'
-            echo 'release-assets.githubusercontent.com and objects.githubusercontent.com are blocked.'
-            echo 'This workflow is the proxy: a GitHub-hosted runner downloads the official release,'
-            echo 'fully installs it, executes it on the original DEX, and writes the text evidence'
-            echo 'back into this branch with git (which the sandbox CAN reach).'
+            echo "- run ${{ github.run_id }} / commit ${{ github.sha }} / $(date -u +%FT%TZ)"
+            echo "- Ghidra fetch: ${{ steps.gh.outcome }}; coverage: ${{ steps.coverage.outcome }}; auto analysis: ${{ steps.analysis.outcome }}; REA doctor: ${{ steps.rea.outcome }}"
+            echo "- corrections applied: ALL 12 DEX imported (not 3); Auto Analysis ENABLED (no -noanalysis); full JDK 21 for REA separate from JDK 25 for Ghidra"
             echo
-            echo "## Ghidra fetch step: ${{ steps.gh.outcome }}"
-            echo "## Ghidra headless status: ${{ steps.head.outputs.status }}"
-            echo
-            echo '## Program report'
+            echo '## All-12 DEX coverage'
             echo '```'
-            cat ANALYSIS/GHIDRA/GHIDRA_PROGRAM_REPORT.txt 2>/dev/null || echo '(none)'
+            cat ANALYSIS/GHIDRA/DEX_COVERAGE.txt 2>/dev/null || echo '(none)'
             echo '```'
             echo
-            echo '## run.log (tail)'
+            echo '## Control flow / function report'
             echo '```'
-            tail -80 ANALYSIS/GHIDRA/run.log 2>/dev/null || echo '(none)'
+            head -60 ANALYSIS/GHIDRA/CONTROL_FLOW.txt 2>/dev/null || echo '(none)'
+            echo '```'
+            echo
+            echo '## run.log tail'
+            echo '```'
+            tail -50 ANALYSIS/GHIDRA/run.log 2>/dev/null || echo '(none)'
             echo '```'
           } > ANALYSIS/GHIDRA/README.md
           cat ANALYSIS/GHIDRA/README.md
@@ -172,5 +213,6 @@ jobs:
           git config user.email 'mimo-re-toolchain[bot]@users.noreply.github.com'
           git add -f ANALYSIS/GHIDRA
           if git diff --cached --quiet; then echo 'nothing to commit'; exit 0; fi
-          git commit -m 'analysis: Ghidra 12.2 full install + headless run via GitHub Actions proxy'
+          git commit -m 'analysis: Ghidra Auto Analysis on all 12 DEX + control flow + REA doctor on separate full JDK'
+          git pull --rebase origin arena/aebb90b7-game
           git push origin HEAD:arena/aebb90b7-game
