@@ -1,0 +1,228 @@
+{
+ "document": "MISSION 06 — consolidated shipped content & DSL contract (no invented format)",
+ "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+ "classification": "VERIFIED_STATIC",
+ "derived_from": [
+  "../MISSION_05/SCHEMAS/CONTENT_SCHEMA.json",
+  "../MISSION_05/SCHEMAS/SHIPPED_CONTENT_STATS.json",
+  "SCHEMAS/CLASS_CATALOG_MIMO.json",
+  "EVIDENCE/MODEL_FACTS.txt",
+  "EVIDENCE/DSL_PARSER_DISASM.txt",
+  "SAMPLES/MANIFEST.json"
+ ],
+ "note": "Every key below appears verbatim in original APK assets or as a DEX string/field name. No new content format was authored.",
+ "shipped_english_v753": {
+  "publishSetVersion": 753,
+  "asset_root": "assets/lessons-<locale>/tracks/",
+  "locales": [
+   "ru",
+   "en",
+   "es",
+   "pt",
+   "de",
+   "fr",
+   "it",
+   "id",
+   "tr",
+   "pl"
+  ],
+  "curriculum_json_files_all_locales": 10298,
+  "tracks": 19,
+  "sections": 144,
+  "tutorials": 1029,
+  "chapters": 1947,
+  "lessons": 18272,
+  "duplicate_lesson_ids": 0,
+  "section_invariant": "endIndex-startIndex+1 == len(tutorialIds), holds for all 144 sections",
+  "content_type_counts": {
+   "interactive": 14248,
+   "executableFiles": 4024
+  },
+  "executable_content_required_keys": [
+   "instructions",
+   "preselectedFileIndex",
+   "hasVisualOutput",
+   "files",
+   "hints"
+  ]
+ },
+ "json_contract": {
+  "tracks_json_root": "TracksJson{publishSetVersion:Long, tracks:List<TrackJson>}",
+  "track_json": "TrackJson{id:Long, version:Int, title:String, descriptionContent:String, isNew:Boolean, isHidden:Boolean, iconBanner:String?, sections:List<SectionJson>}",
+  "section_json": "SectionJson{name:String, description:String, tutorialIds:List<Long>, startIndex:Int, endIndex:Int}",
+  "tutorial_root": "{\"tutorial\": TutorialJson}  (NOT a bare chapters array)",
+  "tutorial_json": "TutorialJson{id:Long, version:Int, type:TutorialType, codeLanguage:CodeLanguage, title:String, descriptionContent:String, chapters:List<Chapter>}",
+  "chapter": "Chapter{id:Long, title:String, type:ChapterType, isCompleted:Boolean, lessons:List<Lesson>}",
+  "lesson": "Lesson{id:Long, title:String, images:List<String>, contentType:LessonContentType, hardModeSelected:Boolean}",
+  "lesson_content_interactive": "LessonContent$Interactive{lessonModules:List<String>, hardModeLessonModules:List<String>} + getHasDifferentHardModeContent()/hardModeModulesOrDefault()",
+  "lesson_content_executable": "LessonContent$Executable{instructions:String, preselectedFileIndex:Int, files:List<File>, hints:List, getHasBrowserOutput(), getHasInputConsole()}",
+  "executable_file": "LessonContent$Executable$File{name:String, codeLanguage:CodeLanguage, content:String, solvedContent:String}",
+  "not_a_key": "executable_files is NOT a shipped key; use executableContent"
+ },
+ "dsl": {
+  "technology": "org.xmlpull.v1.XmlPullParser via XmlPullParserFactory.newInstance(), setNamespaceAware(true)",
+  "entry_method": "Lte/c;->b(Ljava/lang/String;)Ljava/util/ArrayList; @14378108, 400 instructions",
+  "body_regex": "<\\s*body[^>]*>(.*?)<\\s*/\\s*body>",
+  "tags": [
+   "p",
+   "code",
+   "content",
+   "text",
+   "option",
+   "interaction",
+   "interactions",
+   "selection",
+   "output",
+   "webview",
+   "img",
+   "database",
+   "html",
+   "body",
+   "strong",
+   "br"
+  ],
+  "attributes": [
+   "visible-if",
+   "correct",
+   "isDefault",
+   "startIndex",
+   "endIndex",
+   "value",
+   "type",
+   "version",
+   "style",
+   "codelang",
+   "name",
+   "src",
+   "interaction"
+  ],
+  "dispatch": {
+   "p": "Lte/d.a → LessonModule$Paragraph",
+   "code": "Lte/a.a → LessonModule$Code",
+   "selection": "Lte/e.a → LessonModule$Selection",
+   "img": "Lte/c.a → LessonModule$Image",
+   "webview": "Lte/g.a → LessonModule$Webview",
+   "database": "Lte/b.a → LessonModule$Database",
+   "html/body/unknown": "skip + xml_parse_error_module"
+  },
+  "module_visibility": [
+   "ALWAYS(\"always\")",
+   "CORRECT(\"correct\")",
+   "WRONG(\"wrong\")"
+  ],
+  "parser_module": [
+   "CODE",
+   "PARAGRAPH",
+   "SELECTION"
+  ],
+  "interactions": [
+   "FillTheGap{c:List<Option>}",
+   "Selection{c,d,e}",
+   "Spell{c,d}",
+   "ValidatedInput{c,d,e,f}"
+  ],
+  "option": "Option{a:Boolean isCorrect, b:CharSequence text, c:Int startIndex, d:Int endIndex}",
+  "module_fields": {
+   "Paragraph": "c:ArrayList",
+   "Code": "c,d,e,f,g,v,w",
+   "Image": "c,d",
+   "Webview": "c,d,e",
+   "Selection": "c:ArrayList",
+   "Database": "c,d"
+  },
+  "renderer_types": [
+   "interactive_webview",
+   "fill_the_gap",
+   "spell",
+   "selection",
+   "validated_input",
+   "single_choice",
+   "multiple_choice",
+   "slide",
+   "reveal",
+   "none"
+  ],
+  "webview_bridge": "MimoLesson.postMessage(JSON.stringify({documentID, kind, ...})); kinds gesture/activity/focus/height/ready; no answer evaluation in JS",
+  "webview_activity_results": [
+   "mimo.activity.correct",
+   "mimo.activity.wrong",
+   "mimo.activity.completed"
+  ],
+  "corpus_tag_counts": {
+   "text": 369108,
+   "code": 94981,
+   "p": 46388,
+   "option": 44225,
+   "content": 41221,
+   "interaction": 11729,
+   "selection": 7356,
+   "output": 5784,
+   "webview": 930,
+   "visible_if_wrong": 19101,
+   "visible_if_always": 18869,
+   "visible_if_correct": 173,
+   "correct_false": 27762,
+   "correct_true": 7356,
+   "activity_correct": 217,
+   "activity_wrong": 217,
+   "activity_completed": 90
+  }
+ },
+ "enums": {
+  "TutorialType": [
+   "Learn",
+   "MobileProject",
+   "Challenge",
+   "Quiz",
+   "GuidedProject",
+   "GuidedProjectOptional",
+   "RecreateProject",
+   "PracticeRequired",
+   "PracticeOptional"
+  ],
+  "ChapterType": [
+   "NONE",
+   "PRACTICE_LEVEL_1",
+   "PRACTICE_LEVEL_2",
+   "PRACTICE_LEVEL_3",
+   "QUIZ",
+   "CHALLENGE_DIFFICULTY_0..4"
+  ],
+  "LessonContentType": [
+   "INTERACTIVE",
+   "EXECUTABLE_FILES"
+  ],
+  "ContentLocale": [
+   "RU",
+   "EN",
+   "ES",
+   "PT",
+   "DE",
+   "FR",
+   "IT",
+   "ID",
+   "TR",
+   "PL"
+  ],
+  "CodeLanguage_examples": [
+   "BASH",
+   "CPP",
+   "CSHARP",
+   "CSS",
+   "CSV",
+   "HTML",
+   "JAVA",
+   "JAVASCRIPT",
+   "KOTLIN",
+   "PYTHON",
+   "SQL"
+  ]
+ },
+ "original_samples": "SAMPLES/MANIFEST.json — 10 byte-exact APK members with SHA-256",
+ "unknown": [
+  "Tag/Attribute enum ordinal tables",
+  "Interaction$ValidatedInput.e:String and f:String[] semantics",
+  "hard-mode alternate content predicate",
+  "full Lte/a.a 490-instruction construction"
+ ]
+}

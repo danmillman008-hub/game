@@ -1,0 +1,324 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lte/e; semantic=DSL_SelectionModuleParser
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lte/e;-><clinit>()V =====
+dex=classes.dex code_offset=14381672 instructions=6 access=static constructor callers=0 callees=0
+  000000  sget-object v0, Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;->c Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;
+  000004  const-string v2, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  000008  sput-object v0, Lte/e;->b Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;
+  00000c  const/4 v2, 5
+  00000e  return-void 
+  000010  <androguard.core.dex.FillArrayData object at 0x7ff3faf58b50>
+
+===== Lte/e;-><init>(Lv80/d; Lte/d;)V =====
+dex=classes.dex code_offset=14381804 instructions=8 access=public constructor callers=1 callees=1
+callers: Lae/n;->e()Lte/c;
+callees: Ljava/lang/Object;-><init>()V
+  000000  move-object v0, v3
+  000002  invoke-direct v0, Ljava/lang/Object;-><init>()V
+  000008  const/4 v2, 1
+  00000a  iput-object v4, v0, Lte/e;->a Lv80/d;
+  00000e  const/4 v2, 3
+  000010  return-void 
+  000012  nop 
+  000014  <androguard.core.dex.FillArrayData object at 0x7ff3faf58e90>
+
+===== Lte/e;->a(Lorg/xmlpull/v1/XmlPullParser;)Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Selection; =====
+dex=classes.dex code_offset=14381860 instructions=288 access=public final callers=1 callees=88
+callers: Lte/c;->b(Ljava/lang/String;)Ljava/util/ArrayList;
+callees: Landroid/text/SpannableStringBuilder;->append(C)Landroid/text/SpannableStringBuilder;, Landroid/text/style/StyleSpan;-><init>(I)V, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Selection;-><init>(Ljava/util/ArrayList;)V, Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;-><init>(Ljava/lang/CharSequence; Z)V, Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;-><init>(Ljava/lang/CharSequence; Z)V, Ljava/lang/Boolean;->parseBoolean(Ljava/lang/String;)Z, Ljava/lang/Boolean;->parseBoolean(Ljava/lang/String;)Z, Ljava/lang/String;->charAt(I)C, Ljava/lang/String;->length()I, Ljava/lang/String;->length()I, Ljava/util/ArrayList;-><init>()V, Ljava/util/ArrayList;-><init>(I)V, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z, Lorg/xmlpull/v1/XmlPullParser;->getAttributeValue(Ljava/lang/String; Ljava/lang/String;)Ljava/lang/String;, Lorg/xmlpull/v1/XmlPullParser;->getAttributeValue(Ljava/lang/String; Ljava/lang/String;)Ljava/lang/String;, Lorg/xmlpull/v1/XmlPullParser;->getEventType()I, Lorg/xmlpull/v1/XmlPullParser;->getEventType()I, Lorg/xmlpull/v1/XmlPullParser;->getEventType()I, Lorg/xmlpull/v1/XmlPullParser;->getEventType()I, Lorg/xmlpull/v1/XmlPullParser;->getName()Ljava/lang/String;, Lorg/xmlpull/v1/XmlPullParser;->getName()Ljava/lang/String;, Lorg/xmlpull/v1/XmlPullParser;->getName()Ljava/lang/String;, Lorg/xmlpull/v1/XmlPullParser;->getName()Ljava/lang/String;, Lorg/xmlpull/v1/XmlPullParser;->getNamespace()Ljava/lang/String;, Lorg/xmlpull/v1/XmlPullParser;->getNamespace()Ljava/lang/String;, Lorg/xmlpull/v1/XmlPullParser;->getNamespace()Ljava/lang/String;, Lorg/xmlpull/v1/XmlPullParser;->getNamespace()Ljava/lang/String;, Lorg/xmlpull/v1/XmlPullParser;->getNamespace()Ljava/lang/String;, Lorg/xmlpull/v1/XmlPullParser;->getNamespace()Ljava/lang/String;, Lorg/xmlpull/v1/XmlPullParser;->getNamespace()Ljava/lang/String;, Lorg/xmlpull/v1/XmlPullParser;->next()I, Lorg/xmlpull/v1/XmlPullParser;->next()I, Lorg/xmlpull/v1/XmlPullParser;->next()I, Lorg/xmlpull/v1/XmlPullParser;->next()I, Lorg/xmlpull/v1/XmlPullParser;->next()I, Lorg/xmlpull/v1/XmlPullParser;->require(I Ljava/lang/String; Ljava/lang/String;)V, Lorg/xmlpull/v1/XmlPullParser;->require(I Ljava/lang/String; Ljava/lang/String;)V, Lorg/xmlpull/v1/XmlPullParser;->require(I Ljava/lang/String; Ljava/lang/String;)V, Lorg/xmlpull/v1/XmlPullParser;->require(I Ljava/lang/String; Ljava/lang/String;)V, Lorg/xmlpull/v1/XmlPullParser;->require(I Ljava/lang/String; Ljava/lang/String;)V, Lqc/a;-><init>()V, Lqc/a;-><init>()V, Lqc/a;-><init>(Ljava/lang/CharSequence; Landroid/text/style/CharacterStyle;)V, Lqc/a;-><init>(Ljava/lang/CharSequence;)V, Lqc/a;-><init>(Ljava/lang/CharSequence;)V, Lqc/a;->a(Ljava/lang/CharSequence;)V, Lqc/a;->a(Ljava/lang/CharSequence;)V, Lqc/a;->a(Ljava/lang/CharSequence;)V, Lqc/a;->a(Ljava/lang/CharSequence;)V, Lqc/a;->a(Ljava/lang/CharSequence;)V, Lqc/a;->a(Ljava/lang/CharSequence;)V, Lqc/a;->a(Ljava/lang/CharSequence;)V, Lqc/a;->a(Ljava/lang/CharSequence;)V, Lqc/a;->a(Ljava/lang/CharSequence;)V, Lqc/a;->a(Ljava/lang/CharSequence;)V, Lte/d;->b(Lorg/xmlpull/v1/XmlPullParser;)V, Lte/d;->b(Lorg/xmlpull/v1/XmlPullParser;)V, Lte/d;->c(Lorg/xmlpull/v1/XmlPullParser;)Ljava/lang/String;, Lte/d;->d(Lorg/xmlpull/v1/XmlPullParser;)Ljava/lang/String;, Lte/d;->d(Lorg/xmlpull/v1/XmlPullParser;)Ljava/lang/String;, Lte/d;->d(Lorg/xmlpull/v1/XmlPullParser;)Ljava/lang/String;, Lte/d;->d(Lorg/xmlpull/v1/XmlPullParser;)Ljava/lang/String;, Lte/d;->d(Lorg/xmlpull/v1/XmlPullParser;)Ljava/lang/String;, Lte/d;->d(Lorg/xmlpull/v1/XmlPullParser;)Ljava/lang/String;, Lte/d;->e(Lorg/xmlpull/v1/XmlPullParser;)Ljava/lang/String;, Lte/d;->e(Lorg/xmlpull/v1/XmlPullParser;)Ljava/lang/String;, Lv80/d;->n(Ljava/lang/String; Ljava/lang/String; Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;)Ljava/lang/CharSequence;, Lv80/d;->n(Ljava/lang/String; Ljava/lang/String; Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;)Ljava/lang/CharSequence;, Lv80/d;->n(Ljava/lang/String; Ljava/lang/String; Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;)Ljava/lang/CharSequence;, Lv80/d;->n(Ljava/lang/String; Ljava/lang/String; Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;)Ljava/lang/CharSequence;, Lv80/d;->n(Ljava/lang/String; Ljava/lang/String; Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;)Ljava/lang/CharSequence;, Lv80/d;->n(Ljava/lang/String; Ljava/lang/String; Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;)Ljava/lang/CharSequence;, Lv80/d;->n(Ljava/lang/String; Ljava/lang/String; Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;)Ljava/lang/CharSequence;, Lv80/d;->n(Ljava/lang/String; Ljava/lang/String; Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;)Ljava/lang/CharSequence;
+  000000  move-object/from16 v0, v21
+  000004  invoke-interface v0, Lorg/xmlpull/v1/XmlPullParser;->getNamespace()Ljava/lang/String;
+  00000a  move-result-object v1
+  00000c  sget-object v2, Lcom/getmimo/data/content/lessonparser/interactive/model/Tag;->a [Lcom/getmimo/data/content/lessonparser/interactive/model/Tag;
+  000010  const/4 v2, 3
+  000012  const/4 v2, 2
+  000014  const-string v3, "selection"
+  000018  invoke-interface v0, v2, v1, v3, Lorg/xmlpull/v1/XmlPullParser;->require(I Ljava/lang/String; Ljava/lang/String;)V
+  00001e  invoke-interface v0, Lorg/xmlpull/v1/XmlPullParser;->getNamespace()Ljava/lang/String;
+  000024  move-result-object v1
+  000026  const-string v4, "iscode"
+  00002a  invoke-interface v0, v1, v4, Lorg/xmlpull/v1/XmlPullParser;->getAttributeValue(Ljava/lang/String; Ljava/lang/String;)Ljava/lang/String;
+  000030  move-result-object v1
+  000032  if-eqz v1, +007h
+  000036  invoke-static v1, Ljava/lang/Boolean;->parseBoolean(Ljava/lang/String;)Z
+  00003c  move-result v1
+  00003e  goto +3h
+  000040  const/4 v1, 7
+  000042  const/4 v1, 0
+  000044  new-instance v5, Ljava/util/ArrayList;
+  000048  invoke-direct v5, Ljava/util/ArrayList;-><init>()V
+  00004e  invoke-interface v0, Lorg/xmlpull/v1/XmlPullParser;->next()I
+  000054  move-result v6
+  000056  const/4 v7, 5
+  000058  const/4 v7, 3
+  00005a  if-eq v6, v7, +1e3h
+  00005e  invoke-interface v0, Lorg/xmlpull/v1/XmlPullParser;->getName()Ljava/lang/String;
+  000064  move-result-object v6
+  000066  sget-object v8, Lcom/getmimo/data/content/lessonparser/interactive/model/Tag;->a [Lcom/getmimo/data/content/lessonparser/interactive/model/Tag;
+  00006a  const-string v8, "item"
+  00006e  invoke-static v6, v8, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z
+  000074  move-result v6
+  000076  if-eqz v6, +1c3h
+  00007a  invoke-interface v0, Lorg/xmlpull/v1/XmlPullParser;->getNamespace()Ljava/lang/String;
+  000080  move-result-object v6
+  000082  invoke-interface v0, v2, v6, v8, Lorg/xmlpull/v1/XmlPullParser;->require(I Ljava/lang/String; Ljava/lang/String;)V
+  000088  invoke-interface v0, Lorg/xmlpull/v1/XmlPullParser;->getNamespace()Ljava/lang/String;
+  00008e  move-result-object v6
+  000090  const-string v9, "correct"
+  000094  invoke-interface v0, v6, v9, Lorg/xmlpull/v1/XmlPullParser;->getAttributeValue(Ljava/lang/String; Ljava/lang/String;)Ljava/lang/String;
+  00009a  move-result-object v6
+  00009c  if-eqz v6, +007h
+  0000a0  invoke-static v6, Ljava/lang/Boolean;->parseBoolean(Ljava/lang/String;)Z
+  0000a6  move-result v6
+  0000a8  goto +3h
+  0000aa  const/4 v6, 0
+  0000ac  const/4 v6, 0
+  0000ae  const-string v10, "bold"
+  0000b2  move-object/from16 v11, v20
+  0000b6  iget-object v12, v11, Lte/e;->a Lv80/d;
+  0000ba  const-string v13, "strong"
+  0000be  const-string v14, "normal"
+  0000c2  const-string v15, "
+"
+  0000c6  const-string v4, "br"
+  0000ca  const-string v2, "span"
+  0000ce  const-string v9, "code"
+  0000d2  sget-object v7, Lte/e;->b Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;
+  0000d6  if-eqz v1, +0afh
+  0000da  move/from16 v16, v1
+  0000de  new-instance v1, Lqc/a;
+  0000e2  invoke-direct v1, Lqc/a;-><init>()V
+  0000e8  invoke-interface v0, Lorg/xmlpull/v1/XmlPullParser;->next()I
+  0000ee  move-result v11
+  0000f0  move-object/from16 v17, v3
+  0000f4  const/4 v3, 0
+  0000f6  const/4 v3, 3
+  0000f8  if-eq v11, v3, +093h
+  0000fc  invoke-interface v0, Lorg/xmlpull/v1/XmlPullParser;->getEventType()I
+  000102  move-result v3
+  000104  const/4 v11, 1
+  000106  const/4 v11, 4
+  000108  if-ne v3, v11, +00dh
+  00010c  invoke-static v0, Lte/d;->d(Lorg/xmlpull/v1/XmlPullParser;)Ljava/lang/String;
+  000112  move-result-object v3
+  000114  invoke-virtual v12, v3, v9, v7, Lv80/d;->n(Ljava/lang/String; Ljava/lang/String; Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;)Ljava/lang/CharSequence;
+  00011a  move-result-object v3
+  00011c  invoke-virtual v1, v3, Lqc/a;->a(Ljava/lang/CharSequence;)V
+  000122  invoke-interface v0, Lorg/xmlpull/v1/XmlPullParser;->getName()Ljava/lang/String;
+  000128  move-result-object v3
+  00012a  sget-object v11, Lcom/getmimo/data/content/lessonparser/interactive/model/Tag;->a [Lcom/getmimo/data/content/lessonparser/interactive/model/Tag;
+  00012e  invoke-static v3, v2, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z
+  000134  move-result v11
+  000136  if-eqz v11, +030h
+  00013a  invoke-static v0, Lte/d;->e(Lorg/xmlpull/v1/XmlPullParser;)Ljava/lang/String;
+  000140  move-result-object v3
+  000142  new-instance v11, Ljava/util/ArrayList;
+  000146  move-object/from16 v18, v5
+  00014a  invoke-virtual v3, Ljava/lang/String;->length()I
+  000150  move-result v5
+  000152  invoke-direct v11, v5, Ljava/util/ArrayList;-><init>(I)V
+  000158  move-object/from16 v19, v2
+  00015c  const/4 v5, 3
+  00015e  const/4 v5, 0
+  000160  invoke-virtual v3, Ljava/lang/String;->length()I
+  000166  move-result v2
+  000168  if-ge v5, v2, +010h
+  00016c  invoke-virtual v3, v5, Ljava/lang/String;->charAt(I)C
+  000172  move-result v2
+  000174  invoke-virtual v1, v2, Landroid/text/SpannableStringBuilder;->append(C)Landroid/text/SpannableStringBuilder;
+  00017a  move-result-object v2
+  00017c  invoke-virtual v11, v2, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  000182  add-int/lit8 v5, v5, 1
+  000186  goto -13h
+  000188  move-object/from16 v3, v17
+  00018c  move-object/from16 v5, v18
+  000190  move-object/from16 v2, v19
+  000194  goto -56h
+  000196  move-object/from16 v19, v2
+  00019a  move-object/from16 v18, v5
+  00019e  invoke-static v3, v4, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z
+  0001a4  move-result v2
+  0001a6  if-eqz v2, +00dh
+  0001aa  invoke-static v0, Lte/d;->b(Lorg/xmlpull/v1/XmlPullParser;)V
+  0001b0  invoke-virtual v12, v15, v14, v7, Lv80/d;->n(Ljava/lang/String; Ljava/lang/String; Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;)Ljava/lang/CharSequence;
+  0001b6  move-result-object v2
+  0001b8  invoke-virtual v1, v2, Lqc/a;->a(Ljava/lang/CharSequence;)V
+  0001be  goto -1bh
+  0001c0  invoke-static v3, v13, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z
+  0001c6  move-result v2
+  0001c8  if-eqz v2, +015h
+  0001cc  invoke-static v0, Lte/d;->d(Lorg/xmlpull/v1/XmlPullParser;)Ljava/lang/String;
+  0001d2  move-result-object v2
+  0001d4  new-instance v3, Lqc/a;
+  0001d8  const/4 v5, 4
+  0001da  const/4 v5, 0
+  0001dc  invoke-virtual v12, v2, v10, v5, Lv80/d;->n(Ljava/lang/String; Ljava/lang/String; Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;)Ljava/lang/CharSequence;
+  0001e2  move-result-object v2
+  0001e4  invoke-direct v3, v2, Lqc/a;-><init>(Ljava/lang/CharSequence;)V
+  0001ea  invoke-virtual v1, v3, Lqc/a;->a(Ljava/lang/CharSequence;)V
+  0001f0  goto -34h
+  0001f2  invoke-interface v0, Lorg/xmlpull/v1/XmlPullParser;->getEventType()I
+  0001f8  move-result v2
+  0001fa  const/4 v5, 7
+  0001fc  const/4 v5, 3
+  0001fe  if-ne v2, v5, -03bh
+  000202  invoke-static v3, v8, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z
+  000208  move-result v2
+  00020a  if-eqz v2, -041h
+  00020e  invoke-interface v0, Lorg/xmlpull/v1/XmlPullParser;->getNamespace()Ljava/lang/String;
+  000214  move-result-object v2
+  000216  invoke-interface v0, v5, v2, v8, Lorg/xmlpull/v1/XmlPullParser;->require(I Ljava/lang/String; Ljava/lang/String;)V
+  00021c  goto +3h
+  00021e  move-object/from16 v18, v5
+  000222  new-instance v2, Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;
+  000226  invoke-direct v2, v1, v6, Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;-><init>(Ljava/lang/CharSequence; Z)V
+  00022c  move-object/from16 v1, v18
+  000230  goto/16 +0e2h
+  000234  move/from16 v16, v1
+  000238  move-object/from16 v19, v2
+  00023c  move-object/from16 v17, v3
+  000240  move-object/from16 v18, v5
+  000244  new-instance v1, Lqc/a;
+  000248  invoke-direct v1, Lqc/a;-><init>()V
+  00024e  invoke-interface v0, Lorg/xmlpull/v1/XmlPullParser;->next()I
+  000254  move-result v2
+  000256  const/4 v3, 1
+  000258  const/4 v3, 3
+  00025a  if-eq v2, v3, +0c6h
+  00025e  invoke-interface v0, Lorg/xmlpull/v1/XmlPullParser;->getName()Ljava/lang/String;
+  000264  move-result-object v2
+  000266  sget-object v3, Lcom/getmimo/data/content/lessonparser/interactive/model/Tag;->a [Lcom/getmimo/data/content/lessonparser/interactive/model/Tag;
+  00026a  invoke-static v2, v8, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z
+  000270  move-result v2
+  000272  if-nez v2, +0bah
+  000276  invoke-interface v0, Lorg/xmlpull/v1/XmlPullParser;->getEventType()I
+  00027c  move-result v2
+  00027e  const/4 v11, 1
+  000280  const/4 v11, 4
+  000282  if-ne v2, v11, +00dh
+  000286  invoke-static v0, Lte/d;->d(Lorg/xmlpull/v1/XmlPullParser;)Ljava/lang/String;
+  00028c  move-result-object v2
+  00028e  invoke-virtual v12, v2, v14, v7, Lv80/d;->n(Ljava/lang/String; Ljava/lang/String; Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;)Ljava/lang/CharSequence;
+  000294  move-result-object v2
+  000296  invoke-virtual v1, v2, Lqc/a;->a(Ljava/lang/CharSequence;)V
+  00029c  invoke-interface v0, Lorg/xmlpull/v1/XmlPullParser;->getName()Ljava/lang/String;
+  0002a2  move-result-object v2
+  0002a4  invoke-static v2, v9, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z
+  0002aa  move-result v3
+  0002ac  if-eqz v3, +011h
+  0002b0  invoke-static v0, Lte/d;->c(Lorg/xmlpull/v1/XmlPullParser;)Ljava/lang/String;
+  0002b6  move-result-object v2
+  0002b8  invoke-virtual v12, v2, v9, v7, Lv80/d;->n(Ljava/lang/String; Ljava/lang/String; Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;)Ljava/lang/CharSequence;
+  0002be  move-result-object v2
+  0002c0  invoke-virtual v1, v2, Lqc/a;->a(Ljava/lang/CharSequence;)V
+  0002c6  move-object/from16 v3, v19
+  0002ca  goto/16 +086h
+  0002ce  invoke-static v2, v13, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z
+  0002d4  move-result v3
+  0002d6  if-eqz v3, +015h
+  0002da  invoke-static v0, Lte/d;->d(Lorg/xmlpull/v1/XmlPullParser;)Ljava/lang/String;
+  0002e0  move-result-object v2
+  0002e2  new-instance v3, Lqc/a;
+  0002e6  const/4 v5, 5
+  0002e8  const/4 v5, 0
+  0002ea  invoke-virtual v12, v2, v10, v5, Lv80/d;->n(Ljava/lang/String; Ljava/lang/String; Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;)Ljava/lang/CharSequence;
+  0002f0  move-result-object v2
+  0002f2  invoke-direct v3, v2, Lqc/a;-><init>(Ljava/lang/CharSequence;)V
+  0002f8  invoke-virtual v1, v3, Lqc/a;->a(Ljava/lang/CharSequence;)V
+  0002fe  goto -1ch
+  000300  const/4 v5, 4
+  000302  const/4 v5, 0
+  000304  const-string v3, "em"
+  000308  invoke-static v2, v3, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z
+  00030e  move-result v3
+  000310  if-eqz v3, +016h
+  000314  invoke-static v0, Lte/d;->d(Lorg/xmlpull/v1/XmlPullParser;)Ljava/lang/String;
+  00031a  move-result-object v2
+  00031c  new-instance v3, Lqc/a;
+  000320  new-instance v5, Landroid/text/style/StyleSpan;
+  000324  const/4 v11, 1
+  000326  const/4 v11, 2
+  000328  invoke-direct v5, v11, Landroid/text/style/StyleSpan;-><init>(I)V
+  00032e  invoke-direct v3, v2, v5, Lqc/a;-><init>(Ljava/lang/CharSequence; Landroid/text/style/CharacterStyle;)V
+  000334  invoke-virtual v1, v3, Lqc/a;->a(Ljava/lang/CharSequence;)V
+  00033a  goto -3ah
+  00033c  const/4 v11, 0
+  00033e  const/4 v11, 2
+  000340  const-string v3, "number"
+  000344  invoke-static v2, v3, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z
+  00034a  move-result v5
+  00034c  if-eqz v5, +00eh
+  000350  invoke-static v0, Lte/d;->d(Lorg/xmlpull/v1/XmlPullParser;)Ljava/lang/String;
+  000356  move-result-object v2
+  000358  invoke-virtual v12, v2, v3, v7, Lv80/d;->n(Ljava/lang/String; Ljava/lang/String; Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;)Ljava/lang/CharSequence;
+  00035e  move-result-object v2
+  000360  invoke-virtual v1, v2, Lqc/a;->a(Ljava/lang/CharSequence;)V
+  000366  goto -50h
+  000368  invoke-static v2, v4, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z
+  00036e  move-result v3
+  000370  if-eqz v3, +00dh
+  000374  invoke-static v0, Lte/d;->b(Lorg/xmlpull/v1/XmlPullParser;)V
+  00037a  invoke-virtual v12, v15, v14, v7, Lv80/d;->n(Ljava/lang/String; Ljava/lang/String; Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;)Ljava/lang/CharSequence;
+  000380  move-result-object v2
+  000382  invoke-virtual v1, v2, Lqc/a;->a(Ljava/lang/CharSequence;)V
+  000388  goto -61h
+  00038a  move-object/from16 v3, v19
+  00038e  invoke-static v2, v3, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z
+  000394  move-result v5
+  000396  if-eqz v5, +00ah
+  00039a  invoke-static v0, Lte/d;->e(Lorg/xmlpull/v1/XmlPullParser;)Ljava/lang/String;
+  0003a0  move-result-object v2
+  0003a2  invoke-virtual v1, v2, Lqc/a;->a(Ljava/lang/CharSequence;)V
+  0003a8  goto +17h
+  0003aa  invoke-interface v0, Lorg/xmlpull/v1/XmlPullParser;->getEventType()I
+  0003b0  move-result v5
+  0003b2  const/4 v11, 7
+  0003b4  const/4 v11, 3
+  0003b6  if-ne v5, v11, +010h
+  0003ba  invoke-static v2, v8, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z
+  0003c0  move-result v2
+  0003c2  if-eqz v2, +00ah
+  0003c6  invoke-interface v0, Lorg/xmlpull/v1/XmlPullParser;->getNamespace()Ljava/lang/String;
+  0003cc  move-result-object v2
+  0003ce  invoke-interface v0, v11, v2, v8, Lorg/xmlpull/v1/XmlPullParser;->require(I Ljava/lang/String; Ljava/lang/String;)V
+  0003d4  goto +9h
+  0003d6  invoke-interface v0, Lorg/xmlpull/v1/XmlPullParser;->next()I
+  0003dc  move-result v2
+  0003de  move-object/from16 v19, v3
+  0003e2  goto/16 -0c6h
+  0003e6  new-instance v2, Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;
+  0003ea  invoke-direct v2, v1, v6, Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;-><init>(Ljava/lang/CharSequence; Z)V
+  0003f0  goto/16 -0e2h
+  0003f4  invoke-virtual v1, v2, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  0003fa  goto +6h
+  0003fc  move/from16 v16, v1
+  000400  move-object/from16 v17, v3
+  000404  move-object v1, v5
+  000406  invoke-interface v0, Lorg/xmlpull/v1/XmlPullParser;->next()I
+  00040c  move-result v6
+  00040e  move-object v5, v1
+  000410  move/from16 v1, v16
+  000414  move-object/from16 v3, v17
+  000418  const/4 v2, 1
+  00041a  const/4 v2, 2
+  00041c  goto/16 -1e3h
+  000420  move-object/from16 v17, v3
+  000424  move-object v1, v5
+  000426  invoke-interface v0, Lorg/xmlpull/v1/XmlPullParser;->getNamespace()Ljava/lang/String;
+  00042c  move-result-object v2
+  00042e  sget-object v3, Lcom/getmimo/data/content/lessonparser/interactive/model/Tag;->a [Lcom/getmimo/data/content/lessonparser/interactive/model/Tag;
+  000432  move-object/from16 v4, v17
+  000436  const/4 v3, 3
+  000438  const/4 v3, 3
+  00043a  invoke-interface v0, v3, v2, v4, Lorg/xmlpull/v1/XmlPullParser;->require(I Ljava/lang/String; Ljava/lang/String;)V
+  000440  new-instance v0, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Selection;
+  000444  invoke-direct v0, v1, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Selection;-><init>(Ljava/util/ArrayList;)V
+  00044a  return-object v0
+  00044c  <androguard.core.dex.FillArrayData object at 0x7ff3faf5da10>

@@ -1,0 +1,90 @@
+# USER INPUT → RUN → CORRECT/INCORRECT → PROGRESS RECORD
+
+```mermaid
+flowchart TD
+  N0["a.o<br/><small>analytics @9513424</small>"]
+  N1["TutorialType.getTrackingField<br/><small>track @9739460</small>"]
+  N2["a.f<br/><small>local @9784268</small>"]
+  N3["a.p<br/><small>local @9786668</small>"]
+  N4["LessonProgress.isSolvedCorrectly<br/><small>room @9913532</small>"]
+  N5["LessonProgressRepository.createLessonProgress<br/><small>progress @10063916</small>"]
+  N6["g.a<br/><small>codeplayground @10456892</small>"]
+  N7["InteractiveLessonBaseViewModel$lessonSolvedCorrectly$1.<init><br/><small>base @10936828</small>"]
+  N8["InteractiveLessonBaseViewModel$lessonSolvedIncorrectly$1.<init><br/><small>base @10937224</small>"]
+  N9["InteractiveLessonBaseViewModel$onLessonRun$1.<init><br/><small>base @10938236</small>"]
+  N10["InteractiveLessonBaseViewModel$onLessonRun$1.invokeSuspend<br/><small>base @10938584</small>"]
+  N11["InteractiveLessonBaseViewModel$showWrongFeedbackBlock$1.<init><br/><small>base @10939752</small>"]
+  N12["InteractiveLessonBaseViewModel$storeLessonProgressInMemory$2.<init><br/><small>base @10939920</small>"]
+  N13["InteractiveLessonBaseViewModel$updateTabbedCodeViewWithBrowserOutput$1.<init><br/><small>base @10940444</small>"]
+  N14["InteractiveLessonBaseViewModel.createLessonProgress<br/><small>base @10948948</small>"]
+  N15["InteractiveLessonBaseViewModel.I<br/><small>base @10949040</small>"]
+  N16["InteractiveLessonBaseViewModel.K<br/><small>base @10949304</small>"]
+  N17["InteractiveLessonBaseViewModel.L<br/><small>base @10949404</small>"]
+  N18["InteractiveLessonBaseViewModel.P<br/><small>base @10952264</small>"]
+  N19["InteractiveLessonBaseViewModel.Q<br/><small>base @10952588</small>"]
+  N20["InteractiveLessonBaseViewModel.T<br/><small>base @10952812</small>"]
+  N21["InteractiveLessonBaseViewModel.lessonSolvedCorrectly<br/><small>base @10953356</small>"]
+  N22["InteractiveLessonBaseViewModel.lessonSolvedIncorrectly<br/><small>base @10954596</small>"]
+  N23["InteractiveLessonBaseViewModel.onLessonRun<br/><small>base @10954996</small>"]
+  N24["InteractiveLessonBaseViewModel.updateSolutionFeedback<br/><small>base @10955960</small>"]
+  N25["InteractiveLessonBaseViewModel.showWrongFeedbackBlock<br/><small>base @10956096</small>"]
+  N26["InteractiveLessonBaseViewModel.storeLessonProgressInMemory<br/><small>base @10956692</small>"]
+  N27["InteractiveLessonBaseViewModel.trackLessonResult<br/><small>base @10956848</small>"]
+  N28["InteractiveLessonBaseViewModel.configureInteraction<br/><small>base @10957544</small>"]
+  N29["InteractiveLessonBaseViewModel.i0<br/><small>base @10957668</small>"]
+  N30["a.a<br/><small>sound @11019712</small>"]
+  N31["m.<init><br/><small>Ljm @ext</small>"]
+  N32["m.b<br/><small>Ljm @ext</small>"]
+  N33["q.<init><br/><small>Ljm @ext</small>"]
+  N34["g.<init><br/><small>Lym @ext</small>"]
+  N35["l.<init><br/><small>Lym @ext</small>"]
+  N23 --> N9
+  N10 --> N16
+  N10 --> N21
+  N10 --> N22
+  N21 --> N4
+  N21 --> N7
+  N21 --> N14
+  N21 --> N15
+  N21 --> N16
+  N21 --> N24
+  N21 --> N26
+  N21 --> N27
+  N21 --> N29
+  N21 --> N30
+  N21 --> N32
+  N22 --> N8
+  N22 --> N14
+  N22 --> N24
+  N22 --> N25
+  N22 --> N26
+  N22 --> N30
+  N14 --> N5
+  N14 --> N16
+  N15 --> N6
+  N15 --> N16
+  N15 --> N16
+  N15 --> N16
+  N15 --> N16
+  N15 --> N19
+  N24 --> N20
+  N24 --> N33
+  N26 --> N12
+  N27 --> N0
+  N27 --> N1
+  N27 --> N16
+  N27 --> N16
+  N27 --> N16
+  N27 --> N17
+  N29 --> N13
+  N29 --> N28
+  N29 --> N34
+  N29 --> N35
+  N32 --> N31
+  N25 --> N2
+  N25 --> N3
+  N25 --> N11
+  N25 --> N18
+```
+
+Edges are real `invoke-*` xrefs extracted from the 12 original DEX files (androguard 4.1.4).

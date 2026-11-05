@@ -1,0 +1,1349 @@
+{
+ "mission": "MISSION_06",
+ "title": "Mimo 9.35 deep client reverse engineering evidence database",
+ "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+ "branch": "arena/aebb90b7-game",
+ "baseline": "d0714b40",
+ "server_confirmed": 0,
+ "classification_counts": {
+  "VERIFIED_STATIC": 90,
+  "VERIFIED_RUNTIME": 5,
+  "VERIFIED_BOTH": 5,
+  "INFERRED": 2,
+  "UNKNOWN": 11
+ },
+ "total": 113,
+ "schema_note": "Each entry carries classification, topic, claim, source_apk_sha256 and an evidence object (method_signature, dex, code_offset, instructions, callers, callees, file paths, bytecode/log/SQL/runtime references).",
+ "entries": [
+  {
+   "id": "M06-001",
+   "classification": "VERIFIED_STATIC",
+   "topic": "toolchain",
+   "claim": "Androguard 4.1.4 parses all 12 original DEX files; 29,454 classes, 129,071 methods, 78,560 xref targets, 105,012 caller edges, 82,732 field refs, 34,391 string-bearing methods",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/M06_DEX_HARNESS.py",
+    "tool": "/home/user/_work/m06/venv"
+   }
+  },
+  {
+   "id": "M06-002",
+   "classification": "VERIFIED_STATIC",
+   "topic": "toolchain",
+   "claim": "system pip3 install androguard failed Debian PEP 668 externally-managed-environment; venv install succeeded",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "failure": "error: externally-managed-environment",
+    "alternative": "python3 -m venv /home/user/_work/m06/venv"
+   }
+  },
+  {
+   "id": "M06-003",
+   "classification": "VERIFIED_STATIC",
+   "topic": "toolchain",
+   "claim": "Old xref regex truncated descriptors containing spaces (e.g. h0(Ljava/util/List; Z)V); fixed to (L…->.*)$ and cache rebuilt",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/M06_DEX_HARNESS.py",
+    "before": "descriptors containing spaces were truncated (fewer captured edges)",
+    "after": "78,560 xref targets"
+   }
+  },
+  {
+   "id": "M06-004",
+   "classification": "VERIFIED_STATIC",
+   "topic": "toolchain",
+   "claim": "Androguard get_instructions requires iterating d.get_classes()→c.get_methods(); DEX.get_methods() returns MethodIdItem",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "failure": "xrefs=0 / AttributeError get_instructions"
+   }
+  },
+  {
+   "id": "M06-005",
+   "classification": "VERIFIED_STATIC",
+   "topic": "toolchain",
+   "claim": "Instruction12x has no get_offset(); PC accumulator + str(i) + get_length() used",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "failure": "AttributeError: 'Instruction12x' object has no attribute 'get_offset'"
+   }
+  },
+  {
+   "id": "M06-006",
+   "classification": "VERIFIED_STATIC",
+   "topic": "catalog",
+   "claim": "12,851 Mimo methods / 407,242 instructions / 3,133 Mimo classes indexed",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "SCHEMAS/METHOD_CATALOG_MIMO.json",
+    "bytes": 6800000
+   }
+  },
+  {
+   "id": "M06-007",
+   "classification": "VERIFIED_STATIC",
+   "topic": "catalog",
+   "claim": "173 class semantic mappings recovered from Kotlin inner-class names",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "SCHEMAS/OBFUSCATION_MAP.json"
+   }
+  },
+  {
+   "id": "M06-008",
+   "classification": "INFERRED",
+   "topic": "catalog",
+   "claim": "596 method semantic hints recovered; low-vote entries are heuristic, not exact-name proof",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "SCHEMAS/METHOD_NAME_MAP.json"
+   }
+  },
+  {
+   "id": "M06-009",
+   "classification": "VERIFIED_STATIC",
+   "topic": "catalog",
+   "claim": "82 full class disassembly dumps saved",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "dir": "EVIDENCE/DISASM/",
+    "files": 82,
+    "bytes": 2100000
+   }
+  },
+  {
+   "id": "M06-010",
+   "classification": "VERIFIED_STATIC",
+   "topic": "catalog",
+   "claim": "9 real call graphs with invoke-* xrefs",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "dir": "CALL_GRAPHS/",
+    "note": "632 edges total in JSON files"
+   }
+  },
+  {
+   "id": "M06-011",
+   "classification": "VERIFIED_STATIC",
+   "topic": "anti-decomp",
+   "claim": "classes.dex contains one \"Smob - Mod obfuscation tool v4.6 by Kirlif'\" string",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "dex": "classes.dex",
+    "string_pool": true
+   }
+  },
+  {
+   "id": "M06-012",
+   "classification": "INFERRED",
+   "topic": "anti-decomp",
+   "claim": "JADX stubs correlate with injected const/4 junk and trailing fill-array-data-payload; causal link INFERRED",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/DISASM/LessonProgress.smali.txt"
+   }
+  },
+  {
+   "id": "M06-013",
+   "classification": "VERIFIED_STATIC",
+   "topic": "correction",
+   "claim": "LessonProgress.isSolvedCorrectly() returns tries >= 1, NOT attempts >= 1 (corrects M05)",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lcom/getmimo/data/model/room/LessonProgress;->isSolvedCorrectly()Z",
+    "dex": "classes.dex",
+    "code_offset": 9913532,
+    "instructions": 13,
+    "callers": 9,
+    "callees": 0,
+    "bytecode": "iget … ->tries I; const/4 v3,1; if-lt v1,v0",
+    "file": "EVIDENCE/DISASM/LessonProgress.smali.txt"
+   }
+  },
+  {
+   "id": "M06-014",
+   "classification": "VERIFIED_STATIC",
+   "topic": "assets",
+   "claim": "ContentLocale enum has 10 locales RU EN ES PT DE FR IT ID TR PL with language strings ru en es pt de fr it id tr pl",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lcom/getmimo/data/content/model/track/ContentLocale;-><clinit>()V",
+    "dex": "classes.dex",
+    "code_offset": 9681384,
+    "instructions": 141,
+    "callers": 0,
+    "callees": 13,
+    "file": "EVIDENCE/DISASM/ContentLocale.smali.txt"
+   }
+  },
+  {
+   "id": "M06-015",
+   "classification": "VERIFIED_STATIC",
+   "topic": "assets",
+   "claim": "Lye/b;<clinit> builds \"lessons-<lang>/tracks\" map",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lye/b;-><clinit>()V",
+    "dex": "classes.dex",
+    "code_offset": 15518812,
+    "instructions": 97,
+    "callers": null,
+    "callees": null,
+    "file": "EVIDENCE/DISASM/AssetTracksLoader.smali.txt"
+   }
+  },
+  {
+   "id": "M06-016",
+   "classification": "VERIFIED_STATIC",
+   "topic": "assets",
+   "claim": "Lye/b.b(J) opens lessons-<lang>/tracks/tutorial-<id>.json via AssetManager",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lye/b;->b(J)Ljava/io/InputStream;",
+    "dex": "classes.dex",
+    "code_offset": 15519668,
+    "instructions": 36,
+    "callers": null,
+    "callees": null,
+    "file": "EVIDENCE/DISASM/AssetTracksLoader.smali.txt"
+   }
+  },
+  {
+   "id": "M06-017",
+   "classification": "VERIFIED_STATIC",
+   "topic": "assets",
+   "claim": "Lye/b.d() opens lessons-<lang>/tracks/tracks.json via AssetManager",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lye/b;->d()Ljava/io/InputStream;",
+    "dex": "classes.dex",
+    "code_offset": 15519944,
+    "instructions": 26,
+    "callers": null,
+    "callees": null,
+    "file": "EVIDENCE/DISASM/AssetTracksLoader.smali.txt"
+   }
+  },
+  {
+   "id": "M06-018",
+   "classification": "VERIFIED_STATIC",
+   "topic": "assets",
+   "claim": "Lye/b.c() returns file:///android_asset/lessons-common/icons",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lye/b;->c()Ljava/lang/String;",
+    "dex": "classes.dex",
+    "code_offset": 15519852,
+    "instructions": 6,
+    "callers": null,
+    "callees": null,
+    "file": "EVIDENCE/DISASM/AssetTracksLoader.smali.txt"
+   }
+  },
+  {
+   "id": "M06-019",
+   "classification": "VERIFIED_STATIC",
+   "topic": "assets",
+   "claim": "Lye/d uses Context.getFilesDir() with /tracks.json and /tutorial- paths (second loader)",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lye/d;->b(J)Ljava/io/InputStream;",
+    "dex": "classes.dex",
+    "code_offset": 15520292,
+    "instructions": 32,
+    "callers": null,
+    "callees": null,
+    "file": "EVIDENCE/DISASM/AssetTracksLoaderImpl.smali.txt"
+   }
+  },
+  {
+   "id": "M06-020",
+   "classification": "VERIFIED_STATIC",
+   "topic": "assets",
+   "claim": "DefaultTrackLoader.c(InputStream) reads UTF-8 via InputStreamReader/BufferedReader/readText",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lcom/getmimo/data/content/tracks/b;->c(Ljava/io/InputStream;)Ljava/lang/String;",
+    "dex": "classes.dex",
+    "code_offset": 9747356,
+    "instructions": 29,
+    "callers": 3,
+    "callees": 5,
+    "file": "EVIDENCE/DISASM/DefaultTrackLoader.smali.txt"
+   }
+  },
+  {
+   "id": "M06-021",
+   "classification": "VERIFIED_STATIC",
+   "topic": "assets",
+   "claim": "DefaultTrackLoader.a(J,I,I) decodes JSON with kotlinx.serialization Lhb0/b.b and Lhb0/j.h",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lcom/getmimo/data/content/tracks/b;->a(J I I)Lkotlinx/serialization/json/c;",
+    "dex": "classes.dex",
+    "code_offset": 9747500,
+    "instructions": 78,
+    "callers": 0,
+    "callees": 15,
+    "file": "EVIDENCE/DISASM/DefaultTrackLoader.smali.txt"
+   }
+  },
+  {
+   "id": "M06-022",
+   "classification": "VERIFIED_BOTH",
+   "topic": "assets",
+   "claim": "M05 shipped v753 English: 19 tracks, 144 sections, 1,029 tutorials, 1,947 chapters, 18,272 lessons, 0 duplicate lesson IDs",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "../MISSION_05/SCHEMAS/SHIPPED_CONTENT_STATS.json",
+    "runtime": "../MISSION_05/EVIDENCE/RUNTIME_STATIC_MATCH.json"
+   }
+  },
+  {
+   "id": "M06-023",
+   "classification": "VERIFIED_STATIC",
+   "topic": "assets",
+   "claim": "All 144 sections satisfy endIndex-startIndex+1 == len(tutorialIds)",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "../MISSION_05/SCHEMAS/SHIPPED_CONTENT_STATS.json"
+   }
+  },
+  {
+   "id": "M06-024",
+   "classification": "VERIFIED_STATIC",
+   "topic": "dsl",
+   "claim": "Lesson DSL is XML-like text parsed by org.xmlpull.v1.XmlPullParserFactory with setNamespaceAware(true)",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lte/c;->b(Ljava/lang/String;)Ljava/util/ArrayList;",
+    "dex": "classes.dex",
+    "code_offset": 14378108,
+    "instructions": 400,
+    "callers": null,
+    "callees": null,
+    "file": "EVIDENCE/DISASM/DSL_LessonParser.smali.txt"
+   }
+  },
+  {
+   "id": "M06-025",
+   "classification": "VERIFIED_STATIC",
+   "topic": "dsl",
+   "claim": "START_TAG dispatch p→Lte/d.a, code→Lte/a.a, selection→Lte/e.a, img→Lte/c.a, webview→Lte/g.a, database→Lte/b.a; html/body/unknown skipped",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/DSL_PARSER_DISASM.txt"
+   }
+  },
+  {
+   "id": "M06-026",
+   "classification": "VERIFIED_STATIC",
+   "topic": "dsl",
+   "claim": "parser errors emit analytics xml_parse_error_module / xml_parse_error_skipped via Lpe/a.b",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/DISASM/DSL_LessonParser.smali.txt"
+   }
+  },
+  {
+   "id": "M06-027",
+   "classification": "VERIFIED_STATIC",
+   "topic": "dsl",
+   "claim": "Lgm/h;<clinit> regex <\\s*body[^>]*>(.*?)<\\s*/\\s*body>",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/DISASM/LessonInteractionTypeMapper.smali.txt"
+   }
+  },
+  {
+   "id": "M06-028",
+   "classification": "VERIFIED_STATIC",
+   "topic": "dsl",
+   "claim": "ModuleVisibility enum ALWAYS(\"always\"), CORRECT(\"correct\"), WRONG(\"wrong\")",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/DISASM/ModuleVisibility.smali.txt"
+   }
+  },
+  {
+   "id": "M06-029",
+   "classification": "VERIFIED_STATIC",
+   "topic": "dsl",
+   "claim": "ParserModule enum CODE, PARAGRAPH, SELECTION",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/DISASM/ParserModule.smali.txt"
+   }
+  },
+  {
+   "id": "M06-030",
+   "classification": "VERIFIED_STATIC",
+   "topic": "dsl",
+   "claim": "Lte/a.b parses <content><text value type> into SpannableStringBuilder",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/DISASM/DSL_LessonParser.smali.txt"
+   }
+  },
+  {
+   "id": "M06-031",
+   "classification": "VERIFIED_STATIC",
+   "topic": "dsl",
+   "claim": "Lte/g.a webview attributes visible-if(default \"always\"), version, style, interaction(unlock/embedded), content",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/DSL_PARSER_DISASM.txt"
+   }
+  },
+  {
+   "id": "M06-032",
+   "classification": "VERIFIED_STATIC",
+   "topic": "dsl",
+   "claim": "9 LessonInteractionType renderer constants: interactive_webview, fill_the_gap, spell, selection, validated_input, multiple_choice, single_choice, slide, reveal, none",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lgm/h;->a(Ljava/util/List;)Lcom/getmimo/ui/lesson/interactive/model/LessonInteractionType;",
+    "dex": "classes.dex",
+    "code_offset": 12460480,
+    "instructions": 437,
+    "callers": null,
+    "callees": null,
+    "file": "EVIDENCE/DISASM/LessonInteractionTypeMapper.smali.txt"
+   }
+  },
+  {
+   "id": "M06-033",
+   "classification": "UNKNOWN",
+   "topic": "dsl",
+   "claim": "SingleChoice/MultipleChoice/Reveal exact dispatch predicates remain UNKNOWN",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "class_name": "Lgm/h;",
+    "reason": "437-insn method not fully decoded"
+   }
+  },
+  {
+   "id": "M06-034",
+   "classification": "VERIFIED_STATIC",
+   "topic": "dsl",
+   "claim": "LessonContent$Interactive has lessonModules, hardModeLessonModules, getHasDifferentHardModeContent, hardModeModulesOrDefault",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/MODEL_FACTS.txt"
+   }
+  },
+  {
+   "id": "M06-035",
+   "classification": "VERIFIED_STATIC",
+   "topic": "dsl",
+   "claim": "LessonContent$Executable has instructions, preselectedFileIndex, files, getHasBrowserOutput, getHasInputConsole; File has name, codeLanguage, content, solvedContent",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/MODEL_FACTS.txt"
+   }
+  },
+  {
+   "id": "M06-036",
+   "classification": "VERIFIED_BOTH",
+   "topic": "dsl",
+   "claim": "M05 corpus counts: contentType interactive 14,248 / executableFiles 4,024; all 4,024 executableContent have instructions, preselectedFileIndex, hasVisualOutput, files, hints",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "../MISSION_05/SCHEMAS/CONTENT_SCHEMA.json"
+   }
+  },
+  {
+   "id": "M06-037",
+   "classification": "VERIFIED_STATIC",
+   "topic": "dsl",
+   "claim": "TutorialType 9 values Learn, MobileProject, Challenge, Quiz, GuidedProject, GuidedProjectOptional, RecreateProject, PracticeRequired, PracticeOptional",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/MODEL_FACTS.txt"
+   }
+  },
+  {
+   "id": "M06-038",
+   "classification": "VERIFIED_STATIC",
+   "topic": "dsl",
+   "claim": "M05 tag counts text 369,108; code 94,981; p 46,388; option 44,225; content 41,221; interaction 11,729; selection 7,356; output 5,784; webview 930",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "../MISSION_05/SCHEMAS/CONTENT_SCHEMA.json"
+   }
+  },
+  {
+   "id": "M06-039",
+   "classification": "VERIFIED_BOTH",
+   "topic": "dsl",
+   "claim": "mimo.activity.* correct 217, wrong 217, completed 90",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "../MISSION_05/SCHEMAS/CONTENT_SCHEMA.json"
+   }
+  },
+  {
+   "id": "M06-040",
+   "classification": "VERIFIED_STATIC",
+   "topic": "dsl",
+   "claim": "lesson-webview.js injects MimoLesson.postMessage(JSON.stringify({documentID,...})) with gesture/activity/focus/height/ready; no answer evaluation in JS",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "SAMPLES/ORIGINAL_assets_lesson-webview.js",
+    "sha256": "665ee4cbf3498c65a4f6df358c5b43435cf5f6d0c658bcc748b318842ee7d717"
+   }
+  },
+  {
+   "id": "M06-041",
+   "classification": "VERIFIED_STATIC",
+   "topic": "validation",
+   "claim": "base/c.Y(Z) guards LiveData f==TRUE and launches onLessonRun$1",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->Y(Z)V",
+    "dex": "classes.dex",
+    "code_offset": 10954996,
+    "instructions": 30,
+    "callers": 7,
+    "callees": 6
+   }
+  },
+  {
+   "id": "M06-042",
+   "classification": "VERIFIED_STATIC",
+   "topic": "validation",
+   "claim": "onLessonRun$1.invokeSuspend dispatches true→V(), false→X(), posts lessonBundle.b to LiveData e, clears f",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+    "dex": "classes.dex",
+    "code_offset": 10938584,
+    "instructions": 85,
+    "callers": 1,
+    "callees": 10
+   }
+  },
+  {
+   "id": "M06-043",
+   "classification": "VERIFIED_STATIC",
+   "topic": "validation",
+   "claim": "V() sets C=FALSE, increments d, computes tries=NOT(C==TRUE), calls H, e0, solutionFeedbackCorrect + sound, f0 analytics, emits lessonId, calls I()",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->V(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+    "dex": "classes.dex",
+    "code_offset": 10953356,
+    "instructions": 162,
+    "callers": null,
+    "callees": null,
+    "file": "EVIDENCE/ALGORITHM_DIGEST.txt"
+   }
+  },
+  {
+   "id": "M06-044",
+   "classification": "VERIFIED_STATIC",
+   "topic": "validation",
+   "claim": "X() sets C=TRUE, increments d, calls H(0,d), e0, d0 wrong feedback",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->X(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+    "dex": "classes.dex",
+    "code_offset": 10954596,
+    "instructions": 113,
+    "callers": null,
+    "callees": null
+   }
+  },
+  {
+   "id": "M06-045",
+   "classification": "VERIFIED_STATIC",
+   "topic": "validation",
+   "claim": "U() lessonSolvedAndProceedToNextLesson sets f=TRUE, d++, H(NOT(C==TRUE),d), e0, e=b.b, f0, emit, f=FALSE",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "code_offset": 10952900,
+    "instructions": 130
+   }
+  },
+  {
+   "id": "M06-046",
+   "classification": "UNKNOWN",
+   "topic": "validation",
+   "claim": "W(qm/f,cont) lessonSolvedCorrectlyWithPartialMatch body not fully interpreted",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "code_offset": 10953916,
+    "instructions": 202,
+    "file": "EVIDENCE/DISASM/InteractiveLessonBaseViewModel.smali.txt"
+   }
+  },
+  {
+   "id": "M06-047",
+   "classification": "VERIFIED_STATIC",
+   "topic": "validation",
+   "claim": "onValidatedInputExecuted$1 waits delay(300), Lqm/e→V, Lqm/f→b0(f.h)+W, Lqm/g→X",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onValidatedInputExecuted$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+    "dex": "classes.dex",
+    "code_offset": 10939224,
+    "instructions": 144,
+    "callers": 1,
+    "callees": 15
+   }
+  },
+  {
+   "id": "M06-048",
+   "classification": "VERIFIED_STATIC",
+   "topic": "validation",
+   "claim": "setupViews$2 computes normalized match + exact String.equals → Correct / PartialMatch / Incorrect",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lcom/getmimo/ui/lesson/interactive/validatedinput/InteractiveLessonValidatedInputFragment$setupViews$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+    "dex": "classes.dex",
+    "code_offset": 10985684,
+    "instructions": 75,
+    "callers": 1,
+    "callees": 14
+   }
+  },
+  {
+   "id": "M06-049",
+   "classification": "VERIFIED_STATIC",
+   "topic": "validation",
+   "claim": "Lqm/i.a normalizer lowercases Locale.US and keeps letters/digits or < > ( ) : { } , . (ASCII 60,62,40,41,58,123,125,44,46)",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lqm/i;->a(Ljava/lang/String;)Ljava/lang/String;",
+    "dex": "classes.dex",
+    "code_offset": 14172860,
+    "instructions": 50,
+    "callers": null,
+    "callees": null,
+    "file": "EVIDENCE/VALIDATION_RAW_DISASM.txt"
+   }
+  },
+  {
+   "id": "M06-050",
+   "classification": "VERIFIED_STATIC",
+   "topic": "validation",
+   "claim": "Lqm/d.E extracts expected answer as code.subSequence(startIndex,endIndex) from Interaction$ValidatedInput c/d",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/VALIDATEDINPUT_SETUP_DISASM.txt"
+   }
+  },
+  {
+   "id": "M06-051",
+   "classification": "VERIFIED_STATIC",
+   "topic": "validation",
+   "claim": "Lqm/b.invoke stores typed input in Lqm/d.S; Lqm/d.j0 enables RunButton iff input length > 0",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/DISASM/ValidatedInputViewModel.smali.txt"
+   }
+  },
+  {
+   "id": "M06-052",
+   "classification": "VERIFIED_STATIC",
+   "topic": "validation",
+   "claim": "Lim/d.E0 (fillTheGap) filters placed cn/d by boolean b, compares size and each a string to expected by exact equality, joins nonblank with \" \", calls b0 then Y",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lim/d;->E0()V",
+    "dex": "classes.dex",
+    "code_offset": 12834200,
+    "instructions": 200,
+    "callers": null,
+    "callees": null,
+    "file": "EVIDENCE/VALIDATION_RAW_DISASM.txt"
+   }
+  },
+  {
+   "id": "M06-053",
+   "classification": "VERIFIED_STATIC",
+   "topic": "validation",
+   "claim": "Lpm/b.E0 (spell) analogous size/position-wise exact string comparison joining with \"\"",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/DISASM/SpellFragmentRunHandler.smali.txt"
+   }
+  },
+  {
+   "id": "M06-054",
+   "classification": "VERIFIED_STATIC",
+   "topic": "validation",
+   "claim": "Lkm/f.b(List) returns list.all{ it.b == it.c } for selection family",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lkm/f;->b(Ljava/util/List;)Z",
+    "dex": "classes.dex",
+    "code_offset": 13243392,
+    "instructions": 46,
+    "callers": null,
+    "callees": null,
+    "file": "EVIDENCE/DISASM/SelectionValidator.smali.txt"
+   }
+  },
+  {
+   "id": "M06-055",
+   "classification": "VERIFIED_STATIC",
+   "topic": "validation",
+   "claim": "Lkm/f.d(List) rebuilds sm/a display state after a wrong answer",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "code_offset": 13243720
+   }
+  },
+  {
+   "id": "M06-056",
+   "classification": "VERIFIED_STATIC",
+   "topic": "validation",
+   "claim": "selection/a.j0 sets RunButton/keyboard states from cn/d.b and calls base/c.h0(list,boolean)",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/DISASM/SelectionViewModel.smali.txt"
+   }
+  },
+  {
+   "id": "M06-057",
+   "classification": "VERIFIED_STATIC",
+   "topic": "validation",
+   "claim": "q.I() compares user CodeFile.getContent() list with LessonContent$Executable$File.getSolvedContent() list by List.equals; mismatch → Ldm/h error + IncorrectSolutionException",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lcom/getmimo/ui/lesson/executable/q;->I(Ldm/i; Lcom/getmimo/ui/lesson/interactive/LessonBundle; Ljava/util/ArrayList; Lcom/getmimo/data/content/model/track/LessonContent$Executable; Z)Ldm/i;",
+    "dex": "classes.dex",
+    "code_offset": 10912932,
+    "instructions": 114,
+    "callers": 0,
+    "callees": 22,
+    "file": "EVIDENCE/DISASM/ExecutableLessonViewModel.smali.txt"
+   }
+  },
+  {
+   "id": "M06-058",
+   "classification": "VERIFIED_STATIC",
+   "topic": "validation",
+   "claim": "q.E() builds progress via createLessonProgress(LessonBundle, startedAt, tries, attempts)",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lcom/getmimo/ui/lesson/executable/q;->E(Lorg/orbitmvi/orbit/syntax/b;)Lcom/getmimo/data/model/room/LessonProgress;",
+    "dex": "classes.dex",
+    "code_offset": 10913380,
+    "instructions": 57,
+    "callers": 2,
+    "callees": 8
+   }
+  },
+  {
+   "id": "M06-059",
+   "classification": "VERIFIED_RUNTIME",
+   "topic": "validation",
+   "claim": "M05 run-004 wrong answer produced red \"Try again\", Q disabled/grey, Continue→code editor",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "run": "42005358012",
+    "file": "../MISSION_05/RUNTIME/RUN_42002808217_FINDINGS.md"
+   }
+  },
+  {
+   "id": "M06-060",
+   "classification": "UNKNOWN",
+   "topic": "validation",
+   "claim": "No correct-answer runtime state was ever observed",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "runs": "42001925381,42002808217,42003884423,42005358012,42006697783",
+    "reason": "deterministic 24-tap replay not repeated in M06"
+   }
+  },
+  {
+   "id": "M06-061",
+   "classification": "VERIFIED_STATIC",
+   "topic": "progress",
+   "claim": "LessonProgressRepository.createLessonProgress maps 11 Room columns from LessonBundle.a/e/v/f/B, Instant.now(), tries, attempts, tracksRepository.c() publishSetVersion, inQueue=true",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->createLessonProgress(Lcom/getmimo/ui/lesson/interactive/LessonBundle; Lorg/joda/time/Instant; I I)Lcom/getmimo/data/model/room/LessonProgress;",
+    "dex": "classes.dex",
+    "code_offset": 10063916,
+    "instructions": 44,
+    "callers": 0,
+    "callees": 14,
+    "file": "EVIDENCE/DISASM/LessonProgressRepository.smali.txt"
+   }
+  },
+  {
+   "id": "M06-062",
+   "classification": "VERIFIED_STATIC",
+   "topic": "progress",
+   "claim": "createLessonProgress logs a RuntimeException-style error if Instant.now() is before passed startedAt",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "log": "CreateLessonProgress: completedAt date (…) is before startedAt date (…)"
+   }
+  },
+  {
+   "id": "M06-063",
+   "classification": "VERIFIED_STATIC",
+   "topic": "progress",
+   "claim": "base/c.H(I I) delegates to createLessonProgress",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->H(I I)Lcom/getmimo/data/model/room/LessonProgress;",
+    "dex": "classes.dex",
+    "code_offset": 10948948,
+    "instructions": 17,
+    "callers": null,
+    "callees": null
+   }
+  },
+  {
+   "id": "M06-064",
+   "classification": "VERIFIED_STATIC",
+   "topic": "progress",
+   "claim": "base/c.f0(Z Z) emits analytics with TutorialType.getTrackingField()",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->f0(Z Z)V",
+    "dex": "classes.dex",
+    "code_offset": 10956848,
+    "instructions": 41,
+    "callers": 0,
+    "callees": 7
+   }
+  },
+  {
+   "id": "M06-065",
+   "classification": "VERIFIED_STATIC",
+   "topic": "progress",
+   "claim": "base/c.e0() guards field M and launches storeLessonProgressInMemory$2",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "code_offset": 10956692
+   }
+  },
+  {
+   "id": "M06-066",
+   "classification": "VERIFIED_STATIC",
+   "topic": "progress",
+   "claim": "LessonProgressQueue.storeLessonProgress skips when devMenuStorage.e() is true, calls addOrUpdateLessonProgressInQueue, updateCorrectAnswersCount and updateLessonStreakDetector when attempts==1",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->storeLessonProgress(Lcom/getmimo/data/model/room/LessonProgress; Z Z Ld70/b;)Ljava/lang/Object;",
+    "dex": "classes.dex",
+    "code_offset": 10058920,
+    "instructions": 136,
+    "callers": 0,
+    "callees": 11,
+    "file": "EVIDENCE/ALGORITHM_DIGEST.txt"
+   }
+  },
+  {
+   "id": "M06-067",
+   "classification": "VERIFIED_STATIC",
+   "topic": "progress",
+   "claim": "updateCorrectAnswersCount emits AnswersInChapter(correct=count{isSolvedCorrectly}, total=queued.size)",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "code_offset": 10056956,
+    "instructions": 123
+   }
+  },
+  {
+   "id": "M06-068",
+   "classification": "VERIFIED_STATIC",
+   "topic": "progress",
+   "claim": "getCorrectLessonProgressCount counts isSolvedCorrectly(); getCorrectLessonsFirstTryCount adds attempts==1",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "code_offsets": [
+     10057692,
+     10058148
+    ]
+   }
+  },
+  {
+   "id": "M06-069",
+   "classification": "VERIFIED_STATIC",
+   "topic": "progress",
+   "claim": "storeAndPostAllLessonProgress calls moveLessonProgressFromQueue then postUnsyncedLessonProgress",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "code_offset": 10058624
+   }
+  },
+  {
+   "id": "M06-070",
+   "classification": "VERIFIED_STATIC",
+   "topic": "progress",
+   "claim": "Room lesson_progress 11 columns PK(lesson_id,tutorial_id), chapter_completions PK(chapter_id,track_id), tutorial_completions PK(tutorial_id,track_id)",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "../MISSION_05/EVIDENCE/ROOM_SQL.txt",
+    "offsets": [
+     2183344,
+     2183130,
+     2183790
+    ]
+   }
+  },
+  {
+   "id": "M06-071",
+   "classification": "VERIFIED_STATIC",
+   "topic": "progress",
+   "claim": "DAO strings SELECT * FROM lesson_progress WHERE in_queue = 1; UPDATE … SET in_queue = 0; DELETE …; SELECT COUNT(DISTINCT chapter_id) FROM chapter_completions",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "../MISSION_05/EVIDENCE/ROOM_SQL.txt"
+   }
+  },
+  {
+   "id": "M06-072",
+   "classification": "UNKNOWN",
+   "topic": "progress",
+   "claim": "Persisted lesson_progress row after an answer not observed at runtime",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "reason": "private DB extraction forbidden; no root"
+   }
+  },
+  {
+   "id": "M06-073",
+   "classification": "VERIFIED_STATIC",
+   "topic": "unlock",
+   "claim": "GetPathMapState$invoke$3 builds Lvn/d0 Completed, Lvn/e0 Locked, Lvn/h0 UnlockedButNoKeys, Lvn/g0 Unlocked, Lvn/d chapter state, Lvn/n final state",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+    "dex": "classes.dex",
+    "code_offset": 10129608,
+    "instructions": 659,
+    "callers": 1,
+    "callees": 116,
+    "file": "EVIDENCE/PATH_STATE_DISASM.txt"
+   }
+  },
+  {
+   "id": "M06-074",
+   "classification": "VERIFIED_STATIC",
+   "topic": "unlock",
+   "claim": "Challenge tutorials are excluded from path items; sequential prerequisite uses lastOrNull over built items + TutorialType.isRequired() + Lvn/i0.d()",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/PATH_STATE_DISASM.txt"
+   }
+  },
+  {
+   "id": "M06-075",
+   "classification": "VERIFIED_STATIC",
+   "topic": "unlock",
+   "claim": "Chapter hard-mode completion uses Lds/w.c(Set,J,J,J)",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/PATH_STATE_DISASM.txt"
+   }
+  },
+  {
+   "id": "M06-076",
+   "classification": "VERIFIED_STATIC",
+   "topic": "unlock",
+   "claim": "Lcc/b.y builds Lvn/v/w/y/a0 section states",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/DISASM/GetPathMapState_Invoke.smali.txt"
+   }
+  },
+  {
+   "id": "M06-077",
+   "classification": "UNKNOWN",
+   "topic": "unlock",
+   "claim": "Exact boolean combination selecting Locked/UnlockedButNoKeys/Unlocked remains UNKNOWN",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "class_name": "GetPathMapState$invoke$3",
+    "reason": "659 insns, 3 suspension labels, junk const/4 decoys"
+   }
+  },
+  {
+   "id": "M06-078",
+   "classification": "VERIFIED_STATIC",
+   "topic": "unlock",
+   "claim": "CanOpenChapterWithKeys$invoke$1 reads DefaultKeysRepository.c() Boolean and f Flow Integer > 0",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "code_offset": 10104004,
+    "instructions": 102
+   }
+  },
+  {
+   "id": "M06-079",
+   "classification": "UNKNOWN",
+   "topic": "unlock",
+   "claim": "CanOpenChapterWithKeys true-branch result remains UNKNOWN",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "code_offset": 10104004
+   }
+  },
+  {
+   "id": "M06-080",
+   "classification": "VERIFIED_STATIC",
+   "topic": "unlock",
+   "claim": "CompletionRepository.b(Track,cont) attaches TutorialCompletion.isCompleted and completedChapters from Room",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "code_offset": 9981172,
+    "instructions": 178
+   }
+  },
+  {
+   "id": "M06-081",
+   "classification": "VERIFIED_STATIC",
+   "topic": "unlock",
+   "claim": "GetPathMapState.getProBannerState uses displayed inventory / pro banner threshold",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/ALGORITHM_DIGEST.txt"
+   }
+  },
+  {
+   "id": "M06-082",
+   "classification": "VERIFIED_STATIC",
+   "topic": "offline",
+   "claim": "NetworkUtils.a() checks ConnectivityManager.getActiveNetwork(), getNetworkCapabilities, two hasTransport(WIFI|CELLULAR) checks; b() returns !a()",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lcom/getmimo/network/a;->a()Z",
+    "dex": "classes.dex",
+    "code_offset": 10174360,
+    "instructions": 38,
+    "callers": 14,
+    "callees": 4,
+    "file": "EVIDENCE/DISASM/NetworkUtils.smali.txt"
+   }
+  },
+  {
+   "id": "M06-083",
+   "classification": "VERIFIED_STATIC",
+   "topic": "offline",
+   "claim": "LessonProgressRepository.postUnsyncedLessonProgress logs \"No internet connection, not posting unsynced lesson progress\" and throws NoConnectionException offline; online launches postUnsyncedLessonProgress$2 on IO dispatcher",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/DISASM/LessonProgressRepository.smali.txt"
+   }
+  },
+  {
+   "id": "M06-084",
+   "classification": "VERIFIED_STATIC",
+   "topic": "offline",
+   "claim": "ChapterFinishedViewModel$handleOfflineState$1 calls f.R(cont) (handleChapterAlreadyCompletedState) and logs throwable",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/DISASM/ChapterFinishedViewModel.smali.txt"
+   }
+  },
+  {
+   "id": "M06-085",
+   "classification": "VERIFIED_RUNTIME",
+   "topic": "offline",
+   "claim": "M05 cold start with Active default network: none produced first three offline XMLs byte-identical to online",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "run": "42002808217",
+    "file": "../MISSION_05/RUNTIME/"
+   }
+  },
+  {
+   "id": "M06-086",
+   "classification": "VERIFIED_RUNTIME",
+   "topic": "offline",
+   "claim": "M05 offline UI showed \"Connect to the internet to progress further\" while local lesson content remained visible",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "runs": "42002808217,42006697783"
+   }
+  },
+  {
+   "id": "M06-087",
+   "classification": "VERIFIED_RUNTIME",
+   "topic": "offline",
+   "claim": "M05 offline logcat NetworkUnknown/UnknownHostException for analytics cdp.customer.io; no FATAL/ANR/tombstone",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "run": "42002808217"
+   }
+  },
+  {
+   "id": "M06-088",
+   "classification": "UNKNOWN",
+   "topic": "offline",
+   "claim": "Whether every operation (IAP, leaderboards, profile, AiTutor, publishing, account deletion) is blocked offline remains UNKNOWN",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "reason": "only progress-post, chapter-end, keys and content gates decoded"
+   }
+  },
+  {
+   "id": "M06-089",
+   "classification": "VERIFIED_STATIC",
+   "topic": "executable",
+   "claim": "q.J builds Lbe/n0 analytics with IDs, elapsed seconds, attempts, code files, result, \"Lesson passed\"",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/DISASM/ExecutableLessonViewModel.smali.txt"
+   }
+  },
+  {
+   "id": "M06-090",
+   "classification": "VERIFIED_STATIC",
+   "topic": "executable",
+   "claim": "q.F maps style.css/index.html/script.py/script.js through Lcm/b.a..d static hint maps",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/DISASM/ExecutableLessonViewModel.smali.txt"
+   }
+  },
+  {
+   "id": "M06-091",
+   "classification": "VERIFIED_STATIC",
+   "topic": "executable",
+   "claim": "Ldg/a;<clinit> contains shipped HTML template with link href=\"style.css\" and script src=\"script.js\"",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/ALGORITHM_DIGEST.txt"
+   }
+  },
+  {
+   "id": "M06-092",
+   "classification": "VERIFIED_STATIC",
+   "topic": "executable",
+   "claim": "Remote code execution runs through /v1/code/runfiles or /v1/tutorials/{id}/runFiles; no request/response bodies reconstructed",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "../HTTP_VERBS_RESOLVED.json",
+    "boundary": "SERVER CONFIRMED=0"
+   }
+  },
+  {
+   "id": "M06-093",
+   "classification": "VERIFIED_STATIC",
+   "topic": "ui",
+   "claim": "base/c.O(content,bundle) filters ModuleVisibility ALWAYS modules and maps Paragraph→jm/j, Image→jm/i, Webview→jm/k",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "method_signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->O(Lcom/getmimo/data/content/model/track/LessonContent$Interactive; Lcom/getmimo/ui/lesson/interactive/LessonBundle;)V",
+    "dex": "classes.dex",
+    "code_offset": 10949840,
+    "instructions": 616,
+    "callers": 0,
+    "callees": 165
+   }
+  },
+  {
+   "id": "M06-094",
+   "classification": "VERIFIED_STATIC",
+   "topic": "ui",
+   "claim": "base/c.a0() emits lesson_reset analytics and posts jm/q(list,false)",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "code_offset": 10955284
+   }
+  },
+  {
+   "id": "M06-095",
+   "classification": "VERIFIED_STATIC",
+   "topic": "ui",
+   "claim": "base/c.h0(List,Z) creates Lym/f(v,list,boolean) and posts to LiveData w",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "code_offset": 10957544,
+    "instructions": 14
+   }
+  },
+  {
+   "id": "M06-096",
+   "classification": "VERIFIED_STATIC",
+   "topic": "ui",
+   "claim": "base/c.D() deletes File(filesDir, lessonId) recursively after solve",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "code_offset": 10949040
+   }
+  },
+  {
+   "id": "M06-097",
+   "classification": "VERIFIED_BOTH",
+   "topic": "ui",
+   "claim": "M05 VERIFIED_BOTH matches MATCH-1 tutorial-904 lesson 151403; MATCH-2 tutorial-2199 lesson 63259; MATCH-3 tutorial-4648 lesson 152473; MATCH-4 tutorial-4672 lessons 152919/152920; MATCH-5 tracks.json track 274",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "../MISSION_05/EVIDENCE/RUNTIME_STATIC_MATCH.json"
+   }
+  },
+  {
+   "id": "M06-098",
+   "classification": "VERIFIED_STATIC",
+   "topic": "ui",
+   "claim": "WebViewActivityResult enum constants mimo.activity.correct/wrong/completed",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/DISASM/WebViewActivityResult.smali.txt"
+   }
+  },
+  {
+   "id": "M06-099",
+   "classification": "VERIFIED_STATIC",
+   "topic": "ui",
+   "claim": "Orbit MVI used by ExecutableLessonViewModel with Lzl/z state; LiveData/StateFlow used by base/c",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/DISASM/ExecutableLessonViewModel.smali.txt"
+   }
+  },
+  {
+   "id": "M06-100",
+   "classification": "VERIFIED_BOTH",
+   "topic": "native",
+   "claim": "12 .so libraries shipped arm64-v8a; M04 run verified native loads ok",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "run": "41998643355",
+    "file": "../MISSION_05/NATIVE_LIBRARIES.md"
+   }
+  },
+  {
+   "id": "M06-101",
+   "classification": "VERIFIED_STATIC",
+   "topic": "native",
+   "claim": "Method string-constant scan found System.loadLibrary only in Rive; NOT proof of absence",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/DEX_STRING_INDEX.txt"
+   }
+  },
+  {
+   "id": "M06-102",
+   "classification": "UNKNOWN",
+   "topic": "native",
+   "claim": "Native code, JNI tables, signing protocol, TLS/pinning bypass, auth/purchase work deliberately not reconstructed",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "reason": "explicit scope boundary"
+   }
+  },
+  {
+   "id": "M06-103",
+   "classification": "VERIFIED_STATIC",
+   "topic": "network",
+   "claim": "53 Retrofit endpoints catalogued in M02; no server response bodies",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "../HTTP_VERBS_RESOLVED.json"
+   }
+  },
+  {
+   "id": "M06-104",
+   "classification": "VERIFIED_STATIC",
+   "topic": "network",
+   "claim": "Progress POST /v1/tutorials/{tutorialId}/progress, runFiles, /v1/code/runfiles, /v1/tracks/{id}/completion|eta, /v1/user/*, /v2/client-config, /v1/leaderboards/*",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "../HTTP_VERBS_RESOLVED.json"
+   }
+  },
+  {
+   "id": "M06-105",
+   "classification": "UNKNOWN",
+   "topic": "network",
+   "claim": "SERVER CONFIRMED = 0; no backend reconstruction, no server business logic, no server DB",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "reason": "scope boundary"
+   }
+  },
+  {
+   "id": "M06-106",
+   "classification": "VERIFIED_STATIC",
+   "topic": "economy",
+   "claim": "ChapterFinishedSuccessType DAILY_GOAL_NOT_REACHED / REACHED / ALREADY_REACHED_EARLIER_TODAY, streakChallengeCoinPrice, userCoins, local_coins strings",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "EVIDENCE/DEX_STRING_INDEX.txt"
+   }
+  },
+  {
+   "id": "M06-107",
+   "classification": "UNKNOWN",
+   "topic": "economy",
+   "claim": "XP / keys / coins / streak / daily-goal award formulas and thresholds remain UNKNOWN",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "reason": "server response bodies not reconstructed"
+   }
+  },
+  {
+   "id": "M06-108",
+   "classification": "VERIFIED_STATIC",
+   "topic": "economy",
+   "claim": "DefaultKeysRepository, DefaultStreakRepository, DefaultRewardRepository, GetTrackEta, QueuePathOverviewEtaIfNeeded class names recovered",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "file": "SCHEMAS/OBFUSCATION_MAP.json"
+   }
+  },
+  {
+   "id": "M06-109",
+   "classification": "VERIFIED_STATIC",
+   "topic": "corpus",
+   "claim": "10 byte-exact original APK samples with SHA-256 in SAMPLES/MANIFEST.json",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "dir": "SAMPLES/"
+   }
+  },
+  {
+   "id": "M06-110",
+   "classification": "UNKNOWN",
+   "topic": "runtime",
+   "claim": "No new M06 emulator run; M05 runs 001–005 reused with explicit classification",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "reason": "hypotheses resolved statically; remaining runtime hypothesis requires forbidden private DB extraction"
+   }
+  },
+  {
+   "id": "M06-111",
+   "classification": "VERIFIED_RUNTIME",
+   "topic": "runtime",
+   "claim": "M05 42006697783 LESSON_PHASE detected_options=0 rendered offline track 274 \"Automating Tasks with AI\" ChatGPT lessons",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "run": "42006697783",
+    "file": "../MISSION_05/RUNTIME/RUN_42006697783_FINDINGS.md"
+   }
+  },
+  {
+   "id": "M06-112",
+   "classification": "VERIFIED_STATIC",
+   "topic": "scope",
+   "claim": "Original APK unchanged, 142,353,499 bytes, SHA-256 as above",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "bytes": 142353499
+   }
+  },
+  {
+   "id": "M06-113",
+   "classification": "VERIFIED_STATIC",
+   "topic": "scope",
+   "claim": "No APK modification, no emulator root, no auth bypass, no credentials, no backend reconstruction",
+   "source_apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+   "evidence": {
+    "note": "read-only static DEX + shipped assets"
+   }
+  }
+ ]
+}

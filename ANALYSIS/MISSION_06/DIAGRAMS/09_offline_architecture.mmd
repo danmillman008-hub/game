@@ -1,0 +1,43 @@
+%% MISSION 06 — original Mimo 9.35 architecture, reconstructed from DEX bytecode.
+%% APK sha256 48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+%% Classification of each node is in the corresponding numbered report and EVIDENCE_DATABASE.json.
+%% Solid edges = VERIFIED_STATIC invoke/field xref; dashed = INFERRED or client-side boundary.
+flowchart TB
+  subgraph LOCAL["Fully local (works offline)"]
+    A["APK assets curriculum v753<br/>10,298 JSON / 10 locales"]
+    B["AssetManager.open + XmlPullParser + kotlinx.serialization"]
+    C["lesson rendering, Run button, all 4+ interaction validators"]
+    D["validatedInput normalizer / solvedContent comparison"]
+    E["Room lesson_progress writes, in_queue=1"]
+    F["AnswersInChapter StateFlow / streak detector"]
+    G["DataStore prefs: hard mode, first run, onboarding"]
+    H["lesson-webview.js + shipped HTML/CSS/JS assets"]
+  end
+  subgraph GATE["Client-side blocking gates"]
+    I["NetworkUtils.a(): ConnectivityManager<br/>getActiveNetwork + hasTransport(WIFI|CELLULAR)"]
+    J["LessonProgressRepository.postUnsyncedLessonProgress<br/>offline → NoConnectionException"]
+    K["ChapterFinishedViewModel$handleOfflineState$1<br/>→ handleChapterAlreadyCompletedState (R)"]
+    L["CanOpenChapterWithKeys / Lvn/h0 UnlockedButNoKeys"]
+    M["M05 run-004/005: 'Connect to the internet to progress further'<br/>with local lesson content still visible"]
+  end
+  subgraph REMOTE["NOT reconstructed (server-owned boundary)"]
+    N["POST progress sync / chapter &amp; tutorial completion"]
+    O["runFiles remote code execution"]
+    P["streak, XP, keys, coins, daily goal, ETA, rewards"]
+    Q["AiTutor, Remote Config, analytics"]
+  end
+  A --> B --> C --> D --> E --> F
+  G --> C
+  H --> C
+  F --> I
+  I -->|false| J
+  I -->|false| K
+  I -.->|true| N
+  L -.-> P
+  M -.-> P
+  K -.-> O
+  Q -.-> C
+  note right of GATE
+    SERVER CONFIRMED = 0. No response bodies, no server
+    business logic, no server DB in this mission.
+  end note

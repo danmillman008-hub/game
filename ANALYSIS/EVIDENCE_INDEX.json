@@ -5720,5 +5720,1158 @@
    }
   ],
   "note": "Appended, not merged into evidence[]: the 336 M01–M04 entries keep their original OBSERVED/STATICALLY INFERRED vocabulary."
+ },
+ "mission_06_append": {
+  "document": "MISSION 06 — deep client reverse engineering (M01–M05 entries preserved verbatim)",
+  "database": "ANALYSIS/MISSION_06/EVIDENCE_DATABASE.json",
+  "classification_vocabulary": {
+   "VERIFIED_STATIC": "read directly from DEX bytecode / verbatim shipped APK assets",
+   "VERIFIED_RUNTIME": "observed in M04/M05 GitHub Actions emulator evidence (cross-referenced)",
+   "VERIFIED_BOTH": "both of the above",
+   "INFERRED": "named interpretation of verified bytecode",
+   "UNKNOWN": "insufficient evidence; no claim made"
+  },
+  "server_confirmed": 0,
+  "counts": {
+   "total": 113,
+   "VERIFIED_STATIC": 90,
+   "VERIFIED_RUNTIME": 5,
+   "VERIFIED_BOTH": 5,
+   "INFERRED": 2,
+   "UNKNOWN": 11
+  },
+  "evidence": [
+   {
+    "id": "M06-001",
+    "claim": "Androguard 4.1.4 parses all 12 original DEX files; 29,454 classes, 129,071 methods, 78,560 xref targets, 105,012 caller edges, 82,732 field refs, 34,391 string-bearing methods",
+    "classification": "VERIFIED_STATIC",
+    "topic": "toolchain",
+    "source_path": "EVIDENCE/M06_DEX_HARNESS.py",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-002",
+    "claim": "system pip3 install androguard failed Debian PEP 668 externally-managed-environment; venv install succeeded",
+    "classification": "VERIFIED_STATIC",
+    "topic": "toolchain",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-003",
+    "claim": "Old xref regex truncated descriptors containing spaces (e.g. h0(Ljava/util/List; Z)V); fixed to (L…->.*)$ and cache rebuilt",
+    "classification": "VERIFIED_STATIC",
+    "topic": "toolchain",
+    "source_path": "EVIDENCE/M06_DEX_HARNESS.py",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-004",
+    "claim": "Androguard get_instructions requires iterating d.get_classes()→c.get_methods(); DEX.get_methods() returns MethodIdItem",
+    "classification": "VERIFIED_STATIC",
+    "topic": "toolchain",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-005",
+    "claim": "Instruction12x has no get_offset(); PC accumulator + str(i) + get_length() used",
+    "classification": "VERIFIED_STATIC",
+    "topic": "toolchain",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-006",
+    "claim": "12,851 Mimo methods / 407,242 instructions / 3,133 Mimo classes indexed",
+    "classification": "VERIFIED_STATIC",
+    "topic": "catalog",
+    "source_path": "SCHEMAS/METHOD_CATALOG_MIMO.json",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-007",
+    "claim": "173 class semantic mappings recovered from Kotlin inner-class names",
+    "classification": "VERIFIED_STATIC",
+    "topic": "catalog",
+    "source_path": "SCHEMAS/OBFUSCATION_MAP.json",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-008",
+    "claim": "596 method semantic hints recovered; low-vote entries are heuristic, not exact-name proof",
+    "classification": "INFERRED",
+    "topic": "catalog",
+    "source_path": "SCHEMAS/METHOD_NAME_MAP.json",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-009",
+    "claim": "83 full class disassembly dumps saved",
+    "classification": "VERIFIED_STATIC",
+    "topic": "catalog",
+    "source_path": "EVIDENCE/DISASM/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-010",
+    "claim": "9 real call graphs with invoke-* xrefs",
+    "classification": "VERIFIED_STATIC",
+    "topic": "catalog",
+    "source_path": "CALL_GRAPHS/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-011",
+    "claim": "classes.dex contains one \"Smob - Mod obfuscation tool v4.6 by Kirlif'\" string",
+    "classification": "VERIFIED_STATIC",
+    "topic": "anti-decomp",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": "classes.dex",
+    "code_offset": null
+   },
+   {
+    "id": "M06-012",
+    "claim": "JADX stubs correlate with injected const/4 junk and trailing fill-array-data-payload; causal link INFERRED",
+    "classification": "INFERRED",
+    "topic": "anti-decomp",
+    "source_path": "EVIDENCE/DISASM/LessonProgress.smali.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-013",
+    "claim": "LessonProgress.isSolvedCorrectly() returns tries >= 1, NOT attempts >= 1 (corrects M05)",
+    "classification": "VERIFIED_STATIC",
+    "topic": "correction",
+    "source_path": "EVIDENCE/DISASM/LessonProgress.smali.txt",
+    "method_signature": "Lcom/getmimo/data/model/room/LessonProgress;->isSolvedCorrectly()Z",
+    "dex": "classes.dex",
+    "code_offset": 9913532
+   },
+   {
+    "id": "M06-014",
+    "claim": "ContentLocale enum has 10 locales RU EN ES PT DE FR IT ID TR PL with language strings ru en es pt de fr it id tr pl",
+    "classification": "VERIFIED_STATIC",
+    "topic": "assets",
+    "source_path": "EVIDENCE/DISASM/ContentLocale.smali.txt",
+    "method_signature": "Lcom/getmimo/data/content/model/track/ContentLocale;-><clinit>()V",
+    "dex": "classes.dex",
+    "code_offset": 9681384
+   },
+   {
+    "id": "M06-015",
+    "claim": "Lye/b;<clinit> builds \"lessons-<lang>/tracks\" map",
+    "classification": "VERIFIED_STATIC",
+    "topic": "assets",
+    "source_path": "EVIDENCE/DISASM/AssetTracksLoader.smali.txt",
+    "method_signature": "Lye/b;-><clinit>()V",
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-016",
+    "claim": "Lye/b.b(J) opens lessons-<lang>/tracks/tutorial-<id>.json via AssetManager",
+    "classification": "VERIFIED_STATIC",
+    "topic": "assets",
+    "source_path": "EVIDENCE/DISASM/AssetTracksLoader.smali.txt",
+    "method_signature": "Lye/b;->b(J)Ljava/io/InputStream;",
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-017",
+    "claim": "Lye/b.d() opens lessons-<lang>/tracks/tracks.json via AssetManager",
+    "classification": "VERIFIED_STATIC",
+    "topic": "assets",
+    "source_path": "EVIDENCE/DISASM/AssetTracksLoader.smali.txt",
+    "method_signature": "Lye/b;->d()Ljava/io/InputStream;",
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-018",
+    "claim": "Lye/b.c() returns file:///android_asset/lessons-common/icons",
+    "classification": "VERIFIED_STATIC",
+    "topic": "assets",
+    "source_path": "EVIDENCE/DISASM/AssetTracksLoader.smali.txt",
+    "method_signature": "Lye/b;->c()Ljava/lang/String;",
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-019",
+    "claim": "Lye/d uses Context.getFilesDir() with /tracks.json and /tutorial- paths (second loader)",
+    "classification": "VERIFIED_STATIC",
+    "topic": "assets",
+    "source_path": "EVIDENCE/DISASM/AssetTracksLoaderImpl.smali.txt",
+    "method_signature": "Lye/d;->b(J)Ljava/io/InputStream;",
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-020",
+    "claim": "DefaultTrackLoader.c(InputStream) reads UTF-8 via InputStreamReader/BufferedReader/readText",
+    "classification": "VERIFIED_STATIC",
+    "topic": "assets",
+    "source_path": "EVIDENCE/DISASM/DefaultTrackLoader.smali.txt",
+    "method_signature": "Lcom/getmimo/data/content/tracks/b;->c(Ljava/io/InputStream;)Ljava/lang/String;",
+    "dex": "classes.dex",
+    "code_offset": 9747356
+   },
+   {
+    "id": "M06-021",
+    "claim": "DefaultTrackLoader.a(J,I,I) decodes JSON with kotlinx.serialization Lhb0/b.b and Lhb0/j.h",
+    "classification": "VERIFIED_STATIC",
+    "topic": "assets",
+    "source_path": "EVIDENCE/DISASM/DefaultTrackLoader.smali.txt",
+    "method_signature": "Lcom/getmimo/data/content/tracks/b;->a(J I I)Lkotlinx/serialization/json/c;",
+    "dex": "classes.dex",
+    "code_offset": 9747500
+   },
+   {
+    "id": "M06-022",
+    "claim": "M05 shipped v753 English: 19 tracks, 144 sections, 1,029 tutorials, 1,947 chapters, 18,272 lessons, 0 duplicate lesson IDs",
+    "classification": "VERIFIED_BOTH",
+    "topic": "assets",
+    "source_path": "../MISSION_05/SCHEMAS/SHIPPED_CONTENT_STATS.json",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-023",
+    "claim": "All 144 sections satisfy endIndex-startIndex+1 == len(tutorialIds)",
+    "classification": "VERIFIED_STATIC",
+    "topic": "assets",
+    "source_path": "../MISSION_05/SCHEMAS/SHIPPED_CONTENT_STATS.json",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-024",
+    "claim": "Lesson DSL is XML-like text parsed by org.xmlpull.v1.XmlPullParserFactory with setNamespaceAware(true)",
+    "classification": "VERIFIED_STATIC",
+    "topic": "dsl",
+    "source_path": "EVIDENCE/DISASM/DSL_LessonParser.smali.txt",
+    "method_signature": "Lte/c;->b(Ljava/lang/String;)Ljava/util/ArrayList;",
+    "dex": null,
+    "code_offset": 14378108
+   },
+   {
+    "id": "M06-025",
+    "claim": "START_TAG dispatch p→Lte/d.a, code→Lte/a.a, selection→Lte/e.a, img→Lte/c.a, webview→Lte/g.a, database→Lte/b.a; html/body/unknown skipped",
+    "classification": "VERIFIED_STATIC",
+    "topic": "dsl",
+    "source_path": "EVIDENCE/DSL_PARSER_DISASM.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-026",
+    "claim": "parser errors emit analytics xml_parse_error_module / xml_parse_error_skipped via Lpe/a.b",
+    "classification": "VERIFIED_STATIC",
+    "topic": "dsl",
+    "source_path": "EVIDENCE/DISASM/DSL_LessonParser.smali.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-027",
+    "claim": "Lgm/h;<clinit> regex <\\s*body[^>]*>(.*?)<\\s*/\\s*body>",
+    "classification": "VERIFIED_STATIC",
+    "topic": "dsl",
+    "source_path": "EVIDENCE/DISASM/LessonInteractionTypeMapper.smali.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-028",
+    "claim": "ModuleVisibility enum ALWAYS(\"always\"), CORRECT(\"correct\"), WRONG(\"wrong\")",
+    "classification": "VERIFIED_STATIC",
+    "topic": "dsl",
+    "source_path": "EVIDENCE/DISASM/ModuleVisibility.smali.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-029",
+    "claim": "ParserModule enum CODE, PARAGRAPH, SELECTION",
+    "classification": "VERIFIED_STATIC",
+    "topic": "dsl",
+    "source_path": "EVIDENCE/DISASM/ParserModule.smali.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-030",
+    "claim": "Lte/a.b parses <content><text value type> into SpannableStringBuilder",
+    "classification": "VERIFIED_STATIC",
+    "topic": "dsl",
+    "source_path": "EVIDENCE/DISASM/DSL_LessonParser.smali.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-031",
+    "claim": "Lte/g.a webview attributes visible-if(default \"always\"), version, style, interaction(unlock/embedded), content",
+    "classification": "VERIFIED_STATIC",
+    "topic": "dsl",
+    "source_path": "EVIDENCE/DSL_PARSER_DISASM.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-032",
+    "claim": "9 LessonInteractionType renderer constants: interactive_webview, fill_the_gap, spell, selection, validated_input, multiple_choice, single_choice, slide, reveal, none",
+    "classification": "VERIFIED_STATIC",
+    "topic": "dsl",
+    "source_path": "EVIDENCE/DISASM/LessonInteractionTypeMapper.smali.txt",
+    "method_signature": "Lgm/h;->a(Ljava/util/List;)Lcom/getmimo/ui/lesson/interactive/model/LessonInteractionType;",
+    "dex": null,
+    "code_offset": 12460480
+   },
+   {
+    "id": "M06-033",
+    "claim": "SingleChoice/MultipleChoice/Reveal exact dispatch predicates remain UNKNOWN",
+    "classification": "UNKNOWN",
+    "topic": "dsl",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-034",
+    "claim": "LessonContent$Interactive has lessonModules, hardModeLessonModules, getHasDifferentHardModeContent, hardModeModulesOrDefault",
+    "classification": "VERIFIED_STATIC",
+    "topic": "dsl",
+    "source_path": "EVIDENCE/MODEL_FACTS.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-035",
+    "claim": "LessonContent$Executable has instructions, preselectedFileIndex, files, getHasBrowserOutput, getHasInputConsole; File has name, codeLanguage, content, solvedContent",
+    "classification": "VERIFIED_STATIC",
+    "topic": "dsl",
+    "source_path": "EVIDENCE/MODEL_FACTS.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-036",
+    "claim": "M05 corpus counts: contentType interactive 14,248 / executableFiles 4,024; all 4,024 executableContent have instructions, preselectedFileIndex, hasVisualOutput, files, hints",
+    "classification": "VERIFIED_BOTH",
+    "topic": "dsl",
+    "source_path": "../MISSION_05/SCHEMAS/CONTENT_SCHEMA.json",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-037",
+    "claim": "TutorialType 9 values Learn, MobileProject, Challenge, Quiz, GuidedProject, GuidedProjectOptional, RecreateProject, PracticeRequired, PracticeOptional",
+    "classification": "VERIFIED_STATIC",
+    "topic": "dsl",
+    "source_path": "EVIDENCE/MODEL_FACTS.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-038",
+    "claim": "M05 tag counts text 369,108; code 94,981; p 46,388; option 44,225; content 41,221; interaction 11,729; selection 7,356; output 5,784; webview 930",
+    "classification": "VERIFIED_STATIC",
+    "topic": "dsl",
+    "source_path": "../MISSION_05/SCHEMAS/CONTENT_SCHEMA.json",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-039",
+    "claim": "mimo.activity.* correct 217, wrong 217, completed 90",
+    "classification": "VERIFIED_BOTH",
+    "topic": "dsl",
+    "source_path": "../MISSION_05/SCHEMAS/CONTENT_SCHEMA.json",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-040",
+    "claim": "lesson-webview.js injects MimoLesson.postMessage(JSON.stringify({documentID,...})) with gesture/activity/focus/height/ready; no answer evaluation in JS",
+    "classification": "VERIFIED_STATIC",
+    "topic": "dsl",
+    "source_path": "SAMPLES/ORIGINAL_assets_lesson-webview.js",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-041",
+    "claim": "base/c.Y(Z) guards LiveData f==TRUE and launches onLessonRun$1",
+    "classification": "VERIFIED_STATIC",
+    "topic": "validation",
+    "source_path": "Lcom/getmimo/ui/lesson/interactive/base/c;->Y(Z)V",
+    "method_signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->Y(Z)V",
+    "dex": "classes.dex",
+    "code_offset": 10954996
+   },
+   {
+    "id": "M06-042",
+    "claim": "onLessonRun$1.invokeSuspend dispatches true→V(), false→X(), posts lessonBundle.b to LiveData e, clears f",
+    "classification": "VERIFIED_STATIC",
+    "topic": "validation",
+    "source_path": "Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+    "method_signature": "Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+    "dex": "classes.dex",
+    "code_offset": 10938584
+   },
+   {
+    "id": "M06-043",
+    "claim": "V() sets C=FALSE, increments d, computes tries=NOT(C==TRUE), calls H, e0, solutionFeedbackCorrect + sound, f0 analytics, emits lessonId, calls I()",
+    "classification": "VERIFIED_STATIC",
+    "topic": "validation",
+    "source_path": "EVIDENCE/ALGORITHM_DIGEST.txt",
+    "method_signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->V(Ld70/b;)Ljava/lang/Object;",
+    "dex": null,
+    "code_offset": 10953356
+   },
+   {
+    "id": "M06-044",
+    "claim": "X() sets C=TRUE, increments d, calls H(0,d), e0, d0 wrong feedback",
+    "classification": "VERIFIED_STATIC",
+    "topic": "validation",
+    "source_path": "Lcom/getmimo/ui/lesson/interactive/base/c;->X(Ld70/b;)Ljava/lang/Object;",
+    "method_signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->X(Ld70/b;)Ljava/lang/Object;",
+    "dex": null,
+    "code_offset": 10954596
+   },
+   {
+    "id": "M06-045",
+    "claim": "U() lessonSolvedAndProceedToNextLesson sets f=TRUE, d++, H(NOT(C==TRUE),d), e0, e=b.b, f0, emit, f=FALSE",
+    "classification": "VERIFIED_STATIC",
+    "topic": "validation",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": 10952900
+   },
+   {
+    "id": "M06-046",
+    "claim": "W(qm/f,cont) lessonSolvedCorrectlyWithPartialMatch body not fully interpreted",
+    "classification": "UNKNOWN",
+    "topic": "validation",
+    "source_path": "EVIDENCE/DISASM/InteractiveLessonBaseViewModel.smali.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": 10953916
+   },
+   {
+    "id": "M06-047",
+    "claim": "onValidatedInputExecuted$1 waits delay(300), Lqm/e→V, Lqm/f→b0(f.h)+W, Lqm/g→X",
+    "classification": "VERIFIED_STATIC",
+    "topic": "validation",
+    "source_path": "Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onValidatedInputExecuted$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+    "method_signature": "Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onValidatedInputExecuted$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+    "dex": "classes.dex",
+    "code_offset": 10939224
+   },
+   {
+    "id": "M06-048",
+    "claim": "setupViews$2 computes normalized match + exact String.equals → Correct / PartialMatch / Incorrect",
+    "classification": "VERIFIED_STATIC",
+    "topic": "validation",
+    "source_path": "Lcom/getmimo/ui/lesson/interactive/validatedinput/InteractiveLessonValidatedInputFragment$setupViews$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+    "method_signature": "Lcom/getmimo/ui/lesson/interactive/validatedinput/InteractiveLessonValidatedInputFragment$setupViews$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+    "dex": "classes.dex",
+    "code_offset": 10985684
+   },
+   {
+    "id": "M06-049",
+    "claim": "Lqm/i.a normalizer lowercases Locale.US and keeps letters/digits or < > ( ) : { } , . (ASCII 60,62,40,41,58,123,125,44,46)",
+    "classification": "VERIFIED_STATIC",
+    "topic": "validation",
+    "source_path": "EVIDENCE/VALIDATION_RAW_DISASM.txt",
+    "method_signature": "Lqm/i;->a(Ljava/lang/String;)Ljava/lang/String;",
+    "dex": null,
+    "code_offset": 14172860
+   },
+   {
+    "id": "M06-050",
+    "claim": "Lqm/d.E extracts expected answer as code.subSequence(startIndex,endIndex) from Interaction$ValidatedInput c/d",
+    "classification": "VERIFIED_STATIC",
+    "topic": "validation",
+    "source_path": "EVIDENCE/VALIDATEDINPUT_SETUP_DISASM.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-051",
+    "claim": "Lqm/b.invoke stores typed input in Lqm/d.S; Lqm/d.j0 enables RunButton iff input length > 0",
+    "classification": "VERIFIED_STATIC",
+    "topic": "validation",
+    "source_path": "EVIDENCE/DISASM/ValidatedInputViewModel.smali.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-052",
+    "claim": "Lim/d.E0 (fillTheGap) filters placed cn/d by boolean b, compares size and each a string to expected by exact equality, joins nonblank with \" \", calls b0 then Y",
+    "classification": "VERIFIED_STATIC",
+    "topic": "validation",
+    "source_path": "EVIDENCE/VALIDATION_RAW_DISASM.txt",
+    "method_signature": "Lim/d;->E0()V",
+    "dex": null,
+    "code_offset": 12834200
+   },
+   {
+    "id": "M06-053",
+    "claim": "Lpm/b.E0 (spell) analogous size/position-wise exact string comparison joining with \"\"",
+    "classification": "VERIFIED_STATIC",
+    "topic": "validation",
+    "source_path": "EVIDENCE/DISASM/SpellFragmentRunHandler.smali.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-054",
+    "claim": "Lkm/f.b(List) returns list.all{ it.b == it.c } for selection family",
+    "classification": "VERIFIED_STATIC",
+    "topic": "validation",
+    "source_path": "EVIDENCE/DISASM/SelectionValidator.smali.txt",
+    "method_signature": "Lkm/f;->b(Ljava/util/List;)Z",
+    "dex": null,
+    "code_offset": 13243392
+   },
+   {
+    "id": "M06-055",
+    "claim": "Lkm/f.d(List) rebuilds sm/a display state after a wrong answer",
+    "classification": "VERIFIED_STATIC",
+    "topic": "validation",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": 13243720
+   },
+   {
+    "id": "M06-056",
+    "claim": "selection/a.j0 sets RunButton/keyboard states from cn/d.b and calls base/c.h0(list,boolean)",
+    "classification": "VERIFIED_STATIC",
+    "topic": "validation",
+    "source_path": "EVIDENCE/DISASM/SelectionViewModel.smali.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-057",
+    "claim": "q.I() compares user CodeFile.getContent() list with LessonContent$Executable$File.getSolvedContent() list by List.equals; mismatch → Ldm/h error + IncorrectSolutionException",
+    "classification": "VERIFIED_STATIC",
+    "topic": "validation",
+    "source_path": "EVIDENCE/DISASM/ExecutableLessonViewModel.smali.txt",
+    "method_signature": "Lcom/getmimo/ui/lesson/executable/q;->I(Ldm/i; Lcom/getmimo/ui/lesson/interactive/LessonBundle; Ljava/util/ArrayList; Lcom/getmimo/data/content/model/track/LessonContent$Executable; Z)Ldm/i;",
+    "dex": "classes.dex",
+    "code_offset": 10912932
+   },
+   {
+    "id": "M06-058",
+    "claim": "q.E() builds progress via createLessonProgress(LessonBundle, startedAt, tries, attempts)",
+    "classification": "VERIFIED_STATIC",
+    "topic": "validation",
+    "source_path": "Lcom/getmimo/ui/lesson/executable/q;->E(Lorg/orbitmvi/orbit/syntax/b;)Lcom/getmimo/data/model/room/LessonProgress;",
+    "method_signature": "Lcom/getmimo/ui/lesson/executable/q;->E(Lorg/orbitmvi/orbit/syntax/b;)Lcom/getmimo/data/model/room/LessonProgress;",
+    "dex": "classes.dex",
+    "code_offset": 10913380
+   },
+   {
+    "id": "M06-059",
+    "claim": "M05 run-004 wrong answer produced red \"Try again\", Q disabled/grey, Continue→code editor",
+    "classification": "VERIFIED_RUNTIME",
+    "topic": "validation",
+    "source_path": "../MISSION_05/RUNTIME/RUN_42002808217_FINDINGS.md",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-060",
+    "claim": "No correct-answer runtime state was ever observed",
+    "classification": "UNKNOWN",
+    "topic": "validation",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-061",
+    "claim": "LessonProgressRepository.createLessonProgress maps 11 Room columns from LessonBundle.a/e/v/f/B, Instant.now(), tries, attempts, tracksRepository.c() publishSetVersion, inQueue=true",
+    "classification": "VERIFIED_STATIC",
+    "topic": "progress",
+    "source_path": "EVIDENCE/DISASM/LessonProgressRepository.smali.txt",
+    "method_signature": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->createLessonProgress(Lcom/getmimo/ui/lesson/interactive/LessonBundle; Lorg/joda/time/Instant; I I)Lcom/getmimo/data/model/room/LessonProgress;",
+    "dex": "classes.dex",
+    "code_offset": 10063916
+   },
+   {
+    "id": "M06-062",
+    "claim": "createLessonProgress logs a RuntimeException-style error if Instant.now() is before passed startedAt",
+    "classification": "VERIFIED_STATIC",
+    "topic": "progress",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-063",
+    "claim": "base/c.H(I I) delegates to createLessonProgress",
+    "classification": "VERIFIED_STATIC",
+    "topic": "progress",
+    "source_path": "Lcom/getmimo/ui/lesson/interactive/base/c;->H(I I)V",
+    "method_signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->H(I I)V",
+    "dex": null,
+    "code_offset": 10948948
+   },
+   {
+    "id": "M06-064",
+    "claim": "base/c.f0(Z Z) emits analytics with TutorialType.getTrackingField()",
+    "classification": "VERIFIED_STATIC",
+    "topic": "progress",
+    "source_path": "Lcom/getmimo/ui/lesson/interactive/base/c;->f0(Z Z)V",
+    "method_signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->f0(Z Z)V",
+    "dex": "classes.dex",
+    "code_offset": 10956848
+   },
+   {
+    "id": "M06-065",
+    "claim": "base/c.e0() guards field M and launches storeLessonProgressInMemory$2",
+    "classification": "VERIFIED_STATIC",
+    "topic": "progress",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": 10956692
+   },
+   {
+    "id": "M06-066",
+    "claim": "LessonProgressQueue.storeLessonProgress skips when devMenuStorage.e() is true, calls addOrUpdateLessonProgressInQueue, updateCorrectAnswersCount and updateLessonStreakDetector when attempts==1",
+    "classification": "VERIFIED_STATIC",
+    "topic": "progress",
+    "source_path": "EVIDENCE/ALGORITHM_DIGEST.txt",
+    "method_signature": "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->storeLessonProgress(Lcom/getmimo/data/model/room/LessonProgress; Z Z Ld70/b;)Ljava/lang/Object;",
+    "dex": "classes.dex",
+    "code_offset": 10058920
+   },
+   {
+    "id": "M06-067",
+    "claim": "updateCorrectAnswersCount emits AnswersInChapter(correct=count{isSolvedCorrectly}, total=queued.size)",
+    "classification": "VERIFIED_STATIC",
+    "topic": "progress",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": 10056956
+   },
+   {
+    "id": "M06-068",
+    "claim": "getCorrectLessonProgressCount counts isSolvedCorrectly(); getCorrectLessonsFirstTryCount adds attempts==1",
+    "classification": "VERIFIED_STATIC",
+    "topic": "progress",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-069",
+    "claim": "storeAndPostAllLessonProgress calls moveLessonProgressFromQueue then postUnsyncedLessonProgress",
+    "classification": "VERIFIED_STATIC",
+    "topic": "progress",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": 10058624
+   },
+   {
+    "id": "M06-070",
+    "claim": "Room lesson_progress 11 columns PK(lesson_id,tutorial_id), chapter_completions PK(chapter_id,track_id), tutorial_completions PK(tutorial_id,track_id)",
+    "classification": "VERIFIED_STATIC",
+    "topic": "progress",
+    "source_path": "../MISSION_05/EVIDENCE/ROOM_SQL.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-071",
+    "claim": "DAO strings SELECT * FROM lesson_progress WHERE in_queue = 1; UPDATE … SET in_queue = 0; DELETE …; SELECT COUNT(DISTINCT chapter_id) FROM chapter_completions",
+    "classification": "VERIFIED_STATIC",
+    "topic": "progress",
+    "source_path": "../MISSION_05/EVIDENCE/ROOM_SQL.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-072",
+    "claim": "Persisted lesson_progress row after an answer not observed at runtime",
+    "classification": "UNKNOWN",
+    "topic": "progress",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-073",
+    "claim": "GetPathMapState$invoke$3 builds Lvn/d0 Completed, Lvn/e0 Locked, Lvn/h0 UnlockedButNoKeys, Lvn/g0 Unlocked, Lvn/d chapter state, Lvn/n final state",
+    "classification": "VERIFIED_STATIC",
+    "topic": "unlock",
+    "source_path": "EVIDENCE/PATH_STATE_DISASM.txt",
+    "method_signature": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+    "dex": "classes.dex",
+    "code_offset": 10129608
+   },
+   {
+    "id": "M06-074",
+    "claim": "Challenge tutorials are excluded from path items; sequential prerequisite uses lastOrNull over built items + TutorialType.isRequired() + Lvn/i0.d()",
+    "classification": "VERIFIED_STATIC",
+    "topic": "unlock",
+    "source_path": "EVIDENCE/PATH_STATE_DISASM.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-075",
+    "claim": "Chapter hard-mode completion uses Lds/w.c(Set,J,J,J)",
+    "classification": "VERIFIED_STATIC",
+    "topic": "unlock",
+    "source_path": "EVIDENCE/PATH_STATE_DISASM.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-076",
+    "claim": "Lcc/b.y builds Lvn/v/w/y/a0 section states",
+    "classification": "VERIFIED_STATIC",
+    "topic": "unlock",
+    "source_path": "EVIDENCE/DISASM/GetPathMapState_Invoke.smali.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-077",
+    "claim": "Exact boolean combination selecting Locked/UnlockedButNoKeys/Unlocked remains UNKNOWN",
+    "classification": "UNKNOWN",
+    "topic": "unlock",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-078",
+    "claim": "CanOpenChapterWithKeys$invoke$1 reads DefaultKeysRepository.c() Boolean and f Flow Integer > 0",
+    "classification": "VERIFIED_STATIC",
+    "topic": "unlock",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": 10104004
+   },
+   {
+    "id": "M06-079",
+    "claim": "CanOpenChapterWithKeys true-branch result remains UNKNOWN",
+    "classification": "UNKNOWN",
+    "topic": "unlock",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": 10104004
+   },
+   {
+    "id": "M06-080",
+    "claim": "CompletionRepository.b(Track,cont) attaches TutorialCompletion.isCompleted and completedChapters from Room",
+    "classification": "VERIFIED_STATIC",
+    "topic": "unlock",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": 9981172
+   },
+   {
+    "id": "M06-081",
+    "claim": "GetPathMapState.getProBannerState uses displayed inventory / pro banner threshold",
+    "classification": "VERIFIED_STATIC",
+    "topic": "unlock",
+    "source_path": "EVIDENCE/ALGORITHM_DIGEST.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-082",
+    "claim": "NetworkUtils.a() checks ConnectivityManager.getActiveNetwork(), getNetworkCapabilities, two hasTransport(WIFI|CELLULAR) checks; b() returns !a()",
+    "classification": "VERIFIED_STATIC",
+    "topic": "offline",
+    "source_path": "EVIDENCE/DISASM/NetworkUtils.smali.txt",
+    "method_signature": "Lcom/getmimo/network/a;->a()Z",
+    "dex": "classes.dex",
+    "code_offset": 10174360
+   },
+   {
+    "id": "M06-083",
+    "claim": "LessonProgressRepository.postUnsyncedLessonProgress logs \"No internet connection, not posting unsynced lesson progress\" and throws NoConnectionException offline; online launches postUnsyncedLessonProgress$2 on IO dispatcher",
+    "classification": "VERIFIED_STATIC",
+    "topic": "offline",
+    "source_path": "EVIDENCE/DISASM/LessonProgressRepository.smali.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-084",
+    "claim": "ChapterFinishedViewModel$handleOfflineState$1 calls f.R(cont) (handleChapterAlreadyCompletedState) and logs throwable",
+    "classification": "VERIFIED_STATIC",
+    "topic": "offline",
+    "source_path": "EVIDENCE/DISASM/ChapterFinishedViewModel.smali.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-085",
+    "claim": "M05 cold start with Active default network: none produced first three offline XMLs byte-identical to online",
+    "classification": "VERIFIED_RUNTIME",
+    "topic": "offline",
+    "source_path": "../MISSION_05/RUNTIME/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-086",
+    "claim": "M05 offline UI showed \"Connect to the internet to progress further\" while local lesson content remained visible",
+    "classification": "VERIFIED_RUNTIME",
+    "topic": "offline",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-087",
+    "claim": "M05 offline logcat NetworkUnknown/UnknownHostException for analytics cdp.customer.io; no FATAL/ANR/tombstone",
+    "classification": "VERIFIED_RUNTIME",
+    "topic": "offline",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-088",
+    "claim": "Whether every operation (IAP, leaderboards, profile, AiTutor, publishing, account deletion) is blocked offline remains UNKNOWN",
+    "classification": "UNKNOWN",
+    "topic": "offline",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-089",
+    "claim": "q.J builds Lbe/n0 analytics with IDs, elapsed seconds, attempts, code files, result, \"Lesson passed\"",
+    "classification": "VERIFIED_STATIC",
+    "topic": "executable",
+    "source_path": "EVIDENCE/DISASM/ExecutableLessonViewModel.smali.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-090",
+    "claim": "q.F maps style.css/index.html/script.py/script.js through Lcm/b.a..d static hint maps",
+    "classification": "VERIFIED_STATIC",
+    "topic": "executable",
+    "source_path": "EVIDENCE/DISASM/ExecutableLessonViewModel.smali.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-091",
+    "claim": "Ldg/a;<clinit> contains shipped HTML template with link href=\"style.css\" and script src=\"script.js\"",
+    "classification": "VERIFIED_STATIC",
+    "topic": "executable",
+    "source_path": "EVIDENCE/ALGORITHM_DIGEST.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-092",
+    "claim": "Remote code execution runs through /v1/code/runfiles or /v1/tutorials/{id}/runFiles; no request/response bodies reconstructed",
+    "classification": "VERIFIED_STATIC",
+    "topic": "executable",
+    "source_path": "../HTTP_VERBS_RESOLVED.json",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-093",
+    "claim": "base/c.O(content,bundle) filters ModuleVisibility ALWAYS modules and maps Paragraph→jm/j, Image→jm/i, Webview→jm/k",
+    "classification": "VERIFIED_STATIC",
+    "topic": "ui",
+    "source_path": "Lcom/getmimo/ui/lesson/interactive/base/c;->O(Lcom/getmimo/data/content/model/track/LessonContent$Interactive; Lcom/getmimo/ui/lesson/interactive/LessonBundle;)V",
+    "method_signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->O(Lcom/getmimo/data/content/model/track/LessonContent$Interactive; Lcom/getmimo/ui/lesson/interactive/LessonBundle;)V",
+    "dex": "classes.dex",
+    "code_offset": 10949840
+   },
+   {
+    "id": "M06-094",
+    "claim": "base/c.a0() emits lesson_reset analytics and posts jm/q(list,false)",
+    "classification": "VERIFIED_STATIC",
+    "topic": "ui",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": 10955284
+   },
+   {
+    "id": "M06-095",
+    "claim": "base/c.h0(List,Z) creates Lym/f(v,list,boolean) and posts to LiveData w",
+    "classification": "VERIFIED_STATIC",
+    "topic": "ui",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": 10957544
+   },
+   {
+    "id": "M06-096",
+    "claim": "base/c.D() deletes File(filesDir, lessonId) recursively after solve",
+    "classification": "VERIFIED_STATIC",
+    "topic": "ui",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": 10949040
+   },
+   {
+    "id": "M06-097",
+    "claim": "M05 VERIFIED_BOTH matches MATCH-1 tutorial-904 lesson 151403; MATCH-2 tutorial-2199 lesson 63259; MATCH-3 tutorial-4648 lesson 152473; MATCH-4 tutorial-4672 lessons 152919/152920; MATCH-5 tracks.json track 274",
+    "classification": "VERIFIED_BOTH",
+    "topic": "ui",
+    "source_path": "../MISSION_05/EVIDENCE/RUNTIME_STATIC_MATCH.json",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-098",
+    "claim": "WebViewActivityResult enum constants mimo.activity.correct/wrong/completed",
+    "classification": "VERIFIED_STATIC",
+    "topic": "ui",
+    "source_path": "EVIDENCE/DISASM/WebViewActivityResult.smali.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-099",
+    "claim": "Orbit MVI used by ExecutableLessonViewModel with Lzl/z state; LiveData/StateFlow used by base/c",
+    "classification": "VERIFIED_STATIC",
+    "topic": "ui",
+    "source_path": "EVIDENCE/DISASM/ExecutableLessonViewModel.smali.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-100",
+    "claim": "12 .so libraries shipped arm64-v8a; M04 run verified native loads ok",
+    "classification": "VERIFIED_BOTH",
+    "topic": "native",
+    "source_path": "../MISSION_05/NATIVE_LIBRARIES.md",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-101",
+    "claim": "Method string-constant scan found System.loadLibrary only in Rive; NOT proof of absence",
+    "classification": "VERIFIED_STATIC",
+    "topic": "native",
+    "source_path": "EVIDENCE/DEX_STRING_INDEX.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-102",
+    "claim": "Native code, JNI tables, signing protocol, TLS/pinning bypass, auth/purchase work deliberately not reconstructed",
+    "classification": "UNKNOWN",
+    "topic": "native",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-103",
+    "claim": "53 Retrofit endpoints catalogued in M02; no server response bodies",
+    "classification": "VERIFIED_STATIC",
+    "topic": "network",
+    "source_path": "../HTTP_VERBS_RESOLVED.json",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-104",
+    "claim": "Progress POST /v1/tutorials/{tutorialId}/progress, runFiles, /v1/code/runfiles, /v1/tracks/{id}/completion|eta, /v1/user/*, /v2/client-config, /v1/leaderboards/*",
+    "classification": "VERIFIED_STATIC",
+    "topic": "network",
+    "source_path": "../HTTP_VERBS_RESOLVED.json",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-105",
+    "claim": "SERVER CONFIRMED = 0; no backend reconstruction, no server business logic, no server DB",
+    "classification": "UNKNOWN",
+    "topic": "network",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-106",
+    "claim": "ChapterFinishedSuccessType DAILY_GOAL_NOT_REACHED / REACHED / ALREADY_REACHED_EARLIER_TODAY, streakChallengeCoinPrice, userCoins, local_coins strings",
+    "classification": "VERIFIED_STATIC",
+    "topic": "economy",
+    "source_path": "EVIDENCE/DEX_STRING_INDEX.txt",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-107",
+    "claim": "XP / keys / coins / streak / daily-goal award formulas and thresholds remain UNKNOWN",
+    "classification": "UNKNOWN",
+    "topic": "economy",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-108",
+    "claim": "DefaultKeysRepository, DefaultStreakRepository, DefaultRewardRepository, GetTrackEta, QueuePathOverviewEtaIfNeeded class names recovered",
+    "classification": "VERIFIED_STATIC",
+    "topic": "economy",
+    "source_path": "SCHEMAS/OBFUSCATION_MAP.json",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-109",
+    "claim": "11 byte-exact original APK samples with SHA-256 in SAMPLES/MANIFEST.json",
+    "classification": "VERIFIED_STATIC",
+    "topic": "corpus",
+    "source_path": "SAMPLES/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-110",
+    "claim": "No new M06 emulator run; M05 runs 001–005 reused with explicit classification",
+    "classification": "UNKNOWN",
+    "topic": "runtime",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-111",
+    "claim": "M05 42006697783 LESSON_PHASE detected_options=0 rendered offline track 274 \"Automating Tasks with AI\" ChatGPT lessons",
+    "classification": "VERIFIED_RUNTIME",
+    "topic": "runtime",
+    "source_path": "../MISSION_05/RUNTIME/RUN_42006697783_FINDINGS.md",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-112",
+    "claim": "Original APK unchanged, 142,353,499 bytes, SHA-256 as above",
+    "classification": "VERIFIED_STATIC",
+    "topic": "scope",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   },
+   {
+    "id": "M06-113",
+    "claim": "No APK modification, no emulator root, no auth bypass, no credentials, no backend reconstruction",
+    "classification": "VERIFIED_STATIC",
+    "topic": "scope",
+    "source_path": "ANALYSIS/MISSION_06/",
+    "method_signature": null,
+    "dex": null,
+    "code_offset": null
+   }
+  ],
+  "note": "M06 adds 113 entries. The original 336 M01–M04 entries, mission_02_append and mission_05_append are unchanged. No new emulator run; runtime claims explicitly cross-reference M05."
  }
 }

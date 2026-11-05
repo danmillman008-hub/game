@@ -1,0 +1,180 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/data/source/remote/reward/a; semantic=DefaultRewardRepository
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/data/source/remote/reward/a;-><init>(Llh/a; Lnp/d;)V =====
+dex=classes.dex code_offset=10073772 instructions=35 access=public constructor callers=1 callees=4
+callers: Lae/m;->get()Ljava/lang/Object;
+callees: Ljava/lang/Object;-><init>()V, Ljava/lang/Object;-><init>()V, Ljava/util/concurrent/ConcurrentLinkedQueue;-><init>()V, Lua0/h;->b(I I Lkotlinx/coroutines/channels/BufferOverflow; I)Lkotlinx/coroutines/flow/i;
+  000000  move-object v2, v6
+  000002  invoke-direct v2, Ljava/lang/Object;-><init>()V
+  000008  const-string v5, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  00000c  iput-object v7, v2, Lcom/getmimo/data/source/remote/reward/a;->a Llh/a;
+  000010  const/4 v4, 7
+  000012  iput-object v8, v2, Lcom/getmimo/data/source/remote/reward/a;->b Lnp/d;
+  000016  const/4 v4, 7
+  000018  new-instance v7, Ljava/util/concurrent/ConcurrentLinkedQueue;
+  00001c  const/4 v4, 1
+  00001e  invoke-direct v7, Ljava/util/concurrent/ConcurrentLinkedQueue;-><init>()V
+  000024  const/4 v4, 4
+  000026  iput-object v7, v2, Lcom/getmimo/data/source/remote/reward/a;->c Ljava/util/concurrent/ConcurrentLinkedQueue;
+  00002a  const/4 v4, 7
+  00002c  new-instance v7, Ljava/lang/Object;
+  000030  const/4 v5, 6
+  000032  invoke-direct v7, Ljava/lang/Object;-><init>()V
+  000038  const/4 v4, 7
+  00003a  iput-object v7, v2, Lcom/getmimo/data/source/remote/reward/a;->d Ljava/lang/Object;
+  00003e  const/4 v5, 7
+  000040  const/4 v4, 0
+  000042  move v7, v4
+  000044  const/4 v5, 5
+  000046  move v8, v5
+  000048  const/4 v4, 0
+  00004a  move v0, v4
+  00004c  const/4 v5, 1
+  00004e  move v1, v5
+  000050  invoke-static v0, v1, v7, v8, Lua0/h;->b(I I Lkotlinx/coroutines/channels/BufferOverflow; I)Lkotlinx/coroutines/flow/i;
+  000056  move-result-object v5
+  000058  move-object v7, v5
+  00005a  iput-object v7, v2, Lcom/getmimo/data/source/remote/reward/a;->e Lkotlinx/coroutines/flow/i;
+  00005e  const/4 v5, 6
+  000060  return-void 
+  000062  nop 
+  000064  <androguard.core.dex.FillArrayData object at 0x7ff3fafa5d10>
+
+===== Lcom/getmimo/data/source/remote/reward/a;->a(J Ld70/b;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10073920 instructions=38 access=public final callers=1 callees=2
+callers: Lcom/getmimo/ui/main/MainViewModel$confirmRewardAndLookForNewRewards$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Lcom/getmimo/data/source/remote/reward/DefaultRewardRepository$sendConfirmationRequestToBackend$2;-><init>(Lcom/getmimo/data/source/remote/reward/a; J Ld70/b;)V, Lra0/z;->z(Ld70/f; Lo70/m; Ld70/b;)Ljava/lang/Object;
+  000000  move-object v4, v8
+  000002  const-wide/16 v0, -1
+  000006  const/4 v6, 4
+  000008  cmp-long v0, v9, v0
+  00000c  const/4 v6, 7
+  00000e  sget-object v1, Lz60/q;->a Lz60/q;
+  000012  const/4 v7, 1
+  000014  if-eqz v0, +027h
+  000018  const/4 v7, 7
+  00001a  iget-object v0, v4, Lcom/getmimo/data/source/remote/reward/a;->b Lnp/d;
+  00001e  const/4 v6, 1
+  000020  check-cast v0, Lnp/b;
+  000024  const/4 v7, 5
+  000026  iget-object v0, v0, Lnp/b;->c Lya0/c;
+  00002a  const/4 v7, 7
+  00002c  new-instance v2, Lcom/getmimo/data/source/remote/reward/DefaultRewardRepository$sendConfirmationRequestToBackend$2;
+  000030  const/4 v7, 2
+  000032  const/4 v7, 0
+  000034  move v3, v7
+  000036  invoke-direct v2, v4, v9, v10, v3, Lcom/getmimo/data/source/remote/reward/DefaultRewardRepository$sendConfirmationRequestToBackend$2;-><init>(Lcom/getmimo/data/source/remote/reward/a; J Ld70/b;)V
+  00003c  const/4 v6, 4
+  00003e  invoke-static v0, v2, v11, Lra0/z;->z(Ld70/f; Lo70/m; Ld70/b;)Ljava/lang/Object;
+  000044  move-result-object v7
+  000046  move-object v4, v7
+  000048  sget-object v9, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  00004c  const/4 v7, 7
+  00004e  if-ne v4, v9, +004h
+  000052  const/4 v7, 1
+  000054  goto +3h
+  000056  const/4 v7, 1
+  000058  move-object v4, v1
+  00005a  if-ne v4, v9, +004h
+  00005e  const/4 v6, 2
+  000060  return-object v4
+  000062  const/4 v7, 2
+  000064  return-object v1
+  000066  nop 
+  000068  <androguard.core.dex.FillArrayData object at 0x7ff3fafa6910>
+
+===== Lcom/getmimo/data/source/remote/reward/a;->b()V =====
+dex=classes.dex code_offset=10074060 instructions=53 access=public final callers=2 callees=6
+callers: Lcom/getmimo/ui/main/MainViewModel$confirmRewardAndLookForNewRewards$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/main/MainViewModel$fetchRewards$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Ljava/lang/Number;->intValue()I, Ljava/util/concurrent/ConcurrentLinkedQueue;->peek()Ljava/lang/Object;, Ljava/util/concurrent/ConcurrentLinkedQueue;->poll()Ljava/lang/Object;, Lkotlinx/coroutines/flow/i;->b(Ljava/lang/Object;)Z, Lva0/a;->i()Lva0/l;, Lva0/l;->getValue()Ljava/lang/Object;
+  000000  move-object v3, v6
+  000002  iget-object v0, v3, Lcom/getmimo/data/source/remote/reward/a;->e Lkotlinx/coroutines/flow/i;
+  000006  const/4 v5, 4
+  000008  invoke-virtual v0, Lva0/a;->i()Lva0/l;
+  00000e  move-result-object v5
+  000010  move-object v0, v5
+  000012  invoke-virtual v0, Lva0/l;->getValue()Ljava/lang/Object;
+  000018  move-result-object v5
+  00001a  move-object v0, v5
+  00001c  check-cast v0, Ljava/lang/Number;
+  000020  const/4 v5, 4
+  000022  invoke-virtual v0, Ljava/lang/Number;->intValue()I
+  000028  move-result v5
+  00002a  move v0, v5
+  00002c  if-nez v0, +004h
+  000030  const/4 v5, 6
+  000032  return-void 
+  000034  const/4 v5, 6
+  000036  iget-object v0, v3, Lcom/getmimo/data/source/remote/reward/a;->d Ljava/lang/Object;
+  00003a  const/4 v5, 3
+  00003c  monitor-enter v0
+  00003e  const/4 v5, 1
+  000040  iget-object v1, v3, Lcom/getmimo/data/source/remote/reward/a;->c Ljava/util/concurrent/ConcurrentLinkedQueue;
+  000044  const/4 v5, 1
+  000046  invoke-virtual v1, Ljava/util/concurrent/ConcurrentLinkedQueue;->peek()Ljava/lang/Object;
+  00004c  move-result-object v5
+  00004e  move-object v1, v5
+  000050  check-cast v1, Lcom/getmimo/data/model/reward/Reward;
+  000054  const/4 v5, 5
+  000056  if-eqz v1, +017h
+  00005a  const/4 v5, 2
+  00005c  iget-object v2, v3, Lcom/getmimo/data/source/remote/reward/a;->e Lkotlinx/coroutines/flow/i;
+  000060  const/4 v5, 3
+  000062  invoke-virtual v2, v1, Lkotlinx/coroutines/flow/i;->b(Ljava/lang/Object;)Z
+  000068  move-result v5
+  00006a  move v1, v5
+  00006c  if-eqz v1, +00ch
+  000070  const/4 v5, 6
+  000072  iget-object v3, v3, Lcom/getmimo/data/source/remote/reward/a;->c Ljava/util/concurrent/ConcurrentLinkedQueue;
+  000076  const/4 v5, 2
+  000078  invoke-virtual v3, Ljava/util/concurrent/ConcurrentLinkedQueue;->poll()Ljava/lang/Object;
+  00007e  goto +4h
+  000080  move-exception v3
+  000082  goto +5h
+  000084  const/4 v5, 5
+  000086  monitor-exit v0
+  000088  const/4 v5, 7
+  00008a  return-void 
+  00008c  monitor-exit v0
+  00008e  const/4 v5, 6
+  000090  throw v3
+  000092  const/4 v5, 1
+  000094  <androguard.core.dex.FillArrayData object at 0x7ff3fafa7850>
+
+===== Lcom/getmimo/data/source/remote/reward/a;->c(Ld70/b;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10074280 instructions=26 access=public final callers=1 callees=2
+callers: Lcom/getmimo/ui/main/MainViewModel$fetchRewards$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Lcom/getmimo/data/source/remote/reward/DefaultRewardRepository$retrieveOutstandingRewards$2;-><init>(Lcom/getmimo/data/source/remote/reward/a; Ld70/b;)V, Lra0/z;->z(Ld70/f; Lo70/m; Ld70/b;)Ljava/lang/Object;
+  000000  move-object v3, v7
+  000002  iget-object v0, v3, Lcom/getmimo/data/source/remote/reward/a;->b Lnp/d;
+  000006  const/4 v6, 4
+  000008  check-cast v0, Lnp/b;
+  00000c  const/4 v6, 5
+  00000e  iget-object v0, v0, Lnp/b;->c Lya0/c;
+  000012  const/4 v5, 4
+  000014  new-instance v1, Lcom/getmimo/data/source/remote/reward/DefaultRewardRepository$retrieveOutstandingRewards$2;
+  000018  const/4 v6, 4
+  00001a  const/4 v6, 0
+  00001c  move v2, v6
+  00001e  invoke-direct v1, v3, v2, Lcom/getmimo/data/source/remote/reward/DefaultRewardRepository$retrieveOutstandingRewards$2;-><init>(Lcom/getmimo/data/source/remote/reward/a; Ld70/b;)V
+  000024  const/4 v6, 7
+  000026  invoke-static v0, v1, v8, Lra0/z;->z(Ld70/f; Lo70/m; Ld70/b;)Ljava/lang/Object;
+  00002c  move-result-object v6
+  00002e  move-object v3, v6
+  000030  sget-object v8, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000034  const/4 v5, 7
+  000036  if-ne v3, v8, +004h
+  00003a  const/4 v6, 3
+  00003c  return-object v3
+  00003e  const/4 v6, 7
+  000040  sget-object v3, Lz60/q;->a Lz60/q;
+  000044  const/4 v6, 2
+  000046  return-object v3
+  000048  <androguard.core.dex.FillArrayData object at 0x7ff3fafac090>

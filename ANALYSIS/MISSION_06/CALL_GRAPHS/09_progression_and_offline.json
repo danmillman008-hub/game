@@ -1,0 +1,743 @@
+{
+ "title": "GetPathMapState / chapter completion / offline gate",
+ "classification": "VERIFIED_STATIC",
+ "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+ "method": "BFS over invoke-* xrefs from the listed root methods, bounded at depth 5 / 40 nodes",
+ "roots": [
+  "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+  "Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+  "Lcom/getmimo/network/a;->a()Z",
+  "Lcom/getmimo/interactors/chapter/CanOpenChapterWithKeys$invoke$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;"
+ ],
+ "node_count": 40,
+ "edge_count": 97,
+ "nodes": [
+  {
+   "signature": "Lcc/b;->y(Ljava/util/List; Z Ljava/lang/Integer; Z Z)Ljava/util/ArrayList;",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Lcom/getmimo/core/model/inapp/DiscountedSubscription;->getDiscountPercent()I",
+   "dex": "classes.dex",
+   "code_offset": 9623268,
+   "instructions": 6
+  },
+  {
+   "signature": "Lcom/getmimo/data/content/model/track/Chapter;->getId()J",
+   "dex": "classes.dex",
+   "code_offset": 9672300,
+   "instructions": 6
+  },
+  {
+   "signature": "Lcom/getmimo/data/content/model/track/Chapter;->getTitle()Ljava/lang/String;",
+   "dex": "classes.dex",
+   "code_offset": 9672436,
+   "instructions": 6
+  },
+  {
+   "signature": "Lcom/getmimo/data/content/model/track/Chapter;->isCompleted()Z",
+   "dex": "classes.dex",
+   "code_offset": 9672716,
+   "instructions": 6
+  },
+  {
+   "signature": "Lcom/getmimo/data/content/model/track/Section;->getTutorials()Ljava/util/List;",
+   "dex": "classes.dex",
+   "code_offset": 9709024,
+   "instructions": 6
+  },
+  {
+   "signature": "Lcom/getmimo/data/content/model/track/Track;->getId()J",
+   "dex": "classes.dex",
+   "code_offset": 9715468,
+   "instructions": 6
+  },
+  {
+   "signature": "Lcom/getmimo/data/content/model/track/Track;->getSections()Ljava/util/List;",
+   "dex": "classes.dex",
+   "code_offset": 9715516,
+   "instructions": 6
+  },
+  {
+   "signature": "Lcom/getmimo/data/content/model/track/Tutorial;->getChapters()Ljava/util/List;",
+   "dex": "classes.dex",
+   "code_offset": 9733184,
+   "instructions": 6
+  },
+  {
+   "signature": "Lcom/getmimo/data/content/model/track/Tutorial;->getHasProgress()Z",
+   "dex": "classes.dex",
+   "code_offset": 9733332,
+   "instructions": 13
+  },
+  {
+   "signature": "Lcom/getmimo/data/content/model/track/Tutorial;->getIconBanner()Ljava/lang/String;",
+   "dex": "classes.dex",
+   "code_offset": 9733440,
+   "instructions": 6
+  },
+  {
+   "signature": "Lcom/getmimo/data/content/model/track/Tutorial;->getId()J",
+   "dex": "classes.dex",
+   "code_offset": 9733512,
+   "instructions": 6
+  },
+  {
+   "signature": "Lcom/getmimo/data/content/model/track/Tutorial;->getTitle()Ljava/lang/String;",
+   "dex": "classes.dex",
+   "code_offset": 9733620,
+   "instructions": 6
+  },
+  {
+   "signature": "Lcom/getmimo/data/content/model/track/Tutorial;->getType()Lcom/getmimo/data/content/model/track/TutorialType;",
+   "dex": "classes.dex",
+   "code_offset": 9733716,
+   "instructions": 6
+  },
+  {
+   "signature": "Lcom/getmimo/data/content/model/track/Tutorial;->isCompleted()Z",
+   "dex": "classes.dex",
+   "code_offset": 9734092,
+   "instructions": 6
+  },
+  {
+   "signature": "Lcom/getmimo/data/content/model/track/TutorialType;->isRequired()Z",
+   "dex": "classes.dex",
+   "code_offset": 9739824,
+   "instructions": 19
+  },
+  {
+   "signature": "Lcom/getmimo/interactors/chapter/CanOpenChapterWithKeys$invoke$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "dex": "classes.dex",
+   "code_offset": 10100124,
+   "instructions": 14
+  },
+  {
+   "signature": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "dex": "classes.dex",
+   "code_offset": 10129608,
+   "instructions": 659
+  },
+  {
+   "signature": "Lcom/getmimo/interactors/path/b;->b(Lcom/getmimo/data/content/model/track/Track; Ljava/util/ArrayList;)Lvn/c;",
+   "dex": "classes.dex",
+   "code_offset": 10144488,
+   "instructions": 159
+  },
+  {
+   "signature": "Lcom/getmimo/interactors/path/d;->a(I Z Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "dex": "classes.dex",
+   "code_offset": 10148408,
+   "instructions": 102
+  },
+  {
+   "signature": "Lcom/getmimo/network/a;->a()Z",
+   "dex": "classes.dex",
+   "code_offset": 10174360,
+   "instructions": 38
+  },
+  {
+   "signature": "Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "dex": "classes.dex",
+   "code_offset": 10357032,
+   "instructions": 48
+  },
+  {
+   "signature": "Lds/w;->c(Ljava/util/Set; J J J)Z",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Lri/c;->b()Z",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Lsk/a;->d()Z",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Lsk/a;->e()Z",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Lvn/b0;->c()Lcom/getmimo/data/content/model/track/Section;",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Lvn/b0;->getIndex()I",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Lvn/d0;-><init>(J Ljava/lang/String; Lcom/getmimo/data/content/model/track/TutorialType; Ljava/util/List; Z Ljava/lang/String;)V",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Lvn/d;-><init>(J Ljava/lang/String; Z Z)V",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Lvn/e0;-><init>(J Ljava/lang/String; Lcom/getmimo/data/content/model/track/TutorialType; Z Ljava/lang/String;)V",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Lvn/g0;-><init>(J Ljava/lang/String; Lcom/getmimo/data/content/model/track/TutorialType; Z Ljava/util/List; Lcom/getmimo/ui/path/ChapterSpotlightType; Ljava/lang/String; Z)V",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Lvn/h0;-><init>(J Ljava/lang/String; Lcom/getmimo/data/content/model/track/TutorialType; Z Z Ljava/lang/String;)V",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Lvn/i0;->d()Z",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Lvn/i0;->getId()J",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Lvn/i0;->getType()Lcom/getmimo/data/content/model/track/TutorialType;",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Lvn/k;-><init>(J Z)V",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Lvn/l;-><init>(I J)V",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Lvn/m;-><init>(Ljava/lang/String; Ljava/lang/String;)V",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Lvn/n;-><init>(Lcom/getmimo/data/content/model/track/Track; Ljava/util/List; I Ljava/util/List; Lvn/i0; Lt50/j; Lvn/c; Lvn/u; Lvn/m; Lvn/k; Lvn/l; Z Z Z)V",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  }
+ ],
+ "edges": [
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcc/b;->y(Ljava/util/List; Z Ljava/lang/Integer; Z Z)Ljava/util/ArrayList;",
+   "opcode": "invoke-virtual/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/core/model/inapp/DiscountedSubscription;->getDiscountPercent()I",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Chapter;->getId()J",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Chapter;->getId()J",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Chapter;->getId()J",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Chapter;->getId()J",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Chapter;->getTitle()Ljava/lang/String;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Chapter;->getTitle()Ljava/lang/String;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Chapter;->isCompleted()Z",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Chapter;->isCompleted()Z",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Section;->getTutorials()Ljava/util/List;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Track;->getId()J",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Track;->getSections()Ljava/util/List;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->getChapters()Ljava/util/List;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->getChapters()Ljava/util/List;",
+   "opcode": "invoke-virtual/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->getHasProgress()Z",
+   "opcode": "invoke-virtual/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->getIconBanner()Ljava/lang/String;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->getIconBanner()Ljava/lang/String;",
+   "opcode": "invoke-virtual/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->getIconBanner()Ljava/lang/String;",
+   "opcode": "invoke-virtual/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->getIconBanner()Ljava/lang/String;",
+   "opcode": "invoke-virtual/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->getId()J",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->getId()J",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->getId()J",
+   "opcode": "invoke-virtual/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->getId()J",
+   "opcode": "invoke-virtual/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->getId()J",
+   "opcode": "invoke-virtual/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->getId()J",
+   "opcode": "invoke-virtual/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->getTitle()Ljava/lang/String;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->getTitle()Ljava/lang/String;",
+   "opcode": "invoke-virtual/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->getTitle()Ljava/lang/String;",
+   "opcode": "invoke-virtual/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->getTitle()Ljava/lang/String;",
+   "opcode": "invoke-virtual/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->getType()Lcom/getmimo/data/content/model/track/TutorialType;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->getType()Lcom/getmimo/data/content/model/track/TutorialType;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->getType()Lcom/getmimo/data/content/model/track/TutorialType;",
+   "opcode": "invoke-virtual/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->getType()Lcom/getmimo/data/content/model/track/TutorialType;",
+   "opcode": "invoke-virtual/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->getType()Lcom/getmimo/data/content/model/track/TutorialType;",
+   "opcode": "invoke-virtual/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->getType()Lcom/getmimo/data/content/model/track/TutorialType;",
+   "opcode": "invoke-virtual/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->getType()Lcom/getmimo/data/content/model/track/TutorialType;",
+   "opcode": "invoke-virtual/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->isCompleted()Z",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/content/model/track/TutorialType;->isRequired()Z",
+   "opcode": "invoke-virtual/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/interactors/path/b;->b(Lcom/getmimo/data/content/model/track/Track; Ljava/util/ArrayList;)Lvn/c;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/interactors/path/d;->a(I Z Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lds/w;->c(Ljava/util/Set; J J J)Z",
+   "opcode": "invoke-static/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lds/w;->c(Ljava/util/Set; J J J)Z",
+   "opcode": "invoke-static/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lri/c;->b()Z",
+   "opcode": "invoke-virtual/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lsk/a;->d()Z",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lsk/a;->e()Z",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lvn/b0;->c()Lcom/getmimo/data/content/model/track/Section;",
+   "opcode": "invoke-interface"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lvn/b0;->c()Lcom/getmimo/data/content/model/track/Section;",
+   "opcode": "invoke-interface"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lvn/b0;->getIndex()I",
+   "opcode": "invoke-interface"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lvn/d0;-><init>(J Ljava/lang/String; Lcom/getmimo/data/content/model/track/TutorialType; Ljava/util/List; Z Ljava/lang/String;)V",
+   "opcode": "invoke-direct/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lvn/d;-><init>(J Ljava/lang/String; Z Z)V",
+   "opcode": "invoke-direct/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lvn/d;-><init>(J Ljava/lang/String; Z Z)V",
+   "opcode": "invoke-direct/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lvn/e0;-><init>(J Ljava/lang/String; Lcom/getmimo/data/content/model/track/TutorialType; Z Ljava/lang/String;)V",
+   "opcode": "invoke-direct/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lvn/g0;-><init>(J Ljava/lang/String; Lcom/getmimo/data/content/model/track/TutorialType; Z Ljava/util/List; Lcom/getmimo/ui/path/ChapterSpotlightType; Ljava/lang/String; Z)V",
+   "opcode": "invoke-direct/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lvn/h0;-><init>(J Ljava/lang/String; Lcom/getmimo/data/content/model/track/TutorialType; Z Z Ljava/lang/String;)V",
+   "opcode": "invoke-direct/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lvn/i0;->d()Z",
+   "opcode": "invoke-interface"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lvn/i0;->getId()J",
+   "opcode": "invoke-interface"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lvn/i0;->getId()J",
+   "opcode": "invoke-interface"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lvn/i0;->getType()Lcom/getmimo/data/content/model/track/TutorialType;",
+   "opcode": "invoke-interface/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lvn/k;-><init>(J Z)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lvn/l;-><init>(I J)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lvn/m;-><init>(Ljava/lang/String; Ljava/lang/String;)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lvn/n;-><init>(Lcom/getmimo/data/content/model/track/Track; Ljava/util/List; I Ljava/util/List; Lvn/i0; Lt50/j; Lvn/c; Lvn/u; Lvn/m; Lvn/k; Lvn/l; Z Z Z)V",
+   "opcode": "invoke-direct/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lyg/c;->a()Z",
+   "opcode": "invoke-virtual/range"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/ui/chapter/chapterendview/main/f;->R(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/chapter/CanOpenChapterWithKeys$invoke$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/interactors/chapter/a;->a(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcc/b;->y(Ljava/util/List; Z Ljava/lang/Integer; Z Z)Ljava/util/ArrayList;",
+   "callee": "Lcc/b;->v(Lcom/getmimo/data/content/model/track/Section; Z Z)Lvn/z;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcc/b;->y(Ljava/util/List; Z Ljava/lang/Integer; Z Z)Ljava/util/ArrayList;",
+   "callee": "Lcc/b;->v(Lcom/getmimo/data/content/model/track/Section; Z Z)Lvn/z;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcc/b;->y(Ljava/util/List; Z Ljava/lang/Integer; Z Z)Ljava/util/ArrayList;",
+   "callee": "Lcc/b;->v(Lcom/getmimo/data/content/model/track/Section; Z Z)Lvn/z;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcc/b;->y(Ljava/util/List; Z Ljava/lang/Integer; Z Z)Ljava/util/ArrayList;",
+   "callee": "Lcc/b;->v(Lcom/getmimo/data/content/model/track/Section; Z Z)Lvn/z;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcc/b;->y(Ljava/util/List; Z Ljava/lang/Integer; Z Z)Ljava/util/ArrayList;",
+   "callee": "Lcom/getmimo/data/content/model/track/Section;->completionPercentageOptional()F",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcc/b;->y(Ljava/util/List; Z Ljava/lang/Integer; Z Z)Ljava/util/ArrayList;",
+   "callee": "Lcom/getmimo/data/content/model/track/Section;->completionPercentageRequired()F",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcc/b;->y(Ljava/util/List; Z Ljava/lang/Integer; Z Z)Ljava/util/ArrayList;",
+   "callee": "Lcom/getmimo/data/content/model/track/Section;->getHasProgress()Z",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcc/b;->y(Ljava/util/List; Z Ljava/lang/Integer; Z Z)Ljava/util/ArrayList;",
+   "callee": "Lcom/getmimo/data/content/model/track/Section;->getHasProgress()Z",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcc/b;->y(Ljava/util/List; Z Ljava/lang/Integer; Z Z)Ljava/util/ArrayList;",
+   "callee": "Lvn/a0;-><init>(I Lcom/getmimo/data/content/model/track/Section; F Z Lvn/z; Z)V",
+   "opcode": "invoke-direct/range"
+  },
+  {
+   "caller": "Lcc/b;->y(Ljava/util/List; Z Ljava/lang/Integer; Z Z)Ljava/util/ArrayList;",
+   "callee": "Lvn/v;-><init>(I Lcom/getmimo/data/content/model/track/Section; Z Lvn/z;)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcc/b;->y(Ljava/util/List; Z Ljava/lang/Integer; Z Z)Ljava/util/ArrayList;",
+   "callee": "Lvn/w;-><init>(I Lcom/getmimo/data/content/model/track/Section; Z Lvn/z;)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcc/b;->y(Ljava/util/List; Z Ljava/lang/Integer; Z Z)Ljava/util/ArrayList;",
+   "callee": "Lvn/y;-><init>(I Lcom/getmimo/data/content/model/track/Section; Lvn/z;)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/b;->b(Lcom/getmimo/data/content/model/track/Track; Ljava/util/ArrayList;)Lvn/c;",
+   "callee": "Lcom/getmimo/data/content/model/track/Section;->getTutorials()Ljava/util/List;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/b;->b(Lcom/getmimo/data/content/model/track/Track; Ljava/util/ArrayList;)Lvn/c;",
+   "callee": "Lcom/getmimo/data/content/model/track/Track;->getId()J",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/b;->b(Lcom/getmimo/data/content/model/track/Track; Ljava/util/ArrayList;)Lvn/c;",
+   "callee": "Lcom/getmimo/data/content/model/track/Track;->getTitle()Ljava/lang/String;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/b;->b(Lcom/getmimo/data/content/model/track/Track; Ljava/util/ArrayList;)Lvn/c;",
+   "callee": "Lcom/getmimo/data/content/model/track/Track;->getTitle()Ljava/lang/String;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/b;->b(Lcom/getmimo/data/content/model/track/Track; Ljava/util/ArrayList;)Lvn/c;",
+   "callee": "Lcom/getmimo/data/content/model/track/Track;->getVersion()J",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/b;->b(Lcom/getmimo/data/content/model/track/Track; Ljava/util/ArrayList;)Lvn/c;",
+   "callee": "Lcom/getmimo/data/content/model/track/Track;->getVersion()J",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/b;->b(Lcom/getmimo/data/content/model/track/Track; Ljava/util/ArrayList;)Lvn/c;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->getType()Lcom/getmimo/data/content/model/track/TutorialType;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/b;->b(Lcom/getmimo/data/content/model/track/Track; Ljava/util/ArrayList;)Lvn/c;",
+   "callee": "Lcom/getmimo/data/content/model/track/Tutorial;->isCompleted()Z",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/b;->b(Lcom/getmimo/data/content/model/track/Track; Ljava/util/ArrayList;)Lvn/c;",
+   "callee": "Lcom/getmimo/data/content/model/track/TutorialType;->isRequired()Z",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/b;->b(Lcom/getmimo/data/content/model/track/Track; Ljava/util/ArrayList;)Lvn/c;",
+   "callee": "Lcom/getmimo/data/source/remote/iap/purchase/a;->a(Lcom/getmimo/data/source/remote/iap/model/SubscriptionTier;)Z",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/b;->b(Lcom/getmimo/data/content/model/track/Track; Ljava/util/ArrayList;)Lvn/c;",
+   "callee": "Lvn/a;-><init>(J Ljava/lang/String; J Lcom/getmimo/ui/certificates/CertificatesMap$Certificate; I I)V",
+   "opcode": "invoke-direct/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/b;->b(Lcom/getmimo/data/content/model/track/Track; Ljava/util/ArrayList;)Lvn/c;",
+   "callee": "Lvn/b0;->c()Lcom/getmimo/data/content/model/track/Section;",
+   "opcode": "invoke-interface"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/b;->b(Lcom/getmimo/data/content/model/track/Track; Ljava/util/ArrayList;)Lvn/c;",
+   "callee": "Lvn/b;-><init>(J Ljava/lang/String; J Lcom/getmimo/ui/certificates/CertificatesMap$Certificate; I I)V",
+   "opcode": "invoke-direct/range"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/d;->a(I Z Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/interactors/path/GetPathMapState$getProBannerState$1;-><init>(Lcom/getmimo/interactors/path/d; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/d;->a(I Z Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/interactors/upgrade/inventory/a;->a(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/interactors/path/d;->a(I Z Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lvn/t;-><init>(Z)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lvn/d0;-><init>(J Ljava/lang/String; Lcom/getmimo/data/content/model/track/TutorialType; Ljava/util/List; Z Ljava/lang/String;)V",
+   "callee": "Lcom/getmimo/data/content/model/track/TutorialType;->isPractice()Z",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lvn/d0;-><init>(J Ljava/lang/String; Lcom/getmimo/data/content/model/track/TutorialType; Ljava/util/List; Z Ljava/lang/String;)V",
+   "callee": "Lvn/d0;->g()Z",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lvn/e0;-><init>(J Ljava/lang/String; Lcom/getmimo/data/content/model/track/TutorialType; Z Ljava/lang/String;)V",
+   "callee": "Lcom/getmimo/data/content/model/track/TutorialType;->isPractice()Z",
+   "opcode": "invoke-virtual"
+  }
+ ]
+}

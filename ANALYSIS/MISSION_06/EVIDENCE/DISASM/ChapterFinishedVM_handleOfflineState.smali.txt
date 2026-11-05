@@ -1,0 +1,110 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1; semantic=ChapterFinishedVM_handleOfflineState
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;-><init>(Lcom/getmimo/ui/chapter/chapterendview/main/f; Ld70/b;)V =====
+dex=classes.dex code_offset=10356780 instructions=9 access=public constructor callers=2 callees=1
+callers: Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;->create(Ljava/lang/Object; Ld70/b;)Ld70/b;, Lcom/getmimo/ui/chapter/chapterendview/main/f;->I(Ldj/k;)V
+callees: Lkotlin/coroutines/jvm/internal/SuspendLambda;-><init>(I Ld70/b;)V
+  000000  move-object v0, v3
+  000002  iput-object v4, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;->b Lcom/getmimo/ui/chapter/chapterendview/main/f;
+  000006  const-string v2, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  00000a  const/4 v2, 2
+  00000c  move v4, v2
+  00000e  invoke-direct v0, v4, v5, Lkotlin/coroutines/jvm/internal/SuspendLambda;-><init>(I Ld70/b;)V
+  000014  const/4 v2, 4
+  000016  return-void 
+  000018  <androguard.core.dex.FillArrayData object at 0x7ff3fb020d10>
+
+===== Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;->create(Ljava/lang/Object; Ld70/b;)Ld70/b; =====
+dex=classes.dex code_offset=10356888 instructions=9 access=public final callers=1 callees=1
+callers: Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;->invoke(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;
+callees: Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;-><init>(Lcom/getmimo/ui/chapter/chapterendview/main/f; Ld70/b;)V
+  000000  move-object v0, v4
+  000002  new-instance v5, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;
+  000006  const/4 v2, 6
+  000008  iget-object v0, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;->b Lcom/getmimo/ui/chapter/chapterendview/main/f;
+  00000c  const/4 v2, 7
+  00000e  invoke-direct v5, v0, v6, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;-><init>(Lcom/getmimo/ui/chapter/chapterendview/main/f; Ld70/b;)V
+  000014  const/4 v3, 5
+  000016  return-object v5
+  000018  <androguard.core.dex.FillArrayData object at 0x7ff3fb023e50>
+
+===== Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;->invoke(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10356944 instructions=17 access=public final callers=0 callees=2
+callees: Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;->create(Ljava/lang/Object; Ld70/b;)Ld70/b;, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+  000000  move-object v0, v3
+  000002  check-cast v4, Lra0/y;
+  000006  const/4 v2, 4
+  000008  check-cast v5, Ld70/b;
+  00000c  const/4 v2, 5
+  00000e  invoke-virtual v0, v4, v5, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;->create(Ljava/lang/Object; Ld70/b;)Ld70/b;
+  000014  move-result-object v2
+  000016  move-object v0, v2
+  000018  check-cast v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;
+  00001c  const/4 v2, 7
+  00001e  sget-object v4, Lz60/q;->a Lz60/q;
+  000022  const/4 v2, 5
+  000024  invoke-virtual v0, v4, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+  00002a  move-result-object v2
+  00002c  move-object v0, v2
+  00002e  return-object v0
+  000030  <androguard.core.dex.FillArrayData object at 0x7ff3fb0243d0>
+
+===== Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10357032 instructions=48 access=public final callers=1 callees=5
+callers: Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;->invoke(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;
+callees: Lcom/getmimo/ui/chapter/chapterendview/main/f;->R(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lle0/a;->d(Ljava/lang/Throwable;)V, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object v3, v7
+  000002  sget-object v0, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000006  const/4 v5, 2
+  000008  iget-boolean v1, v3, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;->a Z
+  00000c  const/4 v6, 7
+  00000e  const/4 v5, 1
+  000010  move v2, v5
+  000012  if-eqz v1, +016h
+  000016  const/4 v6, 4
+  000018  if-ne v1, v2, +008h
+  00001c  const/4 v6, 7
+  00001e  const/4 v5, 1
+  000020  invoke-static v8, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000026  goto +2dh
+  000028  const/4 v5, 5
+  00002a  const-string v6, "call to 'resume' before 'invoke' with coroutine"
+  00002e  move-object v3, v6
+  000030  invoke-static v3, Lwc/f;->i(Ljava/lang/String;)V
+  000036  const/4 v5, 3
+  000038  const/4 v6, 0
+  00003a  move v3, v6
+  00003c  return-object v3
+  00003e  const/4 v5, 3
+  000040  invoke-static v8, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000046  const/4 v5, 7
+  000048  const/4 v6, 4
+  00004a  iget-object v8, v3, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;->b Lcom/getmimo/ui/chapter/chapterendview/main/f;
+  00004e  const/4 v6, 5
+  000050  iput-boolean v2, v3, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;->a Z
+  000054  const/4 v5, 5
+  000056  sget-object v1, Lcom/getmimo/ui/chapter/chapterendview/main/f;->P Ljava/util/List;
+  00005a  const/4 v5, 5
+  00005c  invoke-virtual v8, v3, Lcom/getmimo/ui/chapter/chapterendview/main/f;->R(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  000062  move-result-object v6
+  000064  move-object v3, v6
+  000066  if-ne v3, v0, +00ch
+  00006a  const/4 v5, 7
+  00006c  return-object v0
+  00006e  move-exception v3
+  000070  sget-object v8, Lle0/b;->a Lle0/a;
+  000074  const/4 v5, 3
+  000076  invoke-virtual v8, v3, Lle0/a;->d(Ljava/lang/Throwable;)V
+  00007c  const/4 v5, 1
+  00007e  const/4 v5, 1
+  000080  sget-object v3, Lz60/q;->a Lz60/q;
+  000084  const/4 v6, 7
+  000086  return-object v3
+  000088  <androguard.core.dex.FillArrayData object at 0x7ff3fb025190>

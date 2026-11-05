@@ -1,0 +1,56 @@
+# selection: content module → state → run handler → km/f.b validator
+
+```mermaid
+flowchart TD
+  N0["InteractiveLessonBaseViewModel$onLessonRun$1.<init><br/><small>base @10938236</small>"]
+  N1["InteractiveLessonBaseViewModel.onLessonRun<br/><small>base @10954996</small>"]
+  N2["InteractiveLessonBaseViewModel.onValidatedInputExecuted<br/><small>base @10955764</small>"]
+  N3["InteractiveLessonBaseViewModel.configureInteraction<br/><small>base @10957544</small>"]
+  N4["d.a<br/><small>base @10958424</small>"]
+  N5["InteractiveLessonSelectionViewModel$configureInteraction$1.<init><br/><small>selection @10976956</small>"]
+  N6["InteractiveLessonSelectionViewModel$createCursorBlinkEvents$3.<init><br/><small>selection @10978772</small>"]
+  N7["InteractiveLessonSelectionViewModel.E<br/><small>selection @10979360</small>"]
+  N8["InteractiveLessonSelectionViewModel.j0<br/><small>selection @10980604</small>"]
+  N9["w.<init><br/><small>Ljm @ext</small>"]
+  N10["x.<init><br/><small>Ljm @ext</small>"]
+  N11["x.<init><br/><small>Ljm @ext</small>"]
+  N12["y.<init><br/><small>Ljm @ext</small>"]
+  N13["c.E0<br/><small>Lkm @ext</small>"]
+  N14["c.M0<br/><small>Lkm @ext</small>"]
+  N15["f.b<br/><small>Lkm @ext</small>"]
+  N16["f.d<br/><small>Lkm @ext</small>"]
+  N17["b.E0<br/><small>Lnm @ext</small>"]
+  N18["b.M0<br/><small>Lnm @ext</small>"]
+  N19["e.<init><br/><small>Lnm @ext</small>"]
+  N20["d.E0<br/><small>Lom @ext</small>"]
+  N21["d.M0<br/><small>Lom @ext</small>"]
+  N22["f.<init><br/><small>Lym @ext</small>"]
+  N7 --> N4
+  N7 --> N5
+  N7 --> N6
+  N7 --> N8
+  N7 --> N9
+  N7 --> N11
+  N7 --> N12
+  N7 --> N12
+  N7 --> N19
+  N17 --> N1
+  N17 --> N2
+  N17 --> N18
+  N13 --> N1
+  N13 --> N2
+  N13 --> N14
+  N13 --> N15
+  N13 --> N16
+  N20 --> N1
+  N20 --> N2
+  N20 --> N15
+  N20 --> N16
+  N20 --> N21
+  N8 --> N3
+  N11 --> N10
+  N1 --> N0
+  N3 --> N22
+```
+
+Edges are real `invoke-*` xrefs extracted from the 12 original DEX files (androguard 4.1.4).

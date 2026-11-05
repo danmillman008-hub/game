@@ -1,0 +1,158 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem; semantic=SelectionItem
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;-><clinit>()V =====
+dex=classes.dex code_offset=9659320 instructions=10 access=static constructor callers=0 callees=1
+callees: Lti/k;-><init>(B)V
+  000000  new-instance v0, Lti/k;
+  000004  const-string v5, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  000008  const/4 v2, 6
+  00000a  move v1, v2
+  00000c  invoke-direct v0, v1, Lti/k;-><init>(B)V
+  000012  const/4 v3, 6
+  000014  sput-object v0, Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;->CREATOR Landroid/os/Parcelable$Creator;
+  000018  const/4 v5, 3
+  00001a  return-void 
+  00001c  <androguard.core.dex.FillArrayData object at 0x7ff3fac4d090>
+
+===== Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;-><init>(Ljava/lang/CharSequence; Z)V =====
+dex=classes.dex code_offset=9659384 instructions=11 access=public constructor callers=3 callees=2
+callers: Lte/e;->a(Lorg/xmlpull/v1/XmlPullParser;)Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Selection;, Lte/e;->a(Lorg/xmlpull/v1/XmlPullParser;)Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Selection;, Lti/k;->createFromParcel(Landroid/os/Parcel;)Ljava/lang/Object;
+callees: Ljava/lang/Object;-><init>()V, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000000  move-object v0, v3
+  000002  invoke-virtual v4, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000008  invoke-direct v0, Ljava/lang/Object;-><init>()V
+  00000e  const/4 v2, 3
+  000010  iput-boolean v5, v0, Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;->a Z
+  000014  const/4 v2, 1
+  000016  iput-object v4, v0, Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;->b Ljava/lang/CharSequence;
+  00001a  const/4 v2, 7
+  00001c  return-void 
+  00001e  nop 
+  000020  <androguard.core.dex.FillArrayData object at 0x7ff3fac4d510>
+
+===== Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;->describeContents()I =====
+dex=classes.dex code_offset=9659544 instructions=5 access=public final callers=0 callees=0
+  000000  move-object v0, v4
+  000002  const/4 v2, 0
+  000004  move v0, v2
+  000006  return v0
+  000008  <androguard.core.dex.FillArrayData object at 0x7ff3fac4d750>
+
+===== Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;->equals(Ljava/lang/Object;)Z =====
+dex=classes.dex code_offset=9659608 instructions=39 access=public final callers=0 callees=1
+callees: Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z
+  000000  move-object v4, v8
+  000002  const/4 v6, 1
+  000004  move v0, v6
+  000006  if-ne v4, v9, +004h
+  00000a  const/4 v6, 6
+  00000c  return v0
+  00000e  const/4 v7, 3
+  000010  instance-of v1, v9, Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;
+  000014  const/4 v7, 5
+  000016  const/4 v7, 0
+  000018  move v2, v7
+  00001a  if-nez v1, +004h
+  00001e  const/4 v7, 3
+  000020  return v2
+  000022  const/4 v6, 2
+  000024  check-cast v9, Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;
+  000028  const/4 v7, 4
+  00002a  iget-boolean v1, v4, Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;->a Z
+  00002e  const/4 v7, 3
+  000030  iget-boolean v3, v9, Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;->a Z
+  000034  const/4 v7, 2
+  000036  if-eq v1, v3, +004h
+  00003a  const/4 v6, 4
+  00003c  return v2
+  00003e  const/4 v6, 3
+  000040  iget-object v4, v4, Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;->b Ljava/lang/CharSequence;
+  000044  const/4 v6, 7
+  000046  iget-object v9, v9, Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;->b Ljava/lang/CharSequence;
+  00004a  const/4 v6, 6
+  00004c  invoke-static v4, v9, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z
+  000052  move-result v7
+  000054  move v4, v7
+  000056  if-nez v4, +004h
+  00005a  const/4 v6, 1
+  00005c  return v2
+  00005e  const/4 v6, 2
+  000060  return v0
+  000062  nop 
+  000064  <androguard.core.dex.FillArrayData object at 0x7ff3fac4e410>
+
+===== Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;->hashCode()I =====
+dex=classes.dex code_offset=9659744 instructions=18 access=public final callers=0 callees=2
+callees: Ljava/lang/Boolean;->hashCode(Z)I, Ljava/lang/Object;->hashCode()I
+  000000  move-object v1, v5
+  000002  iget-boolean v0, v1, Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;->a Z
+  000006  const/4 v4, 6
+  000008  invoke-static v0, Ljava/lang/Boolean;->hashCode(Z)I
+  00000e  move-result v3
+  000010  move v0, v3
+  000012  mul-int/lit8 v0, v0, 31
+  000016  const/4 v3, 2
+  000018  iget-object v1, v1, Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;->b Ljava/lang/CharSequence;
+  00001c  const/4 v4, 4
+  00001e  invoke-virtual v1, Ljava/lang/Object;->hashCode()I
+  000024  move-result v3
+  000026  move v1, v3
+  000028  add-int/2addr v1, v0
+  00002a  const/4 v4, 5
+  00002c  return v1
+  00002e  nop 
+  000030  <androguard.core.dex.FillArrayData object at 0x7ff3fac4ea10>
+
+===== Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;->toString()Ljava/lang/String; =====
+dex=classes.dex code_offset=9659876 instructions=25 access=public final callers=0 callees=6
+callees: Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  000000  move-object v2, v5
+  000002  new-instance v0, Ljava/lang/StringBuilder;
+  000006  const/4 v4, 4
+  000008  const-string v4, "SelectionItem(correct="
+  00000c  move-object v1, v4
+  00000e  invoke-direct v0, v1, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  000014  const/4 v4, 5
+  000016  iget-boolean v1, v2, Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;->a Z
+  00001a  const/4 v4, 5
+  00001c  invoke-virtual v0, v1, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+  000022  const-string v4, ", text="
+  000026  move-object v1, v4
+  000028  invoke-virtual v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00002e  iget-object v2, v2, Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;->b Ljava/lang/CharSequence;
+  000032  const/4 v4, 1
+  000034  invoke-virtual v0, v2, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  00003a  const-string v4, ")"
+  00003e  move-object v2, v4
+  000040  invoke-virtual v0, v2, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  000046  invoke-virtual v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  00004c  move-result-object v4
+  00004e  move-object v2, v4
+  000050  return-object v2
+  000052  nop 
+  000054  <androguard.core.dex.FillArrayData object at 0x7ff3fac4f1d0>
+
+===== Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;->writeToParcel(Landroid/os/Parcel; I)V =====
+dex=classes.dex code_offset=9660052 instructions=13 access=public final callers=1 callees=3
+callers: Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Selection;->writeToParcel(Landroid/os/Parcel; I)V
+callees: Landroid/os/Parcel;->writeInt(I)V, Landroid/text/TextUtils;->writeToParcel(Ljava/lang/CharSequence; Landroid/os/Parcel; I)V, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000000  move-object v1, v5
+  000002  invoke-virtual v6, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000008  iget-boolean v0, v1, Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;->a Z
+  00000c  const/4 v3, 2
+  00000e  invoke-virtual v6, v0, Landroid/os/Parcel;->writeInt(I)V
+  000014  const/4 v3, 1
+  000016  iget-object v1, v1, Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;->b Ljava/lang/CharSequence;
+  00001a  const/4 v3, 4
+  00001c  invoke-static v1, v6, v7, Landroid/text/TextUtils;->writeToParcel(Ljava/lang/CharSequence; Landroid/os/Parcel; I)V
+  000022  const/4 v4, 3
+  000024  return-void 
+  000026  nop 
+  000028  <androguard.core.dex.FillArrayData object at 0x7ff3fac4f690>

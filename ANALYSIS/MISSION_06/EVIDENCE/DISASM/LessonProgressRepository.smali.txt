@@ -1,0 +1,692 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/data/source/remote/progress/LessonProgressRepository; semantic=LessonProgressRepository
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;-><init>(Lcom/getmimo/data/source/remote/progress/LessonProgressApi; Lye/g; Lye/c; Lnp/d; Lri/d; Lcom/getmimo/data/source/local/completion/a; Lcg/a;)V =====
+dex=classes.dex code_offset=10062572 instructions=27 access=public constructor callers=2 callees=8
+callers: Lae/m;->get()Ljava/lang/Object;, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository_Factory;->newInstance(Lcom/getmimo/data/source/remote/progress/LessonProgressApi; Lye/g; Lye/c; Lnp/d; Lri/d; Lcom/getmimo/data/source/local/completion/a; Lcg/a;)Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;
+callees: Ljava/lang/Object;-><init>()V, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000000  move-object v0, v3
+  000002  invoke-virtual v4, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000008  invoke-virtual v5, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00000e  invoke-virtual v6, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000014  invoke-virtual v7, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00001a  invoke-virtual v8, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000020  invoke-virtual v9, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000026  invoke-virtual v10, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00002c  invoke-direct v0, Ljava/lang/Object;-><init>()V
+  000032  const-string v2, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  000036  iput-object v4, v0, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->lessonProgressApi Lcom/getmimo/data/source/remote/progress/LessonProgressApi;
+  00003a  const/4 v2, 5
+  00003c  iput-object v5, v0, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->tracksRepository Lye/g;
+  000040  const/4 v2, 5
+  000042  iput-object v6, v0, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->favoriteTracksRepository Lye/c;
+  000046  const/4 v2, 7
+  000048  iput-object v7, v0, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->dispatcherProvider Lnp/d;
+  00004c  const/4 v2, 4
+  00004e  iput-object v8, v0, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->networkUtils Lri/d;
+  000052  const/4 v2, 6
+  000054  iput-object v9, v0, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->completionRepository Lcom/getmimo/data/source/local/completion/a;
+  000058  const/4 v2, 1
+  00005a  iput-object v10, v0, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->lessonProgressDao Lcg/a;
+  00005e  const/4 v2, 7
+  000060  return-void 
+  000062  nop 
+  000064  <androguard.core.dex.FillArrayData object at 0x7ff3fadae710>
+
+===== Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->access$getLessonProgressApi$p(Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;)Lcom/getmimo/data/source/remote/progress/LessonProgressApi; =====
+dex=classes.dex code_offset=10062800 instructions=6 access=public static final synthetic callers=1 callees=0
+callers: Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$postUnsyncedLessonProgress$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+  000000  move-object v0, v4
+  000002  iget-object v0, v0, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->lessonProgressApi Lcom/getmimo/data/source/remote/progress/LessonProgressApi;
+  000006  const/4 v2, 2
+  000008  return-object v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3fadaea50>
+
+===== Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->access$getLessonProgressDao$p(Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;)Lcg/a; =====
+dex=classes.dex code_offset=10062884 instructions=6 access=public static final synthetic callers=4 callees=0
+callers: Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$addOrUpdateLessonProgressInQueue$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$moveLessonProgressFromQueue$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$postUnsyncedLessonProgress$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$postUnsyncedLessonProgress$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+  000000  move-object v0, v4
+  000002  iget-object v0, v0, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->lessonProgressDao Lcg/a;
+  000006  const/4 v2, 2
+  000008  return-object v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3fadaecd0>
+
+===== Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->access$toLessonProgressSyncResult(Lcom/getmimo/data/source/remote/progress/LessonProgressRepository; Lcom/getmimo/data/model/progress/PostProgressResponse;)Lcg/e; =====
+dex=classes.dex code_offset=10062952 instructions=7 access=public static final synthetic callers=1 callees=1
+callers: Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$postUnsyncedLessonProgress$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->toLessonProgressSyncResult(Lcom/getmimo/data/model/progress/PostProgressResponse;)Lcg/e;
+  000000  move-object v0, v3
+  000002  invoke-direct v0, v4, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->toLessonProgressSyncResult(Lcom/getmimo/data/model/progress/PostProgressResponse;)Lcg/e;
+  000008  move-result-object v2
+  00000a  move-object v0, v2
+  00000c  return-object v0
+  00000e  nop 
+  000010  <androguard.core.dex.FillArrayData object at 0x7ff3fadaf010>
+
+===== Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->access$toProgressList(Lcom/getmimo/data/source/remote/progress/LessonProgressRepository; Ljava/util/List;)Ljava/util/List; =====
+dex=classes.dex code_offset=10063012 instructions=7 access=public static final synthetic callers=1 callees=1
+callers: Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$postUnsyncedLessonProgress$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->toProgressList(Ljava/util/List;)Ljava/util/List;
+  000000  move-object v0, v3
+  000002  invoke-direct v0, v4, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->toProgressList(Ljava/util/List;)Ljava/util/List;
+  000008  move-result-object v2
+  00000a  move-object v0, v2
+  00000c  return-object v0
+  00000e  nop 
+  000010  <androguard.core.dex.FillArrayData object at 0x7ff3fadaf310>
+
+===== Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->addOrUpdateLessonProgressInQueue(Ljava/util/List; Z Ld70/b;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10063532 instructions=62 access=public final callers=2 callees=9
+callers: Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->storeLessonProgress(Lcom/getmimo/data/model/room/LessonProgress; Z Z Ld70/b;)Ljava/lang/Object;, Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->storeSyntheticLessonProgress(Ljava/util/List; Ld70/b;)Ljava/lang/Object;
+callees: La70/r;->i0(Ljava/lang/Iterable; I)I, Lcom/getmimo/data/model/room/LessonProgress;->copy$default(Lcom/getmimo/data/model/room/LessonProgress; J Lorg/joda/time/Instant; Lorg/joda/time/Instant; I J I J J I Z Z I Ljava/lang/Object;)Lcom/getmimo/data/model/room/LessonProgress;, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$addOrUpdateLessonProgressInQueue$2;-><init>(Lcom/getmimo/data/source/remote/progress/LessonProgressRepository; Ljava/util/List; Ld70/b;)V, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/util/ArrayList;-><init>(I)V, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;, Lra0/z;->z(Ld70/f; Lo70/m; Ld70/b;)Ljava/lang/Object;
+  000000  move-object/from16 v0, v22
+  000004  if-eqz v24, +005h
+  000008  move-object/from16 v1, v23
+  00000c  goto +4dh
+  00000e  new-instance v1, Ljava/util/ArrayList;
+  000012  const/16 v2, 23082
+  000016  const/16 v2, 10
+  00001a  move-object/from16 v3, v23
+  00001e  invoke-static v3, v2, La70/r;->i0(Ljava/lang/Iterable; I)I
+  000024  move-result v2
+  000026  invoke-direct v1, v2, Ljava/util/ArrayList;-><init>(I)V
+  00002c  invoke-interface v3, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  000032  move-result-object v2
+  000034  invoke-interface v2, Ljava/util/Iterator;->hasNext()Z
+  00003a  move-result v3
+  00003c  if-eqz v3, +035h
+  000040  invoke-interface v2, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  000046  move-result-object v3
+  000048  move-object v4, v3
+  00004a  check-cast v4, Lcom/getmimo/data/model/room/LessonProgress;
+  00004e  const/16 v20, 31030
+  000052  const/16 v20, 2039
+  000056  const/16 v21, 3012
+  00005a  const/16 v21, 0
+  00005e  const-wide/16 v5, 0
+  000062  const/4 v7, 5
+  000064  const/4 v7, 0
+  000066  const/4 v8, 2
+  000068  const/4 v8, 0
+  00006a  const/4 v9, 6
+  00006c  const/4 v9, 0
+  00006e  const-wide/16 v10, 0
+  000072  const/4 v12, 7
+  000074  const/4 v12, 0
+  000076  const-wide/16 v13, 0
+  00007a  const-wide/16 v15, 0
+  00007e  const/16 v17, 27288
+  000082  const/16 v17, 0
+  000086  const/16 v18, 26537
+  00008a  const/16 v18, 0
+  00008e  const/16 v19, 25486
+  000092  const/16 v19, 0
+  000096  invoke-static/range v4 ... v21, Lcom/getmimo/data/model/room/LessonProgress;->copy$default(Lcom/getmimo/data/model/room/LessonProgress; J Lorg/joda/time/Instant; Lorg/joda/time/Instant; I J I J J I Z Z I Ljava/lang/Object;)Lcom/getmimo/data/model/room/LessonProgress;
+  00009c  move-result-object v3
+  00009e  invoke-virtual v1, v3, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  0000a4  goto -38h
+  0000a6  iget-object v2, v0, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->dispatcherProvider Lnp/d;
+  0000aa  check-cast v2, Lnp/b;
+  0000ae  iget-object v2, v2, Lnp/b;->c Lya0/c;
+  0000b2  new-instance v3, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$addOrUpdateLessonProgressInQueue$2;
+  0000b6  const/4 v4, 5
+  0000b8  const/4 v4, 0
+  0000ba  invoke-direct v3, v0, v1, v4, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$addOrUpdateLessonProgressInQueue$2;-><init>(Lcom/getmimo/data/source/remote/progress/LessonProgressRepository; Ljava/util/List; Ld70/b;)V
+  0000c0  move-object/from16 v0, v25
+  0000c4  invoke-static v2, v3, v0, Lra0/z;->z(Ld70/f; Lo70/m; Ld70/b;)Ljava/lang/Object;
+  0000ca  move-result-object v0
+  0000cc  sget-object v1, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  0000d0  if-ne v0, v1, +003h
+  0000d4  return-object v0
+  0000d6  sget-object v0, Lz60/q;->a Lz60/q;
+  0000da  return-object v0
+  0000dc  <androguard.core.dex.FillArrayData object at 0x7ff3fadb0490>
+
+===== Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->clearLessonProgressQueue(Ld70/b;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10063788 instructions=36 access=public final callers=2 callees=2
+callers: Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->clear(Ld70/b;)Ljava/lang/Object;, Lcom/getmimo/ui/main/MainViewModel$fetchLessonProgressAndPostUnsyncedToBackend$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Landroidx/room/util/a;->c(Landroidx/room/d; Ld70/b; Lo70/j; Z Z)Ljava/lang/Object;, Lbb/j;-><init>(B)V
+  000000  move-object v3, v7
+  000002  iget-object v3, v3, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->lessonProgressDao Lcg/a;
+  000006  const/4 v6, 7
+  000008  check-cast v3, Lcg/d;
+  00000c  const/4 v6, 6
+  00000e  iget-object v3, v3, Lcg/d;->a Landroidx/room/d;
+  000012  const/4 v5, 6
+  000014  new-instance v0, Lbb/j;
+  000018  const/4 v6, 3
+  00001a  const/16 v5, 19
+  00001e  move v1, v5
+  000020  invoke-direct v0, v1, Lbb/j;-><init>(B)V
+  000026  const/4 v5, 2
+  000028  const/4 v6, 0
+  00002a  move v1, v6
+  00002c  const/4 v6, 1
+  00002e  move v2, v6
+  000030  invoke-static v3, v8, v0, v1, v2, Landroidx/room/util/a;->c(Landroidx/room/d; Ld70/b; Lo70/j; Z Z)Ljava/lang/Object;
+  000036  move-result-object v6
+  000038  move-object v3, v6
+  00003a  sget-object v8, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  00003e  const/4 v5, 2
+  000040  sget-object v0, Lz60/q;->a Lz60/q;
+  000044  const/4 v6, 2
+  000046  if-ne v3, v8, +004h
+  00004a  const/4 v6, 3
+  00004c  goto +3h
+  00004e  const/4 v5, 4
+  000050  move-object v3, v0
+  000052  if-ne v3, v8, +004h
+  000056  const/4 v5, 3
+  000058  return-object v3
+  00005a  const/4 v6, 5
+  00005c  return-object v0
+  00005e  nop 
+  000060  <androguard.core.dex.FillArrayData object at 0x7ff3fadb0d10>
+
+===== Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->createLessonProgress(Lcom/getmimo/ui/lesson/interactive/LessonBundle; Lorg/joda/time/Instant; I I)Lcom/getmimo/data/model/room/LessonProgress; =====
+dex=classes.dex code_offset=10063916 instructions=44 access=public callers=2 callees=14
+callers: Lcom/getmimo/ui/lesson/executable/q;->E(Lorg/orbitmvi/orbit/syntax/b;)Lcom/getmimo/data/model/room/LessonProgress;, Lcom/getmimo/ui/lesson/interactive/base/c;->H(I I)Lcom/getmimo/data/model/room/LessonProgress;
+callees: Lcom/getmimo/data/content/tracks/c;->c()J, Lcom/getmimo/data/model/room/LessonProgress;-><init>(J Lorg/joda/time/Instant; Lorg/joda/time/Instant; I J I J J I Z Z)V, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/RuntimeException;-><init>(Ljava/lang/String;)V, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;, Lld0/c;->h(Lld0/c;)Z, Lle0/a;->d(Ljava/lang/Throwable;)V, Lorg/joda/time/Instant;-><init>()V
+  000000  move-object/from16 v0, v17
+  000004  move-object/from16 v4, v18
+  000008  invoke-virtual v0, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00000e  invoke-virtual v4, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000014  new-instance v3, Lorg/joda/time/Instant;
+  000018  invoke-direct v3, Lorg/joda/time/Instant;-><init>()V
+  00001e  invoke-virtual v3, v4, Lld0/c;->h(Lld0/c;)Z
+  000024  move-result v1
+  000026  if-eqz v1, +027h
+  00002a  sget-object v1, Lle0/b;->a Lle0/a;
+  00002e  new-instance v2, Ljava/lang/RuntimeException;
+  000032  new-instance v5, Ljava/lang/StringBuilder;
+  000036  const-string v6, "CreateLessonProgress: completedAt date ("
+  00003a  invoke-direct v5, v6, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  000040  invoke-virtual v5, v3, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  000046  const-string v6, ") is before startedAt date ("
+  00004a  invoke-virtual v5, v6, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  000050  invoke-virtual v5, v4, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  000056  const-string v6, ")"
+  00005a  invoke-virtual v5, v6, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  000060  invoke-virtual v5, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  000066  move-result-object v5
+  000068  invoke-direct v2, v5, Ljava/lang/RuntimeException;-><init>(Ljava/lang/String;)V
+  00006e  invoke-virtual v1, v2, Lle0/a;->d(Ljava/lang/Throwable;)V
+  000074  new-instance v1, Lcom/getmimo/data/model/room/LessonProgress;
+  000078  move-object v5, v1
+  00007a  iget-wide v1, v0, Lcom/getmimo/ui/lesson/interactive/LessonBundle;->a J
+  00007e  iget-wide v6, v0, Lcom/getmimo/ui/lesson/interactive/LessonBundle;->e J
+  000082  iget v8, v0, Lcom/getmimo/ui/lesson/interactive/LessonBundle;->v I
+  000086  iget-wide v9, v0, Lcom/getmimo/ui/lesson/interactive/LessonBundle;->f J
+  00008a  move-object/from16 v11, v16
+  00008e  iget-object v11, v11, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->tracksRepository Lye/g;
+  000092  check-cast v11, Lcom/getmimo/data/content/tracks/c;
+  000096  invoke-virtual v11, Lcom/getmimo/data/content/tracks/c;->c()J
+  00009c  move-result-wide v11
+  00009e  iget-boolean v14, v0, Lcom/getmimo/ui/lesson/interactive/LessonBundle;->B Z
+  0000a2  const/4 v15, 2
+  0000a4  const/4 v15, 1
+  0000a6  move/from16 v13, v20
+  0000aa  move-object v0, v5
+  0000ac  move/from16 v5, v19
+  0000b0  invoke-direct/range v0 ... v15, Lcom/getmimo/data/model/room/LessonProgress;-><init>(J Lorg/joda/time/Instant; Lorg/joda/time/Instant; I J I J J I Z Z)V
+  0000b6  return-object v0
+  0000b8  <androguard.core.dex.FillArrayData object at 0x7ff3fadb1c90>
+
+===== Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->fetchTrackCompletionForFavoriteTracks(Ld70/b;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10064156 instructions=239 access=public final callers=2 callees=30
+callers: Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/main/MainViewModel$fetchLessonProgressAndPostUnsyncedToBackend$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: La70/r;->i0(Ljava/lang/Iterable; I)I, Lcom/getmimo/data/content/model/track/FavoriteTracks;->getFavoriteTrackIds()Ljava/util/List;, Lcom/getmimo/data/content/model/track/TrackIdentifier;-><init>(J J)V, Lcom/getmimo/data/content/model/track/TrackIdentifier;->getTrackId()J, Lcom/getmimo/data/content/model/track/TrackIdentifier;->getTrackVersion()J, Lcom/getmimo/data/content/model/track/TrackJson;->getId()J, Lcom/getmimo/data/content/model/track/TrackJson;->getVersion()J, Lcom/getmimo/data/content/tracks/a;->b(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/data/content/tracks/c;->f(Ljava/util/List; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/io/Serializable;, Lcom/getmimo/data/source/local/completion/a;->d(J J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;-><init>(Lcom/getmimo/data/source/remote/progress/LessonProgressRepository; Ld70/b;)V, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;, Ljava/util/ArrayList;-><init>(I)V, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/collections/a;->o1(Ljava/lang/Iterable;)Ljava/util/List;, Lkotlin/collections/a;->s1(Ljava/lang/Iterable;)Ljava/util/Set;, Lle0/a;->f(Ljava/lang/String; [Ljava/lang/Object;)V, Lwc/f;->i(Ljava/lang/String;)V
+  000000  instance-of v0, v15, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;
+  000004  const/4 v13, 6
+  000006  if-eqz v0, +019h
+  00000a  const/4 v13, 3
+  00000c  move-object v0, v15
+  00000e  check-cast v0, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;
+  000012  const/4 v13, 5
+  000014  iget v1, v0, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;->label I
+  000018  const/4 v13, 4
+  00001a  const/high16 v13, -2147483648
+  00001e  move v2, v13
+  000020  and-int v3, v1, v2
+  000024  const/4 v13, 1
+  000026  if-eqz v3, +009h
+  00002a  const/4 v13, 4
+  00002c  sub-int/2addr v1, v2
+  00002e  const/4 v13, 4
+  000030  iput v1, v0, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;->label I
+  000034  const/4 v13, 4
+  000036  goto +9h
+  000038  const/4 v13, 4
+  00003a  new-instance v0, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;
+  00003e  const/4 v13, 5
+  000040  invoke-direct v0, v14, v15, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;-><init>(Lcom/getmimo/data/source/remote/progress/LessonProgressRepository; Ld70/b;)V
+  000046  const/4 v13, 6
+  000048  iget-object v15, v0, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;->result Ljava/lang/Object;
+  00004c  const/4 v13, 6
+  00004e  sget-object v1, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000052  const/4 v13, 2
+  000054  iget v2, v0, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;->label I
+  000058  const/4 v13, 1
+  00005a  const/4 v13, 3
+  00005c  move v3, v13
+  00005e  const/4 v13, 2
+  000060  move v4, v13
+  000062  const/4 v13, 1
+  000064  move v5, v13
+  000066  const/4 v13, 0
+  000068  move v6, v13
+  00006a  if-eqz v2, +051h
+  00006e  const/4 v13, 5
+  000070  if-eq v2, v5, +048h
+  000074  const/4 v13, 6
+  000076  if-eq v2, v4, +039h
+  00007a  const/4 v13, 6
+  00007c  if-ne v2, v3, +02dh
+  000080  const/4 v13, 5
+  000082  iget-object v2, v0, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;->L$6 Ljava/lang/Object;
+  000086  const/4 v13, 3
+  000088  check-cast v2, Lcom/getmimo/data/content/model/track/TrackIdentifier;
+  00008c  const/4 v13, 6
+  00008e  iget-object v2, v0, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;->L$4 Ljava/lang/Object;
+  000092  const/4 v13, 7
+  000094  check-cast v2, Ljava/util/Iterator;
+  000098  const/4 v13, 2
+  00009a  iget-object v4, v0, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;->L$3 Ljava/lang/Object;
+  00009e  const/4 v13, 4
+  0000a0  check-cast v4, Ljava/lang/Iterable;
+  0000a4  const/4 v13, 3
+  0000a6  iget-object v4, v0, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;->L$2 Ljava/lang/Object;
+  0000aa  const/4 v13, 7
+  0000ac  check-cast v4, Ljava/lang/Iterable;
+  0000b0  const/4 v13, 3
+  0000b2  iget-object v5, v0, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;->L$1 Ljava/lang/Object;
+  0000b6  const/4 v13, 2
+  0000b8  check-cast v5, Ljava/lang/Iterable;
+  0000bc  const/4 v13, 4
+  0000be  iget-object v5, v0, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;->L$0 Ljava/lang/Object;
+  0000c2  const/4 v13, 5
+  0000c4  check-cast v5, Lcom/getmimo/data/content/model/track/FavoriteTracks;
+  0000c8  const/4 v13, 7
+  0000ca  invoke-static v15, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000d0  const/4 v13, 4
+  0000d2  goto/16 +0a0h
+  0000d6  const/4 v13, 7
+  0000d8  const-string v13, "call to 'resume' before 'invoke' with coroutine"
+  0000dc  move-object v14, v13
+  0000de  invoke-static v14, Lwc/f;->i(Ljava/lang/String;)V
+  0000e4  const/4 v13, 7
+  0000e6  return-object v6
+  0000e8  const/4 v13, 3
+  0000ea  iget-object v2, v0, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;->L$0 Ljava/lang/Object;
+  0000ee  const/4 v13, 7
+  0000f0  check-cast v2, Lcom/getmimo/data/content/model/track/FavoriteTracks;
+  0000f4  const/4 v13, 2
+  0000f6  invoke-static v15, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000fc  const/4 v13, 2
+  0000fe  goto +3fh
+  000100  const/4 v13, 1
+  000102  invoke-static v15, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000108  const/4 v13, 6
+  00010a  goto +1ah
+  00010c  const/4 v13, 7
+  00010e  invoke-static v15, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000114  const/4 v13, 2
+  000116  iget-object v15, v14, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->favoriteTracksRepository Lye/c;
+  00011a  const/4 v13, 5
+  00011c  iput v5, v0, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;->label I
+  000120  const/4 v13, 5
+  000122  check-cast v15, Lcom/getmimo/data/content/tracks/a;
+  000126  const/4 v13, 4
+  000128  invoke-virtual v15, v0, Lcom/getmimo/data/content/tracks/a;->b(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  00012e  move-result-object v13
+  000130  move-object v15, v13
+  000132  if-ne v15, v1, +005h
+  000136  const/4 v13, 3
+  000138  goto/16 +0aah
+  00013c  const/4 v13, 7
+  00013e  check-cast v15, Lcom/getmimo/data/content/model/track/FavoriteTracks;
+  000142  const/4 v13, 2
+  000144  iget-object v2, v14, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->tracksRepository Lye/g;
+  000148  const/4 v13, 7
+  00014a  invoke-virtual v15, Lcom/getmimo/data/content/model/track/FavoriteTracks;->getFavoriteTrackIds()Ljava/util/List;
+  000150  move-result-object v13
+  000152  move-object v15, v13
+  000154  iput-object v6, v0, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;->L$0 Ljava/lang/Object;
+  000158  const/4 v13, 3
+  00015a  iput v4, v0, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;->label I
+  00015e  const/4 v13, 4
+  000160  check-cast v2, Lcom/getmimo/data/content/tracks/c;
+  000164  const/4 v13, 1
+  000166  invoke-virtual v2, v15, v0, Lcom/getmimo/data/content/tracks/c;->f(Ljava/util/List; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/io/Serializable;
+  00016c  move-result-object v13
+  00016e  move-object v15, v13
+  000170  if-ne v15, v1, +005h
+  000174  const/4 v13, 3
+  000176  goto/16 +08bh
+  00017a  const/4 v13, 7
+  00017c  check-cast v15, Ljava/lang/Iterable;
+  000180  const/4 v13, 6
+  000182  new-instance v2, Ljava/util/ArrayList;
+  000186  const/4 v13, 6
+  000188  const/16 v13, 10
+  00018c  move v4, v13
+  00018e  invoke-static v15, v4, La70/r;->i0(Ljava/lang/Iterable; I)I
+  000194  move-result v13
+  000196  move v4, v13
+  000198  invoke-direct v2, v4, Ljava/util/ArrayList;-><init>(I)V
+  00019e  const/4 v13, 4
+  0001a0  invoke-interface v15, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  0001a6  move-result-object v13
+  0001a8  move-object v15, v13
+  0001aa  invoke-interface v15, Ljava/util/Iterator;->hasNext()Z
+  0001b0  move-result v13
+  0001b2  move v4, v13
+  0001b4  if-eqz v4, +01eh
+  0001b8  const/4 v13, 5
+  0001ba  invoke-interface v15, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0001c0  move-result-object v13
+  0001c2  move-object v4, v13
+  0001c4  check-cast v4, Lcom/getmimo/data/content/model/track/TrackJson;
+  0001c8  const/4 v13, 7
+  0001ca  new-instance v5, Lcom/getmimo/data/content/model/track/TrackIdentifier;
+  0001ce  const/4 v13, 1
+  0001d0  invoke-virtual v4, Lcom/getmimo/data/content/model/track/TrackJson;->getId()J
+  0001d6  move-result-wide v7
+  0001d8  invoke-virtual v4, Lcom/getmimo/data/content/model/track/TrackJson;->getVersion()J
+  0001de  move-result-wide v9
+  0001e0  invoke-direct v5, v7, v8, v9, v10, Lcom/getmimo/data/content/model/track/TrackIdentifier;-><init>(J J)V
+  0001e6  const/4 v13, 5
+  0001e8  invoke-virtual v2, v5, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  0001ee  goto -22h
+  0001f0  const/4 v13, 4
+  0001f2  invoke-static v2, Lkotlin/collections/a;->s1(Ljava/lang/Iterable;)Ljava/util/Set;
+  0001f8  move-result-object v13
+  0001fa  move-object v15, v13
+  0001fc  invoke-static v15, Lkotlin/collections/a;->o1(Ljava/lang/Iterable;)Ljava/util/List;
+  000202  move-result-object v13
+  000204  move-object v15, v13
+  000206  invoke-interface v15, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  00020c  move-result-object v13
+  00020e  move-object v2, v13
+  000210  move-object v4, v15
+  000212  move-object v12, v0
+  000214  const/4 v13, 4
+  000216  invoke-interface v2, Ljava/util/Iterator;->hasNext()Z
+  00021c  move-result v13
+  00021e  move v15, v13
+  000220  if-eqz v15, +037h
+  000224  const/4 v13, 7
+  000226  invoke-interface v2, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  00022c  move-result-object v13
+  00022e  move-object v15, v13
+  000230  check-cast v15, Lcom/getmimo/data/content/model/track/TrackIdentifier;
+  000234  const/4 v13, 2
+  000236  iget-object v7, v14, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->completionRepository Lcom/getmimo/data/source/local/completion/a;
+  00023a  const/4 v13, 7
+  00023c  invoke-virtual v15, Lcom/getmimo/data/content/model/track/TrackIdentifier;->getTrackId()J
+  000242  move-result-wide v8
+  000244  invoke-virtual v15, Lcom/getmimo/data/content/model/track/TrackIdentifier;->getTrackVersion()J
+  00024a  move-result-wide v10
+  00024c  iput-object v6, v12, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;->L$0 Ljava/lang/Object;
+  000250  const/4 v13, 4
+  000252  iput-object v6, v12, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;->L$1 Ljava/lang/Object;
+  000256  const/4 v13, 6
+  000258  iput-object v4, v12, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;->L$2 Ljava/lang/Object;
+  00025c  const/4 v13, 4
+  00025e  iput-object v6, v12, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;->L$3 Ljava/lang/Object;
+  000262  const/4 v13, 4
+  000264  iput-object v2, v12, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;->L$4 Ljava/lang/Object;
+  000268  const/4 v13, 1
+  00026a  iput-object v6, v12, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;->L$5 Ljava/lang/Object;
+  00026e  const/4 v13, 4
+  000270  iput-object v6, v12, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;->L$6 Ljava/lang/Object;
+  000274  const/4 v13, 7
+  000276  iput v3, v12, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$fetchTrackCompletionForFavoriteTracks$1;->label I
+  00027a  const/4 v13, 7
+  00027c  invoke-virtual/range v7 ... v12, Lcom/getmimo/data/source/local/completion/a;->d(J J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  000282  move-result-object v13
+  000284  move-object v15, v13
+  000286  if-ne v15, v1, -039h
+  00028a  const/4 v13, 6
+  00028c  return-object v1
+  00028e  const/4 v13, 7
+  000290  check-cast v4, Ljava/util/List;
+  000294  const/4 v13, 4
+  000296  sget-object v14, Lle0/b;->a Lle0/a;
+  00029a  const/4 v13, 7
+  00029c  new-instance v15, Ljava/lang/StringBuilder;
+  0002a0  const/4 v13, 1
+  0002a2  const-string v13, "Successfully fetched track completions for "
+  0002a6  move-object v0, v13
+  0002a8  invoke-direct v15, v0, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  0002ae  const/4 v13, 3
+  0002b0  invoke-virtual v15, v4, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  0002b6  invoke-virtual v15, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  0002bc  move-result-object v13
+  0002be  move-object v15, v13
+  0002c0  const/4 v13, 0
+  0002c2  move v0, v13
+  0002c4  new-array v0, v0, [Ljava/lang/Object;
+  0002c8  const/4 v13, 3
+  0002ca  invoke-virtual v14, v15, v0, Lle0/a;->f(Ljava/lang/String; [Ljava/lang/Object;)V
+  0002d0  const/4 v13, 1
+  0002d2  sget-object v14, Lz60/q;->a Lz60/q;
+  0002d6  const/4 v13, 6
+  0002d8  return-object v14
+  0002da  nop 
+  0002dc  <androguard.core.dex.FillArrayData object at 0x7ff3fadba210>
+
+===== Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->getAllLessonProgressInQueue(Ld70/b;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10064988 instructions=22 access=public final callers=4 callees=2
+callers: Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->getCorrectLessonProgressCount(Ld70/b;)Ljava/lang/Object;, Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->getCorrectLessonsFirstTryCount(Ld70/b;)Ljava/lang/Object;, Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->getLessonProgress(Ld70/b;)Ljava/lang/Object;, Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->updateCorrectAnswersCount(Ld70/b;)Ljava/lang/Object;
+callees: Landroidx/room/util/a;->c(Landroidx/room/d; Ld70/b; Lo70/j; Z Z)Ljava/lang/Object;, Lbb/j;-><init>(B)V
+  000000  move-object v3, v7
+  000002  iget-object v3, v3, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->lessonProgressDao Lcg/a;
+  000006  const/4 v6, 4
+  000008  check-cast v3, Lcg/d;
+  00000c  const/4 v6, 4
+  00000e  iget-object v3, v3, Lcg/d;->a Landroidx/room/d;
+  000012  const/4 v6, 4
+  000014  new-instance v0, Lbb/j;
+  000018  const/4 v5, 2
+  00001a  const/16 v6, 20
+  00001e  move v1, v6
+  000020  invoke-direct v0, v1, Lbb/j;-><init>(B)V
+  000026  const/4 v6, 5
+  000028  const/4 v5, 1
+  00002a  move v1, v5
+  00002c  const/4 v5, 0
+  00002e  move v2, v5
+  000030  invoke-static v3, v8, v0, v1, v2, Landroidx/room/util/a;->c(Landroidx/room/d; Ld70/b; Lo70/j; Z Z)Ljava/lang/Object;
+  000036  move-result-object v6
+  000038  move-object v3, v6
+  00003a  return-object v3
+  00003c  <androguard.core.dex.FillArrayData object at 0x7ff3fadba950>
+
+===== Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->moveLessonProgressFromQueue(Ld70/b;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10065092 instructions=26 access=public final callers=1 callees=2
+callers: Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->storeAndPostAllLessonProgress(Ld70/b;)Ljava/lang/Object;
+callees: Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$moveLessonProgressFromQueue$2;-><init>(Lcom/getmimo/data/source/remote/progress/LessonProgressRepository; Ld70/b;)V, Lra0/z;->z(Ld70/f; Lo70/m; Ld70/b;)Ljava/lang/Object;
+  000000  move-object v3, v6
+  000002  iget-object v0, v3, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->dispatcherProvider Lnp/d;
+  000006  const/4 v5, 3
+  000008  check-cast v0, Lnp/b;
+  00000c  const/4 v5, 3
+  00000e  iget-object v0, v0, Lnp/b;->c Lya0/c;
+  000012  const/4 v5, 5
+  000014  new-instance v1, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$moveLessonProgressFromQueue$2;
+  000018  const/4 v5, 0
+  00001a  move v2, v5
+  00001c  invoke-direct v1, v3, v2, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$moveLessonProgressFromQueue$2;-><init>(Lcom/getmimo/data/source/remote/progress/LessonProgressRepository; Ld70/b;)V
+  000022  const/4 v5, 1
+  000024  invoke-static v0, v1, v7, Lra0/z;->z(Ld70/f; Lo70/m; Ld70/b;)Ljava/lang/Object;
+  00002a  move-result-object v5
+  00002c  move-object v3, v5
+  00002e  sget-object v7, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000032  const/4 v5, 7
+  000034  if-ne v3, v7, +004h
+  000038  const/4 v5, 6
+  00003a  return-object v3
+  00003c  const/4 v5, 5
+  00003e  sget-object v3, Lz60/q;->a Lz60/q;
+  000042  const/4 v5, 5
+  000044  return-object v3
+  000046  nop 
+  000048  <androguard.core.dex.FillArrayData object at 0x7ff3fadbb150>
+
+===== Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->postUnsyncedLessonProgress(Ld70/b;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10065264 instructions=44 access=public final callers=2 callees=5
+callers: Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->storeAndPostAllLessonProgress(Ld70/b;)Ljava/lang/Object;, Lcom/getmimo/ui/main/MainViewModel$fetchLessonProgressAndPostUnsyncedToBackend$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$postUnsyncedLessonProgress$2;-><init>(Lcom/getmimo/data/source/remote/progress/LessonProgressRepository; Ld70/b;)V, Lcom/getmimo/network/a;->a()Z, Ljava/io/IOException;-><init>(Ljava/lang/String;)V, Lle0/a;->f(Ljava/lang/String; [Ljava/lang/Object;)V, Lra0/z;->z(Ld70/f; Lo70/m; Ld70/b;)Ljava/lang/Object;
+  000000  move-object v3, v6
+  000002  iget-object v0, v3, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->networkUtils Lri/d;
+  000006  const/4 v5, 2
+  000008  check-cast v0, Lcom/getmimo/network/a;
+  00000c  const/4 v5, 1
+  00000e  invoke-virtual v0, Lcom/getmimo/network/a;->a()Z
+  000014  move-result v5
+  000016  move v0, v5
+  000018  const/4 v5, 0
+  00001a  move v1, v5
+  00001c  if-eqz v0, +019h
+  000020  const/4 v5, 4
+  000022  iget-object v0, v3, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->dispatcherProvider Lnp/d;
+  000026  const/4 v5, 7
+  000028  check-cast v0, Lnp/b;
+  00002c  const/4 v5, 6
+  00002e  iget-object v0, v0, Lnp/b;->c Lya0/c;
+  000032  const/4 v5, 2
+  000034  new-instance v2, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$postUnsyncedLessonProgress$2;
+  000038  const/4 v5, 2
+  00003a  invoke-direct v2, v3, v1, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$postUnsyncedLessonProgress$2;-><init>(Lcom/getmimo/data/source/remote/progress/LessonProgressRepository; Ld70/b;)V
+  000040  const/4 v5, 7
+  000042  invoke-static v0, v2, v7, Lra0/z;->z(Ld70/f; Lo70/m; Ld70/b;)Ljava/lang/Object;
+  000048  move-result-object v5
+  00004a  move-object v3, v5
+  00004c  return-object v3
+  00004e  const/4 v5, 2
+  000050  sget-object v3, Lle0/b;->a Lle0/a;
+  000054  const/4 v5, 5
+  000056  const/4 v5, 0
+  000058  move v7, v5
+  00005a  new-array v7, v7, [Ljava/lang/Object;
+  00005e  const/4 v5, 2
+  000060  const-string v5, "No internet connection, not posting unsynced lesson progress"
+  000064  move-object v0, v5
+  000066  invoke-virtual v3, v0, v7, Lle0/a;->f(Ljava/lang/String; [Ljava/lang/Object;)V
+  00006c  const/4 v5, 3
+  00006e  new-instance v3, Lcom/getmimo/network/NoConnectionException;
+  000072  const/4 v5, 7
+  000074  invoke-direct v3, v1, Ljava/io/IOException;-><init>(Ljava/lang/String;)V
+  00007a  const/4 v5, 1
+  00007c  throw v3
+  00007e  const/4 v5, 1
+  000080  <androguard.core.dex.FillArrayData object at 0x7ff3fadbbe50>
+
+===== Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->toLessonProgressSyncResult(Lcom/getmimo/data/model/progress/PostProgressResponse;)Lcg/e; =====
+dex=classes.dex code_offset=10063068 instructions=14 access=private final callers=1 callees=3
+callers: Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->access$toLessonProgressSyncResult(Lcom/getmimo/data/source/remote/progress/LessonProgressRepository; Lcom/getmimo/data/model/progress/PostProgressResponse;)Lcg/e;
+callees: Lcg/e;-><init>(Z I)V, Lcom/getmimo/data/model/progress/PostProgressResponse;->getDailyGoalCoinReward()I, Lcom/getmimo/data/model/progress/PostProgressResponse;->getReachedGoal()Z
+  000000  move-object v1, v5
+  000002  new-instance v1, Lcg/e;
+  000006  const/4 v4, 4
+  000008  invoke-virtual v6, Lcom/getmimo/data/model/progress/PostProgressResponse;->getReachedGoal()Z
+  00000e  move-result v3
+  000010  move v0, v3
+  000012  invoke-virtual v6, Lcom/getmimo/data/model/progress/PostProgressResponse;->getDailyGoalCoinReward()I
+  000018  move-result v3
+  00001a  move v6, v3
+  00001c  invoke-direct v1, v0, v6, Lcg/e;-><init>(Z I)V
+  000022  const/4 v3, 3
+  000024  return-object v1
+  000026  nop 
+  000028  <androguard.core.dex.FillArrayData object at 0x7ff3fadc42d0>
+
+===== Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->toProgressList(Ljava/util/List;)Ljava/util/List; =====
+dex=classes.dex code_offset=10063248 instructions=76 access=private final callers=1 callees=23
+callers: Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->access$toProgressList(Lcom/getmimo/data/source/remote/progress/LessonProgressRepository; Ljava/util/List;)Ljava/util/List;
+callees: La70/r;->i0(Ljava/lang/Iterable; I)I, Lcom/getmimo/data/model/progress/Progress;-><init>(J Ljava/util/Date; Ljava/util/Date; Ljava/lang/Integer; Ljava/lang/Integer; Ljava/lang/Long; Ljava/lang/Long; Ljava/lang/Integer; Z)V, Lcom/getmimo/data/model/room/LessonProgress;->getAttempts()I, Lcom/getmimo/data/model/room/LessonProgress;->getCompletedAt()Lorg/joda/time/Instant;, Lcom/getmimo/data/model/room/LessonProgress;->getLessonId()J, Lcom/getmimo/data/model/room/LessonProgress;->getPublishSetVersion()J, Lcom/getmimo/data/model/room/LessonProgress;->getStartedAt()Lorg/joda/time/Instant;, Lcom/getmimo/data/model/room/LessonProgress;->getTrackId()J, Lcom/getmimo/data/model/room/LessonProgress;->getTries()I, Lcom/getmimo/data/model/room/LessonProgress;->getTutorialVersion()I, Lcom/getmimo/data/model/room/LessonProgress;->isPracticeProgress()Z, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;, Ljava/util/ArrayList;-><init>(I)V, Ljava/util/Collection;->add(Ljava/lang/Object;)Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;, Lld0/c;->j()Ljava/util/Date;, Lld0/c;->j()Ljava/util/Date;
+  000000  new-instance v14, Ljava/util/ArrayList;
+  000004  const/4 v13, 5
+  000006  const/16 v12, 10
+  00000a  move v0, v12
+  00000c  invoke-static v15, v0, La70/r;->i0(Ljava/lang/Iterable; I)I
+  000012  move-result v12
+  000014  move v0, v12
+  000016  invoke-direct v14, v0, Ljava/util/ArrayList;-><init>(I)V
+  00001c  const/4 v13, 7
+  00001e  invoke-interface v15, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  000024  move-result-object v12
+  000026  move-object v15, v12
+  000028  invoke-interface v15, Ljava/util/Iterator;->hasNext()Z
+  00002e  move-result v12
+  000030  move v0, v12
+  000032  if-eqz v0, +063h
+  000036  const/4 v13, 3
+  000038  invoke-interface v15, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  00003e  move-result-object v12
+  000040  move-object v0, v12
+  000042  check-cast v0, Lcom/getmimo/data/model/room/LessonProgress;
+  000046  const/4 v13, 4
+  000048  new-instance v1, Lcom/getmimo/data/model/progress/Progress;
+  00004c  const/4 v13, 3
+  00004e  invoke-virtual v0, Lcom/getmimo/data/model/room/LessonProgress;->getLessonId()J
+  000054  move-result-wide v2
+  000056  invoke-virtual v0, Lcom/getmimo/data/model/room/LessonProgress;->getCompletedAt()Lorg/joda/time/Instant;
+  00005c  move-result-object v12
+  00005e  move-object v4, v12
+  000060  invoke-virtual v4, Lld0/c;->j()Ljava/util/Date;
+  000066  move-result-object v12
+  000068  move-object v4, v12
+  00006a  invoke-virtual v0, Lcom/getmimo/data/model/room/LessonProgress;->getStartedAt()Lorg/joda/time/Instant;
+  000070  move-result-object v12
+  000072  move-object v5, v12
+  000074  invoke-virtual v5, Lld0/c;->j()Ljava/util/Date;
+  00007a  move-result-object v12
+  00007c  move-object v5, v12
+  00007e  invoke-virtual v0, Lcom/getmimo/data/model/room/LessonProgress;->getTries()I
+  000084  move-result v12
+  000086  move v6, v12
+  000088  invoke-static v6, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  00008e  move-result-object v12
+  000090  move-object v6, v12
+  000092  invoke-virtual v0, Lcom/getmimo/data/model/room/LessonProgress;->getTutorialVersion()I
+  000098  move-result v12
+  00009a  move v7, v12
+  00009c  invoke-static v7, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  0000a2  move-result-object v12
+  0000a4  move-object v7, v12
+  0000a6  invoke-virtual v0, Lcom/getmimo/data/model/room/LessonProgress;->getTrackId()J
+  0000ac  move-result-wide v8
+  0000ae  invoke-static v8, v9, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  0000b4  move-result-object v12
+  0000b6  move-object v8, v12
+  0000b8  invoke-virtual v0, Lcom/getmimo/data/model/room/LessonProgress;->getPublishSetVersion()J
+  0000be  move-result-wide v9
+  0000c0  invoke-static v9, v10, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  0000c6  move-result-object v12
+  0000c8  move-object v9, v12
+  0000ca  invoke-virtual v0, Lcom/getmimo/data/model/room/LessonProgress;->getAttempts()I
+  0000d0  move-result v12
+  0000d2  move v10, v12
+  0000d4  invoke-static v10, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  0000da  move-result-object v12
+  0000dc  move-object v10, v12
+  0000de  invoke-virtual v0, Lcom/getmimo/data/model/room/LessonProgress;->isPracticeProgress()Z
+  0000e4  move-result v12
+  0000e6  move v11, v12
+  0000e8  invoke-direct/range v1 ... v11, Lcom/getmimo/data/model/progress/Progress;-><init>(J Ljava/util/Date; Ljava/util/Date; Ljava/lang/Integer; Ljava/lang/Integer; Ljava/lang/Long; Ljava/lang/Long; Ljava/lang/Integer; Z)V
+  0000ee  const/4 v13, 2
+  0000f0  invoke-interface v14, v1, Ljava/util/Collection;->add(Ljava/lang/Object;)Z
+  0000f6  goto -67h
+  0000f8  const/4 v13, 5
+  0000fa  return-object v14
+  0000fc  <androguard.core.dex.FillArrayData object at 0x7ff3fadc5710>

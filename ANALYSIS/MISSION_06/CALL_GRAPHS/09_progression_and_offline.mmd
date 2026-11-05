@@ -1,0 +1,116 @@
+# GetPathMapState / chapter completion / offline gate
+
+```mermaid
+flowchart TD
+  N0["b.y<br/><small>Lcc @ext</small>"]
+  N1["DiscountedSubscription.getDiscountPercent<br/><small>inapp @9623268</small>"]
+  N2["Chapter.getId<br/><small>track @9672300</small>"]
+  N3["Chapter.getTitle<br/><small>track @9672436</small>"]
+  N4["Chapter.isCompleted<br/><small>track @9672716</small>"]
+  N5["Section.getTutorials<br/><small>track @9709024</small>"]
+  N6["Track.getId<br/><small>track @9715468</small>"]
+  N7["Track.getSections<br/><small>track @9715516</small>"]
+  N8["Tutorial.getChapters<br/><small>track @9733184</small>"]
+  N9["Tutorial.getHasProgress<br/><small>track @9733332</small>"]
+  N10["Tutorial.getIconBanner<br/><small>track @9733440</small>"]
+  N11["Tutorial.getId<br/><small>track @9733512</small>"]
+  N12["Tutorial.getTitle<br/><small>track @9733620</small>"]
+  N13["Tutorial.getType<br/><small>track @9733716</small>"]
+  N14["Tutorial.isCompleted<br/><small>track @9734092</small>"]
+  N15["TutorialType.isRequired<br/><small>track @9739824</small>"]
+  N16["CanOpenChapterWithKeys$invoke$1.invokeSuspend<br/><small>chapter @10100124</small>"]
+  N17["GetPathMapState$invoke$3.invokeSuspend<br/><small>path @10129608</small>"]
+  N18["GetCertificateState.b<br/><small>path @10144488</small>"]
+  N19["GetPathMapState.a<br/><small>path @10148408</small>"]
+  N20["a.a<br/><small>network @10174360</small>"]
+  N21["ChapterFinishedViewModel$handleOfflineState$1.invokeSuspend<br/><small>main @10357032</small>"]
+  N22["w.c<br/><small>Lds @ext</small>"]
+  N23["c.b<br/><small>Lri @ext</small>"]
+  N24["a.d<br/><small>Lsk @ext</small>"]
+  N25["a.e<br/><small>Lsk @ext</small>"]
+  N26["b0.c<br/><small>Lvn @ext</small>"]
+  N27["b0.getIndex<br/><small>Lvn @ext</small>"]
+  N28["d0.<init><br/><small>Lvn @ext</small>"]
+  N29["d.<init><br/><small>Lvn @ext</small>"]
+  N30["e0.<init><br/><small>Lvn @ext</small>"]
+  N31["g0.<init><br/><small>Lvn @ext</small>"]
+  N32["h0.<init><br/><small>Lvn @ext</small>"]
+  N33["i0.d<br/><small>Lvn @ext</small>"]
+  N34["i0.getId<br/><small>Lvn @ext</small>"]
+  N35["i0.getType<br/><small>Lvn @ext</small>"]
+  N36["k.<init><br/><small>Lvn @ext</small>"]
+  N37["l.<init><br/><small>Lvn @ext</small>"]
+  N38["m.<init><br/><small>Lvn @ext</small>"]
+  N39["n.<init><br/><small>Lvn @ext</small>"]
+  N17 --> N0
+  N17 --> N1
+  N17 --> N2
+  N17 --> N2
+  N17 --> N2
+  N17 --> N2
+  N17 --> N3
+  N17 --> N3
+  N17 --> N4
+  N17 --> N4
+  N17 --> N5
+  N17 --> N6
+  N17 --> N7
+  N17 --> N8
+  N17 --> N8
+  N17 --> N9
+  N17 --> N10
+  N17 --> N10
+  N17 --> N10
+  N17 --> N10
+  N17 --> N11
+  N17 --> N11
+  N17 --> N11
+  N17 --> N11
+  N17 --> N11
+  N17 --> N11
+  N17 --> N12
+  N17 --> N12
+  N17 --> N12
+  N17 --> N12
+  N17 --> N13
+  N17 --> N13
+  N17 --> N13
+  N17 --> N13
+  N17 --> N13
+  N17 --> N13
+  N17 --> N13
+  N17 --> N14
+  N17 --> N15
+  N17 --> N18
+  N17 --> N19
+  N17 --> N22
+  N17 --> N22
+  N17 --> N23
+  N17 --> N24
+  N17 --> N25
+  N17 --> N26
+  N17 --> N26
+  N17 --> N27
+  N17 --> N28
+  N17 --> N29
+  N17 --> N29
+  N17 --> N30
+  N17 --> N31
+  N17 --> N32
+  N17 --> N33
+  N17 --> N34
+  N17 --> N34
+  N17 --> N35
+  N17 --> N36
+  N17 --> N37
+  N17 --> N38
+  N17 --> N39
+  N18 --> N5
+  N18 --> N6
+  N18 --> N13
+  N18 --> N14
+  N18 --> N15
+  N18 --> N26
+```
+
+Edges are real `invoke-*` xrefs extracted from the 12 original DEX files (androguard 4.1.4).

@@ -1,0 +1,178 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/data/source/remote/progress/AnswersInChapter; semantic=AnswersInChapter
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/data/source/remote/progress/AnswersInChapter;-><init>(I I)V =====
+dex=classes.dex code_offset=10054632 instructions=10 access=public constructor callers=3 callees=1
+callers: Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->copy(I I)Lcom/getmimo/data/source/remote/progress/AnswersInChapter;, Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;-><init>(Lze/a; Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;)V, Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->updateCorrectAnswersCount(Ld70/b;)Ljava/lang/Object;
+callees: Ljava/lang/Object;-><init>()V
+  000000  move-object v0, v3
+  000002  invoke-direct v0, Ljava/lang/Object;-><init>()V
+  000008  const-string v2, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  00000c  iput v4, v0, Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->answeredCorrectly I
+  000010  const/4 v2, 4
+  000012  iput v5, v0, Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->answeredTotal I
+  000016  const/4 v2, 2
+  000018  return-void 
+  00001a  nop 
+  00001c  <androguard.core.dex.FillArrayData object at 0x7ff3f50d7e50>
+
+===== Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->component1()I =====
+dex=classes.dex code_offset=10054932 instructions=6 access=public final callers=0 callees=0
+  000000  move-object v0, v3
+  000002  iget v0, v0, Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->answeredCorrectly I
+  000006  const/4 v2, 7
+  000008  return v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3f50dc490>
+
+===== Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->component2()I =====
+dex=classes.dex code_offset=10054992 instructions=6 access=public final callers=0 callees=0
+  000000  move-object v0, v4
+  000002  iget v0, v0, Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->answeredTotal I
+  000006  const/4 v2, 2
+  000008  return v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3f50dc790>
+
+===== Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->copy$default(Lcom/getmimo/data/source/remote/progress/AnswersInChapter; I I I Ljava/lang/Object;)Lcom/getmimo/data/source/remote/progress/AnswersInChapter; =====
+dex=classes.dex code_offset=10054800 instructions=21 access=public static synthetic callers=0 callees=1
+callees: Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->copy(I I)Lcom/getmimo/data/source/remote/progress/AnswersInChapter;
+  000000  move-object v0, v3
+  000002  and-int/lit8 v7, v6, 1
+  000006  const/4 v2, 2
+  000008  if-eqz v7, +006h
+  00000c  const/4 v2, 1
+  00000e  iget v4, v0, Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->answeredCorrectly I
+  000012  const/4 v2, 6
+  000014  const/4 v2, 1
+  000016  and-int/lit8 v6, v6, 2
+  00001a  const/4 v2, 5
+  00001c  if-eqz v6, +006h
+  000020  const/4 v2, 7
+  000022  iget v5, v0, Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->answeredTotal I
+  000026  const/4 v2, 6
+  000028  const/4 v2, 4
+  00002a  invoke-virtual v0, v4, v5, Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->copy(I I)Lcom/getmimo/data/source/remote/progress/AnswersInChapter;
+  000030  move-result-object v2
+  000032  move-object v0, v2
+  000034  return-object v0
+  000036  nop 
+  000038  <androguard.core.dex.FillArrayData object at 0x7ff3f50dce50>
+
+===== Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->copy(I I)Lcom/getmimo/data/source/remote/progress/AnswersInChapter; =====
+dex=classes.dex code_offset=10055060 instructions=8 access=public final callers=1 callees=1
+callers: Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->copy$default(Lcom/getmimo/data/source/remote/progress/AnswersInChapter; I I I Ljava/lang/Object;)Lcom/getmimo/data/source/remote/progress/AnswersInChapter;
+callees: Lcom/getmimo/data/source/remote/progress/AnswersInChapter;-><init>(I I)V
+  000000  move-object v0, v3
+  000002  new-instance v0, Lcom/getmimo/data/source/remote/progress/AnswersInChapter;
+  000006  const/4 v2, 6
+  000008  invoke-direct v0, v4, v5, Lcom/getmimo/data/source/remote/progress/AnswersInChapter;-><init>(I I)V
+  00000e  const/4 v2, 3
+  000010  return-object v0
+  000012  nop 
+  000014  <androguard.core.dex.FillArrayData object at 0x7ff3f50dd1d0>
+
+===== Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->equals(Ljava/lang/Object;)Z =====
+dex=classes.dex code_offset=10055140 instructions=35 access=public callers=0 callees=0
+  000000  move-object v4, v8
+  000002  const/4 v7, 1
+  000004  move v0, v7
+  000006  if-ne v4, v9, +004h
+  00000a  const/4 v7, 2
+  00000c  return v0
+  00000e  const/4 v7, 1
+  000010  instance-of v1, v9, Lcom/getmimo/data/source/remote/progress/AnswersInChapter;
+  000014  const/4 v6, 3
+  000016  const/4 v6, 0
+  000018  move v2, v6
+  00001a  if-nez v1, +004h
+  00001e  const/4 v6, 4
+  000020  return v2
+  000022  const/4 v7, 5
+  000024  check-cast v9, Lcom/getmimo/data/source/remote/progress/AnswersInChapter;
+  000028  const/4 v6, 4
+  00002a  iget v1, v4, Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->answeredCorrectly I
+  00002e  const/4 v7, 3
+  000030  iget v3, v9, Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->answeredCorrectly I
+  000034  const/4 v6, 2
+  000036  if-eq v1, v3, +004h
+  00003a  const/4 v6, 1
+  00003c  return v2
+  00003e  const/4 v7, 4
+  000040  iget v4, v4, Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->answeredTotal I
+  000044  const/4 v7, 1
+  000046  iget v9, v9, Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->answeredTotal I
+  00004a  const/4 v7, 7
+  00004c  if-eq v4, v9, +004h
+  000050  const/4 v6, 7
+  000052  return v2
+  000054  const/4 v7, 2
+  000056  return v0
+  000058  <androguard.core.dex.FillArrayData object at 0x7ff3f50ddc10>
+
+===== Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->getAnsweredCorrectly()I =====
+dex=classes.dex code_offset=10055264 instructions=6 access=public final callers=0 callees=0
+  000000  move-object v0, v3
+  000002  iget v0, v0, Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->answeredCorrectly I
+  000006  const/4 v2, 4
+  000008  return v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3f50dded0>
+
+===== Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->getAnsweredTotal()I =====
+dex=classes.dex code_offset=10055324 instructions=6 access=public final callers=1 callees=0
+callers: Lcom/getmimo/ui/chapter/g;->c(I)V
+  000000  move-object v0, v4
+  000002  iget v0, v0, Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->answeredTotal I
+  000006  const/4 v3, 7
+  000008  return v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3f50de210>
+
+===== Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->hashCode()I =====
+dex=classes.dex code_offset=10055408 instructions=18 access=public callers=0 callees=2
+callees: Ljava/lang/Integer;->hashCode(I)I, Ljava/lang/Integer;->hashCode(I)I
+  000000  move-object v1, v5
+  000002  iget v0, v1, Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->answeredCorrectly I
+  000006  const/4 v4, 7
+  000008  invoke-static v0, Ljava/lang/Integer;->hashCode(I)I
+  00000e  move-result v4
+  000010  move v0, v4
+  000012  mul-int/lit8 v0, v0, 31
+  000016  const/4 v3, 4
+  000018  iget v1, v1, Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->answeredTotal I
+  00001c  const/4 v3, 1
+  00001e  invoke-static v1, Ljava/lang/Integer;->hashCode(I)I
+  000024  move-result v4
+  000026  move v1, v4
+  000028  add-int/2addr v1, v0
+  00002a  const/4 v4, 3
+  00002c  return v1
+  00002e  nop 
+  000030  <androguard.core.dex.FillArrayData object at 0x7ff3f50de810>
+
+===== Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->toString()Ljava/lang/String; =====
+dex=classes.dex code_offset=10055532 instructions=16 access=public callers=0 callees=1
+callees: Lsb/j;->k(I I Ljava/lang/String; Ljava/lang/String; Ljava/lang/String;)Ljava/lang/String;
+  000000  move-object v4, v8
+  000002  iget v0, v4, Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->answeredCorrectly I
+  000006  const/4 v6, 5
+  000008  iget v4, v4, Lcom/getmimo/data/source/remote/progress/AnswersInChapter;->answeredTotal I
+  00000c  const/4 v7, 1
+  00000e  const-string v7, ", answeredTotal="
+  000012  move-object v1, v7
+  000014  const-string v7, ")"
+  000018  move-object v2, v7
+  00001a  const-string v6, "AnswersInChapter(answeredCorrectly="
+  00001e  move-object v3, v6
+  000020  invoke-static v0, v4, v3, v1, v2, Lsb/j;->k(I I Ljava/lang/String; Ljava/lang/String; Ljava/lang/String;)Ljava/lang/String;
+  000026  move-result-object v7
+  000028  move-object v4, v7
+  00002a  return-object v4
+  00002c  <androguard.core.dex.FillArrayData object at 0x7ff3f50ded90>

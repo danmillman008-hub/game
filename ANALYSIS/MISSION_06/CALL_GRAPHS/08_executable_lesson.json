@@ -1,0 +1,138 @@
+{
+ "title": "executableFiles \u2192 solvedContent comparison \u2192 progress / browser output",
+ "classification": "VERIFIED_STATIC",
+ "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+ "method": "BFS over invoke-* xrefs from the listed root methods, bounded at depth 5 / 36 nodes",
+ "roots": [
+  "Lcom/getmimo/ui/lesson/executable/q;->I(Ldm/i; Lcom/getmimo/ui/lesson/interactive/LessonBundle; Ljava/util/ArrayList; Lcom/getmimo/data/content/model/track/LessonContent$Executable; Z)Ldm/i;",
+  "Lcom/getmimo/ui/lesson/executable/q;->E(Lorg/orbitmvi/orbit/syntax/b;)Lcom/getmimo/data/model/room/LessonProgress;"
+ ],
+ "node_count": 12,
+ "edge_count": 10,
+ "nodes": [
+  {
+   "signature": "Lcom/getmimo/data/content/model/track/LessonContent$Executable$File;->getSolvedContent()Ljava/lang/String;",
+   "dex": "classes.dex",
+   "code_offset": 9694428,
+   "instructions": 6
+  },
+  {
+   "signature": "Lcom/getmimo/data/content/model/track/LessonContent$Executable;->getFiles()Ljava/util/List;",
+   "dex": "classes.dex",
+   "code_offset": 9696572,
+   "instructions": 6
+  },
+  {
+   "signature": "Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getPublishSetVersion$1;-><init>(Lcom/getmimo/data/content/tracks/c; Ld70/b;)V",
+   "dex": "classes.dex",
+   "code_offset": 9743188,
+   "instructions": 9
+  },
+  {
+   "signature": "Lcom/getmimo/data/content/tracks/c;->c()J",
+   "dex": "classes.dex",
+   "code_offset": 9748376,
+   "instructions": 18
+  },
+  {
+   "signature": "Lcom/getmimo/data/model/execution/CodeFile;->getContent()Ljava/lang/String;",
+   "dex": "classes.dex",
+   "code_offset": 9847952,
+   "instructions": 6
+  },
+  {
+   "signature": "Lcom/getmimo/data/model/room/LessonProgress;-><init>(J Lorg/joda/time/Instant; Lorg/joda/time/Instant; I J I J J I Z Z)V",
+   "dex": "classes.dex",
+   "code_offset": 9910592,
+   "instructions": 16
+  },
+  {
+   "signature": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->createLessonProgress(Lcom/getmimo/ui/lesson/interactive/LessonBundle; Lorg/joda/time/Instant; I I)Lcom/getmimo/data/model/room/LessonProgress;",
+   "dex": "classes.dex",
+   "code_offset": 10063916,
+   "instructions": 44
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/executable/model/ExecutableLessonBundle;->d()Lcom/getmimo/ui/lesson/interactive/LessonBundle;",
+   "dex": "classes.dex",
+   "code_offset": 0,
+   "instructions": 0
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/executable/q;->E(Lorg/orbitmvi/orbit/syntax/b;)Lcom/getmimo/data/model/room/LessonProgress;",
+   "dex": "classes.dex",
+   "code_offset": 10913380,
+   "instructions": 57
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/executable/q;->I(Ldm/i; Lcom/getmimo/ui/lesson/interactive/LessonBundle; Ljava/util/ArrayList; Lcom/getmimo/data/content/model/track/LessonContent$Executable; Z)Ldm/i;",
+   "dex": "classes.dex",
+   "code_offset": 10912932,
+   "instructions": 114
+  },
+  {
+   "signature": "Ldm/g;-><init>(Ljava/util/List;)V",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Ldm/h;-><init>(Z Ljava/lang/String; Ljava/lang/String; Ldm/g; Z I)V",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  }
+ ],
+ "edges": [
+  {
+   "caller": "Lcom/getmimo/ui/lesson/executable/q;->I(Ldm/i; Lcom/getmimo/ui/lesson/interactive/LessonBundle; Ljava/util/ArrayList; Lcom/getmimo/data/content/model/track/LessonContent$Executable; Z)Ldm/i;",
+   "callee": "Lcom/getmimo/data/content/model/track/LessonContent$Executable$File;->getSolvedContent()Ljava/lang/String;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/executable/q;->I(Ldm/i; Lcom/getmimo/ui/lesson/interactive/LessonBundle; Ljava/util/ArrayList; Lcom/getmimo/data/content/model/track/LessonContent$Executable; Z)Ldm/i;",
+   "callee": "Lcom/getmimo/data/content/model/track/LessonContent$Executable;->getFiles()Ljava/util/List;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/executable/q;->I(Ldm/i; Lcom/getmimo/ui/lesson/interactive/LessonBundle; Ljava/util/ArrayList; Lcom/getmimo/data/content/model/track/LessonContent$Executable; Z)Ldm/i;",
+   "callee": "Lcom/getmimo/data/model/execution/CodeFile;->getContent()Ljava/lang/String;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/executable/q;->I(Ldm/i; Lcom/getmimo/ui/lesson/interactive/LessonBundle; Ljava/util/ArrayList; Lcom/getmimo/data/content/model/track/LessonContent$Executable; Z)Ldm/i;",
+   "callee": "Ldm/g;-><init>(Ljava/util/List;)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/executable/q;->I(Ldm/i; Lcom/getmimo/ui/lesson/interactive/LessonBundle; Ljava/util/ArrayList; Lcom/getmimo/data/content/model/track/LessonContent$Executable; Z)Ldm/i;",
+   "callee": "Ldm/h;-><init>(Z Ljava/lang/String; Ljava/lang/String; Ldm/g; Z I)V",
+   "opcode": "invoke-direct/range"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/executable/q;->E(Lorg/orbitmvi/orbit/syntax/b;)Lcom/getmimo/data/model/room/LessonProgress;",
+   "callee": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->createLessonProgress(Lcom/getmimo/ui/lesson/interactive/LessonBundle; Lorg/joda/time/Instant; I I)Lcom/getmimo/data/model/room/LessonProgress;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/executable/q;->E(Lorg/orbitmvi/orbit/syntax/b;)Lcom/getmimo/data/model/room/LessonProgress;",
+   "callee": "Lcom/getmimo/ui/lesson/executable/model/ExecutableLessonBundle;->d()Lcom/getmimo/ui/lesson/interactive/LessonBundle;",
+   "opcode": "invoke-interface"
+  },
+  {
+   "caller": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->createLessonProgress(Lcom/getmimo/ui/lesson/interactive/LessonBundle; Lorg/joda/time/Instant; I I)Lcom/getmimo/data/model/room/LessonProgress;",
+   "callee": "Lcom/getmimo/data/content/tracks/c;->c()J",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->createLessonProgress(Lcom/getmimo/ui/lesson/interactive/LessonBundle; Lorg/joda/time/Instant; I I)Lcom/getmimo/data/model/room/LessonProgress;",
+   "callee": "Lcom/getmimo/data/model/room/LessonProgress;-><init>(J Lorg/joda/time/Instant; Lorg/joda/time/Instant; I J I J J I Z Z)V",
+   "opcode": "invoke-direct/range"
+  },
+  {
+   "caller": "Lcom/getmimo/data/content/tracks/c;->c()J",
+   "callee": "Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getPublishSetVersion$1;-><init>(Lcom/getmimo/data/content/tracks/c; Ld70/b;)V",
+   "opcode": "invoke-direct"
+  }
+ ]
+}

@@ -1,0 +1,116 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/network/a; semantic=NetworkUtils
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/network/a;-><init>(Landroid/content/Context;)V =====
+dex=classes.dex code_offset=10174092 instructions=47 access=public constructor callers=1 callees=10
+callers: Lae/m;->a()Ljava/lang/Object;
+callees: Landroid/content/Context;->getSystemService(Ljava/lang/String;)Ljava/lang/Object;, Landroid/net/NetworkRequest$Builder;-><init>()V, Landroid/net/NetworkRequest$Builder;->addCapability(I)Landroid/net/NetworkRequest$Builder;, Landroid/net/NetworkRequest$Builder;->addTransportType(I)Landroid/net/NetworkRequest$Builder;, Landroid/net/NetworkRequest$Builder;->addTransportType(I)Landroid/net/NetworkRequest$Builder;, Landroid/net/NetworkRequest$Builder;->build()Landroid/net/NetworkRequest;, Lcom/getmimo/network/AndroidNetworkUtils$networkFlow$1;-><init>(Lcom/getmimo/network/a; Ld70/b;)V, Ljava/lang/Object;-><init>()V, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Lua0/h;->f(Lo70/m;)Lkotlinx/coroutines/flow/b;
+  000000  move-object v1, v5
+  000002  invoke-direct v1, Ljava/lang/Object;-><init>()V
+  000008  const-string v4, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  00000c  const-string v4, "connectivity"
+  000010  move-object v0, v4
+  000012  invoke-virtual v6, v0, Landroid/content/Context;->getSystemService(Ljava/lang/String;)Ljava/lang/Object;
+  000018  move-result-object v4
+  00001a  move-object v6, v4
+  00001c  invoke-virtual v6, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000022  check-cast v6, Landroid/net/ConnectivityManager;
+  000026  const/4 v3, 1
+  000028  iput-object v6, v1, Lcom/getmimo/network/a;->a Landroid/net/ConnectivityManager;
+  00002c  const/4 v3, 4
+  00002e  new-instance v6, Landroid/net/NetworkRequest$Builder;
+  000032  const/4 v3, 5
+  000034  invoke-direct v6, Landroid/net/NetworkRequest$Builder;-><init>()V
+  00003a  const/4 v4, 1
+  00003c  const/16 v3, 12
+  000040  move v0, v3
+  000042  invoke-virtual v6, v0, Landroid/net/NetworkRequest$Builder;->addCapability(I)Landroid/net/NetworkRequest$Builder;
+  000048  move-result-object v4
+  00004a  move-object v6, v4
+  00004c  const/4 v4, 0
+  00004e  move v0, v4
+  000050  invoke-virtual v6, v0, Landroid/net/NetworkRequest$Builder;->addTransportType(I)Landroid/net/NetworkRequest$Builder;
+  000056  move-result-object v4
+  000058  move-object v6, v4
+  00005a  const/4 v3, 1
+  00005c  move v0, v3
+  00005e  invoke-virtual v6, v0, Landroid/net/NetworkRequest$Builder;->addTransportType(I)Landroid/net/NetworkRequest$Builder;
+  000064  move-result-object v3
+  000066  move-object v6, v3
+  000068  invoke-virtual v6, Landroid/net/NetworkRequest$Builder;->build()Landroid/net/NetworkRequest;
+  00006e  new-instance v6, Lcom/getmimo/network/AndroidNetworkUtils$networkFlow$1;
+  000072  const/4 v4, 5
+  000074  const/4 v4, 0
+  000076  move v0, v4
+  000078  invoke-direct v6, v1, v0, Lcom/getmimo/network/AndroidNetworkUtils$networkFlow$1;-><init>(Lcom/getmimo/network/a; Ld70/b;)V
+  00007e  const/4 v4, 1
+  000080  invoke-static v6, Lua0/h;->f(Lo70/m;)Lkotlinx/coroutines/flow/b;
+  000086  move-result-object v3
+  000088  move-object v6, v3
+  00008a  iput-object v6, v1, Lcom/getmimo/network/a;->b Lkotlinx/coroutines/flow/b;
+  00008e  const/4 v4, 6
+  000090  return-void 
+  000092  nop 
+  000094  <androguard.core.dex.FillArrayData object at 0x7ff3fadc78d0>
+
+===== Lcom/getmimo/network/a;->a()Z =====
+dex=classes.dex code_offset=10174360 instructions=38 access=public final callers=14 callees=4
+callers: Lao/v;->a(Landroid/os/Bundle; Ljava/lang/String;)V, Lcom/getmimo/data/source/remote/iap/purchase/BillingManager$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/data/source/remote/iap/purchase/BillingManager$purchaseSubscription$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->postUnsyncedLessonProgress(Ld70/b;)Ljava/lang/Object;, Lcom/getmimo/interactors/leaderboard/a;->b(Lcom/getmimo/data/model/leaderboard/RemoteLeaderboardState; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/network/AndroidNetworkUtils$networkFlow$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/network/a;->b()Z, Lcom/getmimo/ui/chapter/ChapterActivity$setupChapterToolbar$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/iap/InAppPurchaseViewModel$loadInAppPurchasesList$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/path/map/PathMapViewModel$init$4;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/practice/playground/c;->a(Lcom/getmimo/ui/practice/playground/e; Lco/m; Landroidx/fragment/app/j0;)V, Lcom/getmimo/ui/projects/ProjectViewModel$remixCode$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/projects/ProjectViewModel$runCode$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/projects/ProjectViewModel$saveCode$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Landroid/net/ConnectivityManager;->getActiveNetwork()Landroid/net/Network;, Landroid/net/ConnectivityManager;->getNetworkCapabilities(Landroid/net/Network;)Landroid/net/NetworkCapabilities;, Landroid/net/NetworkCapabilities;->hasTransport(I)Z, Landroid/net/NetworkCapabilities;->hasTransport(I)Z
+  000000  move-object v3, v7
+  000002  iget-object v3, v3, Lcom/getmimo/network/a;->a Landroid/net/ConnectivityManager;
+  000006  const/4 v5, 2
+  000008  invoke-virtual v3, Landroid/net/ConnectivityManager;->getActiveNetwork()Landroid/net/Network;
+  00000e  move-result-object v6
+  000010  move-object v0, v6
+  000012  const/4 v6, 0
+  000014  move v1, v6
+  000016  if-nez v0, +004h
+  00001a  const/4 v5, 3
+  00001c  return v1
+  00001e  const/4 v5, 6
+  000020  invoke-virtual v3, v0, Landroid/net/ConnectivityManager;->getNetworkCapabilities(Landroid/net/Network;)Landroid/net/NetworkCapabilities;
+  000026  move-result-object v6
+  000028  move-object v3, v6
+  00002a  if-nez v3, +004h
+  00002e  const/4 v6, 4
+  000030  return v1
+  000032  const/4 v5, 5
+  000034  invoke-virtual v3, v1, Landroid/net/NetworkCapabilities;->hasTransport(I)Z
+  00003a  move-result v6
+  00003c  move v0, v6
+  00003e  const/4 v6, 1
+  000040  move v2, v6
+  000042  if-eqz v0, +004h
+  000046  const/4 v6, 2
+  000048  return v2
+  00004a  const/4 v6, 6
+  00004c  invoke-virtual v3, v2, Landroid/net/NetworkCapabilities;->hasTransport(I)Z
+  000052  move-result v5
+  000054  move v3, v5
+  000056  if-eqz v3, +004h
+  00005a  const/4 v5, 2
+  00005c  return v2
+  00005e  const/4 v6, 5
+  000060  return v1
+  000062  nop 
+  000064  <androguard.core.dex.FillArrayData object at 0x7ff3fadb43d0>
+
+===== Lcom/getmimo/network/a;->b()Z =====
+dex=classes.dex code_offset=10174512 instructions=8 access=public final callers=13 callees=1
+callers: Lcom/getmimo/apputil/notification/NotPremiumNotificationService;->d(Landroid/content/Intent;)V, Lcom/getmimo/data/source/remote/authentication/a;->a(Ld70/b;)Ljava/lang/Object;, Lcom/getmimo/data/source/remote/authentication/a;->b(Ljava/lang/String; Ljava/lang/String; Lcom/getmimo/analytics/properties/AuthenticationLocation; Ld70/b;)Ljava/lang/Object;, Lcom/getmimo/data/source/remote/authentication/a;->m(Lcom/google/firebase/auth/EmailAuthCredential; Lcom/getmimo/analytics/properties/AuthenticationLocation; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/data/source/remote/authentication/a;->n(Lcom/google/firebase/auth/FacebookAuthCredential; Lcom/getmimo/analytics/properties/AuthenticationLocation; Ld70/b;)Ljava/lang/Object;, Lcom/getmimo/data/source/remote/authentication/a;->o(Lcom/google/firebase/auth/GoogleAuthCredential; Lcom/getmimo/analytics/properties/AuthenticationLocation; Ld70/b;)Ljava/lang/Object;, Lcom/getmimo/interactors/profile/friends/a;->a(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/chapter/chapterendview/main/f;->I(Ldj/k;)V, Lcom/getmimo/ui/friends/b;->T(Landroid/view/View; Landroid/os/Bundle;)V, Lcom/getmimo/ui/lesson/executable/ExecutableLessonViewModel$executeLessonAndStoreProgress$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/practice/playground/SavedCodeViewModel$refreshData$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lhg/e;->intercept(Lokhttp3/Interceptor$Chain;)Lokhttp3/Response;, Lhm/d;->invoke(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Lcom/getmimo/network/a;->a()Z
+  000000  move-object v0, v3
+  000002  invoke-virtual v0, Lcom/getmimo/network/a;->a()Z
+  000008  move-result v2
+  00000a  move v0, v2
+  00000c  xor-int/lit8 v0, v0, 1
+  000010  const/4 v2, 3
+  000012  return v0
+  000014  <androguard.core.dex.FillArrayData object at 0x7ff3fadb47d0>

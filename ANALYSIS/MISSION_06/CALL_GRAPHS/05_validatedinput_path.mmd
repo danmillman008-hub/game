@@ -1,0 +1,99 @@
+# validatedInput: typed text → normalizer → Correct/Partial/Incorrect → V/W/X
+
+```mermaid
+flowchart TD
+  N0["a.o<br/><small>analytics @9513424</small>"]
+  N1["StringProperty.<init><br/><small>base @9585456</small>"]
+  N2["LessonProgress.isSolvedCorrectly<br/><small>room @9913532</small>"]
+  N3["LessonProgressRepository.createLessonProgress<br/><small>progress @10063916</small>"]
+  N4["g.a<br/><small>codeplayground @10456892</small>"]
+  N5["InteractiveLessonBaseViewModel$lessonSolvedCorrectly$1.<init><br/><small>base @10936828</small>"]
+  N6["InteractiveLessonBaseViewModel$lessonSolvedCorrectlyWithPartialMatch$1.<init><br/><small>base @10937056</small>"]
+  N7["InteractiveLessonBaseViewModel$lessonSolvedIncorrectly$1.<init><br/><small>base @10937224</small>"]
+  N8["InteractiveLessonBaseViewModel$onValidatedInputExecuted$1.<init><br/><small>base @10938916</small>"]
+  N9["InteractiveLessonBaseViewModel$onValidatedInputExecuted$1.invokeSuspend<br/><small>base @10939224</small>"]
+  N10["InteractiveLessonBaseViewModel$storeLessonProgressInMemory$2.<init><br/><small>base @10939920</small>"]
+  N11["InteractiveLessonBaseViewModel.createLessonProgress<br/><small>base @10948948</small>"]
+  N12["InteractiveLessonBaseViewModel.I<br/><small>base @10949040</small>"]
+  N13["InteractiveLessonBaseViewModel.K<br/><small>base @10949304</small>"]
+  N14["InteractiveLessonBaseViewModel.Q<br/><small>base @10952588</small>"]
+  N15["InteractiveLessonBaseViewModel.T<br/><small>base @10952812</small>"]
+  N16["InteractiveLessonBaseViewModel.lessonSolvedCorrectly<br/><small>base @10953356</small>"]
+  N17["InteractiveLessonBaseViewModel.lessonSolvedCorrectlyWithPartialMatch<br/><small>base @10953916</small>"]
+  N18["InteractiveLessonBaseViewModel.lessonSolvedIncorrectly<br/><small>base @10954596</small>"]
+  N19["InteractiveLessonBaseViewModel.emitValidationResult<br/><small>base @10955156</small>"]
+  N20["InteractiveLessonBaseViewModel.onValidatedInputExecuted<br/><small>base @10955764</small>"]
+  N21["InteractiveLessonBaseViewModel.updateSolutionFeedback<br/><small>base @10955960</small>"]
+  N22["InteractiveLessonBaseViewModel.showWrongFeedbackBlock<br/><small>base @10956096</small>"]
+  N23["InteractiveLessonBaseViewModel.storeLessonProgressInMemory<br/><small>base @10956692</small>"]
+  N24["InteractiveLessonBaseViewModel.trackLessonResult<br/><small>base @10956848</small>"]
+  N25["InteractiveLessonBaseViewModel.i0<br/><small>base @10957668</small>"]
+  N26["InteractiveLessonValidatedInputFragment$setupViews$2.invokeSuspend<br/><small>validatedinput @10985684</small>"]
+  N27["InteractiveLessonValidatedInputFragment.M0<br/><small>validatedinput @10988760</small>"]
+  N28["a.a<br/><small>sound @11019712</small>"]
+  N29["m.b<br/><small>Ljm @ext</small>"]
+  N30["n.<init><br/><small>Ljm @ext</small>"]
+  N31["q.<init><br/><small>Ljm @ext</small>"]
+  N32["f.<init><br/><small>Lqm @ext</small>"]
+  N33["i.a<br/><small>Lqm @ext</small>"]
+  N26 --> N19
+  N26 --> N20
+  N26 --> N27
+  N26 --> N32
+  N26 --> N33
+  N26 --> N33
+  N9 --> N13
+  N9 --> N16
+  N9 --> N17
+  N9 --> N18
+  N9 --> N20
+  N19 --> N8
+  N16 --> N2
+  N16 --> N5
+  N16 --> N11
+  N16 --> N12
+  N16 --> N13
+  N16 --> N21
+  N16 --> N23
+  N16 --> N24
+  N16 --> N25
+  N16 --> N28
+  N16 --> N29
+  N17 --> N0
+  N17 --> N1
+  N17 --> N1
+  N17 --> N2
+  N17 --> N6
+  N17 --> N11
+  N17 --> N12
+  N17 --> N13
+  N17 --> N21
+  N17 --> N23
+  N17 --> N24
+  N17 --> N25
+  N17 --> N28
+  N17 --> N30
+  N18 --> N7
+  N18 --> N11
+  N18 --> N21
+  N18 --> N22
+  N18 --> N23
+  N18 --> N28
+  N11 --> N3
+  N11 --> N13
+  N12 --> N4
+  N12 --> N13
+  N12 --> N13
+  N12 --> N13
+  N12 --> N13
+  N12 --> N14
+  N21 --> N15
+  N21 --> N31
+  N23 --> N10
+  N24 --> N0
+  N24 --> N13
+  N24 --> N13
+  N24 --> N13
+```
+
+Edges are real `invoke-*` xrefs extracted from the 12 original DEX files (androguard 4.1.4).

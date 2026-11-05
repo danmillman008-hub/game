@@ -1,0 +1,46 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/network/b; semantic=ConnectivityManagerNetworkMonitor
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/network/b;-><init>(Landroid/content/Context; Lnp/d;)V =====
+dex=classes.dex code_offset=10174572 instructions=33 access=public constructor callers=1 callees=5
+callers: Lae/m;->a()Ljava/lang/Object;
+callees: Lcom/getmimo/network/ConnectivityManagerNetworkMonitor$isOnline$1;-><init>(Lcom/getmimo/network/b; Ld70/b;)V, Ljava/lang/Object;-><init>()V, Lua0/h;->e(Lua0/e; I I)Lua0/e;, Lua0/h;->f(Lo70/m;)Lkotlinx/coroutines/flow/b;, Lua0/h;->i(Lua0/e; Ld70/f;)Lua0/e;
+  000000  move-object v1, v4
+  000002  invoke-direct v1, Ljava/lang/Object;-><init>()V
+  000008  const-string v3, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  00000c  iput-object v5, v1, Lcom/getmimo/network/b;->a Landroid/content/Context;
+  000010  const/4 v3, 6
+  000012  new-instance v5, Lcom/getmimo/network/ConnectivityManagerNetworkMonitor$isOnline$1;
+  000016  const/4 v3, 6
+  000018  const/4 v3, 0
+  00001a  move v0, v3
+  00001c  invoke-direct v5, v1, v0, Lcom/getmimo/network/ConnectivityManagerNetworkMonitor$isOnline$1;-><init>(Lcom/getmimo/network/b; Ld70/b;)V
+  000022  const/4 v3, 2
+  000024  invoke-static v5, Lua0/h;->f(Lo70/m;)Lkotlinx/coroutines/flow/b;
+  00002a  move-result-object v3
+  00002c  move-object v5, v3
+  00002e  check-cast v6, Lnp/b;
+  000032  const/4 v3, 1
+  000034  iget-object v6, v6, Lnp/b;->c Lya0/c;
+  000038  const/4 v3, 2
+  00003a  invoke-static v5, v6, Lua0/h;->i(Lua0/e; Ld70/f;)Lua0/e;
+  000040  move-result-object v3
+  000042  move-object v5, v3
+  000044  const/4 v3, -1
+  000046  move v6, v3
+  000048  const/4 v3, 2
+  00004a  move v0, v3
+  00004c  invoke-static v5, v6, v0, Lua0/h;->e(Lua0/e; I I)Lua0/e;
+  000052  move-result-object v3
+  000054  move-object v5, v3
+  000056  iput-object v5, v1, Lcom/getmimo/network/b;->b Lua0/e;
+  00005a  const/4 v3, 1
+  00005c  return-void 
+  00005e  nop 
+  000060  <androguard.core.dex.FillArrayData object at 0x7ff3fb110250>

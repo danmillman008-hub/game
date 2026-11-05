@@ -1,0 +1,203 @@
+{
+ "title": "fillTheGap: content module \u2192 state \u2192 run handler \u2192 validation",
+ "classification": "VERIFIED_STATIC",
+ "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+ "method": "BFS over invoke-* xrefs from the listed root methods, bounded at depth 5 / 34 nodes",
+ "roots": [
+  "Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->E(Lcom/getmimo/data/content/model/track/LessonContent$Interactive;)V",
+  "Lim/d;->E0()V"
+ ],
+ "node_count": 17,
+ "edge_count": 17,
+ "nodes": [
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;-><init>(Z Lcom/getmimo/ui/lesson/interactive/base/c; Ld70/b;)V",
+   "dex": "classes.dex",
+   "code_offset": 10938236,
+   "instructions": 12
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->Y(Z)V",
+   "dex": "classes.dex",
+   "code_offset": 10954996,
+   "instructions": 31
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->b0(Ljava/lang/String;)V",
+   "dex": "classes.dex",
+   "code_offset": 10955764,
+   "instructions": 31
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->h0(Ljava/util/List; Z)V",
+   "dex": "classes.dex",
+   "code_offset": 10957544,
+   "instructions": 14
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/base/d;->a()Lua0/r;",
+   "dex": "classes.dex",
+   "code_offset": 10958424,
+   "instructions": 15
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/fillthegap/InteractiveLessonFillTheGapViewModel$configureInteraction$1;-><init>(Lcom/getmimo/ui/lesson/interactive/fillthegap/a; Ld70/b;)V",
+   "dex": "classes.dex",
+   "code_offset": 10961796,
+   "instructions": 9
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/fillthegap/InteractiveLessonFillTheGapViewModel$createCursorBlinkEvents$3;-><init>(Lcom/getmimo/ui/lesson/interactive/fillthegap/a; Ld70/b;)V",
+   "dex": "classes.dex",
+   "code_offset": 10963764,
+   "instructions": 9
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->E(Lcom/getmimo/data/content/model/track/LessonContent$Interactive;)V",
+   "dex": "classes.dex",
+   "code_offset": 10964388,
+   "instructions": 210
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->j0(Lim/a;)V",
+   "dex": "classes.dex",
+   "code_offset": 10965552,
+   "instructions": 137
+  },
+  {
+   "signature": "Lim/a;-><init>(Ljava/util/List; Ljava/util/ArrayList; Ljava/util/ArrayList; Ljava/util/ArrayList;)V",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Lim/d;->E0()V",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Lim/d;->M0()Lcom/getmimo/ui/lesson/interactive/fillthegap/a;",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Ljm/w;-><init>()V",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Ljm/x;-><init>(Ljava/lang/CharSequence; Z Ljava/lang/String; Ljm/w;)V",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Ljm/x;-><init>(Lqc/a; Ljava/lang/String; Ljm/w; I)V",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Ljm/y;-><init>(Lqc/a;)V",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Lym/f;-><init>(I Ljava/util/List; Z)V",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  }
+ ],
+ "edges": [
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->E(Lcom/getmimo/data/content/model/track/LessonContent$Interactive;)V",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/d;->a()Lua0/r;",
+   "opcode": "invoke-static"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->E(Lcom/getmimo/data/content/model/track/LessonContent$Interactive;)V",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/fillthegap/InteractiveLessonFillTheGapViewModel$configureInteraction$1;-><init>(Lcom/getmimo/ui/lesson/interactive/fillthegap/a; Ld70/b;)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->E(Lcom/getmimo/data/content/model/track/LessonContent$Interactive;)V",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/fillthegap/InteractiveLessonFillTheGapViewModel$createCursorBlinkEvents$3;-><init>(Lcom/getmimo/ui/lesson/interactive/fillthegap/a; Ld70/b;)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->E(Lcom/getmimo/data/content/model/track/LessonContent$Interactive;)V",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->j0(Lim/a;)V",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->E(Lcom/getmimo/data/content/model/track/LessonContent$Interactive;)V",
+   "callee": "Lim/a;-><init>(Ljava/util/List; Ljava/util/ArrayList; Ljava/util/ArrayList; Ljava/util/ArrayList;)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->E(Lcom/getmimo/data/content/model/track/LessonContent$Interactive;)V",
+   "callee": "Ljm/w;-><init>()V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->E(Lcom/getmimo/data/content/model/track/LessonContent$Interactive;)V",
+   "callee": "Ljm/x;-><init>(Lqc/a; Ljava/lang/String; Ljm/w; I)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->E(Lcom/getmimo/data/content/model/track/LessonContent$Interactive;)V",
+   "callee": "Ljm/x;-><init>(Lqc/a; Ljava/lang/String; Ljm/w; I)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->E(Lcom/getmimo/data/content/model/track/LessonContent$Interactive;)V",
+   "callee": "Ljm/y;-><init>(Lqc/a;)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->E(Lcom/getmimo/data/content/model/track/LessonContent$Interactive;)V",
+   "callee": "Ljm/y;-><init>(Lqc/a;)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lim/d;->E0()V",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->Y(Z)V",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lim/d;->E0()V",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->b0(Ljava/lang/String;)V",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lim/d;->E0()V",
+   "callee": "Lim/d;->M0()Lcom/getmimo/ui/lesson/interactive/fillthegap/a;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->j0(Lim/a;)V",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->h0(Ljava/util/List; Z)V",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Ljm/x;-><init>(Lqc/a; Ljava/lang/String; Ljm/w; I)V",
+   "callee": "Ljm/x;-><init>(Ljava/lang/CharSequence; Z Ljava/lang/String; Ljm/w;)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->Y(Z)V",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;-><init>(Z Lcom/getmimo/ui/lesson/interactive/base/c; Ld70/b;)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->h0(Ljava/util/List; Z)V",
+   "callee": "Lym/f;-><init>(I Ljava/util/List; Z)V",
+   "opcode": "invoke-direct"
+  }
+ ]
+}

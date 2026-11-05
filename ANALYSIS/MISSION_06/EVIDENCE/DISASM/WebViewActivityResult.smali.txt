@@ -1,0 +1,106 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult; semantic=WebViewActivityResult
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;-><clinit>()V =====
+dex=classes.dex code_offset=10995536 instructions=53 access=static constructor callers=0 callees=5
+callees: Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;-><init>(Ljava/lang/String; I Ljava/lang/String;)V, Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;-><init>(Ljava/lang/String; I Ljava/lang/String;)V, Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;-><init>(Ljava/lang/String; I Ljava/lang/String;)V, Ljava/lang/Object;-><init>()V, Lkotlin/enums/a;->a([Ljava/lang/Enum;)Lg70/a;
+  000000  new-instance v0, Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;
+  000004  const-string v7, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  000008  const/4 v6, 0
+  00000a  move v1, v6
+  00000c  const-string v6, "mimo.activity.correct"
+  000010  move-object v2, v6
+  000012  const-string v6, "CORRECT"
+  000016  move-object v3, v6
+  000018  invoke-direct v0, v3, v1, v2, Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;-><init>(Ljava/lang/String; I Ljava/lang/String;)V
+  00001e  const/4 v7, 4
+  000020  sput-object v0, Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;->c Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;
+  000024  const/4 v7, 3
+  000026  new-instance v1, Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;
+  00002a  const/4 v7, 3
+  00002c  const/4 v6, 1
+  00002e  move v2, v6
+  000030  const-string v6, "mimo.activity.wrong"
+  000034  move-object v3, v6
+  000036  const-string v6, "WRONG"
+  00003a  move-object v4, v6
+  00003c  invoke-direct v1, v4, v2, v3, Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;-><init>(Ljava/lang/String; I Ljava/lang/String;)V
+  000042  const/4 v7, 2
+  000044  new-instance v2, Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;
+  000048  const/4 v7, 2
+  00004a  const/4 v6, 2
+  00004c  move v3, v6
+  00004e  const-string v6, "mimo.activity.completed"
+  000052  move-object v4, v6
+  000054  const-string v6, "COMPLETED"
+  000058  move-object v5, v6
+  00005a  invoke-direct v2, v5, v3, v4, Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;-><init>(Ljava/lang/String; I Ljava/lang/String;)V
+  000060  const/4 v7, 6
+  000062  sput-object v2, Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;->d Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;
+  000066  const/4 v7, 6
+  000068  filled-new-array v0, v1, v2, [Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;
+  00006e  move-result-object v6
+  000070  move-object v0, v6
+  000072  sput-object v0, Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;->e [Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;
+  000076  const/4 v7, 4
+  000078  invoke-static v0, Lkotlin/enums/a;->a([Ljava/lang/Enum;)Lg70/a;
+  00007e  move-result-object v6
+  000080  move-object v0, v6
+  000082  sput-object v0, Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;->f Lg70/a;
+  000086  const/4 v7, 5
+  000088  new-instance v0, Ltm/i;
+  00008c  const/4 v7, 1
+  00008e  invoke-direct v0, Ljava/lang/Object;-><init>()V
+  000094  const/4 v7, 2
+  000096  sput-object v0, Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;->b Ltm/i;
+  00009a  const/4 v7, 3
+  00009c  return-void 
+  00009e  nop 
+  0000a0  <androguard.core.dex.FillArrayData object at 0x7ff3facec450>
+
+===== Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;-><init>(Ljava/lang/String; I Ljava/lang/String;)V =====
+dex=classes.dex code_offset=10995756 instructions=8 access=public constructor callers=3 callees=1
+callers: Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;-><clinit>()V, Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;-><clinit>()V, Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;-><clinit>()V
+callees: Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V
+  000000  move-object v0, v4
+  000002  invoke-direct v0, v5, v6, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V
+  000008  const/4 v3, 3
+  00000a  iput-object v7, v0, Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;->a Ljava/lang/String;
+  00000e  const/4 v2, 6
+  000010  return-void 
+  000012  nop 
+  000014  <androguard.core.dex.FillArrayData object at 0x7ff3facec7d0>
+
+===== Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;->valueOf(Ljava/lang/String;)Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult; =====
+dex=classes.dex code_offset=10995852 instructions=11 access=public static callers=0 callees=1
+callees: Ljava/lang/Enum;->valueOf(Ljava/lang/Class; Ljava/lang/String;)Ljava/lang/Enum;
+  000000  move-object v1, v4
+  000002  const-class v0, Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;
+  000006  const/4 v3, 7
+  000008  invoke-static v0, v1, Ljava/lang/Enum;->valueOf(Ljava/lang/Class; Ljava/lang/String;)Ljava/lang/Enum;
+  00000e  move-result-object v3
+  000010  move-object v1, v3
+  000012  check-cast v1, Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;
+  000016  const/4 v3, 2
+  000018  return-object v1
+  00001a  nop 
+  00001c  <androguard.core.dex.FillArrayData object at 0x7ff3facecb90>
+
+===== Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;->values()[Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult; =====
+dex=classes.dex code_offset=10995924 instructions=9 access=public static callers=0 callees=1
+callees: Ljava/lang/Object;->clone()Ljava/lang/Object;
+  000000  sget-object v0, Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;->e [Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;
+  000004  const/4 v4, 1
+  000006  invoke-virtual v0, Ljava/lang/Object;->clone()Ljava/lang/Object;
+  00000c  move-result-object v1
+  00000e  move-object v0, v1
+  000010  check-cast v0, [Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;
+  000014  const/4 v4, 1
+  000016  return-object v0
+  000018  <androguard.core.dex.FillArrayData object at 0x7ff3facecf10>

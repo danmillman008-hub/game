@@ -1,0 +1,613 @@
+{
+ "title": "correct/incorrect \u2192 LessonProgress \u2192 local Room queue \u2192 sync attempt",
+ "classification": "VERIFIED_STATIC",
+ "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+ "method": "BFS over invoke-* xrefs from the listed root methods, bounded at depth 5 / 40 nodes",
+ "roots": [
+  "Lcom/getmimo/ui/lesson/interactive/base/c;->V(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+  "Lcom/getmimo/ui/lesson/interactive/base/c;->X(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+  "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->storeLessonProgress(Lcom/getmimo/data/model/room/LessonProgress; Z Z Ld70/b;)Ljava/lang/Object;",
+  "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->postUnsyncedLessonProgress(Ld70/b;)Ljava/lang/Object;"
+ ],
+ "node_count": 40,
+ "edge_count": 71,
+ "nodes": [
+  {
+   "signature": "Lcom/getmimo/analytics/a;->o(Lbe/x3;)V",
+   "dex": "classes.dex",
+   "code_offset": 9513424,
+   "instructions": 285
+  },
+  {
+   "signature": "Lcom/getmimo/data/content/model/track/TutorialType;->getTrackingField()Ljava/lang/String;",
+   "dex": "classes.dex",
+   "code_offset": 9739460,
+   "instructions": 52
+  },
+  {
+   "signature": "Lcom/getmimo/data/local/a;->f(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "dex": "classes.dex",
+   "code_offset": 9784268,
+   "instructions": 92
+  },
+  {
+   "signature": "Lcom/getmimo/data/model/room/LessonProgress;->getAttempts()I",
+   "dex": "classes.dex",
+   "code_offset": 9912488,
+   "instructions": 6
+  },
+  {
+   "signature": "Lcom/getmimo/data/model/room/LessonProgress;->isSolvedCorrectly()Z",
+   "dex": "classes.dex",
+   "code_offset": 9913532,
+   "instructions": 13
+  },
+  {
+   "signature": "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue$storeLessonProgress$1;-><init>(Lcom/getmimo/data/source/remote/progress/LessonProgressQueue; Ld70/b;)V",
+   "dex": "classes.dex",
+   "code_offset": 10056352,
+   "instructions": 7
+  },
+  {
+   "signature": "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->storeLessonProgress(Lcom/getmimo/data/model/room/LessonProgress; Z Z Ld70/b;)Ljava/lang/Object;",
+   "dex": "classes.dex",
+   "code_offset": 10058920,
+   "instructions": 136
+  },
+  {
+   "signature": "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->updateCorrectAnswersCount(Ld70/b;)Ljava/lang/Object;",
+   "dex": "classes.dex",
+   "code_offset": 10056956,
+   "instructions": 123
+  },
+  {
+   "signature": "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->updateLessonStreakDetector(Lcom/getmimo/data/model/room/LessonProgress; Z)V",
+   "dex": "classes.dex",
+   "code_offset": 10057436,
+   "instructions": 10
+  },
+  {
+   "signature": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$postUnsyncedLessonProgress$2;-><init>(Lcom/getmimo/data/source/remote/progress/LessonProgressRepository; Ld70/b;)V",
+   "dex": "classes.dex",
+   "code_offset": 10061232,
+   "instructions": 9
+  },
+  {
+   "signature": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->addOrUpdateLessonProgressInQueue(Ljava/util/List; Z Ld70/b;)Ljava/lang/Object;",
+   "dex": "classes.dex",
+   "code_offset": 10063532,
+   "instructions": 62
+  },
+  {
+   "signature": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->createLessonProgress(Lcom/getmimo/ui/lesson/interactive/LessonBundle; Lorg/joda/time/Instant; I I)Lcom/getmimo/data/model/room/LessonProgress;",
+   "dex": "classes.dex",
+   "code_offset": 10063916,
+   "instructions": 44
+  },
+  {
+   "signature": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->postUnsyncedLessonProgress(Ld70/b;)Ljava/lang/Object;",
+   "dex": "classes.dex",
+   "code_offset": 10065264,
+   "instructions": 44
+  },
+  {
+   "signature": "Lcom/getmimo/network/a;->a()Z",
+   "dex": "classes.dex",
+   "code_offset": 10174360,
+   "instructions": 38
+  },
+  {
+   "signature": "Lcom/getmimo/ui/codeplayground/g;->a(J I I I Lcom/getmimo/ui/codeplayground/CodePlaygroundBundle$FromLesson;)Ljm/h;",
+   "dex": "classes.dex",
+   "code_offset": 10456892,
+   "instructions": 35
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$lessonSolvedCorrectly$1;-><init>(Lcom/getmimo/ui/lesson/interactive/base/c; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V",
+   "dex": "classes.dex",
+   "code_offset": 10936828,
+   "instructions": 7
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$lessonSolvedIncorrectly$1;-><init>(Lcom/getmimo/ui/lesson/interactive/base/c; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V",
+   "dex": "classes.dex",
+   "code_offset": 10937224,
+   "instructions": 7
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$storeLessonProgressInMemory$2;-><init>(Lcom/getmimo/ui/lesson/interactive/base/c; Lcom/getmimo/data/model/room/LessonProgress; Z Ld70/b;)V",
+   "dex": "classes.dex",
+   "code_offset": 10939920,
+   "instructions": 13
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$updateTabbedCodeViewWithBrowserOutput$1;-><init>(Lcom/getmimo/ui/lesson/interactive/base/c; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V",
+   "dex": "classes.dex",
+   "code_offset": 10940444,
+   "instructions": 7
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->H(I I)Lcom/getmimo/data/model/room/LessonProgress;",
+   "dex": "classes.dex",
+   "code_offset": 10948948,
+   "instructions": 17
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->I()V",
+   "dex": "classes.dex",
+   "code_offset": 10949040,
+   "instructions": 42
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->K()Lcom/getmimo/ui/lesson/interactive/LessonBundle;",
+   "dex": "classes.dex",
+   "code_offset": 10949304,
+   "instructions": 16
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->L()Lcom/getmimo/analytics/properties/LessonType;",
+   "dex": "classes.dex",
+   "code_offset": 10949404,
+   "instructions": 6
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->Q()Z",
+   "dex": "classes.dex",
+   "code_offset": 10952588,
+   "instructions": 13
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->T()Z",
+   "dex": "classes.dex",
+   "code_offset": 10952812,
+   "instructions": 6
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->V(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "dex": "classes.dex",
+   "code_offset": 10953356,
+   "instructions": 162
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->X(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "dex": "classes.dex",
+   "code_offset": 10954596,
+   "instructions": 113
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->c0()V",
+   "dex": "classes.dex",
+   "code_offset": 10955960,
+   "instructions": 31
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->d0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "dex": "classes.dex",
+   "code_offset": 10956096,
+   "instructions": 148
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->e0(Lcom/getmimo/data/model/room/LessonProgress; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "dex": "classes.dex",
+   "code_offset": 10956692,
+   "instructions": 39
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->f0(Z Z)V",
+   "dex": "classes.dex",
+   "code_offset": 10956848,
+   "instructions": 41
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->h0(Ljava/util/List; Z)V",
+   "dex": "classes.dex",
+   "code_offset": 10957544,
+   "instructions": 14
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/interactive/base/c;->i0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "dex": "classes.dex",
+   "code_offset": 10957668,
+   "instructions": 215
+  },
+  {
+   "signature": "Lcom/getmimo/ui/lesson/sound/a;->a(Z)V",
+   "dex": "classes.dex",
+   "code_offset": 11019712,
+   "instructions": 67
+  },
+  {
+   "signature": "Ljm/m;-><init>(Ljava/lang/CharSequence; Z Z)V",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Ljm/m;->b(Ljm/m; Z Z I)Ljm/m;",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Ljm/q;-><init>(Ljava/util/List; Z)V",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Lsk/a;->e()Z",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Lym/g;-><init>(Ljm/d; Z I)V",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  },
+  {
+   "signature": "Lym/l;-><init>(Lcom/getmimo/data/content/lessonparser/interactive/model/Table;)V",
+   "dex": null,
+   "code_offset": null,
+   "instructions": null
+  }
+ ],
+ "edges": [
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->V(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/model/room/LessonProgress;->isSolvedCorrectly()Z",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->V(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$lessonSolvedCorrectly$1;-><init>(Lcom/getmimo/ui/lesson/interactive/base/c; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->V(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->H(I I)Lcom/getmimo/data/model/room/LessonProgress;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->V(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->I()V",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->V(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->K()Lcom/getmimo/ui/lesson/interactive/LessonBundle;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->V(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->c0()V",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->V(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->e0(Lcom/getmimo/data/model/room/LessonProgress; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->V(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->f0(Z Z)V",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->V(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->i0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->V(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/ui/lesson/sound/a;->a(Z)V",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->V(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Ljm/m;->b(Ljm/m; Z Z I)Ljm/m;",
+   "opcode": "invoke-static"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->X(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$lessonSolvedIncorrectly$1;-><init>(Lcom/getmimo/ui/lesson/interactive/base/c; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->X(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->H(I I)Lcom/getmimo/data/model/room/LessonProgress;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->X(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->c0()V",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->X(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->d0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->X(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->e0(Lcom/getmimo/data/model/room/LessonProgress; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->X(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/ui/lesson/sound/a;->a(Z)V",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->storeLessonProgress(Lcom/getmimo/data/model/room/LessonProgress; Z Z Ld70/b;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/model/room/LessonProgress;->getAttempts()I",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->storeLessonProgress(Lcom/getmimo/data/model/room/LessonProgress; Z Z Ld70/b;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue$storeLessonProgress$1;-><init>(Lcom/getmimo/data/source/remote/progress/LessonProgressQueue; Ld70/b;)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->storeLessonProgress(Lcom/getmimo/data/model/room/LessonProgress; Z Z Ld70/b;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->updateCorrectAnswersCount(Ld70/b;)Ljava/lang/Object;",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->storeLessonProgress(Lcom/getmimo/data/model/room/LessonProgress; Z Z Ld70/b;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->updateLessonStreakDetector(Lcom/getmimo/data/model/room/LessonProgress; Z)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->storeLessonProgress(Lcom/getmimo/data/model/room/LessonProgress; Z Z Ld70/b;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->addOrUpdateLessonProgressInQueue(Ljava/util/List; Z Ld70/b;)Ljava/lang/Object;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->storeLessonProgress(Lcom/getmimo/data/model/room/LessonProgress; Z Z Ld70/b;)Ljava/lang/Object;",
+   "callee": "Lsk/a;->e()Z",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->postUnsyncedLessonProgress(Ld70/b;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$postUnsyncedLessonProgress$2;-><init>(Lcom/getmimo/data/source/remote/progress/LessonProgressRepository; Ld70/b;)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->postUnsyncedLessonProgress(Ld70/b;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/network/a;->a()Z",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->H(I I)Lcom/getmimo/data/model/room/LessonProgress;",
+   "callee": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->createLessonProgress(Lcom/getmimo/ui/lesson/interactive/LessonBundle; Lorg/joda/time/Instant; I I)Lcom/getmimo/data/model/room/LessonProgress;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->H(I I)Lcom/getmimo/data/model/room/LessonProgress;",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->K()Lcom/getmimo/ui/lesson/interactive/LessonBundle;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->I()V",
+   "callee": "Lcom/getmimo/ui/codeplayground/g;->a(J I I I Lcom/getmimo/ui/codeplayground/CodePlaygroundBundle$FromLesson;)Ljm/h;",
+   "opcode": "invoke-static/range"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->I()V",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->K()Lcom/getmimo/ui/lesson/interactive/LessonBundle;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->I()V",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->K()Lcom/getmimo/ui/lesson/interactive/LessonBundle;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->I()V",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->K()Lcom/getmimo/ui/lesson/interactive/LessonBundle;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->I()V",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->K()Lcom/getmimo/ui/lesson/interactive/LessonBundle;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->I()V",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->Q()Z",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->c0()V",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->T()Z",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->c0()V",
+   "callee": "Ljm/q;-><init>(Ljava/util/List; Z)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->e0(Lcom/getmimo/data/model/room/LessonProgress; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$storeLessonProgressInMemory$2;-><init>(Lcom/getmimo/ui/lesson/interactive/base/c; Lcom/getmimo/data/model/room/LessonProgress; Z Ld70/b;)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->f0(Z Z)V",
+   "callee": "Lcom/getmimo/analytics/a;->o(Lbe/x3;)V",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->f0(Z Z)V",
+   "callee": "Lcom/getmimo/data/content/model/track/TutorialType;->getTrackingField()Ljava/lang/String;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->f0(Z Z)V",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->K()Lcom/getmimo/ui/lesson/interactive/LessonBundle;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->f0(Z Z)V",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->K()Lcom/getmimo/ui/lesson/interactive/LessonBundle;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->f0(Z Z)V",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->K()Lcom/getmimo/ui/lesson/interactive/LessonBundle;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->f0(Z Z)V",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->L()Lcom/getmimo/analytics/properties/LessonType;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->i0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$updateTabbedCodeViewWithBrowserOutput$1;-><init>(Lcom/getmimo/ui/lesson/interactive/base/c; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->i0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->h0(Ljava/util/List; Z)V",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->i0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lym/g;-><init>(Ljm/d; Z I)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->i0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lym/l;-><init>(Lcom/getmimo/data/content/lessonparser/interactive/model/Table;)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Ljm/m;->b(Ljm/m; Z Z I)Ljm/m;",
+   "callee": "Ljm/m;-><init>(Ljava/lang/CharSequence; Z Z)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->d0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/local/a;->f(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->d0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/local/a;->p()V",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->d0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$showWrongFeedbackBlock$1;-><init>(Lcom/getmimo/ui/lesson/interactive/base/c; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->d0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->P(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->d0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/ui/lesson/interactive/base/c;->S()Z",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->d0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Ljm/o;-><init>(Ljava/lang/CharSequence; Z Z Z Z Z Z)V",
+   "opcode": "invoke-direct/range"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->d0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Ljm/o;->b(Ljm/o; Z Z I)Ljm/o;",
+   "opcode": "invoke-static"
+  },
+  {
+   "caller": "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->updateCorrectAnswersCount(Ld70/b;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/model/room/LessonProgress;->isSolvedCorrectly()Z",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->updateCorrectAnswersCount(Ld70/b;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/source/remote/progress/AnswersInChapter;-><init>(I I)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->updateCorrectAnswersCount(Ld70/b;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue$updateCorrectAnswersCount$1;-><init>(Lcom/getmimo/data/source/remote/progress/LessonProgressQueue; Ld70/b;)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->updateCorrectAnswersCount(Ld70/b;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->getAllLessonProgressInQueue(Ld70/b;)Ljava/lang/Object;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->updateLessonStreakDetector(Lcom/getmimo/data/model/room/LessonProgress; Z)V",
+   "callee": "Lcom/getmimo/data/model/room/LessonProgress;->isSolvedCorrectly()Z",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->addOrUpdateLessonProgressInQueue(Ljava/util/List; Z Ld70/b;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/model/room/LessonProgress;->copy$default(Lcom/getmimo/data/model/room/LessonProgress; J Lorg/joda/time/Instant; Lorg/joda/time/Instant; I J I J J I Z Z I Ljava/lang/Object;)Lcom/getmimo/data/model/room/LessonProgress;",
+   "opcode": "invoke-static/range"
+  },
+  {
+   "caller": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->addOrUpdateLessonProgressInQueue(Ljava/util/List; Z Ld70/b;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository$addOrUpdateLessonProgressInQueue$2;-><init>(Lcom/getmimo/data/source/remote/progress/LessonProgressRepository; Ljava/util/List; Ld70/b;)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->createLessonProgress(Lcom/getmimo/ui/lesson/interactive/LessonBundle; Lorg/joda/time/Instant; I I)Lcom/getmimo/data/model/room/LessonProgress;",
+   "callee": "Lcom/getmimo/data/content/tracks/c;->c()J",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->createLessonProgress(Lcom/getmimo/ui/lesson/interactive/LessonBundle; Lorg/joda/time/Instant; I I)Lcom/getmimo/data/model/room/LessonProgress;",
+   "callee": "Lcom/getmimo/data/model/room/LessonProgress;-><init>(J Lorg/joda/time/Instant; Lorg/joda/time/Instant; I J I J J I Z Z)V",
+   "opcode": "invoke-direct/range"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/codeplayground/g;->a(J I I I Lcom/getmimo/ui/codeplayground/CodePlaygroundBundle$FromLesson;)Ljm/h;",
+   "callee": "Ljm/f;-><init>(Lcom/getmimo/ui/codeplayground/CodePlaygroundBundle;)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lcom/getmimo/analytics/a;->o(Lbe/x3;)V",
+   "callee": "Lcom/getmimo/analytics/a;->m()V",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/analytics/a;->o(Lbe/x3;)V",
+   "callee": "Lcom/getmimo/analytics/properties/base/BaseProperty;->a()Ljava/lang/String;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/analytics/a;->o(Lbe/x3;)V",
+   "callee": "Lcom/getmimo/analytics/properties/base/BaseProperty;->a()Ljava/lang/String;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/analytics/a;->o(Lbe/x3;)V",
+   "callee": "Lcom/getmimo/analytics/properties/base/BaseProperty;->a()Ljava/lang/String;",
+   "opcode": "invoke-virtual"
+  },
+  {
+   "caller": "Lcom/getmimo/ui/lesson/interactive/base/c;->h0(Ljava/util/List; Z)V",
+   "callee": "Lym/f;-><init>(I Ljava/util/List; Z)V",
+   "opcode": "invoke-direct"
+  },
+  {
+   "caller": "Lym/g;-><init>(Ljm/d; Z I)V",
+   "callee": "Lym/g;-><init>(Ljava/lang/String; Ljm/d; Z Z Z)V",
+   "opcode": "invoke-direct/range"
+  },
+  {
+   "caller": "Lcom/getmimo/data/local/a;->f(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+   "callee": "Lcom/getmimo/data/local/DataStoreUserPreferences$hasSeenHardModeTutorIntro$1;-><init>(Lcom/getmimo/data/local/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V",
+   "opcode": "invoke-direct"
+  }
+ ]
+}

@@ -1,0 +1,129 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/interactors/chapter/a; semantic=CanOpenChapterWithKeys
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/interactors/chapter/a;-><init>(Lcom/getmimo/data/source/remote/keys/a;)V =====
+dex=classes.dex code_offset=10103932 instructions=9 access=public constructor callers=2 callees=2
+callers: Lae/p;->get()Ljava/lang/Object;, Lae/p;->get()Ljava/lang/Object;
+callees: Ljava/lang/Object;-><init>()V, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000000  move-object v0, v4
+  000002  invoke-virtual v5, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000008  invoke-direct v0, Ljava/lang/Object;-><init>()V
+  00000e  const-string v2, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  000012  iput-object v5, v0, Lcom/getmimo/interactors/chapter/a;->a Lcom/getmimo/data/source/remote/keys/a;
+  000016  const/4 v2, 2
+  000018  return-void 
+  00001a  nop 
+  00001c  <androguard.core.dex.FillArrayData object at 0x7ff3f50f9f10>
+
+===== Lcom/getmimo/interactors/chapter/a;->a(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10104004 instructions=102 access=public final callers=3 callees=10
+callers: Lcom/getmimo/interactors/chapter/CanOpenChapterWithKeys$invoke$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/practice/PracticeTabViewModel$openChapter$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/practice/list/PastPracticeListViewModel$openChapter$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Lcom/getmimo/data/source/remote/keys/a;->c()Ljava/lang/Boolean;, Lcom/getmimo/interactors/chapter/CanOpenChapterWithKeys$invoke$1;-><init>(Lcom/getmimo/interactors/chapter/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Ljava/lang/Boolean;->booleanValue()Z, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;, Ljava/lang/Integer;->intValue()I, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlinx/coroutines/flow/d;->n(Lua0/e; Ld70/b;)Ljava/lang/Object;, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object v5, v8
+  000002  instance-of v0, v9, Lcom/getmimo/interactors/chapter/CanOpenChapterWithKeys$invoke$1;
+  000006  if-eqz v0, +016h
+  00000a  const/4 v7, 5
+  00000c  move-object v0, v9
+  00000e  check-cast v0, Lcom/getmimo/interactors/chapter/CanOpenChapterWithKeys$invoke$1;
+  000012  iget v1, v0, Lcom/getmimo/interactors/chapter/CanOpenChapterWithKeys$invoke$1;->c I
+  000016  const/high16 v7, -2147483648
+  00001a  move v2, v7
+  00001c  and-int v3, v1, v2
+  000020  const/4 v7, 3
+  000022  if-eqz v3, +008h
+  000026  const/4 v7, 7
+  000028  sub-int/2addr v1, v2
+  00002a  const/4 v7, 4
+  00002c  iput v1, v0, Lcom/getmimo/interactors/chapter/CanOpenChapterWithKeys$invoke$1;->c I
+  000030  goto +8h
+  000032  const/4 v7, 2
+  000034  new-instance v0, Lcom/getmimo/interactors/chapter/CanOpenChapterWithKeys$invoke$1;
+  000038  invoke-direct v0, v5, v9, Lcom/getmimo/interactors/chapter/CanOpenChapterWithKeys$invoke$1;-><init>(Lcom/getmimo/interactors/chapter/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  00003e  const/4 v7, 6
+  000040  iget-object v9, v0, Lcom/getmimo/interactors/chapter/CanOpenChapterWithKeys$invoke$1;->a Ljava/lang/Object;
+  000044  sget-object v1, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000048  const/4 v7, 2
+  00004a  iget v2, v0, Lcom/getmimo/interactors/chapter/CanOpenChapterWithKeys$invoke$1;->c I
+  00004e  iget-object v5, v5, Lcom/getmimo/interactors/chapter/a;->a Lcom/getmimo/data/source/remote/keys/a;
+  000052  const/4 v7, 3
+  000054  const/4 v7, 2
+  000056  move v3, v7
+  000058  const/4 v7, 1
+  00005a  move v4, v7
+  00005c  if-eqz v2, +01fh
+  000060  const/4 v7, 6
+  000062  if-eq v2, v4, +016h
+  000066  const/4 v7, 4
+  000068  if-ne v2, v3, +008h
+  00006c  const/4 v7, 6
+  00006e  invoke-static v9, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000074  const/4 v7, 3
+  000076  goto +3fh
+  000078  const/4 v7, 1
+  00007a  const-string v7, "call to 'resume' before 'invoke' with coroutine"
+  00007e  move-object v5, v7
+  000080  invoke-static v5, Lwc/f;->i(Ljava/lang/String;)V
+  000086  const/4 v7, 6
+  000088  const/4 v7, 0
+  00008a  move v5, v7
+  00008c  return-object v5
+  00008e  const/4 v7, 7
+  000090  invoke-static v9, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000096  const/4 v7, 7
+  000098  goto +12h
+  00009a  const/4 v7, 7
+  00009c  invoke-static v9, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000a2  const/4 v7, 3
+  0000a4  iput v4, v0, Lcom/getmimo/interactors/chapter/CanOpenChapterWithKeys$invoke$1;->c I
+  0000a8  invoke-virtual v5, Lcom/getmimo/data/source/remote/keys/a;->c()Ljava/lang/Boolean;
+  0000ae  move-result-object v7
+  0000b0  move-object v9, v7
+  0000b2  if-ne v9, v1, +004h
+  0000b6  const/4 v7, 5
+  0000b8  goto +1ch
+  0000ba  const/4 v7, 6
+  0000bc  check-cast v9, Ljava/lang/Boolean;
+  0000c0  const/4 v7, 4
+  0000c2  invoke-virtual v9, Ljava/lang/Boolean;->booleanValue()Z
+  0000c8  move-result v7
+  0000ca  move v9, v7
+  0000cc  if-eqz v9, +004h
+  0000d0  const/4 v7, 6
+  0000d2  goto +24h
+  0000d4  const/4 v7, 2
+  0000d6  iget-object v5, v5, Lcom/getmimo/data/source/remote/keys/a;->f Lua0/p;
+  0000da  const/4 v7, 5
+  0000dc  iput v3, v0, Lcom/getmimo/interactors/chapter/CanOpenChapterWithKeys$invoke$1;->c I
+  0000e0  invoke-static v5, v0, Lkotlinx/coroutines/flow/d;->n(Lua0/e; Ld70/b;)Ljava/lang/Object;
+  0000e6  move-result-object v7
+  0000e8  move-object v9, v7
+  0000ea  if-ne v9, v1, +004h
+  0000ee  const/4 v7, 2
+  0000f0  return-object v1
+  0000f2  const/4 v7, 7
+  0000f4  check-cast v9, Ljava/lang/Integer;
+  0000f8  const/4 v7, 5
+  0000fa  if-eqz v9, +00fh
+  0000fe  const/4 v7, 5
+  000100  invoke-virtual v9, Ljava/lang/Integer;->intValue()I
+  000106  move-result v7
+  000108  move v5, v7
+  00010a  if-lez v5, +004h
+  00010e  const/4 v7, 1
+  000110  goto +5h
+  000112  const/4 v7, 5
+  000114  const/4 v7, 0
+  000116  move v4, v7
+  000118  const/4 v7, 2
+  00011a  invoke-static v4, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+  000120  move-result-object v7
+  000122  move-object v5, v7
+  000124  return-object v5
+  000126  nop 
+  000128  <androguard.core.dex.FillArrayData object at 0x7ff3f50fbbd0>

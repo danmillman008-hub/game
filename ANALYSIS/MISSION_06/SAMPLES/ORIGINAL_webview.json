@@ -1,0 +1,85 @@
+{
+  "tutorial": {
+    "id": 3144,
+    "version": 3,
+    "type": "course",
+    "isNew": false,
+    "codeLanguage": "html",
+    "title": "Your First Full-Stack App",
+    "descriptionContent": "Full-Stack",
+    "shortDescriptionContent": "",
+    "showInTrack": true,
+    "iconBanner": null,
+    "chapters": [
+      {
+        "id": 15464,
+        "title": "Your First Full-Stack App",
+        "type": "practiceLevel1",
+        "lessons": [
+          {
+            "title": "Intro",
+            "id": 135976,
+            "contentType": "interactive",
+            "images": [
+              {
+                "id": "5b4c2316-803a-414b-b9c6-6a4ffa151f71"
+              }
+            ],
+            "interactiveContent": "<!DOCTYPE html ><html><body><img src=\"5b4c2316-803a-414b-b9c6-6a4ffa151f71\" visible-if=\"always\" /><p>Welcome to the very last section of the full-stack path. You've come a long way. Not everyone makes it that far.</p><p>You deserve a pat on the back!</p></body></html>"
+          },
+          {
+            "title": "Intro - Copy",
+            "id": 135978,
+            "contentType": "interactive",
+            "images": [
+              {
+                "id": "e449c50c-0b3d-4323-ac4a-b2ef02c62914"
+              }
+            ],
+            "interactiveContent": "<!DOCTYPE html ><html><body><img src=\"e449c50c-0b3d-4323-ac4a-b2ef02c62914\" visible-if=\"always\" /><p>So far, you've learned to build a front-end using a static website or creating a single-page React app.</p><p>In addition, you also know how to build a back-end with Express.</p></body></html>"
+          },
+          {
+            "title": "Intro - Copy - Copy",
+            "id": 135979,
+            "contentType": "interactive",
+            "images": [
+              {
+                "id": "63ca04bc-3230-42e0-b19e-4586f3fe206c"
+              }
+            ],
+            "interactiveContent": "<!DOCTYPE html ><html><body><img src=\"63ca04bc-3230-42e0-b19e-4586f3fe206c\" visible-if=\"always\" /><p>It's time to put it all together. Time to build a full-stack app that consists of a client, the front-end, and a server, the back-end.</p></body></html>"
+          },
+          {
+            "title": "Intro - Copy",
+            "id": 135977,
+            "contentType": "interactive",
+            "images": [],
+            "interactiveContent": "<!DOCTYPE html ><html><body><p>In this section, you'll build a back-end that stores all the airports in the world and retrieves a random one.</p><p>You'll also build the front-end that lets your players guess the position of that random airport.</p><webview version=\"2\" visible-if=\"always\" content=\"&lt;!doctype html&gt;&#xA;&lt;html lang=&quot;en&quot;&gt;&#xA;  &lt;head&gt;&#xA;    &lt;meta charset=&quot;UTF-8&quot; /&gt;&#xA;    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;&#xA;    &lt;title&gt;Airports&lt;/title&gt;&#xA;    &lt;link&#xA;      rel=&quot;stylesheet&quot;&#xA;      href=&quot;https://unpkg.com/leaflet@1.9.4/dist/leaflet.css&quot;&#xA;    /&gt;&#xA;    &lt;style&gt;&#xA;      :root {&#xA;        font-family: system-ui, sans-serif;&#xA;        color: #172033;&#xA;        background: #f3f6fb;&#xA;      }&#xA;&#xA;      * {&#xA;        box-sizing: border-box;&#xA;      }&#xA;&#xA;      body {&#xA;        margin: 0;&#xA;      }&#xA;&#xA;      button {&#xA;        font: inherit;&#xA;      }&#xA;&#xA;      .game {&#xA;        width: min(100%, 960px);&#xA;        min-height: 100dvh;&#xA;        margin: 0 auto;&#xA;        padding: 2rem;&#xA;      }&#xA;&#xA;      .prompt {&#xA;        margin: 0 0 0.75rem;&#xA;        font-size: clamp(1.5rem, 4vw, 2.25rem);&#xA;        line-height: 1.2;&#xA;      }&#xA;&#xA;      .result {&#xA;        margin: 0 0 1rem;&#xA;        font-size: 1.05rem;&#xA;      }&#xA;&#xA;      .map {&#xA;        height: min(500px, calc(100dvh - 220px));&#xA;        min-height: 260px;&#xA;        overflow: hidden;&#xA;        border: 1px solid #cbd5e1;&#xA;        border-radius: 0.75rem;&#xA;      }&#xA;&#xA;      .game button {&#xA;        display: block;&#xA;        width: fit-content;&#xA;        margin: 1rem 0 0 auto;&#xA;        padding: 0.7rem 1rem;&#xA;        color: #fff;&#xA;        background: #1d4ed8;&#xA;        border: 0;&#xA;        border-radius: 0.5rem;&#xA;        cursor: pointer;&#xA;      }&#xA;&#xA;      .game button:hover {&#xA;        background: #1e40af;&#xA;      }&#xA;&#xA;      .game button:focus-visible {&#xA;        outline: 3px solid #93c5fd;&#xA;        outline-offset: 3px;&#xA;      }&#xA;&#xA;      @media (max-width: 600px) {&#xA;        .game {&#xA;          padding: 1rem;&#xA;        }&#xA;&#xA;        .prompt {&#xA;          margin-bottom: 0.5rem;&#xA;        }&#xA;&#xA;        .result {&#xA;          font-size: 1rem;&#xA;        }&#xA;&#xA;        .map {&#xA;          height: calc(100dvh - 210px);&#xA;          min-height: 220px;&#xA;          border-radius: 0.5rem;&#xA;        }&#xA;&#xA;        .game button {&#xA;          width: 100%;&#xA;          min-height: 44px;&#xA;          margin-top: 0.75rem;&#xA;        }&#xA;      }&#xA;    &lt;/style&gt;&#xA;    &lt;script src=&quot;https://unpkg.com/leaflet@1.9.4/dist/leaflet.js&quot;&gt;&lt;/script&gt;&#xA;  &lt;/head&gt;&#xA;  &lt;body&gt;&#xA;    &lt;main class=&quot;game&quot;&gt;&#xA;      &lt;div id=&quot;map&quot; class=&quot;map&quot;&gt;&lt;/div&gt;&#xA;      &lt;button id=&quot;next-airport&quot; type=&quot;button&quot;&gt;Next airport&lt;/button&gt;&#xA;    &lt;/main&gt;&#xA;&#xA;    &lt;script&gt;&#xA;      const EARTH_RADIUS_KM = 6371;&#xA;      const gameElement = document.querySelector(&quot;.game&quot;);&#xA;      const mapElement = document.getElementById(&quot;map&quot;);&#xA;      const nextButton = document.getElementById(&quot;next-airport&quot;);&#xA;&#xA;      let airport = null;&#xA;      let guess = null;&#xA;      let answerLayers = [];&#xA;&#xA;      const map = L.map(&quot;map&quot;).setView([20, 0], 2);&#xA;      L.tileLayer(&quot;https://tile.openstreetmap.org/{z}/{x}/{y}.png&quot;).addTo(map);&#xA;&#xA;      function toRadians(degrees) {&#xA;        return degrees * (Math.PI / 180);&#xA;      }&#xA;&#xA;      function getDistanceInKm(currentGuess, currentAirport) {&#xA;        const lat1 = toRadians(currentGuess.latitude);&#xA;        const lat2 = toRadians(currentAirport.latitude_deg);&#xA;        const deltaLat = lat2 - lat1;&#xA;        const deltaLon = toRadians(&#xA;          currentAirport.longitude_deg - currentGuess.longitude,&#xA;        );&#xA;        const haversine =&#xA;          Math.sin(deltaLat / 2) ** 2 +&#xA;          Math.cos(lat1) *&#xA;            Math.cos(lat2) *&#xA;            Math.sin(deltaLon / 2) ** 2;&#xA;&#xA;        return Math.round(&#xA;          2 * EARTH_RADIUS_KM * Math.asin(Math.sqrt(haversine)),&#xA;        );&#xA;      }&#xA;&#xA;      function renderQuestion() {&#xA;        gameElement&#xA;          .querySelectorAll(&quot;.prompt, .result&quot;)&#xA;          .forEach((element) =&gt; element.remove());&#xA;&#xA;        if (!airport) return;&#xA;&#xA;        const prompt = document.createElement(&quot;h1&quot;);&#xA;        prompt.className = &quot;prompt&quot;;&#xA;        prompt.textContent = `Where is ${airport.name}?`;&#xA;        gameElement.insertBefore(prompt, mapElement);&#xA;&#xA;        if (!guess) return;&#xA;&#xA;        const distance = getDistanceInKm(guess, airport);&#xA;        const result = document.createElement(&quot;p&quot;);&#xA;        const distanceText = document.createElement(&quot;strong&quot;);&#xA;&#xA;        result.className = &quot;result&quot;;&#xA;        result.append(&quot;The airport is &quot;);&#xA;        distanceText.textContent = `${distance.toLocaleString()} km`;&#xA;        result.append(distanceText, &quot; from your guess.&quot;);&#xA;        gameElement.insertBefore(result, mapElement);&#xA;      }&#xA;&#xA;      function clearAnswerLayers() {&#xA;        answerLayers.forEach((layer) =&gt; layer.remove());&#xA;        answerLayers = [];&#xA;      }&#xA;&#xA;      function showAnswer() {&#xA;        clearAnswerLayers();&#xA;&#xA;        if (!airport || !guess) return;&#xA;&#xA;        const guessPosition = [guess.latitude, guess.longitude];&#xA;        const airportPosition = [&#xA;          airport.latitude_deg,&#xA;          airport.longitude_deg,&#xA;        ];&#xA;        const guessMarker = L.marker(guessPosition)&#xA;          .addTo(map)&#xA;          .bindPopup(&quot;Your guess&quot;);&#xA;        const airportMarker = L.marker(airportPosition)&#xA;          .addTo(map)&#xA;          .bindPopup(airport.name)&#xA;          .openPopup();&#xA;        const line = L.polyline([guessPosition, airportPosition]).addTo(map);&#xA;&#xA;        answerLayers = [guessMarker, airportMarker, line];&#xA;        map.fitBounds([guessPosition, airportPosition], {&#xA;          padding: [40, 40],&#xA;        });&#xA;      }&#xA;&#xA;      map.on(&quot;click&quot;, (event) =&gt; {&#xA;        guess = {&#xA;          latitude: event.latlng.lat,&#xA;          longitude: event.latlng.lng,&#xA;        };&#xA;        renderQuestion();&#xA;        showAnswer();&#xA;      });&#xA;&#xA;      async function loadAirport() {&#xA;        const response = await fetch(&#xA;          &quot;https://airports.mimo.dev/api/random-airport&quot;,&#xA;        );&#xA;        airport = await response.json();&#xA;        guess = null;&#xA;        clearAnswerLayers();&#xA;        renderQuestion();&#xA;      }&#xA;&#xA;      nextButton.addEventListener(&quot;click&quot;, loadAirport);&#xA;      loadAirport();&#xA;    &lt;/script&gt;&#xA;  &lt;/body&gt;&#xA;&lt;/html&gt;&#xA;\" /></body></html>"
+          },
+          {
+            "title": "Intro - Copy - Copy",
+            "id": 135980,
+            "contentType": "interactive",
+            "images": [
+              {
+                "id": "3a126b87-c09e-4094-a51e-6655c823127c"
+              }
+            ],
+            "interactiveContent": "<!DOCTYPE html ><html><body><img src=\"3a126b87-c09e-4094-a51e-6655c823127c\" visible-if=\"always\" /><p>We'd like to invite you to continue building with us after this final project.</p><p>We have a great editor to continue building with hosting and database options along with an amazing community of creators.</p></body></html>"
+          },
+          {
+            "title": "Intro - Copy - Copy - Copy",
+            "id": 135981,
+            "contentType": "interactive",
+            "images": [
+              {
+                "id": "38134344-e8ee-4b38-9393-7772232a63dc"
+              }
+            ],
+            "interactiveContent": "<!DOCTYPE html ><html><body><img src=\"38134344-e8ee-4b38-9393-7772232a63dc\" visible-if=\"always\" /><p>But now, it's time to build your first full-stack project. Let's go!</p></body></html>"
+          }
+        ]
+      }
+    ]
+  }
+}

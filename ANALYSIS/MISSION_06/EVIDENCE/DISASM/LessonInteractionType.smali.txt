@@ -1,0 +1,33 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/ui/lesson/interactive/model/LessonInteractionType; semantic=LessonInteractionType
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/ui/lesson/interactive/model/LessonInteractionType;-><init>()V =====
+dex=classes.dex code_offset=10972204 instructions=6 access=private constructor callers=1 callees=1
+callers: Lcom/getmimo/ui/lesson/interactive/model/LessonInteractionType;-><init>(I)V
+callees: Ljava/lang/Object;-><init>()V
+  000000  move-object v0, v3
+  000002  invoke-direct v0, Ljava/lang/Object;-><init>()V
+  000008  const-string v2, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  00000c  return-void 
+  00000e  nop 
+  000010  <androguard.core.dex.FillArrayData object at 0x7ff3fad75490>
+
+===== Lcom/getmimo/ui/lesson/interactive/model/LessonInteractionType;-><init>(I)V =====
+dex=classes.dex code_offset=10972300 instructions=5 access=public synthetic constructor callers=9 callees=1
+callers: Lcom/getmimo/ui/lesson/interactive/model/LessonInteractionType$FillTheGap;-><init>(Ljava/lang/String;)V, Lcom/getmimo/ui/lesson/interactive/model/LessonInteractionType$InteractiveWebView;-><init>(Ljava/lang/String;)V, Lcom/getmimo/ui/lesson/interactive/model/LessonInteractionType$MultipleChoice;-><init>(Ljava/lang/String;)V, Lcom/getmimo/ui/lesson/interactive/model/LessonInteractionType$None;-><init>(Ljava/lang/String;)V, Lcom/getmimo/ui/lesson/interactive/model/LessonInteractionType$Reveal;-><init>(Ljava/lang/String;)V, Lcom/getmimo/ui/lesson/interactive/model/LessonInteractionType$Selection;-><init>(Ljava/lang/String;)V, Lcom/getmimo/ui/lesson/interactive/model/LessonInteractionType$SingleChoice;-><init>(Ljava/lang/String;)V, Lcom/getmimo/ui/lesson/interactive/model/LessonInteractionType$Spell;-><init>(Ljava/lang/String;)V, Lcom/getmimo/ui/lesson/interactive/model/LessonInteractionType$ValidatedInput;-><init>(Ljava/lang/String;)V
+callees: Lcom/getmimo/ui/lesson/interactive/model/LessonInteractionType;-><init>()V
+  000000  move-object v0, v3
+  000002  invoke-direct v0, Lcom/getmimo/ui/lesson/interactive/model/LessonInteractionType;-><init>()V
+  000008  const/4 v2, 4
+  00000a  return-void 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3fad757d0>
+
+===== Lcom/getmimo/ui/lesson/interactive/model/LessonInteractionType;->a()Ljava/lang/String; =====
+dex=classes.dex code_offset=0 instructions=0 access=public abstract callers=1 callees=0
+callers: Lcom/getmimo/interactors/chapter/c;->a(Lcom/getmimo/ui/lesson/interactive/LessonBundle; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;

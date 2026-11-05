@@ -1,0 +1,267 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/ui/lesson/interactive/webview/c; semantic=WebViewLessonViewModel
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/ui/lesson/interactive/webview/c;-><init>(Lhm/b;)V =====
+dex=classes.dex code_offset=11007772 instructions=23 access=public constructor callers=1 callees=3
+callers: Lae/p;->get()Ljava/lang/Object;
+callees: Landroidx/lifecycle/i0;-><init>(Ljava/lang/Object;)V, Lcom/getmimo/ui/lesson/interactive/base/c;-><init>(Lhm/b;)V, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  000000  move-object v1, v4
+  000002  invoke-direct v1, v5, Lcom/getmimo/ui/lesson/interactive/base/c;-><init>(Lhm/b;)V
+  000008  const-string v3, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  00000c  sget-object v5, Lcom/getmimo/analytics/properties/LessonType$InteractiveWebView;->b Lcom/getmimo/analytics/properties/LessonType$InteractiveWebView;
+  000010  const/4 v3, 7
+  000012  iput-object v5, v1, Lcom/getmimo/ui/lesson/interactive/webview/c;->N Lcom/getmimo/analytics/properties/LessonType$InteractiveWebView;
+  000016  const/4 v3, 7
+  000018  new-instance v5, Landroidx/lifecycle/m0;
+  00001c  const/4 v3, 2
+  00001e  const/4 v3, 0
+  000020  move v0, v3
+  000022  invoke-static v0, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  000028  move-result-object v3
+  00002a  move-object v0, v3
+  00002c  invoke-direct v5, v0, Landroidx/lifecycle/i0;-><init>(Ljava/lang/Object;)V
+  000032  const/4 v3, 6
+  000034  iput-object v5, v1, Lcom/getmimo/ui/lesson/interactive/webview/c;->R Landroidx/lifecycle/m0;
+  000038  const/4 v3, 5
+  00003a  iput-object v5, v1, Lcom/getmimo/ui/lesson/interactive/webview/c;->S Landroidx/lifecycle/m0;
+  00003e  const/4 v3, 7
+  000040  return-void 
+  000042  nop 
+  000044  <androguard.core.dex.FillArrayData object at 0x7ff3facf7890>
+
+===== Lcom/getmimo/ui/lesson/interactive/webview/c;->E(Lcom/getmimo/data/content/model/track/LessonContent$Interactive;)V =====
+dex=classes.dex code_offset=11007916 instructions=57 access=public final callers=0 callees=6
+callees: Landroidx/lifecycle/m0;->l(Ljava/lang/Object;)V, Lcom/getmimo/data/content/model/track/LessonContent$Interactive;->getLessonModules()Ljava/util/List;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/util/Collection;->isEmpty()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  000000  move-object v3, v6
+  000002  invoke-virtual v7, Lcom/getmimo/data/content/model/track/LessonContent$Interactive;->getLessonModules()Ljava/util/List;
+  000008  move-result-object v5
+  00000a  move-object v7, v5
+  00000c  const/4 v5, 0
+  00000e  move v0, v5
+  000010  if-eqz v7, +00ch
+  000014  const/4 v5, 4
+  000016  invoke-interface v7, Ljava/util/Collection;->isEmpty()Z
+  00001c  move-result v5
+  00001e  move v1, v5
+  000020  if-eqz v1, +004h
+  000024  const/4 v5, 7
+  000026  goto +2dh
+  000028  const/4 v5, 7
+  00002a  invoke-interface v7, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  000030  move-result-object v5
+  000032  move-object v7, v5
+  000034  const/4 v5, 4
+  000036  invoke-interface v7, Ljava/util/Iterator;->hasNext()Z
+  00003c  move-result v5
+  00003e  move v1, v5
+  000040  if-eqz v1, +01fh
+  000044  const/4 v5, 4
+  000046  invoke-interface v7, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  00004c  move-result-object v5
+  00004e  move-object v1, v5
+  000050  check-cast v1, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule;
+  000054  const/4 v5, 6
+  000056  instance-of v2, v1, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Webview;
+  00005a  const/4 v5, 7
+  00005c  if-eqz v2, -014h
+  000060  const/4 v5, 2
+  000062  check-cast v1, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Webview;
+  000066  const/4 v5, 6
+  000068  iget-object v1, v1, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Webview;->e Lcom/getmimo/data/content/lessonparser/interactive/model/WebviewType;
+  00006c  const/4 v5, 6
+  00006e  sget-object v2, Lcom/getmimo/data/content/lessonparser/interactive/model/WebviewType;->e Lcom/getmimo/data/content/lessonparser/interactive/model/WebviewType;
+  000072  const/4 v5, 1
+  000074  if-ne v1, v2, -020h
+  000078  const/4 v5, 4
+  00007a  const/4 v5, 1
+  00007c  move v0, v5
+  00007e  const/4 v5, 2
+  000080  iput-boolean v0, v3, Lcom/getmimo/ui/lesson/interactive/webview/c;->T Z
+  000084  const/4 v5, 2
+  000086  if-eqz v0, +00dh
+  00008a  const/4 v5, 3
+  00008c  sget-object v7, Lcom/getmimo/ui/common/runbutton/RunButton$State;->g Lcom/getmimo/ui/common/runbutton/RunButton$State;
+  000090  const/4 v5, 6
+  000092  iget-object v3, v3, Lcom/getmimo/ui/lesson/interactive/base/c;->i Landroidx/lifecycle/m0;
+  000096  const/4 v5, 4
+  000098  invoke-virtual v3, v7, Landroidx/lifecycle/m0;->l(Ljava/lang/Object;)V
+  00009e  const/4 v5, 2
+  0000a0  const/4 v5, 5
+  0000a2  return-void 
+  0000a4  <androguard.core.dex.FillArrayData object at 0x7ff3facf8950>
+
+===== Lcom/getmimo/ui/lesson/interactive/webview/c;->L()Lcom/getmimo/analytics/properties/LessonType; =====
+dex=classes.dex code_offset=11008200 instructions=6 access=public final callers=0 callees=0
+  000000  move-object v0, v4
+  000002  iget-object v0, v0, Lcom/getmimo/ui/lesson/interactive/webview/c;->N Lcom/getmimo/analytics/properties/LessonType$InteractiveWebView;
+  000006  const/4 v3, 2
+  000008  return-object v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3facf8c10>
+
+===== Lcom/getmimo/ui/lesson/interactive/webview/c;->N()V =====
+dex=classes.dex code_offset=11008272 instructions=3 access=public final callers=0 callees=0
+  000000  move-object v0, v4
+  000002  return-void 
+  000004  <androguard.core.dex.FillArrayData object at 0x7ff3facf8e50>
+
+===== Lcom/getmimo/ui/lesson/interactive/webview/c;->Q()Z =====
+dex=classes.dex code_offset=11008316 instructions=5 access=public final callers=0 callees=0
+  000000  move-object v0, v4
+  000002  const/4 v3, 0
+  000004  move v0, v3
+  000006  return v0
+  000008  <androguard.core.dex.FillArrayData object at 0x7ff3facf9090>
+
+===== Lcom/getmimo/ui/lesson/interactive/webview/c;->S()Z =====
+dex=classes.dex code_offset=11008452 instructions=5 access=public final callers=0 callees=0
+  000000  move-object v0, v4
+  000002  const/4 v3, 0
+  000004  move v0, v3
+  000006  return v0
+  000008  <androguard.core.dex.FillArrayData object at 0x7ff3facf92d0>
+
+===== Lcom/getmimo/ui/lesson/interactive/webview/c;->T()Z =====
+dex=classes.dex code_offset=11008520 instructions=5 access=public final callers=0 callees=0
+  000000  move-object v0, v4
+  000002  const/4 v2, 0
+  000004  move v0, v2
+  000006  return v0
+  000008  <androguard.core.dex.FillArrayData object at 0x7ff3facf9550>
+
+===== Lcom/getmimo/ui/lesson/interactive/webview/c;->a0()V =====
+dex=classes.dex code_offset=11008564 instructions=47 access=public final callers=0 callees=7
+callees: Landroidx/lifecycle/i0;->d()Ljava/lang/Object;, Landroidx/lifecycle/i0;->d()Ljava/lang/Object;, Landroidx/lifecycle/i0;->k(Ljava/lang/Object;)V, Lcom/getmimo/ui/lesson/interactive/base/c;->a0()V, Ljava/lang/Integer;->intValue()I, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z
+  000000  move-object v2, v5
+  000002  iget-object v0, v2, Lcom/getmimo/ui/lesson/interactive/base/c;->g Landroidx/lifecycle/m0;
+  000006  const/4 v4, 1
+  000008  invoke-virtual v0, Landroidx/lifecycle/i0;->d()Ljava/lang/Object;
+  00000e  move-result-object v4
+  000010  move-object v0, v4
+  000012  sget-object v1, Ljava/lang/Boolean;->TRUE Ljava/lang/Boolean;
+  000016  const/4 v4, 7
+  000018  invoke-static v0, v1, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z
+  00001e  move-result v4
+  000020  move v0, v4
+  000022  if-eqz v0, +004h
+  000026  const/4 v4, 3
+  000028  return-void 
+  00002a  const/4 v4, 5
+  00002c  invoke-super v2, Lcom/getmimo/ui/lesson/interactive/base/c;->a0()V
+  000032  const/4 v4, 5
+  000034  const/4 v4, 0
+  000036  move v0, v4
+  000038  iput-object v0, v2, Lcom/getmimo/ui/lesson/interactive/webview/c;->P Lcom/getmimo/ui/lesson/interactive/webview/WebViewActivityResult;
+  00003c  const/4 v4, 1
+  00003e  iget-object v2, v2, Lcom/getmimo/ui/lesson/interactive/webview/c;->R Landroidx/lifecycle/m0;
+  000042  const/4 v4, 2
+  000044  invoke-virtual v2, Landroidx/lifecycle/i0;->d()Ljava/lang/Object;
+  00004a  move-result-object v4
+  00004c  move-object v0, v4
+  00004e  check-cast v0, Ljava/lang/Integer;
+  000052  const/4 v4, 7
+  000054  if-eqz v0, +009h
+  000058  const/4 v4, 7
+  00005a  invoke-virtual v0, Ljava/lang/Integer;->intValue()I
+  000060  move-result v4
+  000062  move v0, v4
+  000064  goto +4h
+  000066  const/4 v4, 5
+  000068  const/4 v4, 0
+  00006a  move v0, v4
+  00006c  add-int/lit8 v0, v0, 1
+  000070  const/4 v4, 7
+  000072  invoke-static v0, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  000078  move-result-object v4
+  00007a  move-object v0, v4
+  00007c  invoke-virtual v2, v0, Landroidx/lifecycle/i0;->k(Ljava/lang/Object;)V
+  000082  const/4 v4, 2
+  000084  return-void 
+  000086  nop 
+  000088  <androguard.core.dex.FillArrayData object at 0x7ff3facfa2d0>
+
+===== Lcom/getmimo/ui/lesson/interactive/webview/c;->j0(Ld70/b;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=11008744 instructions=75 access=public final callers=2 callees=5
+callers: Lcom/getmimo/ui/lesson/interactive/webview/InteractiveWebViewLessonFragment$goToNextPage$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/interactive/webview/InteractiveWebViewLessonViewModel$onContinueClicked$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Lcom/getmimo/ui/lesson/interactive/base/c;->U(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/interactive/webview/InteractiveWebViewLessonViewModel$onContinueClicked$1;-><init>(Lcom/getmimo/ui/lesson/interactive/webview/c; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object v5, v8
+  000002  instance-of v0, v9, Lcom/getmimo/ui/lesson/interactive/webview/InteractiveWebViewLessonViewModel$onContinueClicked$1;
+  000006  const/4 v7, 1
+  000008  if-eqz v0, +019h
+  00000c  const/4 v7, 6
+  00000e  move-object v0, v9
+  000010  check-cast v0, Lcom/getmimo/ui/lesson/interactive/webview/InteractiveWebViewLessonViewModel$onContinueClicked$1;
+  000014  const/4 v7, 1
+  000016  iget v1, v0, Lcom/getmimo/ui/lesson/interactive/webview/InteractiveWebViewLessonViewModel$onContinueClicked$1;->c I
+  00001a  const/4 v7, 7
+  00001c  const/high16 v7, -2147483648
+  000020  move v2, v7
+  000022  and-int v3, v1, v2
+  000026  const/4 v7, 3
+  000028  if-eqz v3, +009h
+  00002c  const/4 v7, 1
+  00002e  sub-int/2addr v1, v2
+  000030  const/4 v7, 7
+  000032  iput v1, v0, Lcom/getmimo/ui/lesson/interactive/webview/InteractiveWebViewLessonViewModel$onContinueClicked$1;->c I
+  000036  const/4 v7, 3
+  000038  goto +ch
+  00003a  const/4 v7, 1
+  00003c  new-instance v0, Lcom/getmimo/ui/lesson/interactive/webview/InteractiveWebViewLessonViewModel$onContinueClicked$1;
+  000040  const/4 v7, 2
+  000042  check-cast v9, Lkotlin/coroutines/jvm/internal/ContinuationImpl;
+  000046  const/4 v7, 5
+  000048  invoke-direct v0, v5, v9, Lcom/getmimo/ui/lesson/interactive/webview/InteractiveWebViewLessonViewModel$onContinueClicked$1;-><init>(Lcom/getmimo/ui/lesson/interactive/webview/c; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  00004e  const/4 v7, 4
+  000050  iget-object v9, v0, Lcom/getmimo/ui/lesson/interactive/webview/InteractiveWebViewLessonViewModel$onContinueClicked$1;->a Ljava/lang/Object;
+  000054  const/4 v7, 6
+  000056  sget-object v1, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  00005a  const/4 v7, 7
+  00005c  iget v2, v0, Lcom/getmimo/ui/lesson/interactive/webview/InteractiveWebViewLessonViewModel$onContinueClicked$1;->c I
+  000060  const/4 v7, 1
+  000062  sget-object v3, Lz60/q;->a Lz60/q;
+  000066  const/4 v7, 5
+  000068  const/4 v7, 1
+  00006a  move v4, v7
+  00006c  if-eqz v2, +016h
+  000070  const/4 v7, 2
+  000072  if-ne v2, v4, +008h
+  000076  const/4 v7, 1
+  000078  invoke-static v9, Lkotlin/b;->b(Ljava/lang/Object;)V
+  00007e  const/4 v7, 6
+  000080  goto +26h
+  000082  const/4 v7, 1
+  000084  const-string v7, "call to 'resume' before 'invoke' with coroutine"
+  000088  move-object v5, v7
+  00008a  invoke-static v5, Lwc/f;->i(Ljava/lang/String;)V
+  000090  const/4 v7, 7
+  000092  const/4 v7, 0
+  000094  move v5, v7
+  000096  return-object v5
+  000098  const/4 v7, 4
+  00009a  invoke-static v9, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000a0  const/4 v7, 1
+  0000a2  iget-boolean v9, v5, Lcom/getmimo/ui/lesson/interactive/webview/c;->Q Z
+  0000a6  const/4 v7, 7
+  0000a8  if-eqz v9, +004h
+  0000ac  const/4 v7, 5
+  0000ae  return-object v3
+  0000b0  const/4 v7, 7
+  0000b2  iput v4, v0, Lcom/getmimo/ui/lesson/interactive/webview/InteractiveWebViewLessonViewModel$onContinueClicked$1;->c I
+  0000b6  const/4 v7, 2
+  0000b8  invoke-virtual v5, v0, Lcom/getmimo/ui/lesson/interactive/base/c;->U(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  0000be  move-result-object v7
+  0000c0  move-object v9, v7
+  0000c2  if-ne v9, v1, +004h
+  0000c6  const/4 v7, 2
+  0000c8  return-object v1
+  0000ca  const/4 v7, 1
+  0000cc  iput-boolean v4, v5, Lcom/getmimo/ui/lesson/interactive/webview/c;->Q Z
+  0000d0  const/4 v7, 2
+  0000d2  return-object v3
+  0000d4  <androguard.core.dex.FillArrayData object at 0x7ff3facfba10>

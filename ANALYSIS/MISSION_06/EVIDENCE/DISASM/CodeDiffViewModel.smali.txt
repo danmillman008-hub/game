@@ -1,0 +1,79 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lam/o; semantic=CodeDiffViewModel
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lam/o;-><init>(Lcom/getmimo/ui/codeeditor/highlight/a; Ldi/a;)V =====
+dex=classes.dex code_offset=5672544 instructions=43 access=public constructor callers=1 callees=4
+callers: Lae/p;->get()Ljava/lang/Object;
+callees: Lam/r;-><init>(Ljava/util/List; Lcom/getmimo/ui/lesson/executable/codediff/CodeSwitch; I Z Ljava/lang/Throwable;)V, Landroidx/lifecycle/f1;-><init>()V, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Lwc/d;->k(Landroidx/lifecycle/f1; Ljava/lang/Object; Lo70/m; I)Lxd0/e;
+  000000  invoke-virtual v9, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000006  invoke-direct v8, Landroidx/lifecycle/f1;-><init>()V
+  00000c  const-string v7, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  000010  iput-object v9, v8, Lam/o;->b Lcom/getmimo/ui/codeeditor/highlight/a;
+  000014  const/4 v7, 5
+  000016  iput-object v10, v8, Lam/o;->c Ldi/a;
+  00001a  const/4 v7, 3
+  00001c  new-instance v0, Lam/r;
+  000020  const/4 v7, 5
+  000022  const/16 v6, 63
+  000026  move v9, v6
+  000028  and-int/lit8 v9, v9, 1
+  00002c  const/4 v7, 2
+  00002e  const/4 v6, 0
+  000030  move v10, v6
+  000032  if-eqz v9, +008h
+  000036  const/4 v7, 3
+  000038  sget-object v9, Lkotlin/collections/EmptyList;->a Lkotlin/collections/EmptyList;
+  00003c  const/4 v7, 2
+  00003e  move-object v1, v9
+  000040  goto +3h
+  000042  const/4 v7, 4
+  000044  move-object v1, v10
+  000046  sget-object v2, Lcom/getmimo/ui/lesson/executable/codediff/CodeSwitch;->a Lcom/getmimo/ui/lesson/executable/codediff/CodeSwitch;
+  00004a  const/4 v7, 3
+  00004c  const/4 v6, 0
+  00004e  move v3, v6
+  000050  const/4 v6, 1
+  000052  move v4, v6
+  000054  const/4 v6, 0
+  000056  move v5, v6
+  000058  invoke-direct/range v0 ... v5, Lam/r;-><init>(Ljava/util/List; Lcom/getmimo/ui/lesson/executable/codediff/CodeSwitch; I Z Ljava/lang/Throwable;)V
+  00005e  const/4 v7, 7
+  000060  const/4 v6, 6
+  000062  move v9, v6
+  000064  invoke-static v8, v0, v10, v9, Lwc/d;->k(Landroidx/lifecycle/f1; Ljava/lang/Object; Lo70/m; I)Lxd0/e;
+  00006a  move-result-object v6
+  00006c  move-object v9, v6
+  00006e  iput-object v9, v8, Lam/o;->d Lxd0/e;
+  000072  const/4 v7, 5
+  000074  return-void 
+  000076  nop 
+  000078  <androguard.core.dex.FillArrayData object at 0x7ff3fb0e6510>
+
+===== Lam/o;->E(Lo70/m;)Lra0/b1; =====
+dex=classes.dex code_offset=5672764 instructions=9 access=public final bridge callers=3 callees=1
+callers: Lcom/getmimo/ui/lesson/executable/codediff/CodeDiffViewKt$CodeDiffView$1$1$1$1;->invoke()Ljava/lang/Object;, Lcom/getmimo/ui/lesson/executable/codediff/CodeDiffViewKt$CodeDiffView$1$1$2$1;->invoke(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/executable/codediff/CodeDiffViewKt$CodeDiffView$2$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Lorg/orbitmvi/orbit/a;->b(Lud0/c; Z Lo70/m;)Lra0/b1;
+  000000  move-object v1, v5
+  000002  const/4 v4, 1
+  000004  move v0, v4
+  000006  invoke-static v1, v0, v6, Lorg/orbitmvi/orbit/a;->b(Lud0/c; Z Lo70/m;)Lra0/b1;
+  00000c  move-result-object v3
+  00000e  move-object v1, v3
+  000010  return-object v1
+  000012  nop 
+  000014  <androguard.core.dex.FillArrayData object at 0x7ff3fb0e6890>
+
+===== Lam/o;->getContainer()Lud0/b; =====
+dex=classes.dex code_offset=5672844 instructions=6 access=public final callers=0 callees=0
+  000000  move-object v0, v3
+  000002  iget-object v0, v0, Lam/o;->d Lxd0/e;
+  000006  const/4 v2, 7
+  000008  return-object v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3fb0e6b50>

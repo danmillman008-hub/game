@@ -1,0 +1,34 @@
+%% MISSION 06 — original Mimo 9.35 architecture, reconstructed from DEX bytecode.
+%% APK sha256 48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+%% Classification of each node is in the corresponding numbered report and EVIDENCE_DATABASE.json.
+%% Solid edges = VERIFIED_STATIC invoke/field xref; dashed = INFERRED or client-side boundary.
+flowchart TD
+  START["ChapterActivity → InteractiveLessonFragment"] --> BUNDLE["LessonBundle (Parcelable)<br/>lessonId, chapterIndex, tutorialId,<br/>trackId, tutorialType, chapterType,..."]
+  BUNDLE --> VM["InteractiveLessonViewModel.E()"]
+  VM --> TYPE["Lgm/h.a(lessonModules)<br/>LessonInteractionType"]
+  TYPE --> CHOOSE{"type"}
+  CHOOSE -->|"FillTheGap"| V1["fillthegap/a;"]
+  CHOOSE -->|"Selection / SingleChoice / MultipleChoice"| V2["selection/a;"]
+  CHOOSE -->|"Spell"| V3["spell/a;"]
+  CHOOSE -->|"ValidatedInput"| V4["Lqm/d;"]
+  CHOOSE -->|"InteractiveWebView"| V5["webview/c;"]
+  CHOOSE -->|"None / Reveal"| V6["nointeraction/a;"]
+  V1 --> SETUP["base/c;-&gt;O() initialiseViewModel<br/>module visibility filter → render items"]
+  V2 --> SETUP
+  V3 --> SETUP
+  V4 --> SETUP
+  V5 --> SETUP
+  V6 --> SETUP
+  SETUP --> INPUT["user edits tokens / types code / taps options"]
+  INPUT --> RUN["Run button → Fragment E0()"]
+  RUN --> BOOL["boolean isCorrect"]
+  BOOL --> Y["base/c;-&gt;Y(isCorrect)<br/>guard LiveData f == TRUE"]
+  Y --> COR["onLessonRun$1.invokeSuspend"]
+  COR -->|"true"| VC["V() lessonSolvedCorrectly"]
+  COR -->|"false"| XC["X() lessonSolvedIncorrectly"]
+  VC --> FB["solutionFeedbackCorrect + sound.a(true)"]
+  XC --> FW["d0() showWrongFeedbackBlock<br/>solutionFeedbackWrong / Try again"]
+  VC --> H["H(tries, attempts) → createLessonProgress"]
+  XC --> H
+  H --> E0["e0() storeLessonProgressInMemory<br/>→ LessonProgressQueue → Room"]
+  VC --> NAV["e LiveData = chapterIndex<br/>→ next lesson / chapter end"]

@@ -1,0 +1,153 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1; semantic=InteractiveLessonBaseVM_onLessonRun
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;-><init>(Z Lcom/getmimo/ui/lesson/interactive/base/c; Ld70/b;)V =====
+dex=classes.dex code_offset=10938236 instructions=12 access=public constructor callers=2 callees=1
+callers: Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;->create(Ljava/lang/Object; Ld70/b;)Ld70/b;, Lcom/getmimo/ui/lesson/interactive/base/c;->Y(Z)V
+callees: Lkotlin/coroutines/jvm/internal/SuspendLambda;-><init>(I Ld70/b;)V
+  000000  move-object v0, v4
+  000002  iput-boolean v5, v0, Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;->b Z
+  000006  const-string v2, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  00000a  iput-object v6, v0, Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;->c Lcom/getmimo/ui/lesson/interactive/base/c;
+  00000e  const/4 v2, 5
+  000010  const/4 v2, 2
+  000012  move v5, v2
+  000014  invoke-direct v0, v5, v7, Lkotlin/coroutines/jvm/internal/SuspendLambda;-><init>(I Ld70/b;)V
+  00001a  const/4 v3, 5
+  00001c  return-void 
+  00001e  nop 
+  000020  <androguard.core.dex.FillArrayData object at 0x7ff3faec0d10>
+
+===== Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;->create(Ljava/lang/Object; Ld70/b;)Ld70/b; =====
+dex=classes.dex code_offset=10938360 instructions=12 access=public final callers=1 callees=1
+callers: Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;->invoke(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;
+callees: Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;-><init>(Z Lcom/getmimo/ui/lesson/interactive/base/c; Ld70/b;)V
+  000000  move-object v1, v5
+  000002  new-instance v6, Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;
+  000006  const/4 v3, 6
+  000008  iget-boolean v0, v1, Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;->b Z
+  00000c  const/4 v4, 2
+  00000e  iget-object v1, v1, Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;->c Lcom/getmimo/ui/lesson/interactive/base/c;
+  000012  const/4 v3, 3
+  000014  invoke-direct v6, v0, v1, v7, Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;-><init>(Z Lcom/getmimo/ui/lesson/interactive/base/c; Ld70/b;)V
+  00001a  const/4 v3, 3
+  00001c  return-object v6
+  00001e  nop 
+  000020  <androguard.core.dex.FillArrayData object at 0x7ff3faec1190>
+
+===== Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;->invoke(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10938484 instructions=17 access=public final callers=0 callees=2
+callees: Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;->create(Ljava/lang/Object; Ld70/b;)Ld70/b;, Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+  000000  move-object v0, v4
+  000002  check-cast v5, Lra0/y;
+  000006  const/4 v2, 5
+  000008  check-cast v6, Ld70/b;
+  00000c  const/4 v3, 5
+  00000e  invoke-virtual v0, v5, v6, Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;->create(Ljava/lang/Object; Ld70/b;)Ld70/b;
+  000014  move-result-object v2
+  000016  move-object v0, v2
+  000018  check-cast v0, Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;
+  00001c  const/4 v3, 1
+  00001e  sget-object v5, Lz60/q;->a Lz60/q;
+  000022  const/4 v2, 2
+  000024  invoke-virtual v0, v5, Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+  00002a  move-result-object v3
+  00002c  move-object v0, v3
+  00002e  return-object v0
+  000030  <androguard.core.dex.FillArrayData object at 0x7ff3faec16d0>
+
+===== Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10938584 instructions=85 access=public final callers=1 callees=10
+callers: Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;->invoke(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;
+callees: Landroidx/lifecycle/i0;->k(Ljava/lang/Object;)V, Landroidx/lifecycle/i0;->k(Ljava/lang/Object;)V, Landroidx/lifecycle/m0;->l(Ljava/lang/Object;)V, Lcom/getmimo/ui/lesson/interactive/base/c;->K()Lcom/getmimo/ui/lesson/interactive/LessonBundle;, Lcom/getmimo/ui/lesson/interactive/base/c;->V(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/interactive/base/c;->X(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Ljava/lang/Integer;-><init>(I)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object v6, v10
+  000002  iget-object v0, v6, Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;->c Lcom/getmimo/ui/lesson/interactive/base/c;
+  000006  const/4 v9, 6
+  000008  iget-object v1, v0, Lcom/getmimo/ui/lesson/interactive/base/c;->f Landroidx/lifecycle/m0;
+  00000c  const/4 v9, 2
+  00000e  sget-object v2, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000012  const/4 v9, 7
+  000014  iget-byte v3, v6, Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;->a B
+  000018  const/4 v8, 1
+  00001a  const/4 v8, 2
+  00001c  move v4, v8
+  00001e  const/4 v8, 1
+  000020  move v5, v8
+  000022  if-eqz v3, +01ch
+  000026  const/4 v8, 4
+  000028  if-eq v3, v5, +006h
+  00002c  const/4 v9, 3
+  00002e  if-ne v3, v4, +00bh
+  000032  const/4 v8, 1
+  000034  const/4 v8, 7
+  000036  const/4 v9, 2
+  000038  invoke-static v11, Lkotlin/b;->b(Ljava/lang/Object;)V
+  00003e  goto +34h
+  000040  move-exception v6
+  000042  goto +52h
+  000044  const/4 v8, 4
+  000046  const-string v8, "call to 'resume' before 'invoke' with coroutine"
+  00004a  move-object v6, v8
+  00004c  invoke-static v6, Lwc/f;->i(Ljava/lang/String;)V
+  000052  const/4 v9, 6
+  000054  const/4 v8, 0
+  000056  move v6, v8
+  000058  return-object v6
+  00005a  const/4 v8, 5
+  00005c  invoke-static v11, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000062  const/4 v8, 1
+  000064  const/4 v9, 4
+  000066  iget-boolean v11, v6, Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;->b Z
+  00006a  const/4 v9, 4
+  00006c  if-eqz v11, +00fh
+  000070  const/4 v8, 5
+  000072  iput-byte v5, v6, Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;->a B
+  000076  const/4 v8, 5
+  000078  invoke-virtual v0, v6, Lcom/getmimo/ui/lesson/interactive/base/c;->V(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  00007e  move-result-object v9
+  000080  move-object v6, v9
+  000082  if-ne v6, v2, +011h
+  000086  const/4 v9, 6
+  000088  goto +dh
+  00008a  const/4 v9, 6
+  00008c  iput-byte v4, v6, Lcom/getmimo/ui/lesson/interactive/base/InteractiveLessonBaseViewModel$onLessonRun$1;->a B
+  000090  const/4 v8, 5
+  000092  invoke-virtual v0, v6, Lcom/getmimo/ui/lesson/interactive/base/c;->X(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  000098  move-result-object v9
+  00009a  move-object v6, v9
+  00009c  if-ne v6, v2, +004h
+  0000a0  const/4 v9, 1
+  0000a2  return-object v2
+  0000a4  const/4 v8, 7
+  0000a6  iget-object v6, v0, Lcom/getmimo/ui/lesson/interactive/base/c;->e Landroidx/lifecycle/m0;
+  0000aa  const/4 v8, 3
+  0000ac  invoke-virtual v0, Lcom/getmimo/ui/lesson/interactive/base/c;->K()Lcom/getmimo/ui/lesson/interactive/LessonBundle;
+  0000b2  move-result-object v8
+  0000b4  move-object v11, v8
+  0000b6  iget v11, v11, Lcom/getmimo/ui/lesson/interactive/LessonBundle;->b I
+  0000ba  const/4 v8, 3
+  0000bc  new-instance v0, Ljava/lang/Integer;
+  0000c0  const/4 v8, 5
+  0000c2  invoke-direct v0, v11, Ljava/lang/Integer;-><init>(I)V
+  0000c8  const/4 v9, 3
+  0000ca  invoke-virtual v6, v0, Landroidx/lifecycle/m0;->l(Ljava/lang/Object;)V
+  0000d0  sget-object v6, Ljava/lang/Boolean;->FALSE Ljava/lang/Boolean;
+  0000d4  const/4 v8, 1
+  0000d6  invoke-virtual v1, v6, Landroidx/lifecycle/i0;->k(Ljava/lang/Object;)V
+  0000dc  const/4 v8, 1
+  0000de  sget-object v6, Lz60/q;->a Lz60/q;
+  0000e2  const/4 v9, 3
+  0000e4  return-object v6
+  0000e6  sget-object v11, Ljava/lang/Boolean;->FALSE Ljava/lang/Boolean;
+  0000ea  const/4 v9, 2
+  0000ec  invoke-virtual v1, v11, Landroidx/lifecycle/i0;->k(Ljava/lang/Object;)V
+  0000f2  const/4 v8, 1
+  0000f4  throw v6
+  0000f6  const/4 v8, 5
+  0000f8  <androguard.core.dex.FillArrayData object at 0x7ff3faec3010>

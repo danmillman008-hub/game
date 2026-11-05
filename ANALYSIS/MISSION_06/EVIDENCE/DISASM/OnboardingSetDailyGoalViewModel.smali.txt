@@ -1,0 +1,66 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/ui/onboarding/dailygoal/OnboardingSetDailyGoalViewModel; semantic=OnboardingSetDailyGoalViewModel
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/ui/onboarding/dailygoal/OnboardingSetDailyGoalViewModel;-><init>(Lcom/getmimo/data/settings/a; Lcom/getmimo/analytics/a; Lcom/getmimo/interactors/authentication/e; Lkf/d;)V =====
+dex=classes.dex code_offset=11101360 instructions=53 access=public constructor callers=1 callees=9
+callers: Lae/p;->get()Ljava/lang/Object;
+callees: Laj/p;-><init>()V, Landroidx/lifecycle/i0;-><init>()V, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Lkotlinx/coroutines/flow/d;->a(Lua0/n;)Lua0/p;, Lkotlinx/coroutines/flow/d;->a(Lua0/n;)Lua0/p;, Lua0/h;->b(I I Lkotlinx/coroutines/channels/BufferOverflow; I)Lkotlinx/coroutines/flow/i;, Lua0/h;->b(I I Lkotlinx/coroutines/channels/BufferOverflow; I)Lkotlinx/coroutines/flow/i;
+  000000  move-object v1, v5
+  000002  invoke-virtual v6, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000008  invoke-virtual v7, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00000e  invoke-virtual v9, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000014  invoke-direct v1, Laj/p;-><init>()V
+  00001a  const-string v3, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  00001e  iput-object v6, v1, Lcom/getmimo/ui/onboarding/dailygoal/OnboardingSetDailyGoalViewModel;->b Lcom/getmimo/data/settings/a;
+  000022  const/4 v3, 1
+  000024  iput-object v7, v1, Lcom/getmimo/ui/onboarding/dailygoal/OnboardingSetDailyGoalViewModel;->c Lcom/getmimo/analytics/a;
+  000028  const/4 v4, 2
+  00002a  iput-object v8, v1, Lcom/getmimo/ui/onboarding/dailygoal/OnboardingSetDailyGoalViewModel;->d Lcom/getmimo/interactors/authentication/e;
+  00002e  const/4 v3, 1
+  000030  iput-object v9, v1, Lcom/getmimo/ui/onboarding/dailygoal/OnboardingSetDailyGoalViewModel;->e Lkf/d;
+  000034  const/4 v3, 3
+  000036  const/4 v4, 0
+  000038  move v6, v4
+  00003a  const/4 v3, 1
+  00003c  move v7, v3
+  00003e  const/4 v3, 0
+  000040  move v8, v3
+  000042  const/4 v3, 5
+  000044  move v9, v3
+  000046  invoke-static v6, v7, v8, v9, Lua0/h;->b(I I Lkotlinx/coroutines/channels/BufferOverflow; I)Lkotlinx/coroutines/flow/i;
+  00004c  move-result-object v3
+  00004e  move-object v0, v3
+  000050  iput-object v0, v1, Lcom/getmimo/ui/onboarding/dailygoal/OnboardingSetDailyGoalViewModel;->f Lkotlinx/coroutines/flow/i;
+  000054  const/4 v4, 3
+  000056  invoke-static v0, Lkotlinx/coroutines/flow/d;->a(Lua0/n;)Lua0/p;
+  00005c  move-result-object v3
+  00005e  move-object v0, v3
+  000060  iput-object v0, v1, Lcom/getmimo/ui/onboarding/dailygoal/OnboardingSetDailyGoalViewModel;->g Lua0/p;
+  000064  const/4 v4, 6
+  000066  new-instance v0, Landroidx/lifecycle/m0;
+  00006a  const/4 v4, 5
+  00006c  invoke-direct v0, Landroidx/lifecycle/i0;-><init>()V
+  000072  const/4 v4, 1
+  000074  iput-object v0, v1, Lcom/getmimo/ui/onboarding/dailygoal/OnboardingSetDailyGoalViewModel;->h Landroidx/lifecycle/m0;
+  000078  const/4 v4, 5
+  00007a  iput-object v0, v1, Lcom/getmimo/ui/onboarding/dailygoal/OnboardingSetDailyGoalViewModel;->i Landroidx/lifecycle/m0;
+  00007e  const/4 v4, 7
+  000080  invoke-static v6, v7, v8, v9, Lua0/h;->b(I I Lkotlinx/coroutines/channels/BufferOverflow; I)Lkotlinx/coroutines/flow/i;
+  000086  move-result-object v3
+  000088  move-object v6, v3
+  00008a  iput-object v6, v1, Lcom/getmimo/ui/onboarding/dailygoal/OnboardingSetDailyGoalViewModel;->j Lkotlinx/coroutines/flow/i;
+  00008e  const/4 v4, 4
+  000090  invoke-static v6, Lkotlinx/coroutines/flow/d;->a(Lua0/n;)Lua0/p;
+  000096  move-result-object v4
+  000098  move-object v6, v4
+  00009a  iput-object v6, v1, Lcom/getmimo/ui/onboarding/dailygoal/OnboardingSetDailyGoalViewModel;->k Lua0/p;
+  00009e  const/4 v3, 4
+  0000a0  return-void 
+  0000a2  nop 
+  0000a4  <androguard.core.dex.FillArrayData object at 0x7ff3fadd5250>

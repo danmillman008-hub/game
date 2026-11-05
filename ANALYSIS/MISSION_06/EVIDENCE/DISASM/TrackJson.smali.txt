@@ -1,0 +1,687 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/data/content/model/track/TrackJson; semantic=TrackJson
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;-><clinit>()V =====
+dex=classes.dex code_offset=9720916 instructions=60 access=static constructor callers=0 callees=3
+callees: Lcom/getmimo/data/content/model/track/TrackJson$Companion;-><init>(Lkotlin/jvm/internal/c;)V, Lkotlin/a;->a(Lkotlin/LazyThreadSafetyMode; Lkotlin/jvm/functions/Function0;)Lz60/g;, Lvi/n;-><init>(B)V
+  000000  new-instance v0, Lcom/getmimo/data/content/model/track/TrackJson$Companion;
+  000004  const-string v7, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  000008  const/4 v4, 0
+  00000a  move v1, v4
+  00000c  invoke-direct v0, v1, Lcom/getmimo/data/content/model/track/TrackJson$Companion;-><init>(Lkotlin/jvm/internal/c;)V
+  000012  const/4 v7, 7
+  000014  sput-object v0, Lcom/getmimo/data/content/model/track/TrackJson;->Companion Lcom/getmimo/data/content/model/track/TrackJson$Companion;
+  000018  const/4 v5, 1
+  00001a  sget-object v0, Lkotlin/LazyThreadSafetyMode;->b Lkotlin/LazyThreadSafetyMode;
+  00001e  const/4 v7, 1
+  000020  new-instance v2, Lvi/n;
+  000024  const/4 v7, 5
+  000026  const/16 v4, 15
+  00002a  move v3, v4
+  00002c  invoke-direct v2, v3, Lvi/n;-><init>(B)V
+  000032  const/4 v5, 1
+  000034  invoke-static v0, v2, Lkotlin/a;->a(Lkotlin/LazyThreadSafetyMode; Lkotlin/jvm/functions/Function0;)Lz60/g;
+  00003a  move-result-object v4
+  00003c  move-object v0, v4
+  00003e  const/16 v4, 8
+  000042  move v2, v4
+  000044  new-array v2, v2, [Lz60/g;
+  000048  const/4 v6, 2
+  00004a  const/4 v4, 0
+  00004c  move v3, v4
+  00004e  aput-object v1, v2, v3
+  000052  const/4 v7, 5
+  000054  const/4 v4, 1
+  000056  move v3, v4
+  000058  aput-object v1, v2, v3
+  00005c  const/4 v6, 4
+  00005e  const/4 v4, 2
+  000060  move v3, v4
+  000062  aput-object v1, v2, v3
+  000066  const/4 v6, 4
+  000068  const/4 v4, 3
+  00006a  move v3, v4
+  00006c  aput-object v1, v2, v3
+  000070  const/4 v6, 4
+  000072  const/4 v4, 4
+  000074  move v3, v4
+  000076  aput-object v1, v2, v3
+  00007a  const/4 v6, 4
+  00007c  const/4 v4, 5
+  00007e  move v3, v4
+  000080  aput-object v1, v2, v3
+  000084  const/4 v7, 7
+  000086  const/4 v4, 6
+  000088  move v3, v4
+  00008a  aput-object v1, v2, v3
+  00008e  const/4 v7, 7
+  000090  const/4 v4, 7
+  000092  move v1, v4
+  000094  aput-object v0, v2, v1
+  000098  const/4 v5, 1
+  00009a  sput-object v2, Lcom/getmimo/data/content/model/track/TrackJson;->$childSerializers [Lz60/g;
+  00009e  const/4 v5, 5
+  0000a0  return-void 
+  0000a2  nop 
+  0000a4  <androguard.core.dex.FillArrayData object at 0x7ff3fac96fd0>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;-><init>(I J J Ljava/lang/String; Ljava/lang/String; Z Z Ljava/lang/String; Ljava/util/List; Lgb0/j1;)V =====
+dex=classes.dex code_offset=9721116 instructions=39 access=public synthetic constructor callers=1 callees=3
+callers: Lcom/getmimo/data/content/model/track/TrackJson$$serializer;->deserialize(Lkotlinx/serialization/encoding/Decoder;)Lcom/getmimo/data/content/model/track/TrackJson;
+callees: Lcom/getmimo/data/content/model/track/TrackJson$$serializer;->getDescriptor()Lkotlinx/serialization/descriptors/SerialDescriptor;, Lgb0/a1;->j(I I Lkotlinx/serialization/descriptors/SerialDescriptor;)V, Ljava/lang/Object;-><init>()V
+  000000  and-int/lit16 v15, v4, 255
+  000004  const/4 v2, 2
+  000006  const/16 v1, 255
+  00000a  move v0, v1
+  00000c  if-ne v0, v15, +020h
+  000010  const/4 v2, 4
+  000012  invoke-direct v3, Ljava/lang/Object;-><init>()V
+  000018  const/4 v2, 1
+  00001a  iput-wide v5, v3, Lcom/getmimo/data/content/model/track/TrackJson;->id J
+  00001e  const/4 v2, 6
+  000020  iput-wide v7, v3, Lcom/getmimo/data/content/model/track/TrackJson;->version J
+  000024  const/4 v2, 1
+  000026  iput-object v9, v3, Lcom/getmimo/data/content/model/track/TrackJson;->title Ljava/lang/String;
+  00002a  const/4 v2, 4
+  00002c  iput-object v10, v3, Lcom/getmimo/data/content/model/track/TrackJson;->descriptionContent Ljava/lang/String;
+  000030  const/4 v2, 4
+  000032  iput-boolean v11, v3, Lcom/getmimo/data/content/model/track/TrackJson;->isNew Z
+  000036  const/4 v2, 7
+  000038  iput-boolean v12, v3, Lcom/getmimo/data/content/model/track/TrackJson;->isHidden Z
+  00003c  const/4 v2, 2
+  00003e  iput-object v13, v3, Lcom/getmimo/data/content/model/track/TrackJson;->iconBanner Ljava/lang/String;
+  000042  const/4 v2, 7
+  000044  iput-object v14, v3, Lcom/getmimo/data/content/model/track/TrackJson;->sections Ljava/util/List;
+  000048  const/4 v2, 5
+  00004a  return-void 
+  00004c  const/4 v2, 1
+  00004e  sget-object v3, Lcom/getmimo/data/content/model/track/TrackJson$$serializer;->INSTANCE Lcom/getmimo/data/content/model/track/TrackJson$$serializer;
+  000052  const/4 v2, 2
+  000054  invoke-virtual v3, Lcom/getmimo/data/content/model/track/TrackJson$$serializer;->getDescriptor()Lkotlinx/serialization/descriptors/SerialDescriptor;
+  00005a  move-result-object v1
+  00005c  move-object v3, v1
+  00005e  invoke-static v4, v0, v3, Lgb0/a1;->j(I I Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+  000064  const/4 v2, 7
+  000066  const/4 v1, 0
+  000068  move v3, v1
+  00006a  throw v3
+  00006c  const/4 v2, 4
+  00006e  nop 
+  000070  <androguard.core.dex.FillArrayData object at 0x7ff3fac97cd0>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;-><init>(J J Ljava/lang/String; Ljava/lang/String; Z Z Ljava/lang/String; Ljava/util/List;)V =====
+dex=classes.dex code_offset=9721264 instructions=25 access=public constructor callers=1 callees=5
+callers: Lcom/getmimo/data/content/model/track/TrackJson;->copy(J J Ljava/lang/String; Ljava/lang/String; Z Z Ljava/lang/String; Ljava/util/List;)Lcom/getmimo/data/content/model/track/TrackJson;
+callees: Ljava/lang/Object;-><init>()V, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000000  move-object v0, v3
+  000002  invoke-virtual v8, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000008  invoke-virtual v9, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00000e  invoke-virtual v12, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000014  invoke-virtual v13, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00001a  invoke-direct v0, Ljava/lang/Object;-><init>()V
+  000020  const/4 v2, 3
+  000022  iput-wide v4, v0, Lcom/getmimo/data/content/model/track/TrackJson;->id J
+  000026  const/4 v2, 5
+  000028  iput-wide v6, v0, Lcom/getmimo/data/content/model/track/TrackJson;->version J
+  00002c  const/4 v2, 1
+  00002e  iput-object v8, v0, Lcom/getmimo/data/content/model/track/TrackJson;->title Ljava/lang/String;
+  000032  const/4 v2, 4
+  000034  iput-object v9, v0, Lcom/getmimo/data/content/model/track/TrackJson;->descriptionContent Ljava/lang/String;
+  000038  const/4 v2, 7
+  00003a  iput-boolean v10, v0, Lcom/getmimo/data/content/model/track/TrackJson;->isNew Z
+  00003e  const/4 v2, 4
+  000040  iput-boolean v11, v0, Lcom/getmimo/data/content/model/track/TrackJson;->isHidden Z
+  000044  const/4 v2, 2
+  000046  iput-object v12, v0, Lcom/getmimo/data/content/model/track/TrackJson;->iconBanner Ljava/lang/String;
+  00004a  const/4 v2, 3
+  00004c  iput-object v13, v0, Lcom/getmimo/data/content/model/track/TrackJson;->sections Ljava/util/List;
+  000050  const/4 v2, 3
+  000052  return-void 
+  000054  <androguard.core.dex.FillArrayData object at 0x7ff3fac985d0>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;->_childSerializers$_anonymous_()Lkotlinx/serialization/KSerializer; =====
+dex=classes.dex code_offset=9721428 instructions=11 access=private static final synthetic callers=1 callees=1
+callers: Lcom/getmimo/data/content/model/track/TrackJson;->a()Lkotlinx/serialization/KSerializer;
+callees: Lgb0/d;-><init>(Lkotlinx/serialization/KSerializer; B)V
+  000000  new-instance v0, Lgb0/d;
+  000004  const/4 v4, 2
+  000006  sget-object v1, Lcom/getmimo/data/content/model/track/SectionJson$$serializer;->INSTANCE Lcom/getmimo/data/content/model/track/SectionJson$$serializer;
+  00000a  const/4 v5, 6
+  00000c  const/4 v3, 0
+  00000e  move v2, v3
+  000010  invoke-direct v0, v1, v2, Lgb0/d;-><init>(Lkotlinx/serialization/KSerializer; B)V
+  000016  const/4 v5, 6
+  000018  return-object v0
+  00001a  nop 
+  00001c  <androguard.core.dex.FillArrayData object at 0x7ff3fac98950>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;->a()Lkotlinx/serialization/KSerializer; =====
+dex=classes.dex code_offset=9721496 instructions=5 access=public static synthetic callers=1 callees=1
+callers: Lvi/n;->invoke()Ljava/lang/Object;
+callees: Lcom/getmimo/data/content/model/track/TrackJson;->_childSerializers$_anonymous_()Lkotlinx/serialization/KSerializer;
+  000000  invoke-static Lcom/getmimo/data/content/model/track/TrackJson;->_childSerializers$_anonymous_()Lkotlinx/serialization/KSerializer;
+  000006  move-result-object v1
+  000008  move-object v0, v1
+  00000a  return-object v0
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3fac98b90>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;->access$get$childSerializers$cp()[Lz60/g; =====
+dex=classes.dex code_offset=9721560 instructions=4 access=public static final synthetic callers=2 callees=0
+callers: Lcom/getmimo/data/content/model/track/TrackJson$$serializer;->childSerializers()[Lkotlinx/serialization/KSerializer;, Lcom/getmimo/data/content/model/track/TrackJson$$serializer;->deserialize(Lkotlinx/serialization/encoding/Decoder;)Lcom/getmimo/data/content/model/track/TrackJson;
+  000000  sget-object v0, Lcom/getmimo/data/content/model/track/TrackJson;->$childSerializers [Lz60/g;
+  000004  const/4 v2, 4
+  000006  return-object v0
+  000008  <androguard.core.dex.FillArrayData object at 0x7ff3fac98d90>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;->component1()J =====
+dex=classes.dex code_offset=9722112 instructions=6 access=public final callers=0 callees=0
+  000000  move-object v2, v6
+  000002  iget-wide v0, v2, Lcom/getmimo/data/content/model/track/TrackJson;->id J
+  000006  const/4 v4, 4
+  000008  return-wide v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3fac99010>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;->component2()J =====
+dex=classes.dex code_offset=9722224 instructions=6 access=public final callers=0 callees=0
+  000000  move-object v2, v5
+  000002  iget-wide v0, v2, Lcom/getmimo/data/content/model/track/TrackJson;->version J
+  000006  const/4 v4, 4
+  000008  return-wide v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3fac99350>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;->component3()Ljava/lang/String; =====
+dex=classes.dex code_offset=9722284 instructions=6 access=public final callers=0 callees=0
+  000000  move-object v0, v3
+  000002  iget-object v0, v0, Lcom/getmimo/data/content/model/track/TrackJson;->title Ljava/lang/String;
+  000006  const/4 v2, 3
+  000008  return-object v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3fac99650>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;->component4()Ljava/lang/String; =====
+dex=classes.dex code_offset=9722424 instructions=6 access=public final callers=0 callees=0
+  000000  move-object v0, v3
+  000002  iget-object v0, v0, Lcom/getmimo/data/content/model/track/TrackJson;->descriptionContent Ljava/lang/String;
+  000006  const/4 v2, 3
+  000008  return-object v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3fac99950>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;->component5()Z =====
+dex=classes.dex code_offset=9722552 instructions=6 access=public final callers=0 callees=0
+  000000  move-object v0, v4
+  000002  iget-boolean v0, v0, Lcom/getmimo/data/content/model/track/TrackJson;->isNew Z
+  000006  const/4 v3, 2
+  000008  return v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3fac99c90>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;->component6()Z =====
+dex=classes.dex code_offset=9722608 instructions=6 access=public final callers=0 callees=0
+  000000  move-object v0, v4
+  000002  iget-boolean v0, v0, Lcom/getmimo/data/content/model/track/TrackJson;->isHidden Z
+  000006  const/4 v2, 1
+  000008  return v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3fac99fd0>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;->component7()Ljava/lang/String; =====
+dex=classes.dex code_offset=9722664 instructions=6 access=public final callers=0 callees=0
+  000000  move-object v0, v3
+  000002  iget-object v0, v0, Lcom/getmimo/data/content/model/track/TrackJson;->iconBanner Ljava/lang/String;
+  000006  const/4 v2, 7
+  000008  return-object v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3fac9a2d0>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;->component8()Ljava/util/List; =====
+dex=classes.dex code_offset=9722768 instructions=6 access=public final callers=0 callees=0
+  000000  move-object v0, v3
+  000002  iget-object v0, v0, Lcom/getmimo/data/content/model/track/TrackJson;->sections Ljava/util/List;
+  000006  const/4 v2, 7
+  000008  return-object v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3fac9a5d0>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;->copy$default(Lcom/getmimo/data/content/model/track/TrackJson; J J Ljava/lang/String; Ljava/lang/String; Z Z Ljava/lang/String; Ljava/util/List; I Ljava/lang/Object;)Lcom/getmimo/data/content/model/track/TrackJson; =====
+dex=classes.dex code_offset=9721628 instructions=52 access=public static synthetic callers=0 callees=1
+callees: Lcom/getmimo/data/content/model/track/TrackJson;->copy(J J Ljava/lang/String; Ljava/lang/String; Z Z Ljava/lang/String; Ljava/util/List;)Lcom/getmimo/data/content/model/track/TrackJson;
+  000000  move/from16 v0, v22
+  000004  and-int/lit8 v1, v0, 1
+  000008  if-eqz v1, +004h
+  00000c  iget-wide v12, v11, Lcom/getmimo/data/content/model/track/TrackJson;->id J
+  000010  move-wide v1, v12
+  000012  and-int/lit8 v12, v0, 2
+  000016  if-eqz v12, +004h
+  00001a  iget-wide v14, v11, Lcom/getmimo/data/content/model/track/TrackJson;->version J
+  00001e  move-wide v3, v14
+  000020  and-int/lit8 v12, v0, 4
+  000024  if-eqz v12, +006h
+  000028  iget-object v12, v11, Lcom/getmimo/data/content/model/track/TrackJson;->title Ljava/lang/String;
+  00002c  move-object v5, v12
+  00002e  goto +3h
+  000030  move-object/from16 v5, v16
+  000034  and-int/lit8 v12, v0, 8
+  000038  if-eqz v12, +006h
+  00003c  iget-object v12, v11, Lcom/getmimo/data/content/model/track/TrackJson;->descriptionContent Ljava/lang/String;
+  000040  move-object v6, v12
+  000042  goto +3h
+  000044  move-object/from16 v6, v17
+  000048  and-int/lit8 v12, v0, 16
+  00004c  if-eqz v12, +006h
+  000050  iget-boolean v12, v11, Lcom/getmimo/data/content/model/track/TrackJson;->isNew Z
+  000054  move v7, v12
+  000056  goto +3h
+  000058  move/from16 v7, v18
+  00005c  and-int/lit8 v12, v0, 32
+  000060  if-eqz v12, +006h
+  000064  iget-boolean v12, v11, Lcom/getmimo/data/content/model/track/TrackJson;->isHidden Z
+  000068  move v8, v12
+  00006a  goto +3h
+  00006c  move/from16 v8, v19
+  000070  and-int/lit8 v12, v0, 64
+  000074  if-eqz v12, +006h
+  000078  iget-object v12, v11, Lcom/getmimo/data/content/model/track/TrackJson;->iconBanner Ljava/lang/String;
+  00007c  move-object v9, v12
+  00007e  goto +3h
+  000080  move-object/from16 v9, v20
+  000084  and-int/lit16 v12, v0, 128
+  000088  if-eqz v12, +007h
+  00008c  iget-object v12, v11, Lcom/getmimo/data/content/model/track/TrackJson;->sections Ljava/util/List;
+  000090  move-object v10, v12
+  000092  move-object v0, v11
+  000094  goto +4h
+  000096  move-object/from16 v10, v21
+  00009a  goto -4h
+  00009c  invoke-virtual/range v0 ... v10, Lcom/getmimo/data/content/model/track/TrackJson;->copy(J J Ljava/lang/String; Ljava/lang/String; Z Z Ljava/lang/String; Ljava/util/List;)Lcom/getmimo/data/content/model/track/TrackJson;
+  0000a2  move-result-object v11
+  0000a4  return-object v11
+  0000a6  nop 
+  0000a8  <androguard.core.dex.FillArrayData object at 0x7ff3fac9b7d0>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;->copy(J J Ljava/lang/String; Ljava/lang/String; Z Z Ljava/lang/String; Ljava/util/List;)Lcom/getmimo/data/content/model/track/TrackJson; =====
+dex=classes.dex code_offset=9722892 instructions=10 access=public final callers=1 callees=5
+callers: Lcom/getmimo/data/content/model/track/TrackJson;->copy$default(Lcom/getmimo/data/content/model/track/TrackJson; J J Ljava/lang/String; Ljava/lang/String; Z Z Ljava/lang/String; Ljava/util/List; I Ljava/lang/Object;)Lcom/getmimo/data/content/model/track/TrackJson;
+callees: Lcom/getmimo/data/content/model/track/TrackJson;-><init>(J J Ljava/lang/String; Ljava/lang/String; Z Z Ljava/lang/String; Ljava/util/List;)V, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000000  invoke-virtual v9, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000006  invoke-virtual v10, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00000c  invoke-virtual v13, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000012  invoke-virtual v14, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000018  new-instance v4, Lcom/getmimo/data/content/model/track/TrackJson;
+  00001c  const/4 v3, 6
+  00001e  invoke-direct/range v4 ... v14, Lcom/getmimo/data/content/model/track/TrackJson;-><init>(J J Ljava/lang/String; Ljava/lang/String; Z Z Ljava/lang/String; Ljava/util/List;)V
+  000024  const/4 v3, 5
+  000026  return-object v4
+  000028  <androguard.core.dex.FillArrayData object at 0x7ff3fac9b8d0>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;->equals(Ljava/lang/Object;)Z =====
+dex=classes.dex code_offset=9722984 instructions=99 access=public callers=0 callees=4
+callees: Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z
+  000000  move-object v7, v10
+  000002  const/4 v9, 1
+  000004  move v0, v9
+  000006  if-ne v7, v11, +004h
+  00000a  const/4 v9, 1
+  00000c  return v0
+  00000e  const/4 v9, 7
+  000010  instance-of v1, v11, Lcom/getmimo/data/content/model/track/TrackJson;
+  000014  const/4 v9, 4
+  000016  const/4 v9, 0
+  000018  move v2, v9
+  00001a  if-nez v1, +004h
+  00001e  const/4 v9, 6
+  000020  return v2
+  000022  const/4 v9, 3
+  000024  check-cast v11, Lcom/getmimo/data/content/model/track/TrackJson;
+  000028  const/4 v9, 1
+  00002a  iget-wide v3, v7, Lcom/getmimo/data/content/model/track/TrackJson;->id J
+  00002e  const/4 v9, 7
+  000030  iget-wide v5, v11, Lcom/getmimo/data/content/model/track/TrackJson;->id J
+  000034  const/4 v9, 1
+  000036  cmp-long v1, v3, v5
+  00003a  const/4 v9, 5
+  00003c  if-eqz v1, +004h
+  000040  const/4 v9, 3
+  000042  return v2
+  000044  const/4 v9, 7
+  000046  iget-wide v3, v7, Lcom/getmimo/data/content/model/track/TrackJson;->version J
+  00004a  const/4 v9, 7
+  00004c  iget-wide v5, v11, Lcom/getmimo/data/content/model/track/TrackJson;->version J
+  000050  const/4 v9, 1
+  000052  cmp-long v1, v3, v5
+  000056  const/4 v9, 6
+  000058  if-eqz v1, +004h
+  00005c  const/4 v9, 1
+  00005e  return v2
+  000060  const/4 v9, 3
+  000062  iget-object v1, v7, Lcom/getmimo/data/content/model/track/TrackJson;->title Ljava/lang/String;
+  000066  const/4 v9, 2
+  000068  iget-object v3, v11, Lcom/getmimo/data/content/model/track/TrackJson;->title Ljava/lang/String;
+  00006c  const/4 v9, 4
+  00006e  invoke-static v1, v3, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z
+  000074  move-result v9
+  000076  move v1, v9
+  000078  if-nez v1, +004h
+  00007c  const/4 v9, 3
+  00007e  return v2
+  000080  const/4 v9, 2
+  000082  iget-object v1, v7, Lcom/getmimo/data/content/model/track/TrackJson;->descriptionContent Ljava/lang/String;
+  000086  const/4 v9, 3
+  000088  iget-object v3, v11, Lcom/getmimo/data/content/model/track/TrackJson;->descriptionContent Ljava/lang/String;
+  00008c  const/4 v9, 2
+  00008e  invoke-static v1, v3, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z
+  000094  move-result v9
+  000096  move v1, v9
+  000098  if-nez v1, +004h
+  00009c  const/4 v9, 3
+  00009e  return v2
+  0000a0  const/4 v9, 1
+  0000a2  iget-boolean v1, v7, Lcom/getmimo/data/content/model/track/TrackJson;->isNew Z
+  0000a6  const/4 v9, 5
+  0000a8  iget-boolean v3, v11, Lcom/getmimo/data/content/model/track/TrackJson;->isNew Z
+  0000ac  const/4 v9, 3
+  0000ae  if-eq v1, v3, +004h
+  0000b2  const/4 v9, 5
+  0000b4  return v2
+  0000b6  const/4 v9, 1
+  0000b8  iget-boolean v1, v7, Lcom/getmimo/data/content/model/track/TrackJson;->isHidden Z
+  0000bc  const/4 v9, 6
+  0000be  iget-boolean v3, v11, Lcom/getmimo/data/content/model/track/TrackJson;->isHidden Z
+  0000c2  const/4 v9, 6
+  0000c4  if-eq v1, v3, +004h
+  0000c8  const/4 v9, 7
+  0000ca  return v2
+  0000cc  const/4 v9, 3
+  0000ce  iget-object v1, v7, Lcom/getmimo/data/content/model/track/TrackJson;->iconBanner Ljava/lang/String;
+  0000d2  const/4 v9, 2
+  0000d4  iget-object v3, v11, Lcom/getmimo/data/content/model/track/TrackJson;->iconBanner Ljava/lang/String;
+  0000d8  const/4 v9, 5
+  0000da  invoke-static v1, v3, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z
+  0000e0  move-result v9
+  0000e2  move v1, v9
+  0000e4  if-nez v1, +004h
+  0000e8  const/4 v9, 3
+  0000ea  return v2
+  0000ec  const/4 v9, 4
+  0000ee  iget-object v7, v7, Lcom/getmimo/data/content/model/track/TrackJson;->sections Ljava/util/List;
+  0000f2  const/4 v9, 5
+  0000f4  iget-object v11, v11, Lcom/getmimo/data/content/model/track/TrackJson;->sections Ljava/util/List;
+  0000f8  const/4 v9, 2
+  0000fa  invoke-static v7, v11, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z
+  000100  move-result v9
+  000102  move v7, v9
+  000104  if-nez v7, +004h
+  000108  const/4 v9, 1
+  00010a  return v2
+  00010c  const/4 v9, 5
+  00010e  return v0
+  000110  <androguard.core.dex.FillArrayData object at 0x7ff3fac9dad0>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;->getDescriptionContent()Ljava/lang/String; =====
+dex=classes.dex code_offset=9723292 instructions=6 access=public final callers=3 callees=0
+callers: Lcom/getmimo/data/content/tracks/c;->i(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/interactors/path/e;->f(Lcom/getmimo/data/content/model/track/TrackJson; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/tracksearch/b;->E(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/io/Serializable;
+  000000  move-object v0, v4
+  000002  iget-object v0, v0, Lcom/getmimo/data/content/model/track/TrackJson;->descriptionContent Ljava/lang/String;
+  000006  const/4 v2, 1
+  000008  return-object v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3fac9dd50>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;->getIconBanner()Ljava/lang/String; =====
+dex=classes.dex code_offset=9723340 instructions=6 access=public final callers=3 callees=0
+callers: Lcom/getmimo/data/content/tracks/c;->i(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/interactors/path/e;->f(Lcom/getmimo/data/content/model/track/TrackJson; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/tracksearch/b;->E(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/io/Serializable;
+  000000  move-object v0, v3
+  000002  iget-object v0, v0, Lcom/getmimo/data/content/model/track/TrackJson;->iconBanner Ljava/lang/String;
+  000006  const/4 v2, 5
+  000008  return-object v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3fac9e050>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;->getId()J =====
+dex=classes.dex code_offset=9723396 instructions=6 access=public final callers=14 callees=0
+callers: Lcom/getmimo/data/content/tracks/c;->d(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/data/content/tracks/c;->d(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/data/content/tracks/c;->d(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/data/content/tracks/c;->f(Ljava/util/List; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/io/Serializable;, Lcom/getmimo/data/content/tracks/c;->i(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->fetchTrackCompletionForFavoriteTracks(Ld70/b;)Ljava/lang/Object;, Lcom/getmimo/interactors/path/LoadOnboardingPaths$invoke$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/interactors/path/e;->f(Lcom/getmimo/data/content/model/track/TrackJson; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/interactors/path/e;->f(Lcom/getmimo/data/content/model/track/TrackJson; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/interactors/path/e;->f(Lcom/getmimo/data/content/model/track/TrackJson; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/practice/h;->F(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/tracksearch/b;->E(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/io/Serializable;, Lcom/getmimo/ui/tracksearch/b;->E(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/io/Serializable;, Lf0/i1;->invoke(Ljava/lang/Object;)Ljava/lang/Object;
+  000000  move-object v2, v5
+  000002  iget-wide v0, v2, Lcom/getmimo/data/content/model/track/TrackJson;->id J
+  000006  const/4 v4, 7
+  000008  return-wide v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3fac9e390>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;->getSections()Ljava/util/List; =====
+dex=classes.dex code_offset=9723444 instructions=6 access=public final callers=2 callees=0
+callers: Lcom/getmimo/data/content/tracks/c;->i(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/tracksearch/b;->E(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/io/Serializable;
+  000000  move-object v0, v4
+  000002  iget-object v0, v0, Lcom/getmimo/data/content/model/track/TrackJson;->sections Ljava/util/List;
+  000006  const/4 v3, 2
+  000008  return-object v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3fac9e690>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;->getTitle()Ljava/lang/String; =====
+dex=classes.dex code_offset=9723496 instructions=6 access=public final callers=7 callees=0
+callers: Lcom/getmimo/data/content/tracks/c;->i(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/interactors/path/e;->f(Lcom/getmimo/data/content/model/track/TrackJson; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/iap/freetrial/HonestFreeTrialViewModel$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/executable/ExecutableLessonViewModel$showAiTutor$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/interactive/base/c;->G(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/practice/h;->F(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/tracksearch/b;->E(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/io/Serializable;
+  000000  move-object v0, v4
+  000002  iget-object v0, v0, Lcom/getmimo/data/content/model/track/TrackJson;->title Ljava/lang/String;
+  000006  const/4 v2, 5
+  000008  return-object v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3fac9e950>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;->getVersion()J =====
+dex=classes.dex code_offset=9723580 instructions=6 access=public final callers=4 callees=0
+callers: Lcom/getmimo/data/content/tracks/c;->i(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/data/source/local/completion/a;->e(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->fetchTrackCompletionForFavoriteTracks(Ld70/b;)Ljava/lang/Object;, Lcom/getmimo/interactors/eta/a;->a(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  000000  move-object v2, v5
+  000002  iget-wide v0, v2, Lcom/getmimo/data/content/model/track/TrackJson;->version J
+  000006  const/4 v4, 3
+  000008  return-wide v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3fac9ec90>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;->hashCode()I =====
+dex=classes.dex code_offset=9723660 instructions=50 access=public callers=0 callees=8
+callees: Ljava/lang/Long;->hashCode(J)I, Ljava/lang/Object;->hashCode()I, Lsb/j;->c(I I Ljava/lang/String;)I, Lsb/j;->c(I I Ljava/lang/String;)I, Lsb/j;->c(I I Ljava/lang/String;)I, Lsb/j;->e(I I Z)I, Lsb/j;->e(I I Z)I, Lsb/j;->f(J I I)I
+  000000  move-object v4, v7
+  000002  iget-wide v0, v4, Lcom/getmimo/data/content/model/track/TrackJson;->id J
+  000006  const/4 v6, 6
+  000008  invoke-static v0, v1, Ljava/lang/Long;->hashCode(J)I
+  00000e  move-result v6
+  000010  move v0, v6
+  000012  const/16 v6, 31
+  000016  move v1, v6
+  000018  mul-int/2addr v0, v1
+  00001a  const/4 v6, 4
+  00001c  iget-wide v2, v4, Lcom/getmimo/data/content/model/track/TrackJson;->version J
+  000020  const/4 v6, 3
+  000022  invoke-static v2, v3, v0, v1, Lsb/j;->f(J I I)I
+  000028  move-result v6
+  00002a  move v0, v6
+  00002c  iget-object v2, v4, Lcom/getmimo/data/content/model/track/TrackJson;->title Ljava/lang/String;
+  000030  const/4 v6, 6
+  000032  invoke-static v0, v1, v2, Lsb/j;->c(I I Ljava/lang/String;)I
+  000038  move-result v6
+  00003a  move v0, v6
+  00003c  iget-object v2, v4, Lcom/getmimo/data/content/model/track/TrackJson;->descriptionContent Ljava/lang/String;
+  000040  const/4 v6, 7
+  000042  invoke-static v0, v1, v2, Lsb/j;->c(I I Ljava/lang/String;)I
+  000048  move-result v6
+  00004a  move v0, v6
+  00004c  iget-boolean v2, v4, Lcom/getmimo/data/content/model/track/TrackJson;->isNew Z
+  000050  const/4 v6, 6
+  000052  invoke-static v0, v1, v2, Lsb/j;->e(I I Z)I
+  000058  move-result v6
+  00005a  move v0, v6
+  00005c  iget-boolean v2, v4, Lcom/getmimo/data/content/model/track/TrackJson;->isHidden Z
+  000060  const/4 v6, 4
+  000062  invoke-static v0, v1, v2, Lsb/j;->e(I I Z)I
+  000068  move-result v6
+  00006a  move v0, v6
+  00006c  iget-object v2, v4, Lcom/getmimo/data/content/model/track/TrackJson;->iconBanner Ljava/lang/String;
+  000070  const/4 v6, 1
+  000072  invoke-static v0, v1, v2, Lsb/j;->c(I I Ljava/lang/String;)I
+  000078  move-result v6
+  00007a  move v0, v6
+  00007c  iget-object v4, v4, Lcom/getmimo/data/content/model/track/TrackJson;->sections Ljava/util/List;
+  000080  const/4 v6, 5
+  000082  invoke-virtual v4, Ljava/lang/Object;->hashCode()I
+  000088  move-result v6
+  00008a  move v4, v6
+  00008c  add-int/2addr v4, v0
+  00008e  const/4 v6, 2
+  000090  return v4
+  000092  nop 
+  000094  <androguard.core.dex.FillArrayData object at 0x7ff3fac9fbd0>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;->isHidden()Z =====
+dex=classes.dex code_offset=9723860 instructions=6 access=public final callers=2 callees=0
+callers: Lcom/getmimo/data/content/tracks/c;->i(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/tracksearch/b;->E(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/io/Serializable;
+  000000  move-object v0, v4
+  000002  iget-boolean v0, v0, Lcom/getmimo/data/content/model/track/TrackJson;->isHidden Z
+  000006  const/4 v3, 6
+  000008  return v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3fac9ff10>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;->isNew()Z =====
+dex=classes.dex code_offset=9723928 instructions=6 access=public final callers=1 callees=0
+callers: Lcom/getmimo/data/content/tracks/c;->i(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  000000  move-object v0, v4
+  000002  iget-boolean v0, v0, Lcom/getmimo/data/content/model/track/TrackJson;->isNew Z
+  000006  const/4 v2, 3
+  000008  return v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3faca4250>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;->toString()Ljava/lang/String; =====
+dex=classes.dex code_offset=9724008 instructions=58 access=public callers=0 callees=16
+callees: Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;, Lsb/j;->w(J Ljava/lang/String; Ljava/lang/String;)Ljava/lang/StringBuilder;
+  000000  move-object v11, v14
+  000002  iget-wide v0, v11, Lcom/getmimo/data/content/model/track/TrackJson;->id J
+  000006  const/4 v13, 7
+  000008  iget-wide v2, v11, Lcom/getmimo/data/content/model/track/TrackJson;->version J
+  00000c  const/4 v13, 1
+  00000e  iget-object v4, v11, Lcom/getmimo/data/content/model/track/TrackJson;->title Ljava/lang/String;
+  000012  const/4 v13, 6
+  000014  iget-object v5, v11, Lcom/getmimo/data/content/model/track/TrackJson;->descriptionContent Ljava/lang/String;
+  000018  const/4 v13, 4
+  00001a  iget-boolean v6, v11, Lcom/getmimo/data/content/model/track/TrackJson;->isNew Z
+  00001e  const/4 v13, 7
+  000020  iget-boolean v7, v11, Lcom/getmimo/data/content/model/track/TrackJson;->isHidden Z
+  000024  const/4 v13, 6
+  000026  iget-object v8, v11, Lcom/getmimo/data/content/model/track/TrackJson;->iconBanner Ljava/lang/String;
+  00002a  const/4 v13, 7
+  00002c  iget-object v11, v11, Lcom/getmimo/data/content/model/track/TrackJson;->sections Ljava/util/List;
+  000030  const/4 v13, 4
+  000032  const-string v13, "TrackJson(id="
+  000036  move-object v9, v13
+  000038  const-string v13, ", version="
+  00003c  move-object v10, v13
+  00003e  invoke-static v0, v1, v9, v10, Lsb/j;->w(J Ljava/lang/String; Ljava/lang/String;)Ljava/lang/StringBuilder;
+  000044  move-result-object v13
+  000046  move-object v0, v13
+  000048  invoke-virtual v0, v2, v3, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+  00004e  const-string v13, ", title="
+  000052  move-object v1, v13
+  000054  invoke-virtual v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00005a  invoke-virtual v0, v4, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  000060  const-string v13, ", descriptionContent="
+  000064  move-object v1, v13
+  000066  invoke-virtual v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00006c  invoke-virtual v0, v5, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  000072  const-string v13, ", isNew="
+  000076  move-object v1, v13
+  000078  invoke-virtual v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00007e  invoke-virtual v0, v6, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+  000084  const-string v13, ", isHidden="
+  000088  move-object v1, v13
+  00008a  invoke-virtual v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  000090  invoke-virtual v0, v7, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+  000096  const-string v13, ", iconBanner="
+  00009a  move-object v1, v13
+  00009c  invoke-virtual v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0000a2  invoke-virtual v0, v8, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0000a8  const-string v13, ", sections="
+  0000ac  move-object v1, v13
+  0000ae  invoke-virtual v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0000b4  invoke-virtual v0, v11, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  0000ba  const-string v13, ")"
+  0000be  move-object v11, v13
+  0000c0  invoke-virtual v0, v11, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  0000c6  invoke-virtual v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  0000cc  move-result-object v13
+  0000ce  move-object v11, v13
+  0000d0  return-object v11
+  0000d2  nop 
+  0000d4  <androguard.core.dex.FillArrayData object at 0x7ff3faca53d0>
+
+===== Lcom/getmimo/data/content/model/track/TrackJson;->write$Self$content(Lcom/getmimo/data/content/model/track/TrackJson; Lfb0/b; Lkotlinx/serialization/descriptors/SerialDescriptor;)V =====
+dex=classes.dex code_offset=9721844 instructions=60 access=public static final synthetic callers=1 callees=9
+callers: Lcom/getmimo/data/content/model/track/TrackJson$$serializer;->serialize(Lkotlinx/serialization/encoding/Encoder; Lcom/getmimo/data/content/model/track/TrackJson;)V
+callees: Lfb0/b;->D(Lkotlinx/serialization/descriptors/SerialDescriptor; I J)V, Lfb0/b;->D(Lkotlinx/serialization/descriptors/SerialDescriptor; I J)V, Lfb0/b;->i(Lkotlinx/serialization/descriptors/SerialDescriptor; I Lkotlinx/serialization/KSerializer; Ljava/lang/Object;)V, Lfb0/b;->q(Lkotlinx/serialization/descriptors/SerialDescriptor; I Z)V, Lfb0/b;->q(Lkotlinx/serialization/descriptors/SerialDescriptor; I Z)V, Lfb0/b;->r(Lkotlinx/serialization/descriptors/SerialDescriptor; I Ljava/lang/String;)V, Lfb0/b;->r(Lkotlinx/serialization/descriptors/SerialDescriptor; I Ljava/lang/String;)V, Lfb0/b;->r(Lkotlinx/serialization/descriptors/SerialDescriptor; I Ljava/lang/String;)V, Lz60/g;->getValue()Ljava/lang/Object;
+  000000  move-object v4, v8
+  000002  sget-object v0, Lcom/getmimo/data/content/model/track/TrackJson;->$childSerializers [Lz60/g;
+  000006  const/4 v6, 3
+  000008  const/4 v6, 0
+  00000a  move v1, v6
+  00000c  iget-wide v2, v4, Lcom/getmimo/data/content/model/track/TrackJson;->id J
+  000010  const/4 v7, 7
+  000012  invoke-interface v9, v10, v1, v2, v3, Lfb0/b;->D(Lkotlinx/serialization/descriptors/SerialDescriptor; I J)V
+  000018  const/4 v6, 2
+  00001a  const/4 v6, 1
+  00001c  move v1, v6
+  00001e  iget-wide v2, v4, Lcom/getmimo/data/content/model/track/TrackJson;->version J
+  000022  const/4 v6, 2
+  000024  invoke-interface v9, v10, v1, v2, v3, Lfb0/b;->D(Lkotlinx/serialization/descriptors/SerialDescriptor; I J)V
+  00002a  const/4 v7, 7
+  00002c  const/4 v6, 2
+  00002e  move v1, v6
+  000030  iget-object v2, v4, Lcom/getmimo/data/content/model/track/TrackJson;->title Ljava/lang/String;
+  000034  const/4 v7, 6
+  000036  invoke-interface v9, v10, v1, v2, Lfb0/b;->r(Lkotlinx/serialization/descriptors/SerialDescriptor; I Ljava/lang/String;)V
+  00003c  const/4 v7, 6
+  00003e  const/4 v7, 3
+  000040  move v1, v7
+  000042  iget-object v2, v4, Lcom/getmimo/data/content/model/track/TrackJson;->descriptionContent Ljava/lang/String;
+  000046  const/4 v6, 5
+  000048  invoke-interface v9, v10, v1, v2, Lfb0/b;->r(Lkotlinx/serialization/descriptors/SerialDescriptor; I Ljava/lang/String;)V
+  00004e  const/4 v6, 1
+  000050  const/4 v7, 4
+  000052  move v1, v7
+  000054  iget-boolean v2, v4, Lcom/getmimo/data/content/model/track/TrackJson;->isNew Z
+  000058  const/4 v7, 1
+  00005a  invoke-interface v9, v10, v1, v2, Lfb0/b;->q(Lkotlinx/serialization/descriptors/SerialDescriptor; I Z)V
+  000060  const/4 v7, 5
+  000062  const/4 v7, 5
+  000064  move v1, v7
+  000066  iget-boolean v2, v4, Lcom/getmimo/data/content/model/track/TrackJson;->isHidden Z
+  00006a  const/4 v7, 7
+  00006c  invoke-interface v9, v10, v1, v2, Lfb0/b;->q(Lkotlinx/serialization/descriptors/SerialDescriptor; I Z)V
+  000072  const/4 v7, 3
+  000074  const/4 v6, 6
+  000076  move v1, v6
+  000078  iget-object v2, v4, Lcom/getmimo/data/content/model/track/TrackJson;->iconBanner Ljava/lang/String;
+  00007c  const/4 v7, 5
+  00007e  invoke-interface v9, v10, v1, v2, Lfb0/b;->r(Lkotlinx/serialization/descriptors/SerialDescriptor; I Ljava/lang/String;)V
+  000084  const/4 v6, 1
+  000086  const/4 v6, 7
+  000088  move v1, v6
+  00008a  aget-object v0, v0, v1
+  00008e  const/4 v7, 6
+  000090  invoke-interface v0, Lz60/g;->getValue()Ljava/lang/Object;
+  000096  move-result-object v7
+  000098  move-object v0, v7
+  00009a  check-cast v0, Lkotlinx/serialization/KSerializer;
+  00009e  const/4 v6, 3
+  0000a0  iget-object v4, v4, Lcom/getmimo/data/content/model/track/TrackJson;->sections Ljava/util/List;
+  0000a4  const/4 v6, 1
+  0000a6  invoke-interface v9, v10, v1, v0, v4, Lfb0/b;->i(Lkotlinx/serialization/descriptors/SerialDescriptor; I Lkotlinx/serialization/KSerializer; Ljava/lang/Object;)V
+  0000ac  const/4 v6, 3
+  0000ae  return-void 
+  0000b0  <androguard.core.dex.FillArrayData object at 0x7ff3faca65d0>

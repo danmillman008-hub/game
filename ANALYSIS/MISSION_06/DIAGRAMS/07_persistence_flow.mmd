@@ -1,0 +1,24 @@
+%% MISSION 06 — original Mimo 9.35 architecture, reconstructed from DEX bytecode.
+%% APK sha256 48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+%% Classification of each node is in the corresponding numbered report and EVIDENCE_DATABASE.json.
+%% Solid edges = VERIFIED_STATIC invoke/field xref; dashed = INFERRED or client-side boundary.
+flowchart TD
+  A["V()/X()/U()/W()"] --> B["base/c;-&gt;H(tries,attempts)"]
+  B --> C["LessonProgressRepository.createLessonProgress<br/>LessonBundle + startedAt + tries + attempts"]
+  C --> D["LessonProgress(11 fields)<br/>lessonId, completedAt=now, startedAt,<br/>tries, tutorialId, tutorialVersion, trackId,<br/>publishSetVersion, attempts,<br/>isPracticeProgress, inQueue=true"]
+  D --> E["base/c;-&gt;e0() guard field M"]
+  E --> F["LessonProgressQueue.storeLessonProgress"]
+  F --> G{"devMenuStorage.e() ?"}
+  G -->|"true (dev override)"| H["return, no write"]
+  G -->|false| I["LessonProgressRepository.addOrUpdateLessonProgressInQueue"]
+  I --> J["Room DAO → lesson_progress<br/>PK(lesson_id,tutorial_id)"]
+  J --> K["updateCorrectAnswersCount()<br/>AnswersInChapter(correct=count isSolvedCorrectly,<br/>total=queued.size) → _answersInChapter StateFlow"]
+  K --> L{"attempts == 1 ?"}
+  L -->|yes| M["updateLessonStreakDetector"]
+  J --> N["storeAndPostAllLessonProgress() on chapter end"]
+  N --> O["moveLessonProgressFromQueue() → in_queue=0"]
+  O --> P["postUnsyncedLessonProgress()"]
+  P --> Q{"NetworkUtils.a()<br/>WIFI or CELLULAR transport?"}
+  Q -->|false| R["log 'No internet connection, not posting unsynced lesson progress'<br/>throw NoConnectionException<br/>rows stay in Room"]
+  Q -->|true| S["POST /v1/tutorials/{id}/progress (client boundary only)"]
+  S --> T["sync result → chapter_completions / tutorial_completions"]

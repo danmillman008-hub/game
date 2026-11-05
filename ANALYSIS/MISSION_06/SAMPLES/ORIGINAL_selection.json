@@ -1,0 +1,79 @@
+{
+  "tutorial": {
+    "id": 2307,
+    "version": 7,
+    "type": "practiceOptional",
+    "isNew": false,
+    "codeLanguage": "bash",
+    "title": "Introduction to Backend 2",
+    "descriptionContent": "Introduction to Backend 2",
+    "shortDescriptionContent": "",
+    "showInTrack": true,
+    "iconBanner": null,
+    "chapters": [
+      {
+        "id": 13774,
+        "title": "Introduction to Backend 2",
+        "type": "practiceLevel3",
+        "lessons": [
+          {
+            "title": "Question: 404 Not Found",
+            "id": 103089,
+            "contentType": "interactive",
+            "images": [],
+            "interactiveContent": "<!DOCTYPE html ><html><body><p>What status code does the server send if the frontend requests data on a user that was found?</p><selection multiple=\"multiple\"><item value=\"1\" correct=\"true\"><code>200 OK</code></item><item value=\"2\" correct=\"false\"><code>400 Bad Request</code></item><item value=\"3\" correct=\"false\"><code>500 Internal Server Error</code></item><item value=\"4\" correct=\"false\"><code>404 Not Found</code></item></selection><p visible-if=\"wrong\"><code>200 OK</code>.</p></body></html>"
+          },
+          {
+            "title": "Question: Server errors",
+            "id": 103094,
+            "contentType": "interactive",
+            "images": [],
+            "interactiveContent": "<!DOCTYPE html ><html><body><p>What range are the server error codes in?</p><selection iscode=\"false\" multiple=\"multiple\"><item value=\"1\" correct=\"true\">500-599</item><item value=\"2\" correct=\"false\">300-399</item><item value=\"3\" correct=\"false\">400-499</item></selection><p visible-if=\"wrong\">Make sure to pick 500-599.</p></body></html>"
+          },
+          {
+            "title": "Question: JSON properties",
+            "id": 103099,
+            "contentType": "interactive",
+            "images": [],
+            "interactiveContent": "<!DOCTYPE html ><html><body><p>What are the properties of this JSON object sent as a response by the server?</p><code version=\"2\" codelang=\"bash\" name=\"script.sh\" visible-if=\"always\"><content><text value=\"{\" /><text type=\"break\" /><text value=\" &quot;student&quot;: &quot;Mae Wong&quot;,\" /><text type=\"break\" /><text value=\" &quot;grade&quot;: &quot;A&quot;\" /><text type=\"break\" /><text value=\"}\" /></content></code><selection iscode=\"false\" multiple=\"multiple\"><item value=\"1\" correct=\"true\"><code>\"student\"</code> and <code>\"grade\"</code></item><item value=\"2\" correct=\"false\"><code>\"Mae Wong\"</code>, <code>\"A\"</code></item><item value=\"3\" correct=\"false\"><code>\"student\": \"Mae Wong\"</code></item></selection><p visible-if=\"wrong\"><code>\"student\"</code> and <code>\"grade\"</code>.</p></body></html>"
+          },
+          {
+            "title": "Question: POST",
+            "id": 103447,
+            "contentType": "interactive",
+            "images": [],
+            "interactiveContent": "<!DOCTYPE html ><html><body><p>Which request might we use to load a photo from a social media platform?</p><selection multiple=\"multiple\"><item value=\"1\" correct=\"true\"><code>GET</code></item><item value=\"2\" correct=\"false\"><code>POST</code></item><item value=\"3\" correct=\"false\"><code>DELETE</code></item><item value=\"4\" correct=\"false\"><code>PUT</code></item></selection><p visible-if=\"wrong\">Make sure to pick <code>GET</code>.</p></body></html>"
+          },
+          {
+            "title": "Question: POST URL 2",
+            "id": 103448,
+            "contentType": "interactive",
+            "images": [],
+            "interactiveContent": "<!DOCTYPE html ><html><body><p>Looking at this URL, what might the data we're sending be related to?</p><code version=\"2\" codelang=\"bash\" name=\"script.sh\" visible-if=\"always\"><content><text value=\"POST https://sellvintage.com/bags\" /></content></code><selection iscode=\"false\" multiple=\"multiple\"><item value=\"1\" correct=\"true\">A vintage bag item someone might have uploaded on a website</item><item value=\"2\" correct=\"false\">A recipe someone deleted from their blog</item><item value=\"3\" correct=\"false\">A user that has updated their password</item></selection><p visible-if=\"wrong\">A vintage bag item someone might have uploaded on a website.</p></body></html>"
+          },
+          {
+            "title": "Question: POST Body JSON",
+            "id": 103453,
+            "contentType": "interactive",
+            "images": [],
+            "interactiveContent": "<!DOCTYPE html ><html><body><p>What's the format of the data in this POST request's body?</p><code version=\"2\" codelang=\"bash\" name=\"script.sh\" visible-if=\"always\"><content><text value=\"POST https://knowitall.com/posts\" /><text type=\"break\" /><text value=\"\" /><text type=\"break\" /><text value=\"{\" /><text type=\"break\" /><text value=\" &quot;title&quot;: &quot;Titane&quot;,\" /><text type=\"break\" /><text value=\" &quot;content&quot;: &quot;Anyone seen it yet?&quot;,\" /><text type=\"break\" /><text value=\" &quot;user&quot;: &quot;sassy_sam&quot;\" /><text type=\"break\" /><text value=\"}\" /></content></code><selection multiple=\"multiple\"><item value=\"1\" correct=\"true\">JSON</item><item value=\"2\" correct=\"false\">HTTP</item><item value=\"3\" correct=\"false\">JavaScript</item><item value=\"4\" correct=\"false\">TypeScript</item></selection><p visible-if=\"wrong\">Make sure to pick JSON.</p></body></html>"
+          },
+          {
+            "title": "Question: 201 Created Meaning",
+            "id": 103456,
+            "contentType": "interactive",
+            "images": [],
+            "interactiveContent": "<!DOCTYPE html ><html><body><p>Which status code might we get if the server successfully responds with a resource?</p><selection iscode=\"false\" multiple=\"multiple\"><item value=\"1\" correct=\"true\"><code>200</code></item><item value=\"2\" correct=\"false\"><code>400</code></item><item value=\"3\" correct=\"false\"><code>300</code></item></selection><p visible-if=\"wrong\">Make sure to pick <code>200</code>.</p></body></html>"
+          },
+          {
+            "title": "Example: 201 Created",
+            "id": 103457,
+            "contentType": "interactive",
+            "images": [],
+            "interactiveContent": "<!DOCTYPE html ><html><body><p>Add a status code telling us that the server successfully created the resource in the backend.</p><code version=\"2\" codelang=\"bash\" name=\"script.sh\" visible-if=\"always\"><content><text value=\"HTTP/1.1 200 OK\" /><text type=\"break\" /><text value=\"Date: Mon, 21 Jul 2021 17:00:53 GMT\" /><text type=\"break\" /><text value=\"Server: Apache/2.2.14 (Win32)\" /><text type=\"break\" /><text value=\"Content-Length: 50\" /><text type=\"break\" /><text value=\"Content-Type: application/json\" /><text type=\"break\" /><text value=\"Connection: Closed\" /><text type=\"break\" /><text value=\"\" /></content><interactions><interaction type=\"fillTheGap\" isDefault=\"true\"><options><option startIndex=\"9\" endIndex=\"12\" /><option startIndex=\"13\" endIndex=\"15\" /><option correct=\"false\"><content><text value=\"400\" /></content></option></options></interaction></interactions></code><p visible-if=\"wrong\">Make sure to pick <code>200</code>, followed by <code>OK</code>.</p></body></html>"
+          }
+        ]
+      }
+    ]
+  }
+}

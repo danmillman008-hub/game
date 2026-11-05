@@ -1,0 +1,1970 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/ui/chapter/chapterendview/main/f; semantic=ChapterFinishedViewModel
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/ui/chapter/chapterendview/main/f;-><clinit>()V =====
+dex=classes.dex code_offset=10368968 instructions=16 access=static constructor callers=0 callees=1
+callees: Li30/m;->E([Ljava/lang/Object;)Ljava/util/List;
+  000000  const-class v0, Lcom/getmimo/ui/widget/MimoStreakMediumWidgetReceiver;
+  000004  const-string v4, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  000008  const-class v1, Lcom/getmimo/ui/widget/MimoStreakLargeWidgetReceiver;
+  00000c  const/4 v4, 6
+  00000e  const-class v2, Lcom/getmimo/ui/widget/MimoStreakSmallWidgetReceiver;
+  000012  const/4 v4, 3
+  000014  filled-new-array v2, v0, v1, [Ljava/lang/Class;
+  00001a  move-result-object v3
+  00001c  move-object v0, v3
+  00001e  invoke-static v0, Li30/m;->E([Ljava/lang/Object;)Ljava/util/List;
+  000024  move-result-object v3
+  000026  move-object v0, v3
+  000028  sput-object v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->P Ljava/util/List;
+  00002c  const/4 v4, 7
+  00002e  return-void 
+  000030  <androguard.core.dex.FillArrayData object at 0x7ff3fb0256d0>
+
+===== Lcom/getmimo/ui/chapter/chapterendview/main/f;-><init>(Lcom/getmimo/analytics/a; Lye/g; Lcom/getmimo/data/source/remote/progress/LessonProgressQueue; Lri/d; Lbg/a; Lpe/a; Lcom/getmimo/interactors/chapter/d; Lcom/getmimo/ui/lesson/sound/a; Lcom/getmimo/interactors/authentication/b; Lcom/getmimo/interactors/authentication/a; Lyv/l; Lwu/f; Lcom/getmimo/interactors/streak/b; Lcom/getmimo/data/source/remote/iap/purchase/a; Lze/a; Lcom/getmimo/data/source/local/completion/a; Lnp/d; Lnh/d; Lcom/getmimo/data/source/remote/coins/a; Lnp/h; Lkf/d; Lcom/getmimo/interactors/path/a; Ldf/d; Lne/a; Lcom/getmimo/data/local/a; Lcom/getmimo/data/source/remote/keys/a; Lcom/getmimo/interactors/chapterend/b; Lcom/getmimo/interactors/chapter/f; Lce/c; Lrh/f;)V =====
+dex=classes.dex code_offset=10369132 instructions=95 access=public constructor callers=1 callees=30
+callers: Lae/p;->get()Ljava/lang/Object;
+callees: Laj/p;-><init>()V, Landroidx/lifecycle/i0;-><init>()V, Landroidx/lifecycle/i0;-><init>()V, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/util/concurrent/atomic/AtomicBoolean;-><init>(Z)V, Ljava/util/concurrent/atomic/AtomicBoolean;-><init>(Z)V, Lkotlinx/coroutines/flow/d;->r(Lkotlinx/coroutines/channels/a;)Lua0/a;, Lnu/b;->o0(Lce/c;)Z, Lwc/d;->b(I I Lkotlinx/coroutines/channels/BufferOverflow;)Lkotlinx/coroutines/channels/a;
+  000000  invoke-virtual v1, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000006  invoke-virtual v2, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00000c  invoke-virtual v3, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000012  invoke-virtual v4, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000018  invoke-virtual v5, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00001e  invoke-virtual v6, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000024  invoke-virtual v8, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00002a  invoke-virtual v14, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000030  invoke-virtual v15, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000036  invoke-virtual/range v16, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00003c  invoke-virtual/range v17, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000042  invoke-virtual/range v18, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000048  invoke-virtual/range v19, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00004e  invoke-virtual/range v20, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000054  invoke-virtual/range v21, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00005a  invoke-virtual/range v22, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000060  invoke-virtual/range v23, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000066  invoke-virtual/range v24, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00006c  invoke-virtual/range v25, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000072  invoke-virtual/range v26, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000078  invoke-virtual/range v29, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00007e  invoke-virtual/range v30, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000084  invoke-direct v0, Laj/p;-><init>()V
+  00008a  iput-object v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->b Lcom/getmimo/analytics/a;
+  00008e  iput-object v2, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->c Lye/g;
+  000092  iput-object v3, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->d Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;
+  000096  iput-object v4, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->e Lri/d;
+  00009a  iput-object v5, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->f Lbg/a;
+  00009e  iput-object v6, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->g Lpe/a;
+  0000a2  iput-object v7, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->h Lcom/getmimo/interactors/chapter/d;
+  0000a6  iput-object v8, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->i Lcom/getmimo/ui/lesson/sound/a;
+  0000aa  iput-object v9, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->j Lcom/getmimo/interactors/authentication/b;
+  0000ae  iput-object v10, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->k Lcom/getmimo/interactors/authentication/a;
+  0000b2  iput-object v11, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->l Lyv/l;
+  0000b6  iput-object v12, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->m Lwu/f;
+  0000ba  iput-object v13, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->n Lcom/getmimo/interactors/streak/b;
+  0000be  iput-object v14, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->o Lcom/getmimo/data/source/remote/iap/purchase/a;
+  0000c2  iput-object v15, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->p Lze/a;
+  0000c6  move-object/from16 v1, v16
+  0000ca  iput-object v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->q Lcom/getmimo/data/source/local/completion/a;
+  0000ce  move-object/from16 v1, v17
+  0000d2  iput-object v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->r Lnp/d;
+  0000d6  move-object/from16 v1, v18
+  0000da  iput-object v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->s Lnh/d;
+  0000de  move-object/from16 v1, v19
+  0000e2  iput-object v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->t Lcom/getmimo/data/source/remote/coins/a;
+  0000e6  move-object/from16 v1, v20
+  0000ea  iput-object v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->u Lnp/h;
+  0000ee  move-object/from16 v1, v21
+  0000f2  iput-object v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->v Lkf/d;
+  0000f6  move-object/from16 v1, v22
+  0000fa  iput-object v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->w Lcom/getmimo/interactors/path/a;
+  0000fe  move-object/from16 v1, v23
+  000102  iput-object v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->x Ldf/d;
+  000106  move-object/from16 v1, v24
+  00010a  iput-object v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->y Lne/a;
+  00010e  move-object/from16 v1, v25
+  000112  iput-object v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->z Lcom/getmimo/data/local/a;
+  000116  move-object/from16 v1, v26
+  00011a  iput-object v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->A Lcom/getmimo/data/source/remote/keys/a;
+  00011e  move-object/from16 v1, v27
+  000122  iput-object v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->B Lcom/getmimo/interactors/chapterend/b;
+  000126  move-object/from16 v1, v28
+  00012a  iput-object v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->C Lcom/getmimo/interactors/chapter/f;
+  00012e  move-object/from16 v1, v30
+  000132  iput-object v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->D Lrh/f;
+  000136  invoke-static/range v29, Lnu/b;->o0(Lce/c;)Z
+  00013c  move-result v1
+  00013e  iput-boolean v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->E Z
+  000142  new-instance v1, Landroidx/lifecycle/m0;
+  000146  invoke-direct v1, Landroidx/lifecycle/i0;-><init>()V
+  00014c  iput-object v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->F Landroidx/lifecycle/m0;
+  000150  new-instance v1, Landroidx/lifecycle/m0;
+  000154  invoke-direct v1, Landroidx/lifecycle/i0;-><init>()V
+  00015a  iput-object v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->G Landroidx/lifecycle/m0;
+  00015e  const/4 v1, 2
+  000160  const/4 v1, 0
+  000162  const/4 v2, 3
+  000164  const/4 v2, 7
+  000166  const/4 v3, 4
+  000168  const/4 v3, 0
+  00016a  invoke-static v3, v2, v1, Lwc/d;->b(I I Lkotlinx/coroutines/channels/BufferOverflow;)Lkotlinx/coroutines/channels/a;
+  000170  move-result-object v1
+  000172  iput-object v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->I Lkotlinx/coroutines/channels/a;
+  000176  invoke-static v1, Lkotlinx/coroutines/flow/d;->r(Lkotlinx/coroutines/channels/a;)Lua0/a;
+  00017c  move-result-object v1
+  00017e  iput-object v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->J Lua0/a;
+  000182  new-instance v1, Ljava/util/concurrent/atomic/AtomicBoolean;
+  000186  invoke-direct v1, v3, Ljava/util/concurrent/atomic/AtomicBoolean;-><init>(Z)V
+  00018c  iput-object v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->K Ljava/util/concurrent/atomic/AtomicBoolean;
+  000190  new-instance v1, Ljava/util/concurrent/atomic/AtomicBoolean;
+  000194  invoke-direct v1, v3, Ljava/util/concurrent/atomic/AtomicBoolean;-><init>(Z)V
+  00019a  iput-object v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->L Ljava/util/concurrent/atomic/AtomicBoolean;
+  00019e  return-void 
+  0001a0  <androguard.core.dex.FillArrayData object at 0x7ff3fb027890>
+
+===== Lcom/getmimo/ui/chapter/chapterendview/main/f;->E(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10369600 instructions=108 access=public final callers=2 callees=9
+callers: Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$consumeKeyIfNeeded$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$onChapterFinishedScreenShown$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Lcom/getmimo/data/content/model/track/Chapter;->isCompleted()Z, Lcom/getmimo/data/source/remote/keys/a;->a(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$consumeKeyIfNeeded$1;-><init>(Lcom/getmimo/ui/chapter/chapterendview/main/f; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Ljava/lang/Boolean;->booleanValue()Z, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V, Lle0/a;->d(Ljava/lang/Throwable;)V, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object v5, v9
+  000002  instance-of v0, v10, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$consumeKeyIfNeeded$1;
+  000006  const/4 v7, 2
+  000008  if-eqz v0, +019h
+  00000c  const/4 v8, 7
+  00000e  move-object v0, v10
+  000010  check-cast v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$consumeKeyIfNeeded$1;
+  000014  const/4 v7, 2
+  000016  iget v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$consumeKeyIfNeeded$1;->d I
+  00001a  const/4 v7, 3
+  00001c  const/high16 v7, -2147483648
+  000020  move v2, v7
+  000022  and-int v3, v1, v2
+  000026  const/4 v8, 6
+  000028  if-eqz v3, +009h
+  00002c  const/4 v8, 4
+  00002e  sub-int/2addr v1, v2
+  000030  const/4 v8, 2
+  000032  iput v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$consumeKeyIfNeeded$1;->d I
+  000036  const/4 v8, 6
+  000038  goto +9h
+  00003a  const/4 v7, 1
+  00003c  new-instance v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$consumeKeyIfNeeded$1;
+  000040  const/4 v8, 2
+  000042  invoke-direct v0, v5, v10, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$consumeKeyIfNeeded$1;-><init>(Lcom/getmimo/ui/chapter/chapterendview/main/f; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000048  const/4 v7, 3
+  00004a  iget-object v10, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$consumeKeyIfNeeded$1;->b Ljava/lang/Object;
+  00004e  const/4 v7, 7
+  000050  sget-object v1, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000054  const/4 v8, 1
+  000056  iget v2, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$consumeKeyIfNeeded$1;->d I
+  00005a  const/4 v7, 2
+  00005c  const/4 v7, 0
+  00005e  move v3, v7
+  000060  const/4 v8, 1
+  000062  move v4, v8
+  000064  if-eqz v2, +017h
+  000068  const/4 v8, 7
+  00006a  if-ne v2, v4, +00bh
+  00006e  const/4 v8, 2
+  000070  iget-object v5, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$consumeKeyIfNeeded$1;->a Lcom/getmimo/ui/chapter/chapterendview/main/f;
+  000074  const/4 v8, 5
+  000076  const/4 v7, 2
+  000078  invoke-static v10, Lkotlin/b;->b(Ljava/lang/Object;)V
+  00007e  goto +3ah
+  000080  const/4 v8, 4
+  000082  const-string v7, "call to 'resume' before 'invoke' with coroutine"
+  000086  move-object v5, v7
+  000088  invoke-static v5, Lwc/f;->i(Ljava/lang/String;)V
+  00008e  const/4 v8, 7
+  000090  return-object v3
+  000092  const/4 v8, 1
+  000094  invoke-static v10, Lkotlin/b;->b(Ljava/lang/Object;)V
+  00009a  const/4 v8, 1
+  00009c  const/4 v7, 1
+  00009e  iget-object v10, v5, Lcom/getmimo/ui/chapter/chapterendview/main/f;->H Lcom/getmimo/ui/chapter/ChapterBundle;
+  0000a2  const/4 v8, 1
+  0000a4  if-eqz v10, +033h
+  0000a8  const/4 v8, 5
+  0000aa  iget-object v10, v10, Lcom/getmimo/ui/chapter/ChapterBundle;->a Lcom/getmimo/data/content/model/track/Chapter;
+  0000ae  const/4 v7, 1
+  0000b0  invoke-virtual v10, Lcom/getmimo/data/content/model/track/Chapter;->isCompleted()Z
+  0000b6  move-result v7
+  0000b8  move v10, v7
+  0000ba  if-nez v10, +039h
+  0000be  const/4 v7, 2
+  0000c0  iget-boolean v10, v5, Lcom/getmimo/ui/chapter/chapterendview/main/f;->N Z
+  0000c4  const/4 v7, 5
+  0000c6  if-nez v10, +033h
+  0000ca  const/4 v8, 5
+  0000cc  iget-object v10, v5, Lcom/getmimo/ui/chapter/chapterendview/main/f;->A Lcom/getmimo/data/source/remote/keys/a;
+  0000d0  const/4 v7, 5
+  0000d2  iput-object v5, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$consumeKeyIfNeeded$1;->a Lcom/getmimo/ui/chapter/chapterendview/main/f;
+  0000d6  const/4 v7, 7
+  0000d8  iput v4, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$consumeKeyIfNeeded$1;->d I
+  0000dc  const/4 v7, 1
+  0000de  invoke-virtual v10, v0, Lcom/getmimo/data/source/remote/keys/a;->a(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  0000e4  move-result-object v7
+  0000e6  move-object v10, v7
+  0000e8  if-ne v10, v1, +004h
+  0000ec  const/4 v8, 6
+  0000ee  return-object v1
+  0000f0  const/4 v7, 3
+  0000f2  check-cast v10, Ljava/lang/Boolean;
+  0000f6  const/4 v8, 7
+  0000f8  invoke-virtual v10, Ljava/lang/Boolean;->booleanValue()Z
+  0000fe  move-result v8
+  000100  move v10, v8
+  000102  iput-boolean v10, v5, Lcom/getmimo/ui/chapter/chapterendview/main/f;->N Z
+  000106  const/4 v7, 3
+  000108  goto +13h
+  00010a  const/4 v7, 1
+  00010c  const-string v8, "chapterBundle"
+  000110  move-object v5, v8
+  000112  invoke-static v5, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V
+  000118  const/4 v7, 3
+  00011a  throw v3
+  00011c  move-exception v5
+  00011e  sget-object v10, Lle0/b;->a Lle0/a;
+  000122  const/4 v7, 2
+  000124  invoke-virtual v10, v5, Lle0/a;->d(Ljava/lang/Throwable;)V
+  00012a  const/4 v8, 6
+  00012c  const/4 v7, 1
+  00012e  sget-object v5, Lz60/q;->a Lz60/q;
+  000132  const/4 v7, 2
+  000134  return-object v5
+  000136  nop 
+  000138  <androguard.core.dex.FillArrayData object at 0x7ff3fb031890>
+
+===== Lcom/getmimo/ui/chapter/chapterendview/main/f;->F(Ldj/k; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10369984 instructions=152 access=public final callers=2 callees=10
+callers: Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$getChapterEndSuccessStateWithRetry$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOnlineState$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$getChapterEndSuccessStateWithRetry$1;-><init>(Lcom/getmimo/ui/chapter/chapterendview/main/f; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$getChapterEndSuccessStateWithRetry$2$1;-><init>(Lcom/getmimo/ui/chapter/chapterendview/main/f; Ldj/k; Ld70/b;)V, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/jvm/internal/Ref$ObjectRef;-><init>()V, Lkotlinx/coroutines/a;->r(J)J, Lkotlinx/coroutines/a;->s(J Lo70/m; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lla0/d;->p(I Lkotlin/time/DurationUnit;)J, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object v10, v13
+  000002  instance-of v0, v15, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$getChapterEndSuccessStateWithRetry$1;
+  000006  const/4 v12, 2
+  000008  if-eqz v0, +019h
+  00000c  const/4 v12, 4
+  00000e  move-object v0, v15
+  000010  check-cast v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$getChapterEndSuccessStateWithRetry$1;
+  000014  const/4 v12, 1
+  000016  iget v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$getChapterEndSuccessStateWithRetry$1;->g I
+  00001a  const/4 v12, 5
+  00001c  const/high16 v12, -2147483648
+  000020  move v2, v12
+  000022  and-int v3, v1, v2
+  000026  const/4 v12, 3
+  000028  if-eqz v3, +009h
+  00002c  const/4 v12, 5
+  00002e  sub-int/2addr v1, v2
+  000030  const/4 v12, 2
+  000032  iput v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$getChapterEndSuccessStateWithRetry$1;->g I
+  000036  const/4 v12, 4
+  000038  goto +9h
+  00003a  const/4 v12, 2
+  00003c  new-instance v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$getChapterEndSuccessStateWithRetry$1;
+  000040  const/4 v12, 6
+  000042  invoke-direct v0, v10, v15, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$getChapterEndSuccessStateWithRetry$1;-><init>(Lcom/getmimo/ui/chapter/chapterendview/main/f; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000048  const/4 v12, 4
+  00004a  iget-object v15, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$getChapterEndSuccessStateWithRetry$1;->e Ljava/lang/Object;
+  00004e  const/4 v12, 1
+  000050  sget-object v1, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000054  const/4 v12, 1
+  000056  iget v2, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$getChapterEndSuccessStateWithRetry$1;->g I
+  00005a  const/4 v12, 3
+  00005c  const/4 v12, 0
+  00005e  move v3, v12
+  000060  const/4 v12, 1
+  000062  move v4, v12
+  000064  if-eqz v2, +022h
+  000068  const/4 v12, 6
+  00006a  if-ne v2, v4, +016h
+  00006e  const/4 v12, 4
+  000070  iget v14, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$getChapterEndSuccessStateWithRetry$1;->d I
+  000074  const/4 v12, 5
+  000076  iget v2, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$getChapterEndSuccessStateWithRetry$1;->c I
+  00007a  const/4 v12, 3
+  00007c  iget-object v5, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$getChapterEndSuccessStateWithRetry$1;->b Lkotlin/jvm/internal/Ref$ObjectRef;
+  000080  const/4 v12, 1
+  000082  iget-object v6, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$getChapterEndSuccessStateWithRetry$1;->a Ldj/k;
+  000086  const/4 v12, 2
+  000088  const/4 v12, 4
+  00008a  invoke-static v15, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000090  return-object v15
+  000092  move-exception v15
+  000094  goto +5ah
+  000096  const/4 v12, 5
+  000098  const-string v12, "call to 'resume' before 'invoke' with coroutine"
+  00009c  move-object v10, v12
+  00009e  invoke-static v10, Lwc/f;->i(Ljava/lang/String;)V
+  0000a4  const/4 v12, 1
+  0000a6  return-object v3
+  0000a8  const/4 v12, 6
+  0000aa  invoke-static v15, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000b0  const/4 v12, 7
+  0000b2  new-instance v15, Lkotlin/jvm/internal/Ref$ObjectRef;
+  0000b6  const/4 v12, 4
+  0000b8  invoke-direct v15, Lkotlin/jvm/internal/Ref$ObjectRef;-><init>()V
+  0000be  const/4 v12, 6
+  0000c0  const/4 v12, 4
+  0000c2  move v2, v12
+  0000c4  const/4 v12, 0
+  0000c6  move v5, v12
+  0000c8  move-object v9, v15
+  0000ca  move-object v15, v14
+  0000cc  move v14, v5
+  0000ce  move-object v5, v9
+  0000d0  if-ge v14, v2, +054h
+  0000d4  const/4 v12, 4
+  0000d6  const/4 v12, 2
+  0000d8  sget-object v6, Lla0/a;->b Lla0/i;
+  0000dc  const/4 v12, 6
+  0000de  sget-object v6, Lkotlin/time/DurationUnit;->d Lkotlin/time/DurationUnit;
+  0000e2  const/4 v12, 7
+  0000e4  const/16 v12, 10
+  0000e8  move v7, v12
+  0000ea  invoke-static v7, v6, Lla0/d;->p(I Lkotlin/time/DurationUnit;)J
+  0000f0  move-result-wide v6
+  0000f2  new-instance v8, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$getChapterEndSuccessStateWithRetry$2$1;
+  0000f6  const/4 v12, 4
+  0000f8  invoke-direct v8, v10, v15, v3, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$getChapterEndSuccessStateWithRetry$2$1;-><init>(Lcom/getmimo/ui/chapter/chapterendview/main/f; Ldj/k; Ld70/b;)V
+  0000fe  const/4 v12, 7
+  000100  iput-object v15, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$getChapterEndSuccessStateWithRetry$1;->a Ldj/k;
+  000104  const/4 v12, 2
+  000106  iput-object v5, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$getChapterEndSuccessStateWithRetry$1;->b Lkotlin/jvm/internal/Ref$ObjectRef;
+  00010a  const/4 v12, 3
+  00010c  iput v2, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$getChapterEndSuccessStateWithRetry$1;->c I
+  000110  const/4 v12, 6
+  000112  iput v14, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$getChapterEndSuccessStateWithRetry$1;->d I
+  000116  const/4 v12, 1
+  000118  iput v4, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$getChapterEndSuccessStateWithRetry$1;->g I
+  00011c  const/4 v12, 2
+  00011e  invoke-static v6, v7, Lkotlinx/coroutines/a;->r(J)J
+  000124  move-result-wide v6
+  000126  invoke-static v6, v7, v8, v0, Lkotlinx/coroutines/a;->s(J Lo70/m; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  00012c  move-result-object v12
+  00012e  move-object v10, v12
+  000130  if-ne v10, v1, +004h
+  000134  const/4 v12, 4
+  000136  return-object v1
+  000138  const/4 v12, 2
+  00013a  return-object v10
+  00013c  move-object v9, v6
+  00013e  move-object v6, v15
+  000140  move-object v15, v9
+  000142  goto +3h
+  000144  move-exception v6
+  000146  goto -5h
+  000148  instance-of v7, v15, Ljava/util/concurrent/CancellationException;
+  00014c  const/4 v12, 1
+  00014e  if-eqz v7, +00dh
+  000152  const/4 v12, 3
+  000154  instance-of v7, v15, Lkotlinx/coroutines/TimeoutCancellationException;
+  000158  const/4 v12, 1
+  00015a  if-eqz v7, +004h
+  00015e  const/4 v12, 5
+  000160  goto +5h
+  000162  const/4 v12, 2
+  000164  throw v15
+  000166  const/4 v12, 2
+  000168  const/4 v12, 3
+  00016a  iput-object v15, v5, Lkotlin/jvm/internal/Ref$ObjectRef;->a Ljava/lang/Object;
+  00016e  const/4 v12, 3
+  000170  add-int/2addr v14, v4
+  000172  const/4 v12, 6
+  000174  move-object v15, v6
+  000176  goto -53h
+  000178  const/4 v12, 5
+  00017a  iget-object v10, v5, Lkotlin/jvm/internal/Ref$ObjectRef;->a Ljava/lang/Object;
+  00017e  const/4 v12, 4
+  000180  check-cast v10, Ljava/lang/Exception;
+  000184  const/4 v12, 4
+  000186  if-eqz v10, +004h
+  00018a  const/4 v12, 3
+  00018c  goto +ch
+  00018e  const/4 v12, 2
+  000190  new-instance v10, Ljava/lang/IllegalStateException;
+  000194  const/4 v12, 2
+  000196  const-string v12, "Chapter end success state loading failed without an error"
+  00019a  move-object v14, v12
+  00019c  invoke-direct v10, v14, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+  0001a2  const/4 v12, 3
+  0001a4  throw v10
+  0001a6  const/4 v12, 7
+  0001a8  <androguard.core.dex.FillArrayData object at 0x7ff3fb03c590>
+
+===== Lcom/getmimo/ui/chapter/chapterendview/main/f;->G(Ldj/k; Ld70/b;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10370468 instructions=82 access=public final callers=1 callees=8
+callers: Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOnlineState$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Lcom/getmimo/data/content/model/track/Chapter;->getId()J, Lcom/getmimo/data/content/model/track/Chapter;->getLessons()Ljava/util/List;, Lcom/getmimo/data/local/a;->h(J J J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/util/List;->size()I, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V
+  000000  iget-object v0, v13, Lcom/getmimo/ui/chapter/chapterendview/main/f;->H Lcom/getmimo/ui/chapter/ChapterBundle;
+  000004  const/4 v12, 7
+  000006  const/4 v11, 0
+  000008  move v1, v11
+  00000a  const-string v11, "chapterBundle"
+  00000e  move-object v2, v11
+  000010  if-eqz v0, +067h
+  000014  const/4 v12, 1
+  000016  invoke-virtual v14, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00001c  iget-boolean v0, v0, Lcom/getmimo/ui/chapter/ChapterBundle;->F Z
+  000020  const/4 v12, 1
+  000022  if-eqz v0, +007h
+  000026  const/4 v12, 2
+  000028  iget v14, v14, Ldj/k;->b I
+  00002c  const/4 v12, 6
+  00002e  goto +4h
+  000030  const/4 v12, 7
+  000032  const/4 v11, 0
+  000034  move v14, v11
+  000036  if-eqz v14, +04fh
+  00003a  const/4 v12, 5
+  00003c  iget-object v0, v13, Lcom/getmimo/ui/chapter/chapterendview/main/f;->H Lcom/getmimo/ui/chapter/ChapterBundle;
+  000040  const/4 v12, 5
+  000042  if-eqz v0, +042h
+  000046  const/4 v12, 7
+  000048  iget-object v0, v0, Lcom/getmimo/ui/chapter/ChapterBundle;->a Lcom/getmimo/data/content/model/track/Chapter;
+  00004c  const/4 v12, 1
+  00004e  invoke-virtual v0, Lcom/getmimo/data/content/model/track/Chapter;->getLessons()Ljava/util/List;
+  000054  move-result-object v11
+  000056  move-object v0, v11
+  000058  invoke-interface v0, Ljava/util/List;->size()I
+  00005e  move-result v11
+  000060  move v0, v11
+  000062  if-eq v14, v0, +004h
+  000066  const/4 v12, 1
+  000068  goto +37h
+  00006a  const/4 v12, 2
+  00006c  iget-object v14, v13, Lcom/getmimo/ui/chapter/chapterendview/main/f;->H Lcom/getmimo/ui/chapter/ChapterBundle;
+  000070  const/4 v12, 1
+  000072  if-eqz v14, +023h
+  000076  const/4 v12, 7
+  000078  iget-wide v4, v14, Lcom/getmimo/ui/chapter/ChapterBundle;->g J
+  00007c  const/4 v12, 7
+  00007e  iget-wide v6, v14, Lcom/getmimo/ui/chapter/ChapterBundle;->c J
+  000082  const/4 v12, 7
+  000084  iget-object v14, v14, Lcom/getmimo/ui/chapter/ChapterBundle;->a Lcom/getmimo/data/content/model/track/Chapter;
+  000088  const/4 v12, 5
+  00008a  invoke-virtual v14, Lcom/getmimo/data/content/model/track/Chapter;->getId()J
+  000090  move-result-wide v8
+  000092  iget-object v3, v13, Lcom/getmimo/ui/chapter/chapterendview/main/f;->z Lcom/getmimo/data/local/a;
+  000096  const/4 v12, 2
+  000098  move-object v10, v15
+  00009a  check-cast v10, Lkotlin/coroutines/jvm/internal/ContinuationImpl;
+  00009e  const/4 v12, 3
+  0000a0  invoke-virtual/range v3 ... v10, Lcom/getmimo/data/local/a;->h(J J J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  0000a6  move-result-object v11
+  0000a8  move-object v13, v11
+  0000aa  sget-object v14, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  0000ae  const/4 v12, 5
+  0000b0  if-ne v13, v14, +012h
+  0000b4  const/4 v12, 1
+  0000b6  return-object v13
+  0000b8  const/4 v12, 3
+  0000ba  invoke-static v2, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V
+  0000c0  const/4 v12, 1
+  0000c2  throw v1
+  0000c4  const/4 v12, 4
+  0000c6  const/4 v12, 1
+  0000c8  invoke-static v2, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V
+  0000ce  const/4 v12, 2
+  0000d0  throw v1
+  0000d2  const/4 v12, 2
+  0000d4  const/4 v12, 5
+  0000d6  sget-object v13, Lz60/q;->a Lz60/q;
+  0000da  const/4 v12, 1
+  0000dc  return-object v13
+  0000de  const/4 v12, 2
+  0000e0  invoke-static v2, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V
+  0000e6  const/4 v12, 5
+  0000e8  throw v1
+  0000ea  const/4 v12, 5
+  0000ec  <androguard.core.dex.FillArrayData object at 0x7ff3fb03de50>
+
+===== Lcom/getmimo/ui/chapter/chapterendview/main/f;->H(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10370748 instructions=113 access=public final callers=2 callees=20
+callers: Lcom/getmimo/ui/chapter/chapterendview/freestreakgoal/b;->l0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$refreshFinishedChapterStateAfterStreakGoalPurchase$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Landroidx/lifecycle/i0;->d()Ljava/lang/Object;, Landroidx/lifecycle/m0;->l(Ljava/lang/Object;)V, Lcom/getmimo/data/model/store/ProductTypeKt;->getAllStreakChallenges()Ljava/util/Set;, Lcom/getmimo/data/model/store/Products;->getPurchasedProducts()Ljava/util/List;, Lcom/getmimo/data/model/store/PurchasedProduct;->getProductType()Lcom/getmimo/data/model/store/ProductType;, Lcom/getmimo/data/source/remote/store/a;->b()Lci/b;, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$refreshFinishedChapterStateAfterStreakGoalPurchase$1;-><init>(Lcom/getmimo/ui/chapter/chapterendview/main/f; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Set;->contains(Ljava/lang/Object;)Z, Ljj/j;-><init>(Ljj/l; Lp10/a; Loh/h; Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedSuccessType; I Z)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlinx/coroutines/flow/d;->p(Lci/b; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lle0/a;->e(Ljava/lang/Throwable; Ljava/lang/String; [Ljava/lang/Object;)V, Loh/h;-><init>(Lsh/i; Ljava/util/List; I Loh/g; Lcom/getmimo/data/model/store/PurchasedProduct;)V, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object/from16 v0, v22
+  000004  move-object/from16 v1, v23
+  000008  instance-of v2, v1, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$refreshFinishedChapterStateAfterStreakGoalPurchase$1;
+  00000c  if-eqz v2, +011h
+  000010  move-object v2, v1
+  000012  check-cast v2, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$refreshFinishedChapterStateAfterStreakGoalPurchase$1;
+  000016  iget v3, v2, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$refreshFinishedChapterStateAfterStreakGoalPurchase$1;->d I
+  00001a  const/high16 v4, -2147483648
+  00001e  and-int v5, v3, v4
+  000022  if-eqz v5, +006h
+  000026  sub-int/2addr v3, v4
+  000028  iput v3, v2, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$refreshFinishedChapterStateAfterStreakGoalPurchase$1;->d I
+  00002c  goto +6h
+  00002e  new-instance v2, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$refreshFinishedChapterStateAfterStreakGoalPurchase$1;
+  000032  invoke-direct v2, v0, v1, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$refreshFinishedChapterStateAfterStreakGoalPurchase$1;-><init>(Lcom/getmimo/ui/chapter/chapterendview/main/f; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000038  iget-object v1, v2, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$refreshFinishedChapterStateAfterStreakGoalPurchase$1;->b Ljava/lang/Object;
+  00003c  sget-object v3, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000040  iget v4, v2, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$refreshFinishedChapterStateAfterStreakGoalPurchase$1;->d I
+  000044  const/4 v5, 7
+  000046  const/4 v5, 0
+  000048  sget-object v6, Lz60/q;->a Lz60/q;
+  00004c  iget-object v7, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->F Landroidx/lifecycle/m0;
+  000050  const/4 v8, 0
+  000052  const/4 v8, 1
+  000054  if-eqz v4, +013h
+  000058  if-ne v4, v8, +00bh
+  00005c  iget-object v0, v2, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$refreshFinishedChapterStateAfterStreakGoalPurchase$1;->a Ljj/j;
+  000060  invoke-static v1, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000066  goto +33h
+  000068  move-exception v0
+  00006a  goto/16 +093h
+  00006e  const-string v0, "call to 'resume' before 'invoke' with coroutine"
+  000072  invoke-static v0, Lwc/f;->i(Ljava/lang/String;)V
+  000078  return-object v5
+  00007a  invoke-static v1, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000080  invoke-virtual v7, Landroidx/lifecycle/i0;->d()Ljava/lang/Object;
+  000086  move-result-object v1
+  000088  check-cast v1, Ljj/k;
+  00008c  instance-of v4, v1, Ljj/j;
+  000090  if-nez v4, +003h
+  000094  return-object v6
+  000096  iget-object v0, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->s Lnh/d;
+  00009a  check-cast v0, Lcom/getmimo/data/source/remote/store/a;
+  00009e  invoke-virtual v0, Lcom/getmimo/data/source/remote/store/a;->b()Lci/b;
+  0000a4  move-result-object v0
+  0000a6  move-object v4, v1
+  0000a8  check-cast v4, Ljj/j;
+  0000ac  iput-object v4, v2, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$refreshFinishedChapterStateAfterStreakGoalPurchase$1;->a Ljj/j;
+  0000b0  iput v8, v2, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$refreshFinishedChapterStateAfterStreakGoalPurchase$1;->d I
+  0000b4  invoke-static v0, v2, Lkotlinx/coroutines/flow/d;->p(Lci/b; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  0000ba  move-result-object v0
+  0000bc  if-ne v0, v3, +003h
+  0000c0  return-object v3
+  0000c2  move-object/from16 v21, v1
+  0000c6  move-object v1, v0
+  0000c8  move-object/from16 v0, v21
+  0000cc  check-cast v1, Lcom/getmimo/data/model/store/Products;
+  0000d0  invoke-virtual v1, Lcom/getmimo/data/model/store/Products;->getPurchasedProducts()Ljava/util/List;
+  0000d6  move-result-object v1
+  0000d8  invoke-interface v1, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  0000de  move-result-object v1
+  0000e0  invoke-interface v1, Ljava/util/Iterator;->hasNext()Z
+  0000e6  move-result v2
+  0000e8  if-eqz v2, +018h
+  0000ec  invoke-interface v1, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0000f2  move-result-object v2
+  0000f4  move-object v3, v2
+  0000f6  check-cast v3, Lcom/getmimo/data/model/store/PurchasedProduct;
+  0000fa  invoke-static Lcom/getmimo/data/model/store/ProductTypeKt;->getAllStreakChallenges()Ljava/util/Set;
+  000100  move-result-object v4
+  000102  invoke-virtual v3, Lcom/getmimo/data/model/store/PurchasedProduct;->getProductType()Lcom/getmimo/data/model/store/ProductType;
+  000108  move-result-object v3
+  00010a  invoke-interface v4, v3, Ljava/util/Set;->contains(Ljava/lang/Object;)Z
+  000110  move-result v3
+  000112  if-eqz v3, -019h
+  000116  move-object v5, v2
+  000118  move-object v13, v5
+  00011a  check-cast v13, Lcom/getmimo/data/model/store/PurchasedProduct;
+  00011e  move-object v1, v0
+  000120  check-cast v1, Ljj/j;
+  000124  check-cast v0, Ljj/j;
+  000128  iget-object v0, v0, Ljj/j;->c Loh/h;
+  00012c  iget-object v9, v0, Loh/h;->a Lsh/i;
+  000130  iget-object v10, v0, Loh/h;->b Ljava/util/List;
+  000134  iget v11, v0, Loh/h;->c I
+  000138  iget-object v12, v0, Loh/h;->d Loh/g;
+  00013c  invoke-virtual v9, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000142  invoke-virtual v10, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000148  new-instance v17, Loh/h;
+  00014c  move-object/from16 v8, v17
+  000150  invoke-direct/range v8 ... v13, Loh/h;-><init>(Lsh/i; Ljava/util/List; I Loh/g; Lcom/getmimo/data/model/store/PurchasedProduct;)V
+  000156  move-object/from16 v17, v8
+  00015a  iget-object v15, v1, Ljj/j;->a Ljj/l;
+  00015e  iget-object v0, v1, Ljj/j;->b Lp10/a;
+  000162  iget-object v2, v1, Ljj/j;->d Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedSuccessType;
+  000166  iget v3, v1, Ljj/j;->e I
+  00016a  iget-boolean v1, v1, Ljj/j;->f Z
+  00016e  new-instance v14, Ljj/j;
+  000172  move-object/from16 v16, v0
+  000176  move/from16 v20, v1
+  00017a  move-object/from16 v18, v2
+  00017e  move/from16 v19, v3
+  000182  invoke-direct/range v14 ... v20, Ljj/j;-><init>(Ljj/l; Lp10/a; Loh/h; Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedSuccessType; I Z)V
+  000188  invoke-virtual v7, v14, Landroidx/lifecycle/m0;->l(Ljava/lang/Object;)V
+  00018e  return-object v6
+  000190  sget-object v1, Lle0/b;->a Lle0/a;
+  000194  const/4 v2, 1
+  000196  const/4 v2, 0
+  000198  new-array v2, v2, [Ljava/lang/Object;
+  00019c  const-string v3, "Error refreshing finished chapter state after streak goal purchase"
+  0001a0  invoke-virtual v1, v0, v3, v2, Lle0/a;->e(Ljava/lang/Throwable; Ljava/lang/String; [Ljava/lang/Object;)V
+  0001a6  return-object v6
+  0001a8  <androguard.core.dex.FillArrayData object at 0x7ff3fb040290>
+
+===== Lcom/getmimo/ui/chapter/chapterendview/main/f;->I(Ldj/k;)V =====
+dex=classes.dex code_offset=10371260 instructions=117 access=public final callers=1 callees=17
+callers: Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$onChapterFinishedScreenShown$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Landroidx/lifecycle/m0;->l(Ljava/lang/Object;)V, Landroidx/lifecycle/m0;->l(Ljava/lang/Object;)V, Landroidx/lifecycle/m;->k(Landroidx/lifecycle/f1;)Le7/a;, Landroidx/lifecycle/m;->k(Landroidx/lifecycle/f1;)Le7/a;, Landroidx/lifecycle/m;->k(Landroidx/lifecycle/f1;)Le7/a;, Lcom/getmimo/data/content/model/track/Chapter;->isCompleted()Z, Lcom/getmimo/network/a;->b()Z, Lcom/getmimo/ui/chapter/ChapterBundle;->h()Z, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleChapterAlreadyCompletedState$1;-><init>(Lcom/getmimo/ui/chapter/chapterendview/main/f; Ld70/b;)V, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;-><init>(Lcom/getmimo/ui/chapter/chapterendview/main/f; Ld70/b;)V, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOnlineState$1;-><init>(Lcom/getmimo/ui/chapter/chapterendview/main/f; Ldj/k; Ld70/b;)V, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V, Lra0/z;->p(Lra0/y; Ld70/f; Lkotlinx/coroutines/CoroutineStart; Lo70/m; I)Lra0/q1;, Lra0/z;->p(Lra0/y; Ld70/f; Lkotlinx/coroutines/CoroutineStart; Lo70/m; I)Lra0/q1;, Lra0/z;->p(Lra0/y; Ld70/f; Lkotlinx/coroutines/CoroutineStart; Lo70/m; I)Lra0/q1;
+  000000  move-object v5, v8
+  000002  iget-object v0, v5, Lcom/getmimo/ui/chapter/chapterendview/main/f;->e Lri/d;
+  000006  const/4 v7, 7
+  000008  check-cast v0, Lcom/getmimo/network/a;
+  00000c  const/4 v7, 5
+  00000e  invoke-virtual v0, Lcom/getmimo/network/a;->b()Z
+  000014  move-result v7
+  000016  move v0, v7
+  000018  const/4 v7, 2
+  00001a  move v1, v7
+  00001c  iget-object v2, v5, Lcom/getmimo/ui/chapter/chapterendview/main/f;->r Lnp/d;
+  000020  const/4 v7, 7
+  000022  const/4 v7, 0
+  000024  move v3, v7
+  000026  if-eqz v0, +023h
+  00002a  const/4 v7, 4
+  00002c  iget-object v9, v5, Lcom/getmimo/ui/chapter/chapterendview/main/f;->F Landroidx/lifecycle/m0;
+  000030  const/4 v7, 5
+  000032  sget-object v0, Ljj/g;->a Ljj/g;
+  000036  const/4 v7, 3
+  000038  invoke-virtual v9, v0, Landroidx/lifecycle/m0;->l(Ljava/lang/Object;)V
+  00003e  const/4 v7, 2
+  000040  invoke-static v5, Landroidx/lifecycle/m;->k(Landroidx/lifecycle/f1;)Le7/a;
+  000046  move-result-object v7
+  000048  move-object v9, v7
+  00004a  check-cast v2, Lnp/b;
+  00004e  const/4 v7, 4
+  000050  iget-object v0, v2, Lnp/b;->c Lya0/c;
+  000054  const/4 v7, 7
+  000056  new-instance v2, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;
+  00005a  const/4 v7, 4
+  00005c  invoke-direct v2, v5, v3, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;-><init>(Lcom/getmimo/ui/chapter/chapterendview/main/f; Ld70/b;)V
+  000062  const/4 v7, 7
+  000064  invoke-static v9, v0, v3, v2, v1, Lra0/z;->p(Lra0/y; Ld70/f; Lkotlinx/coroutines/CoroutineStart; Lo70/m; I)Lra0/q1;
+  00006a  return-void 
+  00006c  const/4 v7, 3
+  00006e  iget-object v0, v5, Lcom/getmimo/ui/chapter/chapterendview/main/f;->H Lcom/getmimo/ui/chapter/ChapterBundle;
+  000072  const/4 v7, 7
+  000074  const-string v7, "chapterBundle"
+  000078  move-object v4, v7
+  00007a  if-eqz v0, +070h
+  00007e  const/4 v7, 5
+  000080  iget-object v0, v0, Lcom/getmimo/ui/chapter/ChapterBundle;->a Lcom/getmimo/data/content/model/track/Chapter;
+  000084  const/4 v7, 2
+  000086  invoke-virtual v0, Lcom/getmimo/data/content/model/track/Chapter;->isCompleted()Z
+  00008c  move-result v7
+  00008e  move v0, v7
+  000090  if-eqz v0, +044h
+  000094  const/4 v7, 5
+  000096  iget-object v0, v5, Lcom/getmimo/ui/chapter/chapterendview/main/f;->H Lcom/getmimo/ui/chapter/ChapterBundle;
+  00009a  const/4 v7, 4
+  00009c  if-eqz v0, +037h
+  0000a0  const/4 v7, 6
+  0000a2  invoke-virtual v0, Lcom/getmimo/ui/chapter/ChapterBundle;->h()Z
+  0000a8  move-result v7
+  0000aa  move v0, v7
+  0000ac  if-nez v0, +036h
+  0000b0  const/4 v7, 4
+  0000b2  iget-object v0, v5, Lcom/getmimo/ui/chapter/chapterendview/main/f;->H Lcom/getmimo/ui/chapter/ChapterBundle;
+  0000b6  const/4 v7, 1
+  0000b8  if-eqz v0, +022h
+  0000bc  const/4 v7, 3
+  0000be  iget-object v0, v0, Lcom/getmimo/ui/chapter/ChapterBundle;->w Lcom/getmimo/data/content/model/track/TutorialType;
+  0000c2  const/4 v7, 3
+  0000c4  sget-object v4, Lcom/getmimo/data/content/model/track/TutorialType;->Challenge Lcom/getmimo/data/content/model/track/TutorialType;
+  0000c8  const/4 v7, 4
+  0000ca  if-eq v0, v4, +027h
+  0000ce  const/4 v7, 7
+  0000d0  invoke-static v5, Landroidx/lifecycle/m;->k(Landroidx/lifecycle/f1;)Le7/a;
+  0000d6  move-result-object v7
+  0000d8  move-object v9, v7
+  0000da  check-cast v2, Lnp/b;
+  0000de  const/4 v7, 5
+  0000e0  iget-object v0, v2, Lnp/b;->c Lya0/c;
+  0000e4  const/4 v7, 6
+  0000e6  new-instance v2, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleChapterAlreadyCompletedState$1;
+  0000ea  const/4 v7, 7
+  0000ec  invoke-direct v2, v5, v3, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleChapterAlreadyCompletedState$1;-><init>(Lcom/getmimo/ui/chapter/chapterendview/main/f; Ld70/b;)V
+  0000f2  const/4 v7, 3
+  0000f4  invoke-static v9, v0, v3, v2, v1, Lra0/z;->p(Lra0/y; Ld70/f; Lkotlinx/coroutines/CoroutineStart; Lo70/m; I)Lra0/q1;
+  0000fa  return-void 
+  0000fc  const/4 v7, 5
+  0000fe  invoke-static v4, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V
+  000104  const/4 v7, 4
+  000106  throw v3
+  000108  const/4 v7, 2
+  00010a  const/4 v7, 2
+  00010c  invoke-static v4, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V
+  000112  const/4 v7, 1
+  000114  throw v3
+  000116  const/4 v7, 1
+  000118  const/4 v7, 1
+  00011a  iget-object v0, v5, Lcom/getmimo/ui/chapter/chapterendview/main/f;->G Landroidx/lifecycle/m0;
+  00011e  const/4 v7, 6
+  000120  sget-object v4, Ljava/lang/Boolean;->TRUE Ljava/lang/Boolean;
+  000124  const/4 v7, 3
+  000126  invoke-virtual v0, v4, Landroidx/lifecycle/m0;->l(Ljava/lang/Object;)V
+  00012c  const/4 v7, 7
+  00012e  invoke-static v5, Landroidx/lifecycle/m;->k(Landroidx/lifecycle/f1;)Le7/a;
+  000134  move-result-object v7
+  000136  move-object v0, v7
+  000138  check-cast v2, Lnp/b;
+  00013c  const/4 v7, 5
+  00013e  iget-object v2, v2, Lnp/b;->c Lya0/c;
+  000142  const/4 v7, 6
+  000144  new-instance v4, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOnlineState$1;
+  000148  const/4 v7, 6
+  00014a  invoke-direct v4, v5, v9, v3, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOnlineState$1;-><init>(Lcom/getmimo/ui/chapter/chapterendview/main/f; Ldj/k; Ld70/b;)V
+  000150  const/4 v7, 3
+  000152  invoke-static v0, v2, v3, v4, v1, Lra0/z;->p(Lra0/y; Ld70/f; Lkotlinx/coroutines/CoroutineStart; Lo70/m; I)Lra0/q1;
+  000158  return-void 
+  00015a  const/4 v7, 4
+  00015c  invoke-static v4, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V
+  000162  const/4 v7, 7
+  000164  throw v3
+  000166  const/4 v7, 7
+  000168  <androguard.core.dex.FillArrayData object at 0x7ff3fb042450>
+
+===== Lcom/getmimo/ui/chapter/chapterendview/main/f;->J()Z =====
+dex=classes.dex code_offset=10371664 instructions=44 access=public final callers=2 callees=4
+callers: Lcom/getmimo/ui/chapter/chapterendview/main/e;->o0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/chapter/chapterendview/main/e;->o0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+callees: Landroidx/lifecycle/i0;->d()Ljava/lang/Object;, Lne/a;->a()I, Lnu/b;->o0(Lce/c;)Z, Lua0/y;->getValue()Ljava/lang/Object;
+  000000  move-object v2, v5
+  000002  iget-object v0, v2, Lcom/getmimo/ui/chapter/chapterendview/main/f;->y Lne/a;
+  000006  const/4 v4, 4
+  000008  invoke-virtual v0, Lne/a;->a()I
+  00000e  move-result v4
+  000010  move v0, v4
+  000012  const/4 v4, 1
+  000014  move v1, v4
+  000016  if-ne v0, v1, +02eh
+  00001a  const/4 v4, 6
+  00001c  iget-object v0, v2, Lcom/getmimo/ui/chapter/chapterendview/main/f;->F Landroidx/lifecycle/m0;
+  000020  const/4 v4, 3
+  000022  invoke-virtual v0, Landroidx/lifecycle/i0;->d()Ljava/lang/Object;
+  000028  move-result-object v4
+  00002a  move-object v0, v4
+  00002c  instance-of v0, v0, Ljj/j;
+  000030  const/4 v4, 7
+  000032  if-eqz v0, +020h
+  000036  const/4 v4, 3
+  000038  iget-object v2, v2, Lcom/getmimo/ui/chapter/chapterendview/main/f;->D Lrh/f;
+  00003c  const/4 v4, 2
+  00003e  iget-object v0, v2, Lrh/f;->b Lce/c;
+  000042  const/4 v4, 2
+  000044  invoke-static v0, Lnu/b;->o0(Lce/c;)Z
+  00004a  move-result v4
+  00004c  move v0, v4
+  00004e  if-eqz v0, +012h
+  000052  const/4 v4, 3
+  000054  iget-object v2, v2, Lrh/f;->d Lua0/q;
+  000058  const/4 v4, 6
+  00005a  iget-object v2, v2, Lua0/q;->a Lua0/y;
+  00005e  const/4 v4, 7
+  000060  invoke-interface v2, Lua0/y;->getValue()Ljava/lang/Object;
+  000066  move-result-object v4
+  000068  move-object v2, v4
+  00006a  if-nez v2, +004h
+  00006e  const/4 v4, 1
+  000070  return v1
+  000072  const/4 v4, 3
+  000074  const/4 v4, 0
+  000076  move v2, v4
+  000078  return v2
+  00007a  nop 
+  00007c  <androguard.core.dex.FillArrayData object at 0x7ff3fb043290>
+
+===== Lcom/getmimo/ui/chapter/chapterendview/main/f;->K()Z =====
+dex=classes.dex code_offset=10371840 instructions=29 access=public final callers=6 callees=1
+callers: Lcom/getmimo/ui/chapter/chapterendview/freestreakgoal/b;->l0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/chapter/chapterendview/main/e;->o0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/chapter/chapterendview/streak/ChapterFinishedStreakFragment$onContinueClick$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/iap/resubscribe/ResubscribeProPaywallFragment$closePaywall$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/learningcompanions/LearningCompanionsIntroFragment$onContinue$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Llj/b;->invoke()Ljava/lang/Object;
+callees: Landroidx/lifecycle/i0;->d()Ljava/lang/Object;
+  000000  move-object v1, v4
+  000002  iget-object v1, v1, Lcom/getmimo/ui/chapter/chapterendview/main/f;->F Landroidx/lifecycle/m0;
+  000006  const/4 v3, 6
+  000008  invoke-virtual v1, Landroidx/lifecycle/i0;->d()Ljava/lang/Object;
+  00000e  move-result-object v3
+  000010  move-object v1, v3
+  000012  check-cast v1, Ljj/k;
+  000016  const/4 v3, 3
+  000018  instance-of v0, v1, Ljj/j;
+  00001c  const/4 v3, 4
+  00001e  if-eqz v0, +012h
+  000022  const/4 v3, 4
+  000024  check-cast v1, Ljj/j;
+  000028  const/4 v3, 5
+  00002a  iget-object v1, v1, Ljj/j;->b Lp10/a;
+  00002e  const/4 v3, 6
+  000030  instance-of v1, v1, Lyh/g;
+  000034  const/4 v3, 5
+  000036  if-nez v1, +006h
+  00003a  const/4 v3, 5
+  00003c  const/4 v3, 1
+  00003e  move v1, v3
+  000040  return v1
+  000042  const/4 v3, 7
+  000044  const/4 v3, 0
+  000046  move v1, v3
+  000048  return v1
+  00004a  nop 
+  00004c  <androguard.core.dex.FillArrayData object at 0x7ff3fb043c90>
+
+===== Lcom/getmimo/ui/chapter/chapterendview/main/f;->L()Z =====
+dex=classes.dex code_offset=10371968 instructions=36 access=public final callers=4 callees=2
+callers: Lcom/getmimo/ui/chapter/chapterendview/freestreakgoal/b;->l0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/chapter/chapterendview/main/e;->o0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/chapter/chapterendview/streak/ChapterFinishedStreakFragment$onContinueClick$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/learningcompanions/LearningCompanionsIntroFragment$onContinue$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Ltr/b;->y(Lcom/revenuecat/purchases/EntitlementInfo; I)Z, Lua0/y;->getValue()Ljava/lang/Object;
+  000000  move-object v1, v4
+  000002  iget-object v1, v1, Lcom/getmimo/ui/chapter/chapterendview/main/f;->o Lcom/getmimo/data/source/remote/iap/purchase/a;
+  000006  const/4 v3, 4
+  000008  iget-object v1, v1, Lcom/getmimo/data/source/remote/iap/purchase/a;->g Lua0/q;
+  00000c  const/4 v3, 5
+  00000e  iget-object v1, v1, Lua0/q;->a Lua0/y;
+  000012  const/4 v3, 6
+  000014  invoke-interface v1, Lua0/y;->getValue()Ljava/lang/Object;
+  00001a  move-result-object v3
+  00001c  move-object v1, v3
+  00001e  check-cast v1, Lyg/c;
+  000022  const/4 v3, 4
+  000024  iget-object v1, v1, Lyg/c;->b Lcom/revenuecat/purchases/EntitlementInfo;
+  000028  const/4 v3, 6
+  00002a  const/4 v3, 2
+  00002c  move v0, v3
+  00002e  invoke-static v1, v0, Ltr/b;->y(Lcom/revenuecat/purchases/EntitlementInfo; I)Z
+  000034  move-result v3
+  000036  move v0, v3
+  000038  if-eqz v0, +00fh
+  00003c  const/4 v3, 5
+  00003e  if-eqz v1, +00ch
+  000042  const/4 v3, 1
+  000044  iget-object v1, v1, Lcom/revenuecat/purchases/EntitlementInfo;->z Ljava/util/Date;
+  000048  const/4 v3, 2
+  00004a  if-eqz v1, +006h
+  00004e  const/4 v3, 7
+  000050  const/4 v3, 1
+  000052  move v1, v3
+  000054  return v1
+  000056  const/4 v3, 1
+  000058  const/4 v3, 0
+  00005a  move v1, v3
+  00005c  return v1
+  00005e  nop 
+  000060  <androguard.core.dex.FillArrayData object at 0x7ff3fb0548d0>
+
+===== Lcom/getmimo/ui/chapter/chapterendview/main/f;->M(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10372120 instructions=125 access=public final callers=2 callees=9
+callers: Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedFragment$onViewCreated$1$1$1$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowRatingBottomSheet$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Lcom/getmimo/interactors/streak/b;->a()Lkotlinx/coroutines/flow/h;, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowRatingBottomSheet$1;-><init>(Lcom/getmimo/ui/chapter/chapterendview/main/f; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlinx/coroutines/flow/d;->l(Lua0/e; Ld70/b;)Ljava/lang/Object;, Lle0/a;->d(Ljava/lang/Throwable;)V, Lne/a;->a()I, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object v6, v10
+  000002  instance-of v0, v11, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowRatingBottomSheet$1;
+  000006  const/4 v8, 6
+  000008  if-eqz v0, +019h
+  00000c  const/4 v8, 2
+  00000e  move-object v0, v11
+  000010  check-cast v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowRatingBottomSheet$1;
+  000014  const/4 v8, 4
+  000016  iget v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowRatingBottomSheet$1;->d I
+  00001a  const/4 v8, 2
+  00001c  const/high16 v8, -2147483648
+  000020  move v2, v8
+  000022  and-int v3, v1, v2
+  000026  const/4 v9, 6
+  000028  if-eqz v3, +009h
+  00002c  const/4 v9, 6
+  00002e  sub-int/2addr v1, v2
+  000030  const/4 v8, 6
+  000032  iput v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowRatingBottomSheet$1;->d I
+  000036  const/4 v8, 6
+  000038  goto +9h
+  00003a  const/4 v9, 4
+  00003c  new-instance v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowRatingBottomSheet$1;
+  000040  const/4 v9, 6
+  000042  invoke-direct v0, v6, v11, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowRatingBottomSheet$1;-><init>(Lcom/getmimo/ui/chapter/chapterendview/main/f; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000048  const/4 v9, 6
+  00004a  iget-object v11, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowRatingBottomSheet$1;->b Ljava/lang/Object;
+  00004e  const/4 v9, 1
+  000050  sget-object v1, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000054  const/4 v8, 1
+  000056  iget v2, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowRatingBottomSheet$1;->d I
+  00005a  const/4 v9, 1
+  00005c  const/4 v8, 0
+  00005e  move v3, v8
+  000060  const/4 v9, 1
+  000062  move v4, v9
+  000064  if-eqz v2, +01bh
+  000068  const/4 v9, 3
+  00006a  if-ne v2, v4, +00dh
+  00006e  const/4 v9, 1
+  000070  iget-object v6, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowRatingBottomSheet$1;->a Lwu/f;
+  000074  const/4 v8, 7
+  000076  const/4 v8, 1
+  000078  invoke-static v11, Lkotlin/b;->b(Ljava/lang/Object;)V
+  00007e  goto +32h
+  000080  move-exception v6
+  000082  goto +5eh
+  000084  const/4 v9, 3
+  000086  const-string v8, "call to 'resume' before 'invoke' with coroutine"
+  00008a  move-object v6, v8
+  00008c  invoke-static v6, Lwc/f;->i(Ljava/lang/String;)V
+  000092  const/4 v8, 3
+  000094  const/4 v8, 0
+  000096  move v6, v8
+  000098  return-object v6
+  00009a  const/4 v9, 4
+  00009c  invoke-static v11, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000a2  const/4 v8, 3
+  0000a4  const/4 v9, 3
+  0000a6  iget-object v11, v6, Lcom/getmimo/ui/chapter/chapterendview/main/f;->m Lwu/f;
+  0000aa  const/4 v8, 7
+  0000ac  iget-object v6, v6, Lcom/getmimo/ui/chapter/chapterendview/main/f;->n Lcom/getmimo/interactors/streak/b;
+  0000b0  const/4 v9, 5
+  0000b2  invoke-virtual v6, Lcom/getmimo/interactors/streak/b;->a()Lkotlinx/coroutines/flow/h;
+  0000b8  move-result-object v9
+  0000ba  move-object v6, v9
+  0000bc  iput-object v11, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowRatingBottomSheet$1;->a Lwu/f;
+  0000c0  const/4 v9, 5
+  0000c2  iput v4, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowRatingBottomSheet$1;->d I
+  0000c6  const/4 v8, 5
+  0000c8  invoke-static v6, v0, Lkotlinx/coroutines/flow/d;->l(Lua0/e; Ld70/b;)Ljava/lang/Object;
+  0000ce  move-result-object v9
+  0000d0  move-object v6, v9
+  0000d2  if-ne v6, v1, +004h
+  0000d6  const/4 v9, 4
+  0000d8  return-object v1
+  0000da  const/4 v9, 4
+  0000dc  move-object v5, v11
+  0000de  move-object v11, v6
+  0000e0  move-object v6, v5
+  0000e2  check-cast v11, Loh/h;
+  0000e6  const/4 v9, 3
+  0000e8  iget-object v11, v11, Loh/h;->a Lsh/i;
+  0000ec  const/4 v9, 2
+  0000ee  iget v11, v11, Lsh/i;->a I
+  0000f2  const/4 v8, 3
+  0000f4  iget-object v6, v6, Lwu/f;->a Ljava/lang/Object;
+  0000f8  const/4 v9, 1
+  0000fa  check-cast v6, Lne/a;
+  0000fe  const/4 v9, 2
+  000100  invoke-virtual v6, Lne/a;->a()I
+  000106  move-result v9
+  000108  move v6, v9
+  00010a  if-gt v6, v4, +004h
+  00010e  const/4 v9, 5
+  000110  goto +1fh
+  000112  const/4 v8, 5
+  000114  const/4 v9, 4
+  000116  move v0, v9
+  000118  if-ne v6, v0, +005h
+  00011c  const/4 v8, 4
+  00011e  move v3, v4
+  000120  goto +17h
+  000122  const/4 v8, 1
+  000124  const/4 v8, 5
+  000126  move v0, v8
+  000128  if-ne v11, v0, +004h
+  00012c  const/4 v8, 2
+  00012e  goto -8h
+  000130  const/4 v8, 2
+  000132  rem-int/lit8 v6, v6, 15
+  000136  if-nez v6, +00bh
+  00013a  const/4 v8, 3
+  00013c  goto -fh
+  00013e  sget-object v11, Lle0/b;->a Lle0/a;
+  000142  const/4 v9, 3
+  000144  invoke-virtual v11, v6, Lle0/a;->d(Ljava/lang/Throwable;)V
+  00014a  const/4 v9, 3
+  00014c  const/4 v8, 3
+  00014e  invoke-static v3, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+  000154  move-result-object v8
+  000156  move-object v6, v8
+  000158  return-object v6
+  00015a  nop 
+  00015c  <androguard.core.dex.FillArrayData object at 0x7ff3fb056e90>
+
+===== Lcom/getmimo/ui/chapter/chapterendview/main/f;->N(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10372536 instructions=298 access=public final callers=6 callees=36
+callers: Lcom/getmimo/ui/chapter/chapterendview/freestreakgoal/b;->l0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowStreakChallengeScreen$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/chapter/chapterendview/main/e;->o0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/chapter/chapterendview/streak/ChapterFinishedStreakFragment$onContinueClick$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/iap/resubscribe/ResubscribeProPaywallFragment$closePaywall$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/learningcompanions/LearningCompanionsIntroFragment$onContinue$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Landroidx/lifecycle/i0;->d()Ljava/lang/Object;, Lcom/getmimo/core/model/coins/Coins;->getCoins()I, Lcom/getmimo/data/content/model/track/Chapter;->getId()J, Lcom/getmimo/data/model/store/ProductTypeKt;->getAllStreakChallenges()Ljava/util/Set;, Lcom/getmimo/data/model/store/Products;->getProductsAvailableForPurchase()Ljava/util/List;, Lcom/getmimo/data/model/store/Products;->getPurchasedProducts()Ljava/util/List;, Lcom/getmimo/data/model/store/PurchasedProduct;->getProductType()Lcom/getmimo/data/model/store/ProductType;, Lcom/getmimo/data/model/store/StoreProduct;->getCoinPrice()I, Lcom/getmimo/data/model/store/StoreProduct;->getCoinPrice()I, Lcom/getmimo/data/model/store/StoreProduct;->getProductType()Lcom/getmimo/data/model/store/ProductType;, Lcom/getmimo/data/source/remote/coins/a;->a()Lua0/r;, Lcom/getmimo/data/source/remote/store/a;->b()Lci/b;, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowStreakChallengeScreen$1;-><init>(Lcom/getmimo/ui/chapter/chapterendview/main/f; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/util/Collection;->isEmpty()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Set;->contains(Ljava/lang/Object;)Z, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V, Lkotlinx/coroutines/flow/d;->l(Lua0/e; Ld70/b;)Ljava/lang/Object;, Lkotlinx/coroutines/flow/d;->p(Lci/b; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lle0/a;->e(Ljava/lang/Throwable; Ljava/lang/String; [Ljava/lang/Object;)V, Llj/a;-><init>(J I I)V, Lop/b;->b(Ljava/lang/Object; Lv70/y;)Lorg/joda/time/DateTime;, Lorg/joda/time/DateTime;-><init>()V, Lorg/joda/time/DateTime;->p(I)Lorg/joda/time/DateTime;, Lorg/joda/time/DateTime;->x()Lorg/joda/time/DateTime;, Lorg/joda/time/base/BaseDateTime;->d()J, Lorg/joda/time/base/BaseDateTime;->d()J, Lwc/f;->i(Ljava/lang/String;)V
+  000000  instance-of v0, v15, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowStreakChallengeScreen$1;
+  000004  const/4 v13, 4
+  000006  if-eqz v0, +019h
+  00000a  const/4 v13, 6
+  00000c  move-object v0, v15
+  00000e  check-cast v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowStreakChallengeScreen$1;
+  000012  const/4 v13, 5
+  000014  iget v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowStreakChallengeScreen$1;->d I
+  000018  const/4 v13, 6
+  00001a  const/high16 v13, -2147483648
+  00001e  move v2, v13
+  000020  and-int v3, v1, v2
+  000024  const/4 v13, 4
+  000026  if-eqz v3, +009h
+  00002a  const/4 v13, 1
+  00002c  sub-int/2addr v1, v2
+  00002e  const/4 v13, 7
+  000030  iput v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowStreakChallengeScreen$1;->d I
+  000034  const/4 v13, 6
+  000036  goto +9h
+  000038  const/4 v13, 5
+  00003a  new-instance v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowStreakChallengeScreen$1;
+  00003e  const/4 v13, 5
+  000040  invoke-direct v0, v14, v15, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowStreakChallengeScreen$1;-><init>(Lcom/getmimo/ui/chapter/chapterendview/main/f; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000046  const/4 v13, 1
+  000048  iget-object v15, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowStreakChallengeScreen$1;->b Ljava/lang/Object;
+  00004c  const/4 v13, 1
+  00004e  sget-object v1, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000052  const/4 v13, 1
+  000054  iget v2, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowStreakChallengeScreen$1;->d I
+  000058  const/4 v13, 2
+  00005a  const/4 v13, 2
+  00005c  move v3, v13
+  00005e  const/4 v13, 1
+  000060  move v4, v13
+  000062  const/4 v13, 0
+  000064  move v5, v13
+  000066  if-eqz v2, +022h
+  00006a  const/4 v13, 2
+  00006c  if-eq v2, v4, +018h
+  000070  const/4 v13, 4
+  000072  if-ne v2, v3, +00ch
+  000076  const/4 v13, 6
+  000078  iget-object v0, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowStreakChallengeScreen$1;->a Lcom/getmimo/data/model/store/Products;
+  00007c  const/4 v13, 6
+  00007e  invoke-static v15, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000084  const/4 v13, 3
+  000086  goto/16 +0f3h
+  00008a  const/4 v13, 7
+  00008c  const-string v13, "call to 'resume' before 'invoke' with coroutine"
+  000090  move-object v14, v13
+  000092  invoke-static v14, Lwc/f;->i(Ljava/lang/String;)V
+  000098  const/4 v13, 2
+  00009a  return-object v5
+  00009c  const/4 v13, 2
+  00009e  const/4 v13, 4
+  0000a0  invoke-static v15, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000a6  goto/16 +087h
+  0000aa  const/4 v13, 2
+  0000ac  invoke-static v15, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000b2  const/4 v13, 3
+  0000b4  iget-object v15, v14, Lcom/getmimo/ui/chapter/chapterendview/main/f;->F Landroidx/lifecycle/m0;
+  0000b8  const/4 v13, 1
+  0000ba  invoke-virtual v15, Landroidx/lifecycle/i0;->d()Ljava/lang/Object;
+  0000c0  move-result-object v13
+  0000c2  move-object v15, v13
+  0000c4  check-cast v15, Ljj/k;
+  0000c8  const/4 v13, 1
+  0000ca  instance-of v2, v15, Ljj/j;
+  0000ce  const/4 v13, 5
+  0000d0  if-nez v2, +007h
+  0000d4  const/4 v13, 4
+  0000d6  sget-object v14, Ljava/lang/Boolean;->FALSE Ljava/lang/Boolean;
+  0000da  const/4 v13, 4
+  0000dc  return-object v14
+  0000de  const/4 v13, 1
+  0000e0  new-instance v2, Lorg/joda/time/DateTime;
+  0000e4  const/4 v13, 7
+  0000e6  invoke-direct v2, Lorg/joda/time/DateTime;-><init>()V
+  0000ec  const/4 v13, 2
+  0000ee  const/4 v13, 3
+  0000f0  move v6, v13
+  0000f2  invoke-virtual v2, v6, Lorg/joda/time/DateTime;->p(I)Lorg/joda/time/DateTime;
+  0000f8  move-result-object v13
+  0000fa  move-object v2, v13
+  0000fc  invoke-virtual v2, Lorg/joda/time/DateTime;->x()Lorg/joda/time/DateTime;
+  000102  move-result-object v13
+  000104  move-object v2, v13
+  000106  iget-object v7, v14, Lcom/getmimo/ui/chapter/chapterendview/main/f;->u Lnp/h;
+  00010a  const/4 v13, 5
+  00010c  iget-object v8, v7, Lnp/h;->d Lop/b;
+  000110  const/4 v13, 1
+  000112  sget-object v9, Lnp/h;->f [Lv70/y;
+  000116  const/4 v13, 3
+  000118  aget-object v9, v9, v4
+  00011c  const/4 v13, 2
+  00011e  invoke-virtual v8, v7, v9, Lop/b;->b(Ljava/lang/Object; Lv70/y;)Lorg/joda/time/DateTime;
+  000124  move-result-object v13
+  000126  move-object v7, v13
+  000128  if-eqz v7, +018h
+  00012c  const/4 v13, 5
+  00012e  sget-object v8, Lkd0/b;->a Ljava/util/concurrent/atomic/AtomicReference;
+  000132  const/4 v13, 5
+  000134  invoke-virtual v2, Lorg/joda/time/base/BaseDateTime;->d()J
+  00013a  move-result-wide v8
+  00013c  invoke-virtual v7, Lorg/joda/time/base/BaseDateTime;->d()J
+  000142  move-result-wide v10
+  000144  cmp-long v2, v10, v8
+  000148  const/4 v13, 6
+  00014a  if-lez v2, +007h
+  00014e  const/4 v13, 4
+  000150  sget-object v14, Ljava/lang/Boolean;->FALSE Ljava/lang/Boolean;
+  000154  const/4 v13, 7
+  000156  return-object v14
+  000158  const/4 v13, 5
+  00015a  check-cast v15, Ljj/j;
+  00015e  const/4 v13, 5
+  000160  iget-object v15, v15, Ljj/j;->c Loh/h;
+  000164  const/4 v13, 3
+  000166  iget-object v15, v15, Loh/h;->a Lsh/i;
+  00016a  const/4 v13, 5
+  00016c  iget v15, v15, Lsh/i;->a I
+  000170  const/4 v13, 1
+  000172  if-ge v15, v6, +007h
+  000176  const/4 v13, 1
+  000178  sget-object v14, Ljava/lang/Boolean;->FALSE Ljava/lang/Boolean;
+  00017c  const/4 v13, 5
+  00017e  return-object v14
+  000180  const/4 v13, 6
+  000182  const/4 v13, 5
+  000184  iget-object v15, v14, Lcom/getmimo/ui/chapter/chapterendview/main/f;->s Lnh/d;
+  000188  const/4 v13, 6
+  00018a  check-cast v15, Lcom/getmimo/data/source/remote/store/a;
+  00018e  const/4 v13, 4
+  000190  invoke-virtual v15, Lcom/getmimo/data/source/remote/store/a;->b()Lci/b;
+  000196  move-result-object v13
+  000198  move-object v15, v13
+  00019a  iput v4, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowStreakChallengeScreen$1;->d I
+  00019e  const/4 v13, 6
+  0001a0  invoke-static v15, v0, Lkotlinx/coroutines/flow/d;->p(Lci/b; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  0001a6  move-result-object v13
+  0001a8  move-object v15, v13
+  0001aa  if-ne v15, v1, +004h
+  0001ae  const/4 v13, 7
+  0001b0  goto +59h
+  0001b2  const/4 v13, 3
+  0001b4  check-cast v15, Lcom/getmimo/data/model/store/Products;
+  0001b8  invoke-virtual v15, Lcom/getmimo/data/model/store/Products;->getPurchasedProducts()Ljava/util/List;
+  0001be  move-result-object v13
+  0001c0  move-object v2, v13
+  0001c2  if-eqz v2, +00ch
+  0001c6  const/4 v13, 7
+  0001c8  invoke-interface v2, Ljava/util/Collection;->isEmpty()Z
+  0001ce  move-result v13
+  0001d0  move v4, v13
+  0001d2  if-eqz v4, +004h
+  0001d6  const/4 v13, 5
+  0001d8  goto +2fh
+  0001da  const/4 v13, 6
+  0001dc  invoke-interface v2, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  0001e2  move-result-object v13
+  0001e4  move-object v2, v13
+  0001e6  const/4 v13, 7
+  0001e8  invoke-interface v2, Ljava/util/Iterator;->hasNext()Z
+  0001ee  move-result v13
+  0001f0  move v4, v13
+  0001f2  if-eqz v4, +021h
+  0001f6  const/4 v13, 7
+  0001f8  invoke-interface v2, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0001fe  move-result-object v13
+  000200  move-object v4, v13
+  000202  check-cast v4, Lcom/getmimo/data/model/store/PurchasedProduct;
+  000206  const/4 v13, 6
+  000208  invoke-static Lcom/getmimo/data/model/store/ProductTypeKt;->getAllStreakChallenges()Ljava/util/Set;
+  00020e  move-result-object v13
+  000210  move-object v6, v13
+  000212  invoke-virtual v4, Lcom/getmimo/data/model/store/PurchasedProduct;->getProductType()Lcom/getmimo/data/model/store/ProductType;
+  000218  move-result-object v13
+  00021a  move-object v4, v13
+  00021c  invoke-interface v6, v4, Ljava/util/Set;->contains(Ljava/lang/Object;)Z
+  000222  move-result v13
+  000224  move v4, v13
+  000226  if-eqz v4, -020h
+  00022a  const/4 v13, 4
+  00022c  sget-object v14, Ljava/lang/Boolean;->FALSE Ljava/lang/Boolean;
+  000230  const/4 v13, 2
+  000232  return-object v14
+  000234  const/4 v13, 6
+  000236  iget-object v2, v14, Lcom/getmimo/ui/chapter/chapterendview/main/f;->t Lcom/getmimo/data/source/remote/coins/a;
+  00023a  const/4 v13, 6
+  00023c  invoke-virtual v2, Lcom/getmimo/data/source/remote/coins/a;->a()Lua0/r;
+  000242  move-result-object v13
+  000244  move-object v2, v13
+  000246  iput-object v15, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowStreakChallengeScreen$1;->a Lcom/getmimo/data/model/store/Products;
+  00024a  const/4 v13, 6
+  00024c  iput v3, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$shouldShowStreakChallengeScreen$1;->d I
+  000250  const/4 v13, 6
+  000252  invoke-static v2, v0, Lkotlinx/coroutines/flow/d;->l(Lua0/e; Ld70/b;)Ljava/lang/Object;
+  000258  move-result-object v13
+  00025a  move-object v0, v13
+  00025c  if-ne v0, v1, +004h
+  000260  const/4 v13, 4
+  000262  return-object v1
+  000264  const/4 v13, 4
+  000266  move-object v12, v0
+  000268  move-object v0, v15
+  00026a  move-object v15, v12
+  00026c  check-cast v15, Lcom/getmimo/core/model/coins/Coins;
+  000270  const/4 v13, 4
+  000272  invoke-virtual v15, Lcom/getmimo/core/model/coins/Coins;->getCoins()I
+  000278  move-result v13
+  00027a  move v15, v13
+  00027c  invoke-virtual v0, Lcom/getmimo/data/model/store/Products;->getProductsAvailableForPurchase()Ljava/util/List;
+  000282  move-result-object v13
+  000284  move-object v0, v13
+  000286  invoke-interface v0, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  00028c  move-result-object v13
+  00028e  move-object v0, v13
+  000290  const/4 v13, 2
+  000292  invoke-interface v0, Ljava/util/Iterator;->hasNext()Z
+  000298  move-result v13
+  00029a  move v1, v13
+  00029c  if-eqz v1, +018h
+  0002a0  const/4 v13, 3
+  0002a2  invoke-interface v0, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0002a8  move-result-object v13
+  0002aa  move-object v1, v13
+  0002ac  move-object v2, v1
+  0002ae  check-cast v2, Lcom/getmimo/data/model/store/StoreProduct;
+  0002b2  const/4 v13, 4
+  0002b4  invoke-virtual v2, Lcom/getmimo/data/model/store/StoreProduct;->getProductType()Lcom/getmimo/data/model/store/ProductType;
+  0002ba  move-result-object v13
+  0002bc  move-object v2, v13
+  0002be  sget-object v3, Lcom/getmimo/data/model/store/ProductType;->STREAK_CHALLENGE Lcom/getmimo/data/model/store/ProductType;
+  0002c2  const/4 v13, 2
+  0002c4  if-ne v2, v3, -01ah
+  0002c8  const/4 v13, 3
+  0002ca  goto +3h
+  0002cc  const/4 v13, 6
+  0002ce  move-object v1, v5
+  0002d0  check-cast v1, Lcom/getmimo/data/model/store/StoreProduct;
+  0002d4  const/4 v13, 7
+  0002d6  if-eqz v1, +037h
+  0002da  const/4 v13, 6
+  0002dc  invoke-virtual v1, Lcom/getmimo/data/model/store/StoreProduct;->getCoinPrice()I
+  0002e2  move-result v13
+  0002e4  move v0, v13
+  0002e6  if-ge v15, v0, +004h
+  0002ea  const/4 v13, 2
+  0002ec  goto +2dh
+  0002ee  const/4 v13, 3
+  0002f0  new-instance v0, Llj/a;
+  0002f4  const/4 v13, 7
+  0002f6  iget-object v2, v14, Lcom/getmimo/ui/chapter/chapterendview/main/f;->H Lcom/getmimo/ui/chapter/ChapterBundle;
+  0002fa  const/4 v13, 2
+  0002fc  if-eqz v2, +01ah
+  000300  const/4 v13, 1
+  000302  iget-object v2, v2, Lcom/getmimo/ui/chapter/ChapterBundle;->a Lcom/getmimo/data/content/model/track/Chapter;
+  000306  const/4 v13, 2
+  000308  invoke-virtual v2, Lcom/getmimo/data/content/model/track/Chapter;->getId()J
+  00030e  move-result-wide v2
+  000310  invoke-virtual v1, Lcom/getmimo/data/model/store/StoreProduct;->getCoinPrice()I
+  000316  move-result v13
+  000318  move v1, v13
+  00031a  invoke-direct v0, v2, v3, v1, v15, Llj/a;-><init>(J I I)V
+  000320  const/4 v13, 6
+  000322  iput-object v0, v14, Lcom/getmimo/ui/chapter/chapterendview/main/f;->O Llj/a;
+  000326  const/4 v13, 1
+  000328  sget-object v14, Ljava/lang/Boolean;->TRUE Ljava/lang/Boolean;
+  00032c  const/4 v13, 1
+  00032e  return-object v14
+  000330  const/4 v13, 2
+  000332  const-string v13, "chapterBundle"
+  000336  move-object v14, v13
+  000338  invoke-static v14, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V
+  00033e  const/4 v13, 4
+  000340  throw v5
+  000342  const/4 v13, 3
+  000344  const/4 v13, 7
+  000346  sget-object v14, Ljava/lang/Boolean;->FALSE Ljava/lang/Boolean;
+  00034a  const/4 v13, 5
+  00034c  return-object v14
+  00034e  move-exception v14
+  000350  sget-object v15, Lle0/b;->a Lle0/a;
+  000354  const/4 v13, 6
+  000356  const/4 v13, 0
+  000358  move v0, v13
+  00035a  new-array v0, v0, [Ljava/lang/Object;
+  00035e  const/4 v13, 1
+  000360  const-string v13, "Skipping streak challenge offer because products could not be refreshed"
+  000364  move-object v1, v13
+  000366  invoke-virtual v15, v14, v1, v0, Lle0/a;->e(Ljava/lang/Throwable; Ljava/lang/String; [Ljava/lang/Object;)V
+  00036c  const/4 v13, 6
+  00036e  sget-object v14, Ljava/lang/Boolean;->FALSE Ljava/lang/Boolean;
+  000372  const/4 v13, 7
+  000374  return-object v14
+  000376  nop 
+  000378  <androguard.core.dex.FillArrayData object at 0x7ff3fb068210>
+
+===== Lcom/getmimo/ui/chapter/chapterendview/main/f;->O()Z =====
+dex=classes.dex code_offset=10373532 instructions=48 access=public final callers=3 callees=2
+callers: Lcom/getmimo/ui/chapter/chapterendview/freestreakgoal/b;->l0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/chapter/chapterendview/main/e;->o0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/learningcompanions/LearningCompanionsIntroFragment$onContinue$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Landroidx/lifecycle/i0;->d()Ljava/lang/Object;, Lsk/a;->a()Lbf/a;
+  000000  move-object v2, v6
+  000002  iget-object v0, v2, Lcom/getmimo/ui/chapter/chapterendview/main/f;->F Landroidx/lifecycle/m0;
+  000006  const/4 v5, 6
+  000008  invoke-virtual v0, Landroidx/lifecycle/i0;->d()Ljava/lang/Object;
+  00000e  move-result-object v4
+  000010  move-object v0, v4
+  000012  check-cast v0, Ljj/k;
+  000016  const/4 v4, 6
+  000018  instance-of v1, v0, Ljj/j;
+  00001c  const/4 v5, 6
+  00001e  if-eqz v1, +02eh
+  000022  const/4 v5, 2
+  000024  check-cast v0, Ljj/j;
+  000028  const/4 v5, 4
+  00002a  iget-object v1, v0, Ljj/j;->c Loh/h;
+  00002e  const/4 v4, 3
+  000030  iget-object v1, v1, Loh/h;->a Lsh/i;
+  000034  const/4 v4, 4
+  000036  iget-object v1, v1, Lsh/i;->d Lsh/b;
+  00003a  const/4 v5, 2
+  00003c  iget-boolean v1, v1, Lsh/b;->c Z
+  000040  const/4 v5, 7
+  000042  if-eqz v1, +009h
+  000046  const/4 v5, 5
+  000048  iget-boolean v0, v0, Ljj/j;->f Z
+  00004c  const/4 v5, 3
+  00004e  if-eqz v0, +012h
+  000052  const/4 v5, 5
+  000054  const/4 v4, 1
+  000056  iget-object v2, v2, Lcom/getmimo/ui/chapter/chapterendview/main/f;->p Lze/a;
+  00005a  const/4 v5, 4
+  00005c  check-cast v2, Lsk/a;
+  000060  const/4 v4, 2
+  000062  invoke-virtual v2, Lsk/a;->a()Lbf/a;
+  000068  move-result-object v5
+  00006a  move-object v2, v5
+  00006c  if-eqz v2, +007h
+  000070  const/4 v4, 6
+  000072  const/4 v4, 6
+  000074  const/4 v5, 1
+  000076  move v2, v5
+  000078  return v2
+  00007a  const/4 v4, 3
+  00007c  const/4 v4, 0
+  00007e  move v2, v4
+  000080  return v2
+  000082  nop 
+  000084  <androguard.core.dex.FillArrayData object at 0x7ff3fb0691d0>
+
+===== Lcom/getmimo/ui/chapter/chapterendview/main/f;->P(Landroid/content/Context;)Z =====
+dex=classes.dex code_offset=10373708 instructions=98 access=public final callers=7 callees=19
+callers: Lcom/getmimo/ui/chapter/chapterendview/freestreakgoal/b;->l0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/chapter/chapterendview/leaderboard/a;->r0(Z)V, Lcom/getmimo/ui/chapter/chapterendview/main/e;->o0(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/chapter/chapterendview/streak/ChapterFinishedStreakFragment$onContinueClick$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/iap/resubscribe/ResubscribeProPaywallFragment$closePaywall$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/learningcompanions/LearningCompanionsIntroFragment$onContinue$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Llj/b;->invoke()Ljava/lang/Object;
+callees: La70/n;->B0([I)Ljava/util/List;, La70/r;->i0(Ljava/lang/Iterable; I)I, La70/v;->m0(Ljava/lang/Iterable; Ljava/util/Collection;)V, Landroid/appwidget/AppWidgetManager;->getAppWidgetIds(Landroid/content/ComponentName;)[I, Landroid/appwidget/AppWidgetManager;->getInstance(Landroid/content/Context;)Landroid/appwidget/AppWidgetManager;, Landroid/content/ComponentName;-><init>(Landroid/content/Context; Ljava/lang/Class;)V, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String; I)I, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/util/ArrayList;-><init>()V, Ljava/util/ArrayList;-><init>(I)V, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/ArrayList;->isEmpty()Z, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Lne/a;->a()I
+  000000  move-object v5, v9
+  000002  invoke-static v10, Landroid/appwidget/AppWidgetManager;->getInstance(Landroid/content/Context;)Landroid/appwidget/AppWidgetManager;
+  000008  move-result-object v8
+  00000a  move-object v0, v8
+  00000c  new-instance v1, Ljava/util/ArrayList;
+  000010  const/4 v7, 7
+  000012  const/16 v7, 10
+  000016  move v2, v7
+  000018  sget-object v3, Lcom/getmimo/ui/chapter/chapterendview/main/f;->P Ljava/util/List;
+  00001c  const/4 v8, 3
+  00001e  invoke-static v3, v2, La70/r;->i0(Ljava/lang/Iterable; I)I
+  000024  move-result v7
+  000026  move v2, v7
+  000028  invoke-direct v1, v2, Ljava/util/ArrayList;-><init>(I)V
+  00002e  const/4 v8, 7
+  000030  invoke-interface v3, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  000036  move-result-object v8
+  000038  move-object v2, v8
+  00003a  invoke-interface v2, Ljava/util/Iterator;->hasNext()Z
+  000040  move-result v8
+  000042  move v3, v8
+  000044  if-eqz v3, +016h
+  000048  const/4 v8, 2
+  00004a  invoke-interface v2, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  000050  move-result-object v7
+  000052  move-object v3, v7
+  000054  check-cast v3, Ljava/lang/Class;
+  000058  const/4 v8, 5
+  00005a  new-instance v4, Landroid/content/ComponentName;
+  00005e  const/4 v8, 6
+  000060  invoke-direct v4, v10, v3, Landroid/content/ComponentName;-><init>(Landroid/content/Context; Ljava/lang/Class;)V
+  000066  const/4 v8, 3
+  000068  invoke-virtual v1, v4, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  00006e  goto -1ah
+  000070  const/4 v8, 4
+  000072  new-instance v10, Ljava/util/ArrayList;
+  000076  const/4 v7, 2
+  000078  invoke-direct v10, Ljava/util/ArrayList;-><init>()V
+  00007e  const/4 v8, 3
+  000080  invoke-virtual v1, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;
+  000086  move-result-object v7
+  000088  move-object v1, v7
+  00008a  invoke-interface v1, Ljava/util/Iterator;->hasNext()Z
+  000090  move-result v7
+  000092  move v2, v7
+  000094  if-eqz v2, +01dh
+  000098  const/4 v8, 7
+  00009a  invoke-interface v1, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0000a0  move-result-object v7
+  0000a2  move-object v2, v7
+  0000a4  check-cast v2, Landroid/content/ComponentName;
+  0000a8  const/4 v7, 1
+  0000aa  invoke-virtual v0, v2, Landroid/appwidget/AppWidgetManager;->getAppWidgetIds(Landroid/content/ComponentName;)[I
+  0000b0  move-result-object v7
+  0000b2  move-object v2, v7
+  0000b4  invoke-virtual v2, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  0000ba  invoke-static v2, La70/n;->B0([I)Ljava/util/List;
+  0000c0  move-result-object v8
+  0000c2  move-object v2, v8
+  0000c4  invoke-static v2, v10, La70/v;->m0(Ljava/lang/Iterable; Ljava/util/Collection;)V
+  0000ca  const/4 v8, 3
+  0000cc  goto -21h
+  0000ce  const/4 v7, 6
+  0000d0  invoke-virtual v10, Ljava/util/ArrayList;->isEmpty()Z
+  0000d6  move-result v7
+  0000d8  move v10, v7
+  0000da  if-nez v10, +004h
+  0000de  const/4 v7, 6
+  0000e0  goto +25h
+  0000e2  const/4 v8, 5
+  0000e4  iget-object v10, v5, Lcom/getmimo/ui/chapter/chapterendview/main/f;->y Lne/a;
+  0000e8  const/4 v8, 1
+  0000ea  invoke-virtual v10, Lne/a;->a()I
+  0000f0  move-result v7
+  0000f2  move v10, v7
+  0000f4  iget-object v5, v5, Lcom/getmimo/ui/chapter/chapterendview/main/f;->u Lnp/h;
+  0000f8  const/4 v7, 4
+  0000fa  iget-object v5, v5, Lnp/h;->b Landroid/content/SharedPreferences;
+  0000fe  const/4 v7, 6
+  000100  const-string v8, "last_seen_widget_intro_chapter"
+  000104  move-object v0, v8
+  000106  const/16 v7, -100
+  00010a  move v1, v7
+  00010c  invoke-interface v5, v0, v1, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String; I)I
+  000112  move-result v7
+  000114  move v5, v7
+  000116  add-int/lit8 v5, v5, 30
+  00011a  const/4 v8, 3
+  00011c  if-lt v10, v5, +006h
+  000120  const/4 v8, 7
+  000122  const/4 v7, 1
+  000124  move v5, v7
+  000126  return v5
+  000128  const/4 v8, 5
+  00012a  const/4 v7, 0
+  00012c  move v5, v7
+  00012e  return v5
+  000130  <androguard.core.dex.FillArrayData object at 0x7ff3fb06ad10>
+
+===== Lcom/getmimo/ui/chapter/chapterendview/main/f;->Q(Z)V =====
+dex=classes.dex code_offset=10374056 instructions=16 access=public final callers=2 callees=3
+callers: Lcom/getmimo/ui/chapter/chapterendview/leaderboard/a;->r0(Z)V, Lij/c;->invoke()Ljava/lang/Object;
+callees: Landroidx/lifecycle/m;->k(Landroidx/lifecycle/f1;)Le7/a;, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$showSignupPrompt$1;-><init>(Lcom/getmimo/ui/chapter/chapterendview/main/f; Z Ld70/b;)V, Lra0/z;->p(Lra0/y; Ld70/f; Lkotlinx/coroutines/CoroutineStart; Lo70/m; I)Lra0/q1;
+  000000  move-object v3, v7
+  000002  invoke-static v3, Landroidx/lifecycle/m;->k(Landroidx/lifecycle/f1;)Le7/a;
+  000008  move-result-object v6
+  00000a  move-object v0, v6
+  00000c  new-instance v1, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$showSignupPrompt$1;
+  000010  const/4 v6, 5
+  000012  const/4 v5, 0
+  000014  move v2, v5
+  000016  invoke-direct v1, v3, v8, v2, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$showSignupPrompt$1;-><init>(Lcom/getmimo/ui/chapter/chapterendview/main/f; Z Ld70/b;)V
+  00001c  const/4 v6, 5
+  00001e  const/4 v6, 3
+  000020  move v3, v6
+  000022  invoke-static v0, v2, v2, v1, v3, Lra0/z;->p(Lra0/y; Ld70/f; Lkotlinx/coroutines/CoroutineStart; Lo70/m; I)Lra0/q1;
+  000028  return-void 
+  00002a  nop 
+  00002c  <androguard.core.dex.FillArrayData object at 0x7ff3fb06b2d0>
+
+===== Lcom/getmimo/ui/chapter/chapterendview/main/f;->R(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10374136 instructions=128 access=public final callers=3 callees=11
+callers: Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleChapterAlreadyCompletedState$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$handleOfflineState$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$storeAndPostAllLessonProgress$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Lcom/getmimo/data/source/local/completion/a;->e(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->storeAndPostAllLessonProgress(Ld70/b;)Ljava/lang/Object;, Lcom/getmimo/interactors/chapter/f;->a(Lcom/getmimo/ui/chapter/ChapterBundle; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$storeAndPostAllLessonProgress$1;-><init>(Lcom/getmimo/ui/chapter/chapterendview/main/f; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object v8, v11
+  000002  instance-of v0, v12, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$storeAndPostAllLessonProgress$1;
+  000006  const/4 v10, 2
+  000008  if-eqz v0, +019h
+  00000c  const/4 v10, 3
+  00000e  move-object v0, v12
+  000010  check-cast v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$storeAndPostAllLessonProgress$1;
+  000014  const/4 v10, 5
+  000016  iget v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$storeAndPostAllLessonProgress$1;->c I
+  00001a  const/4 v10, 7
+  00001c  const/high16 v10, -2147483648
+  000020  move v2, v10
+  000022  and-int v3, v1, v2
+  000026  const/4 v10, 1
+  000028  if-eqz v3, +009h
+  00002c  const/4 v10, 6
+  00002e  sub-int/2addr v1, v2
+  000030  const/4 v10, 3
+  000032  iput v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$storeAndPostAllLessonProgress$1;->c I
+  000036  const/4 v10, 3
+  000038  goto +9h
+  00003a  const/4 v10, 5
+  00003c  new-instance v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$storeAndPostAllLessonProgress$1;
+  000040  const/4 v10, 2
+  000042  invoke-direct v0, v8, v12, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$storeAndPostAllLessonProgress$1;-><init>(Lcom/getmimo/ui/chapter/chapterendview/main/f; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000048  const/4 v10, 6
+  00004a  iget-object v12, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$storeAndPostAllLessonProgress$1;->a Ljava/lang/Object;
+  00004e  const/4 v10, 5
+  000050  sget-object v1, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000054  const/4 v10, 2
+  000056  iget v2, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$storeAndPostAllLessonProgress$1;->c I
+  00005a  const/4 v10, 1
+  00005c  const/4 v10, 0
+  00005e  move v3, v10
+  000060  const-string v10, "chapterBundle"
+  000064  move-object v4, v10
+  000066  const/4 v10, 3
+  000068  move v5, v10
+  00006a  const/4 v10, 2
+  00006c  move v6, v10
+  00006e  const/4 v10, 1
+  000070  move v7, v10
+  000072  if-eqz v2, +026h
+  000076  const/4 v10, 6
+  000078  if-eq v2, v7, +01dh
+  00007c  const/4 v10, 3
+  00007e  if-eq v2, v6, +014h
+  000082  const/4 v10, 2
+  000084  if-ne v2, v5, +008h
+  000088  const/4 v10, 3
+  00008a  invoke-static v12, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000090  const/4 v10, 4
+  000092  goto +5ah
+  000094  const/4 v10, 7
+  000096  const-string v10, "call to 'resume' before 'invoke' with coroutine"
+  00009a  move-object v8, v10
+  00009c  invoke-static v8, Lwc/f;->i(Ljava/lang/String;)V
+  0000a2  const/4 v10, 4
+  0000a4  return-object v3
+  0000a6  const/4 v10, 1
+  0000a8  invoke-static v12, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000ae  const/4 v10, 5
+  0000b0  goto +32h
+  0000b2  const/4 v10, 1
+  0000b4  invoke-static v12, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000ba  const/4 v10, 2
+  0000bc  goto +1ch
+  0000be  const/4 v10, 7
+  0000c0  invoke-static v12, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000c6  const/4 v10, 2
+  0000c8  iget-object v12, v8, Lcom/getmimo/ui/chapter/chapterendview/main/f;->H Lcom/getmimo/ui/chapter/ChapterBundle;
+  0000cc  const/4 v10, 7
+  0000ce  if-eqz v12, +047h
+  0000d2  const/4 v10, 6
+  0000d4  iput v7, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$storeAndPostAllLessonProgress$1;->c I
+  0000d8  const/4 v10, 1
+  0000da  iget-object v2, v8, Lcom/getmimo/ui/chapter/chapterendview/main/f;->C Lcom/getmimo/interactors/chapter/f;
+  0000de  const/4 v10, 2
+  0000e0  invoke-virtual v2, v12, v0, Lcom/getmimo/interactors/chapter/f;->a(Lcom/getmimo/ui/chapter/ChapterBundle; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  0000e6  move-result-object v10
+  0000e8  move-object v12, v10
+  0000ea  if-ne v12, v1, +004h
+  0000ee  const/4 v10, 3
+  0000f0  goto +29h
+  0000f2  const/4 v10, 3
+  0000f4  iput v6, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$storeAndPostAllLessonProgress$1;->c I
+  0000f8  const/4 v10, 1
+  0000fa  iget-object v12, v8, Lcom/getmimo/ui/chapter/chapterendview/main/f;->d Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;
+  0000fe  const/4 v10, 3
+  000100  invoke-virtual v12, v0, Lcom/getmimo/data/source/remote/progress/LessonProgressQueue;->storeAndPostAllLessonProgress(Ld70/b;)Ljava/lang/Object;
+  000106  move-result-object v10
+  000108  move-object v12, v10
+  00010a  if-ne v12, v1, +004h
+  00010e  const/4 v10, 4
+  000110  goto +19h
+  000112  const/4 v10, 7
+  000114  iget-object v12, v8, Lcom/getmimo/ui/chapter/chapterendview/main/f;->H Lcom/getmimo/ui/chapter/ChapterBundle;
+  000118  const/4 v10, 5
+  00011a  if-eqz v12, +01ah
+  00011e  const/4 v10, 6
+  000120  iget-wide v2, v12, Lcom/getmimo/ui/chapter/ChapterBundle;->g J
+  000124  const/4 v10, 5
+  000126  iput v5, v0, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$storeAndPostAllLessonProgress$1;->c I
+  00012a  const/4 v10, 3
+  00012c  iget-object v8, v8, Lcom/getmimo/ui/chapter/chapterendview/main/f;->q Lcom/getmimo/data/source/local/completion/a;
+  000130  const/4 v10, 4
+  000132  invoke-virtual v8, v2, v3, v0, Lcom/getmimo/data/source/local/completion/a;->e(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  000138  move-result-object v10
+  00013a  move-object v8, v10
+  00013c  if-ne v8, v1, +004h
+  000140  const/4 v10, 1
+  000142  return-object v1
+  000144  const/4 v10, 4
+  000146  sget-object v8, Lz60/q;->a Lz60/q;
+  00014a  const/4 v10, 3
+  00014c  return-object v8
+  00014e  const/4 v10, 5
+  000150  invoke-static v4, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V
+  000156  const/4 v10, 2
+  000158  throw v3
+  00015a  const/4 v10, 1
+  00015c  const/4 v10, 3
+  00015e  invoke-static v4, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V
+  000164  const/4 v10, 1
+  000166  throw v3
+  000168  const/4 v10, 5
+  00016a  nop 
+  00016c  <androguard.core.dex.FillArrayData object at 0x7ff3fb081910>
+
+===== Lcom/getmimo/ui/chapter/chapterendview/main/f;->S(Lcom/getmimo/data/content/model/track/Track; Ldj/k; Lcom/getmimo/analytics/properties/FinishChapterSourceProperty;)V =====
+dex=classes.dex code_offset=10374552 instructions=373 access=public final callers=1 callees=113
+callers: Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$onChapterFinishedScreenShown$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: La70/r;->i0(Ljava/lang/Iterable; I)I, La70/r;->i0(Ljava/lang/Iterable; I)I, Lbe/x3;-><init>(Ljava/lang/Object; Ljava/lang/Object;)V, Lbe/x3;-><init>(Ljava/lang/Object; Ljava/lang/Object;)V, Lbe/x3;-><init>(Ljava/lang/Object; Ljava/lang/Object;)V, Lbe/x3;-><init>(Ljava/lang/Object; Ljava/lang/Object;)V, Lbe/x3;-><init>(Ljava/lang/Object; Ljava/lang/Object;)V, Lcom/getmimo/analytics/a;->g(Lcom/getmimo/analytics/SuperProperty;)V, Lcom/getmimo/analytics/a;->n(Lcom/getmimo/analytics/SuperProperty; Ljava/lang/Object;)V, Lcom/getmimo/analytics/a;->n(Lcom/getmimo/analytics/SuperProperty; Ljava/lang/Object;)V, Lcom/getmimo/analytics/a;->o(Lbe/x3;)V, Lcom/getmimo/analytics/a;->o(Lbe/x3;)V, Lcom/getmimo/analytics/a;->o(Lbe/x3;)V, Lcom/getmimo/analytics/properties/base/BooleanProperty;-><init>(Ljava/lang/String; Z)V, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V, Lcom/getmimo/analytics/properties/base/StringProperty;-><init>(Ljava/lang/String; Ljava/lang/String;)V, Lcom/getmimo/analytics/properties/base/StringProperty;-><init>(Ljava/lang/String; Ljava/lang/String;)V, Lcom/getmimo/analytics/properties/base/StringProperty;-><init>(Ljava/lang/String; Ljava/lang/String;)V, Lcom/getmimo/data/content/model/track/Chapter;->getId()J, Lcom/getmimo/data/content/model/track/Chapter;->getTitle()Ljava/lang/String;, Lcom/getmimo/data/content/model/track/Chapter;->getTitle()Ljava/lang/String;, Lcom/getmimo/data/content/model/track/Chapter;->getType()Lcom/getmimo/data/content/model/track/ChapterType;, Lcom/getmimo/data/content/model/track/Chapter;->getType()Lcom/getmimo/data/content/model/track/ChapterType;, Lcom/getmimo/data/content/model/track/Chapter;->isCompleted()Z, Lcom/getmimo/data/content/model/track/ChapterType;->getLevel()I, Lcom/getmimo/data/content/model/track/ChapterType;->getTypeName()Ljava/lang/String;, Lcom/getmimo/data/content/model/track/Track;->getTutorials()Ljava/util/List;, Lcom/getmimo/data/content/model/track/Track;->getTutorials()Ljava/util/List;, Lcom/getmimo/data/content/model/track/Track;->getTutorials()Ljava/util/List;, Lcom/getmimo/data/content/model/track/Tutorial;->getChapters()Ljava/util/List;, Lcom/getmimo/data/content/model/track/Tutorial;->getChapters()Ljava/util/List;, Lcom/getmimo/data/content/model/track/Tutorial;->getChapters()Ljava/util/List;, Lcom/getmimo/data/content/model/track/Tutorial;->getId()J, Lcom/getmimo/data/content/model/track/Tutorial;->getId()J, Lcom/getmimo/data/content/model/track/Tutorial;->getType()Lcom/getmimo/data/content/model/track/TutorialType;, Lcom/getmimo/data/content/model/track/Tutorial;->getType()Lcom/getmimo/data/content/model/track/TutorialType;, Lcom/getmimo/data/content/model/track/Tutorial;->getVersion()I, Lcom/getmimo/data/content/model/track/TutorialType;->getTrackingField()Ljava/lang/String;, Lcom/getmimo/data/content/model/track/TutorialType;->getTrackingField()Ljava/lang/String;, Li30/m;->D(Ljava/lang/Object;)Ljava/util/List;, Li30/m;->E([Ljava/lang/Object;)Ljava/util/List;, Li30/m;->H([Ljava/lang/Object;)Ljava/util/ArrayList;, Li30/m;->x(Ljava/util/List;)I, Li30/m;->x(Ljava/util/List;)I, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;, Ljava/lang/Number;->intValue()I, Ljava/lang/Number;->intValue()I, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/String;->length()I, Ljava/lang/String;->length()I, Ljava/lang/String;->toLowerCase(Ljava/util/Locale;)Ljava/lang/String;, Ljava/util/ArrayList;-><init>(I)V, Ljava/util/ArrayList;-><init>(I)V, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/List;->get(I)Ljava/lang/Object;, Ljava/util/List;->get(I)Ljava/lang/Object;, Ljava/util/List;->get(I)Ljava/lang/Object;, Lkotlin/collections/a;->E0(Ljava/util/List;)Ljava/lang/Object;, Lkotlin/collections/a;->S0(Ljava/lang/Iterable; Ljava/util/Collection;)Ljava/util/ArrayList;, Lkotlin/collections/a;->S0(Ljava/lang/Iterable; Ljava/util/Collection;)Ljava/util/ArrayList;, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V, Lud/a;->e(Ljava/lang/Object;)Ljava/util/List;, Lud/a;->e(Ljava/lang/Object;)Ljava/util/List;
+  000000  move-object/from16 v0, v23
+  000004  move-object/from16 v1, v25
+  000008  invoke-virtual/range v24, Lcom/getmimo/data/content/model/track/Track;->getTutorials()Ljava/util/List;
+  00000e  move-result-object v2
+  000010  iget-object v3, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->H Lcom/getmimo/ui/chapter/ChapterBundle;
+  000014  const-string v4, "chapterBundle"
+  000018  if-eqz v3, +2e3h
+  00001c  iget v3, v3, Lcom/getmimo/ui/chapter/ChapterBundle;->f I
+  000020  invoke-interface v2, v3, Ljava/util/List;->get(I)Ljava/lang/Object;
+  000026  move-result-object v2
+  000028  check-cast v2, Lcom/getmimo/data/content/model/track/Tutorial;
+  00002c  invoke-virtual v2, Lcom/getmimo/data/content/model/track/Tutorial;->getVersion()I
+  000032  move-result v3
+  000034  invoke-virtual v2, Lcom/getmimo/data/content/model/track/Tutorial;->getId()J
+  00003a  move-result-wide v6
+  00003c  iget-object v8, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->H Lcom/getmimo/ui/chapter/ChapterBundle;
+  000040  if-eqz v8, +2c5h
+  000044  iget v8, v8, Lcom/getmimo/ui/chapter/ChapterBundle;->b I
+  000048  invoke-virtual v2, Lcom/getmimo/data/content/model/track/Tutorial;->getType()Lcom/getmimo/data/content/model/track/TutorialType;
+  00004e  move-result-object v9
+  000050  invoke-virtual v9, Lcom/getmimo/data/content/model/track/TutorialType;->getTrackingField()Ljava/lang/String;
+  000056  move-result-object v9
+  000058  iget-object v10, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->H Lcom/getmimo/ui/chapter/ChapterBundle;
+  00005c  if-eqz v10, +2adh
+  000060  invoke-virtual/range v26, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000066  invoke-virtual v1, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00006c  iget v11, v1, Ldj/k;->b I
+  000070  invoke-virtual v9, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000076  new-instance v12, Lbe/f;
+  00007a  iget-object v13, v10, Lcom/getmimo/ui/chapter/ChapterBundle;->a Lcom/getmimo/data/content/model/track/Chapter;
+  00007e  invoke-virtual v13, Lcom/getmimo/data/content/model/track/Chapter;->getId()J
+  000084  move-result-wide v14
+  000086  move-wide/from16 v17, v6
+  00008a  const/16 v16, 1770
+  00008e  const/16 v16, 0
+  000092  iget-wide v5, v10, Lcom/getmimo/ui/chapter/ChapterBundle;->g J
+  000096  iget-object v7, v10, Lcom/getmimo/ui/chapter/ChapterBundle;->z Ljava/lang/Integer;
+  00009a  iget v1, v1, Ldj/k;->a I
+  00009e  const/16 v19, 5810
+  0000a2  const/16 v19, 0
+  0000a6  if-nez v1, +005h
+  0000aa  move/from16 v20, v19
+  0000ae  goto +5h
+  0000b0  mul-int/lit8 v20, v11, 100
+  0000b4  div-int v20, v20, v1
+  0000b8  invoke-virtual v13, Lcom/getmimo/data/content/model/track/Chapter;->getType()Lcom/getmimo/data/content/model/track/ChapterType;
+  0000be  move-result-object v21
+  0000c0  move/from16 v25, v1
+  0000c4  invoke-virtual/range v21, Lcom/getmimo/data/content/model/track/ChapterType;->getTypeName()Ljava/lang/String;
+  0000ca  move-result-object v1
+  0000cc  invoke-virtual v13, Lcom/getmimo/data/content/model/track/Chapter;->getType()Lcom/getmimo/data/content/model/track/ChapterType;
+  0000d2  move-result-object v21
+  0000d4  invoke-virtual/range v21, Lcom/getmimo/data/content/model/track/ChapterType;->getLevel()I
+  0000da  move-result v21
+  0000dc  invoke-virtual v13, Lcom/getmimo/data/content/model/track/Chapter;->isCompleted()Z
+  0000e2  move-result v13
+  0000e4  iget-boolean v10, v10, Lcom/getmimo/ui/chapter/ChapterBundle;->F Z
+  0000e8  if-eqz v10, +003h
+  0000ec  goto +3h
+  0000ee  move/from16 v11, v19
+  0000f2  new-instance v10, Lcom/getmimo/analytics/properties/base/NumberProperty;
+  0000f6  move-object/from16 v22, v2
+  0000fa  const-string v2, "chapter_id"
+  0000fe  invoke-static v14, v15, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  000104  move-result-object v14
+  000106  invoke-direct v10, v14, v2, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V
+  00010c  new-instance v2, Lcom/getmimo/analytics/properties/base/NumberProperty;
+  000110  const-string v14, "tutorial_version"
+  000114  invoke-static v3, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  00011a  move-result-object v3
+  00011c  invoke-direct v2, v3, v14, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V
+  000122  new-instance v3, Lcom/getmimo/analytics/properties/base/NumberProperty;
+  000126  invoke-static/range v17 ... v18, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  00012c  move-result-object v14
+  00012e  const-string v15, "tutorial_id"
+  000132  invoke-direct v3, v14, v15, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V
+  000138  new-instance v14, Lcom/getmimo/analytics/properties/base/NumberProperty;
+  00013c  invoke-static v5, v6, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  000142  move-result-object v5
+  000144  const-string v6, "track_id"
+  000148  invoke-direct v14, v5, v6, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V
+  00014e  new-instance v5, Lcom/getmimo/analytics/properties/base/NumberProperty;
+  000152  move-object/from16 v17, v2
+  000156  const-string v2, "lessons_total"
+  00015a  move-object/from16 v18, v3
+  00015e  invoke-static/range v25, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  000164  move-result-object v3
+  000166  invoke-direct v5, v3, v2, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V
+  00016c  new-instance v2, Lcom/getmimo/analytics/properties/base/NumberProperty;
+  000170  const-string v3, "chapter_index"
+  000174  invoke-static v8, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  00017a  move-result-object v8
+  00017c  invoke-direct v2, v8, v3, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V
+  000182  new-instance v3, Lcom/getmimo/analytics/properties/base/NumberProperty;
+  000186  const-string v8, "percent_of_lessons_passed"
+  00018a  move-object/from16 v25, v2
+  00018e  invoke-static/range v20, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  000194  move-result-object v2
+  000196  invoke-direct v3, v2, v8, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V
+  00019c  new-instance v2, Lcom/getmimo/analytics/properties/base/StringProperty;
+  0001a0  const-string v8, "tutorial_type"
+  0001a4  invoke-direct v2, v8, v9, Lcom/getmimo/analytics/properties/base/StringProperty;-><init>(Ljava/lang/String; Ljava/lang/String;)V
+  0001aa  new-instance v9, Lcom/getmimo/analytics/properties/base/BooleanProperty;
+  0001ae  move-object/from16 v20, v2
+  0001b2  const-string v2, "is_redo"
+  0001b6  invoke-direct v9, v2, v13, Lcom/getmimo/analytics/properties/base/BooleanProperty;-><init>(Ljava/lang/String; Z)V
+  0001bc  new-instance v2, Lcom/getmimo/analytics/properties/base/NumberProperty;
+  0001c0  const-string v13, "total_hard_lessons"
+  0001c4  invoke-static v11, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  0001ca  move-result-object v11
+  0001cc  invoke-direct v2, v11, v13, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V
+  0001d2  const/16 v11, 14611
+  0001d6  const/16 v11, 11
+  0001da  new-array v11, v11, [Lcom/getmimo/analytics/properties/base/BaseProperty;
+  0001de  aput-object v26, v11, v19
+  0001e2  const/4 v13, 0
+  0001e4  const/4 v13, 1
+  0001e6  aput-object v10, v11, v13
+  0001ea  const/4 v10, 6
+  0001ec  const/4 v10, 2
+  0001ee  aput-object v17, v11, v10
+  0001f2  move/from16 v26, v10
+  0001f6  const/4 v10, 7
+  0001f8  const/4 v10, 3
+  0001fa  aput-object v18, v11, v10
+  0001fe  const/16 v17, 12286
+  000202  const/16 v17, 4
+  000206  aput-object v14, v11, v17
+  00020a  const/4 v14, 0
+  00020c  const/4 v14, 5
+  00020e  aput-object v5, v11, v14
+  000212  const/4 v5, 0
+  000214  const/4 v5, 6
+  000216  aput-object v25, v11, v5
+  00021a  const/4 v5, 0
+  00021c  const/4 v5, 7
+  00021e  aput-object v3, v11, v5
+  000222  const/16 v3, 30522
+  000226  const/16 v3, 8
+  00022a  aput-object v20, v11, v3
+  00022e  const/16 v3, 3753
+  000232  const/16 v3, 9
+  000236  aput-object v9, v11, v3
+  00023a  const/16 v3, 16272
+  00023e  const/16 v3, 10
+  000242  aput-object v2, v11, v3
+  000246  invoke-static v11, Li30/m;->H([Ljava/lang/Object;)Ljava/util/ArrayList;
+  00024c  move-result-object v2
+  00024e  if-eqz v1, +015h
+  000252  new-instance v5, Lcom/getmimo/analytics/properties/base/StringProperty;
+  000256  sget-object v9, Ljava/util/Locale;->ROOT Ljava/util/Locale;
+  00025a  invoke-virtual v1, v9, Ljava/lang/String;->toLowerCase(Ljava/util/Locale;)Ljava/lang/String;
+  000260  move-result-object v1
+  000262  invoke-virtual v1, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000268  const-string v9, "chapter_type"
+  00026c  invoke-direct v5, v9, v1, Lcom/getmimo/analytics/properties/base/StringProperty;-><init>(Ljava/lang/String; Ljava/lang/String;)V
+  000272  invoke-virtual v2, v5, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  000278  new-instance v1, Lcom/getmimo/analytics/properties/base/NumberProperty;
+  00027c  const-string v5, "skill_level"
+  000280  invoke-static/range v21, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  000286  move-result-object v9
+  000288  invoke-direct v1, v9, v5, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V
+  00028e  invoke-virtual v2, v1, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  000294  invoke-static v7, Lud/a;->e(Ljava/lang/Object;)Ljava/util/List;
+  00029a  move-result-object v1
+  00029c  new-instance v5, Ljava/util/ArrayList;
+  0002a0  invoke-static v1, v3, La70/r;->i0(Ljava/lang/Iterable; I)I
+  0002a6  move-result v7
+  0002a8  invoke-direct v5, v7, Ljava/util/ArrayList;-><init>(I)V
+  0002ae  invoke-interface v1, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  0002b4  move-result-object v1
+  0002b6  invoke-interface v1, Ljava/util/Iterator;->hasNext()Z
+  0002bc  move-result v7
+  0002be  const-string v9, "section_index"
+  0002c2  if-eqz v7, +019h
+  0002c6  invoke-interface v1, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0002cc  move-result-object v7
+  0002ce  check-cast v7, Ljava/lang/Number;
+  0002d2  invoke-virtual v7, Ljava/lang/Number;->intValue()I
+  0002d8  move-result v7
+  0002da  new-instance v11, Lcom/getmimo/analytics/properties/base/NumberProperty;
+  0002de  invoke-static v7, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  0002e4  move-result-object v7
+  0002e6  invoke-direct v11, v7, v9, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V
+  0002ec  invoke-virtual v5, v11, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  0002f2  goto -1eh
+  0002f4  invoke-static v5, v2, Lkotlin/collections/a;->S0(Ljava/lang/Iterable; Ljava/util/Collection;)Ljava/util/ArrayList;
+  0002fa  move-result-object v1
+  0002fc  sget-object v2, Lge/m;->c Lge/m;
+  000300  invoke-direct v12, v2, v1, Lbe/x3;-><init>(Ljava/lang/Object; Ljava/lang/Object;)V
+  000306  iget-object v1, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->b Lcom/getmimo/analytics/a;
+  00030a  invoke-virtual v1, v12, Lcom/getmimo/analytics/a;->o(Lbe/x3;)V
+  000310  iget-object v2, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->H Lcom/getmimo/ui/chapter/ChapterBundle;
+  000314  if-eqz v2, +14bh
+  000318  iget v2, v2, Lcom/getmimo/ui/chapter/ChapterBundle;->b I
+  00031c  invoke-virtual/range v22, Lcom/getmimo/data/content/model/track/Tutorial;->getChapters()Ljava/util/List;
+  000322  move-result-object v5
+  000324  invoke-static v5, Li30/m;->x(Ljava/util/List;)I
+  00032a  move-result v5
+  00032c  if-ne v2, v5, +10fh
+  000330  new-instance v2, Lbe/f;
+  000334  invoke-virtual/range v22, Lcom/getmimo/data/content/model/track/Tutorial;->getId()J
+  00033a  move-result-wide v11
+  00033c  iget-object v5, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->H Lcom/getmimo/ui/chapter/ChapterBundle;
+  000340  if-eqz v5, +0ffh
+  000344  move/from16 v25, v13
+  000348  iget-wide v13, v5, Lcom/getmimo/ui/chapter/ChapterBundle;->g J
+  00034c  iget-object v5, v5, Lcom/getmimo/ui/chapter/ChapterBundle;->z Ljava/lang/Integer;
+  000350  invoke-virtual/range v22, Lcom/getmimo/data/content/model/track/Tutorial;->getType()Lcom/getmimo/data/content/model/track/TutorialType;
+  000356  move-result-object v7
+  000358  invoke-virtual v7, Lcom/getmimo/data/content/model/track/TutorialType;->getTrackingField()Ljava/lang/String;
+  00035e  move-result-object v7
+  000360  invoke-virtual v7, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000366  new-instance v3, Lge/j;
+  00036a  const-string v10, "finish_tutorial"
+  00036e  move-object/from16 v20, v4
+  000372  const-string v4, "c44udc"
+  000376  invoke-direct v3, v10, v4, Lbe/x3;-><init>(Ljava/lang/Object; Ljava/lang/Object;)V
+  00037c  new-instance v4, Lcom/getmimo/analytics/properties/base/NumberProperty;
+  000380  invoke-static v11, v12, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  000386  move-result-object v10
+  000388  invoke-direct v4, v10, v15, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V
+  00038e  new-instance v10, Lcom/getmimo/analytics/properties/base/NumberProperty;
+  000392  invoke-static v13, v14, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  000398  move-result-object v11
+  00039a  invoke-direct v10, v11, v6, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V
+  0003a0  new-instance v11, Lcom/getmimo/analytics/properties/base/StringProperty;
+  0003a4  invoke-direct v11, v8, v7, Lcom/getmimo/analytics/properties/base/StringProperty;-><init>(Ljava/lang/String; Ljava/lang/String;)V
+  0003aa  const/4 v7, 3
+  0003ac  const/4 v7, 3
+  0003ae  new-array v7, v7, [Lcom/getmimo/analytics/properties/base/BaseProperty;
+  0003b2  aput-object v4, v7, v19
+  0003b6  aput-object v10, v7, v25
+  0003ba  aput-object v11, v7, v26
+  0003be  invoke-static v7, Li30/m;->E([Ljava/lang/Object;)Ljava/util/List;
+  0003c4  move-result-object v4
+  0003c6  invoke-static v5, Lud/a;->e(Ljava/lang/Object;)Ljava/util/List;
+  0003cc  move-result-object v5
+  0003ce  new-instance v7, Ljava/util/ArrayList;
+  0003d2  const/16 v8, 23537
+  0003d6  const/16 v8, 10
+  0003da  invoke-static v5, v8, La70/r;->i0(Ljava/lang/Iterable; I)I
+  0003e0  move-result v8
+  0003e2  invoke-direct v7, v8, Ljava/util/ArrayList;-><init>(I)V
+  0003e8  invoke-interface v5, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  0003ee  move-result-object v5
+  0003f0  invoke-interface v5, Ljava/util/Iterator;->hasNext()Z
+  0003f6  move-result v8
+  0003f8  if-eqz v8, +019h
+  0003fc  invoke-interface v5, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  000402  move-result-object v8
+  000404  check-cast v8, Ljava/lang/Number;
+  000408  invoke-virtual v8, Ljava/lang/Number;->intValue()I
+  00040e  move-result v8
+  000410  new-instance v10, Lcom/getmimo/analytics/properties/base/NumberProperty;
+  000414  invoke-static v8, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  00041a  move-result-object v8
+  00041c  invoke-direct v10, v8, v9, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V
+  000422  invoke-virtual v7, v10, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  000428  goto -1ch
+  00042a  invoke-static v7, v4, Lkotlin/collections/a;->S0(Ljava/lang/Iterable; Ljava/util/Collection;)Ljava/util/ArrayList;
+  000430  move-result-object v4
+  000432  invoke-direct v2, v3, v4, Lbe/x3;-><init>(Ljava/lang/Object; Ljava/lang/Object;)V
+  000438  invoke-virtual v1, v2, Lcom/getmimo/analytics/a;->o(Lbe/x3;)V
+  00043e  iget-object v2, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->H Lcom/getmimo/ui/chapter/ChapterBundle;
+  000442  if-eqz v2, +07ah
+  000446  iget v2, v2, Lcom/getmimo/ui/chapter/ChapterBundle;->f I
+  00044a  invoke-virtual/range v24, Lcom/getmimo/data/content/model/track/Track;->getTutorials()Ljava/util/List;
+  000450  move-result-object v3
+  000452  invoke-static v3, Li30/m;->x(Ljava/util/List;)I
+  000458  move-result v3
+  00045a  if-ge v2, v3, +03dh
+  00045e  invoke-virtual/range v24, Lcom/getmimo/data/content/model/track/Track;->getTutorials()Ljava/util/List;
+  000464  move-result-object v2
+  000466  iget-object v0, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->H Lcom/getmimo/ui/chapter/ChapterBundle;
+  00046a  if-eqz v0, +031h
+  00046e  iget v0, v0, Lcom/getmimo/ui/chapter/ChapterBundle;->f I
+  000472  add-int/lit8 v0, v0, 1
+  000476  invoke-interface v2, v0, Ljava/util/List;->get(I)Ljava/lang/Object;
+  00047c  move-result-object v0
+  00047e  check-cast v0, Lcom/getmimo/data/content/model/track/Tutorial;
+  000482  invoke-virtual v0, Lcom/getmimo/data/content/model/track/Tutorial;->getChapters()Ljava/util/List;
+  000488  move-result-object v0
+  00048a  invoke-static v0, Lkotlin/collections/a;->E0(Ljava/util/List;)Ljava/lang/Object;
+  000490  move-result-object v0
+  000492  check-cast v0, Lcom/getmimo/data/content/model/track/Chapter;
+  000496  if-eqz v0, +007h
+  00049a  invoke-virtual v0, Lcom/getmimo/data/content/model/track/Chapter;->getTitle()Ljava/lang/String;
+  0004a0  move-result-object v5
+  0004a2  goto +3h
+  0004a4  move-object/from16 v5, v16
+  0004a8  invoke-virtual v1, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  0004ae  if-eqz v5, +079h
+  0004b2  invoke-virtual v5, Ljava/lang/String;->length()I
+  0004b8  move-result v0
+  0004ba  if-nez v0, +003h
+  0004be  goto +71h
+  0004c0  sget-object v0, Lcom/getmimo/analytics/SuperProperty;->e Lcom/getmimo/analytics/SuperProperty;
+  0004c4  invoke-virtual v1, v0, v5, Lcom/getmimo/analytics/a;->n(Lcom/getmimo/analytics/SuperProperty; Ljava/lang/Object;)V
+  0004ca  return-void 
+  0004cc  invoke-static/range v20, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V
+  0004d2  throw v16
+  0004d4  new-instance v2, Lbe/f;
+  0004d8  iget-object v0, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->H Lcom/getmimo/ui/chapter/ChapterBundle;
+  0004dc  if-eqz v0, +029h
+  0004e0  iget-wide v3, v0, Lcom/getmimo/ui/chapter/ChapterBundle;->g J
+  0004e4  new-instance v0, Lge/j;
+  0004e8  const-string v5, "finish_track"
+  0004ec  const-string v7, "xnu3qy"
+  0004f0  invoke-direct v0, v5, v7, Lbe/x3;-><init>(Ljava/lang/Object; Ljava/lang/Object;)V
+  0004f6  new-instance v5, Lcom/getmimo/analytics/properties/base/NumberProperty;
+  0004fa  invoke-static v3, v4, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  000500  move-result-object v3
+  000502  invoke-direct v5, v3, v6, Lcom/getmimo/analytics/properties/base/NumberProperty;-><init>(Ljava/lang/Number; Ljava/lang/String;)V
+  000508  invoke-static v5, Li30/m;->D(Ljava/lang/Object;)Ljava/util/List;
+  00050e  move-result-object v3
+  000510  invoke-direct v2, v0, v3, Lbe/x3;-><init>(Ljava/lang/Object; Ljava/lang/Object;)V
+  000516  invoke-virtual v1, v2, Lcom/getmimo/analytics/a;->o(Lbe/x3;)V
+  00051c  invoke-virtual v1, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000522  sget-object v0, Lcom/getmimo/analytics/SuperProperty;->e Lcom/getmimo/analytics/SuperProperty;
+  000526  invoke-virtual v1, v0, Lcom/getmimo/analytics/a;->g(Lcom/getmimo/analytics/SuperProperty;)V
+  00052c  return-void 
+  00052e  invoke-static/range v20, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V
+  000534  throw v16
+  000536  invoke-static/range v20, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V
+  00053c  throw v16
+  00053e  move-object/from16 v20, v4
+  000542  invoke-static/range v20, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V
+  000548  throw v16
+  00054a  move-object/from16 v20, v4
+  00054e  move/from16 v25, v13
+  000552  invoke-virtual/range v22, Lcom/getmimo/data/content/model/track/Tutorial;->getChapters()Ljava/util/List;
+  000558  move-result-object v2
+  00055a  iget-object v0, v0, Lcom/getmimo/ui/chapter/chapterendview/main/f;->H Lcom/getmimo/ui/chapter/ChapterBundle;
+  00055e  if-eqz v0, +022h
+  000562  iget v0, v0, Lcom/getmimo/ui/chapter/ChapterBundle;->b I
+  000566  add-int/lit8 v0, v0, 1
+  00056a  invoke-interface v2, v0, Ljava/util/List;->get(I)Ljava/lang/Object;
+  000570  move-result-object v0
+  000572  check-cast v0, Lcom/getmimo/data/content/model/track/Chapter;
+  000576  invoke-virtual v0, Lcom/getmimo/data/content/model/track/Chapter;->getTitle()Ljava/lang/String;
+  00057c  move-result-object v0
+  00057e  invoke-virtual v1, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000584  if-eqz v0, +00eh
+  000588  invoke-virtual v0, Ljava/lang/String;->length()I
+  00058e  move-result v2
+  000590  if-nez v2, +003h
+  000594  goto +6h
+  000596  sget-object v2, Lcom/getmimo/analytics/SuperProperty;->e Lcom/getmimo/analytics/SuperProperty;
+  00059a  invoke-virtual v1, v2, v0, Lcom/getmimo/analytics/a;->n(Lcom/getmimo/analytics/SuperProperty; Ljava/lang/Object;)V
+  0005a0  return-void 
+  0005a2  invoke-static/range v20, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V
+  0005a8  throw v16
+  0005aa  move-object/from16 v20, v4
+  0005ae  invoke-static/range v20, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V
+  0005b4  throw v16
+  0005b6  move-object/from16 v20, v4
+  0005ba  const/16 v16, 19095
+  0005be  const/16 v16, 0
+  0005c2  invoke-static/range v20, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V
+  0005c8  throw v16
+  0005ca  move-object/from16 v20, v4
+  0005ce  const/16 v16, 15939
+  0005d2  const/16 v16, 0
+  0005d6  invoke-static/range v20, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V
+  0005dc  throw v16
+  0005de  move-object/from16 v20, v4
+  0005e2  const/16 v16, 28269
+  0005e6  const/16 v16, 0
+  0005ea  invoke-static/range v20, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V
+  0005f0  throw v16
+  0005f2  nop 
+  0005f4  <androguard.core.dex.FillArrayData object at 0x7ff3fb0982d0>

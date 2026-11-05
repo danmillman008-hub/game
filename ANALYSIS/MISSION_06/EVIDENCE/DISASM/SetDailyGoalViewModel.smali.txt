@@ -1,0 +1,100 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/ui/profile/b; semantic=SetDailyGoalViewModel
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/ui/profile/b;-><init>(Lcom/getmimo/data/settings/a; Lcom/getmimo/analytics/a; Lsh/m;)V =====
+dex=classes.dex code_offset=11321792 instructions=87 access=public constructor callers=1 callees=21
+callers: Lae/p;->get()Ljava/lang/Object;
+callees: Laj/p;-><init>()V, Landroidx/lifecycle/i0;-><init>()V, Landroidx/lifecycle/i0;-><init>()V, Landroidx/lifecycle/i0;-><init>()V, Landroidx/lifecycle/m;->k(Landroidx/lifecycle/f1;)Le7/a;, Landroidx/lifecycle/m;->k(Landroidx/lifecycle/f1;)Le7/a;, Lcom/getmimo/data/settings/a;->d()Lua0/i;, Lcom/getmimo/ui/profile/SetDailyGoalViewModel$loadStreakData$1;-><init>(Lcom/getmimo/ui/profile/b; Ld70/b;)V, Lcom/getmimo/ui/profile/SetDailyGoalViewModel$loadUserDailyGoal$1;-><init>(Lcom/getmimo/ui/profile/b; Ld70/b;)V, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Lkotlin/coroutines/jvm/internal/SuspendLambda;-><init>(I Ld70/b;)V, Lkotlin/coroutines/jvm/internal/SuspendLambda;-><init>(I Ld70/b;)V, Lkotlinx/coroutines/flow/d;->q(Lua0/e; Lra0/y;)Lra0/q1;, Lkotlinx/coroutines/flow/d;->q(Lua0/e; Lra0/y;)Lra0/q1;, Lsh/m;->a(Lsh/m;)Lua0/r;, Lua0/i;-><init>(Lua0/e; Lo70/n; B)V, Lua0/i;-><init>(Lua0/e; Lo70/n; B)V, Lua0/j;-><init>(Lua0/e; Lo70/m; B)V, Lua0/j;-><init>(Lua0/e; Lo70/m; B)V
+  000000  move-object v4, v7
+  000002  invoke-virtual v8, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000008  invoke-virtual v9, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00000e  invoke-virtual v10, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000014  invoke-direct v4, Laj/p;-><init>()V
+  00001a  const-string v6, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  00001e  iput-object v8, v4, Lcom/getmimo/ui/profile/b;->b Lcom/getmimo/data/settings/a;
+  000022  const/4 v6, 2
+  000024  iput-object v9, v4, Lcom/getmimo/ui/profile/b;->c Lcom/getmimo/analytics/a;
+  000028  const/4 v6, 2
+  00002a  const/4 v6, -1
+  00002c  move v9, v6
+  00002e  iput v9, v4, Lcom/getmimo/ui/profile/b;->d I
+  000032  const/4 v6, 6
+  000034  new-instance v9, Landroidx/lifecycle/m0;
+  000038  const/4 v6, 5
+  00003a  invoke-direct v9, Landroidx/lifecycle/i0;-><init>()V
+  000040  const/4 v6, 7
+  000042  iput-object v9, v4, Lcom/getmimo/ui/profile/b;->e Landroidx/lifecycle/m0;
+  000046  const/4 v6, 4
+  000048  new-instance v9, Landroidx/lifecycle/m0;
+  00004c  const/4 v6, 1
+  00004e  invoke-direct v9, Landroidx/lifecycle/i0;-><init>()V
+  000054  const/4 v6, 3
+  000056  iput-object v9, v4, Lcom/getmimo/ui/profile/b;->f Landroidx/lifecycle/m0;
+  00005a  const/4 v6, 5
+  00005c  new-instance v9, Landroidx/lifecycle/m0;
+  000060  const/4 v6, 2
+  000062  invoke-direct v9, Landroidx/lifecycle/i0;-><init>()V
+  000068  const/4 v6, 4
+  00006a  iput-object v9, v4, Lcom/getmimo/ui/profile/b;->g Landroidx/lifecycle/m0;
+  00006e  const/4 v6, 7
+  000070  invoke-virtual v8, Lcom/getmimo/data/settings/a;->d()Lua0/i;
+  000076  move-result-object v6
+  000078  move-object v8, v6
+  00007a  new-instance v9, Lcom/getmimo/ui/profile/SetDailyGoalViewModel$loadUserDailyGoal$1;
+  00007e  const/4 v6, 2
+  000080  const/4 v6, 0
+  000082  move v0, v6
+  000084  invoke-direct v9, v4, v0, Lcom/getmimo/ui/profile/SetDailyGoalViewModel$loadUserDailyGoal$1;-><init>(Lcom/getmimo/ui/profile/b; Ld70/b;)V
+  00008a  const/4 v6, 5
+  00008c  new-instance v1, Lua0/j;
+  000090  const/4 v6, 5
+  000092  const/4 v6, 3
+  000094  move v2, v6
+  000096  invoke-direct v1, v8, v9, v2, Lua0/j;-><init>(Lua0/e; Lo70/m; B)V
+  00009c  const/4 v6, 5
+  00009e  new-instance v8, Lcom/getmimo/ui/profile/SetDailyGoalViewModel$loadUserDailyGoal$2;
+  0000a2  const/4 v6, 4
+  0000a4  invoke-direct v8, v2, v0, Lkotlin/coroutines/jvm/internal/SuspendLambda;-><init>(I Ld70/b;)V
+  0000aa  const/4 v6, 3
+  0000ac  new-instance v9, Lua0/i;
+  0000b0  const/4 v6, 6
+  0000b2  const/4 v6, 1
+  0000b4  move v3, v6
+  0000b6  invoke-direct v9, v1, v8, v3, Lua0/i;-><init>(Lua0/e; Lo70/n; B)V
+  0000bc  const/4 v6, 3
+  0000be  invoke-static v4, Landroidx/lifecycle/m;->k(Landroidx/lifecycle/f1;)Le7/a;
+  0000c4  move-result-object v6
+  0000c6  move-object v8, v6
+  0000c8  invoke-static v9, v8, Lkotlinx/coroutines/flow/d;->q(Lua0/e; Lra0/y;)Lra0/q1;
+  0000ce  invoke-static v10, Lsh/m;->a(Lsh/m;)Lua0/r;
+  0000d4  move-result-object v6
+  0000d6  move-object v8, v6
+  0000d8  new-instance v9, Lcom/getmimo/ui/profile/SetDailyGoalViewModel$loadStreakData$1;
+  0000dc  const/4 v6, 5
+  0000de  invoke-direct v9, v4, v0, Lcom/getmimo/ui/profile/SetDailyGoalViewModel$loadStreakData$1;-><init>(Lcom/getmimo/ui/profile/b; Ld70/b;)V
+  0000e4  const/4 v6, 6
+  0000e6  new-instance v10, Lua0/j;
+  0000ea  const/4 v6, 4
+  0000ec  invoke-direct v10, v8, v9, v2, Lua0/j;-><init>(Lua0/e; Lo70/m; B)V
+  0000f2  const/4 v6, 1
+  0000f4  new-instance v8, Lcom/getmimo/ui/profile/SetDailyGoalViewModel$loadStreakData$2;
+  0000f8  const/4 v6, 3
+  0000fa  invoke-direct v8, v2, v0, Lkotlin/coroutines/jvm/internal/SuspendLambda;-><init>(I Ld70/b;)V
+  000100  const/4 v6, 1
+  000102  new-instance v9, Lua0/i;
+  000106  const/4 v6, 5
+  000108  invoke-direct v9, v10, v8, v3, Lua0/i;-><init>(Lua0/e; Lo70/n; B)V
+  00010e  const/4 v6, 6
+  000110  invoke-static v4, Landroidx/lifecycle/m;->k(Landroidx/lifecycle/f1;)Le7/a;
+  000116  move-result-object v6
+  000118  move-object v4, v6
+  00011a  invoke-static v9, v4, Lkotlinx/coroutines/flow/d;->q(Lua0/e; Lra0/y;)Lra0/q1;
+  000120  return-void 
+  000122  nop 
+  000124  <androguard.core.dex.FillArrayData object at 0x7ff3fac64190>

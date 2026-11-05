@@ -1,0 +1,119 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lye/d; semantic=AssetTracksLoaderImpl
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lye/d;-><init>(Landroid/content/Context;)V =====
+dex=classes.dex code_offset=15520116 instructions=18 access=public constructor callers=1 callees=4
+callers: Lae/m;->a()Ljava/lang/Object;
+callees: Landroid/content/Context;->getFilesDir()Ljava/io/File;, Ljava/io/File;->getAbsolutePath()Ljava/lang/String;, Ljava/lang/Object;-><init>()V, Lsb/j;->p(Ljava/lang/String; Ljava/lang/String;)Ljava/lang/String;
+  000000  move-object v1, v4
+  000002  invoke-direct v1, Ljava/lang/Object;-><init>()V
+  000008  const-string v3, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  00000c  invoke-virtual v5, Landroid/content/Context;->getFilesDir()Ljava/io/File;
+  000012  move-result-object v3
+  000014  move-object v5, v3
+  000016  invoke-virtual v5, Ljava/io/File;->getAbsolutePath()Ljava/lang/String;
+  00001c  move-result-object v3
+  00001e  move-object v5, v3
+  000020  const-string v3, "/live_preview"
+  000024  move-object v0, v3
+  000026  invoke-static v5, v0, Lsb/j;->p(Ljava/lang/String; Ljava/lang/String;)Ljava/lang/String;
+  00002c  move-result-object v3
+  00002e  move-object v5, v3
+  000030  iput-object v5, v1, Lye/d;->a Ljava/lang/String;
+  000034  const/4 v3, 7
+  000036  return-void 
+  000038  <androguard.core.dex.FillArrayData object at 0x7ff3f50f82d0>
+
+===== Lye/d;->a(Lcom/getmimo/data/content/model/track/Tutorial;)Lcom/getmimo/data/content/model/track/Tutorial; =====
+dex=classes.dex code_offset=15520216 instructions=5 access=public final callers=0 callees=1
+callees: Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000000  move-object v0, v4
+  000002  invoke-virtual v5, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000008  return-object v5
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3f50f8550>
+
+===== Lye/d;->b(J)Ljava/io/InputStream; =====
+dex=classes.dex code_offset=15520292 instructions=32 access=public final callers=0 callees=8
+callees: Ljava/io/File;-><init>(Ljava/lang/String;)V, Ljava/io/FileInputStream;-><init>(Ljava/io/File;)V, Ljava/lang/String;->concat(Ljava/lang/String;)Ljava/lang/String;, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  000000  move-object v1, v5
+  000002  iget-object v1, v1, Lye/d;->a Ljava/lang/String;
+  000006  const/4 v3, 4
+  000008  const-string v3, "/tracks"
+  00000c  move-object v0, v3
+  00000e  invoke-virtual v1, v0, Ljava/lang/String;->concat(Ljava/lang/String;)Ljava/lang/String;
+  000014  move-result-object v3
+  000016  move-object v1, v3
+  000018  new-instance v0, Ljava/lang/StringBuilder;
+  00001c  const/4 v4, 1
+  00001e  invoke-direct v0, v1, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  000024  const/4 v3, 6
+  000026  const-string v4, "/tutorial-"
+  00002a  move-object v1, v4
+  00002c  invoke-virtual v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  000032  invoke-virtual v0, v6, v7, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+  000038  const-string v4, ".json"
+  00003c  move-object v1, v4
+  00003e  invoke-virtual v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  000044  invoke-virtual v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  00004a  move-result-object v4
+  00004c  move-object v1, v4
+  00004e  new-instance v6, Ljava/io/FileInputStream;
+  000052  const/4 v3, 2
+  000054  new-instance v7, Ljava/io/File;
+  000058  const/4 v4, 6
+  00005a  invoke-direct v7, v1, Ljava/io/File;-><init>(Ljava/lang/String;)V
+  000060  const/4 v4, 1
+  000062  invoke-direct v6, v7, Ljava/io/FileInputStream;-><init>(Ljava/io/File;)V
+  000068  const/4 v4, 7
+  00006a  return-object v6
+  00006c  <androguard.core.dex.FillArrayData object at 0x7ff3f50f8f10>
+
+===== Lye/d;->c()Ljava/lang/String; =====
+dex=classes.dex code_offset=15520460 instructions=11 access=public final callers=0 callees=1
+callees: Ljava/lang/String;->concat(Ljava/lang/String;)Ljava/lang/String;
+  000000  move-object v1, v4
+  000002  iget-object v1, v1, Lye/d;->a Ljava/lang/String;
+  000006  const/4 v3, 1
+  000008  const-string v3, "/icons"
+  00000c  move-object v0, v3
+  00000e  invoke-virtual v1, v0, Ljava/lang/String;->concat(Ljava/lang/String;)Ljava/lang/String;
+  000014  move-result-object v3
+  000016  move-object v1, v3
+  000018  return-object v1
+  00001a  nop 
+  00001c  <androguard.core.dex.FillArrayData object at 0x7ff3f50f93d0>
+
+===== Lye/d;->d()Ljava/io/InputStream; =====
+dex=classes.dex code_offset=15520532 instructions=24 access=public final callers=0 callees=4
+callees: Ljava/io/File;-><init>(Ljava/lang/String;)V, Ljava/io/FileInputStream;-><init>(Ljava/io/File;)V, Ljava/lang/String;->concat(Ljava/lang/String;)Ljava/lang/String;, Ljava/lang/String;->concat(Ljava/lang/String;)Ljava/lang/String;
+  000000  move-object v2, v5
+  000002  iget-object v2, v2, Lye/d;->a Ljava/lang/String;
+  000006  const/4 v4, 3
+  000008  const-string v4, "/tracks"
+  00000c  move-object v0, v4
+  00000e  invoke-virtual v2, v0, Ljava/lang/String;->concat(Ljava/lang/String;)Ljava/lang/String;
+  000014  move-result-object v4
+  000016  move-object v2, v4
+  000018  const-string v4, "/tracks.json"
+  00001c  move-object v0, v4
+  00001e  invoke-virtual v2, v0, Ljava/lang/String;->concat(Ljava/lang/String;)Ljava/lang/String;
+  000024  move-result-object v4
+  000026  move-object v2, v4
+  000028  new-instance v0, Ljava/io/FileInputStream;
+  00002c  const/4 v4, 1
+  00002e  new-instance v1, Ljava/io/File;
+  000032  const/4 v4, 2
+  000034  invoke-direct v1, v2, Ljava/io/File;-><init>(Ljava/lang/String;)V
+  00003a  const/4 v4, 3
+  00003c  invoke-direct v0, v1, Ljava/io/FileInputStream;-><init>(Ljava/io/File;)V
+  000042  const/4 v4, 4
+  000044  return-object v0
+  000046  nop 
+  000048  <androguard.core.dex.FillArrayData object at 0x7ff3f50f9b90>

@@ -1,0 +1,322 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lye/b; semantic=AssetTracksLoader
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lye/b;-><clinit>()V =====
+dex=classes.dex code_offset=15518812 instructions=97 access=static constructor callers=0 callees=22
+callees: Lcom/getmimo/data/content/model/track/ContentLocale;->getLanguageString()Ljava/lang/String;, Lcom/getmimo/data/content/model/track/ContentLocale;->values()[Lcom/getmimo/data/content/model/track/ContentLocale;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/StringBuilder;-><init>()V, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/LinkedHashMap;-><init>(I)V, Ljava/util/LinkedHashMap;-><init>(I)V, Ljava/util/LinkedHashMap;->entrySet()Ljava/util/Set;, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;, Ljava/util/Map;->put(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;, Ljava/util/Map;->put(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;, Ljava/util/Map;->size()I, Lkotlin/collections/b;->Y(I)I, Lkotlin/collections/b;->Y(I)I
+  000000  invoke-static Lcom/getmimo/data/content/model/track/ContentLocale;->values()[Lcom/getmimo/data/content/model/track/ContentLocale;
+  000006  move-result-object v8
+  000008  move-object v0, v8
+  00000a  new-instance v1, Ljava/util/LinkedHashMap;
+  00000e  const-string v9, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  000012  array-length v2, v0
+  000014  const/4 v9, 1
+  000016  invoke-static v2, Lkotlin/collections/b;->Y(I)I
+  00001c  move-result v8
+  00001e  move v2, v8
+  000020  const/16 v8, 16
+  000024  move v3, v8
+  000026  if-ge v2, v3, +004h
+  00002a  const/4 v9, 7
+  00002c  move v2, v3
+  00002e  const/4 v9, 3
+  000030  invoke-direct v1, v2, Ljava/util/LinkedHashMap;-><init>(I)V
+  000036  const/4 v9, 1
+  000038  array-length v2, v0
+  00003a  const/4 v9, 7
+  00003c  const/4 v8, 0
+  00003e  move v3, v8
+  000040  if-ge v3, v2, +024h
+  000044  const/4 v9, 7
+  000046  aget-object v4, v0, v3
+  00004a  const/4 v9, 1
+  00004c  invoke-virtual v4, Lcom/getmimo/data/content/model/track/ContentLocale;->getLanguageString()Ljava/lang/String;
+  000052  move-result-object v8
+  000054  move-object v5, v8
+  000056  new-instance v6, Ljava/lang/StringBuilder;
+  00005a  const/4 v9, 5
+  00005c  const-string v8, "lessons-"
+  000060  move-object v7, v8
+  000062  invoke-direct v6, v7, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  000068  const/4 v9, 4
+  00006a  invoke-virtual v6, v5, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  000070  invoke-virtual v6, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  000076  move-result-object v8
+  000078  move-object v5, v8
+  00007a  invoke-interface v1, v4, v5, Ljava/util/Map;->put(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;
+  000080  add-int/lit8 v3, v3, 1
+  000084  const/4 v9, 2
+  000086  goto -23h
+  000088  const/4 v9, 3
+  00008a  new-instance v0, Ljava/util/LinkedHashMap;
+  00008e  const/4 v9, 5
+  000090  invoke-interface v1, Ljava/util/Map;->size()I
+  000096  move-result v8
+  000098  move v2, v8
+  00009a  invoke-static v2, Lkotlin/collections/b;->Y(I)I
+  0000a0  move-result v8
+  0000a2  move v2, v8
+  0000a4  invoke-direct v0, v2, Ljava/util/LinkedHashMap;-><init>(I)V
+  0000aa  const/4 v9, 3
+  0000ac  invoke-virtual v1, Ljava/util/LinkedHashMap;->entrySet()Ljava/util/Set;
+  0000b2  move-result-object v8
+  0000b4  move-object v1, v8
+  0000b6  check-cast v1, Ljava/lang/Iterable;
+  0000ba  const/4 v9, 4
+  0000bc  invoke-interface v1, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  0000c2  move-result-object v8
+  0000c4  move-object v1, v8
+  0000c6  invoke-interface v1, Ljava/util/Iterator;->hasNext()Z
+  0000cc  move-result v8
+  0000ce  move v2, v8
+  0000d0  if-eqz v2, +02eh
+  0000d4  const/4 v9, 4
+  0000d6  invoke-interface v1, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0000dc  move-result-object v8
+  0000de  move-object v2, v8
+  0000e0  check-cast v2, Ljava/util/Map$Entry;
+  0000e4  const/4 v9, 1
+  0000e6  invoke-interface v2, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+  0000ec  move-result-object v8
+  0000ee  move-object v3, v8
+  0000f0  invoke-interface v2, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+  0000f6  move-result-object v8
+  0000f8  move-object v2, v8
+  0000fa  new-instance v4, Ljava/lang/StringBuilder;
+  0000fe  const/4 v9, 7
+  000100  invoke-direct v4, Ljava/lang/StringBuilder;-><init>()V
+  000106  const/4 v9, 1
+  000108  invoke-virtual v4, v2, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  00010e  const-string v8, "/tracks"
+  000112  move-object v2, v8
+  000114  invoke-virtual v4, v2, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00011a  invoke-virtual v4, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  000120  move-result-object v8
+  000122  move-object v2, v8
+  000124  invoke-interface v0, v3, v2, Ljava/util/Map;->put(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;
+  00012a  goto -32h
+  00012c  const/4 v9, 5
+  00012e  sput-object v0, Lye/b;->c Ljava/util/LinkedHashMap;
+  000132  const/4 v9, 4
+  000134  return-void 
+  000136  nop 
+  000138  <androguard.core.dex.FillArrayData object at 0x7ff3f50ec590>
+
+===== Lye/b;-><init>(Landroid/content/res/AssetManager; Lke/a;)V =====
+dex=classes.dex code_offset=15519176 instructions=9 access=public constructor callers=1 callees=1
+callers: Lae/m;->a()Ljava/lang/Object;
+callees: Ljava/lang/Object;-><init>()V
+  000000  move-object v0, v3
+  000002  invoke-direct v0, Ljava/lang/Object;-><init>()V
+  000008  const/4 v2, 4
+  00000a  iput-object v4, v0, Lye/b;->a Landroid/content/res/AssetManager;
+  00000e  const/4 v2, 5
+  000010  iput-object v5, v0, Lye/b;->b Lke/a;
+  000014  const/4 v2, 6
+  000016  return-void 
+  000018  <androguard.core.dex.FillArrayData object at 0x7ff3f50ec990>
+
+===== Lye/b;->a(Lcom/getmimo/data/content/model/track/Tutorial;)Lcom/getmimo/data/content/model/track/Tutorial; =====
+dex=classes.dex code_offset=15519268 instructions=116 access=public final callers=0 callees=17
+callees: Lcom/getmimo/data/content/model/track/Chapter;->getLessons()Ljava/util/List;, Lcom/getmimo/data/content/model/track/Lesson;->getContentType()Lcom/getmimo/data/content/model/track/LessonContentType;, Lcom/getmimo/data/content/model/track/Tutorial;->copy$default(Lcom/getmimo/data/content/model/track/Tutorial; J I Lcom/getmimo/data/content/model/track/TutorialType; Lcom/getmimo/data/content/model/track/CodeLanguage; Ljava/lang/String; Z Ljava/util/List; Ljava/lang/String; Z I Ljava/lang/Object;)Lcom/getmimo/data/content/model/track/Tutorial;, Lcom/getmimo/data/content/model/track/Tutorial;->getChapters()Ljava/util/List;, Lcom/getmimo/data/content/model/track/Tutorial;->getCodeLanguage()Lcom/getmimo/data/content/model/track/CodeLanguage;, Lcom/getmimo/data/content/model/track/Tutorial;->getType()Lcom/getmimo/data/content/model/track/TutorialType;, Ljava/lang/Enum;->ordinal()I, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/util/ArrayList;-><init>()V, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/Collection;->isEmpty()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  000000  invoke-virtual v15, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000006  invoke-virtual v15, Lcom/getmimo/data/content/model/track/Tutorial;->getType()Lcom/getmimo/data/content/model/track/TutorialType;
+  00000c  move-result-object v13
+  00000e  move-object v14, v13
+  000010  sget-object v0, Lcom/getmimo/data/content/model/track/TutorialType;->GuidedProject Lcom/getmimo/data/content/model/track/TutorialType;
+  000014  const/4 v13, 2
+  000016  if-eq v14, v0, +01dh
+  00001a  const/4 v13, 2
+  00001c  invoke-virtual v15, Lcom/getmimo/data/content/model/track/Tutorial;->getCodeLanguage()Lcom/getmimo/data/content/model/track/CodeLanguage;
+  000022  move-result-object v13
+  000024  move-object v14, v13
+  000026  sget-object v0, Lye/a;->a [I
+  00002a  const/4 v13, 7
+  00002c  invoke-virtual v14, Ljava/lang/Enum;->ordinal()I
+  000032  move-result v13
+  000034  move v14, v13
+  000036  aget v14, v0, v14
+  00003a  const/4 v13, 2
+  00003c  const/4 v13, 1
+  00003e  move v0, v13
+  000040  if-eq v14, v0, +00bh
+  000044  const/4 v13, 3
+  000046  const/4 v13, 2
+  000048  move v0, v13
+  00004a  if-eq v14, v0, +006h
+  00004e  const/4 v13, 7
+  000050  const/4 v13, 2
+  000052  move-object v0, v15
+  000054  goto +7bh
+  000056  const/4 v13, 5
+  000058  invoke-virtual v15, Lcom/getmimo/data/content/model/track/Tutorial;->getChapters()Ljava/util/List;
+  00005e  move-result-object v13
+  000060  move-object v14, v13
+  000062  new-instance v8, Ljava/util/ArrayList;
+  000066  const/4 v13, 7
+  000068  invoke-direct v8, Ljava/util/ArrayList;-><init>()V
+  00006e  const/4 v13, 2
+  000070  invoke-interface v14, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  000076  move-result-object v13
+  000078  move-object v14, v13
+  00007a  invoke-interface v14, Ljava/util/Iterator;->hasNext()Z
+  000080  move-result v13
+  000082  move v0, v13
+  000084  if-eqz v0, +045h
+  000088  const/4 v13, 2
+  00008a  invoke-interface v14, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  000090  move-result-object v13
+  000092  move-object v0, v13
+  000094  move-object v1, v0
+  000096  check-cast v1, Lcom/getmimo/data/content/model/track/Chapter;
+  00009a  const/4 v13, 4
+  00009c  invoke-virtual v1, Lcom/getmimo/data/content/model/track/Chapter;->getLessons()Ljava/util/List;
+  0000a2  move-result-object v13
+  0000a4  move-object v1, v13
+  0000a6  if-eqz v1, +00ch
+  0000aa  const/4 v13, 6
+  0000ac  invoke-interface v1, Ljava/util/Collection;->isEmpty()Z
+  0000b2  move-result v13
+  0000b4  move v2, v13
+  0000b6  if-eqz v2, +004h
+  0000ba  const/4 v13, 3
+  0000bc  goto +25h
+  0000be  const/4 v13, 5
+  0000c0  invoke-interface v1, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  0000c6  move-result-object v13
+  0000c8  move-object v1, v13
+  0000ca  const/4 v13, 3
+  0000cc  invoke-interface v1, Ljava/util/Iterator;->hasNext()Z
+  0000d2  move-result v13
+  0000d4  move v2, v13
+  0000d6  if-eqz v2, +017h
+  0000da  const/4 v13, 6
+  0000dc  invoke-interface v1, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0000e2  move-result-object v13
+  0000e4  move-object v2, v13
+  0000e6  check-cast v2, Lcom/getmimo/data/content/model/track/Lesson;
+  0000ea  const/4 v13, 4
+  0000ec  invoke-virtual v2, Lcom/getmimo/data/content/model/track/Lesson;->getContentType()Lcom/getmimo/data/content/model/track/LessonContentType;
+  0000f2  move-result-object v13
+  0000f4  move-object v2, v13
+  0000f6  sget-object v3, Lcom/getmimo/data/content/model/track/LessonContentType;->EXECUTABLE_FILES Lcom/getmimo/data/content/model/track/LessonContentType;
+  0000fa  const/4 v13, 7
+  0000fc  if-ne v2, v3, -019h
+  000100  const/4 v13, 4
+  000102  goto -44h
+  000104  const/4 v13, 4
+  000106  invoke-virtual v8, v0, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  00010c  goto -49h
+  00010e  const/4 v13, 6
+  000110  const/16 v13, 447
+  000114  move v11, v13
+  000116  const/4 v13, 0
+  000118  move v12, v13
+  00011a  const-wide/16 v1, 0
+  00011e  const/4 v13, 7
+  000120  const/4 v13, 0
+  000122  move v3, v13
+  000124  const/4 v13, 0
+  000126  move v4, v13
+  000128  const/4 v13, 0
+  00012a  move v5, v13
+  00012c  const/4 v13, 0
+  00012e  move v6, v13
+  000130  const/4 v13, 0
+  000132  move v7, v13
+  000134  const/4 v13, 0
+  000136  move v9, v13
+  000138  const/4 v13, 0
+  00013a  move v10, v13
+  00013c  move-object v0, v15
+  00013e  invoke-static/range v0 ... v12, Lcom/getmimo/data/content/model/track/Tutorial;->copy$default(Lcom/getmimo/data/content/model/track/Tutorial; J I Lcom/getmimo/data/content/model/track/TutorialType; Lcom/getmimo/data/content/model/track/CodeLanguage; Ljava/lang/String; Z Ljava/util/List; Ljava/lang/String; Z I Ljava/lang/Object;)Lcom/getmimo/data/content/model/track/Tutorial;
+  000144  move-result-object v13
+  000146  move-object v14, v13
+  000148  return-object v14
+  00014a  return-object v0
+  00014c  <androguard.core.dex.FillArrayData object at 0x7ff3f50ee750>
+
+===== Lye/b;->b(J)Ljava/io/InputStream; =====
+dex=classes.dex code_offset=15519668 instructions=36 access=public final callers=0 callees=10
+callees: Landroid/content/res/AssetManager;->open(Ljava/lang/String;)Ljava/io/InputStream;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/StringBuilder;-><init>()V, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;, Lke/a;->a()Lcom/getmimo/data/content/model/track/ContentLocale;, Lkotlin/collections/b;->W(Ljava/util/Map; Ljava/lang/Object;)Ljava/lang/Object;
+  000000  move-object v2, v5
+  000002  iget-object v0, v2, Lye/b;->b Lke/a;
+  000006  const/4 v4, 7
+  000008  invoke-virtual v0, Lke/a;->a()Lcom/getmimo/data/content/model/track/ContentLocale;
+  00000e  move-result-object v4
+  000010  move-object v0, v4
+  000012  sget-object v1, Lye/b;->c Ljava/util/LinkedHashMap;
+  000016  const/4 v4, 4
+  000018  invoke-static v1, v0, Lkotlin/collections/b;->W(Ljava/util/Map; Ljava/lang/Object;)Ljava/lang/Object;
+  00001e  move-result-object v4
+  000020  move-object v0, v4
+  000022  check-cast v0, Ljava/lang/String;
+  000026  const/4 v4, 6
+  000028  new-instance v1, Ljava/lang/StringBuilder;
+  00002c  const/4 v4, 1
+  00002e  invoke-direct v1, Ljava/lang/StringBuilder;-><init>()V
+  000034  const/4 v4, 4
+  000036  invoke-virtual v1, v0, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00003c  const-string v4, "/tutorial-"
+  000040  move-object v0, v4
+  000042  invoke-virtual v1, v0, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  000048  invoke-virtual v1, v6, v7, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+  00004e  const-string v4, ".json"
+  000052  move-object v6, v4
+  000054  invoke-virtual v1, v6, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00005a  invoke-virtual v1, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  000060  move-result-object v4
+  000062  move-object v6, v4
+  000064  iget-object v2, v2, Lye/b;->a Landroid/content/res/AssetManager;
+  000068  const/4 v4, 4
+  00006a  invoke-virtual v2, v6, Landroid/content/res/AssetManager;->open(Ljava/lang/String;)Ljava/io/InputStream;
+  000070  move-result-object v4
+  000072  move-object v2, v4
+  000074  invoke-virtual v2, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00007a  return-object v2
+  00007c  <androguard.core.dex.FillArrayData object at 0x7ff3f50ef1d0>
+
+===== Lye/b;->c()Ljava/lang/String; =====
+dex=classes.dex code_offset=15519852 instructions=6 access=public final callers=0 callees=0
+  000000  move-object v0, v4
+  000002  const-string v3, "file:///android_asset/lessons-common/icons"
+  000006  move-object v0, v3
+  000008  return-object v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3f50ef4d0>
+
+===== Lye/b;->d()Ljava/io/InputStream; =====
+dex=classes.dex code_offset=15519944 instructions=26 access=public final callers=0 callees=5
+callees: Landroid/content/res/AssetManager;->open(Ljava/lang/String;)Ljava/io/InputStream;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Lke/a;->a()Lcom/getmimo/data/content/model/track/ContentLocale;, Lkotlin/collections/b;->W(Ljava/util/Map; Ljava/lang/Object;)Ljava/lang/Object;, Lsb/j;->p(Ljava/lang/String; Ljava/lang/String;)Ljava/lang/String;
+  000000  move-object v2, v5
+  000002  iget-object v0, v2, Lye/b;->b Lke/a;
+  000006  const/4 v4, 6
+  000008  invoke-virtual v0, Lke/a;->a()Lcom/getmimo/data/content/model/track/ContentLocale;
+  00000e  move-result-object v4
+  000010  move-object v0, v4
+  000012  sget-object v1, Lye/b;->c Ljava/util/LinkedHashMap;
+  000016  const/4 v4, 2
+  000018  invoke-static v1, v0, Lkotlin/collections/b;->W(Ljava/util/Map; Ljava/lang/Object;)Ljava/lang/Object;
+  00001e  move-result-object v4
+  000020  move-object v0, v4
+  000022  check-cast v0, Ljava/lang/String;
+  000026  const/4 v4, 5
+  000028  const-string v4, "/tracks.json"
+  00002c  move-object v1, v4
+  00002e  invoke-static v0, v1, Lsb/j;->p(Ljava/lang/String; Ljava/lang/String;)Ljava/lang/String;
+  000034  move-result-object v4
+  000036  move-object v0, v4
+  000038  iget-object v2, v2, Lye/b;->a Landroid/content/res/AssetManager;
+  00003c  const/4 v4, 4
+  00003e  invoke-virtual v2, v0, Landroid/content/res/AssetManager;->open(Ljava/lang/String;)Ljava/io/InputStream;
+  000044  move-result-object v4
+  000046  move-object v2, v4
+  000048  invoke-virtual v2, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00004e  return-object v2
+  000050  <androguard.core.dex.FillArrayData object at 0x7ff3f50efcd0>

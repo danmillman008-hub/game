@@ -1,0 +1,200 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/data/content/model/track/TutorialJson; semantic=TutorialJson
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/data/content/model/track/TutorialJson;-><clinit>()V =====
+dex=classes.dex code_offset=9735688 instructions=10 access=static constructor callers=0 callees=1
+callees: Lcom/getmimo/data/content/model/track/TutorialJson$Companion;-><init>(Lkotlin/jvm/internal/c;)V
+  000000  new-instance v0, Lcom/getmimo/data/content/model/track/TutorialJson$Companion;
+  000004  const-string v3, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  000008  const/4 v2, 0
+  00000a  move v1, v2
+  00000c  invoke-direct v0, v1, Lcom/getmimo/data/content/model/track/TutorialJson$Companion;-><init>(Lkotlin/jvm/internal/c;)V
+  000012  const/4 v3, 6
+  000014  sput-object v0, Lcom/getmimo/data/content/model/track/TutorialJson;->Companion Lcom/getmimo/data/content/model/track/TutorialJson$Companion;
+  000018  const/4 v3, 6
+  00001a  return-void 
+  00001c  <androguard.core.dex.FillArrayData object at 0x7ff3faca7a50>
+
+===== Lcom/getmimo/data/content/model/track/TutorialJson;-><init>(I Lcom/getmimo/data/content/model/track/Tutorial; Lgb0/j1;)V =====
+dex=classes.dex code_offset=9735784 instructions=25 access=public synthetic constructor callers=1 callees=3
+callers: Lcom/getmimo/data/content/model/track/TutorialJson$$serializer;->deserialize(Lkotlinx/serialization/encoding/Decoder;)Lcom/getmimo/data/content/model/track/TutorialJson;
+callees: Lcom/getmimo/data/content/model/track/TutorialJson$$serializer;->getDescriptor()Lkotlinx/serialization/descriptors/SerialDescriptor;, Lgb0/a1;->j(I I Lkotlinx/serialization/descriptors/SerialDescriptor;)V, Ljava/lang/Object;-><init>()V
+  000000  move-object v1, v5
+  000002  and-int/lit8 v8, v6, 1
+  000006  const/4 v3, 7
+  000008  const/4 v3, 1
+  00000a  move v0, v3
+  00000c  if-ne v0, v8, +00bh
+  000010  const/4 v3, 3
+  000012  invoke-direct v1, Ljava/lang/Object;-><init>()V
+  000018  const/4 v3, 2
+  00001a  iput-object v7, v1, Lcom/getmimo/data/content/model/track/TutorialJson;->tutorial Lcom/getmimo/data/content/model/track/Tutorial;
+  00001e  const/4 v4, 4
+  000020  return-void 
+  000022  const/4 v3, 2
+  000024  sget-object v1, Lcom/getmimo/data/content/model/track/TutorialJson$$serializer;->INSTANCE Lcom/getmimo/data/content/model/track/TutorialJson$$serializer;
+  000028  const/4 v3, 1
+  00002a  invoke-virtual v1, Lcom/getmimo/data/content/model/track/TutorialJson$$serializer;->getDescriptor()Lkotlinx/serialization/descriptors/SerialDescriptor;
+  000030  move-result-object v4
+  000032  move-object v1, v4
+  000034  invoke-static v6, v0, v1, Lgb0/a1;->j(I I Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+  00003a  const/4 v4, 7
+  00003c  const/4 v4, 0
+  00003e  move v1, v4
+  000040  throw v1
+  000042  const/4 v3, 6
+  000044  <androguard.core.dex.FillArrayData object at 0x7ff3facafe50>
+
+===== Lcom/getmimo/data/content/model/track/TutorialJson;-><init>(Lcom/getmimo/data/content/model/track/Tutorial;)V =====
+dex=classes.dex code_offset=9735956 instructions=8 access=public constructor callers=1 callees=2
+callers: Lcom/getmimo/data/content/model/track/TutorialJson;->copy(Lcom/getmimo/data/content/model/track/Tutorial;)Lcom/getmimo/data/content/model/track/TutorialJson;
+callees: Ljava/lang/Object;-><init>()V, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000000  move-object v0, v4
+  000002  invoke-virtual v5, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000008  invoke-direct v0, Ljava/lang/Object;-><init>()V
+  00000e  const/4 v2, 5
+  000010  iput-object v5, v0, Lcom/getmimo/data/content/model/track/TutorialJson;->tutorial Lcom/getmimo/data/content/model/track/Tutorial;
+  000014  const/4 v2, 4
+  000016  return-void 
+  000018  <androguard.core.dex.FillArrayData object at 0x7ff3facb0190>
+
+===== Lcom/getmimo/data/content/model/track/TutorialJson;->component1()Lcom/getmimo/data/content/model/track/Tutorial; =====
+dex=classes.dex code_offset=9736232 instructions=6 access=public final callers=0 callees=0
+  000000  move-object v0, v4
+  000002  iget-object v0, v0, Lcom/getmimo/data/content/model/track/TutorialJson;->tutorial Lcom/getmimo/data/content/model/track/Tutorial;
+  000006  const/4 v2, 1
+  000008  return-object v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3facb0450>
+
+===== Lcom/getmimo/data/content/model/track/TutorialJson;->copy$default(Lcom/getmimo/data/content/model/track/TutorialJson; Lcom/getmimo/data/content/model/track/Tutorial; I Ljava/lang/Object;)Lcom/getmimo/data/content/model/track/TutorialJson; =====
+dex=classes.dex code_offset=9736040 instructions=14 access=public static synthetic callers=0 callees=1
+callees: Lcom/getmimo/data/content/model/track/TutorialJson;->copy(Lcom/getmimo/data/content/model/track/Tutorial;)Lcom/getmimo/data/content/model/track/TutorialJson;
+  000000  move-object v0, v4
+  000002  and-int/lit8 v6, v6, 1
+  000006  const/4 v2, 6
+  000008  if-eqz v6, +006h
+  00000c  const/4 v3, 7
+  00000e  iget-object v5, v0, Lcom/getmimo/data/content/model/track/TutorialJson;->tutorial Lcom/getmimo/data/content/model/track/Tutorial;
+  000012  const/4 v2, 5
+  000014  const/4 v3, 5
+  000016  invoke-virtual v0, v5, Lcom/getmimo/data/content/model/track/TutorialJson;->copy(Lcom/getmimo/data/content/model/track/Tutorial;)Lcom/getmimo/data/content/model/track/TutorialJson;
+  00001c  move-result-object v3
+  00001e  move-object v0, v3
+  000020  return-object v0
+  000022  nop 
+  000024  <androguard.core.dex.FillArrayData object at 0x7ff3facb0950>
+
+===== Lcom/getmimo/data/content/model/track/TutorialJson;->copy(Lcom/getmimo/data/content/model/track/Tutorial;)Lcom/getmimo/data/content/model/track/TutorialJson; =====
+dex=classes.dex code_offset=9736288 instructions=8 access=public final callers=1 callees=2
+callers: Lcom/getmimo/data/content/model/track/TutorialJson;->copy$default(Lcom/getmimo/data/content/model/track/TutorialJson; Lcom/getmimo/data/content/model/track/Tutorial; I Ljava/lang/Object;)Lcom/getmimo/data/content/model/track/TutorialJson;
+callees: Lcom/getmimo/data/content/model/track/TutorialJson;-><init>(Lcom/getmimo/data/content/model/track/Tutorial;)V, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000000  move-object v0, v3
+  000002  invoke-virtual v4, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000008  new-instance v0, Lcom/getmimo/data/content/model/track/TutorialJson;
+  00000c  const/4 v2, 7
+  00000e  invoke-direct v0, v4, Lcom/getmimo/data/content/model/track/TutorialJson;-><init>(Lcom/getmimo/data/content/model/track/Tutorial;)V
+  000014  const/4 v2, 2
+  000016  return-object v0
+  000018  <androguard.core.dex.FillArrayData object at 0x7ff3facb0c50>
+
+===== Lcom/getmimo/data/content/model/track/TutorialJson;->equals(Ljava/lang/Object;)Z =====
+dex=classes.dex code_offset=9736372 instructions=30 access=public callers=0 callees=1
+callees: Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z
+  000000  move-object v3, v7
+  000002  const/4 v5, 1
+  000004  move v0, v5
+  000006  if-ne v3, v8, +004h
+  00000a  const/4 v5, 4
+  00000c  return v0
+  00000e  const/4 v6, 1
+  000010  instance-of v1, v8, Lcom/getmimo/data/content/model/track/TutorialJson;
+  000014  const/4 v6, 6
+  000016  const/4 v5, 0
+  000018  move v2, v5
+  00001a  if-nez v1, +004h
+  00001e  const/4 v5, 2
+  000020  return v2
+  000022  const/4 v6, 4
+  000024  check-cast v8, Lcom/getmimo/data/content/model/track/TutorialJson;
+  000028  const/4 v6, 4
+  00002a  iget-object v3, v3, Lcom/getmimo/data/content/model/track/TutorialJson;->tutorial Lcom/getmimo/data/content/model/track/Tutorial;
+  00002e  const/4 v6, 2
+  000030  iget-object v8, v8, Lcom/getmimo/data/content/model/track/TutorialJson;->tutorial Lcom/getmimo/data/content/model/track/Tutorial;
+  000034  const/4 v6, 2
+  000036  invoke-static v3, v8, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z
+  00003c  move-result v6
+  00003e  move v3, v6
+  000040  if-nez v3, +004h
+  000044  const/4 v5, 7
+  000046  return v2
+  000048  const/4 v5, 4
+  00004a  return v0
+  00004c  <androguard.core.dex.FillArrayData object at 0x7ff3facb1590>
+
+===== Lcom/getmimo/data/content/model/track/TutorialJson;->getTutorial()Lcom/getmimo/data/content/model/track/Tutorial; =====
+dex=classes.dex code_offset=9736564 instructions=6 access=public final callers=1 callees=0
+callers: Lcom/getmimo/data/content/tracks/DefaultTrackLoader$getTutorial$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+  000000  move-object v0, v4
+  000002  iget-object v0, v0, Lcom/getmimo/data/content/model/track/TutorialJson;->tutorial Lcom/getmimo/data/content/model/track/Tutorial;
+  000006  const/4 v3, 4
+  000008  return-object v0
+  00000a  nop 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3facb1810>
+
+===== Lcom/getmimo/data/content/model/track/TutorialJson;->hashCode()I =====
+dex=classes.dex code_offset=9736636 instructions=8 access=public callers=0 callees=1
+callees: Lcom/getmimo/data/content/model/track/Tutorial;->hashCode()I
+  000000  move-object v0, v3
+  000002  iget-object v0, v0, Lcom/getmimo/data/content/model/track/TutorialJson;->tutorial Lcom/getmimo/data/content/model/track/Tutorial;
+  000006  const/4 v2, 5
+  000008  invoke-virtual v0, Lcom/getmimo/data/content/model/track/Tutorial;->hashCode()I
+  00000e  move-result v2
+  000010  move v0, v2
+  000012  return v0
+  000014  <androguard.core.dex.FillArrayData object at 0x7ff3facb1b90>
+
+===== Lcom/getmimo/data/content/model/track/TutorialJson;->toString()Ljava/lang/String; =====
+dex=classes.dex code_offset=9736756 instructions=19 access=public callers=0 callees=4
+callees: Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  000000  move-object v2, v6
+  000002  iget-object v2, v2, Lcom/getmimo/data/content/model/track/TutorialJson;->tutorial Lcom/getmimo/data/content/model/track/Tutorial;
+  000006  const/4 v4, 7
+  000008  new-instance v0, Ljava/lang/StringBuilder;
+  00000c  const/4 v4, 1
+  00000e  const-string v4, "TutorialJson(tutorial="
+  000012  move-object v1, v4
+  000014  invoke-direct v0, v1, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  00001a  const/4 v4, 5
+  00001c  invoke-virtual v0, v2, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  000022  const-string v4, ")"
+  000026  move-object v2, v4
+  000028  invoke-virtual v0, v2, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  00002e  invoke-virtual v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  000034  move-result-object v5
+  000036  move-object v2, v5
+  000038  return-object v2
+  00003a  nop 
+  00003c  <androguard.core.dex.FillArrayData object at 0x7ff3facb2110>
+
+===== Lcom/getmimo/data/content/model/track/TutorialJson;->write$Self$content(Lcom/getmimo/data/content/model/track/TutorialJson; Lfb0/b; Lkotlinx/serialization/descriptors/SerialDescriptor;)V =====
+dex=classes.dex code_offset=9736140 instructions=11 access=public static final synthetic callers=1 callees=1
+callers: Lcom/getmimo/data/content/model/track/TutorialJson$$serializer;->serialize(Lkotlinx/serialization/encoding/Encoder; Lcom/getmimo/data/content/model/track/TutorialJson;)V
+callees: Lfb0/b;->i(Lkotlinx/serialization/descriptors/SerialDescriptor; I Lkotlinx/serialization/KSerializer; Ljava/lang/Object;)V
+  000000  move-object v2, v6
+  000002  sget-object v0, Lcom/getmimo/data/content/model/track/Tutorial$$serializer;->INSTANCE Lcom/getmimo/data/content/model/track/Tutorial$$serializer;
+  000006  const/4 v4, 5
+  000008  iget-object v2, v2, Lcom/getmimo/data/content/model/track/TutorialJson;->tutorial Lcom/getmimo/data/content/model/track/Tutorial;
+  00000c  const/4 v5, 2
+  00000e  const/4 v4, 0
+  000010  move v1, v4
+  000012  invoke-interface v7, v8, v1, v0, v2, Lfb0/b;->i(Lkotlinx/serialization/descriptors/SerialDescriptor; I Lkotlinx/serialization/KSerializer; Ljava/lang/Object;)V
+  000018  const/4 v4, 4
+  00001a  return-void 
+  00001c  <androguard.core.dex.FillArrayData object at 0x7ff3facb24d0>

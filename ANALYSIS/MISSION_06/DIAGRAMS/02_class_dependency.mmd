@@ -1,0 +1,29 @@
+%% MISSION 06 — original Mimo 9.35 architecture, reconstructed from DEX bytecode.
+%% APK sha256 48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+%% Classification of each node is in the corresponding numbered report and EVIDENCE_DATABASE.json.
+%% Solid edges = VERIFIED_STATIC invoke/field xref; dashed = INFERRED or client-side boundary.
+flowchart LR
+  DI["Lhm/b; DI container<br/>13 Object slots"]
+  DI --> VM["base/c; InteractiveLessonBaseViewModel"]
+  VM --> REPO["LessonProgressRepository"]
+  VM --> QUEUE["LessonProgressQueue"]
+  VM --> ANALYTICS["analytics/a;"]
+  VM --> SOUND["lesson/sound/a;"]
+  VM --> PREFS["data/local/a; DataStore prefs"]
+  VM --> FILES["mf/a; filesDir"]
+  REPO --> API["LessonProgressApi (Retrofit)"]
+  REPO --> DAO["cg/a; LessonProgressDao"]
+  REPO --> TRACKS["tracks/c; DefaultTracksRepository"]
+  REPO --> COMPLETION["completion/a; CompletionRepository"]
+  REPO --> NET["network/a; NetworkUtils"]
+  DAO --> ROOM["Room lesson_progress"]
+  QUEUE --> DEVMENU["ze/a; dev menu storage"]
+  VM --> BUNDLE["LessonBundle (Parcelable)"]
+  VM --> CONTENT["LessonContent$Interactive"]
+  CONTENT --> MODULES["LessonModule sealed classes"]
+  VM --> BASEFRAG["base/b; InteractiveLessonBaseFragment"]
+  BASEFRAG --> CHILD["fillthegap/a, selection/a, spell/a,<br/>validatedinput(Lqm/d), webview/c"]
+  CHILD --> VM
+  BASEFRAG --> RUN["RunButton / InteractionKeyboard"]
+  VM --> LIVEDATA["m0 LiveData + kotlinx StateFlow"]
+  VM --> COROUTINE["ra0/z; coroutine launchers"]

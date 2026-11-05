@@ -1,0 +1,33 @@
+%% MISSION 06 — original Mimo 9.35 architecture, reconstructed from DEX bytecode.
+%% APK sha256 48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+%% Classification of each node is in the corresponding numbered report and EVIDENCE_DATABASE.json.
+%% Solid edges = VERIFIED_STATIC invoke/field xref; dashed = INFERRED or client-side boundary.
+flowchart TD
+  A["APK assets/lessons-&lt;locale&gt;/tracks/"] --> B["ContentLocale enum<br/>ru en es pt de fr it id tr pl"]
+  B --> C["Lye/b;&lt;clinit&gt; builds<br/>locale → 'lessons-&lt;lang&gt;/tracks'"]
+  C --> D{"which file?"}
+  D -->|"tracks.json"| E["Lye/b;-&gt;d() AssetManager.open"]
+  D -->|"tutorial-&lt;id&gt;.json"| F["Lye/b;-&gt;b(J) AssetManager.open"]
+  E --> G["DefaultTrackLoader.a(J,I,I)<br/>BufferedReader UTF-8 readText"]
+  F --> G
+  G --> H["kotlinx.serialization Json.decodeFromString<br/>TracksJson / TutorialJson / LessonContent DTO"]
+  H --> I["string field 'content' = XML-like lesson DSL"]
+  I --> J["Lte/c;-&gt;b(String)<br/>XmlPullParserFactory.newInstance()<br/>setNamespaceAware(true)"]
+  J --> K{"START_TAG name"}
+  K -->|p| K1["Lte/d;-&gt;a → LessonModule$Paragraph"]
+  K -->|code| K2["Lte/a;-&gt;a → LessonModule$Code<br/>interactions/options/output"]
+  K -->|selection| K3["Lte/e;-&gt;a → LessonModule$Selection"]
+  K -->|img| K4["Lte/c;-&gt;a → LessonModule$Image"]
+  K -->|webview| K5["Lte/g;-&gt;a → LessonModule$Webview"]
+  K -->|database| K6["Lte/b;-&gt;a → LessonModule$Database"]
+  K -->|html/body/unknown| K7["skip + xml_parse_error_module"]
+  K1 --> L["List&lt;LessonModule&gt; with ModuleVisibility<br/>ALWAYS / CORRECT / WRONG"]
+  K2 --> L
+  K3 --> L
+  K4 --> L
+  K5 --> L
+  K6 --> L
+  L --> M["Lgm/h;-&gt;a(List) → LessonInteractionType<br/>9 possible renderer types"]
+  M --> N["InteractiveLessonViewModel.E()<br/>Lgm/g state → LiveData"]
+  N --> O["base/c;-&gt;O() filters ALWAYS modules,<br/>jm/j paragraph, jm/i image, jm/k webview"]
+  O --> P["RecyclerView / Compose renderer<br/>+ CodeBodyView / DatabaseView"]

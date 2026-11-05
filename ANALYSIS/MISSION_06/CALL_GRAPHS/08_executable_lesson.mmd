@@ -1,0 +1,29 @@
+# executableFiles → solvedContent comparison → progress / browser output
+
+```mermaid
+flowchart TD
+  N0["LessonContent$Executable$File.getSolvedContent<br/><small>track @9694428</small>"]
+  N1["LessonContent$Executable.getFiles<br/><small>track @9696572</small>"]
+  N2["DefaultTracksRepository$getPublishSetVersion$1.<init><br/><small>tracks @9743188</small>"]
+  N3["DefaultTracksRepository.c<br/><small>tracks @9748376</small>"]
+  N4["ProjectViewModel.getContent<br/><small>execution @9847952</small>"]
+  N5["LessonProgress.<init><br/><small>room @9910592</small>"]
+  N6["LessonProgressRepository.createLessonProgress<br/><small>progress @10063916</small>"]
+  N7["ExecutableLessonBundle.d<br/><small>model @0</small>"]
+  N8["ExecutableLessonViewModel.doOnLessonCorrectlySolved<br/><small>executable @10913380</small>"]
+  N9["ExecutableLessonViewModel.executeLessonAndStoreProgress<br/><small>executable @10912932</small>"]
+  N10["g.<init><br/><small>Ldm @ext</small>"]
+  N11["h.<init><br/><small>Ldm @ext</small>"]
+  N9 --> N0
+  N9 --> N1
+  N9 --> N4
+  N9 --> N10
+  N9 --> N11
+  N8 --> N6
+  N8 --> N7
+  N6 --> N3
+  N6 --> N5
+  N3 --> N2
+```
+
+Edges are real `invoke-*` xrefs extracted from the 12 original DEX files (androguard 4.1.4).

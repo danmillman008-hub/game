@@ -1,0 +1,97 @@
+# correct/incorrect → LessonProgress → local Room queue → sync attempt
+
+```mermaid
+flowchart TD
+  N0["a.o<br/><small>analytics @9513424</small>"]
+  N1["TutorialType.getTrackingField<br/><small>track @9739460</small>"]
+  N2["a.f<br/><small>local @9784268</small>"]
+  N3["LessonProgress.getAttempts<br/><small>room @9912488</small>"]
+  N4["LessonProgress.isSolvedCorrectly<br/><small>room @9913532</small>"]
+  N5["LessonProgressQueue$storeLessonProgress$1.<init><br/><small>progress @10056352</small>"]
+  N6["LessonProgressQueue.storeLessonProgress<br/><small>progress @10058920</small>"]
+  N7["LessonProgressQueue.updateCorrectAnswersCount<br/><small>progress @10056956</small>"]
+  N8["LessonProgressQueue.updateLessonStreakDetector<br/><small>progress @10057436</small>"]
+  N9["LessonProgressRepository$postUnsyncedLessonProgress$2.<init><br/><small>progress @10061232</small>"]
+  N10["LessonProgressRepository.addOrUpdateLessonProgressInQueue<br/><small>progress @10063532</small>"]
+  N11["LessonProgressRepository.createLessonProgress<br/><small>progress @10063916</small>"]
+  N12["LessonProgressRepository.postUnsyncedLessonProgress<br/><small>progress @10065264</small>"]
+  N13["a.a<br/><small>network @10174360</small>"]
+  N14["g.a<br/><small>codeplayground @10456892</small>"]
+  N15["InteractiveLessonBaseViewModel$lessonSolvedCorrectly$1.<init><br/><small>base @10936828</small>"]
+  N16["InteractiveLessonBaseViewModel$lessonSolvedIncorrectly$1.<init><br/><small>base @10937224</small>"]
+  N17["InteractiveLessonBaseViewModel$storeLessonProgressInMemory$2.<init><br/><small>base @10939920</small>"]
+  N18["InteractiveLessonBaseViewModel$updateTabbedCodeViewWithBrowserOutput$1.<init><br/><small>base @10940444</small>"]
+  N19["InteractiveLessonBaseViewModel.createLessonProgress<br/><small>base @10948948</small>"]
+  N20["InteractiveLessonBaseViewModel.I<br/><small>base @10949040</small>"]
+  N21["InteractiveLessonBaseViewModel.K<br/><small>base @10949304</small>"]
+  N22["InteractiveLessonBaseViewModel.L<br/><small>base @10949404</small>"]
+  N23["InteractiveLessonBaseViewModel.Q<br/><small>base @10952588</small>"]
+  N24["InteractiveLessonBaseViewModel.T<br/><small>base @10952812</small>"]
+  N25["InteractiveLessonBaseViewModel.lessonSolvedCorrectly<br/><small>base @10953356</small>"]
+  N26["InteractiveLessonBaseViewModel.lessonSolvedIncorrectly<br/><small>base @10954596</small>"]
+  N27["InteractiveLessonBaseViewModel.updateSolutionFeedback<br/><small>base @10955960</small>"]
+  N28["InteractiveLessonBaseViewModel.showWrongFeedbackBlock<br/><small>base @10956096</small>"]
+  N29["InteractiveLessonBaseViewModel.storeLessonProgressInMemory<br/><small>base @10956692</small>"]
+  N30["InteractiveLessonBaseViewModel.trackLessonResult<br/><small>base @10956848</small>"]
+  N31["InteractiveLessonBaseViewModel.configureInteraction<br/><small>base @10957544</small>"]
+  N32["InteractiveLessonBaseViewModel.i0<br/><small>base @10957668</small>"]
+  N33["a.a<br/><small>sound @11019712</small>"]
+  N34["m.<init><br/><small>Ljm @ext</small>"]
+  N35["m.b<br/><small>Ljm @ext</small>"]
+  N36["q.<init><br/><small>Ljm @ext</small>"]
+  N37["a.e<br/><small>Lsk @ext</small>"]
+  N38["g.<init><br/><small>Lym @ext</small>"]
+  N39["l.<init><br/><small>Lym @ext</small>"]
+  N25 --> N4
+  N25 --> N15
+  N25 --> N19
+  N25 --> N20
+  N25 --> N21
+  N25 --> N27
+  N25 --> N29
+  N25 --> N30
+  N25 --> N32
+  N25 --> N33
+  N25 --> N35
+  N26 --> N16
+  N26 --> N19
+  N26 --> N27
+  N26 --> N28
+  N26 --> N29
+  N26 --> N33
+  N6 --> N3
+  N6 --> N5
+  N6 --> N7
+  N6 --> N8
+  N6 --> N10
+  N6 --> N37
+  N12 --> N9
+  N12 --> N13
+  N19 --> N11
+  N19 --> N21
+  N20 --> N14
+  N20 --> N21
+  N20 --> N21
+  N20 --> N21
+  N20 --> N21
+  N20 --> N23
+  N27 --> N24
+  N27 --> N36
+  N29 --> N17
+  N30 --> N0
+  N30 --> N1
+  N30 --> N21
+  N30 --> N21
+  N30 --> N21
+  N30 --> N22
+  N32 --> N18
+  N32 --> N31
+  N32 --> N38
+  N32 --> N39
+  N35 --> N34
+  N28 --> N2
+  N7 --> N4
+  N8 --> N4
+```
+
+Edges are real `invoke-*` xrefs extracted from the 12 original DEX files (androguard 4.1.4).

@@ -1,0 +1,223 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lkm/f; semantic=SelectionValidator
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lkm/f;->a(Lcom/getmimo/data/content/model/track/LessonContent$Interactive;)Ljava/util/List; =====
+dex=classes.dex code_offset=13243104 instructions=77 access=public static callers=2 callees=16
+callers: Lkm/e;->E(Lcom/getmimo/data/content/model/track/LessonContent$Interactive;)V, Lom/f;->E(Lcom/getmimo/data/content/model/track/LessonContent$Interactive;)V
+callees: La70/r;->i0(Ljava/lang/Iterable; I)I, Lcom/getmimo/data/content/model/track/LessonContent$Interactive;->getLessonModules()Ljava/util/List;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/util/ArrayList;-><init>()V, Ljava/util/ArrayList;-><init>(I)V, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;, Ljava/util/Collections;->shuffle(Ljava/util/List;)V, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Lkotlin/collections/a;->C0(Ljava/util/List;)Ljava/lang/Object;, Lkotlin/collections/a;->r1(Ljava/lang/Iterable;)Ljava/util/List;, Lsm/a;-><init>(Ljava/lang/CharSequence; Z Z Z)V
+  000000  move-object v5, v9
+  000002  invoke-virtual v5, Lcom/getmimo/data/content/model/track/LessonContent$Interactive;->getLessonModules()Ljava/util/List;
+  000008  move-result-object v8
+  00000a  move-object v5, v8
+  00000c  new-instance v0, Ljava/util/ArrayList;
+  000010  const-string v8, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  000014  invoke-direct v0, Ljava/util/ArrayList;-><init>()V
+  00001a  const/4 v8, 6
+  00001c  invoke-interface v5, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  000022  move-result-object v7
+  000024  move-object v5, v7
+  000026  const/4 v8, 7
+  000028  invoke-interface v5, Ljava/util/Iterator;->hasNext()Z
+  00002e  move-result v8
+  000030  move v1, v8
+  000032  if-eqz v1, +012h
+  000036  const/4 v7, 7
+  000038  invoke-interface v5, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  00003e  move-result-object v7
+  000040  move-object v1, v7
+  000042  instance-of v2, v1, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Selection;
+  000046  const/4 v7, 5
+  000048  if-eqz v2, -011h
+  00004c  const/4 v7, 6
+  00004e  invoke-virtual v0, v1, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  000054  goto -16h
+  000056  const/4 v8, 2
+  000058  invoke-static v0, Lkotlin/collections/a;->C0(Ljava/util/List;)Ljava/lang/Object;
+  00005e  move-result-object v8
+  000060  move-object v5, v8
+  000062  check-cast v5, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Selection;
+  000066  const/4 v7, 4
+  000068  iget-object v5, v5, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Selection;->c Ljava/util/ArrayList;
+  00006c  const/4 v7, 7
+  00006e  new-instance v0, Ljava/util/ArrayList;
+  000072  const/4 v8, 3
+  000074  const/16 v7, 10
+  000078  move v1, v7
+  00007a  invoke-static v5, v1, La70/r;->i0(Ljava/lang/Iterable; I)I
+  000080  move-result v7
+  000082  move v1, v7
+  000084  invoke-direct v0, v1, Ljava/util/ArrayList;-><init>(I)V
+  00008a  const/4 v7, 5
+  00008c  invoke-virtual v5, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;
+  000092  move-result-object v7
+  000094  move-object v5, v7
+  000096  invoke-interface v5, Ljava/util/Iterator;->hasNext()Z
+  00009c  move-result v7
+  00009e  move v1, v7
+  0000a0  if-eqz v1, +01eh
+  0000a4  const/4 v7, 2
+  0000a6  invoke-interface v5, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0000ac  move-result-object v8
+  0000ae  move-object v1, v8
+  0000b0  check-cast v1, Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;
+  0000b4  const/4 v7, 1
+  0000b6  new-instance v2, Lsm/a;
+  0000ba  const/4 v7, 5
+  0000bc  iget-object v3, v1, Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;->b Ljava/lang/CharSequence;
+  0000c0  const/4 v8, 1
+  0000c2  iget-boolean v1, v1, Lcom/getmimo/data/content/lessonparser/interactive/model/SelectionItem;->a Z
+  0000c6  const/4 v7, 2
+  0000c8  const/4 v8, 0
+  0000ca  move v4, v8
+  0000cc  invoke-direct v2, v3, v4, v1, v4, Lsm/a;-><init>(Ljava/lang/CharSequence; Z Z Z)V
+  0000d2  const/4 v8, 4
+  0000d4  invoke-virtual v0, v2, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  0000da  goto -22h
+  0000dc  const/4 v8, 1
+  0000de  invoke-static v0, Lkotlin/collections/a;->r1(Ljava/lang/Iterable;)Ljava/util/List;
+  0000e4  move-result-object v7
+  0000e6  move-object v5, v7
+  0000e8  invoke-static v5, Ljava/util/Collections;->shuffle(Ljava/util/List;)V
+  0000ee  const/4 v8, 6
+  0000f0  return-object v5
+  0000f2  nop 
+  0000f4  <androguard.core.dex.FillArrayData object at 0x7ff3fac50a90>
+
+===== Lkm/f;->b(Ljava/util/List;)Z =====
+dex=classes.dex code_offset=13243392 instructions=46 access=public static callers=2 callees=5
+callers: Lkm/c;->E0()V, Lom/d;->E0()V
+callees: Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/util/Collection;->isEmpty()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  000000  move-object v2, v6
+  000002  invoke-virtual v2, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000008  invoke-interface v2, Ljava/util/Collection;->isEmpty()Z
+  00000e  move-result v5
+  000010  move v0, v5
+  000012  if-eqz v0, +004h
+  000016  const/4 v5, 3
+  000018  goto +30h
+  00001a  const/4 v5, 4
+  00001c  invoke-interface v2, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  000022  move-result-object v5
+  000024  move-object v2, v5
+  000026  const/4 v5, 2
+  000028  invoke-interface v2, Ljava/util/Iterator;->hasNext()Z
+  00002e  move-result v4
+  000030  move v0, v4
+  000032  if-eqz v0, +022h
+  000036  const/4 v5, 5
+  000038  invoke-interface v2, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  00003e  move-result-object v4
+  000040  move-object v0, v4
+  000042  check-cast v0, Lsm/a;
+  000046  const/4 v4, 4
+  000048  iget-boolean v1, v0, Lsm/a;->c Z
+  00004c  const/4 v5, 2
+  00004e  iget-boolean v0, v0, Lsm/a;->b Z
+  000052  const/4 v5, 2
+  000054  if-eqz v1, +006h
+  000058  const/4 v4, 4
+  00005a  if-eqz v0, +00ah
+  00005e  const/4 v5, 6
+  000060  const/4 v4, 6
+  000062  if-nez v1, -01eh
+  000066  const/4 v4, 3
+  000068  if-eqz v0, -021h
+  00006c  const/4 v4, 2
+  00006e  const/4 v5, 7
+  000070  const/4 v5, 0
+  000072  move v2, v5
+  000074  return v2
+  000076  const/4 v4, 2
+  000078  const/4 v4, 1
+  00007a  move v2, v4
+  00007c  return v2
+  00007e  nop 
+  000080  <androguard.core.dex.FillArrayData object at 0x7ff3fac517d0>
+
+===== Lkm/f;->c(Ljava/util/List;)Ljava/util/ArrayList; =====
+dex=classes.dex code_offset=13243580 instructions=35 access=public static callers=2 callees=7
+callers: Lkm/e;->a0()V, Lom/f;->a0()V
+callees: La70/r;->i0(Ljava/lang/Iterable; I)I, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/util/ArrayList;-><init>(I)V, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;, Lsm/a;->a(Lsm/a; Z Z I)Lsm/a;
+  000000  move-object v4, v8
+  000002  new-instance v0, Ljava/util/ArrayList;
+  000006  const/4 v6, 4
+  000008  const/16 v6, 10
+  00000c  move v1, v6
+  00000e  invoke-static v4, v1, La70/r;->i0(Ljava/lang/Iterable; I)I
+  000014  move-result v6
+  000016  move v1, v6
+  000018  invoke-direct v0, v1, Ljava/util/ArrayList;-><init>(I)V
+  00001e  const/4 v7, 4
+  000020  invoke-interface v4, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  000026  move-result-object v7
+  000028  move-object v4, v7
+  00002a  invoke-interface v4, Ljava/util/Iterator;->hasNext()Z
+  000030  move-result v7
+  000032  move v1, v7
+  000034  if-eqz v1, +018h
+  000038  const/4 v6, 3
+  00003a  invoke-interface v4, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  000040  move-result-object v7
+  000042  move-object v1, v7
+  000044  check-cast v1, Lsm/a;
+  000048  const/4 v6, 4
+  00004a  const/4 v6, 5
+  00004c  move v2, v6
+  00004e  const/4 v7, 0
+  000050  move v3, v7
+  000052  invoke-static v1, v3, v3, v2, Lsm/a;->a(Lsm/a; Z Z I)Lsm/a;
+  000058  move-result-object v6
+  00005a  move-object v1, v6
+  00005c  invoke-virtual v0, v1, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  000062  goto -1ch
+  000064  const/4 v6, 5
+  000066  return-object v0
+  000068  <androguard.core.dex.FillArrayData object at 0x7ff3fac521d0>
+
+===== Lkm/f;->d(Ljava/util/List;)Ljava/util/ArrayList; =====
+dex=classes.dex code_offset=13243720 instructions=37 access=public static callers=2 callees=7
+callers: Lkm/c;->E0()V, Lom/d;->E0()V
+callees: La70/r;->i0(Ljava/lang/Iterable; I)I, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/util/ArrayList;-><init>(I)V, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;, Lsm/a;->a(Lsm/a; Z Z I)Lsm/a;
+  000000  move-object v5, v8
+  000002  new-instance v0, Ljava/util/ArrayList;
+  000006  const/4 v7, 5
+  000008  const/16 v7, 10
+  00000c  move v1, v7
+  00000e  invoke-static v5, v1, La70/r;->i0(Ljava/lang/Iterable; I)I
+  000014  move-result v7
+  000016  move v1, v7
+  000018  invoke-direct v0, v1, Ljava/util/ArrayList;-><init>(I)V
+  00001e  const/4 v7, 2
+  000020  invoke-interface v5, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  000026  move-result-object v7
+  000028  move-object v5, v7
+  00002a  invoke-interface v5, Ljava/util/Iterator;->hasNext()Z
+  000030  move-result v7
+  000032  move v1, v7
+  000034  if-eqz v1, +01ah
+  000038  const/4 v7, 6
+  00003a  invoke-interface v5, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  000040  move-result-object v7
+  000042  move-object v1, v7
+  000044  check-cast v1, Lsm/a;
+  000048  const/4 v7, 7
+  00004a  const/4 v7, 1
+  00004c  move v2, v7
+  00004e  const/4 v7, 7
+  000050  move v3, v7
+  000052  const/4 v7, 0
+  000054  move v4, v7
+  000056  invoke-static v1, v4, v2, v3, Lsm/a;->a(Lsm/a; Z Z I)Lsm/a;
+  00005c  move-result-object v7
+  00005e  move-object v1, v7
+  000060  invoke-virtual v0, v1, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  000066  goto -1eh
+  000068  const/4 v7, 7
+  00006a  return-object v0
+  00006c  <androguard.core.dex.FillArrayData object at 0x7ff3fac52a50>

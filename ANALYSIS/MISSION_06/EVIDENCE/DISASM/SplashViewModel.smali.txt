@@ -1,0 +1,114 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/ui/a; semantic=SplashViewModel
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/ui/a;-><init>(Lcom/getmimo/interactors/appupdate/a;)V =====
+dex=classes.dex code_offset=10178372 instructions=7 access=public constructor callers=1 callees=1
+callers: Lae/p;->get()Ljava/lang/Object;
+callees: Landroidx/lifecycle/f1;-><init>()V
+  000000  move-object v0, v3
+  000002  invoke-direct v0, Landroidx/lifecycle/f1;-><init>()V
+  000008  const-string v2, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  00000c  iput-object v4, v0, Lcom/getmimo/ui/a;->b Lcom/getmimo/interactors/appupdate/a;
+  000010  const/4 v2, 2
+  000012  return-void 
+  000014  <androguard.core.dex.FillArrayData object at 0x7ff3fac94310>
+
+===== Lcom/getmimo/ui/a;->E(Landroid/app/Activity; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10178464 instructions=89 access=public final callers=2 callees=9
+callers: Lcom/getmimo/ui/SplashActivity$onCreate$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/SplashViewModel$checkForUpdate$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Lae/c;-><init>(Ljava/lang/Object; B)V, Lcom/getmimo/interactors/appupdate/a;->b(Landroid/app/Activity;)Lua0/r;, Lcom/getmimo/ui/SplashViewModel$checkForUpdate$1;-><init>(Lcom/getmimo/ui/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/jvm/internal/Ref$BooleanRef;-><init>()V, Lkotlinx/coroutines/flow/a;->collect(Lua0/f; Ld70/b;)Ljava/lang/Object;, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object v4, v8
+  000002  instance-of v0, v10, Lcom/getmimo/ui/SplashViewModel$checkForUpdate$1;
+  000006  const/4 v6, 7
+  000008  if-eqz v0, +019h
+  00000c  const/4 v6, 6
+  00000e  move-object v0, v10
+  000010  check-cast v0, Lcom/getmimo/ui/SplashViewModel$checkForUpdate$1;
+  000014  const/4 v7, 5
+  000016  iget v1, v0, Lcom/getmimo/ui/SplashViewModel$checkForUpdate$1;->d I
+  00001a  const/4 v6, 7
+  00001c  const/high16 v6, -2147483648
+  000020  move v2, v6
+  000022  and-int v3, v1, v2
+  000026  const/4 v7, 4
+  000028  if-eqz v3, +009h
+  00002c  const/4 v6, 2
+  00002e  sub-int/2addr v1, v2
+  000030  const/4 v6, 7
+  000032  iput v1, v0, Lcom/getmimo/ui/SplashViewModel$checkForUpdate$1;->d I
+  000036  const/4 v6, 6
+  000038  goto +9h
+  00003a  const/4 v7, 3
+  00003c  new-instance v0, Lcom/getmimo/ui/SplashViewModel$checkForUpdate$1;
+  000040  const/4 v6, 5
+  000042  invoke-direct v0, v4, v10, Lcom/getmimo/ui/SplashViewModel$checkForUpdate$1;-><init>(Lcom/getmimo/ui/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000048  const/4 v6, 3
+  00004a  iget-object v10, v0, Lcom/getmimo/ui/SplashViewModel$checkForUpdate$1;->b Ljava/lang/Object;
+  00004e  const/4 v7, 7
+  000050  sget-object v1, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000054  const/4 v7, 3
+  000056  iget v2, v0, Lcom/getmimo/ui/SplashViewModel$checkForUpdate$1;->d I
+  00005a  const/4 v7, 2
+  00005c  const/4 v6, 1
+  00005e  move v3, v6
+  000060  if-eqz v2, +019h
+  000064  const/4 v6, 4
+  000066  if-ne v2, v3, +00bh
+  00006a  const/4 v7, 4
+  00006c  iget-object v4, v0, Lcom/getmimo/ui/SplashViewModel$checkForUpdate$1;->a Lkotlin/jvm/internal/Ref$BooleanRef;
+  000070  const/4 v6, 7
+  000072  invoke-static v10, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000078  const/4 v7, 2
+  00007a  goto +3bh
+  00007c  const/4 v6, 2
+  00007e  const-string v7, "call to 'resume' before 'invoke' with coroutine"
+  000082  move-object v4, v7
+  000084  invoke-static v4, Lwc/f;->i(Ljava/lang/String;)V
+  00008a  const/4 v7, 6
+  00008c  const/4 v7, 0
+  00008e  move v4, v7
+  000090  return-object v4
+  000092  const/4 v7, 4
+  000094  invoke-static v10, Lkotlin/b;->b(Ljava/lang/Object;)V
+  00009a  const/4 v7, 5
+  00009c  new-instance v10, Lkotlin/jvm/internal/Ref$BooleanRef;
+  0000a0  const/4 v7, 7
+  0000a2  invoke-direct v10, Lkotlin/jvm/internal/Ref$BooleanRef;-><init>()V
+  0000a8  const/4 v7, 3
+  0000aa  iget-object v4, v4, Lcom/getmimo/ui/a;->b Lcom/getmimo/interactors/appupdate/a;
+  0000ae  const/4 v6, 5
+  0000b0  invoke-virtual v4, v9, Lcom/getmimo/interactors/appupdate/a;->b(Landroid/app/Activity;)Lua0/r;
+  0000b6  move-result-object v6
+  0000b8  move-object v4, v6
+  0000ba  new-instance v9, Lae/c;
+  0000be  const/4 v7, 2
+  0000c0  const/16 v7, 18
+  0000c4  move v2, v7
+  0000c6  invoke-direct v9, v10, v2, Lae/c;-><init>(Ljava/lang/Object; B)V
+  0000cc  const/4 v7, 5
+  0000ce  iput-object v10, v0, Lcom/getmimo/ui/SplashViewModel$checkForUpdate$1;->a Lkotlin/jvm/internal/Ref$BooleanRef;
+  0000d2  const/4 v7, 5
+  0000d4  iput v3, v0, Lcom/getmimo/ui/SplashViewModel$checkForUpdate$1;->d I
+  0000d8  const/4 v6, 2
+  0000da  invoke-virtual v4, v9, v0, Lkotlinx/coroutines/flow/a;->collect(Lua0/f; Ld70/b;)Ljava/lang/Object;
+  0000e0  move-result-object v7
+  0000e2  move-object v4, v7
+  0000e4  if-ne v4, v1, +004h
+  0000e8  const/4 v6, 3
+  0000ea  return-object v1
+  0000ec  const/4 v6, 1
+  0000ee  move-object v4, v10
+  0000f0  iget-boolean v4, v4, Lkotlin/jvm/internal/Ref$BooleanRef;->a Z
+  0000f4  const/4 v7, 6
+  0000f6  invoke-static v4, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+  0000fc  move-result-object v6
+  0000fe  move-object v4, v6
+  000100  return-object v4
+  000102  nop 
+  000104  <androguard.core.dex.FillArrayData object at 0x7ff3fac95dd0>

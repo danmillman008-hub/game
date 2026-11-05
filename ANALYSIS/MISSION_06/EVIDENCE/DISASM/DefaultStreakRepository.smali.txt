@@ -1,0 +1,849 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/data/user/streak/a; semantic=DefaultStreakRepository
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/data/user/streak/a;-><init>(Lsh/h; Lnp/a; Lcom/getmimo/analytics/a; Lze/a; Lcom/getmimo/ui/widget/d; Lrh/f;)V =====
+dex=classes.dex code_offset=10083120 instructions=24 access=public constructor callers=1 callees=2
+callers: Lae/m;->a()Ljava/lang/Object;
+callees: Ljava/lang/Object;-><init>()V, Lua0/h;->c(Ljava/lang/Object;)Lkotlinx/coroutines/flow/k;
+  000000  move-object v0, v3
+  000002  invoke-direct v0, Ljava/lang/Object;-><init>()V
+  000008  const-string v2, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  00000c  iput-object v4, v0, Lcom/getmimo/data/user/streak/a;->a Lsh/h;
+  000010  const/4 v2, 1
+  000012  iput-object v5, v0, Lcom/getmimo/data/user/streak/a;->b Lnp/a;
+  000016  const/4 v2, 2
+  000018  iput-object v6, v0, Lcom/getmimo/data/user/streak/a;->c Lcom/getmimo/analytics/a;
+  00001c  const/4 v2, 1
+  00001e  iput-object v7, v0, Lcom/getmimo/data/user/streak/a;->d Lze/a;
+  000022  const/4 v2, 3
+  000024  iput-object v8, v0, Lcom/getmimo/data/user/streak/a;->e Lcom/getmimo/ui/widget/d;
+  000028  const/4 v2, 1
+  00002a  iput-object v9, v0, Lcom/getmimo/data/user/streak/a;->f Lrh/f;
+  00002e  const/4 v2, 6
+  000030  sget-object v4, Lsh/d;->a Lsh/d;
+  000034  const/4 v2, 7
+  000036  invoke-static v4, Lua0/h;->c(Ljava/lang/Object;)Lkotlinx/coroutines/flow/k;
+  00003c  move-result-object v2
+  00003e  move-object v4, v2
+  000040  iput-object v4, v0, Lcom/getmimo/data/user/streak/a;->g Lkotlinx/coroutines/flow/k;
+  000044  const/4 v2, 3
+  000046  return-void 
+  000048  <androguard.core.dex.FillArrayData object at 0x7ff3fafac8d0>
+
+===== Lcom/getmimo/data/user/streak/a;->c(Lsh/l; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10083492 instructions=103 access=public final callers=4 callees=17
+callers: Lcom/getmimo/data/user/streak/DefaultStreakRepository$getDailyStreakData$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/interactors/main/a;->a(Lorg/joda/time/DateTime; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/interactors/path/c;->d(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/store/c;->F(Lorg/joda/time/LocalDateTime; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+callees: Lcom/getmimo/core/model/streak/UserActivityResponse;->getActiveStreakLength()I, Lcom/getmimo/core/model/streak/UserActivityResponse;->getActivity()Ljava/util/List;, Lcom/getmimo/core/model/streak/UserActivityResponse;->getLongestStreakLength()I, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getDailyStreakData$1;-><init>(Lcom/getmimo/data/user/streak/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Lcom/getmimo/data/user/streak/a;->d(Lcom/getmimo/core/model/streak/UserActivityResponse; Lnp/a;)Ljava/util/ArrayList;, Lcom/getmimo/data/user/streak/a;->h(Lcom/getmimo/core/model/streak/UserActivityResponse;)Lsh/b;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/text/DateFormat;->format(Ljava/util/Date;)Ljava/lang/String;, Ljava/text/DateFormat;->format(Ljava/util/Date;)Ljava/lang/String;, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lld0/c;->j()Ljava/util/Date;, Lld0/c;->j()Ljava/util/Date;, Lrh/f;->b(Lrh/f; Ljava/util/List;)V, Lsh/h;->a(Ljava/lang/String; Ljava/lang/String; Ld70/b;)Ljava/lang/Object;, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object v5, v9
+  000002  instance-of v0, v11, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getDailyStreakData$1;
+  000006  const/4 v7, 2
+  000008  if-eqz v0, +019h
+  00000c  const/4 v8, 4
+  00000e  move-object v0, v11
+  000010  check-cast v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getDailyStreakData$1;
+  000014  const/4 v7, 3
+  000016  iget v1, v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getDailyStreakData$1;->c I
+  00001a  const/4 v8, 4
+  00001c  const/high16 v8, -2147483648
+  000020  move v2, v8
+  000022  and-int v3, v1, v2
+  000026  const/4 v8, 5
+  000028  if-eqz v3, +009h
+  00002c  const/4 v8, 6
+  00002e  sub-int/2addr v1, v2
+  000030  const/4 v7, 4
+  000032  iput v1, v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getDailyStreakData$1;->c I
+  000036  const/4 v8, 5
+  000038  goto +9h
+  00003a  const/4 v8, 3
+  00003c  new-instance v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getDailyStreakData$1;
+  000040  const/4 v8, 4
+  000042  invoke-direct v0, v5, v11, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getDailyStreakData$1;-><init>(Lcom/getmimo/data/user/streak/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000048  const/4 v7, 5
+  00004a  iget-object v11, v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getDailyStreakData$1;->a Ljava/lang/Object;
+  00004e  const/4 v7, 4
+  000050  sget-object v1, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000054  const/4 v7, 3
+  000056  iget v2, v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getDailyStreakData$1;->c I
+  00005a  const/4 v8, 7
+  00005c  iget-object v3, v5, Lcom/getmimo/data/user/streak/a;->b Lnp/a;
+  000060  const/4 v7, 6
+  000062  const/4 v8, 1
+  000064  move v4, v8
+  000066  if-eqz v2, +016h
+  00006a  const/4 v7, 7
+  00006c  if-ne v2, v4, +008h
+  000070  const/4 v7, 3
+  000072  invoke-static v11, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000078  const/4 v7, 4
+  00007a  goto +44h
+  00007c  const/4 v8, 7
+  00007e  const-string v7, "call to 'resume' before 'invoke' with coroutine"
+  000082  move-object v5, v7
+  000084  invoke-static v5, Lwc/f;->i(Ljava/lang/String;)V
+  00008a  const/4 v7, 4
+  00008c  const/4 v7, 0
+  00008e  move v5, v7
+  000090  return-object v5
+  000092  const/4 v7, 7
+  000094  invoke-static v11, Lkotlin/b;->b(Ljava/lang/Object;)V
+  00009a  const/4 v7, 6
+  00009c  iget-object v11, v3, Lnp/a;->b Ljava/text/SimpleDateFormat;
+  0000a0  const/4 v8, 6
+  0000a2  iget-object v2, v10, Lsh/l;->a Lorg/joda/time/DateTime;
+  0000a6  const/4 v8, 6
+  0000a8  invoke-virtual v2, Lld0/c;->j()Ljava/util/Date;
+  0000ae  move-result-object v7
+  0000b0  move-object v2, v7
+  0000b2  invoke-virtual v11, v2, Ljava/text/DateFormat;->format(Ljava/util/Date;)Ljava/lang/String;
+  0000b8  move-result-object v8
+  0000ba  move-object v2, v8
+  0000bc  invoke-virtual v2, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  0000c2  iget-object v10, v10, Lsh/l;->b Lorg/joda/time/DateTime;
+  0000c6  const/4 v7, 1
+  0000c8  invoke-virtual v10, Lld0/c;->j()Ljava/util/Date;
+  0000ce  move-result-object v7
+  0000d0  move-object v10, v7
+  0000d2  invoke-virtual v11, v10, Ljava/text/DateFormat;->format(Ljava/util/Date;)Ljava/lang/String;
+  0000d8  move-result-object v7
+  0000da  move-object v10, v7
+  0000dc  invoke-virtual v10, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  0000e2  iput v4, v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getDailyStreakData$1;->c I
+  0000e6  const/4 v7, 3
+  0000e8  iget-object v11, v5, Lcom/getmimo/data/user/streak/a;->a Lsh/h;
+  0000ec  const/4 v8, 2
+  0000ee  invoke-interface v11, v2, v10, v0, Lsh/h;->a(Ljava/lang/String; Ljava/lang/String; Ld70/b;)Ljava/lang/Object;
+  0000f4  move-result-object v8
+  0000f6  move-object v11, v8
+  0000f8  if-ne v11, v1, +004h
+  0000fc  const/4 v7, 3
+  0000fe  return-object v1
+  000100  const/4 v8, 6
+  000102  check-cast v11, Lcom/getmimo/core/model/streak/UserActivityResponse;
+  000106  const/4 v7, 7
+  000108  iget-object v10, v5, Lcom/getmimo/data/user/streak/a;->f Lrh/f;
+  00010c  const/4 v8, 7
+  00010e  invoke-virtual v11, Lcom/getmimo/core/model/streak/UserActivityResponse;->getActivity()Ljava/util/List;
+  000114  move-result-object v7
+  000116  move-object v0, v7
+  000118  invoke-static v10, v0, Lrh/f;->b(Lrh/f; Ljava/util/List;)V
+  00011e  const/4 v8, 3
+  000120  invoke-virtual v11, Lcom/getmimo/core/model/streak/UserActivityResponse;->getActiveStreakLength()I
+  000126  invoke-virtual v11, Lcom/getmimo/core/model/streak/UserActivityResponse;->getLongestStreakLength()I
+  00012c  invoke-static v11, v3, Lcom/getmimo/data/user/streak/a;->d(Lcom/getmimo/core/model/streak/UserActivityResponse; Lnp/a;)Ljava/util/ArrayList;
+  000132  move-result-object v7
+  000134  move-object v10, v7
+  000136  invoke-virtual v5, v11, Lcom/getmimo/data/user/streak/a;->h(Lcom/getmimo/core/model/streak/UserActivityResponse;)Lsh/b;
+  00013c  return-object v10
+  00013e  nop 
+  000140  <androguard.core.dex.FillArrayData object at 0x7ff3fafae790>
+
+===== Lcom/getmimo/data/user/streak/a;->d(Lcom/getmimo/core/model/streak/UserActivityResponse; Lnp/a;)Ljava/util/ArrayList; =====
+dex=classes.dex code_offset=10083248 instructions=51 access=public static callers=3 callees=13
+callers: Lcom/getmimo/data/user/streak/a;->c(Lsh/l; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/data/user/streak/a;->f(Lsh/k; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/data/user/streak/a;->f(Lsh/k; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+callees: La70/r;->i0(Ljava/lang/Iterable; I)I, Lcom/getmimo/core/model/streak/UserActivity;->getDate()Ljava/lang/String;, Lcom/getmimo/core/model/streak/UserActivity;->getStreakType()Ljava/lang/String;, Lcom/getmimo/core/model/streak/UserActivityResponse;->getActivity()Ljava/util/List;, Lds/w;->e(Ljava/lang/String;)Lcom/getmimo/data/user/streak/StreakType;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/util/ArrayList;-><init>(I)V, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;, Lnp/a;->b(Ljava/lang/String;)Lorg/joda/time/DateTime;, Lsh/c;-><init>(Lorg/joda/time/DateTime; Lcom/getmimo/data/user/streak/StreakType;)V
+  000000  move-object v5, v9
+  000002  invoke-virtual v5, Lcom/getmimo/core/model/streak/UserActivityResponse;->getActivity()Ljava/util/List;
+  000008  move-result-object v8
+  00000a  move-object v5, v8
+  00000c  new-instance v0, Ljava/util/ArrayList;
+  000010  const/4 v8, 3
+  000012  const/16 v8, 10
+  000016  move v1, v8
+  000018  invoke-static v5, v1, La70/r;->i0(Ljava/lang/Iterable; I)I
+  00001e  move-result v8
+  000020  move v1, v8
+  000022  invoke-direct v0, v1, Ljava/util/ArrayList;-><init>(I)V
+  000028  const/4 v8, 7
+  00002a  invoke-interface v5, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  000030  move-result-object v8
+  000032  move-object v5, v8
+  000034  invoke-interface v5, Ljava/util/Iterator;->hasNext()Z
+  00003a  move-result v7
+  00003c  move v1, v7
+  00003e  if-eqz v1, +030h
+  000042  const/4 v8, 6
+  000044  invoke-interface v5, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  00004a  move-result-object v8
+  00004c  move-object v1, v8
+  00004e  check-cast v1, Lcom/getmimo/core/model/streak/UserActivity;
+  000052  const/4 v7, 1
+  000054  new-instance v2, Lsh/c;
+  000058  const/4 v7, 3
+  00005a  invoke-virtual v1, Lcom/getmimo/core/model/streak/UserActivity;->getDate()Ljava/lang/String;
+  000060  move-result-object v7
+  000062  move-object v3, v7
+  000064  invoke-virtual v10, v3, Lnp/a;->b(Ljava/lang/String;)Lorg/joda/time/DateTime;
+  00006a  move-result-object v7
+  00006c  move-object v3, v7
+  00006e  sget-object v4, Lcom/getmimo/data/user/streak/StreakType;->b Lds/w;
+  000072  const/4 v8, 6
+  000074  invoke-virtual v1, Lcom/getmimo/core/model/streak/UserActivity;->getStreakType()Ljava/lang/String;
+  00007a  move-result-object v8
+  00007c  move-object v1, v8
+  00007e  invoke-virtual v4, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000084  invoke-static v1, Lds/w;->e(Ljava/lang/String;)Lcom/getmimo/data/user/streak/StreakType;
+  00008a  move-result-object v7
+  00008c  move-object v1, v7
+  00008e  invoke-direct v2, v3, v1, Lsh/c;-><init>(Lorg/joda/time/DateTime; Lcom/getmimo/data/user/streak/StreakType;)V
+  000094  const/4 v7, 7
+  000096  invoke-virtual v0, v2, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  00009c  goto -34h
+  00009e  const/4 v7, 3
+  0000a0  return-object v0
+  0000a2  nop 
+  0000a4  <androguard.core.dex.FillArrayData object at 0x7ff3fafaf550>
+
+===== Lcom/getmimo/data/user/streak/a;->e(Lsh/k;)Lua0/r; =====
+dex=classes.dex code_offset=10083904 instructions=13 access=public final callers=2 callees=2
+callers: Lcom/getmimo/interactors/streak/a;->a(Lorg/joda/time/DateTime;)Lua0/i;, Lsh/m;->a(Lsh/m;)Lua0/r;
+callees: Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakMonthData$1;-><init>(Lcom/getmimo/data/user/streak/a; Lsh/k; Ld70/b;)V, Lua0/r;-><init>(Lo70/m;)V
+  000000  move-object v2, v6
+  000002  new-instance v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakMonthData$1;
+  000006  const/4 v5, 2
+  000008  const/4 v4, 0
+  00000a  move v1, v4
+  00000c  invoke-direct v0, v2, v7, v1, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakMonthData$1;-><init>(Lcom/getmimo/data/user/streak/a; Lsh/k; Ld70/b;)V
+  000012  const/4 v5, 4
+  000014  new-instance v2, Lua0/r;
+  000018  const/4 v5, 5
+  00001a  invoke-direct v2, v0, Lua0/r;-><init>(Lo70/m;)V
+  000020  const/4 v5, 1
+  000022  return-object v2
+  000024  <androguard.core.dex.FillArrayData object at 0x7ff3fafaf9d0>
+
+===== Lcom/getmimo/data/user/streak/a;->f(Lsh/k; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10083984 instructions=224 access=public final callers=3 callees=27
+callers: Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakMonthData$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakMonthRemoteData$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lsh/m;->b(Lsh/m; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+callees: Lcom/getmimo/analytics/a;->h(I)V, Lcom/getmimo/analytics/a;->k(Lcom/getmimo/analytics/PeopleProperty; Ljava/lang/Object;)V, Lcom/getmimo/analytics/a;->k(Lcom/getmimo/analytics/PeopleProperty; Ljava/lang/Object;)V, Lcom/getmimo/analytics/a;->n(Lcom/getmimo/analytics/SuperProperty; Ljava/lang/Object;)V, Lcom/getmimo/core/model/streak/UserActivityResponse;->getActiveStreakLength()I, Lcom/getmimo/core/model/streak/UserActivityResponse;->getLongestStreakLength()I, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakMonthRemoteData$1;-><init>(Lcom/getmimo/data/user/streak/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Lcom/getmimo/data/user/streak/a;->d(Lcom/getmimo/core/model/streak/UserActivityResponse; Lnp/a;)Ljava/util/ArrayList;, Lcom/getmimo/data/user/streak/a;->d(Lcom/getmimo/core/model/streak/UserActivityResponse; Lnp/a;)Ljava/util/ArrayList;, Lcom/getmimo/data/user/streak/a;->h(Lcom/getmimo/core/model/streak/UserActivityResponse;)Lsh/b;, Lcom/getmimo/data/user/streak/a;->h(Lcom/getmimo/core/model/streak/UserActivityResponse;)Lsh/b;, Lcom/getmimo/data/user/streak/a;->i(Lsh/k; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/widget/d;->a(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lj6/u;->g(I Ljava/lang/String;)Ljava/lang/String;, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlinx/coroutines/flow/k;->l(Ljava/lang/Object; Ljava/lang/Object;)Z, Lle0/a;->a(Ljava/lang/String; [Ljava/lang/Object;)V, Lsh/e;-><init>(Lsh/k; Lsh/i;)V, Lsh/i;-><init>(I I Ljava/util/List; Lsh/b;)V, Lsh/i;-><init>(I I Ljava/util/List; Lsh/b;)V, Lsk/a;->a()Lbf/a;, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object v10, v13
+  000002  instance-of v0, v15, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakMonthRemoteData$1;
+  000006  const/4 v12, 4
+  000008  if-eqz v0, +019h
+  00000c  const/4 v12, 1
+  00000e  move-object v0, v15
+  000010  check-cast v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakMonthRemoteData$1;
+  000014  const/4 v12, 6
+  000016  iget v1, v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakMonthRemoteData$1;->e I
+  00001a  const/4 v12, 4
+  00001c  const/high16 v12, -2147483648
+  000020  move v2, v12
+  000022  and-int v3, v1, v2
+  000026  const/4 v12, 5
+  000028  if-eqz v3, +009h
+  00002c  const/4 v12, 4
+  00002e  sub-int/2addr v1, v2
+  000030  const/4 v12, 6
+  000032  iput v1, v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakMonthRemoteData$1;->e I
+  000036  const/4 v12, 1
+  000038  goto +9h
+  00003a  const/4 v12, 2
+  00003c  new-instance v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakMonthRemoteData$1;
+  000040  const/4 v12, 5
+  000042  invoke-direct v0, v10, v15, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakMonthRemoteData$1;-><init>(Lcom/getmimo/data/user/streak/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000048  const/4 v12, 6
+  00004a  iget-object v15, v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakMonthRemoteData$1;->c Ljava/lang/Object;
+  00004e  const/4 v12, 2
+  000050  sget-object v1, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000054  const/4 v12, 2
+  000056  iget v2, v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakMonthRemoteData$1;->e I
+  00005a  const/4 v12, 7
+  00005c  const/4 v12, 2
+  00005e  move v3, v12
+  000060  const/4 v12, 1
+  000062  move v4, v12
+  000064  const/4 v12, 0
+  000066  move v5, v12
+  000068  if-eqz v2, +023h
+  00006c  const/4 v12, 1
+  00006e  if-eq v2, v4, +017h
+  000072  const/4 v12, 5
+  000074  if-ne v2, v3, +00bh
+  000078  const/4 v12, 5
+  00007a  iget-object v10, v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakMonthRemoteData$1;->b Lsh/i;
+  00007e  const/4 v12, 7
+  000080  invoke-static v15, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000086  const/4 v12, 1
+  000088  return-object v10
+  00008a  const/4 v12, 5
+  00008c  const-string v12, "call to 'resume' before 'invoke' with coroutine"
+  000090  move-object v10, v12
+  000092  invoke-static v10, Lwc/f;->i(Ljava/lang/String;)V
+  000098  const/4 v12, 3
+  00009a  return-object v5
+  00009c  const/4 v12, 5
+  00009e  iget-object v14, v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakMonthRemoteData$1;->a Lsh/k;
+  0000a2  const/4 v12, 1
+  0000a4  invoke-static v15, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000aa  const/4 v12, 3
+  0000ac  goto +17h
+  0000ae  const/4 v12, 6
+  0000b0  invoke-static v15, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000b6  const/4 v12, 4
+  0000b8  iput-object v14, v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakMonthRemoteData$1;->a Lsh/k;
+  0000bc  const/4 v12, 6
+  0000be  iput v4, v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakMonthRemoteData$1;->e I
+  0000c2  const/4 v12, 2
+  0000c4  invoke-virtual v10, v14, v0, Lcom/getmimo/data/user/streak/a;->i(Lsh/k; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  0000ca  move-result-object v12
+  0000cc  move-object v15, v12
+  0000ce  if-ne v15, v1, +005h
+  0000d2  const/4 v12, 5
+  0000d4  goto/16 +0e4h
+  0000d8  const/4 v12, 5
+  0000da  check-cast v15, Lcom/getmimo/core/model/streak/UserActivityResponse;
+  0000de  const/4 v12, 5
+  0000e0  iget-object v2, v10, Lcom/getmimo/data/user/streak/a;->d Lze/a;
+  0000e4  const/4 v12, 5
+  0000e6  check-cast v2, Lsk/a;
+  0000ea  const/4 v12, 5
+  0000ec  invoke-virtual v2, Lsk/a;->a()Lbf/a;
+  0000f2  move-result-object v12
+  0000f4  move-object v2, v12
+  0000f6  iget-object v6, v10, Lcom/getmimo/data/user/streak/a;->b Lnp/a;
+  0000fa  const/4 v12, 3
+  0000fc  if-eqz v2, +01bh
+  000100  const/4 v12, 3
+  000102  new-instance v7, Lsh/i;
+  000106  const/4 v12, 2
+  000108  iget v8, v2, Lbf/a;->a I
+  00010c  const/4 v12, 3
+  00010e  iget v2, v2, Lbf/a;->b I
+  000112  const/4 v12, 7
+  000114  invoke-static v15, v6, Lcom/getmimo/data/user/streak/a;->d(Lcom/getmimo/core/model/streak/UserActivityResponse; Lnp/a;)Ljava/util/ArrayList;
+  00011a  move-result-object v12
+  00011c  move-object v6, v12
+  00011e  invoke-virtual v10, v15, Lcom/getmimo/data/user/streak/a;->h(Lcom/getmimo/core/model/streak/UserActivityResponse;)Lsh/b;
+  000124  move-result-object v12
+  000126  move-object v15, v12
+  000128  invoke-direct v7, v8, v2, v6, v15, Lsh/i;-><init>(I I Ljava/util/List; Lsh/b;)V
+  00012e  const/4 v12, 4
+  000130  goto +1dh
+  000132  const/4 v12, 5
+  000134  new-instance v7, Lsh/i;
+  000138  const/4 v12, 5
+  00013a  invoke-virtual v15, Lcom/getmimo/core/model/streak/UserActivityResponse;->getActiveStreakLength()I
+  000140  move-result v12
+  000142  move v2, v12
+  000144  invoke-virtual v15, Lcom/getmimo/core/model/streak/UserActivityResponse;->getLongestStreakLength()I
+  00014a  move-result v12
+  00014c  move v8, v12
+  00014e  invoke-static v15, v6, Lcom/getmimo/data/user/streak/a;->d(Lcom/getmimo/core/model/streak/UserActivityResponse; Lnp/a;)Ljava/util/ArrayList;
+  000154  move-result-object v12
+  000156  move-object v6, v12
+  000158  invoke-virtual v10, v15, Lcom/getmimo/data/user/streak/a;->h(Lcom/getmimo/core/model/streak/UserActivityResponse;)Lsh/b;
+  00015e  move-result-object v12
+  000160  move-object v15, v12
+  000162  invoke-direct v7, v2, v8, v6, v15, Lsh/i;-><init>(I I Ljava/util/List; Lsh/b;)V
+  000168  const/4 v12, 6
+  00016a  iget-object v15, v10, Lcom/getmimo/data/user/streak/a;->c Lcom/getmimo/analytics/a;
+  00016e  const/4 v12, 6
+  000170  iget v2, v15, Lcom/getmimo/analytics/a;->i I
+  000174  const/4 v12, 7
+  000176  iget v6, v7, Lsh/i;->a I
+  00017a  const/4 v12, 7
+  00017c  if-eq v6, v2, +023h
+  000180  const/4 v12, 4
+  000182  const/4 v12, -1
+  000184  move v2, v12
+  000186  if-eq v6, v2, +01eh
+  00018a  const/4 v12, 6
+  00018c  sget-object v2, Lcom/getmimo/analytics/SuperProperty;->c Lcom/getmimo/analytics/SuperProperty;
+  000190  const/4 v12, 6
+  000192  invoke-static v6, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  000198  move-result-object v12
+  00019a  move-object v8, v12
+  00019c  invoke-virtual v15, v2, v8, Lcom/getmimo/analytics/a;->n(Lcom/getmimo/analytics/SuperProperty; Ljava/lang/Object;)V
+  0001a2  const/4 v12, 4
+  0001a4  sget-object v2, Lcom/getmimo/analytics/PeopleProperty;->H Lcom/getmimo/analytics/PeopleProperty;
+  0001a8  const/4 v12, 4
+  0001aa  invoke-static v6, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  0001b0  move-result-object v12
+  0001b2  move-object v8, v12
+  0001b4  invoke-virtual v15, v2, v8, Lcom/getmimo/analytics/a;->k(Lcom/getmimo/analytics/PeopleProperty; Ljava/lang/Object;)V
+  0001ba  const/4 v12, 7
+  0001bc  iput v6, v15, Lcom/getmimo/analytics/a;->i I
+  0001c0  const/4 v12, 4
+  0001c2  const/4 v12, 7
+  0001c4  sget-object v2, Lcom/getmimo/analytics/PeopleProperty;->I Lcom/getmimo/analytics/PeopleProperty;
+  0001c8  const/4 v12, 1
+  0001ca  iget v6, v7, Lsh/i;->b I
+  0001ce  const/4 v12, 1
+  0001d0  invoke-static v6, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  0001d6  move-result-object v12
+  0001d8  move-object v8, v12
+  0001da  invoke-virtual v15, v2, v8, Lcom/getmimo/analytics/a;->k(Lcom/getmimo/analytics/PeopleProperty; Ljava/lang/Object;)V
+  0001e0  const/4 v12, 1
+  0001e2  sget-object v2, Lle0/b;->a Lle0/a;
+  0001e6  const/4 v12, 1
+  0001e8  const-string v12, "Set longest streak length: "
+  0001ec  move-object v8, v12
+  0001ee  invoke-static v6, v8, Lj6/u;->g(I Ljava/lang/String;)Ljava/lang/String;
+  0001f4  move-result-object v12
+  0001f6  move-object v6, v12
+  0001f8  const/4 v12, 0
+  0001fa  move v8, v12
+  0001fc  new-array v9, v8, [Ljava/lang/Object;
+  000200  const/4 v12, 2
+  000202  invoke-virtual v2, v6, v9, Lle0/a;->a(Ljava/lang/String; [Ljava/lang/Object;)V
+  000208  const/4 v12, 4
+  00020a  iget-object v2, v7, Lsh/i;->d Lsh/b;
+  00020e  const/4 v12, 5
+  000210  iget v2, v2, Lsh/b;->b I
+  000214  const/4 v12, 5
+  000216  const/16 v12, 100
+  00021a  move v6, v12
+  00021c  if-eq v2, v6, +00fh
+  000220  const/4 v12, 7
+  000222  const/16 v12, 200
+  000226  move v6, v12
+  000228  if-eq v2, v6, +00eh
+  00022c  const/4 v12, 7
+  00022e  const/16 v12, 400
+  000232  move v4, v12
+  000234  if-eq v2, v4, +006h
+  000238  const/4 v12, 1
+  00023a  const/4 v12, 2
+  00023c  move v4, v8
+  00023e  goto +4h
+  000240  const/4 v12, 4
+  000242  move v4, v3
+  000244  const/4 v12, 7
+  000246  invoke-virtual v15, v4, Lcom/getmimo/analytics/a;->h(I)V
+  00024c  const/4 v12, 4
+  00024e  iget-boolean v15, v14, Lsh/k;->c Z
+  000252  const/4 v12, 2
+  000254  if-eqz v15, +025h
+  000258  const/4 v12, 2
+  00025a  new-instance v15, Lsh/e;
+  00025e  const/4 v12, 4
+  000260  invoke-direct v15, v14, v7, Lsh/e;-><init>(Lsh/k; Lsh/i;)V
+  000266  const/4 v12, 1
+  000268  iget-object v14, v10, Lcom/getmimo/data/user/streak/a;->g Lkotlinx/coroutines/flow/k;
+  00026c  const/4 v12, 6
+  00026e  invoke-virtual v14, v5, v15, Lkotlinx/coroutines/flow/k;->l(Ljava/lang/Object; Ljava/lang/Object;)Z
+  000274  iput-object v5, v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakMonthRemoteData$1;->a Lsh/k;
+  000278  const/4 v12, 2
+  00027a  iput-object v7, v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakMonthRemoteData$1;->b Lsh/i;
+  00027e  const/4 v12, 1
+  000280  iput v3, v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakMonthRemoteData$1;->e I
+  000284  const/4 v12, 2
+  000286  iget-object v10, v10, Lcom/getmimo/data/user/streak/a;->e Lcom/getmimo/ui/widget/d;
+  00028a  const/4 v12, 6
+  00028c  invoke-virtual v10, v0, Lcom/getmimo/ui/widget/d;->a(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  000292  move-result-object v12
+  000294  move-object v10, v12
+  000296  if-ne v10, v1, +004h
+  00029a  const/4 v12, 4
+  00029c  return-object v1
+  00029e  const/4 v12, 7
+  0002a0  return-object v7
+  0002a2  nop 
+  0002a4  <androguard.core.dex.FillArrayData object at 0x7ff3fafb7c50>
+
+===== Lcom/getmimo/data/user/streak/a;->g(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10084732 instructions=103 access=public final callers=2 callees=14
+callers: Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakRepairTargetDate$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/store/c;->G(Lcom/getmimo/data/model/store/Products; Z Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/io/Serializable;
+callees: Lcom/getmimo/core/model/streak/Streak;->getStart()Ljava/lang/String;, Lcom/getmimo/core/model/streak/UserActivityResponse;->getActiveStreak()Lcom/getmimo/core/model/streak/Streak;, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakRepairTargetDate$1;-><init>(Lcom/getmimo/data/user/streak/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Lcom/getmimo/data/user/streak/a;->i(Lsh/k; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lnp/a;->b(Ljava/lang/String;)Lorg/joda/time/DateTime;, Lorg/joda/time/DateTime;-><init>()V, Lorg/joda/time/DateTime;-><init>()V, Lorg/joda/time/DateTime;->p(I)Lorg/joda/time/DateTime;, Lorg/joda/time/DateTime;->p(I)Lorg/joda/time/DateTime;, Lorg/joda/time/DateTime;->x()Lorg/joda/time/DateTime;, Lsh/j;->a(Lorg/joda/time/DateTime; Z)Lsh/k;, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object v4, v8
+  000002  instance-of v0, v9, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakRepairTargetDate$1;
+  000006  const/4 v6, 3
+  000008  if-eqz v0, +019h
+  00000c  const/4 v6, 2
+  00000e  move-object v0, v9
+  000010  check-cast v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakRepairTargetDate$1;
+  000014  const/4 v6, 4
+  000016  iget v1, v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakRepairTargetDate$1;->c I
+  00001a  const/4 v6, 7
+  00001c  const/high16 v7, -2147483648
+  000020  move v2, v7
+  000022  and-int v3, v1, v2
+  000026  const/4 v7, 7
+  000028  if-eqz v3, +009h
+  00002c  const/4 v7, 2
+  00002e  sub-int/2addr v1, v2
+  000030  const/4 v7, 5
+  000032  iput v1, v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakRepairTargetDate$1;->c I
+  000036  const/4 v7, 7
+  000038  goto +9h
+  00003a  const/4 v7, 5
+  00003c  new-instance v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakRepairTargetDate$1;
+  000040  const/4 v7, 6
+  000042  invoke-direct v0, v4, v9, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakRepairTargetDate$1;-><init>(Lcom/getmimo/data/user/streak/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000048  const/4 v6, 6
+  00004a  iget-object v9, v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakRepairTargetDate$1;->a Ljava/lang/Object;
+  00004e  const/4 v6, 2
+  000050  sget-object v1, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000054  const/4 v7, 4
+  000056  iget v2, v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakRepairTargetDate$1;->c I
+  00005a  const/4 v7, 4
+  00005c  const/4 v6, 1
+  00005e  move v3, v6
+  000060  if-eqz v2, +016h
+  000064  const/4 v6, 1
+  000066  if-ne v2, v3, +008h
+  00006a  const/4 v6, 4
+  00006c  invoke-static v9, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000072  const/4 v7, 7
+  000074  goto +2ch
+  000076  const/4 v6, 4
+  000078  const-string v6, "call to 'resume' before 'invoke' with coroutine"
+  00007c  move-object v4, v6
+  00007e  invoke-static v4, Lwc/f;->i(Ljava/lang/String;)V
+  000084  const/4 v7, 2
+  000086  const/4 v6, 0
+  000088  move v4, v6
+  00008a  return-object v4
+  00008c  const/4 v7, 7
+  00008e  invoke-static v9, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000094  const/4 v6, 4
+  000096  new-instance v9, Lorg/joda/time/DateTime;
+  00009a  const/4 v7, 3
+  00009c  invoke-direct v9, Lorg/joda/time/DateTime;-><init>()V
+  0000a2  const/4 v6, 3
+  0000a4  const/4 v6, 0
+  0000a6  move v2, v6
+  0000a8  invoke-static v9, v2, Lsh/j;->a(Lorg/joda/time/DateTime; Z)Lsh/k;
+  0000ae  move-result-object v6
+  0000b0  move-object v9, v6
+  0000b2  iput v3, v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getStreakRepairTargetDate$1;->c I
+  0000b6  const/4 v7, 1
+  0000b8  invoke-virtual v4, v9, v0, Lcom/getmimo/data/user/streak/a;->i(Lsh/k; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  0000be  move-result-object v7
+  0000c0  move-object v9, v7
+  0000c2  if-ne v9, v1, +004h
+  0000c6  const/4 v6, 5
+  0000c8  return-object v1
+  0000ca  const/4 v7, 4
+  0000cc  check-cast v9, Lcom/getmimo/core/model/streak/UserActivityResponse;
+  0000d0  const/4 v7, 7
+  0000d2  invoke-virtual v9, Lcom/getmimo/core/model/streak/UserActivityResponse;->getActiveStreak()Lcom/getmimo/core/model/streak/Streak;
+  0000d8  move-result-object v7
+  0000da  move-object v9, v7
+  0000dc  if-eqz v9, +016h
+  0000e0  const/4 v6, 2
+  0000e2  iget-object v4, v4, Lcom/getmimo/data/user/streak/a;->b Lnp/a;
+  0000e6  const/4 v7, 5
+  0000e8  invoke-virtual v9, Lcom/getmimo/core/model/streak/Streak;->getStart()Ljava/lang/String;
+  0000ee  move-result-object v6
+  0000f0  move-object v9, v6
+  0000f2  invoke-virtual v4, v9, Lnp/a;->b(Ljava/lang/String;)Lorg/joda/time/DateTime;
+  0000f8  move-result-object v6
+  0000fa  move-object v4, v6
+  0000fc  invoke-virtual v4, v3, Lorg/joda/time/DateTime;->p(I)Lorg/joda/time/DateTime;
+  000102  move-result-object v7
+  000104  move-object v4, v7
+  000106  return-object v4
+  000108  const/4 v6, 2
+  00010a  new-instance v4, Lorg/joda/time/DateTime;
+  00010e  const/4 v7, 5
+  000110  invoke-direct v4, Lorg/joda/time/DateTime;-><init>()V
+  000116  const/4 v7, 4
+  000118  invoke-virtual v4, v3, Lorg/joda/time/DateTime;->p(I)Lorg/joda/time/DateTime;
+  00011e  move-result-object v7
+  000120  move-object v4, v7
+  000122  invoke-virtual v4, Lorg/joda/time/DateTime;->x()Lorg/joda/time/DateTime;
+  000128  move-result-object v7
+  00012a  move-object v4, v7
+  00012c  return-object v4
+  00012e  nop 
+  000130  <androguard.core.dex.FillArrayData object at 0x7ff3fafbda10>
+
+===== Lcom/getmimo/data/user/streak/a;->h(Lcom/getmimo/core/model/streak/UserActivityResponse;)Lsh/b; =====
+dex=classes.dex code_offset=10085140 instructions=97 access=public final callers=3 callees=17
+callers: Lcom/getmimo/data/user/streak/a;->c(Lsh/l; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/data/user/streak/a;->f(Lsh/k; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/data/user/streak/a;->f(Lsh/k; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+callees: Lcom/getmimo/core/model/streak/UserActivity;->getDate()Ljava/lang/String;, Lcom/getmimo/core/model/streak/UserActivity;->getSparksCount()Ljava/lang/Integer;, Lcom/getmimo/core/model/streak/UserActivity;->getSparksGoal()Ljava/lang/Integer;, Lcom/getmimo/core/model/streak/UserActivity;->getStreakType()Ljava/lang/String;, Lcom/getmimo/core/model/streak/UserActivityResponse;->getActivity()Ljava/util/List;, Lds/w;->e(Ljava/lang/String;)Lcom/getmimo/data/user/streak/StreakType;, Ljava/lang/Integer;->intValue()I, Ljava/lang/Integer;->intValue()I, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;, Lmc/a;->B(Lorg/joda/time/DateTime; Lorg/joda/time/DateTime;)Z, Lnp/a;->b(Ljava/lang/String;)Lorg/joda/time/DateTime;, Lorg/joda/time/DateTime;-><init>()V, Lsh/b;-><init>(I I Z)V, Lsh/b;-><init>(I I Z)V
+  000000  move-object v4, v7
+  000002  new-instance v0, Lorg/joda/time/DateTime;
+  000006  const/4 v6, 2
+  000008  invoke-direct v0, Lorg/joda/time/DateTime;-><init>()V
+  00000e  const/4 v6, 1
+  000010  invoke-virtual v8, Lcom/getmimo/core/model/streak/UserActivityResponse;->getActivity()Ljava/util/List;
+  000016  move-result-object v6
+  000018  move-object v8, v6
+  00001a  invoke-interface v8, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  000020  move-result-object v6
+  000022  move-object v8, v6
+  000024  const/4 v6, 4
+  000026  invoke-interface v8, Ljava/util/Iterator;->hasNext()Z
+  00002c  move-result v6
+  00002e  move v1, v6
+  000030  if-eqz v1, +022h
+  000034  const/4 v6, 5
+  000036  invoke-interface v8, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  00003c  move-result-object v6
+  00003e  move-object v1, v6
+  000040  move-object v2, v1
+  000042  check-cast v2, Lcom/getmimo/core/model/streak/UserActivity;
+  000046  const/4 v6, 2
+  000048  iget-object v3, v4, Lcom/getmimo/data/user/streak/a;->b Lnp/a;
+  00004c  const/4 v6, 7
+  00004e  invoke-virtual v2, Lcom/getmimo/core/model/streak/UserActivity;->getDate()Ljava/lang/String;
+  000054  move-result-object v6
+  000056  move-object v2, v6
+  000058  invoke-virtual v3, v2, Lnp/a;->b(Ljava/lang/String;)Lorg/joda/time/DateTime;
+  00005e  move-result-object v6
+  000060  move-object v2, v6
+  000062  invoke-static v2, v0, Lmc/a;->B(Lorg/joda/time/DateTime; Lorg/joda/time/DateTime;)Z
+  000068  move-result v6
+  00006a  move v2, v6
+  00006c  if-eqz v2, -024h
+  000070  const/4 v6, 5
+  000072  goto +4h
+  000074  const/4 v6, 6
+  000076  const/4 v6, 0
+  000078  move v1, v6
+  00007a  check-cast v1, Lcom/getmimo/core/model/streak/UserActivity;
+  00007e  const/4 v6, 6
+  000080  const/4 v6, 0
+  000082  move v4, v6
+  000084  if-eqz v1, +044h
+  000088  const/4 v6, 4
+  00008a  new-instance v8, Lsh/b;
+  00008e  const/4 v6, 3
+  000090  invoke-virtual v1, Lcom/getmimo/core/model/streak/UserActivity;->getSparksCount()Ljava/lang/Integer;
+  000096  move-result-object v6
+  000098  move-object v0, v6
+  00009a  if-eqz v0, +009h
+  00009e  const/4 v6, 5
+  0000a0  invoke-virtual v0, Ljava/lang/Integer;->intValue()I
+  0000a6  move-result v6
+  0000a8  move v0, v6
+  0000aa  goto +3h
+  0000ac  const/4 v6, 2
+  0000ae  move v0, v4
+  0000b0  invoke-virtual v1, Lcom/getmimo/core/model/streak/UserActivity;->getSparksGoal()Ljava/lang/Integer;
+  0000b6  move-result-object v6
+  0000b8  move-object v2, v6
+  0000ba  if-eqz v2, +009h
+  0000be  const/4 v6, 1
+  0000c0  invoke-virtual v2, Ljava/lang/Integer;->intValue()I
+  0000c6  move-result v6
+  0000c8  move v2, v6
+  0000ca  goto +3h
+  0000cc  const/4 v6, 6
+  0000ce  move v2, v4
+  0000d0  sget-object v3, Lcom/getmimo/data/user/streak/StreakType;->b Lds/w;
+  0000d4  const/4 v6, 2
+  0000d6  invoke-virtual v1, Lcom/getmimo/core/model/streak/UserActivity;->getStreakType()Ljava/lang/String;
+  0000dc  move-result-object v6
+  0000de  move-object v1, v6
+  0000e0  invoke-virtual v3, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  0000e6  invoke-static v1, Lds/w;->e(Ljava/lang/String;)Lcom/getmimo/data/user/streak/StreakType;
+  0000ec  move-result-object v6
+  0000ee  move-object v1, v6
+  0000f0  sget-object v3, Lcom/getmimo/data/user/streak/StreakType;->g Lcom/getmimo/data/user/streak/StreakType;
+  0000f4  const/4 v6, 5
+  0000f6  if-eq v1, v3, +005h
+  0000fa  const/4 v6, 2
+  0000fc  const/4 v6, 1
+  0000fe  move v4, v6
+  000100  const/4 v6, 7
+  000102  invoke-direct v8, v0, v2, v4, Lsh/b;-><init>(I I Z)V
+  000108  const/4 v6, 5
+  00010a  return-object v8
+  00010c  const/4 v6, 5
+  00010e  new-instance v8, Lsh/b;
+  000112  const/4 v6, 7
+  000114  invoke-direct v8, v4, v4, v4, Lsh/b;-><init>(I I Z)V
+  00011a  const/4 v6, 2
+  00011c  return-object v8
+  00011e  nop 
+  000120  <androguard.core.dex.FillArrayData object at 0x7ff3fafbf3d0>
+
+===== Lcom/getmimo/data/user/streak/a;->i(Lsh/k; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10085496 instructions=186 access=public final callers=3 callees=27
+callers: Lcom/getmimo/data/user/streak/DefaultStreakRepository$getUserActivity$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/data/user/streak/a;->f(Lsh/k; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/data/user/streak/a;->g(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+callees: Lcom/getmimo/core/model/streak/UserActivityResponse;->getActivity()Ljava/util/List;, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getUserActivity$1;-><init>(Lcom/getmimo/data/user/streak/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/text/DateFormat;->format(Ljava/util/Date;)Ljava/lang/String;, Ljava/text/DateFormat;->format(Ljava/util/Date;)Ljava/lang/String;, Ljava/util/TimeZone;->getDefault()Ljava/util/TimeZone;, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lld0/c;->e()Lorg/joda/time/DateTimeZone;, Lld0/c;->h(Lld0/c;)Z, Lld0/c;->j()Ljava/util/Date;, Lld0/c;->j()Ljava/util/Date;, Lnu/b;->o0(Lce/c;)Z, Lorg/joda/time/DateTime;->p(I)Lorg/joda/time/DateTime;, Lorg/joda/time/DateTime;->r(Lorg/joda/time/DateTimeZone;)Lorg/joda/time/DateTime;, Lorg/joda/time/DateTime;->s(I)Lorg/joda/time/DateTime;, Lorg/joda/time/DateTimeZone;->f(Ljava/util/TimeZone;)Lorg/joda/time/DateTimeZone;, Lorg/joda/time/LocalDate;->j(Lorg/joda/time/DateTimeZone;)Lorg/joda/time/DateTime;, Lpd0/a;->b(Ljava/lang/String;)Lorg/joda/time/LocalDate;, Lrh/d;->a(Ljava/lang/String; Lorg/joda/time/DateTime;)I, Lrh/e;->e()Ljava/lang/String;, Lrh/e;->e()Ljava/lang/String;, Lrh/f;->b(Lrh/f; Ljava/util/List;)V, Lsh/h;->a(Ljava/lang/String; Ljava/lang/String; Ld70/b;)Ljava/lang/Object;, Lua0/y;->getValue()Ljava/lang/Object;, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object v10, v13
+  000002  instance-of v0, v15, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getUserActivity$1;
+  000006  const/4 v12, 1
+  000008  if-eqz v0, +019h
+  00000c  const/4 v12, 4
+  00000e  move-object v0, v15
+  000010  check-cast v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getUserActivity$1;
+  000014  const/4 v12, 7
+  000016  iget v1, v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getUserActivity$1;->c I
+  00001a  const/4 v12, 2
+  00001c  const/high16 v12, -2147483648
+  000020  move v2, v12
+  000022  and-int v3, v1, v2
+  000026  const/4 v12, 7
+  000028  if-eqz v3, +009h
+  00002c  const/4 v12, 5
+  00002e  sub-int/2addr v1, v2
+  000030  const/4 v12, 7
+  000032  iput v1, v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getUserActivity$1;->c I
+  000036  const/4 v12, 7
+  000038  goto +9h
+  00003a  const/4 v12, 2
+  00003c  new-instance v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getUserActivity$1;
+  000040  const/4 v12, 3
+  000042  invoke-direct v0, v10, v15, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getUserActivity$1;-><init>(Lcom/getmimo/data/user/streak/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000048  const/4 v12, 6
+  00004a  iget-object v15, v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getUserActivity$1;->a Ljava/lang/Object;
+  00004e  const/4 v12, 2
+  000050  sget-object v1, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000054  const/4 v12, 6
+  000056  iget v2, v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getUserActivity$1;->c I
+  00005a  const/4 v12, 5
+  00005c  iget-object v3, v10, Lcom/getmimo/data/user/streak/a;->f Lrh/f;
+  000060  const/4 v12, 2
+  000062  const/4 v12, 1
+  000064  move v4, v12
+  000066  const/4 v12, 0
+  000068  move v5, v12
+  00006a  if-eqz v2, +015h
+  00006e  const/4 v12, 3
+  000070  if-ne v2, v4, +009h
+  000074  const/4 v12, 5
+  000076  invoke-static v15, Lkotlin/b;->b(Ljava/lang/Object;)V
+  00007c  const/4 v12, 1
+  00007e  goto/16 +0cah
+  000082  const/4 v12, 7
+  000084  const-string v12, "call to 'resume' before 'invoke' with coroutine"
+  000088  move-object v10, v12
+  00008a  invoke-static v10, Lwc/f;->i(Ljava/lang/String;)V
+  000090  const/4 v12, 6
+  000092  return-object v5
+  000094  const/4 v12, 4
+  000096  invoke-static v15, Lkotlin/b;->b(Ljava/lang/Object;)V
+  00009c  const/4 v12, 3
+  00009e  iget-object v15, v10, Lcom/getmimo/data/user/streak/a;->b Lnp/a;
+  0000a2  const/4 v12, 2
+  0000a4  iget-object v15, v15, Lnp/a;->b Ljava/text/SimpleDateFormat;
+  0000a8  const/4 v12, 5
+  0000aa  iget-object v2, v14, Lsh/k;->a Lorg/joda/time/DateTime;
+  0000ae  const/4 v12, 3
+  0000b0  invoke-virtual v2, v4, Lorg/joda/time/DateTime;->p(I)Lorg/joda/time/DateTime;
+  0000b6  move-result-object v12
+  0000b8  move-object v2, v12
+  0000ba  invoke-static Ljava/util/TimeZone;->getDefault()Ljava/util/TimeZone;
+  0000c0  move-result-object v12
+  0000c2  move-object v6, v12
+  0000c4  invoke-static v6, Lorg/joda/time/DateTimeZone;->f(Ljava/util/TimeZone;)Lorg/joda/time/DateTimeZone;
+  0000ca  move-result-object v12
+  0000cc  move-object v6, v12
+  0000ce  invoke-static v6, Lorg/joda/time/DateTime;->r(Lorg/joda/time/DateTimeZone;)Lorg/joda/time/DateTime;
+  0000d4  move-result-object v12
+  0000d6  move-object v6, v12
+  0000d8  iget-object v7, v3, Lrh/f;->d Lua0/q;
+  0000dc  const/4 v12, 5
+  0000de  iget-object v7, v7, Lua0/q;->a Lua0/y;
+  0000e2  const/4 v12, 1
+  0000e4  invoke-interface v7, Lua0/y;->getValue()Ljava/lang/Object;
+  0000ea  move-result-object v12
+  0000ec  move-object v7, v12
+  0000ee  check-cast v7, Lrh/e;
+  0000f2  const/4 v12, 7
+  0000f4  if-eqz v7, +03fh
+  0000f8  const/4 v12, 5
+  0000fa  iget-object v8, v3, Lrh/f;->b Lce/c;
+  0000fe  const/4 v12, 4
+  000100  invoke-static v8, Lnu/b;->o0(Lce/c;)Z
+  000106  move-result v12
+  000108  move v8, v12
+  00010a  if-eqz v8, +014h
+  00010e  const/4 v12, 4
+  000110  invoke-virtual v7, Lrh/e;->e()Ljava/lang/String;
+  000116  move-result-object v12
+  000118  move-object v8, v12
+  00011a  invoke-static v8, v6, Lrh/d;->a(Ljava/lang/String; Lorg/joda/time/DateTime;)I
+  000120  move-result v12
+  000122  move v8, v12
+  000124  const/16 v12, 8
+  000128  move v9, v12
+  00012a  if-gt v8, v9, +004h
+  00012e  const/4 v12, 2
+  000130  goto +3h
+  000132  const/4 v12, 4
+  000134  move-object v7, v5
+  000136  if-eqz v7, +01eh
+  00013a  const/4 v12, 6
+  00013c  invoke-virtual v7, Lrh/e;->e()Ljava/lang/String;
+  000142  move-result-object v12
+  000144  move-object v7, v12
+  000146  sget-object v8, Lorg/joda/time/LocalDate;->d Ljava/util/HashSet;
+  00014a  const/4 v12, 6
+  00014c  sget-object v8, Lpd0/t;->b0 Lpd0/a;
+  000150  const/4 v12, 6
+  000152  invoke-virtual v8, v7, Lpd0/a;->b(Ljava/lang/String;)Lorg/joda/time/LocalDate;
+  000158  move-result-object v12
+  00015a  move-object v7, v12
+  00015c  invoke-virtual v6, Lld0/c;->e()Lorg/joda/time/DateTimeZone;
+  000162  move-result-object v12
+  000164  move-object v6, v12
+  000166  invoke-virtual v7, v6, Lorg/joda/time/LocalDate;->j(Lorg/joda/time/DateTimeZone;)Lorg/joda/time/DateTime;
+  00016c  move-result-object v12
+  00016e  move-object v6, v12
+  000170  goto +3h
+  000172  const/4 v12, 1
+  000174  move-object v6, v5
+  000176  if-eqz v6, +013h
+  00017a  const/4 v12, 7
+  00017c  invoke-virtual v6, v2, Lld0/c;->h(Lld0/c;)Z
+  000182  move-result v12
+  000184  move v7, v12
+  000186  if-eqz v7, +004h
+  00018a  const/4 v12, 5
+  00018c  move-object v5, v6
+  00018e  const/4 v12, 5
+  000190  if-nez v5, +004h
+  000194  const/4 v12, 4
+  000196  goto +4h
+  000198  const/4 v12, 6
+  00019a  move-object v2, v5
+  00019c  const/4 v12, 4
+  00019e  iget-boolean v5, v14, Lsh/k;->c Z
+  0001a2  const/4 v12, 3
+  0001a4  iget-object v14, v14, Lsh/k;->b Lorg/joda/time/DateTime;
+  0001a8  const/4 v12, 5
+  0001aa  if-eqz v5, +004h
+  0001ae  const/4 v12, 7
+  0001b0  goto +7h
+  0001b2  const/4 v12, 7
+  0001b4  invoke-virtual v14, v4, Lorg/joda/time/DateTime;->s(I)Lorg/joda/time/DateTime;
+  0001ba  move-result-object v12
+  0001bc  move-object v14, v12
+  0001be  invoke-virtual v2, Lld0/c;->j()Ljava/util/Date;
+  0001c4  move-result-object v12
+  0001c6  move-object v2, v12
+  0001c8  invoke-virtual v15, v2, Ljava/text/DateFormat;->format(Ljava/util/Date;)Ljava/lang/String;
+  0001ce  move-result-object v12
+  0001d0  move-object v2, v12
+  0001d2  invoke-virtual v2, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  0001d8  invoke-virtual v14, Lld0/c;->j()Ljava/util/Date;
+  0001de  move-result-object v12
+  0001e0  move-object v14, v12
+  0001e2  invoke-virtual v15, v14, Ljava/text/DateFormat;->format(Ljava/util/Date;)Ljava/lang/String;
+  0001e8  move-result-object v12
+  0001ea  move-object v14, v12
+  0001ec  invoke-virtual v14, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  0001f2  iput v4, v0, Lcom/getmimo/data/user/streak/DefaultStreakRepository$getUserActivity$1;->c I
+  0001f6  const/4 v12, 5
+  0001f8  iget-object v10, v10, Lcom/getmimo/data/user/streak/a;->a Lsh/h;
+  0001fc  const/4 v12, 2
+  0001fe  invoke-interface v10, v2, v14, v0, Lsh/h;->a(Ljava/lang/String; Ljava/lang/String; Ld70/b;)Ljava/lang/Object;
+  000204  move-result-object v12
+  000206  move-object v15, v12
+  000208  if-ne v15, v1, +004h
+  00020c  const/4 v12, 7
+  00020e  return-object v1
+  000210  const/4 v12, 7
+  000212  move-object v10, v15
+  000214  check-cast v10, Lcom/getmimo/core/model/streak/UserActivityResponse;
+  000218  const/4 v12, 1
+  00021a  invoke-virtual v10, Lcom/getmimo/core/model/streak/UserActivityResponse;->getActivity()Ljava/util/List;
+  000220  move-result-object v12
+  000222  move-object v10, v12
+  000224  invoke-static v3, v10, Lrh/f;->b(Lrh/f; Ljava/util/List;)V
+  00022a  const/4 v12, 3
+  00022c  return-object v15
+  00022e  nop 
+  000230  <androguard.core.dex.FillArrayData object at 0x7ff3fafc6910>

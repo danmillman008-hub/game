@@ -1,0 +1,90 @@
+{
+  "tutorial": {
+    "id": 2346,
+    "version": 7,
+    "type": "practiceRequired",
+    "isNew": false,
+    "codeLanguage": "python",
+    "title": "Modules",
+    "descriptionContent": "Modules and Libraries",
+    "shortDescriptionContent": "",
+    "showInTrack": true,
+    "iconBanner": null,
+    "chapters": [
+      {
+        "id": 13715,
+        "title": "Modules",
+        "type": "practiceLevel2",
+        "lessons": [
+          {
+            "title": "As",
+            "id": 88741,
+            "contentType": "interactive",
+            "images": [],
+            "interactiveContent": "<!DOCTYPE html ><html><body><p>How do we rename a module?</p><selection iscode=\"false\" multiple=\"multiple\"><item value=\"1\" correct=\"true\">With the <code>as</code> keyword</item><item value=\"2\" correct=\"false\">With the <code>from</code> keyword</item><item value=\"3\" correct=\"false\">With the <code>if</code> keyword</item></selection><p visible-if=\"wrong\">With the <code>as</code> keyword.</p></body></html>",
+            "hardModeContent": "<!DOCTYPE html ><html><body><p>We use the <code>as</code> keyword to rename a module in our code.</p><p>Which line imports <code>math</code> with the shorter name <code>m</code>?</p><selection iscode=\"false\" multiple=\"multiple\"><item value=\"1\" correct=\"true\"><code>import math as m</code></item><item value=\"2\" correct=\"false\"><code>import m as math</code></item><item value=\"3\" correct=\"false\"><code>from math import m</code></item></selection><p visible-if=\"wrong\">Make sure to pick <code>import math as m</code>.</p></body></html>",
+            "hardModeSelected": true
+          },
+          {
+            "title": "Question: From",
+            "id": 88739,
+            "contentType": "interactive",
+            "images": [],
+            "interactiveContent": "<!DOCTYPE html ><html><body><p>How do we import parts of a module's functionality?</p><selection iscode=\"false\" multiple=\"multiple\"><item value=\"1\" correct=\"true\">With the <code>from</code> keyword</item><item value=\"2\" correct=\"false\">With the <code>as</code> keyword</item><item value=\"3\" correct=\"false\">With the <code>in</code> keyword</item></selection><p visible-if=\"wrong\">With the <code>from</code> keyword.</p></body></html>",
+            "hardModeContent": "<!DOCTYPE html ><html><body><p>We use the <code>from</code> keyword to import part of a module's functionality.</p><p>Which line imports only <code>sqrt</code> from <code>math</code>?</p><selection iscode=\"false\" multiple=\"multiple\"><item value=\"1\" correct=\"true\"><code>from math import sqrt</code></item><item value=\"2\" correct=\"false\"><code>import math</code></item><item value=\"3\" correct=\"false\"><code>from sqrt import math</code></item></selection><p visible-if=\"wrong\">Make sure to pick <code>from math import sqrt</code>.</p></body></html>",
+            "hardModeSelected": true
+          },
+          {
+            "title": "Example: Mean",
+            "id": 88743,
+            "contentType": "interactive",
+            "images": [],
+            "interactiveContent": "<!DOCTYPE html ><html><body><p>Import the <code>statistics</code> module followed by the <code>math</code> module.</p><code version=\"2\" codelang=\"python\" name=\"script.py\" visible-if=\"always\"><content><text value=\"import statistics, math    \" /><text type=\"break\" /><text value=\"\" /><text type=\"break\" /><text value=\"total_plays = [232, 43, 345, 35]\" /></content><interactions><interaction type=\"validatedInput\" isDefault=\"true\" startIndex=\"7\" endIndex=\"23\" /></interactions></code><p visible-if=\"wrong\">Make sure to type <code>statistics, math</code>.</p></body></html>"
+          },
+          {
+            "title": "Question: Module",
+            "id": 88736,
+            "contentType": "interactive",
+            "images": [],
+            "interactiveContent": "<!DOCTYPE html ><html><body><p>What's wrong with this code?</p><code version=\"2\" codelang=\"python\" name=\"script.py\" visible-if=\"always\"><content><text value=\"import     \" /><text type=\"break\" /><text value=\"\" /><text type=\"break\" /><text value=\"equation = &quot;user defined&quot;\" /><text type=\"break\" /><text value=\"\" /><text type=\"break\" /><text value=\"print(&quot;The root of 100 is&quot;)\" /><text type=\"break\" /><text value=\"print(math.sqrt(100))\" /><text type=\"break\" /><text value=\"\" /></content></code><selection iscode=\"false\" multiple=\"multiple\"><item value=\"1\" correct=\"true\">The import statement is unfinished</item><item value=\"2\" correct=\"false\">The <code>equation</code> module is not being imported</item><item value=\"3\" correct=\"false\">There's nothing wrong with this code</item></selection><p visible-if=\"wrong\">The import statement is unfinished.</p></body></html>",
+            "hardModeContent": "<!DOCTYPE html ><html><body><p>Which replacement for the unfinished first line makes <code>math.sqrt(100)</code> available?</p><code version=\"2\" codelang=\"python\" name=\"script.py\" visible-if=\"always\"><content><text value=\"import     \" /><text type=\"break\" /><text value=\"\" /><text type=\"break\" /><text value=\"equation = &quot;user defined&quot;\" /><text type=\"break\" /><text value=\"\" /><text type=\"break\" /><text value=\"print(&quot;The root of 100 is&quot;)\" /><text type=\"break\" /><text value=\"print(math.sqrt(100))\" /><text type=\"break\" /><text value=\"\" /></content></code><selection iscode=\"false\" multiple=\"multiple\"><item value=\"1\" correct=\"true\"><code>import math</code></item><item value=\"2\" correct=\"false\"><code>import equation</code></item><item value=\"3\" correct=\"false\"><code>import sqrt</code></item></selection><p visible-if=\"wrong\">Make sure to pick <code>import math</code>.</p></body></html>",
+            "hardModeSelected": true
+          },
+          {
+            "title": "Question: Help",
+            "id": 88738,
+            "contentType": "interactive",
+            "images": [],
+            "interactiveContent": "<!DOCTYPE html ><html><body><p>What does the <code>help()</code> instruction do when used with a module?</p><selection iscode=\"false\" multiple=\"multiple\"><item value=\"1\" correct=\"true\">It gives a description of the functionality the module has</item><item value=\"2\" correct=\"false\">It prevents the module from producing errors</item><item value=\"3\" correct=\"false\">It stores the module inside a new variable</item></selection><p visible-if=\"wrong\">It gives a description of the functionality the module has.</p></body></html>",
+            "hardModeContent": "<!DOCTYPE html ><html><body><p>Used with a module, <code>help()</code> describes the functionality that module provides.</p><p>After <code>import math</code>, which line asks Python for that description?</p><selection iscode=\"false\" multiple=\"multiple\"><item value=\"1\" correct=\"true\"><code>help(math)</code></item><item value=\"2\" correct=\"false\"><code>math.help()</code></item><item value=\"3\" correct=\"false\"><code>help = \"math\"</code></item></selection><p visible-if=\"wrong\">Make sure to pick <code>help(math)</code>.</p></body></html>",
+            "hardModeSelected": true
+          },
+          {
+            "title": "Question: Library",
+            "id": 124672,
+            "contentType": "interactive",
+            "images": [],
+            "interactiveContent": "<!DOCTYPE html ><html><body><p>What do we need to do before we can use modules in our code?</p><selection iscode=\"false\" multiple=\"multiple\"><item value=\"1\" correct=\"true\">Install the libraries containing the modules</item><item value=\"2\" correct=\"false\">Ask for permission from the creator</item><item value=\"3\" correct=\"false\">Nothing, just import the modules</item></selection><p visible-if=\"wrong\">Install the libraries containing the modules.</p></body></html>",
+            "hardModeSelected": true
+          },
+          {
+            "title": "Question: Documentation",
+            "id": 124673,
+            "contentType": "interactive",
+            "images": [],
+            "interactiveContent": "<!DOCTYPE html ><html><body><p>How do we know if a library has the modules we need?</p><selection iscode=\"false\" multiple=\"multiple\"><item value=\"1\" correct=\"true\">Check the documentation</item><item value=\"2\" correct=\"false\">We use the library and we'll get an error</item><item value=\"3\" correct=\"false\">There's no way to know; just try your luck</item></selection><p visible-if=\"wrong\">Check the documentation.</p></body></html>",
+            "hardModeSelected": true
+          },
+          {
+            "title": "Example: Import from library",
+            "id": 124677,
+            "contentType": "interactive",
+            "images": [],
+            "interactiveContent": "<!DOCTYPE html ><html><body><p>To let our program wait, we need the <code>sleep</code> module from the <code>time</code> library. Write the code to <strong>only</strong> import that module.</p><code version=\"2\" codelang=\"python\" name=\"script.py\" visible-if=\"always\"><content><text value=\"from time import sleep\" /><text type=\"break\" /><text value=\"\" /><text type=\"break\" /><text value=\"print(&quot;This message is shown immediately.&quot;)\" /><text type=\"break\" /><text value=\"sleep(1)\" /><text type=\"break\" /><text value=\"print(&quot;This message is shown after a 1-second delay.&quot;)\" /><text type=\"break\" /><text value=\"\" /></content><interactions><interaction type=\"fillTheGap\" isDefault=\"true\"><options><option startIndex=\"0\" endIndex=\"4\" /><option startIndex=\"5\" endIndex=\"9\" /><option startIndex=\"10\" endIndex=\"16\" /><option startIndex=\"17\" endIndex=\"22\" /><option correct=\"false\"><content><text value=\"as\" /></content></option><option correct=\"false\"><content><text value=\"install\" /></content></option></options></interaction></interactions><output><content><text value=\"This message is shown immediately.\" /><text type=\"break\" /><text value=\"This message is shown after a 1-second delay.\" /></content></output></code><p visible-if=\"wrong\">Make sure to pick <code>from</code> followed by <code>time</code> and then <code>import</code>, <code>sleep</code>.</p></body></html>",
+            "hardModeSelected": true
+          }
+        ]
+      }
+    ]
+  }
+}

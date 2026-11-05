@@ -1,0 +1,28 @@
+%% MISSION 06 — original Mimo 9.35 architecture, reconstructed from DEX bytecode.
+%% APK sha256 48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+%% Classification of each node is in the corresponding numbered report and EVIDENCE_DATABASE.json.
+%% Solid edges = VERIFIED_STATIC invoke/field xref; dashed = INFERRED or client-side boundary.
+flowchart TD
+  A["lesson JSON executableContent<br/>instructions, preselectedFileIndex,<br/>hasVisualOutput, files[{name,codeLanguage,<br/>content,solvedContent}], hints"] --> B["DefaultTrackLoader$getExecutableLesson$2"]
+  B --> C["LessonContent$Executable$File"]
+  C --> D["ExecutableLessonViewModel (q)<br/>Orbit MVI container zl/z state"]
+  D --> E["CodeEditViewModel / CodePlayground<br/>CodeFile{name, content}"]
+  E --> F["user edits / Run"]
+  F --> G["q;-&gt;I() executeLessonAndStoreProgress"]
+  G --> H["userContents = files.map{getContent()}"]
+  G --> I["solvedContents = executable.files.map{getSolvedContent()}"]
+  H --> J{"userContents.equals(solvedContents) ?"}
+  I --> J
+  J -->|false| K["Ldm/h error state + IncorrectSolutionException"]
+  J -->|true| L["q;-&gt;E() doOnLessonCorrectlySolved<br/>createLessonProgress(tries,attempts)"]
+  L --> M["LessonProgressQueue → Room"]
+  F --> N["q;-&gt;K() updateCodeExecutionState"]
+  N --> O["client-side browser preview:<br/>Ldg/a; shipped HTML template<br/>lesson-webview.js bridge"]
+  F -.->|"hasVisualOutput / external runner"| P["POST /v1/code/runfiles (client boundary only)"]
+  K --> Q["retry / hints: q;-&gt;F() substitutes<br/>style.css / index.html / script.py / script.js<br/>from static Lcm/b maps"]
+  note right of J
+    VERIFIED_STATIC: q-&gt;I @10912932 compares
+    ArrayList&lt;String&gt;.equals. Shipped solvedContent
+    therefore suffices for the offline correctness check.
+    Remote execution result handling is a client-side boundary.
+  end note

@@ -1,0 +1,107 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility; semantic=ModuleVisibility
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;-><clinit>()V =====
+dex=classes.dex code_offset=9656484 instructions=52 access=static constructor callers=0 callees=5
+callees: Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;-><init>(Ljava/lang/String; I Ljava/lang/String;)V, Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;-><init>(Ljava/lang/String; I Ljava/lang/String;)V, Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;-><init>(Ljava/lang/String; I Ljava/lang/String;)V, Lds/x;-><init>(B)V, Lkotlin/enums/a;->a([Ljava/lang/Enum;)Lg70/a;
+  000000  new-instance v0, Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;
+  000004  const-string v9, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  000008  const/4 v6, 0
+  00000a  move v1, v6
+  00000c  const-string v6, "always"
+  000010  move-object v2, v6
+  000012  const-string v6, "ALWAYS"
+  000016  move-object v3, v6
+  000018  invoke-direct v0, v3, v1, v2, Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;-><init>(Ljava/lang/String; I Ljava/lang/String;)V
+  00001e  const/4 v7, 1
+  000020  sput-object v0, Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;->c Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;
+  000024  const/4 v8, 1
+  000026  new-instance v1, Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;
+  00002a  const/4 v9, 7
+  00002c  const/4 v6, 1
+  00002e  move v2, v6
+  000030  const-string v6, "correct"
+  000034  move-object v3, v6
+  000036  const-string v6, "CORRECT"
+  00003a  move-object v4, v6
+  00003c  invoke-direct v1, v4, v2, v3, Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;-><init>(Ljava/lang/String; I Ljava/lang/String;)V
+  000042  const/4 v9, 1
+  000044  sput-object v1, Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;->d Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;
+  000048  const/4 v9, 7
+  00004a  new-instance v2, Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;
+  00004e  const/4 v8, 4
+  000050  const/4 v6, 2
+  000052  move v3, v6
+  000054  const-string v6, "wrong"
+  000058  move-object v4, v6
+  00005a  const-string v6, "WRONG"
+  00005e  move-object v5, v6
+  000060  invoke-direct v2, v5, v3, v4, Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;-><init>(Ljava/lang/String; I Ljava/lang/String;)V
+  000066  const/4 v8, 3
+  000068  sput-object v2, Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;->e Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;
+  00006c  const/4 v7, 6
+  00006e  filled-new-array v0, v1, v2, [Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;
+  000074  move-result-object v6
+  000076  move-object v0, v6
+  000078  sput-object v0, Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;->f [Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;
+  00007c  const/4 v8, 6
+  00007e  invoke-static v0, Lkotlin/enums/a;->a([Ljava/lang/Enum;)Lg70/a;
+  000084  new-instance v0, Lds/x;
+  000088  const/4 v8, 2
+  00008a  const/16 v6, 22
+  00008e  move v1, v6
+  000090  invoke-direct v0, v1, Lds/x;-><init>(B)V
+  000096  const/4 v9, 3
+  000098  sput-object v0, Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;->b Lds/x;
+  00009c  const/4 v9, 5
+  00009e  return-void 
+  0000a0  <androguard.core.dex.FillArrayData object at 0x7ff3fadc6250>
+
+===== Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;-><init>(Ljava/lang/String; I Ljava/lang/String;)V =====
+dex=classes.dex code_offset=9656684 instructions=8 access=public constructor callers=3 callees=1
+callers: Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;-><clinit>()V, Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;-><clinit>()V, Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;-><clinit>()V
+callees: Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V
+  000000  move-object v0, v3
+  000002  invoke-direct v0, v4, v5, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V
+  000008  const/4 v2, 6
+  00000a  iput-object v6, v0, Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;->a Ljava/lang/String;
+  00000e  const/4 v2, 6
+  000010  return-void 
+  000012  nop 
+  000014  <androguard.core.dex.FillArrayData object at 0x7ff3fadc6590>
+
+===== Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;->valueOf(Ljava/lang/String;)Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility; =====
+dex=classes.dex code_offset=9656820 instructions=11 access=public static callers=4 callees=1
+callers: Lcom/getmimo/data/content/lessonparser/interactive/model/e;->createFromParcel(Landroid/os/Parcel;)Ljava/lang/Object;, Lcom/getmimo/data/content/lessonparser/interactive/model/f;->createFromParcel(Landroid/os/Parcel;)Ljava/lang/Object;, Lcom/getmimo/data/content/lessonparser/interactive/model/g;->createFromParcel(Landroid/os/Parcel;)Ljava/lang/Object;, Lcom/getmimo/data/content/lessonparser/interactive/model/h;->createFromParcel(Landroid/os/Parcel;)Ljava/lang/Object;
+callees: Ljava/lang/Enum;->valueOf(Ljava/lang/Class; Ljava/lang/String;)Ljava/lang/Enum;
+  000000  move-object v1, v4
+  000002  const-class v0, Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;
+  000006  const/4 v3, 2
+  000008  invoke-static v0, v1, Ljava/lang/Enum;->valueOf(Ljava/lang/Class; Ljava/lang/String;)Ljava/lang/Enum;
+  00000e  move-result-object v3
+  000010  move-object v1, v3
+  000012  check-cast v1, Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;
+  000016  const/4 v3, 7
+  000018  return-object v1
+  00001a  nop 
+  00001c  <androguard.core.dex.FillArrayData object at 0x7ff3fadc6910>
+
+===== Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;->values()[Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility; =====
+dex=classes.dex code_offset=9656952 instructions=9 access=public static callers=2 callees=1
+callers: Lds/x;->o(Ljava/lang/String;)Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;, Lqk/b;->invoke()Ljava/lang/Object;
+callees: Ljava/lang/Object;->clone()Ljava/lang/Object;
+  000000  sget-object v0, Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;->f [Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;
+  000004  const/4 v3, 2
+  000006  invoke-virtual v0, Ljava/lang/Object;->clone()Ljava/lang/Object;
+  00000c  move-result-object v1
+  00000e  move-object v0, v1
+  000010  check-cast v0, [Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;
+  000014  const/4 v4, 1
+  000016  return-object v0
+  000018  <androguard.core.dex.FillArrayData object at 0x7ff3fadc6cd0>

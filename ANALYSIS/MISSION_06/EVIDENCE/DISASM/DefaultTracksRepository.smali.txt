@@ -1,0 +1,1120 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/data/content/tracks/c; semantic=DefaultTracksRepository
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/data/content/tracks/c;-><init>(Lye/e; Lfe/a;)V =====
+dex=classes.dex code_offset=9748008 instructions=16 access=public constructor callers=1 callees=2
+callers: Lae/m;->a()Ljava/lang/Object;
+callees: Ljava/lang/Object;-><init>()V, Ljava/util/HashMap;-><init>()V
+  000000  move-object v0, v4
+  000002  invoke-direct v0, Ljava/lang/Object;-><init>()V
+  000008  const-string v3, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  00000c  iput-object v5, v0, Lcom/getmimo/data/content/tracks/c;->a Lye/e;
+  000010  const/4 v3, 1
+  000012  iput-object v6, v0, Lcom/getmimo/data/content/tracks/c;->b Lfe/a;
+  000016  const/4 v2, 2
+  000018  new-instance v5, Ljava/util/HashMap;
+  00001c  const/4 v3, 4
+  00001e  invoke-direct v5, Ljava/util/HashMap;-><init>()V
+  000024  const/4 v3, 3
+  000026  iput-object v5, v0, Lcom/getmimo/data/content/tracks/c;->d Ljava/util/HashMap;
+  00002a  const/4 v2, 3
+  00002c  return-void 
+  00002e  nop 
+  000030  <androguard.core.dex.FillArrayData object at 0x7ff3fafcdb50>
+
+===== Lcom/getmimo/data/content/tracks/c;->a(J I I Ld70/b;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=9748116 instructions=25 access=public final callers=1 callees=2
+callers: Lcom/getmimo/ui/lesson/executable/ExecutableLessonViewModel$initialise$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Lcom/getmimo/data/content/tracks/DefaultTrackLoader$getExecutableLesson$2;-><init>(Lcom/getmimo/data/content/tracks/b; J I I Ld70/b;)V, Lra0/z;->z(Ld70/f; Lo70/m; Ld70/b;)Ljava/lang/Object;
+  000000  iget-object v10, v10, Lcom/getmimo/data/content/tracks/c;->a Lye/e;
+  000004  const/4 v8, 5
+  000006  move-object v1, v10
+  000008  check-cast v1, Lcom/getmimo/data/content/tracks/b;
+  00000c  const/4 v8, 1
+  00000e  iget-object v10, v1, Lcom/getmimo/data/content/tracks/b;->c Lnp/d;
+  000012  const/4 v8, 7
+  000014  check-cast v10, Lnp/b;
+  000018  const/4 v8, 4
+  00001a  iget-object v10, v10, Lnp/b;->c Lya0/c;
+  00001e  const/4 v8, 5
+  000020  new-instance v0, Lcom/getmimo/data/content/tracks/DefaultTrackLoader$getExecutableLesson$2;
+  000024  const/4 v9, 6
+  000026  const/4 v7, 0
+  000028  move v6, v7
+  00002a  move-wide v2, v11
+  00002c  move v4, v13
+  00002e  move v5, v14
+  000030  invoke-direct/range v0 ... v6, Lcom/getmimo/data/content/tracks/DefaultTrackLoader$getExecutableLesson$2;-><init>(Lcom/getmimo/data/content/tracks/b; J I I Ld70/b;)V
+  000036  const/4 v8, 5
+  000038  invoke-static v10, v0, v15, Lra0/z;->z(Ld70/f; Lo70/m; Ld70/b;)Ljava/lang/Object;
+  00003e  move-result-object v7
+  000040  move-object v10, v7
+  000042  return-object v10
+  000044  <androguard.core.dex.FillArrayData object at 0x7ff3fafce390>
+
+===== Lcom/getmimo/data/content/tracks/c;->b(J I I Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=9748228 instructions=25 access=public final callers=2 callees=2
+callers: Lcom/getmimo/interactors/chapter/c;->a(Lcom/getmimo/ui/lesson/interactive/LessonBundle; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/interactive/d;->F(Lcom/getmimo/ui/lesson/interactive/InteractiveLessonBundle; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+callees: Lcom/getmimo/data/content/tracks/DefaultTrackLoader$getInteractiveLesson$2;-><init>(Lcom/getmimo/data/content/tracks/b; J I I Ld70/b;)V, Lra0/z;->z(Ld70/f; Lo70/m; Ld70/b;)Ljava/lang/Object;
+  000000  iget-object v9, v9, Lcom/getmimo/data/content/tracks/c;->a Lye/e;
+  000004  const/4 v8, 5
+  000006  move-object v1, v9
+  000008  check-cast v1, Lcom/getmimo/data/content/tracks/b;
+  00000c  const/4 v8, 2
+  00000e  iget-object v9, v1, Lcom/getmimo/data/content/tracks/b;->c Lnp/d;
+  000012  const/4 v8, 2
+  000014  check-cast v9, Lnp/b;
+  000018  const/4 v8, 1
+  00001a  iget-object v9, v9, Lnp/b;->c Lya0/c;
+  00001e  const/4 v8, 2
+  000020  new-instance v0, Lcom/getmimo/data/content/tracks/DefaultTrackLoader$getInteractiveLesson$2;
+  000024  const/4 v8, 7
+  000026  const/4 v7, 0
+  000028  move v6, v7
+  00002a  move-wide v2, v10
+  00002c  move v4, v12
+  00002e  move v5, v13
+  000030  invoke-direct/range v0 ... v6, Lcom/getmimo/data/content/tracks/DefaultTrackLoader$getInteractiveLesson$2;-><init>(Lcom/getmimo/data/content/tracks/b; J I I Ld70/b;)V
+  000036  const/4 v8, 5
+  000038  invoke-static v9, v0, v14, Lra0/z;->z(Ld70/f; Lo70/m; Ld70/b;)Ljava/lang/Object;
+  00003e  move-result-object v7
+  000040  move-object v9, v7
+  000042  return-object v9
+  000044  <androguard.core.dex.FillArrayData object at 0x7ff3fafceb50>
+
+===== Lcom/getmimo/data/content/tracks/c;->c()J =====
+dex=classes.dex code_offset=9748376 instructions=18 access=public final callers=4 callees=3
+callers: Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->createLessonProgress(Lcom/getmimo/ui/lesson/interactive/LessonBundle; Lorg/joda/time/Instant; I I)Lcom/getmimo/data/model/room/LessonProgress;, Lcom/getmimo/ui/lesson/executable/ExecutableLessonViewModel$executeLessonAndStoreProgress$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/executable/ExecutableLessonViewModel$performCodeExecution$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Ldi/a;->o(Lcom/getmimo/data/content/model/track/LessonIdentifier; Ljava/util/ArrayList; Ld70/b;)Ljava/lang/Object;
+callees: Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getPublishSetVersion$1;-><init>(Lcom/getmimo/data/content/tracks/c; Ld70/b;)V, Ljava/lang/Number;->longValue()J, Lra0/z;->u(Ld70/f; Lo70/m;)Ljava/lang/Object;
+  000000  move-object v2, v5
+  000002  new-instance v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getPublishSetVersion$1;
+  000006  const/4 v4, 7
+  000008  const/4 v4, 0
+  00000a  move v1, v4
+  00000c  invoke-direct v0, v2, v1, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getPublishSetVersion$1;-><init>(Lcom/getmimo/data/content/tracks/c; Ld70/b;)V
+  000012  const/4 v4, 1
+  000014  sget-object v2, Lkotlin/coroutines/EmptyCoroutineContext;->a Lkotlin/coroutines/EmptyCoroutineContext;
+  000018  const/4 v4, 2
+  00001a  invoke-static v2, v0, Lra0/z;->u(Ld70/f; Lo70/m;)Ljava/lang/Object;
+  000020  move-result-object v4
+  000022  move-object v2, v4
+  000024  check-cast v2, Ljava/lang/Number;
+  000028  const/4 v4, 2
+  00002a  invoke-virtual v2, Ljava/lang/Number;->longValue()J
+  000030  move-result-wide v0
+  000032  return-wide v0
+  000034  <androguard.core.dex.FillArrayData object at 0x7ff3fafcf090>
+
+===== Lcom/getmimo/data/content/tracks/c;->d(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=9748488 instructions=226 access=public final callers=7 callees=33
+callers: Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTrackById$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/data/content/tracks/c;->i(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/data/source/local/completion/a;->e(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/interactors/eta/a;->a(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/iap/freetrial/HonestFreeTrialViewModel$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/executable/ExecutableLessonViewModel$showAiTutor$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/interactive/base/c;->G(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+callees: La70/r;->i0(Ljava/lang/Iterable; I)I, La80/g;->r(Ljava/lang/String;)V, Lcom/getmimo/analytics/model/ContentExperiment;->getOriginalTrackId()J, Lcom/getmimo/analytics/model/ContentExperiment;->getOriginalTrackId()J, Lcom/getmimo/analytics/model/ContentExperiment;->getUseTheVariant()Z, Lcom/getmimo/analytics/model/ContentExperiment;->getVariantTrackId()J, Lcom/getmimo/analytics/model/ContentExperiment;->getVariantTrackId()J, Lcom/getmimo/data/content/model/track/TrackJson;->getId()J, Lcom/getmimo/data/content/model/track/TrackJson;->getId()J, Lcom/getmimo/data/content/model/track/TrackJson;->getId()J, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTrackById$1;-><init>(Lcom/getmimo/data/content/tracks/c; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Lcom/getmimo/data/content/tracks/c;->g(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lfe/b;->a()Lcom/getmimo/analytics/model/ContentExperiment;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Long;-><init>(J)V, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;, Ljava/util/ArrayList;-><init>(I)V, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/ArrayList;->contains(Ljava/lang/Object;)Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lle0/a;->c(Ljava/lang/String; [Ljava/lang/Object;)V, Ls7/a;->l(J Ljava/lang/String; Ljava/lang/StringBuilder;)Ljava/lang/String;, Lsb/j;->w(J Ljava/lang/String; Ljava/lang/String;)Ljava/lang/StringBuilder;, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object v6, v10
+  000002  instance-of v0, v13, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTrackById$1;
+  000006  const/4 v8, 2
+  000008  if-eqz v0, +019h
+  00000c  const/4 v8, 3
+  00000e  move-object v0, v13
+  000010  check-cast v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTrackById$1;
+  000014  const/4 v8, 4
+  000016  iget v1, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTrackById$1;->d I
+  00001a  const/4 v9, 6
+  00001c  const/high16 v8, -2147483648
+  000020  move v2, v8
+  000022  and-int v3, v1, v2
+  000026  const/4 v9, 3
+  000028  if-eqz v3, +009h
+  00002c  const/4 v8, 1
+  00002e  sub-int/2addr v1, v2
+  000030  const/4 v9, 2
+  000032  iput v1, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTrackById$1;->d I
+  000036  const/4 v8, 2
+  000038  goto +9h
+  00003a  const/4 v9, 3
+  00003c  new-instance v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTrackById$1;
+  000040  const/4 v8, 4
+  000042  invoke-direct v0, v6, v13, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTrackById$1;-><init>(Lcom/getmimo/data/content/tracks/c; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000048  const/4 v8, 4
+  00004a  iget-object v13, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTrackById$1;->b Ljava/lang/Object;
+  00004e  const/4 v9, 1
+  000050  sget-object v1, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000054  const/4 v9, 5
+  000056  iget v2, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTrackById$1;->d I
+  00005a  const/4 v9, 2
+  00005c  const/4 v9, 0
+  00005e  move v3, v9
+  000060  const/4 v9, 1
+  000062  move v4, v9
+  000064  if-eqz v2, +017h
+  000068  const/4 v9, 2
+  00006a  if-ne v2, v4, +00bh
+  00006e  const/4 v8, 5
+  000070  iget-wide v11, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTrackById$1;->a J
+  000074  const/4 v8, 3
+  000076  invoke-static v13, Lkotlin/b;->b(Ljava/lang/Object;)V
+  00007c  const/4 v9, 7
+  00007e  goto +1fh
+  000080  const/4 v9, 6
+  000082  const-string v9, "call to 'resume' before 'invoke' with coroutine"
+  000086  move-object v6, v9
+  000088  invoke-static v6, Lwc/f;->i(Ljava/lang/String;)V
+  00008e  const/4 v8, 4
+  000090  return-object v3
+  000092  const/4 v8, 2
+  000094  invoke-static v13, Lkotlin/b;->b(Ljava/lang/Object;)V
+  00009a  const/4 v8, 1
+  00009c  iput-wide v11, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTrackById$1;->a J
+  0000a0  const/4 v8, 7
+  0000a2  iput v4, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTrackById$1;->d I
+  0000a6  const/4 v8, 5
+  0000a8  invoke-virtual v6, v0, Lcom/getmimo/data/content/tracks/c;->g(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  0000ae  move-result-object v8
+  0000b0  move-object v13, v8
+  0000b2  if-ne v13, v1, +004h
+  0000b6  const/4 v9, 2
+  0000b8  return-object v1
+  0000ba  const/4 v9, 5
+  0000bc  check-cast v13, Ljava/util/List;
+  0000c0  const/4 v8, 1
+  0000c2  new-instance v0, Ljava/util/ArrayList;
+  0000c6  const/4 v9, 6
+  0000c8  const/16 v9, 10
+  0000cc  move v1, v9
+  0000ce  invoke-static v13, v1, La70/r;->i0(Ljava/lang/Iterable; I)I
+  0000d4  move-result v8
+  0000d6  move v1, v8
+  0000d8  invoke-direct v0, v1, Ljava/util/ArrayList;-><init>(I)V
+  0000de  const/4 v9, 2
+  0000e0  invoke-interface v13, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  0000e6  move-result-object v8
+  0000e8  move-object v1, v8
+  0000ea  invoke-interface v1, Ljava/util/Iterator;->hasNext()Z
+  0000f0  move-result v8
+  0000f2  move v2, v8
+  0000f4  if-eqz v2, +01ah
+  0000f8  const/4 v8, 2
+  0000fa  invoke-interface v1, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  000100  move-result-object v9
+  000102  move-object v2, v9
+  000104  check-cast v2, Lcom/getmimo/data/content/model/track/TrackJson;
+  000108  const/4 v9, 2
+  00010a  invoke-virtual v2, Lcom/getmimo/data/content/model/track/TrackJson;->getId()J
+  000110  move-result-wide v4
+  000112  new-instance v2, Ljava/lang/Long;
+  000116  const/4 v9, 2
+  000118  invoke-direct v2, v4, v5, Ljava/lang/Long;-><init>(J)V
+  00011e  const/4 v8, 5
+  000120  invoke-virtual v0, v2, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  000126  goto -1eh
+  000128  const/4 v9, 7
+  00012a  iget-object v6, v6, Lcom/getmimo/data/content/tracks/c;->b Lfe/a;
+  00012e  const/4 v8, 5
+  000130  iget-object v6, v6, Lfe/a;->a Lfe/b;
+  000134  const/4 v9, 4
+  000136  invoke-virtual v6, Lfe/b;->a()Lcom/getmimo/analytics/model/ContentExperiment;
+  00013c  move-result-object v8
+  00013e  move-object v6, v8
+  000140  if-nez v6, +006h
+  000144  const/4 v9, 1
+  000146  const/4 v8, 1
+  000148  move-wide v0, v11
+  00014a  goto +2fh
+  00014c  const/4 v8, 2
+  00014e  invoke-virtual v6, Lcom/getmimo/analytics/model/ContentExperiment;->getOriginalTrackId()J
+  000154  move-result-wide v1
+  000156  cmp-long v1, v11, v1
+  00015a  const/4 v9, 6
+  00015c  if-nez v1, -00bh
+  000160  const/4 v8, 3
+  000162  invoke-virtual v6, Lcom/getmimo/analytics/model/ContentExperiment;->getUseTheVariant()Z
+  000168  move-result v8
+  00016a  move v1, v8
+  00016c  if-eqz v1, +019h
+  000170  const/4 v9, 5
+  000172  invoke-virtual v6, Lcom/getmimo/analytics/model/ContentExperiment;->getVariantTrackId()J
+  000178  move-result-wide v1
+  00017a  invoke-static v1, v2, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+  000180  move-result-object v9
+  000182  move-object v1, v9
+  000184  invoke-virtual v0, v1, Ljava/util/ArrayList;->contains(Ljava/lang/Object;)Z
+  00018a  move-result v9
+  00018c  move v0, v9
+  00018e  if-eqz v0, +008h
+  000192  const/4 v8, 5
+  000194  invoke-virtual v6, Lcom/getmimo/analytics/model/ContentExperiment;->getVariantTrackId()J
+  00019a  move-result-wide v0
+  00019c  goto +6h
+  00019e  const/4 v9, 1
+  0001a0  invoke-virtual v6, Lcom/getmimo/analytics/model/ContentExperiment;->getOriginalTrackId()J
+  0001a6  move-result-wide v0
+  0001a8  invoke-interface v13, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  0001ae  move-result-object v8
+  0001b0  move-object v6, v8
+  0001b2  const/4 v8, 2
+  0001b4  invoke-interface v6, Ljava/util/Iterator;->hasNext()Z
+  0001ba  move-result v8
+  0001bc  move v2, v8
+  0001be  if-eqz v2, +017h
+  0001c2  const/4 v8, 6
+  0001c4  invoke-interface v6, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0001ca  move-result-object v9
+  0001cc  move-object v2, v9
+  0001ce  move-object v4, v2
+  0001d0  check-cast v4, Lcom/getmimo/data/content/model/track/TrackJson;
+  0001d4  const/4 v8, 2
+  0001d6  invoke-virtual v4, Lcom/getmimo/data/content/model/track/TrackJson;->getId()J
+  0001dc  move-result-wide v4
+  0001de  cmp-long v4, v4, v0
+  0001e2  const/4 v9, 3
+  0001e4  if-nez v4, -019h
+  0001e8  const/4 v9, 6
+  0001ea  goto +3h
+  0001ec  const/4 v8, 2
+  0001ee  move-object v2, v3
+  0001f0  check-cast v2, Lcom/getmimo/data/content/model/track/TrackJson;
+  0001f4  const/4 v9, 4
+  0001f6  if-nez v2, +059h
+  0001fa  const/4 v9, 5
+  0001fc  sget-object v6, Lle0/b;->a Lle0/a;
+  000200  const/4 v8, 4
+  000202  const-string v8, "Track with id "
+  000206  move-object v2, v8
+  000208  const-string v8, " not found. Original track id: "
+  00020c  move-object v4, v8
+  00020e  invoke-static v0, v1, v2, v4, Lsb/j;->w(J Ljava/lang/String; Ljava/lang/String;)Ljava/lang/StringBuilder;
+  000214  move-result-object v9
+  000216  move-object v0, v9
+  000218  const-string v8, "."
+  00021c  move-object v1, v8
+  00021e  invoke-static v11, v12, v1, v0, Ls7/a;->l(J Ljava/lang/String; Ljava/lang/StringBuilder;)Ljava/lang/String;
+  000224  move-result-object v8
+  000226  move-object v11, v8
+  000228  const/4 v9, 0
+  00022a  move v12, v9
+  00022c  new-array v12, v12, [Ljava/lang/Object;
+  000230  const/4 v8, 1
+  000232  invoke-virtual v6, v11, v12, Lle0/a;->c(Ljava/lang/String; [Ljava/lang/Object;)V
+  000238  const/4 v8, 2
+  00023a  invoke-interface v13, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  000240  move-result-object v8
+  000242  move-object v6, v8
+  000244  const/4 v8, 6
+  000246  invoke-interface v6, Ljava/util/Iterator;->hasNext()Z
+  00024c  move-result v9
+  00024e  move v11, v9
+  000250  if-eqz v11, +01ah
+  000254  const/4 v9, 4
+  000256  invoke-interface v6, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  00025c  move-result-object v8
+  00025e  move-object v11, v8
+  000260  move-object v12, v11
+  000262  check-cast v12, Lcom/getmimo/data/content/model/track/TrackJson;
+  000266  const/4 v8, 3
+  000268  invoke-virtual v12, Lcom/getmimo/data/content/model/track/TrackJson;->getId()J
+  00026e  move-result-wide v12
+  000270  const-wide/16 v0, 50
+  000274  const/4 v8, 6
+  000276  cmp-long v12, v12, v0
+  00027a  const/4 v9, 2
+  00027c  if-nez v12, -01ch
+  000280  const/4 v8, 1
+  000282  goto +3h
+  000284  const/4 v8, 5
+  000286  move-object v11, v3
+  000288  check-cast v11, Lcom/getmimo/data/content/model/track/TrackJson;
+  00028c  const/4 v9, 5
+  00028e  if-eqz v11, +004h
+  000292  const/4 v8, 7
+  000294  return-object v11
+  000296  const/4 v8, 2
+  000298  const-string v9, "Web Development track with id 50 not found"
+  00029c  move-object v6, v9
+  00029e  invoke-static v6, La80/g;->r(Ljava/lang/String;)V
+  0002a4  const/4 v8, 3
+  0002a6  return-object v3
+  0002a8  const/4 v9, 7
+  0002aa  return-object v2
+  0002ac  <androguard.core.dex.FillArrayData object at 0x7ff3fafd2ed0>
+
+===== Lcom/getmimo/data/content/tracks/c;->e(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=9749216 instructions=86 access=public final callers=12 callees=10
+callers: Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTrackWithChapters$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/interactors/chapterend/a;->a(Lcom/getmimo/ui/chapter/ChapterBundle; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/io/Serializable;, Lcom/getmimo/interactors/path/ObservePathSwitcherState$flowOfVisibleTracks$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/interactors/path/ObservePathSwitcherState$invoke$4;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/interactors/path/a;->a(J Ljava/lang/Long; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/interactors/path/b;->a(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/interactors/path/d;->b(J I Lvn/i0; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/interactors/path/e;->f(Lcom/getmimo/data/content/model/track/TrackJson; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/interactors/practice/GetPracticeTopics$invoke$deferredResults$1$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/chapter/chapterendview/main/ChapterFinishedViewModel$onChapterFinishedScreenShown$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/path/map/PathMapViewModel$init$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/reactivation/ReactivationViewModel$fetchTrackProgress$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Lcom/getmimo/data/content/model/track/Track;->getId()J, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTrackWithChapters$1;-><init>(Lcom/getmimo/data/content/tracks/c; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Lcom/getmimo/data/content/tracks/c;->i(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Ljava/lang/Long;-><init>(J)V, Ljava/lang/Long;-><init>(J)V, Ljava/util/HashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;, Ljava/util/HashMap;->put(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object v5, v9
+  000002  instance-of v0, v12, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTrackWithChapters$1;
+  000006  const/4 v8, 3
+  000008  if-eqz v0, +019h
+  00000c  const/4 v7, 3
+  00000e  move-object v0, v12
+  000010  check-cast v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTrackWithChapters$1;
+  000014  const/4 v7, 7
+  000016  iget v1, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTrackWithChapters$1;->c I
+  00001a  const/4 v8, 3
+  00001c  const/high16 v7, -2147483648
+  000020  move v2, v7
+  000022  and-int v3, v1, v2
+  000026  const/4 v8, 4
+  000028  if-eqz v3, +009h
+  00002c  const/4 v7, 4
+  00002e  sub-int/2addr v1, v2
+  000030  const/4 v8, 2
+  000032  iput v1, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTrackWithChapters$1;->c I
+  000036  const/4 v7, 2
+  000038  goto +9h
+  00003a  const/4 v8, 5
+  00003c  new-instance v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTrackWithChapters$1;
+  000040  const/4 v7, 3
+  000042  invoke-direct v0, v5, v12, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTrackWithChapters$1;-><init>(Lcom/getmimo/data/content/tracks/c; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000048  const/4 v8, 6
+  00004a  iget-object v12, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTrackWithChapters$1;->a Ljava/lang/Object;
+  00004e  const/4 v7, 5
+  000050  sget-object v1, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000054  const/4 v8, 4
+  000056  iget v2, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTrackWithChapters$1;->c I
+  00005a  const/4 v8, 6
+  00005c  iget-object v3, v5, Lcom/getmimo/data/content/tracks/c;->d Ljava/util/HashMap;
+  000060  const/4 v7, 5
+  000062  const/4 v8, 1
+  000064  move v4, v8
+  000066  if-eqz v2, +016h
+  00006a  const/4 v7, 5
+  00006c  if-ne v2, v4, +008h
+  000070  const/4 v8, 5
+  000072  invoke-static v12, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000078  const/4 v7, 3
+  00007a  goto +30h
+  00007c  const/4 v8, 2
+  00007e  const-string v7, "call to 'resume' before 'invoke' with coroutine"
+  000082  move-object v5, v7
+  000084  invoke-static v5, Lwc/f;->i(Ljava/lang/String;)V
+  00008a  const/4 v8, 4
+  00008c  const/4 v8, 0
+  00008e  move v5, v8
+  000090  return-object v5
+  000092  const/4 v8, 5
+  000094  invoke-static v12, Lkotlin/b;->b(Ljava/lang/Object;)V
+  00009a  const/4 v8, 5
+  00009c  new-instance v12, Ljava/lang/Long;
+  0000a0  const/4 v8, 3
+  0000a2  invoke-direct v12, v10, v11, Ljava/lang/Long;-><init>(J)V
+  0000a8  const/4 v7, 5
+  0000aa  invoke-virtual v3, v12, Ljava/util/HashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  0000b0  move-result-object v8
+  0000b2  move-object v12, v8
+  0000b4  check-cast v12, Lcom/getmimo/data/content/model/track/Track;
+  0000b8  const/4 v8, 5
+  0000ba  if-nez v12, +021h
+  0000be  const/4 v7, 3
+  0000c0  iput v4, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTrackWithChapters$1;->c I
+  0000c4  const/4 v8, 6
+  0000c6  invoke-virtual v5, v10, v11, v0, Lcom/getmimo/data/content/tracks/c;->i(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  0000cc  move-result-object v7
+  0000ce  move-object v12, v7
+  0000d0  if-ne v12, v1, +004h
+  0000d4  const/4 v7, 6
+  0000d6  return-object v1
+  0000d8  const/4 v8, 2
+  0000da  check-cast v12, Lcom/getmimo/data/content/model/track/Track;
+  0000de  const/4 v7, 1
+  0000e0  invoke-virtual v12, Lcom/getmimo/data/content/model/track/Track;->getId()J
+  0000e6  move-result-wide v5
+  0000e8  new-instance v11, Ljava/lang/Long;
+  0000ec  const/4 v8, 3
+  0000ee  invoke-direct v11, v5, v6, Ljava/lang/Long;-><init>(J)V
+  0000f4  const/4 v8, 6
+  0000f6  invoke-virtual v3, v11, v12, Ljava/util/HashMap;->put(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;
+  0000fc  const/4 v7, 7
+  0000fe  return-object v12
+  000100  <androguard.core.dex.FillArrayData object at 0x7ff3fafd8850>
+
+===== Lcom/getmimo/data/content/tracks/c;->f(Ljava/util/List; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/io/Serializable; =====
+dex=classes.dex code_offset=9749532 instructions=102 access=public final callers=4 callees=13
+callers: Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracks$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->fetchTrackCompletionForFavoriteTracks(Ld70/b;)Ljava/lang/Object;, Lcom/getmimo/interactors/path/LoadOnboardingPaths$forTrack$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/interactors/path/LoadOnboardingPaths$invoke$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Lcom/getmimo/data/content/model/track/TrackJson;->getId()J, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracks$2;-><init>(Lcom/getmimo/data/content/tracks/c; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Lcom/getmimo/data/content/tracks/c;->g(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Long;-><init>(J)V, Ljava/util/ArrayList;-><init>()V, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/List;->contains(Ljava/lang/Object;)Z, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object v4, v8
+  000002  instance-of v0, v10, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracks$2;
+  000006  const/4 v7, 5
+  000008  if-eqz v0, +019h
+  00000c  const/4 v6, 5
+  00000e  move-object v0, v10
+  000010  check-cast v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracks$2;
+  000014  const/4 v7, 6
+  000016  iget v1, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracks$2;->d I
+  00001a  const/4 v7, 6
+  00001c  const/high16 v7, -2147483648
+  000020  move v2, v7
+  000022  and-int v3, v1, v2
+  000026  const/4 v6, 2
+  000028  if-eqz v3, +009h
+  00002c  const/4 v6, 7
+  00002e  sub-int/2addr v1, v2
+  000030  const/4 v6, 3
+  000032  iput v1, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracks$2;->d I
+  000036  const/4 v6, 3
+  000038  goto +9h
+  00003a  const/4 v6, 5
+  00003c  new-instance v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracks$2;
+  000040  const/4 v7, 2
+  000042  invoke-direct v0, v4, v10, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracks$2;-><init>(Lcom/getmimo/data/content/tracks/c; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000048  const/4 v6, 7
+  00004a  iget-object v10, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracks$2;->b Ljava/lang/Object;
+  00004e  const/4 v6, 5
+  000050  sget-object v1, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000054  const/4 v7, 6
+  000056  iget v2, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracks$2;->d I
+  00005a  const/4 v7, 2
+  00005c  const/4 v7, 1
+  00005e  move v3, v7
+  000060  if-eqz v2, +019h
+  000064  const/4 v7, 3
+  000066  if-ne v2, v3, +00bh
+  00006a  const/4 v7, 3
+  00006c  iget-object v9, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracks$2;->a Ljava/util/List;
+  000070  const/4 v7, 4
+  000072  invoke-static v10, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000078  const/4 v6, 4
+  00007a  goto +21h
+  00007c  const/4 v6, 2
+  00007e  const-string v7, "call to 'resume' before 'invoke' with coroutine"
+  000082  move-object v4, v7
+  000084  invoke-static v4, Lwc/f;->i(Ljava/lang/String;)V
+  00008a  const/4 v7, 4
+  00008c  const/4 v6, 0
+  00008e  move v4, v6
+  000090  return-object v4
+  000092  const/4 v7, 1
+  000094  invoke-static v10, Lkotlin/b;->b(Ljava/lang/Object;)V
+  00009a  const/4 v6, 7
+  00009c  iput-object v9, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracks$2;->a Ljava/util/List;
+  0000a0  const/4 v7, 4
+  0000a2  iput v3, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracks$2;->d I
+  0000a6  const/4 v7, 6
+  0000a8  invoke-virtual v4, v0, Lcom/getmimo/data/content/tracks/c;->g(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  0000ae  move-result-object v6
+  0000b0  move-object v10, v6
+  0000b2  if-ne v10, v1, +004h
+  0000b6  const/4 v6, 1
+  0000b8  return-object v1
+  0000ba  const/4 v7, 1
+  0000bc  check-cast v10, Ljava/lang/Iterable;
+  0000c0  const/4 v7, 5
+  0000c2  new-instance v4, Ljava/util/ArrayList;
+  0000c6  const/4 v7, 3
+  0000c8  invoke-direct v4, Ljava/util/ArrayList;-><init>()V
+  0000ce  const/4 v6, 4
+  0000d0  invoke-interface v10, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  0000d6  move-result-object v7
+  0000d8  move-object v10, v7
+  0000da  const/4 v6, 6
+  0000dc  invoke-interface v10, Ljava/util/Iterator;->hasNext()Z
+  0000e2  move-result v6
+  0000e4  move v0, v6
+  0000e6  if-eqz v0, +023h
+  0000ea  const/4 v7, 2
+  0000ec  invoke-interface v10, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0000f2  move-result-object v6
+  0000f4  move-object v0, v6
+  0000f6  move-object v1, v0
+  0000f8  check-cast v1, Lcom/getmimo/data/content/model/track/TrackJson;
+  0000fc  const/4 v6, 6
+  0000fe  invoke-virtual v1, Lcom/getmimo/data/content/model/track/TrackJson;->getId()J
+  000104  move-result-wide v1
+  000106  new-instance v3, Ljava/lang/Long;
+  00010a  const/4 v6, 4
+  00010c  invoke-direct v3, v1, v2, Ljava/lang/Long;-><init>(J)V
+  000112  const/4 v7, 3
+  000114  invoke-interface v9, v3, Ljava/util/List;->contains(Ljava/lang/Object;)Z
+  00011a  move-result v6
+  00011c  move v1, v6
+  00011e  if-eqz v1, -022h
+  000122  const/4 v6, 6
+  000124  invoke-virtual v4, v0, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  00012a  goto -27h
+  00012c  const/4 v6, 1
+  00012e  return-object v4
+  000130  <androguard.core.dex.FillArrayData object at 0x7ff3fafda550>
+
+===== Lcom/getmimo/data/content/tracks/c;->g(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=9749916 instructions=69 access=public final callers=5 callees=6
+callers: Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracks$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/data/content/tracks/c;->d(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/data/content/tracks/c;->f(Ljava/util/List; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/io/Serializable;, Lcom/getmimo/ui/practice/h;->F(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/tracksearch/b;->E(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/io/Serializable;
+callees: Lcom/getmimo/data/content/model/track/TracksJson;->getTracks()Ljava/util/List;, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracks$1;-><init>(Lcom/getmimo/data/content/tracks/c; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Lcom/getmimo/data/content/tracks/c;->h(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object v4, v8
+  000002  instance-of v0, v9, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracks$1;
+  000006  const/4 v6, 4
+  000008  if-eqz v0, +019h
+  00000c  const/4 v6, 5
+  00000e  move-object v0, v9
+  000010  check-cast v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracks$1;
+  000014  const/4 v7, 1
+  000016  iget v1, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracks$1;->c I
+  00001a  const/4 v6, 3
+  00001c  const/high16 v7, -2147483648
+  000020  move v2, v7
+  000022  and-int v3, v1, v2
+  000026  const/4 v6, 6
+  000028  if-eqz v3, +009h
+  00002c  const/4 v7, 1
+  00002e  sub-int/2addr v1, v2
+  000030  const/4 v6, 7
+  000032  iput v1, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracks$1;->c I
+  000036  const/4 v7, 2
+  000038  goto +9h
+  00003a  const/4 v7, 1
+  00003c  new-instance v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracks$1;
+  000040  const/4 v6, 7
+  000042  invoke-direct v0, v4, v9, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracks$1;-><init>(Lcom/getmimo/data/content/tracks/c; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000048  const/4 v7, 7
+  00004a  iget-object v9, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracks$1;->a Ljava/lang/Object;
+  00004e  const/4 v7, 6
+  000050  sget-object v1, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000054  const/4 v6, 6
+  000056  iget v2, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracks$1;->c I
+  00005a  const/4 v7, 4
+  00005c  const/4 v6, 1
+  00005e  move v3, v6
+  000060  if-eqz v2, +016h
+  000064  const/4 v7, 6
+  000066  if-ne v2, v3, +008h
+  00006a  const/4 v6, 2
+  00006c  invoke-static v9, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000072  const/4 v7, 2
+  000074  goto +1eh
+  000076  const/4 v6, 4
+  000078  const-string v6, "call to 'resume' before 'invoke' with coroutine"
+  00007c  move-object v4, v6
+  00007e  invoke-static v4, Lwc/f;->i(Ljava/lang/String;)V
+  000084  const/4 v6, 7
+  000086  const/4 v6, 0
+  000088  move v4, v6
+  00008a  return-object v4
+  00008c  const/4 v7, 3
+  00008e  invoke-static v9, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000094  const/4 v7, 2
+  000096  iput v3, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracks$1;->c I
+  00009a  const/4 v7, 7
+  00009c  invoke-virtual v4, v0, Lcom/getmimo/data/content/tracks/c;->h(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  0000a2  move-result-object v6
+  0000a4  move-object v9, v6
+  0000a6  if-ne v9, v1, +004h
+  0000aa  const/4 v6, 6
+  0000ac  return-object v1
+  0000ae  const/4 v7, 6
+  0000b0  check-cast v9, Lcom/getmimo/data/content/model/track/TracksJson;
+  0000b4  const/4 v6, 6
+  0000b6  invoke-virtual v9, Lcom/getmimo/data/content/model/track/TracksJson;->getTracks()Ljava/util/List;
+  0000bc  move-result-object v6
+  0000be  move-object v4, v6
+  0000c0  return-object v4
+  0000c2  nop 
+  0000c4  <androguard.core.dex.FillArrayData object at 0x7ff3fafdba10>
+
+===== Lcom/getmimo/data/content/tracks/c;->h(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=9750156 instructions=86 access=public final callers=3 callees=6
+callers: Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getPublishSetVersion$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracksJson$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/data/content/tracks/c;->g(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+callees: Lcom/getmimo/data/content/tracks/DefaultTrackLoader$getAllTracks$2;-><init>(Lcom/getmimo/data/content/tracks/b; Ld70/b;)V, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracksJson$1;-><init>(Lcom/getmimo/data/content/tracks/c; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lra0/z;->z(Ld70/f; Lo70/m; Ld70/b;)Ljava/lang/Object;, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object v5, v9
+  000002  instance-of v0, v10, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracksJson$1;
+  000006  const/4 v8, 7
+  000008  if-eqz v0, +019h
+  00000c  const/4 v8, 7
+  00000e  move-object v0, v10
+  000010  check-cast v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracksJson$1;
+  000014  const/4 v7, 2
+  000016  iget v1, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracksJson$1;->c I
+  00001a  const/4 v8, 1
+  00001c  const/high16 v8, -2147483648
+  000020  move v2, v8
+  000022  and-int v3, v1, v2
+  000026  const/4 v8, 7
+  000028  if-eqz v3, +009h
+  00002c  const/4 v8, 1
+  00002e  sub-int/2addr v1, v2
+  000030  const/4 v8, 6
+  000032  iput v1, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracksJson$1;->c I
+  000036  const/4 v7, 4
+  000038  goto +9h
+  00003a  const/4 v7, 7
+  00003c  new-instance v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracksJson$1;
+  000040  const/4 v7, 6
+  000042  invoke-direct v0, v5, v10, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracksJson$1;-><init>(Lcom/getmimo/data/content/tracks/c; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000048  const/4 v8, 1
+  00004a  iget-object v10, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracksJson$1;->a Ljava/lang/Object;
+  00004e  const/4 v8, 6
+  000050  sget-object v1, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000054  const/4 v7, 2
+  000056  iget v2, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracksJson$1;->c I
+  00005a  const/4 v7, 4
+  00005c  const/4 v8, 0
+  00005e  move v3, v8
+  000060  const/4 v7, 1
+  000062  move v4, v7
+  000064  if-eqz v2, +014h
+  000068  const/4 v7, 4
+  00006a  if-ne v2, v4, +008h
+  00006e  const/4 v7, 1
+  000070  invoke-static v10, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000076  const/4 v8, 1
+  000078  goto +38h
+  00007a  const/4 v8, 2
+  00007c  const-string v8, "call to 'resume' before 'invoke' with coroutine"
+  000080  move-object v5, v8
+  000082  invoke-static v5, Lwc/f;->i(Ljava/lang/String;)V
+  000088  const/4 v8, 2
+  00008a  return-object v3
+  00008c  const/4 v8, 7
+  00008e  invoke-static v10, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000094  const/4 v8, 2
+  000096  iget-object v10, v5, Lcom/getmimo/data/content/tracks/c;->c Lcom/getmimo/data/content/model/track/TracksJson;
+  00009a  const/4 v8, 3
+  00009c  if-nez v10, +02ch
+  0000a0  const/4 v8, 3
+  0000a2  iput v4, v0, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$getTracksJson$1;->c I
+  0000a6  const/4 v8, 6
+  0000a8  iget-object v10, v5, Lcom/getmimo/data/content/tracks/c;->a Lye/e;
+  0000ac  const/4 v7, 4
+  0000ae  check-cast v10, Lcom/getmimo/data/content/tracks/b;
+  0000b2  const/4 v7, 3
+  0000b4  iget-object v2, v10, Lcom/getmimo/data/content/tracks/b;->c Lnp/d;
+  0000b8  const/4 v8, 2
+  0000ba  check-cast v2, Lnp/b;
+  0000be  const/4 v8, 7
+  0000c0  iget-object v2, v2, Lnp/b;->c Lya0/c;
+  0000c4  const/4 v8, 2
+  0000c6  new-instance v4, Lcom/getmimo/data/content/tracks/DefaultTrackLoader$getAllTracks$2;
+  0000ca  const/4 v7, 5
+  0000cc  invoke-direct v4, v10, v3, Lcom/getmimo/data/content/tracks/DefaultTrackLoader$getAllTracks$2;-><init>(Lcom/getmimo/data/content/tracks/b; Ld70/b;)V
+  0000d2  const/4 v7, 4
+  0000d4  invoke-static v2, v4, v0, Lra0/z;->z(Ld70/f; Lo70/m; Ld70/b;)Ljava/lang/Object;
+  0000da  move-result-object v8
+  0000dc  move-object v10, v8
+  0000de  if-ne v10, v1, +004h
+  0000e2  const/4 v8, 4
+  0000e4  return-object v1
+  0000e6  const/4 v8, 3
+  0000e8  check-cast v10, Lcom/getmimo/data/content/model/track/TracksJson;
+  0000ec  const/4 v7, 5
+  0000ee  iput-object v10, v5, Lcom/getmimo/data/content/tracks/c;->c Lcom/getmimo/data/content/model/track/TracksJson;
+  0000f2  const/4 v8, 1
+  0000f4  const/4 v7, 2
+  0000f6  return-object v10
+  0000f8  <androguard.core.dex.FillArrayData object at 0x7ff3fafdd490>
+
+===== Lcom/getmimo/data/content/tracks/c;->i(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=9750496 instructions=409 access=public final callers=2 callees=53
+callers: Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/data/content/tracks/c;->e(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+callees: La70/n;->G0([Ljava/lang/Object;)Ljava/util/Set;, La70/n;->G0([Ljava/lang/Object;)Ljava/util/Set;, La70/n;->G0([Ljava/lang/Object;)Ljava/util/Set;, La70/r;->i0(Ljava/lang/Iterable; I)I, La70/r;->i0(Ljava/lang/Iterable; I)I, Lcom/getmimo/data/content/model/track/Section;-><init>(Ljava/lang/String; Ljava/lang/String; Ljava/util/List; I)V, Lcom/getmimo/data/content/model/track/SectionJson;->getDescription()Ljava/lang/String;, Lcom/getmimo/data/content/model/track/SectionJson;->getName()Ljava/lang/String;, Lcom/getmimo/data/content/model/track/SectionJson;->getTutorialIds()Ljava/util/List;, Lcom/getmimo/data/content/model/track/Track;-><init>(J J Ljava/lang/String; Ljava/lang/String; Z Z Ljava/lang/String; Ljava/util/List;)V, Lcom/getmimo/data/content/model/track/TrackJson;->getDescriptionContent()Ljava/lang/String;, Lcom/getmimo/data/content/model/track/TrackJson;->getIconBanner()Ljava/lang/String;, Lcom/getmimo/data/content/model/track/TrackJson;->getId()J, Lcom/getmimo/data/content/model/track/TrackJson;->getSections()Ljava/util/List;, Lcom/getmimo/data/content/model/track/TrackJson;->getTitle()Ljava/lang/String;, Lcom/getmimo/data/content/model/track/TrackJson;->getVersion()J, Lcom/getmimo/data/content/model/track/TrackJson;->isHidden()Z, Lcom/getmimo/data/content/model/track/TrackJson;->isNew()Z, Lcom/getmimo/data/content/model/track/Tutorial;->getChapters()Ljava/util/List;, Lcom/getmimo/data/content/model/track/Tutorial;->getCodeLanguage()Lcom/getmimo/data/content/model/track/CodeLanguage;, Lcom/getmimo/data/content/model/track/Tutorial;->getShowInTrack()Z, Lcom/getmimo/data/content/model/track/Tutorial;->getType()Lcom/getmimo/data/content/model/track/TutorialType;, Lcom/getmimo/data/content/model/track/Tutorial;->getType()Lcom/getmimo/data/content/model/track/TutorialType;, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;-><init>(Lcom/getmimo/data/content/tracks/c; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Lcom/getmimo/data/content/tracks/b;->b(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/data/content/tracks/c;->d(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Li30/m;->Y()V, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Number;->longValue()J, Ljava/util/ArrayList;-><init>()V, Ljava/util/ArrayList;-><init>(I)V, Ljava/util/ArrayList;-><init>(I)V, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/Collection;->add(Ljava/lang/Object;)Z, Ljava/util/Collection;->add(Ljava/lang/Object;)Z, Ljava/util/Collection;->isEmpty()Z, Ljava/util/Collection;->isEmpty()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Set;->contains(Ljava/lang/Object;)Z, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object/from16 v0, v35
+  000004  move-wide/from16 v1, v36
+  000008  move-object/from16 v3, v38
+  00000c  instance-of v4, v3, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;
+  000010  if-eqz v4, +011h
+  000014  move-object v4, v3
+  000016  check-cast v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;
+  00001a  iget v5, v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->J I
+  00001e  const/high16 v6, -2147483648
+  000022  and-int v7, v5, v6
+  000026  if-eqz v7, +006h
+  00002a  sub-int/2addr v5, v6
+  00002c  iput v5, v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->J I
+  000030  goto +6h
+  000032  new-instance v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;
+  000036  invoke-direct v4, v0, v3, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;-><init>(Lcom/getmimo/data/content/tracks/c; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  00003c  iget-object v3, v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->H Ljava/lang/Object;
+  000040  sget-object v5, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000044  iget v6, v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->J I
+  000048  const/4 v9, 7
+  00004a  const/4 v9, 2
+  00004c  const/4 v10, 5
+  00004e  const/4 v10, 1
+  000050  if-eqz v6, +07ch
+  000054  if-eq v6, v10, +070h
+  000058  if-ne v6, v9, +064h
+  00005c  iget-boolean v1, v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->G Z
+  000060  iget-boolean v2, v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->F Z
+  000064  iget-wide v10, v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->c J
+  000068  iget-wide v12, v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->b J
+  00006c  iget v6, v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->E I
+  000070  iget v14, v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->D I
+  000074  move-wide/from16 v36, v10
+  000078  iget-wide v9, v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->a J
+  00007c  iget-object v11, v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->C Ljava/util/Collection;
+  000080  check-cast v11, Ljava/util/Collection;
+  000084  iget-object v15, v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->B Ljava/lang/String;
+  000088  const/16 v16, 23802
+  00008c  const/16 v16, 0
+  000090  iget-object v7, v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->A Ljava/lang/String;
+  000094  iget-object v8, v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->z Ljava/lang/String;
+  000098  move/from16 v17, v1
+  00009c  iget-object v1, v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->y Ljava/util/Collection;
+  0000a0  check-cast v1, Ljava/util/Collection;
+  0000a4  move-object/from16 v18, v1
+  0000a8  iget-object v1, v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->x Ljava/util/Iterator;
+  0000ac  move-object/from16 v19, v1
+  0000b0  iget-object v1, v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->w Ljava/util/Collection;
+  0000b4  check-cast v1, Ljava/util/Collection;
+  0000b8  move-object/from16 v20, v1
+  0000bc  iget-object v1, v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->v Ljava/lang/String;
+  0000c0  move-object/from16 v21, v1
+  0000c4  iget-object v1, v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->g Ljava/lang/String;
+  0000c8  move-object/from16 v22, v1
+  0000cc  iget-object v1, v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->f Ljava/util/Iterator;
+  0000d0  move-object/from16 v23, v1
+  0000d4  iget-object v1, v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->e Ljava/util/Collection;
+  0000d8  check-cast v1, Ljava/util/Collection;
+  0000dc  move-object/from16 v24, v1
+  0000e0  iget-object v1, v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->d Ljava/util/Set;
+  0000e4  check-cast v1, Ljava/util/Set;
+  0000e8  invoke-static v3, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000ee  move-wide/from16 v29, v36
+  0000f2  move-object v0, v15
+  0000f4  move-object v15, v4
+  0000f6  move-object/from16 v4, v21
+  0000fa  move-object/from16 v21, v8
+  0000fe  move v8, v2
+  000100  move-object/from16 v2, v18
+  000104  move-wide/from16 v31, v12
+  000108  move-object v13, v1
+  00010a  move-object v1, v5
+  00010c  move-object v12, v7
+  00010e  move/from16 v5, v17
+  000112  move v7, v6
+  000114  move-wide/from16 v17, v31
+  000118  move-object/from16 v6, v23
+  00011c  goto/16 +18fh
+  000120  const/16 v16, 9606
+  000124  const/16 v16, 0
+  000128  const-string v0, "call to 'resume' before 'invoke' with coroutine"
+  00012c  invoke-static v0, Lwc/f;->i(Ljava/lang/String;)V
+  000132  return-object v16
+  000134  const/16 v16, 30757
+  000138  const/16 v16, 0
+  00013c  iget-wide v1, v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->a J
+  000140  invoke-static v3, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000146  goto +15h
+  000148  const/16 v16, 20147
+  00014c  const/16 v16, 0
+  000150  invoke-static v3, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000156  iput-wide v1, v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->a J
+  00015a  iput v10, v4, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->J I
+  00015e  invoke-virtual v0, v1, v2, v4, Lcom/getmimo/data/content/tracks/c;->d(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  000164  move-result-object v3
+  000166  if-ne v3, v5, +005h
+  00016a  move-object v1, v5
+  00016c  goto/16 +14bh
+  000170  check-cast v3, Lcom/getmimo/data/content/model/track/TrackJson;
+  000174  const-wide/16 v6, 50
+  000178  cmp-long v6, v1, v6
+  00017c  if-eqz v6, +034h
+  000180  const-wide/16 v6, 219
+  000184  cmp-long v6, v1, v6
+  000188  if-eqz v6, +02eh
+  00018c  const-wide/16 v6, 226
+  000190  cmp-long v6, v1, v6
+  000194  if-eqz v6, +028h
+  000198  const-wide/16 v6, 145
+  00019c  cmp-long v6, v1, v6
+  0001a0  if-eqz v6, +022h
+  0001a4  const-wide/16 v6, 197
+  0001a8  cmp-long v6, v1, v6
+  0001ac  if-eqz v6, +01ch
+  0001b0  const-wide/16 v6, 228
+  0001b4  cmp-long v6, v1, v6
+  0001b8  if-nez v6, +003h
+  0001bc  goto +14h
+  0001be  sget-object v6, Lcom/getmimo/data/content/model/track/TutorialType;->GuidedProject Lcom/getmimo/data/content/model/track/TutorialType;
+  0001c2  sget-object v7, Lcom/getmimo/data/content/model/track/TutorialType;->MobileProject Lcom/getmimo/data/content/model/track/TutorialType;
+  0001c6  sget-object v8, Lcom/getmimo/data/content/model/track/TutorialType;->Quiz Lcom/getmimo/data/content/model/track/TutorialType;
+  0001ca  sget-object v9, Lcom/getmimo/data/content/model/track/TutorialType;->RecreateProject Lcom/getmimo/data/content/model/track/TutorialType;
+  0001ce  sget-object v10, Lcom/getmimo/data/content/model/track/TutorialType;->GuidedProjectOptional Lcom/getmimo/data/content/model/track/TutorialType;
+  0001d2  filled-new-array v6, v7, v8, v9, v10, [Lcom/getmimo/data/content/model/track/TutorialType;
+  0001d8  move-result-object v6
+  0001da  invoke-static v6, La70/n;->G0([Ljava/lang/Object;)Ljava/util/Set;
+  0001e0  move-result-object v6
+  0001e2  goto +11h
+  0001e4  sget-object v6, Lcom/getmimo/data/content/model/track/TutorialType;->MobileProject Lcom/getmimo/data/content/model/track/TutorialType;
+  0001e8  sget-object v7, Lcom/getmimo/data/content/model/track/TutorialType;->Quiz Lcom/getmimo/data/content/model/track/TutorialType;
+  0001ec  sget-object v8, Lcom/getmimo/data/content/model/track/TutorialType;->RecreateProject Lcom/getmimo/data/content/model/track/TutorialType;
+  0001f0  sget-object v9, Lcom/getmimo/data/content/model/track/TutorialType;->GuidedProjectOptional Lcom/getmimo/data/content/model/track/TutorialType;
+  0001f4  filled-new-array v6, v7, v8, v9, [Lcom/getmimo/data/content/model/track/TutorialType;
+  0001fa  move-result-object v6
+  0001fc  invoke-static v6, La70/n;->G0([Ljava/lang/Object;)Ljava/util/Set;
+  000202  move-result-object v6
+  000204  invoke-virtual v3, Lcom/getmimo/data/content/model/track/TrackJson;->getId()J
+  00020a  move-result-wide v7
+  00020c  invoke-virtual v3, Lcom/getmimo/data/content/model/track/TrackJson;->getVersion()J
+  000212  move-result-wide v9
+  000214  invoke-virtual v3, Lcom/getmimo/data/content/model/track/TrackJson;->getTitle()Ljava/lang/String;
+  00021a  move-result-object v11
+  00021c  invoke-virtual v3, Lcom/getmimo/data/content/model/track/TrackJson;->getDescriptionContent()Ljava/lang/String;
+  000222  move-result-object v12
+  000224  invoke-virtual v3, Lcom/getmimo/data/content/model/track/TrackJson;->isNew()Z
+  00022a  move-result v13
+  00022c  invoke-virtual v3, Lcom/getmimo/data/content/model/track/TrackJson;->isHidden()Z
+  000232  move-result v14
+  000234  invoke-virtual v3, Lcom/getmimo/data/content/model/track/TrackJson;->getIconBanner()Ljava/lang/String;
+  00023a  move-result-object v15
+  00023c  invoke-virtual v3, Lcom/getmimo/data/content/model/track/TrackJson;->getSections()Ljava/util/List;
+  000242  move-result-object v3
+  000244  move-wide/from16 v36, v1
+  000248  new-instance v1, Ljava/util/ArrayList;
+  00024c  move-object/from16 v17, v4
+  000250  const/16 v2, 3453
+  000254  const/16 v2, 10
+  000258  invoke-static v3, v2, La70/r;->i0(Ljava/lang/Iterable; I)I
+  00025e  move-result v4
+  000260  invoke-direct v1, v4, Ljava/util/ArrayList;-><init>(I)V
+  000266  invoke-interface v3, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  00026c  move-result-object v2
+  00026e  const/4 v3, 7
+  000270  const/4 v3, 0
+  000272  move-object v4, v2
+  000274  move-wide/from16 v19, v7
+  000278  move-wide/from16 v21, v9
+  00027c  move-object/from16 v23, v11
+  000280  move/from16 v25, v13
+  000284  move/from16 v26, v14
+  000288  move-object/from16 v27, v15
+  00028c  move-object v7, v6
+  00028e  move v6, v3
+  000290  move-wide/from16 v2, v36
+  000294  move-object/from16 v24, v12
+  000298  invoke-interface v4, Ljava/util/Iterator;->hasNext()Z
+  00029e  move-result v8
+  0002a0  if-eqz v8, +1b3h
+  0002a4  invoke-interface v4, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0002aa  move-result-object v8
+  0002ac  add-int/lit8 v9, v6, 1
+  0002b0  if-ltz v6, +1a7h
+  0002b4  check-cast v8, Lcom/getmimo/data/content/model/track/SectionJson;
+  0002b8  invoke-virtual v8, Lcom/getmimo/data/content/model/track/SectionJson;->getName()Ljava/lang/String;
+  0002be  move-result-object v10
+  0002c0  invoke-virtual v8, Lcom/getmimo/data/content/model/track/SectionJson;->getDescription()Ljava/lang/String;
+  0002c6  move-result-object v11
+  0002c8  invoke-virtual v8, Lcom/getmimo/data/content/model/track/SectionJson;->getTutorialIds()Ljava/util/List;
+  0002ce  move-result-object v8
+  0002d0  new-instance v12, Ljava/util/ArrayList;
+  0002d4  const/16 v13, 29784
+  0002d8  const/16 v13, 10
+  0002dc  invoke-static v8, v13, La70/r;->i0(Ljava/lang/Iterable; I)I
+  0002e2  move-result v14
+  0002e4  invoke-direct v12, v14, Ljava/util/ArrayList;-><init>(I)V
+  0002ea  invoke-interface v8, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  0002f0  move-result-object v8
+  0002f2  move-object/from16 v36, v1
+  0002f6  move-object/from16 v37, v36
+  0002fa  move-object/from16 v28, v5
+  0002fe  move-object/from16 v18, v7
+  000302  move-object v1, v8
+  000304  move-object/from16 v15, v17
+  000308  move-wide/from16 v13, v19
+  00030c  move-wide/from16 v29, v21
+  000310  move/from16 v8, v25
+  000314  move/from16 v5, v26
+  000318  move-object/from16 v0, v27
+  00031c  move v7, v6
+  00031e  move-object/from16 v17, v12
+  000322  move-object/from16 v12, v24
+  000326  move-object v6, v4
+  000328  move-wide v3, v2
+  00032a  move-object/from16 v2, v23
+  00032e  invoke-interface v1, Ljava/util/Iterator;->hasNext()Z
+  000334  move-result v19
+  000336  if-eqz v19, +0a3h
+  00033a  invoke-interface v1, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  000340  move-result-object v19
+  000342  check-cast v19, Ljava/lang/Number;
+  000346  move-wide/from16 v20, v13
+  00034a  invoke-virtual/range v19, Ljava/lang/Number;->longValue()J
+  000350  move-result-wide v13
+  000352  move-wide/from16 v22, v13
+  000356  move-object/from16 v13, v18
+  00035a  check-cast v13, Ljava/util/Set;
+  00035e  iput-object v13, v15, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->d Ljava/util/Set;
+  000362  move-object/from16 v13, v37
+  000366  check-cast v13, Ljava/util/Collection;
+  00036a  iput-object v13, v15, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->e Ljava/util/Collection;
+  00036e  iput-object v6, v15, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->f Ljava/util/Iterator;
+  000372  iput-object v11, v15, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->g Ljava/lang/String;
+  000376  iput-object v10, v15, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->v Ljava/lang/String;
+  00037a  move-object/from16 v13, v17
+  00037e  check-cast v13, Ljava/util/Collection;
+  000382  iput-object v13, v15, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->w Ljava/util/Collection;
+  000386  iput-object v1, v15, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->x Ljava/util/Iterator;
+  00038a  iput-object v13, v15, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->y Ljava/util/Collection;
+  00038e  iput-object v2, v15, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->z Ljava/lang/String;
+  000392  iput-object v12, v15, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->A Ljava/lang/String;
+  000396  iput-object v0, v15, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->B Ljava/lang/String;
+  00039a  move-object/from16 v13, v36
+  00039e  check-cast v13, Ljava/util/Collection;
+  0003a2  iput-object v13, v15, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->C Ljava/util/Collection;
+  0003a6  iput-wide v3, v15, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->a J
+  0003aa  iput v9, v15, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->D I
+  0003ae  iput v7, v15, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->E I
+  0003b2  move-wide/from16 v13, v20
+  0003b6  iput-wide v13, v15, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->b J
+  0003ba  move-object/from16 v20, v0
+  0003be  move-object/from16 v19, v1
+  0003c2  move-wide/from16 v0, v29
+  0003c6  iput-wide v0, v15, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->c J
+  0003ca  iput-boolean v8, v15, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->F Z
+  0003ce  iput-boolean v5, v15, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->G Z
+  0003d2  move-wide/from16 v24, v0
+  0003d6  const/4 v0, 7
+  0003d8  const/4 v0, 2
+  0003da  iput v0, v15, Lcom/getmimo/data/content/tracks/DefaultTracksRepository$loadTrackWithChapters$1;->J I
+  0003de  move-object/from16 v1, v35
+  0003e2  iget-object v0, v1, Lcom/getmimo/data/content/tracks/c;->a Lye/e;
+  0003e6  check-cast v0, Lcom/getmimo/data/content/tracks/b;
+  0003ea  move-object/from16 v21, v2
+  0003ee  move-wide/from16 v1, v22
+  0003f2  invoke-virtual v0, v1, v2, v15, Lcom/getmimo/data/content/tracks/b;->b(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  0003f8  move-result-object v0
+  0003fa  move-object/from16 v1, v28
+  0003fe  if-ne v0, v1, +003h
+  000402  return-object v1
+  000404  move-object/from16 v22, v11
+  000408  move-object/from16 v2, v17
+  00040c  move-wide/from16 v29, v24
+  000410  move-object/from16 v11, v36
+  000414  move-object/from16 v24, v37
+  000418  move-wide/from16 v31, v3
+  00041c  move-object v3, v0
+  00041e  move-object v4, v10
+  000420  move-object/from16 v0, v20
+  000424  move-object/from16 v20, v2
+  000428  move-wide/from16 v33, v13
+  00042c  move v14, v9
+  00042e  move-wide/from16 v9, v31
+  000432  move-object/from16 v13, v18
+  000436  move-wide/from16 v17, v33
+  00043a  check-cast v3, Lcom/getmimo/data/content/model/track/Tutorial;
+  00043e  invoke-interface v2, v3, Ljava/util/Collection;->add(Ljava/lang/Object;)Z
+  000444  move-wide/from16 v36, v9
+  000448  move-object v10, v4
+  00044a  move-wide/from16 v3, v36
+  00044e  move-object/from16 v28, v1
+  000452  move-object/from16 v36, v11
+  000456  move v9, v14
+  000458  move-object/from16 v1, v19
+  00045c  move-object/from16 v2, v21
+  000460  move-object/from16 v11, v22
+  000464  move-object/from16 v37, v24
+  000468  move-wide/from16 v31, v17
+  00046c  move-object/from16 v18, v13
+  000470  move-wide/from16 v13, v31
+  000474  move-object/from16 v17, v20
+  000478  goto/16 -0a5h
+  00047c  move-object/from16 v20, v0
+  000480  move-object/from16 v21, v2
+  000484  move-object/from16 v1, v28
+  000488  move-wide/from16 v24, v29
+  00048c  check-cast v17, Ljava/util/List;
+  000490  new-instance v0, Ljava/util/ArrayList;
+  000494  invoke-direct v0, Ljava/util/ArrayList;-><init>()V
+  00049a  invoke-interface/range v17, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  0004a0  move-result-object v2
+  0004a2  invoke-interface v2, Ljava/util/Iterator;->hasNext()Z
+  0004a8  move-result v17
+  0004aa  if-eqz v17, +07fh
+  0004ae  move-object/from16 v28, v1
+  0004b2  invoke-interface v2, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0004b8  move-result-object v1
+  0004ba  move-object/from16 v17, v1
+  0004be  check-cast v17, Lcom/getmimo/data/content/model/track/Tutorial;
+  0004c2  invoke-virtual/range v17, Lcom/getmimo/data/content/model/track/Tutorial;->getChapters()Ljava/util/List;
+  0004c8  move-result-object v19
+  0004ca  invoke-interface/range v19, Ljava/util/Collection;->isEmpty()Z
+  0004d0  move-result v19
+  0004d2  if-nez v19, +064h
+  0004d6  move-object/from16 v19, v2
+  0004da  invoke-virtual/range v17, Lcom/getmimo/data/content/model/track/Tutorial;->getType()Lcom/getmimo/data/content/model/track/TutorialType;
+  0004e0  move-result-object v2
+  0004e2  move-wide/from16 v22, v3
+  0004e6  move-object/from16 v3, v18
+  0004ea  invoke-interface v3, v2, Ljava/util/Set;->contains(Ljava/lang/Object;)Z
+  0004f0  move-result v2
+  0004f2  if-nez v2, +04bh
+  0004f6  invoke-virtual/range v17, Lcom/getmimo/data/content/model/track/Tutorial;->getType()Lcom/getmimo/data/content/model/track/TutorialType;
+  0004fc  move-result-object v2
+  0004fe  sget-object v4, Lcom/getmimo/data/content/model/track/TutorialType;->GuidedProject Lcom/getmimo/data/content/model/track/TutorialType;
+  000502  if-ne v2, v4, +03ah
+  000506  sget-object v2, Lcom/getmimo/data/content/model/track/CodeLanguage;->NODE Lcom/getmimo/data/content/model/track/CodeLanguage;
+  00050a  sget-object v4, Lcom/getmimo/data/content/model/track/CodeLanguage;->SQL Lcom/getmimo/data/content/model/track/CodeLanguage;
+  00050e  filled-new-array v2, v4, [Lcom/getmimo/data/content/model/track/CodeLanguage;
+  000514  move-result-object v2
+  000516  invoke-static v2, La70/n;->G0([Ljava/lang/Object;)Ljava/util/Set;
+  00051c  move-result-object v2
+  00051e  check-cast v2, Ljava/lang/Iterable;
+  000522  instance-of v4, v2, Ljava/util/Collection;
+  000526  if-eqz v4, +00ch
+  00052a  move-object v4, v2
+  00052c  check-cast v4, Ljava/util/Collection;
+  000530  invoke-interface v4, Ljava/util/Collection;->isEmpty()Z
+  000536  move-result v4
+  000538  if-eqz v4, +003h
+  00053c  goto +1dh
+  00053e  invoke-interface v2, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  000544  move-result-object v2
+  000546  invoke-interface v2, Ljava/util/Iterator;->hasNext()Z
+  00054c  move-result v4
+  00054e  if-eqz v4, +014h
+  000552  invoke-interface v2, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  000558  move-result-object v4
+  00055a  check-cast v4, Lcom/getmimo/data/content/model/track/CodeLanguage;
+  00055e  move-object/from16 v18, v2
+  000562  invoke-virtual/range v17, Lcom/getmimo/data/content/model/track/Tutorial;->getCodeLanguage()Lcom/getmimo/data/content/model/track/CodeLanguage;
+  000568  move-result-object v2
+  00056a  if-ne v4, v2, +003h
+  00056e  goto +dh
+  000570  move-object/from16 v2, v18
+  000574  goto -17h
+  000576  invoke-virtual/range v17, Lcom/getmimo/data/content/model/track/Tutorial;->getShowInTrack()Z
+  00057c  move-result v2
+  00057e  if-eqz v2, +005h
+  000582  invoke-virtual v0, v1, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  000588  move-object/from16 v18, v3
+  00058c  move-object/from16 v2, v19
+  000590  move-wide/from16 v3, v22
+  000594  move-object/from16 v1, v28
+  000598  goto -7bh
+  00059a  move-object/from16 v19, v2
+  00059e  move-wide/from16 v22, v3
+  0005a2  move-object/from16 v3, v18
+  0005a6  goto -fh
+  0005a8  move-object/from16 v28, v1
+  0005ac  move-wide/from16 v22, v3
+  0005b0  move-object/from16 v3, v18
+  0005b4  new-instance v1, Lcom/getmimo/data/content/model/track/Section;
+  0005b8  invoke-direct v1, v10, v11, v0, v7, Lcom/getmimo/data/content/model/track/Section;-><init>(Ljava/lang/String; Ljava/lang/String; Ljava/util/List; I)V
+  0005be  move-object/from16 v11, v36
+  0005c2  invoke-interface v11, v1, Ljava/util/Collection;->add(Ljava/lang/Object;)Z
+  0005c8  move-object/from16 v0, v35
+  0005cc  move-object/from16 v1, v37
+  0005d0  move-object v7, v3
+  0005d2  move/from16 v26, v5
+  0005d6  move-object v4, v6
+  0005d8  move v6, v9
+  0005da  move-object/from16 v17, v15
+  0005de  move-object/from16 v27, v20
+  0005e2  move-wide/from16 v2, v22
+  0005e6  move-object/from16 v5, v28
+  0005ea  move-wide/from16 v19, v13
+  0005ee  move-object/from16 v23, v21
+  0005f2  move-wide/from16 v21, v24
+  0005f6  move/from16 v25, v8
+  0005fa  goto/16 -1b3h
+  0005fe  invoke-static Li30/m;->Y()V
+  000604  throw v16
+  000606  move-object/from16 v28, v1
+  00060a  check-cast v28, Ljava/util/List;
+  00060e  new-instance v18, Lcom/getmimo/data/content/model/track/Track;
+  000612  invoke-direct/range v18 ... v28, Lcom/getmimo/data/content/model/track/Track;-><init>(J J Ljava/lang/String; Ljava/lang/String; Z Z Ljava/lang/String; Ljava/util/List;)V
+  000618  return-object v18
+  00061a  nop 
+  00061c  <androguard.core.dex.FillArrayData object at 0x7ff3fafecc10>

@@ -1,0 +1,129 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/ui/common/runbutton/RunButton$State; semantic=RunButtonState
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/ui/common/runbutton/RunButton$State;-><clinit>()V =====
+dex=classes.dex code_offset=10494672 instructions=89 access=static constructor callers=0 callees=9
+callees: Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V, Lkotlin/enums/a;->a([Ljava/lang/Enum;)Lg70/a;
+  000000  new-instance v0, Lcom/getmimo/ui/common/runbutton/RunButton$State;
+  000004  const-string v11, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  000008  const-string v10, "RUN_ENABLED"
+  00000c  move-object v1, v10
+  00000e  const/4 v10, 0
+  000010  move v2, v10
+  000012  invoke-direct v0, v1, v2, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V
+  000018  const/4 v11, 1
+  00001a  sput-object v0, Lcom/getmimo/ui/common/runbutton/RunButton$State;->a Lcom/getmimo/ui/common/runbutton/RunButton$State;
+  00001e  const/4 v11, 2
+  000020  new-instance v1, Lcom/getmimo/ui/common/runbutton/RunButton$State;
+  000024  const/4 v11, 4
+  000026  const-string v10, "RUN_DISABLED"
+  00002a  move-object v2, v10
+  00002c  const/4 v10, 1
+  00002e  move v3, v10
+  000030  invoke-direct v1, v2, v3, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V
+  000036  const/4 v11, 4
+  000038  sput-object v1, Lcom/getmimo/ui/common/runbutton/RunButton$State;->b Lcom/getmimo/ui/common/runbutton/RunButton$State;
+  00003c  const/4 v11, 5
+  00003e  new-instance v2, Lcom/getmimo/ui/common/runbutton/RunButton$State;
+  000042  const/4 v11, 7
+  000044  const-string v10, "SUBMIT_ENABLED"
+  000048  move-object v3, v10
+  00004a  const/4 v10, 2
+  00004c  move v4, v10
+  00004e  invoke-direct v2, v3, v4, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V
+  000054  const/4 v11, 6
+  000056  sput-object v2, Lcom/getmimo/ui/common/runbutton/RunButton$State;->c Lcom/getmimo/ui/common/runbutton/RunButton$State;
+  00005a  const/4 v11, 1
+  00005c  new-instance v3, Lcom/getmimo/ui/common/runbutton/RunButton$State;
+  000060  const/4 v11, 5
+  000062  const-string v10, "SUBMIT_DISABLED"
+  000066  move-object v4, v10
+  000068  const/4 v10, 3
+  00006a  move v5, v10
+  00006c  invoke-direct v3, v4, v5, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V
+  000072  const/4 v11, 5
+  000074  sput-object v3, Lcom/getmimo/ui/common/runbutton/RunButton$State;->d Lcom/getmimo/ui/common/runbutton/RunButton$State;
+  000078  const/4 v11, 7
+  00007a  new-instance v4, Lcom/getmimo/ui/common/runbutton/RunButton$State;
+  00007e  const/4 v11, 2
+  000080  const-string v10, "PROCESSING"
+  000084  move-object v5, v10
+  000086  const/4 v10, 4
+  000088  move v6, v10
+  00008a  invoke-direct v4, v5, v6, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V
+  000090  const/4 v11, 5
+  000092  sput-object v4, Lcom/getmimo/ui/common/runbutton/RunButton$State;->e Lcom/getmimo/ui/common/runbutton/RunButton$State;
+  000096  const/4 v11, 4
+  000098  new-instance v5, Lcom/getmimo/ui/common/runbutton/RunButton$State;
+  00009c  const/4 v11, 3
+  00009e  const-string v10, "CONTINUE_BIG"
+  0000a2  move-object v6, v10
+  0000a4  const/4 v10, 5
+  0000a6  move v7, v10
+  0000a8  invoke-direct v5, v6, v7, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V
+  0000ae  const/4 v11, 2
+  0000b0  sput-object v5, Lcom/getmimo/ui/common/runbutton/RunButton$State;->f Lcom/getmimo/ui/common/runbutton/RunButton$State;
+  0000b4  const/4 v11, 4
+  0000b6  new-instance v6, Lcom/getmimo/ui/common/runbutton/RunButton$State;
+  0000ba  const/4 v11, 3
+  0000bc  const-string v10, "CONTINUE_DISABLED"
+  0000c0  move-object v7, v10
+  0000c2  const/4 v10, 6
+  0000c4  move v8, v10
+  0000c6  invoke-direct v6, v7, v8, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V
+  0000cc  const/4 v11, 2
+  0000ce  sput-object v6, Lcom/getmimo/ui/common/runbutton/RunButton$State;->g Lcom/getmimo/ui/common/runbutton/RunButton$State;
+  0000d2  const/4 v11, 7
+  0000d4  new-instance v7, Lcom/getmimo/ui/common/runbutton/RunButton$State;
+  0000d8  const/4 v11, 1
+  0000da  const-string v10, "NOT_SHOWN"
+  0000de  move-object v8, v10
+  0000e0  const/4 v10, 7
+  0000e2  move v9, v10
+  0000e4  invoke-direct v7, v8, v9, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V
+  0000ea  const/4 v11, 7
+  0000ec  sput-object v7, Lcom/getmimo/ui/common/runbutton/RunButton$State;->v Lcom/getmimo/ui/common/runbutton/RunButton$State;
+  0000f0  const/4 v11, 4
+  0000f2  filled-new-array/range v0 ... v7, [Lcom/getmimo/ui/common/runbutton/RunButton$State;
+  0000f8  move-result-object v10
+  0000fa  move-object v0, v10
+  0000fc  sput-object v0, Lcom/getmimo/ui/common/runbutton/RunButton$State;->w [Lcom/getmimo/ui/common/runbutton/RunButton$State;
+  000100  const/4 v11, 7
+  000102  invoke-static v0, Lkotlin/enums/a;->a([Ljava/lang/Enum;)Lg70/a;
+  000108  return-void 
+  00010a  nop 
+  00010c  <androguard.core.dex.FillArrayData object at 0x7ff3fac3bb90>
+
+===== Lcom/getmimo/ui/common/runbutton/RunButton$State;->valueOf(Ljava/lang/String;)Lcom/getmimo/ui/common/runbutton/RunButton$State; =====
+dex=classes.dex code_offset=10495032 instructions=11 access=public static callers=0 callees=1
+callees: Ljava/lang/Enum;->valueOf(Ljava/lang/Class; Ljava/lang/String;)Ljava/lang/Enum;
+  000000  move-object v1, v4
+  000002  const-class v0, Lcom/getmimo/ui/common/runbutton/RunButton$State;
+  000006  const/4 v3, 6
+  000008  invoke-static v0, v1, Ljava/lang/Enum;->valueOf(Ljava/lang/Class; Ljava/lang/String;)Ljava/lang/Enum;
+  00000e  move-result-object v3
+  000010  move-object v1, v3
+  000012  check-cast v1, Lcom/getmimo/ui/common/runbutton/RunButton$State;
+  000016  const/4 v3, 3
+  000018  return-object v1
+  00001a  nop 
+  00001c  <androguard.core.dex.FillArrayData object at 0x7ff3fac3bf10>
+
+===== Lcom/getmimo/ui/common/runbutton/RunButton$State;->values()[Lcom/getmimo/ui/common/runbutton/RunButton$State; =====
+dex=classes.dex code_offset=10495112 instructions=9 access=public static callers=0 callees=1
+callees: Ljava/lang/Object;->clone()Ljava/lang/Object;
+  000000  sget-object v0, Lcom/getmimo/ui/common/runbutton/RunButton$State;->w [Lcom/getmimo/ui/common/runbutton/RunButton$State;
+  000004  const/4 v3, 1
+  000006  invoke-virtual v0, Ljava/lang/Object;->clone()Ljava/lang/Object;
+  00000c  move-result-object v1
+  00000e  move-object v0, v1
+  000010  check-cast v0, [Lcom/getmimo/ui/common/runbutton/RunButton$State;
+  000014  const/4 v2, 2
+  000016  return-object v0
+  000018  <androguard.core.dex.FillArrayData object at 0x7ff3fae0c350>

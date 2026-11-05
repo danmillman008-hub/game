@@ -1,0 +1,486 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/ui/lesson/interactive/fillthegap/a; semantic=FillTheGapViewModel
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/ui/lesson/interactive/fillthegap/a;-><init>(Lbg/a; Lhm/b; Lim/b; Lcom/getmimo/ui/lesson/interactive/base/d;)V =====
+dex=classes.dex code_offset=10964188 instructions=38 access=public constructor callers=1 callees=6
+callers: Lae/p;->get()Ljava/lang/Object;
+callees: Landroidx/lifecycle/i0;-><init>()V, Lcom/getmimo/ui/lesson/interactive/base/c;-><init>(Lhm/b;)V, Lcw/e;->g(Ljava/lang/Object; Lv70/y;)Ljava/lang/Boolean;, Lcw/e;->j(Ljava/lang/Object; Lv70/y; Z)V, Ljava/lang/Boolean;->booleanValue()Z, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000000  move-object v1, v4
+  000002  invoke-virtual v5, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000008  invoke-direct v1, v6, Lcom/getmimo/ui/lesson/interactive/base/c;-><init>(Lhm/b;)V
+  00000e  const-string v3, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  000012  iput-object v7, v1, Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->N Lim/b;
+  000016  const/4 v3, 3
+  000018  iput-object v8, v1, Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->O Lcom/getmimo/ui/lesson/interactive/base/d;
+  00001c  const/4 v3, 4
+  00001e  iget-object v6, v5, Lbg/a;->j Lcw/e;
+  000022  const/4 v3, 3
+  000024  sget-object v7, Lbg/a;->m [Lv70/y;
+  000028  const/4 v3, 1
+  00002a  const/16 v3, 8
+  00002e  move v8, v3
+  000030  aget-object v0, v7, v8
+  000034  const/4 v3, 2
+  000036  invoke-virtual v6, v5, v0, Lcw/e;->g(Ljava/lang/Object; Lv70/y;)Ljava/lang/Boolean;
+  00003c  move-result-object v3
+  00003e  move-object v0, v3
+  000040  invoke-virtual v0, Ljava/lang/Boolean;->booleanValue()Z
+  000046  move-result v3
+  000048  move v0, v3
+  00004a  iput-boolean v0, v1, Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->P Z
+  00004e  const/4 v3, 7
+  000050  const/4 v3, 0
+  000052  move v0, v3
+  000054  aget-object v7, v7, v8
+  000058  const/4 v3, 3
+  00005a  invoke-virtual v6, v5, v7, v0, Lcw/e;->j(Ljava/lang/Object; Lv70/y; Z)V
+  000060  const/4 v3, 6
+  000062  new-instance v5, Landroidx/lifecycle/m0;
+  000066  const/4 v3, 7
+  000068  invoke-direct v5, Landroidx/lifecycle/i0;-><init>()V
+  00006e  const/4 v3, 3
+  000070  iput-object v5, v1, Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->R Landroidx/lifecycle/m0;
+  000074  const/4 v3, 1
+  000076  return-void 
+  000078  <androguard.core.dex.FillArrayData object at 0x7ff3fae1d510>
+
+===== Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->E(Lcom/getmimo/data/content/model/track/LessonContent$Interactive;)V =====
+dex=classes.dex code_offset=10964388 instructions=210 access=public final callers=0 callees=67
+callees: La70/r;->i0(Ljava/lang/Iterable; I)I, Landroid/text/SpannableString;-><init>(Ljava/lang/CharSequence;)V, Landroid/text/SpannableString;-><init>(Ljava/lang/CharSequence;)V, Landroid/text/SpannableStringBuilder;-><init>(Ljava/lang/CharSequence; I I)V, Landroidx/lifecycle/m;->k(Landroidx/lifecycle/f1;)Le7/a;, Lci/b;-><init>(Ljava/lang/Object; Ljava/lang/Object; B)V, Lci/b;-><init>(Ljava/lang/Object; Ljava/lang/Object; B)V, Lci/b;-><init>(Ljava/lang/Object; Ljava/lang/Object; B)V, Lcn/d;-><init>(I Ljava/lang/String; Z)V, Lcom/getmimo/ui/lesson/interactive/base/d;->a()Lua0/r;, Lcom/getmimo/ui/lesson/interactive/fillthegap/InteractiveLessonFillTheGapViewModel$configureInteraction$1;-><init>(Lcom/getmimo/ui/lesson/interactive/fillthegap/a; Ld70/b;)V, Lcom/getmimo/ui/lesson/interactive/fillthegap/InteractiveLessonFillTheGapViewModel$createCursorBlinkEvents$3;-><init>(Lcom/getmimo/ui/lesson/interactive/fillthegap/a; Ld70/b;)V, Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->j0(Lim/a;)V, Li30/m;->Y()V, Lim/a;-><init>(Ljava/util/List; Ljava/util/ArrayList; Ljava/util/ArrayList; Ljava/util/ArrayList;)V, Liq/w;->F(Ljava/util/ArrayList;)Ljava/util/List;, Ljava/lang/CharSequence;->length()I, Ljava/lang/CharSequence;->subSequence(I I)Ljava/lang/CharSequence;, Ljava/lang/CharSequence;->subSequence(I I)Ljava/lang/CharSequence;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->toString()Ljava/lang/String;, Ljava/util/ArrayList;-><init>()V, Ljava/util/ArrayList;-><init>()V, Ljava/util/ArrayList;-><init>()V, Ljava/util/ArrayList;-><init>(I)V, Ljava/util/ArrayList;-><init>(Ljava/util/Collection;)V, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljm/w;-><init>()V, Ljm/x;-><init>(Lqc/a; Ljava/lang/String; Ljm/w; I)V, Ljm/x;-><init>(Lqc/a; Ljava/lang/String; Ljm/w; I)V, Ljm/y;-><init>(Lqc/a;)V, Ljm/y;-><init>(Lqc/a;)V, Lkotlin/coroutines/jvm/internal/SuspendLambda;-><init>(I Ld70/b;)V, Lkotlinx/coroutines/flow/d;->q(Lua0/e; Lra0/y;)Lra0/q1;, Lqc/a;-><init>(Ljava/lang/CharSequence;)V, Lqc/a;-><init>(Ljava/lang/CharSequence;)V, Lua0/i;-><init>(Lua0/e; Lo70/n; B)V, Lua0/j;-><init>(Lua0/e; Lo70/m; B)V, Lua0/j;-><init>(Lua0/e; Lo70/m; B)V, Lud/a;->B(Ljava/util/List;)Ljava/util/ArrayList;, Lud/a;->B(Ljava/util/List;)Ljava/util/ArrayList;, Lud/a;->C(Ljava/util/List;)Ljava/util/ArrayList;, Lv80/d;->j(Z)Lqc/a;, Lv80/d;->j(Z)Lqc/a;, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object/from16 v0, v16
+  000004  iget-object v1, v0, Lcom/getmimo/ui/lesson/interactive/base/c;->c Ljava/util/List;
+  000008  invoke-interface v1, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  00000e  move-result-object v1
+  000010  invoke-interface v1, Ljava/util/Iterator;->hasNext()Z
+  000016  move-result v2
+  000018  const/4 v3, 1
+  00001a  const/4 v3, 0
+  00001c  if-eqz v2, +010h
+  000020  invoke-interface v1, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  000026  move-result-object v2
+  000028  move-object v4, v2
+  00002a  check-cast v4, Ljm/e;
+  00002e  iget-object v4, v4, Ljm/e;->b Lcom/getmimo/data/content/lessonparser/interactive/model/Interaction;
+  000032  instance-of v4, v4, Lcom/getmimo/data/content/lessonparser/interactive/model/Interaction$FillTheGap;
+  000036  if-eqz v4, -013h
+  00003a  goto +2h
+  00003c  move-object v2, v3
+  00003e  check-cast v2, Ljm/e;
+  000042  if-eqz v2, +180h
+  000046  iget-object v1, v2, Ljm/e;->b Lcom/getmimo/data/content/lessonparser/interactive/model/Interaction;
+  00004a  iget-object v2, v2, Ljm/e;->a Ljava/lang/CharSequence;
+  00004e  invoke-virtual v1, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000054  check-cast v1, Lcom/getmimo/data/content/lessonparser/interactive/model/Interaction$FillTheGap;
+  000058  iget-object v4, v0, Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->N Lim/b;
+  00005c  invoke-virtual v4, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000062  iget-object v1, v1, Lcom/getmimo/data/content/lessonparser/interactive/model/Interaction$FillTheGap;->c Ljava/util/List;
+  000066  invoke-static v1, Lud/a;->B(Ljava/util/List;)Ljava/util/ArrayList;
+  00006c  move-result-object v5
+  00006e  new-instance v6, Ljava/util/ArrayList;
+  000072  const/16 v7, 17093
+  000076  const/16 v7, 10
+  00007a  invoke-static v5, v7, La70/r;->i0(Ljava/lang/Iterable; I)I
+  000080  move-result v8
+  000082  invoke-direct v6, v8, Ljava/util/ArrayList;-><init>(I)V
+  000088  invoke-virtual v5, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;
+  00008e  move-result-object v5
+  000090  invoke-interface v5, Ljava/util/Iterator;->hasNext()Z
+  000096  move-result v8
+  000098  if-eqz v8, +02bh
+  00009c  invoke-interface v5, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0000a2  move-result-object v8
+  0000a4  check-cast v8, Lcom/getmimo/data/content/lessonparser/interactive/model/Option;
+  0000a8  iget-boolean v9, v8, Lcom/getmimo/data/content/lessonparser/interactive/model/Option;->a Z
+  0000ac  if-eqz v9, +00ch
+  0000b0  new-instance v9, Landroid/text/SpannableStringBuilder;
+  0000b4  iget v10, v8, Lcom/getmimo/data/content/lessonparser/interactive/model/Option;->c I
+  0000b8  iget v11, v8, Lcom/getmimo/data/content/lessonparser/interactive/model/Option;->d I
+  0000bc  invoke-direct v9, v2, v10, v11, Landroid/text/SpannableStringBuilder;-><init>(Ljava/lang/CharSequence; I I)V
+  0000c2  goto +3h
+  0000c4  iget-object v9, v8, Lcom/getmimo/data/content/lessonparser/interactive/model/Option;->b Ljava/lang/CharSequence;
+  0000c8  new-instance v10, Lcn/d;
+  0000cc  invoke-virtual v9, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0000d2  move-result-object v9
+  0000d4  iget-boolean v8, v8, Lcom/getmimo/data/content/lessonparser/interactive/model/Option;->a Z
+  0000d8  const/16 v11, 19733
+  0000dc  const/16 v11, 120
+  0000e0  invoke-direct v10, v11, v9, v8, Lcn/d;-><init>(I Ljava/lang/String; Z)V
+  0000e6  invoke-virtual v6, v10, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  0000ec  goto -2eh
+  0000ee  new-instance v5, Ljava/util/ArrayList;
+  0000f2  invoke-direct v5, Ljava/util/ArrayList;-><init>()V
+  0000f8  invoke-virtual v6, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;
+  0000fe  move-result-object v8
+  000100  invoke-interface v8, Ljava/util/Iterator;->hasNext()Z
+  000106  move-result v9
+  000108  if-eqz v9, +011h
+  00010c  invoke-interface v8, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  000112  move-result-object v9
+  000114  move-object v10, v9
+  000116  check-cast v10, Lcn/d;
+  00011a  iget-boolean v10, v10, Lcn/d;->c Z
+  00011e  if-eqz v10, -00fh
+  000122  invoke-virtual v5, v9, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  000128  goto -14h
+  00012a  invoke-static v6, Liq/w;->F(Ljava/util/ArrayList;)Ljava/util/List;
+  000130  move-result-object v6
+  000132  new-instance v8, Ljava/util/ArrayList;
+  000136  invoke-direct v8, Ljava/util/ArrayList;-><init>()V
+  00013c  new-instance v9, Ljava/util/ArrayList;
+  000140  invoke-direct v9, Ljava/util/ArrayList;-><init>()V
+  000146  invoke-interface v1, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  00014c  move-result-object v1
+  00014e  invoke-interface v1, Ljava/util/Iterator;->hasNext()Z
+  000154  move-result v10
+  000156  if-eqz v10, +011h
+  00015a  invoke-interface v1, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  000160  move-result-object v10
+  000162  move-object v11, v10
+  000164  check-cast v11, Lcom/getmimo/data/content/lessonparser/interactive/model/Option;
+  000168  iget-boolean v11, v11, Lcom/getmimo/data/content/lessonparser/interactive/model/Option;->a Z
+  00016c  if-eqz v11, -00fh
+  000170  invoke-virtual v9, v10, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  000176  goto -14h
+  000178  invoke-static v9, Lud/a;->B(Ljava/util/List;)Ljava/util/ArrayList;
+  00017e  move-result-object v1
+  000180  invoke-virtual v1, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;
+  000186  move-result-object v1
+  000188  const/4 v10, 5
+  00018a  const/4 v10, 0
+  00018c  const/4 v11, 5
+  00018e  const/4 v11, 0
+  000190  invoke-interface v1, Ljava/util/Iterator;->hasNext()Z
+  000196  move-result v12
+  000198  const/4 v13, 1
+  00019a  const/4 v13, 1
+  00019c  if-eqz v12, +05ah
+  0001a0  invoke-interface v1, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0001a6  move-result-object v12
+  0001a8  add-int/lit8 v14, v11, 1
+  0001ac  if-ltz v11, +04eh
+  0001b0  check-cast v12, Lcom/getmimo/data/content/lessonparser/interactive/model/Option;
+  0001b4  iget v15, v12, Lcom/getmimo/data/content/lessonparser/interactive/model/Option;->c I
+  0001b8  invoke-interface v2, v10, v15, Ljava/lang/CharSequence;->subSequence(I I)Ljava/lang/CharSequence;
+  0001be  move-result-object v10
+  0001c0  new-instance v15, Ljm/y;
+  0001c4  new-instance v7, Lqc/a;
+  0001c8  new-instance v9, Landroid/text/SpannableString;
+  0001cc  invoke-direct v9, v10, Landroid/text/SpannableString;-><init>(Ljava/lang/CharSequence;)V
+  0001d2  invoke-direct v7, v9, Lqc/a;-><init>(Ljava/lang/CharSequence;)V
+  0001d8  invoke-direct v15, v7, Ljm/y;-><init>(Lqc/a;)V
+  0001de  invoke-virtual v8, v15, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  0001e4  iget-object v7, v4, Lim/b;->a Lv80/d;
+  0001e8  if-nez v11, +015h
+  0001ec  new-instance v9, Ljm/x;
+  0001f0  invoke-virtual v7, v13, Lv80/d;->j(Z)Lqc/a;
+  0001f6  move-result-object v7
+  0001f8  new-instance v10, Ljm/w;
+  0001fc  invoke-direct v10, Ljm/w;-><init>()V
+  000202  const/4 v11, 0
+  000204  const/4 v11, 6
+  000206  invoke-direct v9, v7, v3, v10, v11, Ljm/x;-><init>(Lqc/a; Ljava/lang/String; Ljm/w; I)V
+  00020c  const/4 v10, 6
+  00020e  const/4 v10, 0
+  000210  goto +10h
+  000212  new-instance v9, Ljm/x;
+  000216  const/4 v10, 5
+  000218  const/4 v10, 0
+  00021a  invoke-virtual v7, v10, Lv80/d;->j(Z)Lqc/a;
+  000220  move-result-object v7
+  000222  const/16 v11, 21377
+  000226  const/16 v11, 14
+  00022a  invoke-direct v9, v7, v3, v3, v11, Ljm/x;-><init>(Lqc/a; Ljava/lang/String; Ljm/w; I)V
+  000230  invoke-virtual v8, v9, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  000236  iget v7, v12, Lcom/getmimo/data/content/lessonparser/interactive/model/Option;->d I
+  00023a  move v10, v7
+  00023c  move v11, v14
+  00023e  const/16 v7, 26999
+  000242  const/16 v7, 10
+  000246  goto -5bh
+  000248  invoke-static Li30/m;->Y()V
+  00024e  throw v3
+  000250  invoke-interface v2, Ljava/lang/CharSequence;->length()I
+  000256  move-result v1
+  000258  invoke-interface v2, v10, v1, Ljava/lang/CharSequence;->subSequence(I I)Ljava/lang/CharSequence;
+  00025e  move-result-object v1
+  000260  new-instance v2, Ljm/y;
+  000264  new-instance v4, Lqc/a;
+  000268  new-instance v7, Landroid/text/SpannableString;
+  00026c  invoke-direct v7, v1, Landroid/text/SpannableString;-><init>(Ljava/lang/CharSequence;)V
+  000272  invoke-direct v4, v7, Lqc/a;-><init>(Ljava/lang/CharSequence;)V
+  000278  invoke-direct v2, v4, Ljm/y;-><init>(Lqc/a;)V
+  00027e  invoke-virtual v8, v2, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  000284  new-instance v1, Lim/a;
+  000288  invoke-static v6, Lud/a;->C(Ljava/util/List;)Ljava/util/ArrayList;
+  00028e  move-result-object v2
+  000290  new-instance v4, Ljava/util/ArrayList;
+  000294  invoke-direct v4, v8, Ljava/util/ArrayList;-><init>(Ljava/util/Collection;)V
+  00029a  invoke-direct v1, v6, v5, v2, v4, Lim/a;-><init>(Ljava/util/List; Ljava/util/ArrayList; Ljava/util/ArrayList; Ljava/util/ArrayList;)V
+  0002a0  iput-object v1, v0, Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->Q Lim/a;
+  0002a4  invoke-virtual v0, v1, Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->j0(Lim/a;)V
+  0002aa  iget-object v1, v0, Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->O Lcom/getmimo/ui/lesson/interactive/base/d;
+  0002ae  invoke-virtual v1, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  0002b4  invoke-static Lcom/getmimo/ui/lesson/interactive/base/d;->a()Lua0/r;
+  0002ba  move-result-object v1
+  0002bc  new-instance v2, Lci/b;
+  0002c0  const/16 v4, 29408
+  0002c4  const/16 v4, 10
+  0002c8  invoke-direct v2, v1, v0, v4, Lci/b;-><init>(Ljava/lang/Object; Ljava/lang/Object; B)V
+  0002ce  new-instance v1, Lci/b;
+  0002d2  const/16 v4, 9815
+  0002d6  const/16 v4, 11
+  0002da  invoke-direct v1, v2, v0, v4, Lci/b;-><init>(Ljava/lang/Object; Ljava/lang/Object; B)V
+  0002e0  new-instance v2, Lcom/getmimo/ui/lesson/interactive/fillthegap/InteractiveLessonFillTheGapViewModel$createCursorBlinkEvents$3;
+  0002e4  invoke-direct v2, v0, v3, Lcom/getmimo/ui/lesson/interactive/fillthegap/InteractiveLessonFillTheGapViewModel$createCursorBlinkEvents$3;-><init>(Lcom/getmimo/ui/lesson/interactive/fillthegap/a; Ld70/b;)V
+  0002ea  new-instance v4, Lua0/j;
+  0002ee  const/4 v5, 0
+  0002f0  const/4 v5, 3
+  0002f2  invoke-direct v4, v1, v2, v5, Lua0/j;-><init>(Lua0/e; Lo70/m; B)V
+  0002f8  new-instance v1, Lci/b;
+  0002fc  const/16 v2, 5982
+  000300  const/16 v2, 12
+  000304  invoke-direct v1, v4, v0, v2, Lci/b;-><init>(Ljava/lang/Object; Ljava/lang/Object; B)V
+  00030a  new-instance v2, Lcom/getmimo/ui/lesson/interactive/fillthegap/InteractiveLessonFillTheGapViewModel$configureInteraction$1;
+  00030e  invoke-direct v2, v0, v3, Lcom/getmimo/ui/lesson/interactive/fillthegap/InteractiveLessonFillTheGapViewModel$configureInteraction$1;-><init>(Lcom/getmimo/ui/lesson/interactive/fillthegap/a; Ld70/b;)V
+  000314  new-instance v4, Lua0/j;
+  000318  invoke-direct v4, v1, v2, v5, Lua0/j;-><init>(Lua0/e; Lo70/m; B)V
+  00031e  new-instance v1, Lcom/getmimo/ui/lesson/interactive/fillthegap/InteractiveLessonFillTheGapViewModel$configureInteraction$2;
+  000322  invoke-direct v1, v5, v3, Lkotlin/coroutines/jvm/internal/SuspendLambda;-><init>(I Ld70/b;)V
+  000328  new-instance v2, Lua0/i;
+  00032c  invoke-direct v2, v4, v1, v13, Lua0/i;-><init>(Lua0/e; Lo70/n; B)V
+  000332  invoke-static v0, Landroidx/lifecycle/m;->k(Landroidx/lifecycle/f1;)Le7/a;
+  000338  move-result-object v0
+  00033a  invoke-static v2, v0, Lkotlinx/coroutines/flow/d;->q(Lua0/e; Lra0/y;)Lra0/q1;
+  000340  return-void 
+  000342  const-string v0, "There is no code block found with FillTheGap interaction. There must be at least one"
+  000346  invoke-static v0, Lwc/f;->i(Ljava/lang/String;)V
+  00034c  return-void 
+  00034e  nop 
+  000350  <androguard.core.dex.FillArrayData object at 0x7ff3fae24fd0>
+
+===== Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->a0()V =====
+dex=classes.dex code_offset=10965272 instructions=75 access=public final callers=0 callees=14
+callees: La70/r;->i0(Ljava/lang/Iterable; I)I, Lcom/getmimo/ui/lesson/interactive/base/c;->a0()V, Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->j0(Lim/a;)V, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/util/ArrayList;-><init>(I)V, Ljava/util/ArrayList;-><init>(Ljava/util/Collection;)V, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;, Lkotlin/collections/a;->o1(Ljava/lang/Iterable;)Ljava/util/List;, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V, Lud/a;->C(Ljava/util/List;)Ljava/util/ArrayList;
+  000000  move-object v5, v8
+  000002  invoke-super v5, Lcom/getmimo/ui/lesson/interactive/base/c;->a0()V
+  000008  const/4 v7, 2
+  00000a  iget-object v0, v5, Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->Q Lim/a;
+  00000e  const/4 v7, 6
+  000010  if-eqz v0, +062h
+  000014  const/4 v7, 4
+  000016  iget-object v1, v5, Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->N Lim/b;
+  00001a  const/4 v7, 5
+  00001c  invoke-virtual v1, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000022  iget-object v1, v0, Lim/a;->a Ljava/util/List;
+  000026  const/4 v7, 3
+  000028  invoke-static v1, Lud/a;->C(Ljava/util/List;)Ljava/util/ArrayList;
+  00002e  move-result-object v7
+  000030  move-object v1, v7
+  000032  iput-object v1, v0, Lim/a;->c Ljava/util/ArrayList;
+  000036  const/4 v7, 7
+  000038  iget-object v1, v0, Lim/a;->e Ljava/util/List;
+  00003c  const/4 v7, 4
+  00003e  new-instance v2, Ljava/util/ArrayList;
+  000042  const/4 v7, 3
+  000044  invoke-direct v2, v1, Ljava/util/ArrayList;-><init>(Ljava/util/Collection;)V
+  00004a  const/4 v7, 5
+  00004c  iput-object v2, v0, Lim/a;->d Ljava/util/List;
+  000050  const/4 v7, 7
+  000052  iget-object v1, v0, Lim/a;->a Ljava/util/List;
+  000056  const/4 v7, 7
+  000058  new-instance v2, Ljava/util/ArrayList;
+  00005c  const/4 v7, 7
+  00005e  const/16 v7, 10
+  000062  move v3, v7
+  000064  invoke-static v1, v3, La70/r;->i0(Ljava/lang/Iterable; I)I
+  00006a  move-result v7
+  00006c  move v3, v7
+  00006e  invoke-direct v2, v3, Ljava/util/ArrayList;-><init>(I)V
+  000074  const/4 v7, 3
+  000076  invoke-interface v1, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  00007c  move-result-object v7
+  00007e  move-object v1, v7
+  000080  invoke-interface v1, Ljava/util/Iterator;->hasNext()Z
+  000086  move-result v7
+  000088  move v3, v7
+  00008a  if-eqz v3, +014h
+  00008e  const/4 v7, 1
+  000090  invoke-interface v1, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  000096  move-result-object v7
+  000098  move-object v3, v7
+  00009a  check-cast v3, Lcn/d;
+  00009e  const/4 v7, 2
+  0000a0  const/4 v7, 0
+  0000a2  move v4, v7
+  0000a4  iput-boolean v4, v3, Lcn/d;->b Z
+  0000a8  const/4 v7, 6
+  0000aa  invoke-virtual v2, v3, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  0000b0  goto -18h
+  0000b2  const/4 v7, 6
+  0000b4  invoke-static v2, Lkotlin/collections/a;->o1(Ljava/lang/Iterable;)Ljava/util/List;
+  0000ba  move-result-object v7
+  0000bc  move-object v1, v7
+  0000be  invoke-virtual v1, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  0000c4  iput-object v1, v0, Lim/a;->a Ljava/util/List;
+  0000c8  const/4 v7, 7
+  0000ca  invoke-virtual v5, v0, Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->j0(Lim/a;)V
+  0000d0  const/4 v7, 7
+  0000d2  return-void 
+  0000d4  const/4 v7, 6
+  0000d6  const-string v7, "fillTheGap"
+  0000da  move-object v5, v7
+  0000dc  invoke-static v5, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V
+  0000e2  const/4 v7, 1
+  0000e4  const/4 v7, 0
+  0000e6  move v5, v7
+  0000e8  throw v5
+  0000ea  const/4 v7, 6
+  0000ec  <androguard.core.dex.FillArrayData object at 0x7ff3fae265d0>
+
+===== Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->j0(Lim/a;)V =====
+dex=classes.dex code_offset=10965552 instructions=137 access=public final callers=5 callees=18
+callers: La6/b;->o(Lcn/d;)V, La6/b;->o(Lcn/d;)V, Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->E(Lcom/getmimo/data/content/model/track/LessonContent$Interactive;)V, Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->a0()V, Lim/d;->J0()V
+callees: Landroidx/lifecycle/m0;->l(Ljava/lang/Object;)V, Landroidx/lifecycle/m0;->l(Ljava/lang/Object;)V, Landroidx/lifecycle/m0;->l(Ljava/lang/Object;)V, Landroidx/lifecycle/m0;->l(Ljava/lang/Object;)V, Lcom/getmimo/ui/lesson/interactive/base/c;->h0(Ljava/util/List; Z)V, Li30/m;->W()V, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/util/ArrayList;->isEmpty()Z, Ljava/util/ArrayList;->isEmpty()Z, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;, Ljava/util/ArrayList;->size()I, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V, Lwc/b;->s(Ljava/util/List; Ljava/util/List;)Ljava/util/ArrayList;
+  000000  move-object v5, v8
+  000002  iput-object v9, v5, Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->Q Lim/a;
+  000006  const/4 v7, 6
+  000008  iget-object v0, v5, Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->R Landroidx/lifecycle/m0;
+  00000c  const/4 v7, 3
+  00000e  iget-object v1, v9, Lim/a;->a Ljava/util/List;
+  000012  const/4 v7, 1
+  000014  invoke-virtual v0, v1, Landroidx/lifecycle/m0;->l(Ljava/lang/Object;)V
+  00001a  const/4 v7, 2
+  00001c  iget-object v0, v5, Lcom/getmimo/ui/lesson/interactive/base/c;->c Ljava/util/List;
+  000020  const/4 v7, 5
+  000022  iget-object v1, v5, Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->Q Lim/a;
+  000026  const/4 v7, 1
+  000028  const/4 v7, 0
+  00002a  move v2, v7
+  00002c  if-eqz v1, +0abh
+  000030  const/4 v7, 1
+  000032  iget-object v1, v1, Lim/a;->d Ljava/util/List;
+  000036  const/4 v7, 3
+  000038  invoke-static v0, v1, Lwc/b;->s(Ljava/util/List; Ljava/util/List;)Ljava/util/ArrayList;
+  00003e  move-result-object v7
+  000040  move-object v0, v7
+  000042  const/4 v7, 1
+  000044  move v1, v7
+  000046  invoke-virtual v5, v0, v1, Lcom/getmimo/ui/lesson/interactive/base/c;->h0(Ljava/util/List; Z)V
+  00004c  const/4 v7, 3
+  00004e  iget-object v0, v5, Lcom/getmimo/ui/lesson/interactive/fillthegap/a;->N Lim/b;
+  000052  const/4 v7, 5
+  000054  invoke-virtual v0, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00005a  iget-object v0, v9, Lim/a;->b Ljava/util/ArrayList;
+  00005e  const/4 v7, 4
+  000060  invoke-virtual v0, Ljava/util/ArrayList;->size()I
+  000066  move-result v7
+  000068  move v0, v7
+  00006a  iget-object v1, v9, Lim/a;->c Ljava/util/ArrayList;
+  00006e  const/4 v7, 5
+  000070  invoke-virtual v1, Ljava/util/ArrayList;->isEmpty()Z
+  000076  move-result v7
+  000078  move v3, v7
+  00007a  const/4 v7, 0
+  00007c  move v4, v7
+  00007e  if-eqz v3, +004h
+  000082  const/4 v7, 7
+  000084  goto +2dh
+  000086  const/4 v7, 4
+  000088  invoke-virtual v1, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;
+  00008e  move-result-object v7
+  000090  move-object v1, v7
+  000092  const/4 v7, 6
+  000094  invoke-interface v1, Ljava/util/Iterator;->hasNext()Z
+  00009a  move-result v7
+  00009c  move v3, v7
+  00009e  if-eqz v3, +01fh
+  0000a2  const/4 v7, 7
+  0000a4  invoke-interface v1, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0000aa  move-result-object v7
+  0000ac  move-object v3, v7
+  0000ae  check-cast v3, Lcn/d;
+  0000b2  const/4 v7, 5
+  0000b4  iget-boolean v3, v3, Lcn/d;->b Z
+  0000b8  const/4 v7, 3
+  0000ba  if-eqz v3, -014h
+  0000be  const/4 v7, 1
+  0000c0  add-int/lit8 v4, v4, 1
+  0000c4  const/4 v7, 4
+  0000c6  if-ltz v4, +004h
+  0000ca  const/4 v7, 6
+  0000cc  goto -1ch
+  0000ce  const/4 v7, 6
+  0000d0  invoke-static Li30/m;->W()V
+  0000d6  const/4 v7, 2
+  0000d8  throw v2
+  0000da  const/4 v7, 3
+  0000dc  const/4 v7, 4
+  0000de  if-ne v0, v4, +007h
+  0000e2  const/4 v7, 1
+  0000e4  sget-object v0, Lcom/getmimo/ui/common/runbutton/RunButton$State;->a Lcom/getmimo/ui/common/runbutton/RunButton$State;
+  0000e8  const/4 v7, 1
+  0000ea  goto +5h
+  0000ec  const/4 v7, 4
+  0000ee  sget-object v0, Lcom/getmimo/ui/common/runbutton/RunButton$State;->b Lcom/getmimo/ui/common/runbutton/RunButton$State;
+  0000f2  const/4 v7, 4
+  0000f4  iget-object v1, v5, Lcom/getmimo/ui/lesson/interactive/base/c;->i Landroidx/lifecycle/m0;
+  0000f8  const/4 v7, 1
+  0000fa  invoke-virtual v1, v0, Landroidx/lifecycle/m0;->l(Ljava/lang/Object;)V
+  000100  const/4 v7, 3
+  000102  iget-object v9, v9, Lim/a;->c Ljava/util/ArrayList;
+  000106  const/4 v7, 6
+  000108  invoke-virtual v9, Ljava/util/ArrayList;->isEmpty()Z
+  00010e  move-result v7
+  000110  move v0, v7
+  000112  if-eqz v0, +004h
+  000116  const/4 v7, 7
+  000118  goto +23h
+  00011a  const/4 v7, 5
+  00011c  invoke-virtual v9, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;
+  000122  move-result-object v7
+  000124  move-object v9, v7
+  000126  const/4 v7, 5
+  000128  invoke-interface v9, Ljava/util/Iterator;->hasNext()Z
+  00012e  move-result v7
+  000130  move v0, v7
+  000132  if-eqz v0, +015h
+  000136  const/4 v7, 1
+  000138  invoke-interface v9, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  00013e  move-result-object v7
+  000140  move-object v0, v7
+  000142  check-cast v0, Lcn/d;
+  000146  const/4 v7, 2
+  000148  iget-boolean v0, v0, Lcn/d;->b Z
+  00014c  const/4 v7, 4
+  00014e  if-eqz v0, -014h
+  000152  const/4 v7, 2
+  000154  sget-object v9, Lcom/getmimo/ui/lesson/view/InteractionKeyboardButtonState;->a Lcom/getmimo/ui/lesson/view/InteractionKeyboardButtonState;
+  000158  const/4 v7, 1
+  00015a  goto +5h
+  00015c  const/4 v7, 4
+  00015e  sget-object v9, Lcom/getmimo/ui/lesson/view/InteractionKeyboardButtonState;->b Lcom/getmimo/ui/lesson/view/InteractionKeyboardButtonState;
+  000162  const/4 v7, 5
+  000164  iget-object v0, v5, Lcom/getmimo/ui/lesson/interactive/base/c;->j Landroidx/lifecycle/m0;
+  000168  const/4 v7, 1
+  00016a  invoke-virtual v0, v9, Landroidx/lifecycle/m0;->l(Ljava/lang/Object;)V
+  000170  const/4 v7, 7
+  000172  iget-object v5, v5, Lcom/getmimo/ui/lesson/interactive/base/c;->k Landroidx/lifecycle/m0;
+  000176  const/4 v7, 5
+  000178  invoke-virtual v5, v9, Landroidx/lifecycle/m0;->l(Ljava/lang/Object;)V
+  00017e  const/4 v7, 7
+  000180  return-void 
+  000182  const/4 v7, 3
+  000184  const-string v7, "fillTheGap"
+  000188  move-object v5, v7
+  00018a  invoke-static v5, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V
+  000190  const/4 v7, 5
+  000192  throw v2
+  000194  const/4 v7, 2
+  000196  nop 
+  000198  <androguard.core.dex.FillArrayData object at 0x7ff3fae34d90>

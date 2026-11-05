@@ -1,0 +1,74 @@
+%% MISSION 06 — original Mimo 9.35 architecture, reconstructed from DEX bytecode.
+%% APK sha256 48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+%% Classification of each node is in the corresponding numbered report and EVIDENCE_DATABASE.json.
+%% Solid edges = VERIFIED_STATIC invoke/field xref; dashed = INFERRED or client-side boundary.
+flowchart TB
+  subgraph APK["APK assets (shipped, offline)"]
+    A1["assets/lessons-&lt;locale&gt;/tracks/tracks.json<br/>v753, 19 tracks"]
+    A2["assets/lessons-&lt;locale&gt;/tracks/tutorial-&lt;id&gt;.json<br/>1029 tutorials / 18272 lessons"]
+    A3["assets/lesson-webview.js<br/>assets/lessons-common/icons"]
+    A4["classes*.dex × 12<br/>29454 classes / 129071 methods"]
+    A5["lib/*.so × 12 (arm64-v8a)"]
+  end
+  subgraph LOAD["Content layer"]
+    L1["Lye/b; AssetsTracksLoader<br/>AssetManager.open"]
+    L2["Lye/d; local-files variant"]
+    L3["tracks/b; DefaultTrackLoader<br/>UTF-8 readText + kotlinx.serialization"]
+    L4["tracks/c; DefaultTracksRepository<br/>loadTrackWithChapters"]
+    L5["Lte/c; DSL LessonParser<br/>XmlPullParserFactory"]
+    L6["Lte/a,d,e,b,f,g module parsers"]
+  end
+  subgraph DOMAIN["Domain / interactors"]
+    D1["LessonContent$Interactive<br/>lessonModules / hardModeLessonModules"]
+    D2["LessonBundle (Parcelable)<br/>ids + tutorial/chapter type"]
+    D3["Lgm/h; LessonInteractionType mapper<br/>9 renderer types"]
+    D4["GetPathMapState / CompletionRepository<br/>CanOpenChapterWithKeys"]
+    D5["LessonProgressQueue / LessonProgressRepository"]
+  end
+  subgraph UI["UI layer (Fragments / ViewModels / Orbit MVI)"]
+    U1["MainActivity / SplashActivity_default"]
+    U2["PathMapFragment + PathMapViewModel"]
+    U3["ChapterActivity + ChapterViewModel"]
+    U4["InteractiveLessonFragment + InteractiveLessonViewModel"]
+    U5["base/c; InteractiveLessonBaseViewModel"]
+    U6["per-interaction ViewModels<br/>fillTheGap, selection, spell, validatedInput, webview"]
+    U7["NonInteractiveLessonFragment"]
+    U8["ExecutableLessonViewModel (q)<br/>CodeEditViewModel / CodePlayground"]
+    U9["ChapterFinishedViewModel / screens"]
+  end
+  subgraph STORE["Local persistence"]
+    S1["Room lesson_progress (in_queue)"]
+    S2["Room chapter_completions / tutorial_completions"]
+    S3["DataStore / SharedPreferences<br/>hard mode, first run, daily goal"]
+    S4["in-memory StateFlow / LiveData"]
+    S5["LessonProgressQueue (unsynced)"]
+  end
+  subgraph EXT["Client-side boundary (NOT reconstructed)"]
+    X1["Retrofit LessonProgressApi POST progress"]
+    X2["runFiles / code execution endpoints"]
+    X3["user / streak / keys / ETA endpoints"]
+    X4["AiTutor / analytics / Remote Config"]
+  end
+  A1 --> L1 --> L3 --> L4 --> D1
+  A2 --> L1
+  A3 -.-> U6
+  A4 -.-> LOAD
+  A4 -.-> DOMAIN
+  A4 -.-> UI
+  A5 -.-> U1
+  D1 --> L5 --> L6 --> D1
+  D1 --> D3 --> U4 --> U5 --> U6
+  D2 --> U5
+  U1 --> U2 --> U3 --> U4
+  U3 --> U9
+  U4 --> U8
+  U5 --> D5 --> S1 --> S5
+  D4 --> S1
+  D4 --> S2
+  D4 --> S3
+  D4 --> S4
+  S5 -.->|"networkUtils.a() gate"| X1
+  U8 -.-> X2
+  U9 -.-> X3
+  U6 -.-> X4
+  U5 -.-> X4

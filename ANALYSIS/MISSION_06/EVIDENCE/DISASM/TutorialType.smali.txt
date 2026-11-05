@@ -1,0 +1,454 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/data/content/model/track/TutorialType; semantic=TutorialType
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/data/content/model/track/TutorialType;->$values()[Lcom/getmimo/data/content/model/track/TutorialType; =====
+dex=classes.dex code_offset=9738004 instructions=23 access=private static final synthetic callers=1 callees=0
+callers: Lcom/getmimo/data/content/model/track/TutorialType;-><clinit>()V
+  000000  sget-object v0, Lcom/getmimo/data/content/model/track/TutorialType;->Learn Lcom/getmimo/data/content/model/track/TutorialType;
+  000004  const-string v9, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  000008  sget-object v1, Lcom/getmimo/data/content/model/track/TutorialType;->MobileProject Lcom/getmimo/data/content/model/track/TutorialType;
+  00000c  const/4 v9, 4
+  00000e  sget-object v2, Lcom/getmimo/data/content/model/track/TutorialType;->Challenge Lcom/getmimo/data/content/model/track/TutorialType;
+  000012  const/4 v9, 7
+  000014  sget-object v3, Lcom/getmimo/data/content/model/track/TutorialType;->Quiz Lcom/getmimo/data/content/model/track/TutorialType;
+  000018  const/4 v9, 6
+  00001a  sget-object v4, Lcom/getmimo/data/content/model/track/TutorialType;->GuidedProject Lcom/getmimo/data/content/model/track/TutorialType;
+  00001e  const/4 v9, 1
+  000020  sget-object v5, Lcom/getmimo/data/content/model/track/TutorialType;->GuidedProjectOptional Lcom/getmimo/data/content/model/track/TutorialType;
+  000024  const/4 v9, 1
+  000026  sget-object v6, Lcom/getmimo/data/content/model/track/TutorialType;->RecreateProject Lcom/getmimo/data/content/model/track/TutorialType;
+  00002a  const/4 v9, 4
+  00002c  sget-object v7, Lcom/getmimo/data/content/model/track/TutorialType;->PracticeRequired Lcom/getmimo/data/content/model/track/TutorialType;
+  000030  const/4 v9, 7
+  000032  sget-object v8, Lcom/getmimo/data/content/model/track/TutorialType;->PracticeOptional Lcom/getmimo/data/content/model/track/TutorialType;
+  000036  const/4 v9, 3
+  000038  filled-new-array/range v0 ... v8, [Lcom/getmimo/data/content/model/track/TutorialType;
+  00003e  move-result-object v9
+  000040  move-object v0, v9
+  000042  return-object v0
+  000044  <androguard.core.dex.FillArrayData object at 0x7ff3facb29d0>
+
+===== Lcom/getmimo/data/content/model/track/TutorialType;-><clinit>()V =====
+dex=classes.dex code_offset=9738132 instructions=123 access=static constructor callers=0 callees=14
+callees: Lcom/getmimo/data/content/model/track/TutorialType$Companion;-><init>(Lkotlin/jvm/internal/c;)V, Lcom/getmimo/data/content/model/track/TutorialType;->$values()[Lcom/getmimo/data/content/model/track/TutorialType;, Lcom/getmimo/data/content/model/track/TutorialType;-><init>(Ljava/lang/String; I)V, Lcom/getmimo/data/content/model/track/TutorialType;-><init>(Ljava/lang/String; I)V, Lcom/getmimo/data/content/model/track/TutorialType;-><init>(Ljava/lang/String; I)V, Lcom/getmimo/data/content/model/track/TutorialType;-><init>(Ljava/lang/String; I)V, Lcom/getmimo/data/content/model/track/TutorialType;-><init>(Ljava/lang/String; I)V, Lcom/getmimo/data/content/model/track/TutorialType;-><init>(Ljava/lang/String; I)V, Lcom/getmimo/data/content/model/track/TutorialType;-><init>(Ljava/lang/String; I)V, Lcom/getmimo/data/content/model/track/TutorialType;-><init>(Ljava/lang/String; I)V, Lcom/getmimo/data/content/model/track/TutorialType;-><init>(Ljava/lang/String; I)V, Lkotlin/a;->a(Lkotlin/LazyThreadSafetyMode; Lkotlin/jvm/functions/Function0;)Lz60/g;, Lkotlin/enums/a;->a([Ljava/lang/Enum;)Lg70/a;, Lvi/n;-><init>(B)V
+  000000  new-instance v0, Lcom/getmimo/data/content/model/track/TutorialType;
+  000004  const/4 v4, 1
+  000006  const-string v3, "Learn"
+  00000a  move-object v1, v3
+  00000c  const/4 v3, 0
+  00000e  move v2, v3
+  000010  invoke-direct v0, v1, v2, Lcom/getmimo/data/content/model/track/TutorialType;-><init>(Ljava/lang/String; I)V
+  000016  const/4 v4, 2
+  000018  sput-object v0, Lcom/getmimo/data/content/model/track/TutorialType;->Learn Lcom/getmimo/data/content/model/track/TutorialType;
+  00001c  const/4 v4, 7
+  00001e  new-instance v0, Lcom/getmimo/data/content/model/track/TutorialType;
+  000022  const/4 v4, 5
+  000024  const-string v3, "MobileProject"
+  000028  move-object v1, v3
+  00002a  const/4 v3, 1
+  00002c  move v2, v3
+  00002e  invoke-direct v0, v1, v2, Lcom/getmimo/data/content/model/track/TutorialType;-><init>(Ljava/lang/String; I)V
+  000034  const/4 v4, 5
+  000036  sput-object v0, Lcom/getmimo/data/content/model/track/TutorialType;->MobileProject Lcom/getmimo/data/content/model/track/TutorialType;
+  00003a  const/4 v4, 1
+  00003c  new-instance v0, Lcom/getmimo/data/content/model/track/TutorialType;
+  000040  const/4 v4, 4
+  000042  const-string v3, "Challenge"
+  000046  move-object v1, v3
+  000048  const/4 v3, 2
+  00004a  move v2, v3
+  00004c  invoke-direct v0, v1, v2, Lcom/getmimo/data/content/model/track/TutorialType;-><init>(Ljava/lang/String; I)V
+  000052  const/4 v4, 2
+  000054  sput-object v0, Lcom/getmimo/data/content/model/track/TutorialType;->Challenge Lcom/getmimo/data/content/model/track/TutorialType;
+  000058  const/4 v4, 3
+  00005a  new-instance v0, Lcom/getmimo/data/content/model/track/TutorialType;
+  00005e  const/4 v4, 3
+  000060  const-string v3, "Quiz"
+  000064  move-object v1, v3
+  000066  const/4 v3, 3
+  000068  move v2, v3
+  00006a  invoke-direct v0, v1, v2, Lcom/getmimo/data/content/model/track/TutorialType;-><init>(Ljava/lang/String; I)V
+  000070  const/4 v4, 4
+  000072  sput-object v0, Lcom/getmimo/data/content/model/track/TutorialType;->Quiz Lcom/getmimo/data/content/model/track/TutorialType;
+  000076  const/4 v4, 2
+  000078  new-instance v0, Lcom/getmimo/data/content/model/track/TutorialType;
+  00007c  const/4 v4, 4
+  00007e  const-string v3, "GuidedProject"
+  000082  move-object v1, v3
+  000084  const/4 v3, 4
+  000086  move v2, v3
+  000088  invoke-direct v0, v1, v2, Lcom/getmimo/data/content/model/track/TutorialType;-><init>(Ljava/lang/String; I)V
+  00008e  const/4 v4, 4
+  000090  sput-object v0, Lcom/getmimo/data/content/model/track/TutorialType;->GuidedProject Lcom/getmimo/data/content/model/track/TutorialType;
+  000094  const/4 v4, 3
+  000096  new-instance v0, Lcom/getmimo/data/content/model/track/TutorialType;
+  00009a  const/4 v4, 6
+  00009c  const-string v3, "GuidedProjectOptional"
+  0000a0  move-object v1, v3
+  0000a2  const/4 v3, 5
+  0000a4  move v2, v3
+  0000a6  invoke-direct v0, v1, v2, Lcom/getmimo/data/content/model/track/TutorialType;-><init>(Ljava/lang/String; I)V
+  0000ac  const/4 v4, 2
+  0000ae  sput-object v0, Lcom/getmimo/data/content/model/track/TutorialType;->GuidedProjectOptional Lcom/getmimo/data/content/model/track/TutorialType;
+  0000b2  const/4 v4, 2
+  0000b4  new-instance v0, Lcom/getmimo/data/content/model/track/TutorialType;
+  0000b8  const/4 v4, 1
+  0000ba  const-string v3, "RecreateProject"
+  0000be  move-object v1, v3
+  0000c0  const/4 v3, 6
+  0000c2  move v2, v3
+  0000c4  invoke-direct v0, v1, v2, Lcom/getmimo/data/content/model/track/TutorialType;-><init>(Ljava/lang/String; I)V
+  0000ca  const/4 v4, 4
+  0000cc  sput-object v0, Lcom/getmimo/data/content/model/track/TutorialType;->RecreateProject Lcom/getmimo/data/content/model/track/TutorialType;
+  0000d0  const/4 v4, 4
+  0000d2  new-instance v0, Lcom/getmimo/data/content/model/track/TutorialType;
+  0000d6  const/4 v4, 4
+  0000d8  const-string v3, "PracticeRequired"
+  0000dc  move-object v1, v3
+  0000de  const/4 v3, 7
+  0000e0  move v2, v3
+  0000e2  invoke-direct v0, v1, v2, Lcom/getmimo/data/content/model/track/TutorialType;-><init>(Ljava/lang/String; I)V
+  0000e8  const/4 v4, 1
+  0000ea  sput-object v0, Lcom/getmimo/data/content/model/track/TutorialType;->PracticeRequired Lcom/getmimo/data/content/model/track/TutorialType;
+  0000ee  const/4 v4, 5
+  0000f0  new-instance v0, Lcom/getmimo/data/content/model/track/TutorialType;
+  0000f4  const/4 v4, 5
+  0000f6  const-string v3, "PracticeOptional"
+  0000fa  move-object v1, v3
+  0000fc  const/16 v3, 8
+  000100  move v2, v3
+  000102  invoke-direct v0, v1, v2, Lcom/getmimo/data/content/model/track/TutorialType;-><init>(Ljava/lang/String; I)V
+  000108  const/4 v4, 7
+  00010a  sput-object v0, Lcom/getmimo/data/content/model/track/TutorialType;->PracticeOptional Lcom/getmimo/data/content/model/track/TutorialType;
+  00010e  const/4 v4, 6
+  000110  invoke-static Lcom/getmimo/data/content/model/track/TutorialType;->$values()[Lcom/getmimo/data/content/model/track/TutorialType;
+  000116  move-result-object v3
+  000118  move-object v0, v3
+  00011a  sput-object v0, Lcom/getmimo/data/content/model/track/TutorialType;->$VALUES [Lcom/getmimo/data/content/model/track/TutorialType;
+  00011e  const/4 v4, 4
+  000120  invoke-static v0, Lkotlin/enums/a;->a([Ljava/lang/Enum;)Lg70/a;
+  000126  move-result-object v3
+  000128  move-object v0, v3
+  00012a  sput-object v0, Lcom/getmimo/data/content/model/track/TutorialType;->$ENTRIES Lg70/a;
+  00012e  const/4 v4, 1
+  000130  new-instance v0, Lcom/getmimo/data/content/model/track/TutorialType$Companion;
+  000134  const/4 v4, 3
+  000136  const/4 v3, 0
+  000138  move v1, v3
+  00013a  invoke-direct v0, v1, Lcom/getmimo/data/content/model/track/TutorialType$Companion;-><init>(Lkotlin/jvm/internal/c;)V
+  000140  const/4 v4, 7
+  000142  sput-object v0, Lcom/getmimo/data/content/model/track/TutorialType;->Companion Lcom/getmimo/data/content/model/track/TutorialType$Companion;
+  000146  const/4 v4, 6
+  000148  sget-object v0, Lkotlin/LazyThreadSafetyMode;->b Lkotlin/LazyThreadSafetyMode;
+  00014c  const/4 v4, 5
+  00014e  new-instance v1, Lvi/n;
+  000152  const/4 v4, 3
+  000154  const/16 v3, 20
+  000158  move v2, v3
+  00015a  invoke-direct v1, v2, Lvi/n;-><init>(B)V
+  000160  const/4 v4, 3
+  000162  invoke-static v0, v1, Lkotlin/a;->a(Lkotlin/LazyThreadSafetyMode; Lkotlin/jvm/functions/Function0;)Lz60/g;
+  000168  move-result-object v3
+  00016a  move-object v0, v3
+  00016c  sput-object v0, Lcom/getmimo/data/content/model/track/TutorialType;->$cachedSerializer$delegate Lz60/g;
+  000170  const/4 v4, 7
+  000172  return-void 
+  000174  <androguard.core.dex.FillArrayData object at 0x7ff3facc0990>
+
+===== Lcom/getmimo/data/content/model/track/TutorialType;-><init>(Ljava/lang/String; I)V =====
+dex=classes.dex code_offset=9738584 instructions=5 access=private constructor callers=9 callees=1
+callers: Lcom/getmimo/data/content/model/track/TutorialType;-><clinit>()V, Lcom/getmimo/data/content/model/track/TutorialType;-><clinit>()V, Lcom/getmimo/data/content/model/track/TutorialType;-><clinit>()V, Lcom/getmimo/data/content/model/track/TutorialType;-><clinit>()V, Lcom/getmimo/data/content/model/track/TutorialType;-><clinit>()V, Lcom/getmimo/data/content/model/track/TutorialType;-><clinit>()V, Lcom/getmimo/data/content/model/track/TutorialType;-><clinit>()V, Lcom/getmimo/data/content/model/track/TutorialType;-><clinit>()V, Lcom/getmimo/data/content/model/track/TutorialType;-><clinit>()V
+callees: Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V
+  000000  move-object v0, v3
+  000002  invoke-direct v0, v4, v5, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V
+  000008  const/4 v2, 5
+  00000a  return-void 
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3facc0b90>
+
+===== Lcom/getmimo/data/content/model/track/TutorialType;->_init_$_anonymous_()Lkotlinx/serialization/KSerializer; =====
+dex=classes.dex code_offset=9738676 instructions=102 access=private static final synthetic callers=1 callees=4
+callers: Lcom/getmimo/data/content/model/track/TutorialType;->a()Lkotlinx/serialization/KSerializer;
+callees: Lcom/getmimo/data/content/model/track/TutorialType$Companion$annotationImpl$kotlinx_serialization_json_JsonNames$0;-><init>([Ljava/lang/String;)V, Lcom/getmimo/data/content/model/track/TutorialType$Companion$annotationImpl$kotlinx_serialization_json_JsonNames$0;-><init>([Ljava/lang/String;)V, Lcom/getmimo/data/content/model/track/TutorialType;->values()[Lcom/getmimo/data/content/model/track/TutorialType;, Lgb0/a1;->e(Ljava/lang/String; [Ljava/lang/Enum; [Ljava/lang/String; [[Ljava/lang/annotation/Annotation;)Lgb0/z;
+  000000  invoke-static Lcom/getmimo/data/content/model/track/TutorialType;->values()[Lcom/getmimo/data/content/model/track/TutorialType;
+  000006  move-result-object v10
+  000008  move-object v0, v10
+  00000a  const-string v10, "practiceRequired"
+  00000e  move-object v8, v10
+  000010  const-string v10, "practiceOptional"
+  000014  move-object v9, v10
+  000016  const-string v10, "course"
+  00001a  move-object v1, v10
+  00001c  const-string v10, "mobileProject"
+  000020  move-object v2, v10
+  000022  const-string v10, "challenges"
+  000026  move-object v3, v10
+  000028  const-string v10, "quiz"
+  00002c  move-object v4, v10
+  00002e  const/4 v10, 0
+  000030  move v5, v10
+  000032  const/4 v10, 0
+  000034  move v6, v10
+  000036  const-string v10, "recreateProject"
+  00003a  move-object v7, v10
+  00003c  filled-new-array/range v1 ... v9, [Ljava/lang/String;
+  000042  move-result-object v10
+  000044  move-object v1, v10
+  000046  const/16 v10, 9
+  00004a  move v2, v10
+  00004c  new-array v2, v2, [[Ljava/lang/annotation/Annotation;
+  000050  const/4 v11, 5
+  000052  const/4 v10, 0
+  000054  move v3, v10
+  000056  const/4 v10, 0
+  000058  move v4, v10
+  00005a  aput-object v4, v2, v3
+  00005e  const/4 v11, 6
+  000060  const/4 v10, 1
+  000062  move v5, v10
+  000064  aput-object v4, v2, v5
+  000068  const/4 v11, 4
+  00006a  const/4 v10, 2
+  00006c  move v6, v10
+  00006e  aput-object v4, v2, v6
+  000072  const/4 v11, 2
+  000074  const/4 v10, 3
+  000076  move v6, v10
+  000078  aput-object v4, v2, v6
+  00007c  const/4 v11, 1
+  00007e  new-instance v6, Lcom/getmimo/data/content/model/track/TutorialType$Companion$annotationImpl$kotlinx_serialization_json_JsonNames$0;
+  000082  const/4 v11, 5
+  000084  const-string v10, "guidedProject"
+  000088  move-object v7, v10
+  00008a  const-string v10, "proficiencyProject"
+  00008e  move-object v8, v10
+  000090  filled-new-array v7, v8, [Ljava/lang/String;
+  000096  move-result-object v10
+  000098  move-object v7, v10
+  00009a  invoke-direct v6, v7, Lcom/getmimo/data/content/model/track/TutorialType$Companion$annotationImpl$kotlinx_serialization_json_JsonNames$0;-><init>([Ljava/lang/String;)V
+  0000a0  const/4 v11, 7
+  0000a2  new-array v7, v5, [Ljava/lang/annotation/Annotation;
+  0000a6  const/4 v11, 4
+  0000a8  aput-object v6, v7, v3
+  0000ac  const/4 v11, 5
+  0000ae  const/4 v10, 4
+  0000b0  move v6, v10
+  0000b2  aput-object v7, v2, v6
+  0000b6  const/4 v11, 7
+  0000b8  new-instance v6, Lcom/getmimo/data/content/model/track/TutorialType$Companion$annotationImpl$kotlinx_serialization_json_JsonNames$0;
+  0000bc  const/4 v11, 2
+  0000be  const-string v10, "guidedProjectOptional"
+  0000c2  move-object v7, v10
+  0000c4  filled-new-array v7, [Ljava/lang/String;
+  0000ca  move-result-object v10
+  0000cc  move-object v7, v10
+  0000ce  invoke-direct v6, v7, Lcom/getmimo/data/content/model/track/TutorialType$Companion$annotationImpl$kotlinx_serialization_json_JsonNames$0;-><init>([Ljava/lang/String;)V
+  0000d4  const/4 v11, 7
+  0000d6  new-array v5, v5, [Ljava/lang/annotation/Annotation;
+  0000da  const/4 v11, 3
+  0000dc  aput-object v6, v5, v3
+  0000e0  const/4 v11, 7
+  0000e2  const/4 v10, 5
+  0000e4  move v3, v10
+  0000e6  aput-object v5, v2, v3
+  0000ea  const/4 v11, 5
+  0000ec  const/4 v10, 6
+  0000ee  move v3, v10
+  0000f0  aput-object v4, v2, v3
+  0000f4  const/4 v11, 7
+  0000f6  const/4 v10, 7
+  0000f8  move v3, v10
+  0000fa  aput-object v4, v2, v3
+  0000fe  const/4 v11, 2
+  000100  const/16 v10, 8
+  000104  move v3, v10
+  000106  aput-object v4, v2, v3
+  00010a  const/4 v11, 7
+  00010c  const-string v10, "com.getmimo.data.content.model.track.TutorialType"
+  000110  move-object v3, v10
+  000112  invoke-static v3, v0, v1, v2, Lgb0/a1;->e(Ljava/lang/String; [Ljava/lang/Enum; [Ljava/lang/String; [[Ljava/lang/annotation/Annotation;)Lgb0/z;
+  000118  move-result-object v10
+  00011a  move-object v0, v10
+  00011c  return-object v0
+  00011e  nop 
+  000120  <androguard.core.dex.FillArrayData object at 0x7ff3facc2910>
+
+===== Lcom/getmimo/data/content/model/track/TutorialType;->a()Lkotlinx/serialization/KSerializer; =====
+dex=classes.dex code_offset=9739064 instructions=5 access=public static synthetic callers=1 callees=1
+callers: Lvi/n;->invoke()Ljava/lang/Object;
+callees: Lcom/getmimo/data/content/model/track/TutorialType;->_init_$_anonymous_()Lkotlinx/serialization/KSerializer;
+  000000  invoke-static Lcom/getmimo/data/content/model/track/TutorialType;->_init_$_anonymous_()Lkotlinx/serialization/KSerializer;
+  000006  move-result-object v1
+  000008  move-object v0, v1
+  00000a  return-object v0
+  00000c  <androguard.core.dex.FillArrayData object at 0x7ff3facc2b50>
+
+===== Lcom/getmimo/data/content/model/track/TutorialType;->access$get$cachedSerializer$delegate$cp()Lz60/g; =====
+dex=classes.dex code_offset=9739152 instructions=4 access=public static final synthetic callers=1 callees=0
+callers: Lcom/getmimo/data/content/model/track/TutorialType$Companion;->get$cachedSerializer()Lkotlinx/serialization/KSerializer;
+  000000  sget-object v0, Lcom/getmimo/data/content/model/track/TutorialType;->$cachedSerializer$delegate Lz60/g;
+  000004  const/4 v2, 7
+  000006  return-object v0
+  000008  <androguard.core.dex.FillArrayData object at 0x7ff3facc2d50>
+
+===== Lcom/getmimo/data/content/model/track/TutorialType;->getEntries()Lg70/a; =====
+dex=classes.dex code_offset=9739204 instructions=4 access=public static callers=0 callees=0
+  000000  sget-object v0, Lcom/getmimo/data/content/model/track/TutorialType;->$ENTRIES Lg70/a;
+  000004  const/4 v2, 4
+  000006  return-object v0
+  000008  <androguard.core.dex.FillArrayData object at 0x7ff3facc2f10>
+
+===== Lcom/getmimo/data/content/model/track/TutorialType;->getTrackingField()Ljava/lang/String; =====
+dex=classes.dex code_offset=9739460 instructions=52 access=public final callers=15 callees=1
+callers: Lcom/getmimo/ui/chapter/chapterendview/main/f;->S(Lcom/getmimo/data/content/model/track/Track; Ldj/k; Lcom/getmimo/analytics/properties/FinishChapterSourceProperty;)V, Lcom/getmimo/ui/chapter/chapterendview/main/f;->S(Lcom/getmimo/data/content/model/track/Track; Ldj/k; Lcom/getmimo/analytics/properties/FinishChapterSourceProperty;)V, Lcom/getmimo/ui/lesson/executable/ExecutableLessonViewModel$doOnLessonCorrectlySolved$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/executable/ExecutableLessonViewModel$executeLessonAndStoreProgress$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/executable/ExecutableLessonViewModel$generateDiffAndShowSheet$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/executable/ExecutableLessonViewModel$runConsoleCode$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/executable/ExecutableLessonViewModel$seeSolution$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/executable/ExecutableLessonViewModel$trackAiTutorClosed$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/executable/ExecutableLessonViewModel$trackAiTutorOpened$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/executable/ExecutableLessonViewModel$trackCodingKeyboardSnippetClicked$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/interactive/base/c;->f0(Z Z)V, Lcom/getmimo/ui/practice/list/PastPracticeListViewModel$setSearchQuery$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lex/a0;->invoke()Ljava/lang/Object;, Lhm/e;->emit(Ljava/lang/Object; Ld70/b;)Ljava/lang/Object;, Lqm/b;->invoke(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Ljava/lang/Enum;->ordinal()I
+  000000  move-object v1, v4
+  000002  sget-object v0, Lcom/getmimo/data/content/model/track/TutorialType$WhenMappings;->$EnumSwitchMapping$0 [I
+  000006  const/4 v3, 1
+  000008  invoke-virtual v1, Ljava/lang/Enum;->ordinal()I
+  00000e  move-result v3
+  000010  move v1, v3
+  000012  aget v1, v0, v1
+  000016  const/4 v3, 4
+  000018  const/4 v3, 1
+  00001a  move v0, v3
+  00001c  if-eq v1, v0, +02fh
+  000020  const/4 v3, 7
+  000022  const/4 v3, 2
+  000024  move v0, v3
+  000026  if-eq v1, v0, +025h
+  00002a  const/4 v3, 7
+  00002c  const/4 v3, 3
+  00002e  move v0, v3
+  000030  if-eq v1, v0, +01bh
+  000034  const/4 v3, 2
+  000036  const/4 v3, 4
+  000038  move v0, v3
+  00003a  if-eq v1, v0, +011h
+  00003e  const/4 v3, 1
+  000040  const/4 v3, 5
+  000042  move v0, v3
+  000044  if-eq v1, v0, +007h
+  000048  const/4 v3, 3
+  00004a  const-string v3, "other"
+  00004e  move-object v1, v3
+  000050  return-object v1
+  000052  const/4 v3, 2
+  000054  const-string v3, "guidedProject"
+  000058  move-object v1, v3
+  00005a  return-object v1
+  00005c  const/4 v3, 1
+  00005e  const-string v3, "practiceOptional"
+  000062  move-object v1, v3
+  000064  return-object v1
+  000066  const/4 v3, 2
+  000068  const-string v3, "practiceRequired"
+  00006c  move-object v1, v3
+  00006e  return-object v1
+  000070  const/4 v3, 2
+  000072  const-string v3, "challenges"
+  000076  move-object v1, v3
+  000078  return-object v1
+  00007a  const/4 v3, 7
+  00007c  const-string v3, "course"
+  000080  move-object v1, v3
+  000082  return-object v1
+  000084  <androguard.core.dex.FillArrayData object at 0x7ff3facc3e90>
+
+===== Lcom/getmimo/data/content/model/track/TutorialType;->isChallenge()Z =====
+dex=classes.dex code_offset=9739632 instructions=13 access=public final callers=1 callees=0
+callers: Lcom/getmimo/ui/chapter/ChapterBundle;->h()Z
+  000000  move-object v1, v4
+  000002  sget-object v0, Lcom/getmimo/data/content/model/track/TutorialType;->Challenge Lcom/getmimo/data/content/model/track/TutorialType;
+  000006  const/4 v3, 5
+  000008  if-ne v1, v0, +006h
+  00000c  const/4 v3, 4
+  00000e  const/4 v3, 1
+  000010  move v1, v3
+  000012  return v1
+  000014  const/4 v3, 7
+  000016  const/4 v3, 0
+  000018  move v1, v3
+  00001a  return v1
+  00001c  <androguard.core.dex.FillArrayData object at 0x7ff3facc8310>
+
+===== Lcom/getmimo/data/content/model/track/TutorialType;->isPractice()Z =====
+dex=classes.dex code_offset=9739740 instructions=19 access=public final callers=3 callees=0
+callers: Lcom/getmimo/ui/chapter/ChapterBundle;->h()Z, Lvn/d0;-><init>(J Ljava/lang/String; Lcom/getmimo/data/content/model/track/TutorialType; Ljava/util/List; Z Ljava/lang/String;)V, Lvn/e0;-><init>(J Ljava/lang/String; Lcom/getmimo/data/content/model/track/TutorialType; Z Ljava/lang/String;)V
+  000000  move-object v1, v5
+  000002  sget-object v0, Lcom/getmimo/data/content/model/track/TutorialType;->PracticeRequired Lcom/getmimo/data/content/model/track/TutorialType;
+  000006  const/4 v3, 7
+  000008  if-eq v1, v0, +00eh
+  00000c  const/4 v4, 1
+  00000e  sget-object v0, Lcom/getmimo/data/content/model/track/TutorialType;->PracticeOptional Lcom/getmimo/data/content/model/track/TutorialType;
+  000012  const/4 v3, 2
+  000014  if-ne v1, v0, +004h
+  000018  const/4 v3, 6
+  00001a  goto +6h
+  00001c  const/4 v4, 5
+  00001e  const/4 v4, 0
+  000020  move v1, v4
+  000022  return v1
+  000024  const/4 v3, 1
+  000026  const/4 v4, 1
+  000028  move v1, v4
+  00002a  return v1
+  00002c  <androguard.core.dex.FillArrayData object at 0x7ff3facc8950>
+
+===== Lcom/getmimo/data/content/model/track/TutorialType;->isRequired()Z =====
+dex=classes.dex code_offset=9739824 instructions=19 access=public final callers=10 callees=0
+callers: Lcom/getmimo/data/content/model/track/Section;->completionPercentageOptional$lambda$0(Lcom/getmimo/data/content/model/track/Tutorial;)Z, Lcom/getmimo/data/content/model/track/Section;->completionPercentageRequired$lambda$0(Lcom/getmimo/data/content/model/track/Tutorial;)Z, Lcom/getmimo/interactors/chapter/b;->a(Lcom/getmimo/ui/chapter/ChapterBundle; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/interactors/chapterend/a;->a(Lcom/getmimo/ui/chapter/ChapterBundle; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/io/Serializable;, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/interactors/path/a;->b(Lcom/getmimo/data/content/model/track/Section;)Z, Lcom/getmimo/interactors/path/b;->b(Lcom/getmimo/data/content/model/track/Track; Ljava/util/ArrayList;)Lvn/c;, Lcom/getmimo/ui/reactivation/ReactivationViewModel$fetchTrackProgress$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lq70/a;->o(Lcom/getmimo/data/content/model/track/Track; I J J)Lcom/getmimo/ui/chapter/ChapterBundle;, Lq70/a;->o(Lcom/getmimo/data/content/model/track/Track; I J J)Lcom/getmimo/ui/chapter/ChapterBundle;
+  000000  move-object v1, v4
+  000002  sget-object v0, Lcom/getmimo/data/content/model/track/TutorialType;->Learn Lcom/getmimo/data/content/model/track/TutorialType;
+  000006  const/4 v3, 2
+  000008  if-eq v1, v0, +00eh
+  00000c  const/4 v3, 2
+  00000e  sget-object v0, Lcom/getmimo/data/content/model/track/TutorialType;->PracticeRequired Lcom/getmimo/data/content/model/track/TutorialType;
+  000012  const/4 v3, 3
+  000014  if-ne v1, v0, +004h
+  000018  const/4 v3, 7
+  00001a  goto +6h
+  00001c  const/4 v3, 6
+  00001e  const/4 v3, 0
+  000020  move v1, v3
+  000022  return v1
+  000024  const/4 v3, 7
+  000026  const/4 v3, 1
+  000028  move v1, v3
+  00002a  return v1
+  00002c  <androguard.core.dex.FillArrayData object at 0x7ff3facc8f50>
+
+===== Lcom/getmimo/data/content/model/track/TutorialType;->valueOf(Ljava/lang/String;)Lcom/getmimo/data/content/model/track/TutorialType; =====
+dex=classes.dex code_offset=9739272 instructions=11 access=public static callers=2 callees=1
+callers: Lbs/p;->createFromParcel(Landroid/os/Parcel;)Ljava/lang/Object;, Ldr/c;->createFromParcel(Landroid/os/Parcel;)Ljava/lang/Object;
+callees: Ljava/lang/Enum;->valueOf(Ljava/lang/Class; Ljava/lang/String;)Ljava/lang/Enum;
+  000000  move-object v1, v5
+  000002  const-class v0, Lcom/getmimo/data/content/model/track/TutorialType;
+  000006  const/4 v4, 2
+  000008  invoke-static v0, v1, Ljava/lang/Enum;->valueOf(Ljava/lang/Class; Ljava/lang/String;)Ljava/lang/Enum;
+  00000e  move-result-object v4
+  000010  move-object v1, v4
+  000012  check-cast v1, Lcom/getmimo/data/content/model/track/TutorialType;
+  000016  const/4 v4, 6
+  000018  return-object v1
+  00001a  nop 
+  00001c  <androguard.core.dex.FillArrayData object at 0x7ff3facc9310>
+
+===== Lcom/getmimo/data/content/model/track/TutorialType;->values()[Lcom/getmimo/data/content/model/track/TutorialType; =====
+dex=classes.dex code_offset=9739364 instructions=9 access=public static callers=10 callees=1
+callers: Lbo/t;-><clinit>()V, Lcom/getmimo/data/content/model/track/TutorialType$WhenMappings;-><clinit>()V, Lcom/getmimo/data/content/model/track/TutorialType;->_init_$_anonymous_()Lkotlinx/serialization/KSerializer;, Ldj/r;-><clinit>()V, Lhi/d;-><clinit>()V, Lth/a;-><clinit>()V, Lvn/f0;-><clinit>()V, Lxn/l;-><clinit>()V, Lxn/p1;-><clinit>()V, Lyh/d;-><clinit>()V
+callees: Ljava/lang/Object;->clone()Ljava/lang/Object;
+  000000  sget-object v0, Lcom/getmimo/data/content/model/track/TutorialType;->$VALUES [Lcom/getmimo/data/content/model/track/TutorialType;
+  000004  const/4 v2, 5
+  000006  invoke-virtual v0, Ljava/lang/Object;->clone()Ljava/lang/Object;
+  00000c  move-result-object v1
+  00000e  move-object v0, v1
+  000010  check-cast v0, [Lcom/getmimo/data/content/model/track/TutorialType;
+  000014  const/4 v2, 1
+  000016  return-object v0
+  000018  <androguard.core.dex.FillArrayData object at 0x7ff3facc9690>

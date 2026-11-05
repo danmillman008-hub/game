@@ -1,0 +1,1284 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/data/source/local/completion/a; semantic=CompletionRepository
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/data/source/local/completion/a;-><init>(Leg/c; Leg/f; Lcom/getmimo/data/source/remote/progress/CompletionApi; Lkf/d; Lye/g;)V =====
+dex=classes.dex code_offset=9979820 instructions=21 access=public constructor callers=1 callees=6
+callers: Lae/m;->a()Ljava/lang/Object;
+callees: Ljava/lang/Object;-><init>()V, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000000  move-object v0, v4
+  000002  invoke-virtual v5, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000008  invoke-virtual v6, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00000e  invoke-virtual v7, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000014  invoke-virtual v8, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00001a  invoke-virtual v9, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000020  invoke-direct v0, Ljava/lang/Object;-><init>()V
+  000026  const-string v3, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  00002a  iput-object v5, v0, Lcom/getmimo/data/source/local/completion/a;->a Leg/c;
+  00002e  const/4 v2, 2
+  000030  iput-object v6, v0, Lcom/getmimo/data/source/local/completion/a;->b Leg/f;
+  000034  const/4 v2, 1
+  000036  iput-object v7, v0, Lcom/getmimo/data/source/local/completion/a;->c Lcom/getmimo/data/source/remote/progress/CompletionApi;
+  00003a  const/4 v3, 3
+  00003c  iput-object v8, v0, Lcom/getmimo/data/source/local/completion/a;->d Lkf/d;
+  000040  const/4 v2, 5
+  000042  iput-object v9, v0, Lcom/getmimo/data/source/local/completion/a;->e Lye/g;
+  000046  const/4 v2, 4
+  000048  return-void 
+  00004a  nop 
+  00004c  <androguard.core.dex.FillArrayData object at 0x7ff3fb0da090>
+
+===== Lcom/getmimo/data/source/local/completion/a;->a(Lcom/getmimo/data/content/model/track/Track; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=9979960 instructions=302 access=public final callers=6 callees=68
+callers: Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialAndChapterCompletionToTrack$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/interactors/chapterend/a;->a(Lcom/getmimo/ui/chapter/ChapterBundle; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/io/Serializable;, Lcom/getmimo/interactors/path/GetPathMapState$invoke$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/interactors/path/a;->a(J Ljava/lang/Long; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/interactors/path/e;->e(Lcom/getmimo/data/content/model/track/Track; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/interactors/practice/GetPracticeTopics$invoke$deferredResults$1$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: La70/r;->i0(Ljava/lang/Iterable; I)I, La70/r;->i0(Ljava/lang/Iterable; I)I, La70/r;->i0(Ljava/lang/Iterable; I)I, La70/r;->i0(Ljava/lang/Iterable; I)I, Landroidx/room/util/a;->c(Landroidx/room/d; Ld70/b; Lo70/j; Z Z)Ljava/lang/Object;, Landroidx/room/util/a;->c(Landroidx/room/d; Ld70/b; Lo70/j; Z Z)Ljava/lang/Object;, Lcom/getmimo/data/content/model/track/Chapter;->copy$default(Lcom/getmimo/data/content/model/track/Chapter; J Ljava/lang/String; Ljava/util/List; Lcom/getmimo/data/content/model/track/ChapterType; Z I Ljava/lang/Object;)Lcom/getmimo/data/content/model/track/Chapter;, Lcom/getmimo/data/content/model/track/Chapter;->getId()J, Lcom/getmimo/data/content/model/track/Section;->copy$default(Lcom/getmimo/data/content/model/track/Section; Ljava/lang/String; Ljava/lang/String; Ljava/util/List; I I Ljava/lang/Object;)Lcom/getmimo/data/content/model/track/Section;, Lcom/getmimo/data/content/model/track/Section;->getTutorials()Ljava/util/List;, Lcom/getmimo/data/content/model/track/Track;->copy$default(Lcom/getmimo/data/content/model/track/Track; J J Ljava/lang/String; Ljava/lang/String; Z Z Ljava/lang/String; Ljava/util/List; I Ljava/lang/Object;)Lcom/getmimo/data/content/model/track/Track;, Lcom/getmimo/data/content/model/track/Track;->getId()J, Lcom/getmimo/data/content/model/track/Track;->getId()J, Lcom/getmimo/data/content/model/track/Track;->getSections()Ljava/util/List;, Lcom/getmimo/data/content/model/track/Tutorial;->copy$default(Lcom/getmimo/data/content/model/track/Tutorial; J I Lcom/getmimo/data/content/model/track/TutorialType; Lcom/getmimo/data/content/model/track/CodeLanguage; Ljava/lang/String; Z Ljava/util/List; Ljava/lang/String; Z I Ljava/lang/Object;)Lcom/getmimo/data/content/model/track/Tutorial;, Lcom/getmimo/data/content/model/track/Tutorial;->getChapters()Ljava/util/List;, Lcom/getmimo/data/content/model/track/Tutorial;->getId()J, Lcom/getmimo/data/content/model/track/Tutorial;->getId()J, Lcom/getmimo/data/model/room/ChapterCompletion;->getChapterId()J, Lcom/getmimo/data/model/room/ChapterCompletion;->getTutorialId()J, Lcom/getmimo/data/model/room/TutorialCompletion;->getTutorialId()J, Lcom/getmimo/data/model/room/TutorialCompletion;->isCompleted()Z, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialAndChapterCompletionToTrack$1;-><init>(Lcom/getmimo/data/source/local/completion/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Leg/a;-><init>(J B)V, Leg/a;-><init>(J B)V, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Long;-><init>(J)V, Ljava/lang/Long;-><init>(J)V, Ljava/lang/Long;-><init>(J)V, Ljava/lang/Long;-><init>(J)V, Ljava/util/ArrayList;-><init>()V, Ljava/util/ArrayList;-><init>(I)V, Ljava/util/ArrayList;-><init>(I)V, Ljava/util/ArrayList;-><init>(I)V, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/Collection;->isEmpty()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/LinkedHashMap;-><init>()V, Ljava/util/LinkedHashMap;-><init>(I)V, Ljava/util/LinkedHashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;, Ljava/util/LinkedHashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;, Ljava/util/List;->add(Ljava/lang/Object;)Z, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;, Ljava/util/Map;->put(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;, Ljava/util/Map;->put(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/collections/b;->Y(I)I, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object/from16 v0, v28
+  000004  move-object/from16 v1, v30
+  000008  instance-of v2, v1, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialAndChapterCompletionToTrack$1;
+  00000c  if-eqz v2, +011h
+  000010  move-object v2, v1
+  000012  check-cast v2, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialAndChapterCompletionToTrack$1;
+  000016  iget v3, v2, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialAndChapterCompletionToTrack$1;->e I
+  00001a  const/high16 v4, -2147483648
+  00001e  and-int v5, v3, v4
+  000022  if-eqz v5, +006h
+  000026  sub-int/2addr v3, v4
+  000028  iput v3, v2, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialAndChapterCompletionToTrack$1;->e I
+  00002c  goto +6h
+  00002e  new-instance v2, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialAndChapterCompletionToTrack$1;
+  000032  invoke-direct v2, v0, v1, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialAndChapterCompletionToTrack$1;-><init>(Lcom/getmimo/data/source/local/completion/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000038  iget-object v1, v2, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialAndChapterCompletionToTrack$1;->c Ljava/lang/Object;
+  00003c  sget-object v3, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000040  iget v4, v2, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialAndChapterCompletionToTrack$1;->e I
+  000044  const/4 v5, 6
+  000046  const/4 v5, 2
+  000048  const/4 v6, 1
+  00004a  const/4 v6, 1
+  00004c  const/4 v7, 2
+  00004e  const/4 v7, 0
+  000050  const/16 v8, 27149
+  000054  const/16 v8, 10
+  000058  if-eqz v4, +023h
+  00005c  if-eq v4, v6, +016h
+  000060  if-ne v4, v5, +00ch
+  000064  iget-object v0, v2, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialAndChapterCompletionToTrack$1;->b Ljava/util/LinkedHashMap;
+  000068  iget-object v2, v2, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialAndChapterCompletionToTrack$1;->a Lcom/getmimo/data/content/model/track/Track;
+  00006c  invoke-static v1, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000072  move-object v9, v2
+  000074  goto/16 +083h
+  000078  const-string v0, "call to 'resume' before 'invoke' with coroutine"
+  00007c  invoke-static v0, Lwc/f;->i(Ljava/lang/String;)V
+  000082  const/4 v0, 3
+  000084  const/4 v0, 0
+  000086  return-object v0
+  000088  iget-object v4, v2, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialAndChapterCompletionToTrack$1;->a Lcom/getmimo/data/content/model/track/Track;
+  00008c  invoke-static v1, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000092  move-object/from16 v27, v4
+  000096  move-object v4, v1
+  000098  move-object/from16 v1, v27
+  00009c  goto +1eh
+  00009e  invoke-static v1, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000a4  invoke-virtual/range v29, Lcom/getmimo/data/content/model/track/Track;->getId()J
+  0000aa  move-result-wide v9
+  0000ac  move-object/from16 v1, v29
+  0000b0  iput-object v1, v2, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialAndChapterCompletionToTrack$1;->a Lcom/getmimo/data/content/model/track/Track;
+  0000b4  iput v6, v2, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialAndChapterCompletionToTrack$1;->e I
+  0000b8  iget-object v4, v0, Lcom/getmimo/data/source/local/completion/a;->b Leg/f;
+  0000bc  iget-object v4, v4, Leg/f;->a Landroidx/room/d;
+  0000c0  new-instance v11, Leg/a;
+  0000c4  invoke-direct v11, v9, v10, v6, Leg/a;-><init>(J B)V
+  0000ca  invoke-static v4, v2, v11, v6, v7, Landroidx/room/util/a;->c(Landroidx/room/d; Ld70/b; Lo70/j; Z Z)Ljava/lang/Object;
+  0000d0  move-result-object v4
+  0000d2  if-ne v4, v3, +003h
+  0000d6  goto +4eh
+  0000d8  check-cast v4, Ljava/lang/Iterable;
+  0000dc  invoke-static v4, v8, La70/r;->i0(Ljava/lang/Iterable; I)I
+  0000e2  move-result v9
+  0000e4  invoke-static v9, Lkotlin/collections/b;->Y(I)I
+  0000ea  move-result v9
+  0000ec  const/16 v10, 9537
+  0000f0  const/16 v10, 16
+  0000f4  if-ge v9, v10, +003h
+  0000f8  move v9, v10
+  0000fa  new-instance v10, Ljava/util/LinkedHashMap;
+  0000fe  invoke-direct v10, v9, Ljava/util/LinkedHashMap;-><init>(I)V
+  000104  invoke-interface v4, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  00010a  move-result-object v4
+  00010c  invoke-interface v4, Ljava/util/Iterator;->hasNext()Z
+  000112  move-result v9
+  000114  if-eqz v9, +016h
+  000118  invoke-interface v4, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  00011e  move-result-object v9
+  000120  move-object v11, v9
+  000122  check-cast v11, Lcom/getmimo/data/model/room/TutorialCompletion;
+  000126  invoke-virtual v11, Lcom/getmimo/data/model/room/TutorialCompletion;->getTutorialId()J
+  00012c  move-result-wide v11
+  00012e  new-instance v13, Ljava/lang/Long;
+  000132  invoke-direct v13, v11, v12, Ljava/lang/Long;-><init>(J)V
+  000138  invoke-interface v10, v13, v9, Ljava/util/Map;->put(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;
+  00013e  goto -19h
+  000140  invoke-virtual v1, Lcom/getmimo/data/content/model/track/Track;->getId()J
+  000146  move-result-wide v11
+  000148  iput-object v1, v2, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialAndChapterCompletionToTrack$1;->a Lcom/getmimo/data/content/model/track/Track;
+  00014c  iput-object v10, v2, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialAndChapterCompletionToTrack$1;->b Ljava/util/LinkedHashMap;
+  000150  iput v5, v2, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialAndChapterCompletionToTrack$1;->e I
+  000154  iget-object v0, v0, Lcom/getmimo/data/source/local/completion/a;->a Leg/c;
+  000158  iget-object v0, v0, Leg/c;->a Landroidx/room/d;
+  00015c  new-instance v4, Leg/a;
+  000160  invoke-direct v4, v11, v12, v7, Leg/a;-><init>(J B)V
+  000166  invoke-static v0, v2, v4, v6, v7, Landroidx/room/util/a;->c(Landroidx/room/d; Ld70/b; Lo70/j; Z Z)Ljava/lang/Object;
+  00016c  move-result-object v0
+  00016e  if-ne v0, v3, +003h
+  000172  return-object v3
+  000174  move-object v9, v1
+  000176  move-object v1, v0
+  000178  move-object v0, v10
+  00017a  check-cast v1, Ljava/lang/Iterable;
+  00017e  new-instance v2, Ljava/util/LinkedHashMap;
+  000182  invoke-direct v2, Ljava/util/LinkedHashMap;-><init>()V
+  000188  invoke-interface v1, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  00018e  move-result-object v1
+  000190  invoke-interface v1, Ljava/util/Iterator;->hasNext()Z
+  000196  move-result v3
+  000198  if-eqz v3, +026h
+  00019c  invoke-interface v1, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0001a2  move-result-object v3
+  0001a4  move-object v4, v3
+  0001a6  check-cast v4, Lcom/getmimo/data/model/room/ChapterCompletion;
+  0001aa  invoke-virtual v4, Lcom/getmimo/data/model/room/ChapterCompletion;->getTutorialId()J
+  0001b0  move-result-wide v4
+  0001b2  new-instance v10, Ljava/lang/Long;
+  0001b6  invoke-direct v10, v4, v5, Ljava/lang/Long;-><init>(J)V
+  0001bc  invoke-virtual v2, v10, Ljava/util/LinkedHashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  0001c2  move-result-object v4
+  0001c4  if-nez v4, +00ah
+  0001c8  new-instance v4, Ljava/util/ArrayList;
+  0001cc  invoke-direct v4, Ljava/util/ArrayList;-><init>()V
+  0001d2  invoke-interface v2, v10, v4, Ljava/util/Map;->put(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;
+  0001d8  check-cast v4, Ljava/util/List;
+  0001dc  invoke-interface v4, v3, Ljava/util/List;->add(Ljava/lang/Object;)Z
+  0001e2  goto -29h
+  0001e4  invoke-virtual v9, Lcom/getmimo/data/content/model/track/Track;->getSections()Ljava/util/List;
+  0001ea  move-result-object v1
+  0001ec  new-instance v3, Ljava/util/ArrayList;
+  0001f0  invoke-static v1, v8, La70/r;->i0(Ljava/lang/Iterable; I)I
+  0001f6  move-result v4
+  0001f8  invoke-direct v3, v4, Ljava/util/ArrayList;-><init>(I)V
+  0001fe  invoke-interface v1, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  000204  move-result-object v1
+  000206  invoke-interface v1, Ljava/util/Iterator;->hasNext()Z
+  00020c  move-result v4
+  00020e  if-eqz v4, +10ch
+  000212  invoke-interface v1, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  000218  move-result-object v4
+  00021a  move-object v10, v4
+  00021c  check-cast v10, Lcom/getmimo/data/content/model/track/Section;
+  000220  invoke-virtual v10, Lcom/getmimo/data/content/model/track/Section;->getTutorials()Ljava/util/List;
+  000226  move-result-object v4
+  000228  new-instance v13, Ljava/util/ArrayList;
+  00022c  invoke-static v4, v8, La70/r;->i0(Ljava/lang/Iterable; I)I
+  000232  move-result v5
+  000234  invoke-direct v13, v5, Ljava/util/ArrayList;-><init>(I)V
+  00023a  invoke-interface v4, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  000240  move-result-object v4
+  000242  invoke-interface v4, Ljava/util/Iterator;->hasNext()Z
+  000248  move-result v5
+  00024a  if-eqz v5, +0d3h
+  00024e  invoke-interface v4, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  000254  move-result-object v5
+  000256  move-object v14, v5
+  000258  check-cast v14, Lcom/getmimo/data/content/model/track/Tutorial;
+  00025c  invoke-virtual v14, Lcom/getmimo/data/content/model/track/Tutorial;->getId()J
+  000262  move-result-wide v11
+  000264  new-instance v5, Ljava/lang/Long;
+  000268  invoke-direct v5, v11, v12, Ljava/lang/Long;-><init>(J)V
+  00026e  invoke-interface v0, v5, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  000274  move-result-object v5
+  000276  check-cast v5, Lcom/getmimo/data/model/room/TutorialCompletion;
+  00027a  if-eqz v5, +009h
+  00027e  invoke-virtual v5, Lcom/getmimo/data/model/room/TutorialCompletion;->isCompleted()Z
+  000284  move-result v5
+  000286  move/from16 v24, v5
+  00028a  goto +3h
+  00028c  move/from16 v24, v7
+  000290  invoke-virtual v14, Lcom/getmimo/data/content/model/track/Tutorial;->getChapters()Ljava/util/List;
+  000296  move-result-object v5
+  000298  new-instance v11, Ljava/util/ArrayList;
+  00029c  invoke-static v5, v8, La70/r;->i0(Ljava/lang/Iterable; I)I
+  0002a2  move-result v12
+  0002a4  invoke-direct v11, v12, Ljava/util/ArrayList;-><init>(I)V
+  0002aa  invoke-interface v5, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  0002b0  move-result-object v5
+  0002b2  invoke-interface v5, Ljava/util/Iterator;->hasNext()Z
+  0002b8  move-result v12
+  0002ba  if-eqz v12, +06ah
+  0002be  invoke-interface v5, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0002c4  move-result-object v12
+  0002c6  move-object v15, v12
+  0002c8  check-cast v15, Lcom/getmimo/data/content/model/track/Chapter;
+  0002cc  invoke-virtual v14, Lcom/getmimo/data/content/model/track/Tutorial;->getId()J
+  0002d2  move-result-wide v6
+  0002d4  new-instance v12, Ljava/lang/Long;
+  0002d8  invoke-direct v12, v6, v7, Ljava/lang/Long;-><init>(J)V
+  0002de  invoke-virtual v2, v12, Ljava/util/LinkedHashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  0002e4  move-result-object v6
+  0002e6  check-cast v6, Ljava/util/List;
+  0002ea  if-eqz v6, +02ch
+  0002ee  invoke-interface v6, Ljava/util/Collection;->isEmpty()Z
+  0002f4  move-result v7
+  0002f6  if-eqz v7, +005h
+  0002fa  const/4 v6, 1
+  0002fc  const/4 v6, 0
+  0002fe  goto +1fh
+  000300  invoke-interface v6, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  000306  move-result-object v6
+  000308  invoke-interface v6, Ljava/util/Iterator;->hasNext()Z
+  00030e  move-result v7
+  000310  if-eqz v7, -00bh
+  000314  invoke-interface v6, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  00031a  move-result-object v7
+  00031c  check-cast v7, Lcom/getmimo/data/model/room/ChapterCompletion;
+  000320  invoke-virtual v7, Lcom/getmimo/data/model/room/ChapterCompletion;->getChapterId()J
+  000326  move-result-wide v16
+  000328  invoke-virtual v15, Lcom/getmimo/data/content/model/track/Chapter;->getId()J
+  00032e  move-result-wide v18
+  000330  cmp-long v7, v16, v18
+  000334  if-nez v7, -016h
+  000338  const/4 v6, 4
+  00033a  const/4 v6, 1
+  00033c  move/from16 v21, v6
+  000340  goto +5h
+  000342  const/16 v21, 30250
+  000346  const/16 v21, 0
+  00034a  const/16 v22, 18921
+  00034e  const/16 v22, 15
+  000352  const/16 v23, 3432
+  000356  const/16 v23, 0
+  00035a  const-wide/16 v16, 0
+  00035e  const/16 v18, 13218
+  000362  const/16 v18, 0
+  000366  const/16 v19, 8344
+  00036a  const/16 v19, 0
+  00036e  const/16 v20, 29631
+  000372  const/16 v20, 0
+  000376  invoke-static/range v15 ... v23, Lcom/getmimo/data/content/model/track/Chapter;->copy$default(Lcom/getmimo/data/content/model/track/Chapter; J Ljava/lang/String; Ljava/util/List; Lcom/getmimo/data/content/model/track/ChapterType; Z I Ljava/lang/Object;)Lcom/getmimo/data/content/model/track/Chapter;
+  00037c  move-result-object v6
+  00037e  invoke-virtual v11, v6, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  000384  const/4 v6, 2
+  000386  const/4 v6, 1
+  000388  const/4 v7, 1
+  00038a  const/4 v7, 0
+  00038c  goto -6dh
+  00038e  const/16 v25, 1200
+  000392  const/16 v25, 191
+  000396  const/16 v26, 12149
+  00039a  const/16 v26, 0
+  00039e  const-wide/16 v15, 0
+  0003a2  const/16 v17, 14652
+  0003a6  const/16 v17, 0
+  0003aa  const/16 v18, 12143
+  0003ae  const/16 v18, 0
+  0003b2  const/16 v19, 5776
+  0003b6  const/16 v19, 0
+  0003ba  const/16 v20, 425
+  0003be  const/16 v20, 0
+  0003c2  const/16 v21, 26127
+  0003c6  const/16 v21, 0
+  0003ca  const/16 v23, 18198
+  0003ce  const/16 v23, 0
+  0003d2  move-object/from16 v22, v11
+  0003d6  invoke-static/range v14 ... v26, Lcom/getmimo/data/content/model/track/Tutorial;->copy$default(Lcom/getmimo/data/content/model/track/Tutorial; J I Lcom/getmimo/data/content/model/track/TutorialType; Lcom/getmimo/data/content/model/track/CodeLanguage; Ljava/lang/String; Z Ljava/util/List; Ljava/lang/String; Z I Ljava/lang/Object;)Lcom/getmimo/data/content/model/track/Tutorial;
+  0003dc  move-result-object v5
+  0003de  invoke-virtual v13, v5, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  0003e4  const/4 v6, 3
+  0003e6  const/4 v6, 1
+  0003e8  const/4 v7, 0
+  0003ea  const/4 v7, 0
+  0003ec  goto/16 -0d5h
+  0003f0  const/16 v15, 27914
+  0003f4  const/16 v15, 11
+  0003f8  const/16 v16, 31111
+  0003fc  const/16 v16, 0
+  000400  const/4 v11, 3
+  000402  const/4 v11, 0
+  000404  const/4 v12, 1
+  000406  const/4 v12, 0
+  000408  const/4 v14, 1
+  00040a  const/4 v14, 0
+  00040c  invoke-static/range v10 ... v16, Lcom/getmimo/data/content/model/track/Section;->copy$default(Lcom/getmimo/data/content/model/track/Section; Ljava/lang/String; Ljava/lang/String; Ljava/util/List; I I Ljava/lang/Object;)Lcom/getmimo/data/content/model/track/Section;
+  000412  move-result-object v4
+  000414  invoke-virtual v3, v4, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  00041a  const/4 v6, 1
+  00041c  const/4 v6, 1
+  00041e  const/4 v7, 7
+  000420  const/4 v7, 0
+  000422  goto/16 -10eh
+  000426  const/16 v20, 23633
+  00042a  const/16 v20, 127
+  00042e  const/16 v21, 7852
+  000432  const/16 v21, 0
+  000436  const-wide/16 v10, 0
+  00043a  const-wide/16 v12, 0
+  00043e  const/4 v14, 0
+  000440  const/4 v14, 0
+  000442  const/4 v15, 4
+  000444  const/4 v15, 0
+  000446  const/16 v16, 13969
+  00044a  const/16 v16, 0
+  00044e  const/16 v17, 14753
+  000452  const/16 v17, 0
+  000456  const/16 v18, 18267
+  00045a  const/16 v18, 0
+  00045e  move-object/from16 v19, v3
+  000462  invoke-static/range v9 ... v21, Lcom/getmimo/data/content/model/track/Track;->copy$default(Lcom/getmimo/data/content/model/track/Track; J J Ljava/lang/String; Ljava/lang/String; Z Z Ljava/lang/String; Ljava/util/List; I Ljava/lang/Object;)Lcom/getmimo/data/content/model/track/Track;
+  000468  move-result-object v0
+  00046a  return-object v0
+  00046c  <androguard.core.dex.FillArrayData object at 0x7ff3fb0ef350>
+
+===== Lcom/getmimo/data/source/local/completion/a;->b(Lcom/getmimo/data/content/model/track/Track; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=9981172 instructions=178 access=public final callers=4 callees=37
+callers: Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialCompletionToTrack$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/interactors/path/b;->a(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/interactors/path/e;->g(Lcom/getmimo/data/content/model/track/Track; Z Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/reactivation/ReactivationViewModel$fetchTrackProgress$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: La70/r;->i0(Ljava/lang/Iterable; I)I, La70/r;->i0(Ljava/lang/Iterable; I)I, La70/r;->i0(Ljava/lang/Iterable; I)I, Landroidx/room/util/a;->c(Landroidx/room/d; Ld70/b; Lo70/j; Z Z)Ljava/lang/Object;, Lcom/getmimo/data/content/model/track/Section;->copy$default(Lcom/getmimo/data/content/model/track/Section; Ljava/lang/String; Ljava/lang/String; Ljava/util/List; I I Ljava/lang/Object;)Lcom/getmimo/data/content/model/track/Section;, Lcom/getmimo/data/content/model/track/Section;->getTutorials()Ljava/util/List;, Lcom/getmimo/data/content/model/track/Track;->copy$default(Lcom/getmimo/data/content/model/track/Track; J J Ljava/lang/String; Ljava/lang/String; Z Z Ljava/lang/String; Ljava/util/List; I Ljava/lang/Object;)Lcom/getmimo/data/content/model/track/Track;, Lcom/getmimo/data/content/model/track/Track;->getId()J, Lcom/getmimo/data/content/model/track/Track;->getSections()Ljava/util/List;, Lcom/getmimo/data/content/model/track/Tutorial;->copy$default(Lcom/getmimo/data/content/model/track/Tutorial; J I Lcom/getmimo/data/content/model/track/TutorialType; Lcom/getmimo/data/content/model/track/CodeLanguage; Ljava/lang/String; Z Ljava/util/List; Ljava/lang/String; Z I Ljava/lang/Object;)Lcom/getmimo/data/content/model/track/Tutorial;, Lcom/getmimo/data/content/model/track/Tutorial;->getId()J, Lcom/getmimo/data/model/room/TutorialCompletion;->getTutorialId()J, Lcom/getmimo/data/model/room/TutorialCompletion;->isCompleted()Z, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialCompletionToTrack$1;-><init>(Lcom/getmimo/data/source/local/completion/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Leg/a;-><init>(J B)V, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Long;-><init>(J)V, Ljava/lang/Long;-><init>(J)V, Ljava/util/ArrayList;-><init>(I)V, Ljava/util/ArrayList;-><init>(I)V, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/LinkedHashMap;-><init>(I)V, Ljava/util/LinkedHashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;, Ljava/util/Map;->put(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/collections/b;->Y(I)I, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object/from16 v0, v24
+  000004  move-object/from16 v1, v26
+  000008  instance-of v2, v1, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialCompletionToTrack$1;
+  00000c  if-eqz v2, +011h
+  000010  move-object v2, v1
+  000012  check-cast v2, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialCompletionToTrack$1;
+  000016  iget v3, v2, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialCompletionToTrack$1;->d I
+  00001a  const/high16 v4, -2147483648
+  00001e  and-int v5, v3, v4
+  000022  if-eqz v5, +006h
+  000026  sub-int/2addr v3, v4
+  000028  iput v3, v2, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialCompletionToTrack$1;->d I
+  00002c  goto +6h
+  00002e  new-instance v2, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialCompletionToTrack$1;
+  000032  invoke-direct v2, v0, v1, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialCompletionToTrack$1;-><init>(Lcom/getmimo/data/source/local/completion/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000038  iget-object v1, v2, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialCompletionToTrack$1;->b Ljava/lang/Object;
+  00003c  sget-object v3, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000040  iget v4, v2, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialCompletionToTrack$1;->d I
+  000044  const/4 v5, 0
+  000046  const/4 v5, 0
+  000048  const/4 v6, 0
+  00004a  const/4 v6, 1
+  00004c  if-eqz v4, +013h
+  000050  if-ne v4, v6, +009h
+  000054  iget-object v0, v2, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialCompletionToTrack$1;->a Lcom/getmimo/data/content/model/track/Track;
+  000058  invoke-static v1, Lkotlin/b;->b(Ljava/lang/Object;)V
+  00005e  move-object v6, v0
+  000060  goto +28h
+  000062  const-string v0, "call to 'resume' before 'invoke' with coroutine"
+  000066  invoke-static v0, Lwc/f;->i(Ljava/lang/String;)V
+  00006c  const/4 v0, 1
+  00006e  const/4 v0, 0
+  000070  return-object v0
+  000072  invoke-static v1, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000078  invoke-virtual/range v25, Lcom/getmimo/data/content/model/track/Track;->getId()J
+  00007e  move-result-wide v7
+  000080  move-object/from16 v1, v25
+  000084  iput-object v1, v2, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialCompletionToTrack$1;->a Lcom/getmimo/data/content/model/track/Track;
+  000088  iput v6, v2, Lcom/getmimo/data/source/local/completion/CompletionRepository$attachTutorialCompletionToTrack$1;->d I
+  00008c  iget-object v0, v0, Lcom/getmimo/data/source/local/completion/a;->b Leg/f;
+  000090  iget-object v0, v0, Leg/f;->a Landroidx/room/d;
+  000094  new-instance v4, Leg/a;
+  000098  invoke-direct v4, v7, v8, v6, Leg/a;-><init>(J B)V
+  00009e  invoke-static v0, v2, v4, v6, v5, Landroidx/room/util/a;->c(Landroidx/room/d; Ld70/b; Lo70/j; Z Z)Ljava/lang/Object;
+  0000a4  move-result-object v0
+  0000a6  if-ne v0, v3, +003h
+  0000aa  return-object v3
+  0000ac  move-object v6, v1
+  0000ae  move-object v1, v0
+  0000b0  check-cast v1, Ljava/lang/Iterable;
+  0000b4  const/16 v0, 20054
+  0000b8  const/16 v0, 10
+  0000bc  invoke-static v1, v0, La70/r;->i0(Ljava/lang/Iterable; I)I
+  0000c2  move-result v2
+  0000c4  invoke-static v2, Lkotlin/collections/b;->Y(I)I
+  0000ca  move-result v2
+  0000cc  const/16 v3, 6604
+  0000d0  const/16 v3, 16
+  0000d4  if-ge v2, v3, +003h
+  0000d8  move v2, v3
+  0000da  new-instance v3, Ljava/util/LinkedHashMap;
+  0000de  invoke-direct v3, v2, Ljava/util/LinkedHashMap;-><init>(I)V
+  0000e4  invoke-interface v1, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  0000ea  move-result-object v1
+  0000ec  invoke-interface v1, Ljava/util/Iterator;->hasNext()Z
+  0000f2  move-result v2
+  0000f4  if-eqz v2, +016h
+  0000f8  invoke-interface v1, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0000fe  move-result-object v2
+  000100  move-object v4, v2
+  000102  check-cast v4, Lcom/getmimo/data/model/room/TutorialCompletion;
+  000106  invoke-virtual v4, Lcom/getmimo/data/model/room/TutorialCompletion;->getTutorialId()J
+  00010c  move-result-wide v7
+  00010e  new-instance v4, Ljava/lang/Long;
+  000112  invoke-direct v4, v7, v8, Ljava/lang/Long;-><init>(J)V
+  000118  invoke-interface v3, v4, v2, Ljava/util/Map;->put(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;
+  00011e  goto -19h
+  000120  invoke-virtual v6, Lcom/getmimo/data/content/model/track/Track;->getSections()Ljava/util/List;
+  000126  move-result-object v1
+  000128  new-instance v2, Ljava/util/ArrayList;
+  00012c  invoke-static v1, v0, La70/r;->i0(Ljava/lang/Iterable; I)I
+  000132  move-result v4
+  000134  invoke-direct v2, v4, Ljava/util/ArrayList;-><init>(I)V
+  00013a  invoke-interface v1, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  000140  move-result-object v1
+  000142  invoke-interface v1, Ljava/util/Iterator;->hasNext()Z
+  000148  move-result v4
+  00014a  if-eqz v4, +080h
+  00014e  invoke-interface v1, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  000154  move-result-object v4
+  000156  move-object v7, v4
+  000158  check-cast v7, Lcom/getmimo/data/content/model/track/Section;
+  00015c  invoke-virtual v7, Lcom/getmimo/data/content/model/track/Section;->getTutorials()Ljava/util/List;
+  000162  move-result-object v4
+  000164  new-instance v10, Ljava/util/ArrayList;
+  000168  invoke-static v4, v0, La70/r;->i0(Ljava/lang/Iterable; I)I
+  00016e  move-result v8
+  000170  invoke-direct v10, v8, Ljava/util/ArrayList;-><init>(I)V
+  000176  invoke-interface v4, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  00017c  move-result-object v4
+  00017e  invoke-interface v4, Ljava/util/Iterator;->hasNext()Z
+  000184  move-result v8
+  000186  if-eqz v8, +04dh
+  00018a  invoke-interface v4, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  000190  move-result-object v8
+  000192  move-object v11, v8
+  000194  check-cast v11, Lcom/getmimo/data/content/model/track/Tutorial;
+  000198  invoke-virtual v11, Lcom/getmimo/data/content/model/track/Tutorial;->getId()J
+  00019e  move-result-wide v8
+  0001a0  new-instance v12, Ljava/lang/Long;
+  0001a4  invoke-direct v12, v8, v9, Ljava/lang/Long;-><init>(J)V
+  0001aa  invoke-virtual v3, v12, Ljava/util/LinkedHashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  0001b0  move-result-object v8
+  0001b2  check-cast v8, Lcom/getmimo/data/model/room/TutorialCompletion;
+  0001b6  if-eqz v8, +009h
+  0001ba  invoke-virtual v8, Lcom/getmimo/data/model/room/TutorialCompletion;->isCompleted()Z
+  0001c0  move-result v8
+  0001c2  move/from16 v21, v8
+  0001c6  goto +3h
+  0001c8  move/from16 v21, v5
+  0001cc  const/16 v22, 26588
+  0001d0  const/16 v22, 255
+  0001d4  const/16 v23, 12606
+  0001d8  const/16 v23, 0
+  0001dc  const-wide/16 v12, 0
+  0001e0  const/4 v14, 3
+  0001e2  const/4 v14, 0
+  0001e4  const/4 v15, 5
+  0001e6  const/4 v15, 0
+  0001e8  const/16 v16, 31535
+  0001ec  const/16 v16, 0
+  0001f0  const/16 v17, 9804
+  0001f4  const/16 v17, 0
+  0001f8  const/16 v18, 1292
+  0001fc  const/16 v18, 0
+  000200  const/16 v19, 1532
+  000204  const/16 v19, 0
+  000208  const/16 v20, 7940
+  00020c  const/16 v20, 0
+  000210  invoke-static/range v11 ... v23, Lcom/getmimo/data/content/model/track/Tutorial;->copy$default(Lcom/getmimo/data/content/model/track/Tutorial; J I Lcom/getmimo/data/content/model/track/TutorialType; Lcom/getmimo/data/content/model/track/CodeLanguage; Ljava/lang/String; Z Ljava/util/List; Ljava/lang/String; Z I Ljava/lang/Object;)Lcom/getmimo/data/content/model/track/Tutorial;
+  000216  move-result-object v8
+  000218  invoke-virtual v10, v8, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  00021e  goto -50h
+  000220  const/16 v12, 21724
+  000224  const/16 v12, 11
+  000228  const/4 v13, 3
+  00022a  const/4 v13, 0
+  00022c  const/4 v8, 7
+  00022e  const/4 v8, 0
+  000230  const/4 v9, 4
+  000232  const/4 v9, 0
+  000234  const/4 v11, 6
+  000236  const/4 v11, 0
+  000238  invoke-static/range v7 ... v13, Lcom/getmimo/data/content/model/track/Section;->copy$default(Lcom/getmimo/data/content/model/track/Section; Ljava/lang/String; Ljava/lang/String; Ljava/util/List; I I Ljava/lang/Object;)Lcom/getmimo/data/content/model/track/Section;
+  00023e  move-result-object v4
+  000240  invoke-virtual v2, v4, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  000246  goto/16 -082h
+  00024a  const/16 v17, 30713
+  00024e  const/16 v17, 127
+  000252  const/16 v18, 22794
+  000256  const/16 v18, 0
+  00025a  const-wide/16 v7, 0
+  00025e  const-wide/16 v9, 0
+  000262  const/4 v11, 7
+  000264  const/4 v11, 0
+  000266  const/4 v12, 4
+  000268  const/4 v12, 0
+  00026a  const/4 v13, 3
+  00026c  const/4 v13, 0
+  00026e  const/4 v14, 2
+  000270  const/4 v14, 0
+  000272  const/4 v15, 7
+  000274  const/4 v15, 0
+  000276  move-object/from16 v16, v2
+  00027a  invoke-static/range v6 ... v18, Lcom/getmimo/data/content/model/track/Track;->copy$default(Lcom/getmimo/data/content/model/track/Track; J J Ljava/lang/String; Ljava/lang/String; Z Z Ljava/lang/String; Ljava/util/List; I Ljava/lang/Object;)Lcom/getmimo/data/content/model/track/Track;
+  000280  move-result-object v0
+  000282  return-object v0
+  000284  <androguard.core.dex.FillArrayData object at 0x7ff3fb0f2490>
+
+===== Lcom/getmimo/data/source/local/completion/a;->c(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=9981856 instructions=70 access=public final callers=2 callees=6
+callers: Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchLastInteractedTrackId$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/authentication/t;->M(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+callees: Lcom/getmimo/data/model/progress/LastInteractedTrackResponse;->getLastInteractedTrackId()Ljava/lang/Long;, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchLastInteractedTrackId$1;-><init>(Lcom/getmimo/data/source/local/completion/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Lcom/getmimo/data/source/remote/progress/CompletionApi;->getLastInteractedTrack(Ld70/b;)Ljava/lang/Object;, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object v4, v7
+  000002  instance-of v0, v8, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchLastInteractedTrackId$1;
+  000006  const/4 v6, 7
+  000008  if-eqz v0, +019h
+  00000c  const/4 v6, 6
+  00000e  move-object v0, v8
+  000010  check-cast v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchLastInteractedTrackId$1;
+  000014  const/4 v6, 2
+  000016  iget v1, v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchLastInteractedTrackId$1;->c I
+  00001a  const/4 v6, 7
+  00001c  const/high16 v6, -2147483648
+  000020  move v2, v6
+  000022  and-int v3, v1, v2
+  000026  const/4 v6, 5
+  000028  if-eqz v3, +009h
+  00002c  const/4 v6, 7
+  00002e  sub-int/2addr v1, v2
+  000030  const/4 v6, 7
+  000032  iput v1, v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchLastInteractedTrackId$1;->c I
+  000036  const/4 v6, 5
+  000038  goto +9h
+  00003a  const/4 v6, 1
+  00003c  new-instance v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchLastInteractedTrackId$1;
+  000040  const/4 v6, 2
+  000042  invoke-direct v0, v4, v8, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchLastInteractedTrackId$1;-><init>(Lcom/getmimo/data/source/local/completion/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000048  const/4 v6, 1
+  00004a  iget-object v8, v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchLastInteractedTrackId$1;->a Ljava/lang/Object;
+  00004e  const/4 v6, 1
+  000050  sget-object v1, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000054  const/4 v6, 1
+  000056  iget v2, v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchLastInteractedTrackId$1;->c I
+  00005a  const/4 v6, 2
+  00005c  const/4 v6, 1
+  00005e  move v3, v6
+  000060  if-eqz v2, +016h
+  000064  const/4 v6, 2
+  000066  if-ne v2, v3, +008h
+  00006a  const/4 v6, 7
+  00006c  invoke-static v8, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000072  const/4 v6, 4
+  000074  goto +21h
+  000076  const/4 v6, 6
+  000078  const-string v6, "call to 'resume' before 'invoke' with coroutine"
+  00007c  move-object v4, v6
+  00007e  invoke-static v4, Lwc/f;->i(Ljava/lang/String;)V
+  000084  const/4 v6, 6
+  000086  const/4 v6, 0
+  000088  move v4, v6
+  00008a  return-object v4
+  00008c  const/4 v6, 1
+  00008e  invoke-static v8, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000094  const/4 v6, 4
+  000096  iput v3, v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchLastInteractedTrackId$1;->c I
+  00009a  const/4 v6, 4
+  00009c  iget-object v4, v4, Lcom/getmimo/data/source/local/completion/a;->c Lcom/getmimo/data/source/remote/progress/CompletionApi;
+  0000a0  const/4 v6, 6
+  0000a2  invoke-interface v4, v0, Lcom/getmimo/data/source/remote/progress/CompletionApi;->getLastInteractedTrack(Ld70/b;)Ljava/lang/Object;
+  0000a8  move-result-object v6
+  0000aa  move-object v8, v6
+  0000ac  if-ne v8, v1, +004h
+  0000b0  const/4 v6, 2
+  0000b2  return-object v1
+  0000b4  const/4 v6, 4
+  0000b6  check-cast v8, Lcom/getmimo/data/model/progress/LastInteractedTrackResponse;
+  0000ba  const/4 v6, 6
+  0000bc  invoke-virtual v8, Lcom/getmimo/data/model/progress/LastInteractedTrackResponse;->getLastInteractedTrackId()Ljava/lang/Long;
+  0000c2  move-result-object v6
+  0000c4  move-object v4, v6
+  0000c6  return-object v4
+  0000c8  <androguard.core.dex.FillArrayData object at 0x7ff3fb0f3910>
+
+===== Lcom/getmimo/data/source/local/completion/a;->d(J J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=9982148 instructions=210 access=public final callers=3 callees=44
+callers: Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/data/source/local/completion/a;->e(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;->fetchTrackCompletionForFavoriteTracks(Ld70/b;)Ljava/lang/Object;
+callees: La70/r;->i0(Ljava/lang/Iterable; I)I, La70/r;->i0(Ljava/lang/Iterable; I)I, La70/v;->m0(Ljava/lang/Iterable; Ljava/util/Collection;)V, Lal/b;-><init>(Ljava/lang/Object; Ljava/lang/Object; B)V, Lal/b;-><init>(Ljava/lang/Object; Ljava/lang/Object; B)V, Landroid/content/SharedPreferences$Editor;->apply()V, Landroid/content/SharedPreferences$Editor;->putLong(Ljava/lang/String; J)Landroid/content/SharedPreferences$Editor;, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;, Landroidx/room/util/a;->c(Landroidx/room/d; Ld70/b; Lo70/j; Z Z)Ljava/lang/Object;, Landroidx/room/util/a;->c(Landroidx/room/d; Ld70/b; Lo70/j; Z Z)Ljava/lang/Object;, Lcom/getmimo/data/model/progress/TrackCompletionResponse;->getLastInteractedTutorialId()J, Lcom/getmimo/data/model/progress/TrackCompletionResponse;->getTutorials()Ljava/util/List;, Lcom/getmimo/data/model/progress/TrackCompletionResponse;->getTutorials()Ljava/util/List;, Lcom/getmimo/data/model/progress/TutorialCompletion;->getCompletedChapters()Ljava/util/List;, Lcom/getmimo/data/model/progress/TutorialCompletion;->getTutorialId()J, Lcom/getmimo/data/model/progress/TutorialCompletion;->getTutorialId()J, Lcom/getmimo/data/model/progress/TutorialCompletion;->isCompleted()Z, Lcom/getmimo/data/model/room/ChapterCompletion;-><init>(J Lorg/joda/time/Instant; J J)V, Lcom/getmimo/data/model/room/TutorialCompletion;-><init>(J Z Lorg/joda/time/Instant; J)V, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;-><init>(Lcom/getmimo/data/source/local/completion/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Lcom/getmimo/data/source/remote/progress/CompletionApi;->getTrackCompletion(J J Ld70/b;)Ljava/lang/Object;, Lcom/google/android/recaptcha/internal/b;->g(J Ljava/lang/String;)Ljava/lang/String;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Number;->longValue()J, Ljava/util/ArrayList;-><init>()V, Ljava/util/ArrayList;-><init>(I)V, Ljava/util/ArrayList;-><init>(I)V, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/Collection;->isEmpty()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lorg/joda/time/Instant;-><init>()V, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object/from16 v0, v24
+  000004  move-object/from16 v1, v29
+  000008  sget-object v2, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  00000c  instance-of v3, v1, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;
+  000010  if-eqz v3, +012h
+  000014  move-object v3, v1
+  000016  check-cast v3, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;
+  00001a  iget v4, v3, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;->g I
+  00001e  const/high16 v5, -2147483648
+  000022  and-int v6, v4, v5
+  000026  if-eqz v6, +007h
+  00002a  sub-int/2addr v4, v5
+  00002c  iput v4, v3, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;->g I
+  000030  move-object v9, v3
+  000032  goto +7h
+  000034  new-instance v3, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;
+  000038  invoke-direct v3, v0, v1, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;-><init>(Lcom/getmimo/data/source/local/completion/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  00003e  goto -7h
+  000040  iget-object v1, v9, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;->e Ljava/lang/Object;
+  000044  iget v3, v9, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;->g I
+  000048  const/4 v11, 6
+  00004a  const/4 v11, 3
+  00004c  const/4 v12, 1
+  00004e  const/4 v12, 2
+  000050  sget-object v13, Lz60/q;->a Lz60/q;
+  000054  const/4 v14, 4
+  000056  const/4 v14, 1
+  000058  const/4 v15, 7
+  00005a  const/4 v15, 0
+  00005c  if-eqz v3, +030h
+  000060  if-eq v3, v14, +024h
+  000064  if-eq v3, v12, +013h
+  000068  if-ne v3, v11, +00bh
+  00006c  iget-wide v2, v9, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;->a J
+  000070  iget-object v4, v9, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;->c Lcom/getmimo/data/model/progress/TrackCompletionResponse;
+  000074  invoke-static v1, Lkotlin/b;->b(Ljava/lang/Object;)V
+  00007a  goto/16 +12ch
+  00007e  const-string v0, "call to 'resume' before 'invoke' with coroutine"
+  000082  invoke-static v0, Lwc/f;->i(Ljava/lang/String;)V
+  000088  return-object v15
+  00008a  iget-wide v3, v9, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;->b J
+  00008e  iget-wide v5, v9, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;->a J
+  000092  iget-object v7, v9, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;->d Ljava/util/ArrayList;
+  000096  iget-object v8, v9, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;->c Lcom/getmimo/data/model/progress/TrackCompletionResponse;
+  00009a  invoke-static v1, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000a0  move-wide v10, v5
+  0000a2  move-object v1, v8
+  0000a4  goto/16 +0e7h
+  0000a8  iget-wide v3, v9, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;->b J
+  0000ac  iget-wide v5, v9, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;->a J
+  0000b0  invoke-static v1, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000b6  move-wide/from16 v20, v5
+  0000ba  goto +1ch
+  0000bc  invoke-static v1, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000c2  move-wide/from16 v5, v25
+  0000c6  iput-wide v5, v9, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;->a J
+  0000ca  move-wide/from16 v7, v27
+  0000ce  iput-wide v7, v9, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;->b J
+  0000d2  iput v14, v9, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;->g I
+  0000d6  iget-object v4, v0, Lcom/getmimo/data/source/local/completion/a;->c Lcom/getmimo/data/source/remote/progress/CompletionApi;
+  0000da  invoke-interface/range v4 ... v9, Lcom/getmimo/data/source/remote/progress/CompletionApi;->getTrackCompletion(J J Ld70/b;)Ljava/lang/Object;
+  0000e0  move-result-object v1
+  0000e2  if-ne v1, v2, +004h
+  0000e6  goto/16 +0f3h
+  0000ea  move-wide/from16 v20, v25
+  0000ee  move-wide/from16 v3, v27
+  0000f2  check-cast v1, Lcom/getmimo/data/model/progress/TrackCompletionResponse;
+  0000f6  new-instance v19, Lorg/joda/time/Instant;
+  0000fa  invoke-direct/range v19, Lorg/joda/time/Instant;-><init>()V
+  000100  invoke-virtual v1, Lcom/getmimo/data/model/progress/TrackCompletionResponse;->getTutorials()Ljava/util/List;
+  000106  move-result-object v5
+  000108  new-instance v7, Ljava/util/ArrayList;
+  00010c  invoke-direct v7, Ljava/util/ArrayList;-><init>()V
+  000112  invoke-interface v5, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  000118  move-result-object v5
+  00011a  invoke-interface v5, Ljava/util/Iterator;->hasNext()Z
+  000120  move-result v6
+  000122  const/16 v8, 14295
+  000126  const/16 v8, 10
+  00012a  if-eqz v6, +040h
+  00012e  invoke-interface v5, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  000134  move-result-object v6
+  000136  check-cast v6, Lcom/getmimo/data/model/progress/TutorialCompletion;
+  00013a  invoke-virtual v6, Lcom/getmimo/data/model/progress/TutorialCompletion;->getCompletedChapters()Ljava/util/List;
+  000140  move-result-object v11
+  000142  new-instance v15, Ljava/util/ArrayList;
+  000146  invoke-static v11, v8, La70/r;->i0(Ljava/lang/Iterable; I)I
+  00014c  move-result v8
+  00014e  invoke-direct v15, v8, Ljava/util/ArrayList;-><init>(I)V
+  000154  invoke-interface v11, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  00015a  move-result-object v8
+  00015c  invoke-interface v8, Ljava/util/Iterator;->hasNext()Z
+  000162  move-result v11
+  000164  if-eqz v11, +01bh
+  000168  invoke-interface v8, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  00016e  move-result-object v11
+  000170  check-cast v11, Ljava/lang/Number;
+  000174  invoke-virtual v11, Ljava/lang/Number;->longValue()J
+  00017a  move-result-wide v17
+  00017c  new-instance v16, Lcom/getmimo/data/model/room/ChapterCompletion;
+  000180  invoke-virtual v6, Lcom/getmimo/data/model/progress/TutorialCompletion;->getTutorialId()J
+  000186  move-result-wide v22
+  000188  invoke-direct/range v16 ... v23, Lcom/getmimo/data/model/room/ChapterCompletion;-><init>(J Lorg/joda/time/Instant; J J)V
+  00018e  move-object/from16 v11, v16
+  000192  invoke-virtual v15, v11, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  000198  goto -1eh
+  00019a  invoke-static v15, v7, La70/v;->m0(Ljava/lang/Iterable; Ljava/util/Collection;)V
+  0001a0  const/4 v11, 7
+  0001a2  const/4 v11, 3
+  0001a4  const/4 v15, 1
+  0001a6  const/4 v15, 0
+  0001a8  goto -47h
+  0001aa  invoke-virtual v1, Lcom/getmimo/data/model/progress/TrackCompletionResponse;->getTutorials()Ljava/util/List;
+  0001b0  move-result-object v5
+  0001b2  new-instance v6, Ljava/util/ArrayList;
+  0001b6  invoke-static v5, v8, La70/r;->i0(Ljava/lang/Iterable; I)I
+  0001bc  move-result v8
+  0001be  invoke-direct v6, v8, Ljava/util/ArrayList;-><init>(I)V
+  0001c4  invoke-interface v5, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  0001ca  move-result-object v5
+  0001cc  invoke-interface v5, Ljava/util/Iterator;->hasNext()Z
+  0001d2  move-result v8
+  0001d4  if-eqz v8, +027h
+  0001d8  invoke-interface v5, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0001de  move-result-object v8
+  0001e0  check-cast v8, Lcom/getmimo/data/model/progress/TutorialCompletion;
+  0001e4  new-instance v16, Lcom/getmimo/data/model/room/TutorialCompletion;
+  0001e8  invoke-virtual v8, Lcom/getmimo/data/model/progress/TutorialCompletion;->getTutorialId()J
+  0001ee  move-result-wide v17
+  0001f0  invoke-virtual v8, Lcom/getmimo/data/model/progress/TutorialCompletion;->isCompleted()Z
+  0001f6  move-result v8
+  0001f8  move-wide/from16 v21, v20
+  0001fc  move-object/from16 v20, v19
+  000200  move/from16 v19, v8
+  000204  invoke-direct/range v16 ... v22, Lcom/getmimo/data/model/room/TutorialCompletion;-><init>(J Z Lorg/joda/time/Instant; J)V
+  00020a  move-object/from16 v15, v16
+  00020e  move-object/from16 v19, v20
+  000212  move-wide/from16 v10, v21
+  000216  invoke-virtual v6, v15, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  00021c  move-wide/from16 v20, v10
+  000220  goto -2ah
+  000222  move-wide/from16 v10, v20
+  000226  iput-object v1, v9, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;->c Lcom/getmimo/data/model/progress/TrackCompletionResponse;
+  00022a  iput-object v7, v9, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;->d Ljava/util/ArrayList;
+  00022e  iput-wide v10, v9, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;->a J
+  000232  iput-wide v3, v9, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;->b J
+  000236  iput v12, v9, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;->g I
+  00023a  iget-object v5, v0, Lcom/getmimo/data/source/local/completion/a;->b Leg/f;
+  00023e  iget-object v12, v5, Leg/f;->a Landroidx/room/d;
+  000242  new-instance v15, Lal/b;
+  000246  const/16 v8, 28785
+  00024a  const/16 v8, 24
+  00024e  invoke-direct v15, v5, v6, v8, Lal/b;-><init>(Ljava/lang/Object; Ljava/lang/Object; B)V
+  000254  const/4 v8, 3
+  000256  const/4 v8, 0
+  000258  invoke-static v12, v9, v15, v8, v14, Landroidx/room/util/a;->c(Landroidx/room/d; Ld70/b; Lo70/j; Z Z)Ljava/lang/Object;
+  00025e  move-result-object v5
+  000260  sget-object v6, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000264  if-ne v5, v6, +003h
+  000268  goto +2h
+  00026a  move-object v5, v13
+  00026c  if-ne v5, v2, +003h
+  000270  goto +2eh
+  000272  invoke-interface v7, Ljava/util/Collection;->isEmpty()Z
+  000278  move-result v5
+  00027a  if-nez v5, +02eh
+  00027e  iput-object v1, v9, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;->c Lcom/getmimo/data/model/progress/TrackCompletionResponse;
+  000282  const/4 v5, 3
+  000284  const/4 v5, 0
+  000286  iput-object v5, v9, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;->d Ljava/util/ArrayList;
+  00028a  iput-wide v10, v9, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;->a J
+  00028e  iput-wide v3, v9, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;->b J
+  000292  const/4 v3, 7
+  000294  const/4 v3, 3
+  000296  iput v3, v9, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$2;->g I
+  00029a  iget-object v3, v0, Lcom/getmimo/data/source/local/completion/a;->a Leg/c;
+  00029e  iget-object v4, v3, Leg/c;->a Landroidx/room/d;
+  0002a2  new-instance v5, Lal/b;
+  0002a6  const/16 v6, 28085
+  0002aa  const/16 v6, 23
+  0002ae  invoke-direct v5, v3, v7, v6, Lal/b;-><init>(Ljava/lang/Object; Ljava/lang/Object; B)V
+  0002b4  const/4 v8, 7
+  0002b6  const/4 v8, 0
+  0002b8  invoke-static v4, v9, v5, v8, v14, Landroidx/room/util/a;->c(Landroidx/room/d; Ld70/b; Lo70/j; Z Z)Ljava/lang/Object;
+  0002be  move-result-object v3
+  0002c0  if-ne v3, v2, +003h
+  0002c4  goto +2h
+  0002c6  move-object v3, v13
+  0002c8  if-ne v3, v2, +003h
+  0002cc  return-object v2
+  0002ce  move-object v4, v1
+  0002d0  move-wide v2, v10
+  0002d2  move-wide v10, v2
+  0002d4  move-object v1, v4
+  0002d6  invoke-virtual v1, Lcom/getmimo/data/model/progress/TrackCompletionResponse;->getLastInteractedTutorialId()J
+  0002dc  move-result-wide v1
+  0002de  iget-object v0, v0, Lcom/getmimo/data/source/local/completion/a;->d Lkf/d;
+  0002e2  check-cast v0, Lkf/c;
+  0002e6  iget-object v0, v0, Lkf/c;->a Landroid/content/SharedPreferences;
+  0002ea  invoke-interface v0, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+  0002f0  move-result-object v0
+  0002f2  const-string v3, "last_interacted_tutorial_id_"
+  0002f6  invoke-static v10, v11, v3, Lcom/google/android/recaptcha/internal/b;->g(J Ljava/lang/String;)Ljava/lang/String;
+  0002fc  move-result-object v3
+  0002fe  invoke-interface v0, v3, v1, v2, Landroid/content/SharedPreferences$Editor;->putLong(Ljava/lang/String; J)Landroid/content/SharedPreferences$Editor;
+  000304  move-result-object v0
+  000306  invoke-interface v0, Landroid/content/SharedPreferences$Editor;->apply()V
+  00030c  return-object v13
+  00030e  nop 
+  000310  <androguard.core.dex.FillArrayData object at 0x7ff3fb0fb910>
+
+===== Lcom/getmimo/data/source/local/completion/a;->e(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=9983000 instructions=100 access=public final callers=3 callees=8
+callers: Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/interactors/chapter/GetChapterEndSuccessState$invoke$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/chapter/chapterendview/main/f;->R(Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+callees: Lcom/getmimo/data/content/model/track/TrackJson;->getVersion()J, Lcom/getmimo/data/content/tracks/c;->d(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$1;-><init>(Lcom/getmimo/data/source/local/completion/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Lcom/getmimo/data/source/local/completion/a;->d(J J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lwc/f;->i(Ljava/lang/String;)V
+  000000  instance-of v0, v12, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$1;
+  000004  const/4 v8, 7
+  000006  if-eqz v0, +01ah
+  00000a  const/4 v8, 2
+  00000c  move-object v0, v12
+  00000e  check-cast v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$1;
+  000012  const/4 v8, 3
+  000014  iget v1, v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$1;->d I
+  000018  const/4 v8, 3
+  00001a  const/high16 v7, -2147483648
+  00001e  move v2, v7
+  000020  and-int v3, v1, v2
+  000024  const/4 v8, 4
+  000026  if-eqz v3, +00ah
+  00002a  const/4 v8, 6
+  00002c  sub-int/2addr v1, v2
+  00002e  const/4 v8, 5
+  000030  iput v1, v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$1;->d I
+  000034  const/4 v8, 4
+  000036  move-object v6, v0
+  000038  goto +ah
+  00003a  const/4 v8, 7
+  00003c  new-instance v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$1;
+  000040  const/4 v8, 6
+  000042  invoke-direct v0, v9, v12, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$1;-><init>(Lcom/getmimo/data/source/local/completion/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000048  const/4 v8, 3
+  00004a  goto -ah
+  00004c  iget-object v12, v6, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$1;->b Ljava/lang/Object;
+  000050  const/4 v8, 4
+  000052  sget-object v0, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000056  const/4 v8, 2
+  000058  iget v1, v6, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$1;->d I
+  00005c  const/4 v8, 4
+  00005e  const/4 v7, 2
+  000060  move v2, v7
+  000062  const/4 v7, 1
+  000064  move v3, v7
+  000066  if-eqz v1, +022h
+  00006a  const/4 v8, 6
+  00006c  if-eq v1, v3, +016h
+  000070  const/4 v8, 6
+  000072  if-ne v1, v2, +008h
+  000076  const/4 v8, 7
+  000078  invoke-static v12, Lkotlin/b;->b(Ljava/lang/Object;)V
+  00007e  const/4 v8, 3
+  000080  goto +49h
+  000082  const/4 v8, 5
+  000084  const-string v7, "call to 'resume' before 'invoke' with coroutine"
+  000088  move-object v9, v7
+  00008a  invoke-static v9, Lwc/f;->i(Ljava/lang/String;)V
+  000090  const/4 v8, 5
+  000092  const/4 v7, 0
+  000094  move v9, v7
+  000096  return-object v9
+  000098  const/4 v8, 1
+  00009a  iget-wide v10, v6, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$1;->a J
+  00009e  const/4 v8, 2
+  0000a0  invoke-static v12, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000a6  const/4 v8, 5
+  0000a8  goto +1ch
+  0000aa  const/4 v8, 7
+  0000ac  invoke-static v12, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000b2  const/4 v8, 2
+  0000b4  iput-wide v10, v6, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$1;->a J
+  0000b8  const/4 v8, 6
+  0000ba  iput v3, v6, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$1;->d I
+  0000be  const/4 v8, 7
+  0000c0  iget-object v12, v9, Lcom/getmimo/data/source/local/completion/a;->e Lye/g;
+  0000c4  const/4 v8, 3
+  0000c6  check-cast v12, Lcom/getmimo/data/content/tracks/c;
+  0000ca  const/4 v8, 7
+  0000cc  invoke-virtual v12, v10, v11, v6, Lcom/getmimo/data/content/tracks/c;->d(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  0000d2  move-result-object v7
+  0000d4  move-object v12, v7
+  0000d6  if-ne v12, v0, +004h
+  0000da  const/4 v8, 7
+  0000dc  goto +19h
+  0000de  const/4 v8, 7
+  0000e0  check-cast v12, Lcom/getmimo/data/content/model/track/TrackJson;
+  0000e4  const/4 v8, 4
+  0000e6  invoke-virtual v12, Lcom/getmimo/data/content/model/track/TrackJson;->getVersion()J
+  0000ec  move-result-wide v4
+  0000ee  iput-wide v10, v6, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$1;->a J
+  0000f2  const/4 v8, 2
+  0000f4  iput v2, v6, Lcom/getmimo/data/source/local/completion/CompletionRepository$fetchTrackCompletion$1;->d I
+  0000f8  const/4 v8, 6
+  0000fa  move-object v1, v9
+  0000fc  move-wide v2, v10
+  0000fe  invoke-virtual/range v1 ... v6, Lcom/getmimo/data/source/local/completion/a;->d(J J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  000104  move-result-object v7
+  000106  move-object v9, v7
+  000108  if-ne v9, v0, +004h
+  00010c  const/4 v8, 6
+  00010e  return-object v0
+  000110  const/4 v8, 3
+  000112  sget-object v9, Lz60/q;->a Lz60/q;
+  000116  const/4 v8, 2
+  000118  return-object v9
+  00011a  nop 
+  00011c  <androguard.core.dex.FillArrayData object at 0x7ff3fb101750>
+
+===== Lcom/getmimo/data/source/local/completion/a;->f(J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=9983360 instructions=83 access=public final callers=2 callees=8
+callers: Lcom/getmimo/data/source/local/completion/CompletionRepository$getChapterCompletionCount$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/interactors/authentication/GetSignupPrompt$getFinishedChaptersCount$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Landroidx/room/util/a;->c(Landroidx/room/d; Ld70/b; Lo70/j; Z Z)Ljava/lang/Object;, Lcom/getmimo/data/source/local/completion/CompletionRepository$getChapterCompletionCount$1;-><init>(Lcom/getmimo/data/source/local/completion/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Leg/a;-><init>(J B)V, Ljava/lang/Integer;-><init>(I)V, Ljava/util/List;->size()I, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object v4, v7
+  000002  instance-of v0, v10, Lcom/getmimo/data/source/local/completion/CompletionRepository$getChapterCompletionCount$1;
+  000006  const/4 v6, 3
+  000008  if-eqz v0, +019h
+  00000c  const/4 v6, 6
+  00000e  move-object v0, v10
+  000010  check-cast v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$getChapterCompletionCount$1;
+  000014  const/4 v6, 2
+  000016  iget v1, v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$getChapterCompletionCount$1;->c I
+  00001a  const/4 v6, 1
+  00001c  const/high16 v6, -2147483648
+  000020  move v2, v6
+  000022  and-int v3, v1, v2
+  000026  const/4 v6, 6
+  000028  if-eqz v3, +009h
+  00002c  const/4 v6, 1
+  00002e  sub-int/2addr v1, v2
+  000030  const/4 v6, 3
+  000032  iput v1, v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$getChapterCompletionCount$1;->c I
+  000036  const/4 v6, 7
+  000038  goto +9h
+  00003a  const/4 v6, 7
+  00003c  new-instance v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$getChapterCompletionCount$1;
+  000040  const/4 v6, 7
+  000042  invoke-direct v0, v4, v10, Lcom/getmimo/data/source/local/completion/CompletionRepository$getChapterCompletionCount$1;-><init>(Lcom/getmimo/data/source/local/completion/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000048  const/4 v6, 5
+  00004a  iget-object v10, v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$getChapterCompletionCount$1;->a Ljava/lang/Object;
+  00004e  const/4 v6, 4
+  000050  sget-object v1, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000054  const/4 v6, 6
+  000056  iget v2, v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$getChapterCompletionCount$1;->c I
+  00005a  const/4 v6, 3
+  00005c  const/4 v6, 1
+  00005e  move v3, v6
+  000060  if-eqz v2, +016h
+  000064  const/4 v6, 1
+  000066  if-ne v2, v3, +008h
+  00006a  const/4 v6, 3
+  00006c  invoke-static v10, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000072  const/4 v6, 4
+  000074  goto +2dh
+  000076  const/4 v6, 4
+  000078  const-string v6, "call to 'resume' before 'invoke' with coroutine"
+  00007c  move-object v4, v6
+  00007e  invoke-static v4, Lwc/f;->i(Ljava/lang/String;)V
+  000084  const/4 v6, 7
+  000086  const/4 v6, 0
+  000088  move v4, v6
+  00008a  return-object v4
+  00008c  const/4 v6, 6
+  00008e  invoke-static v10, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000094  const/4 v6, 1
+  000096  iput v3, v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$getChapterCompletionCount$1;->c I
+  00009a  const/4 v6, 6
+  00009c  iget-object v4, v4, Lcom/getmimo/data/source/local/completion/a;->a Leg/c;
+  0000a0  const/4 v6, 6
+  0000a2  iget-object v4, v4, Leg/c;->a Landroidx/room/d;
+  0000a6  const/4 v6, 4
+  0000a8  new-instance v10, Leg/a;
+  0000ac  const/4 v6, 3
+  0000ae  const/4 v6, 0
+  0000b0  move v2, v6
+  0000b2  invoke-direct v10, v8, v9, v2, Leg/a;-><init>(J B)V
+  0000b8  const/4 v6, 7
+  0000ba  invoke-static v4, v0, v10, v3, v2, Landroidx/room/util/a;->c(Landroidx/room/d; Ld70/b; Lo70/j; Z Z)Ljava/lang/Object;
+  0000c0  move-result-object v6
+  0000c2  move-object v10, v6
+  0000c4  if-ne v10, v1, +004h
+  0000c8  const/4 v6, 5
+  0000ca  return-object v1
+  0000cc  const/4 v6, 6
+  0000ce  check-cast v10, Ljava/util/List;
+  0000d2  const/4 v6, 2
+  0000d4  invoke-interface v10, Ljava/util/List;->size()I
+  0000da  move-result v6
+  0000dc  move v4, v6
+  0000de  new-instance v8, Ljava/lang/Integer;
+  0000e2  const/4 v6, 7
+  0000e4  invoke-direct v8, v4, Ljava/lang/Integer;-><init>(I)V
+  0000ea  const/4 v6, 4
+  0000ec  return-object v8
+  0000ee  nop 
+  0000f0  <androguard.core.dex.FillArrayData object at 0x7ff3fb103050>
+
+===== Lcom/getmimo/data/source/local/completion/a;->g(Lcom/getmimo/data/content/model/track/Track; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=9983660 instructions=272 access=public final callers=2 callees=49
+callers: Lcom/getmimo/data/source/local/completion/CompletionRepository$getRecentlyCompletedTutorialTitles$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/reactivation/ReactivationViewModel$fetchTrackProgress$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: La70/r;->i0(Ljava/lang/Iterable; I)I, La70/r;->i0(Ljava/lang/Iterable; I)I, Landroidx/room/util/a;->c(Landroidx/room/d; Ld70/b; Lo70/j; Z Z)Ljava/lang/Object;, Lcom/getmimo/data/content/model/track/Track;->getId()J, Lcom/getmimo/data/content/model/track/Track;->getTutorials()Ljava/util/List;, Lcom/getmimo/data/content/model/track/Track;->getTutorials()Ljava/util/List;, Lcom/getmimo/data/content/model/track/Tutorial;->getId()J, Lcom/getmimo/data/content/model/track/Tutorial;->getId()J, Lcom/getmimo/data/content/model/track/Tutorial;->getTitle()Ljava/lang/String;, Lcom/getmimo/data/model/room/TutorialCompletion;->getTutorialId()J, Lcom/getmimo/data/model/room/TutorialCompletion;->isCompleted()Z, Lcom/getmimo/data/source/local/completion/CompletionRepository$getRecentlyCompletedTutorialTitles$1;-><init>(Lcom/getmimo/data/source/local/completion/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Leg/a;-><init>(J B)V, Li30/m;->Y()V, Ljava/lang/Integer;-><init>(I)V, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Long;-><init>(J)V, Ljava/lang/Long;-><init>(J)V, Ljava/lang/Long;-><init>(J)V, Ljava/util/ArrayList;-><init>()V, Ljava/util/ArrayList;-><init>()V, Ljava/util/ArrayList;-><init>(I)V, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/Iterator;->next()Ljava/lang/Object;, Ljava/util/LinkedHashMap;-><init>(I)V, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;, Ljava/util/Map;->put(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;, Lkotlin/Pair;-><init>(Ljava/lang/Object; Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/collections/a;->e1(Ljava/util/Comparator; Ljava/lang/Iterable;)Ljava/util/List;, Lkotlin/collections/a;->g1(Ljava/lang/Iterable; I)Ljava/util/List;, Lkotlin/collections/b;->Y(I)I, Lkotlin/collections/b;->j0(Ljava/util/List;)Ljava/util/Map;, Lp20/g;-><init>(B)V, Luf/a;-><init>(Lp20/g; Ljava/util/Map;)V, Lwc/f;->i(Ljava/lang/String;)V
+  000000  instance-of v0, v15, Lcom/getmimo/data/source/local/completion/CompletionRepository$getRecentlyCompletedTutorialTitles$1;
+  000004  const/4 v12, 6
+  000006  if-eqz v0, +019h
+  00000a  const/4 v12, 6
+  00000c  move-object v0, v15
+  00000e  check-cast v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$getRecentlyCompletedTutorialTitles$1;
+  000012  const/4 v12, 4
+  000014  iget v1, v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$getRecentlyCompletedTutorialTitles$1;->e I
+  000018  const/4 v12, 4
+  00001a  const/high16 v12, -2147483648
+  00001e  move v2, v12
+  000020  and-int v3, v1, v2
+  000024  const/4 v12, 1
+  000026  if-eqz v3, +009h
+  00002a  const/4 v12, 6
+  00002c  sub-int/2addr v1, v2
+  00002e  const/4 v12, 6
+  000030  iput v1, v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$getRecentlyCompletedTutorialTitles$1;->e I
+  000034  const/4 v12, 7
+  000036  goto +9h
+  000038  const/4 v12, 6
+  00003a  new-instance v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$getRecentlyCompletedTutorialTitles$1;
+  00003e  const/4 v12, 1
+  000040  invoke-direct v0, v13, v15, Lcom/getmimo/data/source/local/completion/CompletionRepository$getRecentlyCompletedTutorialTitles$1;-><init>(Lcom/getmimo/data/source/local/completion/a; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000046  const/4 v12, 4
+  000048  iget-object v15, v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$getRecentlyCompletedTutorialTitles$1;->c Ljava/lang/Object;
+  00004c  const/4 v12, 3
+  00004e  sget-object v1, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000052  const/4 v12, 1
+  000054  iget v2, v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$getRecentlyCompletedTutorialTitles$1;->e I
+  000058  const/4 v12, 6
+  00005a  const/4 v12, 0
+  00005c  move v3, v12
+  00005e  const/4 v12, 1
+  000060  move v4, v12
+  000062  if-eqz v2, +01eh
+  000066  const/4 v12, 4
+  000068  if-ne v2, v4, +012h
+  00006c  const/4 v12, 7
+  00006e  iget-object v13, v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$getRecentlyCompletedTutorialTitles$1;->b Ljava/util/LinkedHashMap;
+  000072  const/4 v12, 1
+  000074  iget-object v14, v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$getRecentlyCompletedTutorialTitles$1;->a Ljava/util/Map;
+  000078  const/4 v12, 7
+  00007a  check-cast v14, Ljava/util/Map;
+  00007e  const/4 v12, 4
+  000080  invoke-static v15, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000086  const/4 v12, 2
+  000088  goto/16 +0e0h
+  00008c  const/4 v12, 3
+  00008e  const-string v12, "call to 'resume' before 'invoke' with coroutine"
+  000092  move-object v13, v12
+  000094  invoke-static v13, Lwc/f;->i(Ljava/lang/String;)V
+  00009a  const/4 v12, 1
+  00009c  return-object v3
+  00009e  const/4 v12, 6
+  0000a0  invoke-static v15, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000a6  const/4 v12, 3
+  0000a8  invoke-virtual v14, Lcom/getmimo/data/content/model/track/Track;->getTutorials()Ljava/util/List;
+  0000ae  move-result-object v12
+  0000b0  move-object v15, v12
+  0000b2  new-instance v2, Ljava/util/ArrayList;
+  0000b6  const/4 v12, 2
+  0000b8  const/16 v12, 10
+  0000bc  move v5, v12
+  0000be  invoke-static v15, v5, La70/r;->i0(Ljava/lang/Iterable; I)I
+  0000c4  move-result v12
+  0000c6  move v6, v12
+  0000c8  invoke-direct v2, v6, Ljava/util/ArrayList;-><init>(I)V
+  0000ce  const/4 v12, 5
+  0000d0  invoke-interface v15, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  0000d6  move-result-object v12
+  0000d8  move-object v15, v12
+  0000da  const/4 v12, 0
+  0000dc  move v6, v12
+  0000de  move v7, v6
+  0000e0  invoke-interface v15, Ljava/util/Iterator;->hasNext()Z
+  0000e6  move-result v12
+  0000e8  move v8, v12
+  0000ea  if-eqz v8, +036h
+  0000ee  const/4 v12, 5
+  0000f0  invoke-interface v15, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0000f6  move-result-object v12
+  0000f8  move-object v8, v12
+  0000fa  add-int/lit8 v9, v7, 1
+  0000fe  const/4 v12, 5
+  000100  if-ltz v7, +024h
+  000104  const/4 v12, 2
+  000106  check-cast v8, Lcom/getmimo/data/content/model/track/Tutorial;
+  00010a  const/4 v12, 6
+  00010c  invoke-virtual v8, Lcom/getmimo/data/content/model/track/Tutorial;->getId()J
+  000112  move-result-wide v10
+  000114  new-instance v8, Ljava/lang/Long;
+  000118  const/4 v12, 7
+  00011a  invoke-direct v8, v10, v11, Ljava/lang/Long;-><init>(J)V
+  000120  const/4 v12, 3
+  000122  new-instance v10, Ljava/lang/Integer;
+  000126  const/4 v12, 2
+  000128  invoke-direct v10, v7, Ljava/lang/Integer;-><init>(I)V
+  00012e  const/4 v12, 7
+  000130  new-instance v7, Lkotlin/Pair;
+  000134  const/4 v12, 6
+  000136  invoke-direct v7, v8, v10, Lkotlin/Pair;-><init>(Ljava/lang/Object; Ljava/lang/Object;)V
+  00013c  const/4 v12, 5
+  00013e  invoke-virtual v2, v7, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  000144  move v7, v9
+  000146  goto -33h
+  000148  const/4 v12, 5
+  00014a  invoke-static Li30/m;->Y()V
+  000150  const/4 v12, 7
+  000152  throw v3
+  000154  const/4 v12, 1
+  000156  const/4 v12, 7
+  000158  invoke-static v2, Lkotlin/collections/b;->j0(Ljava/util/List;)Ljava/util/Map;
+  00015e  move-result-object v12
+  000160  move-object v15, v12
+  000162  invoke-virtual v14, Lcom/getmimo/data/content/model/track/Track;->getTutorials()Ljava/util/List;
+  000168  move-result-object v12
+  00016a  move-object v2, v12
+  00016c  invoke-static v2, v5, La70/r;->i0(Ljava/lang/Iterable; I)I
+  000172  move-result v12
+  000174  move v3, v12
+  000176  invoke-static v3, Lkotlin/collections/b;->Y(I)I
+  00017c  move-result v12
+  00017e  move v3, v12
+  000180  const/16 v12, 16
+  000184  move v5, v12
+  000186  if-ge v3, v5, +004h
+  00018a  const/4 v12, 1
+  00018c  move v3, v5
+  00018e  const/4 v12, 1
+  000190  new-instance v5, Ljava/util/LinkedHashMap;
+  000194  const/4 v12, 1
+  000196  invoke-direct v5, v3, Ljava/util/LinkedHashMap;-><init>(I)V
+  00019c  const/4 v12, 5
+  00019e  invoke-interface v2, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  0001a4  move-result-object v12
+  0001a6  move-object v2, v12
+  0001a8  invoke-interface v2, Ljava/util/Iterator;->hasNext()Z
+  0001ae  move-result v12
+  0001b0  move v3, v12
+  0001b2  if-eqz v3, +01fh
+  0001b6  const/4 v12, 6
+  0001b8  invoke-interface v2, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0001be  move-result-object v12
+  0001c0  move-object v3, v12
+  0001c2  check-cast v3, Lcom/getmimo/data/content/model/track/Tutorial;
+  0001c6  const/4 v12, 7
+  0001c8  invoke-virtual v3, Lcom/getmimo/data/content/model/track/Tutorial;->getId()J
+  0001ce  move-result-wide v7
+  0001d0  new-instance v9, Ljava/lang/Long;
+  0001d4  const/4 v12, 2
+  0001d6  invoke-direct v9, v7, v8, Ljava/lang/Long;-><init>(J)V
+  0001dc  const/4 v12, 5
+  0001de  invoke-virtual v3, Lcom/getmimo/data/content/model/track/Tutorial;->getTitle()Ljava/lang/String;
+  0001e4  move-result-object v12
+  0001e6  move-object v3, v12
+  0001e8  invoke-interface v5, v9, v3, Ljava/util/Map;->put(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;
+  0001ee  goto -23h
+  0001f0  const/4 v12, 6
+  0001f2  invoke-virtual v14, Lcom/getmimo/data/content/model/track/Track;->getId()J
+  0001f8  move-result-wide v2
+  0001fa  move-object v14, v15
+  0001fc  check-cast v14, Ljava/util/Map;
+  000200  const/4 v12, 3
+  000202  iput-object v14, v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$getRecentlyCompletedTutorialTitles$1;->a Ljava/util/Map;
+  000206  const/4 v12, 6
+  000208  iput-object v5, v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$getRecentlyCompletedTutorialTitles$1;->b Ljava/util/LinkedHashMap;
+  00020c  const/4 v12, 5
+  00020e  iput v4, v0, Lcom/getmimo/data/source/local/completion/CompletionRepository$getRecentlyCompletedTutorialTitles$1;->e I
+  000212  const/4 v12, 6
+  000214  iget-object v13, v13, Lcom/getmimo/data/source/local/completion/a;->b Leg/f;
+  000218  const/4 v12, 1
+  00021a  iget-object v13, v13, Leg/f;->a Landroidx/room/d;
+  00021e  const/4 v12, 2
+  000220  new-instance v14, Leg/a;
+  000224  const/4 v12, 4
+  000226  invoke-direct v14, v2, v3, v4, Leg/a;-><init>(J B)V
+  00022c  const/4 v12, 2
+  00022e  invoke-static v13, v0, v14, v4, v6, Landroidx/room/util/a;->c(Landroidx/room/d; Ld70/b; Lo70/j; Z Z)Ljava/lang/Object;
+  000234  move-result-object v12
+  000236  move-object v13, v12
+  000238  if-ne v13, v1, +004h
+  00023c  const/4 v12, 5
+  00023e  return-object v1
+  000240  const/4 v12, 4
+  000242  move-object v14, v15
+  000244  move-object v15, v13
+  000246  move-object v13, v5
+  000248  check-cast v15, Ljava/lang/Iterable;
+  00024c  const/4 v12, 3
+  00024e  new-instance v0, Ljava/util/ArrayList;
+  000252  const/4 v12, 4
+  000254  invoke-direct v0, Ljava/util/ArrayList;-><init>()V
+  00025a  const/4 v12, 1
+  00025c  invoke-interface v15, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  000262  move-result-object v12
+  000264  move-object v15, v12
+  000266  const/4 v12, 5
+  000268  invoke-interface v15, Ljava/util/Iterator;->hasNext()Z
+  00026e  move-result v12
+  000270  move v1, v12
+  000272  if-eqz v1, +018h
+  000276  const/4 v12, 1
+  000278  invoke-interface v15, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  00027e  move-result-object v12
+  000280  move-object v1, v12
+  000282  move-object v2, v1
+  000284  check-cast v2, Lcom/getmimo/data/model/room/TutorialCompletion;
+  000288  const/4 v12, 6
+  00028a  invoke-virtual v2, Lcom/getmimo/data/model/room/TutorialCompletion;->isCompleted()Z
+  000290  move-result v12
+  000292  move v2, v12
+  000294  if-eqz v2, -017h
+  000298  const/4 v12, 6
+  00029a  invoke-virtual v0, v1, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  0002a0  goto -1ch
+  0002a2  const/4 v12, 2
+  0002a4  new-instance v15, Lp20/g;
+  0002a8  const/4 v12, 6
+  0002aa  const/4 v12, 7
+  0002ac  move v1, v12
+  0002ae  invoke-direct v15, v1, Lp20/g;-><init>(B)V
+  0002b4  const/4 v12, 3
+  0002b6  new-instance v1, Luf/a;
+  0002ba  const/4 v12, 3
+  0002bc  invoke-direct v1, v15, v14, Luf/a;-><init>(Lp20/g; Ljava/util/Map;)V
+  0002c2  const/4 v12, 6
+  0002c4  invoke-static v1, v0, Lkotlin/collections/a;->e1(Ljava/util/Comparator; Ljava/lang/Iterable;)Ljava/util/List;
+  0002ca  move-result-object v12
+  0002cc  move-object v14, v12
+  0002ce  new-instance v15, Ljava/util/ArrayList;
+  0002d2  const/4 v12, 5
+  0002d4  invoke-direct v15, Ljava/util/ArrayList;-><init>()V
+  0002da  const/4 v12, 6
+  0002dc  invoke-interface v14, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  0002e2  move-result-object v12
+  0002e4  move-object v14, v12
+  0002e6  const/4 v12, 1
+  0002e8  invoke-interface v14, Ljava/util/Iterator;->hasNext()Z
+  0002ee  move-result v12
+  0002f0  move v0, v12
+  0002f2  if-eqz v0, +025h
+  0002f6  const/4 v12, 3
+  0002f8  invoke-interface v14, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0002fe  move-result-object v12
+  000300  move-object v0, v12
+  000302  check-cast v0, Lcom/getmimo/data/model/room/TutorialCompletion;
+  000306  const/4 v12, 3
+  000308  invoke-virtual v0, Lcom/getmimo/data/model/room/TutorialCompletion;->getTutorialId()J
+  00030e  move-result-wide v0
+  000310  new-instance v2, Ljava/lang/Long;
+  000314  const/4 v12, 6
+  000316  invoke-direct v2, v0, v1, Ljava/lang/Long;-><init>(J)V
+  00031c  const/4 v12, 6
+  00031e  invoke-interface v13, v2, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+  000324  move-result-object v12
+  000326  move-object v0, v12
+  000328  check-cast v0, Ljava/lang/String;
+  00032c  const/4 v12, 6
+  00032e  if-eqz v0, -024h
+  000332  const/4 v12, 4
+  000334  invoke-virtual v15, v0, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  00033a  goto -29h
+  00033c  const/4 v12, 3
+  00033e  const/4 v12, 2
+  000340  move v13, v12
+  000342  invoke-static v15, v13, Lkotlin/collections/a;->g1(Ljava/lang/Iterable; I)Ljava/util/List;
+  000348  move-result-object v12
+  00034a  move-object v13, v12
+  00034c  return-object v13
+  00034e  nop 
+  000350  <androguard.core.dex.FillArrayData object at 0x7ff3fb10ba10>

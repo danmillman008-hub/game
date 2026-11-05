@@ -1,0 +1,552 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/ui/lesson/interactive/d; semantic=InteractiveLessonViewModel
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/ui/lesson/interactive/d;-><init>(Lye/g; Lgm/h; Lcom/getmimo/ui/awesome/b; Lnp/g; Lcom/getmimo/ui/codeeditor/highlight/a;)V =====
+dex=classes.dex code_offset=10959760 instructions=25 access=public constructor callers=1 callees=5
+callers: Lae/p;->get()Ljava/lang/Object;
+callees: Laj/p;-><init>()V, Landroidx/lifecycle/i0;-><init>()V, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000000  move-object v0, v4
+  000002  invoke-virtual v5, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000008  invoke-virtual v8, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00000e  invoke-virtual v9, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000014  invoke-direct v0, Laj/p;-><init>()V
+  00001a  const-string v2, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  00001e  iput-object v5, v0, Lcom/getmimo/ui/lesson/interactive/d;->b Lye/g;
+  000022  const/4 v2, 6
+  000024  iput-object v6, v0, Lcom/getmimo/ui/lesson/interactive/d;->c Lgm/h;
+  000028  const/4 v3, 4
+  00002a  iput-object v7, v0, Lcom/getmimo/ui/lesson/interactive/d;->d Lcom/getmimo/ui/awesome/b;
+  00002e  const/4 v3, 2
+  000030  iput-object v8, v0, Lcom/getmimo/ui/lesson/interactive/d;->e Lnp/g;
+  000034  const/4 v2, 2
+  000036  iput-object v9, v0, Lcom/getmimo/ui/lesson/interactive/d;->f Lcom/getmimo/ui/codeeditor/highlight/a;
+  00003a  const/4 v2, 4
+  00003c  new-instance v5, Landroidx/lifecycle/m0;
+  000040  const/4 v2, 2
+  000042  invoke-direct v5, Landroidx/lifecycle/i0;-><init>()V
+  000048  const/4 v3, 2
+  00004a  iput-object v5, v0, Lcom/getmimo/ui/lesson/interactive/d;->g Landroidx/lifecycle/m0;
+  00004e  const/4 v3, 3
+  000050  return-void 
+  000052  nop 
+  000054  <androguard.core.dex.FillArrayData object at 0x7ff3fad5c9d0>
+
+===== Lcom/getmimo/ui/lesson/interactive/d;->E(Lcom/getmimo/data/content/model/track/LessonContent$Interactive; Lcom/getmimo/ui/lesson/interactive/LessonBundle;)V =====
+dex=classes.dex code_offset=10959964 instructions=98 access=public final callers=2 callees=17
+callers: Lbm/d;->emit(Ljava/lang/Object; Ld70/b;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$initialise$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Landroidx/lifecycle/i0;->d()Ljava/lang/Object;, Landroidx/lifecycle/m0;->l(Ljava/lang/Object;)V, Lcom/getmimo/data/content/model/track/LessonContent$Interactive;->copy$default(Lcom/getmimo/data/content/model/track/LessonContent$Interactive; Ljava/util/List; Ljava/util/List; I Ljava/lang/Object;)Lcom/getmimo/data/content/model/track/LessonContent$Interactive;, Lcom/getmimo/data/content/model/track/LessonContent$Interactive;->getHardModeLessonModules()Ljava/util/List;, Lcom/getmimo/data/content/model/track/LessonContent$Interactive;->getHasDifferentHardModeContent()Z, Lcom/getmimo/data/content/model/track/LessonContent$Interactive;->getLessonModules()Ljava/util/List;, Lcom/getmimo/data/content/model/track/LessonContent$Interactive;->getLessonModules()Ljava/util/List;, Lcom/getmimo/data/content/model/track/LessonContent$Interactive;->getLessonModules()Ljava/util/List;, Lcom/getmimo/data/content/model/track/LessonContent$Interactive;->hardModeModulesOrDefault()Ljava/util/List;, Lgm/g;-><init>(Lcom/getmimo/ui/lesson/interactive/model/LessonInteractionType; Lcom/getmimo/data/content/model/track/LessonContent$Interactive; Lcom/getmimo/ui/lesson/interactive/LessonBundle; I)V, Lgm/h;->a(Ljava/util/List;)Lcom/getmimo/ui/lesson/interactive/model/LessonInteractionType;, Lgm/h;->a(Ljava/util/List;)Lcom/getmimo/ui/lesson/interactive/model/LessonInteractionType;, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/util/Collection;->isEmpty()Z
+  000000  move-object v4, v8
+  000002  invoke-virtual v9, Lcom/getmimo/data/content/model/track/LessonContent$Interactive;->getLessonModules()Ljava/util/List;
+  000008  move-result-object v6
+  00000a  move-object v0, v6
+  00000c  iget-object v1, v4, Lcom/getmimo/ui/lesson/interactive/d;->c Lgm/h;
+  000010  const/4 v6, 6
+  000012  invoke-virtual v1, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000018  invoke-static v0, Lgm/h;->a(Ljava/util/List;)Lcom/getmimo/ui/lesson/interactive/model/LessonInteractionType;
+  00001e  move-result-object v6
+  000020  move-object v0, v6
+  000022  invoke-virtual v9, Lcom/getmimo/data/content/model/track/LessonContent$Interactive;->getHardModeLessonModules()Ljava/util/List;
+  000028  move-result-object v6
+  00002a  move-object v1, v6
+  00002c  iget-boolean v2, v4, Lcom/getmimo/ui/lesson/interactive/d;->j Z
+  000030  const/4 v7, 2
+  000032  const/4 v7, 0
+  000034  move v3, v7
+  000036  if-eqz v2, +036h
+  00003a  const/4 v7, 5
+  00003c  if-eqz v1, +033h
+  000040  const/4 v7, 1
+  000042  invoke-interface v1, Ljava/util/Collection;->isEmpty()Z
+  000048  move-result v7
+  00004a  move v2, v7
+  00004c  if-eqz v2, +004h
+  000050  const/4 v7, 6
+  000052  goto +29h
+  000054  const/4 v6, 2
+  000056  invoke-static v1, Lgm/h;->a(Ljava/util/List;)Lcom/getmimo/ui/lesson/interactive/model/LessonInteractionType;
+  00005c  move-result-object v7
+  00005e  move-object v1, v7
+  000060  invoke-virtual v1, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000066  move-result-object v6
+  000068  move-object v1, v6
+  00006a  invoke-virtual v0, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000070  move-result-object v6
+  000072  move-object v2, v6
+  000074  if-ne v1, v2, +017h
+  000078  const/4 v7, 1
+  00007a  invoke-virtual v9, Lcom/getmimo/data/content/model/track/LessonContent$Interactive;->getHasDifferentHardModeContent()Z
+  000080  move-result v6
+  000082  move v1, v6
+  000084  if-eqz v1, +00fh
+  000088  const/4 v6, 7
+  00008a  invoke-virtual v9, Lcom/getmimo/data/content/model/track/LessonContent$Interactive;->hardModeModulesOrDefault()Ljava/util/List;
+  000090  move-result-object v6
+  000092  move-object v1, v6
+  000094  const/4 v6, 2
+  000096  move v2, v6
+  000098  invoke-static v9, v1, v3, v2, v3, Lcom/getmimo/data/content/model/track/LessonContent$Interactive;->copy$default(Lcom/getmimo/data/content/model/track/LessonContent$Interactive; Ljava/util/List; Ljava/util/List; I Ljava/lang/Object;)Lcom/getmimo/data/content/model/track/LessonContent$Interactive;
+  00009e  move-result-object v7
+  0000a0  move-object v9, v7
+  0000a2  const/4 v7, 3
+  0000a4  iget-object v1, v4, Lcom/getmimo/ui/lesson/interactive/d;->g Landroidx/lifecycle/m0;
+  0000a8  const/4 v7, 5
+  0000aa  invoke-virtual v1, Landroidx/lifecycle/i0;->d()Ljava/lang/Object;
+  0000b0  move-result-object v6
+  0000b2  move-object v2, v6
+  0000b4  check-cast v2, Lgm/g;
+  0000b8  const/4 v6, 7
+  0000ba  if-eqz v2, +00eh
+  0000be  const/4 v7, 7
+  0000c0  iget-object v2, v2, Lgm/g;->b Lcom/getmimo/data/content/model/track/LessonContent$Interactive;
+  0000c4  const/4 v6, 3
+  0000c6  if-eqz v2, +008h
+  0000ca  const/4 v6, 2
+  0000cc  invoke-virtual v2, Lcom/getmimo/data/content/model/track/LessonContent$Interactive;->getLessonModules()Ljava/util/List;
+  0000d2  move-result-object v7
+  0000d4  move-object v3, v7
+  0000d6  const/4 v6, 7
+  0000d8  if-eqz v3, +019h
+  0000dc  const/4 v6, 3
+  0000de  invoke-virtual v9, Lcom/getmimo/data/content/model/track/LessonContent$Interactive;->getLessonModules()Ljava/util/List;
+  0000e4  move-result-object v7
+  0000e6  move-object v2, v7
+  0000e8  invoke-virtual v3, v2, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+  0000ee  move-result v6
+  0000f0  move v2, v6
+  0000f2  if-nez v2, +00ch
+  0000f6  const/4 v6, 5
+  0000f8  iget v2, v4, Lcom/getmimo/ui/lesson/interactive/d;->k I
+  0000fc  const/4 v7, 2
+  0000fe  add-int/lit8 v2, v2, 1
+  000102  const/4 v6, 2
+  000104  iput v2, v4, Lcom/getmimo/ui/lesson/interactive/d;->k I
+  000108  const/4 v6, 1
+  00010a  const/4 v7, 1
+  00010c  new-instance v2, Lgm/g;
+  000110  const/4 v6, 2
+  000112  iget v4, v4, Lcom/getmimo/ui/lesson/interactive/d;->k I
+  000116  const/4 v7, 2
+  000118  invoke-direct v2, v0, v9, v10, v4, Lgm/g;-><init>(Lcom/getmimo/ui/lesson/interactive/model/LessonInteractionType; Lcom/getmimo/data/content/model/track/LessonContent$Interactive; Lcom/getmimo/ui/lesson/interactive/LessonBundle; I)V
+  00011e  const/4 v7, 6
+  000120  invoke-virtual v1, v2, Landroidx/lifecycle/m0;->l(Ljava/lang/Object;)V
+  000126  const/4 v7, 4
+  000128  return-void 
+  00012a  nop 
+  00012c  <androguard.core.dex.FillArrayData object at 0x7ff3fad5e590>
+
+===== Lcom/getmimo/ui/lesson/interactive/d;->F(Lcom/getmimo/ui/lesson/interactive/InteractiveLessonBundle; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10960328 instructions=120 access=public final callers=2 callees=9
+callers: Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$initialise$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$loadLessonContent$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Lcom/getmimo/data/content/tracks/c;->b(J I I Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/awesome/b;->a(Lcom/getmimo/ui/lesson/interactive/LessonBundle; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$loadLessonContent$1;-><init>(Lcom/getmimo/ui/lesson/interactive/d; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljw/p;->b()V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lwc/f;->i(Ljava/lang/String;)V
+  000000  instance-of v0, v13, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$loadLessonContent$1;
+  000004  const/4 v10, 1
+  000006  if-eqz v0, +01ah
+  00000a  const/4 v8, 6
+  00000c  move-object v0, v13
+  00000e  check-cast v0, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$loadLessonContent$1;
+  000012  const/4 v9, 4
+  000014  iget v1, v0, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$loadLessonContent$1;->c I
+  000018  const/4 v8, 5
+  00001a  const/high16 v7, -2147483648
+  00001e  move v2, v7
+  000020  and-int v3, v1, v2
+  000024  const/4 v10, 6
+  000026  if-eqz v3, +00ah
+  00002a  const/4 v10, 5
+  00002c  sub-int/2addr v1, v2
+  00002e  const/4 v8, 2
+  000030  iput v1, v0, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$loadLessonContent$1;->c I
+  000034  const/4 v10, 3
+  000036  move-object v6, v0
+  000038  goto +ah
+  00003a  const/4 v8, 3
+  00003c  new-instance v0, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$loadLessonContent$1;
+  000040  const/4 v8, 5
+  000042  invoke-direct v0, v11, v13, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$loadLessonContent$1;-><init>(Lcom/getmimo/ui/lesson/interactive/d; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000048  const/4 v10, 6
+  00004a  goto -ah
+  00004c  iget-object v13, v6, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$loadLessonContent$1;->a Ljava/lang/Object;
+  000050  const/4 v9, 3
+  000052  sget-object v0, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000056  const/4 v10, 6
+  000058  iget v1, v6, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$loadLessonContent$1;->c I
+  00005c  const/4 v9, 2
+  00005e  const/4 v7, 0
+  000060  move v2, v7
+  000062  const/4 v7, 2
+  000064  move v3, v7
+  000066  const/4 v7, 1
+  000068  move v4, v7
+  00006a  if-eqz v1, +01dh
+  00006e  const/4 v8, 6
+  000070  if-eq v1, v4, +014h
+  000074  const/4 v8, 6
+  000076  if-ne v1, v3, +008h
+  00007a  const/4 v10, 7
+  00007c  invoke-static v13, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000082  const/4 v8, 5
+  000084  goto +5dh
+  000086  const/4 v8, 4
+  000088  const-string v7, "call to 'resume' before 'invoke' with coroutine"
+  00008c  move-object v11, v7
+  00008e  invoke-static v11, Lwc/f;->i(Ljava/lang/String;)V
+  000094  const/4 v8, 4
+  000096  return-object v2
+  000098  const/4 v9, 4
+  00009a  invoke-static v13, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000a0  const/4 v8, 6
+  0000a2  return-object v13
+  0000a4  const/4 v8, 4
+  0000a6  invoke-static v13, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000ac  const/4 v9, 6
+  0000ae  instance-of v13, v12, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonBundle$Standard;
+  0000b2  const/4 v9, 7
+  0000b4  if-eqz v13, +028h
+  0000b8  const/4 v10, 5
+  0000ba  check-cast v12, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonBundle$Standard;
+  0000be  const/4 v10, 6
+  0000c0  iget-object v12, v12, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonBundle$Standard;->a Lcom/getmimo/ui/lesson/interactive/LessonBundle;
+  0000c4  const/4 v8, 2
+  0000c6  iget-wide v2, v12, Lcom/getmimo/ui/lesson/interactive/LessonBundle;->e J
+  0000ca  const/4 v9, 6
+  0000cc  move v13, v4
+  0000ce  iget v4, v12, Lcom/getmimo/ui/lesson/interactive/LessonBundle;->c I
+  0000d2  const/4 v8, 7
+  0000d4  iget v5, v12, Lcom/getmimo/ui/lesson/interactive/LessonBundle;->H I
+  0000d8  const/4 v9, 2
+  0000da  iput v13, v6, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$loadLessonContent$1;->c I
+  0000de  const/4 v10, 1
+  0000e0  iget-object v11, v11, Lcom/getmimo/ui/lesson/interactive/d;->b Lye/g;
+  0000e4  const/4 v9, 4
+  0000e6  move-object v1, v11
+  0000e8  check-cast v1, Lcom/getmimo/data/content/tracks/c;
+  0000ec  const/4 v9, 5
+  0000ee  invoke-virtual/range v1 ... v6, Lcom/getmimo/data/content/tracks/c;->b(J I I Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  0000f4  move-result-object v7
+  0000f6  move-object v11, v7
+  0000f8  if-ne v11, v0, +004h
+  0000fc  const/4 v8, 3
+  0000fe  goto +1eh
+  000100  const/4 v8, 6
+  000102  return-object v11
+  000104  const/4 v9, 3
+  000106  instance-of v13, v12, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonBundle$AwesomeMode;
+  00010a  const/4 v9, 7
+  00010c  if-eqz v13, +020h
+  000110  const/4 v8, 7
+  000112  check-cast v12, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonBundle$AwesomeMode;
+  000116  const/4 v8, 1
+  000118  iget-object v12, v12, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonBundle$AwesomeMode;->a Lcom/getmimo/ui/lesson/interactive/LessonBundle;
+  00011c  const/4 v8, 7
+  00011e  iput v3, v6, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$loadLessonContent$1;->c I
+  000122  const/4 v9, 7
+  000124  iget-object v11, v11, Lcom/getmimo/ui/lesson/interactive/d;->d Lcom/getmimo/ui/awesome/b;
+  000128  const/4 v8, 7
+  00012a  invoke-virtual v11, v12, v6, Lcom/getmimo/ui/awesome/b;->a(Lcom/getmimo/ui/lesson/interactive/LessonBundle; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  000130  move-result-object v7
+  000132  move-object v13, v7
+  000134  if-ne v13, v0, +004h
+  000138  const/4 v8, 2
+  00013a  return-object v0
+  00013c  const/4 v10, 3
+  00013e  invoke-virtual v13, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000144  check-cast v13, Lcom/getmimo/data/content/model/track/LessonContent$Interactive;
+  000148  const/4 v10, 3
+  00014a  return-object v13
+  00014c  const/4 v8, 7
+  00014e  invoke-static Ljw/p;->b()V
+  000154  const/4 v10, 4
+  000156  return-object v2
+  000158  <androguard.core.dex.FillArrayData object at 0x7ff3faecca90>
+
+===== Lcom/getmimo/ui/lesson/interactive/d;->G(Lcom/getmimo/data/content/model/track/LessonContent$Interactive; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10960716 instructions=121 access=public final callers=2 callees=10
+callers: Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$initialise$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Lcom/getmimo/data/content/model/track/LessonContent$Interactive;->copy(Ljava/util/List; Ljava/util/List;)Lcom/getmimo/data/content/model/track/LessonContent$Interactive;, Lcom/getmimo/data/content/model/track/LessonContent$Interactive;->getHardModeLessonModules()Ljava/util/List;, Lcom/getmimo/data/content/model/track/LessonContent$Interactive;->getLessonModules()Ljava/util/List;, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$1;-><init>(Lcom/getmimo/ui/lesson/interactive/d; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Lcom/getmimo/ui/lesson/interactive/d;->H(Ljava/util/List; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/interactive/d;->H(Ljava/util/List; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object v7, v10
+  000002  instance-of v0, v12, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$1;
+  000006  const/4 v9, 1
+  000008  if-eqz v0, +019h
+  00000c  const/4 v9, 5
+  00000e  move-object v0, v12
+  000010  check-cast v0, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$1;
+  000014  const/4 v9, 2
+  000016  iget v1, v0, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$1;->f I
+  00001a  const/4 v9, 4
+  00001c  const/high16 v9, -2147483648
+  000020  move v2, v9
+  000022  and-int v3, v1, v2
+  000026  const/4 v9, 3
+  000028  if-eqz v3, +009h
+  00002c  const/4 v9, 1
+  00002e  sub-int/2addr v1, v2
+  000030  const/4 v9, 3
+  000032  iput v1, v0, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$1;->f I
+  000036  const/4 v9, 3
+  000038  goto +9h
+  00003a  const/4 v9, 5
+  00003c  new-instance v0, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$1;
+  000040  const/4 v9, 1
+  000042  invoke-direct v0, v7, v12, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$1;-><init>(Lcom/getmimo/ui/lesson/interactive/d; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000048  const/4 v9, 6
+  00004a  iget-object v12, v0, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$1;->d Ljava/lang/Object;
+  00004e  const/4 v9, 2
+  000050  sget-object v1, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000054  const/4 v9, 7
+  000056  iget v2, v0, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$1;->f I
+  00005a  const/4 v9, 1
+  00005c  const/4 v9, 0
+  00005e  move v3, v9
+  000060  const/4 v9, 2
+  000062  move v4, v9
+  000064  const/4 v9, 1
+  000066  move v5, v9
+  000068  if-eqz v2, +029h
+  00006c  const/4 v9, 2
+  00006e  if-eq v2, v5, +01ah
+  000072  const/4 v9, 4
+  000074  if-ne v2, v4, +00eh
+  000078  const/4 v9, 3
+  00007a  iget-object v7, v0, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$1;->c Ljava/util/List;
+  00007e  const/4 v9, 3
+  000080  iget-object v11, v0, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$1;->b Lcom/getmimo/data/content/model/track/LessonContent$Interactive;
+  000084  const/4 v9, 4
+  000086  invoke-static v12, Lkotlin/b;->b(Ljava/lang/Object;)V
+  00008c  const/4 v9, 7
+  00008e  goto +58h
+  000090  const/4 v9, 2
+  000092  const-string v9, "call to 'resume' before 'invoke' with coroutine"
+  000096  move-object v7, v9
+  000098  invoke-static v7, Lwc/f;->i(Ljava/lang/String;)V
+  00009e  const/4 v9, 1
+  0000a0  return-object v3
+  0000a2  const/4 v9, 7
+  0000a4  iget-object v11, v0, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$1;->b Lcom/getmimo/data/content/model/track/LessonContent$Interactive;
+  0000a8  const/4 v9, 1
+  0000aa  iget-object v2, v0, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$1;->a Lcom/getmimo/data/content/model/track/LessonContent$Interactive;
+  0000ae  const/4 v9, 6
+  0000b0  invoke-static v12, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000b6  const/4 v9, 6
+  0000b8  goto +1fh
+  0000ba  const/4 v9, 3
+  0000bc  invoke-static v12, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000c2  const/4 v9, 1
+  0000c4  invoke-virtual v11, Lcom/getmimo/data/content/model/track/LessonContent$Interactive;->getLessonModules()Ljava/util/List;
+  0000ca  move-result-object v9
+  0000cc  move-object v12, v9
+  0000ce  iput-object v11, v0, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$1;->a Lcom/getmimo/data/content/model/track/LessonContent$Interactive;
+  0000d2  const/4 v9, 7
+  0000d4  iput-object v11, v0, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$1;->b Lcom/getmimo/data/content/model/track/LessonContent$Interactive;
+  0000d8  const/4 v9, 5
+  0000da  iput v5, v0, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$1;->f I
+  0000de  const/4 v9, 1
+  0000e0  invoke-virtual v7, v12, v0, Lcom/getmimo/ui/lesson/interactive/d;->H(Ljava/util/List; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  0000e6  move-result-object v9
+  0000e8  move-object v12, v9
+  0000ea  if-ne v12, v1, +004h
+  0000ee  const/4 v9, 3
+  0000f0  goto +22h
+  0000f2  const/4 v9, 4
+  0000f4  move-object v2, v11
+  0000f6  check-cast v12, Ljava/util/List;
+  0000fa  const/4 v9, 1
+  0000fc  invoke-virtual v2, Lcom/getmimo/data/content/model/track/LessonContent$Interactive;->getHardModeLessonModules()Ljava/util/List;
+  000102  move-result-object v9
+  000104  move-object v2, v9
+  000106  if-eqz v2, +021h
+  00010a  const/4 v9, 5
+  00010c  iput-object v3, v0, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$1;->a Lcom/getmimo/data/content/model/track/LessonContent$Interactive;
+  000110  const/4 v9, 7
+  000112  iput-object v11, v0, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$1;->b Lcom/getmimo/data/content/model/track/LessonContent$Interactive;
+  000116  const/4 v9, 3
+  000118  iput-object v12, v0, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$1;->c Ljava/util/List;
+  00011c  const/4 v9, 5
+  00011e  iput v4, v0, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$1;->f I
+  000122  const/4 v9, 2
+  000124  invoke-virtual v7, v2, v0, Lcom/getmimo/ui/lesson/interactive/d;->H(Ljava/util/List; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  00012a  move-result-object v9
+  00012c  move-object v7, v9
+  00012e  if-ne v7, v1, +004h
+  000132  const/4 v9, 2
+  000134  return-object v1
+  000136  const/4 v9, 6
+  000138  move-object v6, v12
+  00013a  move-object v12, v7
+  00013c  move-object v7, v6
+  00013e  move-object v3, v12
+  000140  check-cast v3, Ljava/util/List;
+  000144  const/4 v9, 7
+  000146  move-object v12, v7
+  000148  const/4 v9, 7
+  00014a  invoke-virtual v11, v12, v3, Lcom/getmimo/data/content/model/track/LessonContent$Interactive;->copy(Ljava/util/List; Ljava/util/List;)Lcom/getmimo/data/content/model/track/LessonContent$Interactive;
+  000150  move-result-object v9
+  000152  move-object v7, v9
+  000154  return-object v7
+  000156  nop 
+  000158  <androguard.core.dex.FillArrayData object at 0x7ff3faecef50>
+
+===== Lcom/getmimo/ui/lesson/interactive/d;->H(Ljava/util/List; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10961100 instructions=155 access=public final callers=3 callees=21
+callers: Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/interactive/d;->G(Lcom/getmimo/data/content/model/track/LessonContent$Interactive; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/interactive/d;->G(Lcom/getmimo/data/content/model/track/LessonContent$Interactive; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+callees: La70/r;->i0(Ljava/lang/Iterable; I)I, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Code;-><init>(Ljava/lang/CharSequence; Ljava/util/List; Lcom/getmimo/data/content/lessonparser/interactive/model/Output; Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility; Lcom/getmimo/data/content/model/track/CodeLanguage; Ljava/lang/String; Ljava/util/List;)V, Lcom/getmimo/ui/codeeditor/highlight/a;->a(Ljava/lang/CharSequence; Lcom/getmimo/data/content/model/track/CodeLanguage; Ld70/b;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$2;-><init>(Lcom/getmimo/ui/lesson/interactive/d; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->toString()Ljava/lang/String;, Ljava/lang/Object;->toString()Ljava/lang/String;, Ljava/util/ArrayList;-><init>(I)V, Ljava/util/Collection;->add(Ljava/lang/Object;)Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z, Lle0/a;->e(Ljava/lang/Throwable; Ljava/lang/String; [Ljava/lang/Object;)V, Lle0/a;->k(Ljava/lang/String; [Ljava/lang/Object;)V, Lle0/a;->k(Ljava/lang/String; [Ljava/lang/Object;)V, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object/from16 v1, v20
+  000004  move-object/from16 v0, v22
+  000008  instance-of v2, v0, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$2;
+  00000c  if-eqz v2, +011h
+  000010  move-object v2, v0
+  000012  check-cast v2, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$2;
+  000016  iget v3, v2, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$2;->v I
+  00001a  const/high16 v4, -2147483648
+  00001e  and-int v5, v3, v4
+  000022  if-eqz v5, +006h
+  000026  sub-int/2addr v3, v4
+  000028  iput v3, v2, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$2;->v I
+  00002c  goto +6h
+  00002e  new-instance v2, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$2;
+  000032  invoke-direct v2, v1, v0, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$2;-><init>(Lcom/getmimo/ui/lesson/interactive/d; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000038  iget-object v0, v2, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$2;->f Ljava/lang/Object;
+  00003c  sget-object v3, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000040  iget v4, v2, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$2;->v I
+  000044  const/4 v5, 5
+  000046  const/4 v5, 1
+  000048  const/4 v6, 0
+  00004a  const/4 v6, 0
+  00004c  if-eqz v4, +021h
+  000050  if-ne v4, v5, +017h
+  000054  iget-object v4, v2, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$2;->e Ljava/util/Collection;
+  000058  check-cast v4, Ljava/util/Collection;
+  00005c  iget-object v7, v2, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$2;->d Ljava/lang/String;
+  000060  iget-object v8, v2, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$2;->c Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Code;
+  000064  iget-object v9, v2, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$2;->b Ljava/util/Iterator;
+  000068  iget-object v10, v2, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$2;->a Ljava/util/Collection;
+  00006c  check-cast v10, Ljava/util/Collection;
+  000070  invoke-static v0, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000076  goto +6ah
+  000078  move-exception v0
+  00007a  goto/16 +0c3h
+  00007e  const-string v0, "call to 'resume' before 'invoke' with coroutine"
+  000082  invoke-static v0, Lwc/f;->i(Ljava/lang/String;)V
+  000088  const/4 v0, 1
+  00008a  const/4 v0, 0
+  00008c  return-object v0
+  00008e  invoke-static v0, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000094  new-instance v0, Ljava/util/ArrayList;
+  000098  const/16 v4, 19988
+  00009c  const/16 v4, 10
+  0000a0  move-object/from16 v7, v21
+  0000a4  invoke-static v7, v4, La70/r;->i0(Ljava/lang/Iterable; I)I
+  0000aa  move-result v4
+  0000ac  invoke-direct v0, v4, Ljava/util/ArrayList;-><init>(I)V
+  0000b2  invoke-interface v7, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  0000b8  move-result-object v4
+  0000ba  move-object v9, v4
+  0000bc  move-object v4, v0
+  0000be  invoke-interface v9, Ljava/util/Iterator;->hasNext()Z
+  0000c4  move-result v0
+  0000c6  if-eqz v0, +0b3h
+  0000ca  invoke-interface v9, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  0000d0  move-result-object v0
+  0000d2  move-object v8, v0
+  0000d4  check-cast v8, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule;
+  0000d8  instance-of v0, v8, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Code;
+  0000dc  if-nez v0, +005h
+  0000e0  move-object v0, v4
+  0000e2  goto/16 +0a0h
+  0000e6  move-object v0, v8
+  0000e8  check-cast v0, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Code;
+  0000ec  iget-object v0, v0, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Code;->c Ljava/lang/CharSequence;
+  0000f0  invoke-virtual v0, Ljava/lang/Object;->toString()Ljava/lang/String;
+  0000f6  move-result-object v7
+  0000f8  iget-object v0, v1, Lcom/getmimo/ui/lesson/interactive/d;->f Lcom/getmimo/ui/codeeditor/highlight/a;
+  0000fc  move-object v10, v8
+  0000fe  check-cast v10, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Code;
+  000102  iget-object v10, v10, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Code;->c Ljava/lang/CharSequence;
+  000106  move-object v11, v8
+  000108  check-cast v11, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Code;
+  00010c  iget-object v11, v11, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Code;->g Lcom/getmimo/data/content/model/track/CodeLanguage;
+  000110  move-object v12, v4
+  000112  check-cast v12, Ljava/util/Collection;
+  000116  iput-object v12, v2, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$2;->a Ljava/util/Collection;
+  00011a  iput-object v9, v2, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$2;->b Ljava/util/Iterator;
+  00011e  move-object v12, v8
+  000120  check-cast v12, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Code;
+  000124  iput-object v12, v2, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$2;->c Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Code;
+  000128  iput-object v7, v2, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$2;->d Ljava/lang/String;
+  00012c  move-object v12, v4
+  00012e  check-cast v12, Ljava/util/Collection;
+  000132  iput-object v12, v2, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$2;->e Ljava/util/Collection;
+  000136  iput v5, v2, Lcom/getmimo/ui/lesson/interactive/InteractiveLessonViewModel$withClientSideSyntaxHighlighting$2;->v I
+  00013a  invoke-virtual v0, v10, v11, v2, Lcom/getmimo/ui/codeeditor/highlight/a;->a(Ljava/lang/CharSequence; Lcom/getmimo/data/content/model/track/CodeLanguage; Ld70/b;)Ljava/lang/Object;
+  000140  move-result-object v0
+  000142  if-ne v0, v3, +003h
+  000146  return-object v3
+  000148  move-object v10, v4
+  00014a  move-object v12, v0
+  00014c  check-cast v12, Ljava/lang/CharSequence;
+  000150  invoke-virtual v12, Ljava/lang/Object;->toString()Ljava/lang/String;
+  000156  move-result-object v0
+  000158  invoke-static v0, v7, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z
+  00015e  move-result v0
+  000160  if-eqz v0, +040h
+  000164  move-object v0, v8
+  000166  check-cast v0, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Code;
+  00016a  iget-object v0, v0, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Code;->c Ljava/lang/CharSequence;
+  00016e  instance-of v0, v0, Landroid/text/Spanned;
+  000172  if-eqz v0, +012h
+  000176  instance-of v0, v12, Landroid/text/Spanned;
+  00017a  if-nez v0, +00eh
+  00017e  sget-object v0, Lle0/b;->a Lle0/a;
+  000182  const-string v7, "Syntax highlighting dropped spans; preserving original content"
+  000186  new-array v11, v6, [Ljava/lang/Object;
+  00018a  invoke-virtual v0, v7, v11, Lle0/a;->k(Ljava/lang/String; [Ljava/lang/Object;)V
+  000190  check-cast v8, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Code;
+  000194  goto +31h
+  000196  move-object v0, v8
+  000198  check-cast v0, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Code;
+  00019c  iget-object v13, v0, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Code;->d Ljava/util/List;
+  0001a0  iget-object v14, v0, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Code;->e Lcom/getmimo/data/content/lessonparser/interactive/model/Output;
+  0001a4  iget-object v15, v0, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Code;->f Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;
+  0001a8  iget-object v7, v0, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Code;->g Lcom/getmimo/data/content/model/track/CodeLanguage;
+  0001ac  iget-object v11, v0, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Code;->v Ljava/lang/String;
+  0001b0  iget-object v0, v0, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Code;->w Ljava/util/List;
+  0001b4  invoke-virtual v15, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  0001ba  invoke-virtual v7, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  0001c0  invoke-virtual v11, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  0001c6  move-object/from16 v17, v11
+  0001ca  new-instance v11, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Code;
+  0001ce  move-object/from16 v18, v0
+  0001d2  move-object/from16 v16, v7
+  0001d6  invoke-direct/range v11 ... v18, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Code;-><init>(Ljava/lang/CharSequence; Ljava/util/List; Lcom/getmimo/data/content/lessonparser/interactive/model/Output; Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility; Lcom/getmimo/data/content/model/track/CodeLanguage; Ljava/lang/String; Ljava/util/List;)V
+  0001dc  move-object v8, v11
+  0001de  goto +ch
+  0001e0  sget-object v0, Lle0/b;->a Lle0/a;
+  0001e4  const-string v7, "Syntax highlighting changed interactive lesson code; preserving original content"
+  0001e8  new-array v11, v6, [Ljava/lang/Object;
+  0001ec  invoke-virtual v0, v7, v11, Lle0/a;->k(Ljava/lang/String; [Ljava/lang/Object;)V
+  0001f2  check-cast v8, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Code;
+  0001f6  move-object v0, v4
+  0001f8  move-object v4, v10
+  0001fa  goto +fh
+  0001fc  move-exception v0
+  0001fe  move-object v10, v4
+  000200  sget-object v7, Lle0/b;->a Lle0/a;
+  000204  const-string v11, "Unable to syntax highlight interactive lesson code"
+  000208  new-array v12, v6, [Ljava/lang/Object;
+  00020c  invoke-virtual v7, v0, v11, v12, Lle0/a;->e(Ljava/lang/Throwable; Ljava/lang/String; [Ljava/lang/Object;)V
+  000212  check-cast v8, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Code;
+  000216  goto -10h
+  000218  move-object/from16 v19, v4
+  00021c  move-object v4, v0
+  00021e  move-object/from16 v0, v19
+  000222  invoke-interface v4, v8, Ljava/util/Collection;->add(Ljava/lang/Object;)Z
+  000228  goto/16 -0b6h
+  00022c  check-cast v4, Ljava/util/List;
+  000230  return-object v4
+  000232  nop 
+  000234  <androguard.core.dex.FillArrayData object at 0x7ff3faef2050>

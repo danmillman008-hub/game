@@ -1,0 +1,123 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lqm/i; semantic=ValidatedInputNormalizer
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lqm/i;-><clinit>()V =====
+dex=classes.dex code_offset=14172580 instructions=56 access=static constructor callers=0 callees=10
+callees: Li30/m;->E([Ljava/lang/Object;)Ljava/util/List;, Ljava/lang/Character;->valueOf(C)Ljava/lang/Character;, Ljava/lang/Character;->valueOf(C)Ljava/lang/Character;, Ljava/lang/Character;->valueOf(C)Ljava/lang/Character;, Ljava/lang/Character;->valueOf(C)Ljava/lang/Character;, Ljava/lang/Character;->valueOf(C)Ljava/lang/Character;, Ljava/lang/Character;->valueOf(C)Ljava/lang/Character;, Ljava/lang/Character;->valueOf(C)Ljava/lang/Character;, Ljava/lang/Character;->valueOf(C)Ljava/lang/Character;, Ljava/lang/Character;->valueOf(C)Ljava/lang/Character;
+  000000  const/16 v10, 60
+  000004  move v0, v10
+  000006  invoke-static v0, Ljava/lang/Character;->valueOf(C)Ljava/lang/Character;
+  00000c  move-result-object v10
+  00000e  move-object v1, v10
+  000010  const/16 v10, 62
+  000014  move v0, v10
+  000016  invoke-static v0, Ljava/lang/Character;->valueOf(C)Ljava/lang/Character;
+  00001c  move-result-object v10
+  00001e  move-object v2, v10
+  000020  const/16 v10, 40
+  000024  move v0, v10
+  000026  invoke-static v0, Ljava/lang/Character;->valueOf(C)Ljava/lang/Character;
+  00002c  move-result-object v10
+  00002e  move-object v3, v10
+  000030  const/16 v10, 41
+  000034  move v0, v10
+  000036  invoke-static v0, Ljava/lang/Character;->valueOf(C)Ljava/lang/Character;
+  00003c  move-result-object v10
+  00003e  move-object v4, v10
+  000040  const/16 v10, 58
+  000044  move v0, v10
+  000046  invoke-static v0, Ljava/lang/Character;->valueOf(C)Ljava/lang/Character;
+  00004c  move-result-object v10
+  00004e  move-object v5, v10
+  000050  const/16 v10, 123
+  000054  move v0, v10
+  000056  invoke-static v0, Ljava/lang/Character;->valueOf(C)Ljava/lang/Character;
+  00005c  move-result-object v10
+  00005e  move-object v6, v10
+  000060  const/16 v10, 125
+  000064  move v0, v10
+  000066  invoke-static v0, Ljava/lang/Character;->valueOf(C)Ljava/lang/Character;
+  00006c  move-result-object v10
+  00006e  move-object v7, v10
+  000070  const/16 v10, 44
+  000074  move v0, v10
+  000076  invoke-static v0, Ljava/lang/Character;->valueOf(C)Ljava/lang/Character;
+  00007c  move-result-object v10
+  00007e  move-object v8, v10
+  000080  const/16 v10, 46
+  000084  move v0, v10
+  000086  invoke-static v0, Ljava/lang/Character;->valueOf(C)Ljava/lang/Character;
+  00008c  move-result-object v10
+  00008e  move-object v9, v10
+  000090  filled-new-array/range v1 ... v9, [Ljava/lang/Character;
+  000096  move-result-object v10
+  000098  move-object v0, v10
+  00009a  invoke-static v0, Li30/m;->E([Ljava/lang/Object;)Ljava/util/List;
+  0000a0  move-result-object v10
+  0000a2  move-object v0, v10
+  0000a4  sput-object v0, Lqm/i;->a Ljava/util/List;
+  0000a8  const-string v12, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  0000ac  return-void 
+  0000ae  nop 
+  0000b0  <androguard.core.dex.FillArrayData object at 0x7ff3facca450>
+
+===== Lqm/i;->a(Ljava/lang/String;)Ljava/lang/String; =====
+dex=classes.dex code_offset=14172860 instructions=50 access=public static callers=2 callees=11
+callers: Lcom/getmimo/ui/lesson/interactive/validatedinput/InteractiveLessonValidatedInputFragment$setupViews$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/lesson/interactive/validatedinput/InteractiveLessonValidatedInputFragment$setupViews$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Ljava/lang/Character;->isLetterOrDigit(C)Z, Ljava/lang/Character;->valueOf(C)Ljava/lang/Character;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/String;->charAt(I)C, Ljava/lang/String;->length()I, Ljava/lang/String;->toLowerCase(Ljava/util/Locale;)Ljava/lang/String;, Ljava/lang/StringBuilder;-><init>()V, Ljava/lang/StringBuilder;->append(C)Ljava/lang/Appendable;, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;, Ljava/util/List;->contains(Ljava/lang/Object;)Z
+  000000  move-object v6, v9
+  000002  sget-object v0, Ljava/util/Locale;->US Ljava/util/Locale;
+  000006  const/4 v8, 6
+  000008  invoke-virtual v0, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00000e  invoke-virtual v6, v0, Ljava/lang/String;->toLowerCase(Ljava/util/Locale;)Ljava/lang/String;
+  000014  move-result-object v8
+  000016  move-object v6, v8
+  000018  invoke-virtual v6, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00001e  new-instance v0, Ljava/lang/StringBuilder;
+  000022  const/4 v8, 3
+  000024  invoke-direct v0, Ljava/lang/StringBuilder;-><init>()V
+  00002a  const/4 v8, 6
+  00002c  invoke-virtual v6, Ljava/lang/String;->length()I
+  000032  move-result v8
+  000034  move v1, v8
+  000036  const/4 v8, 0
+  000038  move v2, v8
+  00003a  if-ge v2, v1, +029h
+  00003e  const/4 v8, 4
+  000040  invoke-virtual v6, v2, Ljava/lang/String;->charAt(I)C
+  000046  move-result v8
+  000048  move v3, v8
+  00004a  invoke-static v3, Ljava/lang/Character;->isLetterOrDigit(C)Z
+  000050  move-result v8
+  000052  move v4, v8
+  000054  if-nez v4, +013h
+  000058  const/4 v8, 5
+  00005a  sget-object v4, Lqm/i;->a Ljava/util/List;
+  00005e  const/4 v8, 1
+  000060  invoke-static v3, Ljava/lang/Character;->valueOf(C)Ljava/lang/Character;
+  000066  move-result-object v8
+  000068  move-object v5, v8
+  00006a  invoke-interface v4, v5, Ljava/util/List;->contains(Ljava/lang/Object;)Z
+  000070  move-result v8
+  000072  move v4, v8
+  000074  if-eqz v4, +007h
+  000078  const/4 v8, 1
+  00007a  const/4 v8, 3
+  00007c  invoke-virtual v0, v3, Ljava/lang/StringBuilder;->append(C)Ljava/lang/Appendable;
+  000082  const/4 v8, 1
+  000084  add-int/lit8 v2, v2, 1
+  000088  const/4 v8, 1
+  00008a  goto -28h
+  00008c  const/4 v8, 5
+  00008e  invoke-virtual v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  000094  move-result-object v8
+  000096  move-object v6, v8
+  000098  return-object v6
+  00009a  nop 
+  00009c  <androguard.core.dex.FillArrayData object at 0x7ff3faccb250>

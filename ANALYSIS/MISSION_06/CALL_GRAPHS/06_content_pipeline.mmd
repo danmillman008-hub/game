@@ -1,0 +1,167 @@
+# APK assets → AssetManager → JSON → XmlPullParser DSL → LessonModule → renderer
+
+```mermaid
+flowchart TD
+  N0["CollapsibleLine.<init><br/><small>model @9646268</small>"]
+  N1["Interaction$FillTheGap.<init><br/><small>model @9646920</small>"]
+  N2["Interaction$Selection.<init><br/><small>model @9647744</small>"]
+  N3["Interaction$Spell.<init><br/><small>model @9648736</small>"]
+  N4["Interaction$ValidatedInput.<init><br/><small>model @9649524</small>"]
+  N5["LessonModule$Code.<init><br/><small>model @9650588</small>"]
+  N6["Option.<init><br/><small>model @9657108</small>"]
+  N7["Output$ConsoleOutput.<init><br/><small>model @9658056</small>"]
+  N8["Output$TableOutput.<init><br/><small>model @9658644</small>"]
+  N9["CodeLanguage$Companion.fromString<br/><small>track @9677956</small>"]
+  N10["DefaultTrackLoader.a<br/><small>tracks @9747500</small>"]
+  N11["DefaultTrackLoader.c<br/><small>tracks @9747356</small>"]
+  N12["LessonInteractionType$FillTheGap.<init><br/><small>model @10966108</small>"]
+  N13["LessonInteractionType$InteractiveWebView.<init><br/><small>model @10966688</small>"]
+  N14["LessonInteractionType$MultipleChoice.<init><br/><small>model @10967376</small>"]
+  N15["LessonInteractionType$None.<init><br/><small>model @10968180</small>"]
+  N16["LessonInteractionType$Reveal.<init><br/><small>model @10968876</small>"]
+  N17["LessonInteractionType$Selection.<init><br/><small>model @10969620</small>"]
+  N18["LessonInteractionType$SingleChoice.<init><br/><small>model @10970316</small>"]
+  N19["LessonInteractionType$Spell.<init><br/><small>model @10970940</small>"]
+  N20["LessonInteractionType$ValidatedInput.<init><br/><small>model @10971632</small>"]
+  N21["h.a<br/><small>Lgm @ext</small>"]
+  N22["XmlPullParser.getAttributeValue<br/><small>v1 @ext</small>"]
+  N23["XmlPullParser.getEventType<br/><small>v1 @ext</small>"]
+  N24["XmlPullParser.getName<br/><small>v1 @ext</small>"]
+  N25["XmlPullParser.next<br/><small>v1 @ext</small>"]
+  N26["XmlPullParser.setInput<br/><small>v1 @ext</small>"]
+  N27["XmlPullParserFactory.newInstance<br/><small>v1 @ext</small>"]
+  N28["XmlPullParserFactory.newPullParser<br/><small>v1 @ext</small>"]
+  N29["XmlPullParserFactory.setNamespaceAware<br/><small>v1 @ext</small>"]
+  N30["a.a<br/><small>Lte @ext</small>"]
+  N31["b.a<br/><small>Lte @ext</small>"]
+  N32["c.a<br/><small>Lte @ext</small>"]
+  N33["c.b<br/><small>Lte @ext</small>"]
+  N34["d.a<br/><small>Lte @ext</small>"]
+  N35["e.a<br/><small>Lte @ext</small>"]
+  N36["g.a<br/><small>Lte @ext</small>"]
+  N37["b.b<br/><small>Lye @ext</small>"]
+  N38["b.d<br/><small>Lye @ext</small>"]
+  N39["f.b<br/><small>Lye @ext</small>"]
+  N10 --> N11
+  N10 --> N39
+  N33 --> N23
+  N33 --> N23
+  N33 --> N23
+  N33 --> N23
+  N33 --> N23
+  N33 --> N24
+  N33 --> N24
+  N33 --> N24
+  N33 --> N24
+  N33 --> N24
+  N33 --> N24
+  N33 --> N24
+  N33 --> N24
+  N33 --> N24
+  N33 --> N25
+  N33 --> N25
+  N33 --> N25
+  N33 --> N25
+  N33 --> N26
+  N33 --> N27
+  N33 --> N28
+  N33 --> N29
+  N33 --> N30
+  N33 --> N31
+  N33 --> N32
+  N33 --> N34
+  N33 --> N35
+  N33 --> N36
+  N21 --> N12
+  N21 --> N13
+  N21 --> N14
+  N21 --> N15
+  N21 --> N16
+  N21 --> N17
+  N21 --> N18
+  N21 --> N19
+  N21 --> N20
+  N30 --> N0
+  N30 --> N1
+  N30 --> N2
+  N30 --> N3
+  N30 --> N4
+  N30 --> N5
+  N30 --> N6
+  N30 --> N7
+  N30 --> N8
+  N30 --> N9
+  N30 --> N22
+  N30 --> N22
+  N30 --> N22
+  N30 --> N22
+  N30 --> N22
+  N30 --> N22
+  N30 --> N22
+  N30 --> N22
+  N30 --> N22
+  N30 --> N22
+  N30 --> N22
+  N30 --> N22
+  N30 --> N24
+  N30 --> N24
+  N30 --> N24
+  N30 --> N24
+  N30 --> N24
+  N30 --> N24
+  N30 --> N24
+  N30 --> N24
+  N30 --> N25
+  N30 --> N25
+  N30 --> N25
+  N30 --> N25
+  N30 --> N25
+  N30 --> N25
+  N30 --> N25
+  N30 --> N25
+  N30 --> N25
+  N31 --> N22
+  N31 --> N24
+  N32 --> N22
+  N32 --> N22
+  N32 --> N25
+  N34 --> N22
+  N34 --> N22
+  N34 --> N23
+  N34 --> N23
+  N34 --> N23
+  N34 --> N23
+  N34 --> N23
+  N34 --> N24
+  N34 --> N24
+  N34 --> N25
+  N34 --> N25
+  N35 --> N22
+  N35 --> N22
+  N35 --> N23
+  N35 --> N23
+  N35 --> N23
+  N35 --> N23
+  N35 --> N24
+  N35 --> N24
+  N35 --> N24
+  N35 --> N24
+  N35 --> N25
+  N35 --> N25
+  N35 --> N25
+  N35 --> N25
+  N35 --> N25
+  N36 --> N22
+  N36 --> N22
+  N36 --> N22
+  N36 --> N22
+  N36 --> N22
+  N36 --> N23
+  N36 --> N23
+  N36 --> N23
+  N36 --> N25
+  N36 --> N25
+  N36 --> N25
+```
+
+Edges are real `invoke-*` xrefs extracted from the 12 original DEX files (androguard 4.1.4).

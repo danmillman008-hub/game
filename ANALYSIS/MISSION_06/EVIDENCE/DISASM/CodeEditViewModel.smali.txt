@@ -1,0 +1,641 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/ui/codeeditor/view/b; semantic=CodeEditViewModel
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/ui/codeeditor/view/b;-><init>(Lqf/d; Lcom/getmimo/ui/codeeditor/format/a; Lcom/getmimo/ui/codeeditor/highlight/a; Lpe/a;)V =====
+dex=classes.dex code_offset=10423052 instructions=64 access=public constructor callers=1 callees=12
+callers: Lcom/getmimo/ui/codeeditor/view/CodeEditView;-><init>(Landroid/content/Context; Landroid/util/AttributeSet;)V
+callees: Ljava/lang/Object;-><init>()V, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Lkotlinx/coroutines/a;->a()Lra0/c1;, Lkotlinx/coroutines/flow/d;->a(Lua0/n;)Lua0/p;, Lkotlinx/coroutines/flow/d;->b(Lua0/o;)Lua0/q;, Lra0/z;->c(Ld70/f;)Lwa0/d;, Lua0/h;->b(I I Lkotlinx/coroutines/channels/BufferOverflow; I)Lkotlinx/coroutines/flow/i;, Lua0/h;->c(Ljava/lang/Object;)Lkotlinx/coroutines/flow/k;, Lzt/c;->G(Ld70/d; Ld70/f;)Ld70/f;
+  000000  move-object v0, v3
+  000002  invoke-virtual v4, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000008  invoke-virtual v6, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00000e  invoke-virtual v7, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000014  invoke-direct v0, Ljava/lang/Object;-><init>()V
+  00001a  const-string v2, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  00001e  iput-object v4, v0, Lcom/getmimo/ui/codeeditor/view/b;->a Lqf/d;
+  000022  const/4 v2, 4
+  000024  iput-object v5, v0, Lcom/getmimo/ui/codeeditor/view/b;->b Lcom/getmimo/ui/codeeditor/format/a;
+  000028  const/4 v2, 1
+  00002a  iput-object v6, v0, Lcom/getmimo/ui/codeeditor/view/b;->c Lcom/getmimo/ui/codeeditor/highlight/a;
+  00002e  const/4 v2, 6
+  000030  iput-object v7, v0, Lcom/getmimo/ui/codeeditor/view/b;->d Lpe/a;
+  000034  const/4 v2, 3
+  000036  sget-object v4, Lra0/i0;->a Lya0/d;
+  00003a  const/4 v2, 5
+  00003c  sget-object v4, Lwa0/l;->a Lsa0/d;
+  000040  const/4 v2, 3
+  000042  invoke-static Lkotlinx/coroutines/a;->a()Lra0/c1;
+  000048  move-result-object v2
+  00004a  move-object v5, v2
+  00004c  invoke-virtual v4, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000052  invoke-static v4, v5, Lzt/c;->G(Ld70/d; Ld70/f;)Ld70/f;
+  000058  move-result-object v2
+  00005a  move-object v4, v2
+  00005c  invoke-static v4, Lra0/z;->c(Ld70/f;)Lwa0/d;
+  000062  move-result-object v2
+  000064  move-object v4, v2
+  000066  iput-object v4, v0, Lcom/getmimo/ui/codeeditor/view/b;->f Lwa0/d;
+  00006a  const/4 v2, 7
+  00006c  const/4 v2, -1
+  00006e  move v4, v2
+  000070  iput v4, v0, Lcom/getmimo/ui/codeeditor/view/b;->h I
+  000074  const/4 v2, 6
+  000076  const/4 v2, 0
+  000078  move v4, v2
+  00007a  invoke-static v4, Lua0/h;->c(Ljava/lang/Object;)Lkotlinx/coroutines/flow/k;
+  000080  move-result-object v2
+  000082  move-object v5, v2
+  000084  iput-object v5, v0, Lcom/getmimo/ui/codeeditor/view/b;->j Lkotlinx/coroutines/flow/k;
+  000088  const/4 v2, 3
+  00008a  invoke-static v5, Lkotlinx/coroutines/flow/d;->b(Lua0/o;)Lua0/q;
+  000090  move-result-object v2
+  000092  move-object v5, v2
+  000094  iput-object v5, v0, Lcom/getmimo/ui/codeeditor/view/b;->k Lua0/q;
+  000098  const/4 v2, 3
+  00009a  const/4 v2, 0
+  00009c  move v5, v2
+  00009e  const/4 v2, 6
+  0000a0  move v6, v2
+  0000a2  const/4 v2, 1
+  0000a4  move v7, v2
+  0000a6  invoke-static v7, v5, v4, v6, Lua0/h;->b(I I Lkotlinx/coroutines/channels/BufferOverflow; I)Lkotlinx/coroutines/flow/i;
+  0000ac  move-result-object v2
+  0000ae  move-object v4, v2
+  0000b0  iput-object v4, v0, Lcom/getmimo/ui/codeeditor/view/b;->l Lkotlinx/coroutines/flow/i;
+  0000b4  const/4 v2, 1
+  0000b6  invoke-static v4, Lkotlinx/coroutines/flow/d;->a(Lua0/n;)Lua0/p;
+  0000bc  move-result-object v2
+  0000be  move-object v4, v2
+  0000c0  iput-object v4, v0, Lcom/getmimo/ui/codeeditor/view/b;->m Lua0/p;
+  0000c4  const/4 v2, 6
+  0000c6  return-void 
+  0000c8  <androguard.core.dex.FillArrayData object at 0x7ff3fb0e7dd0>
+
+===== Lcom/getmimo/ui/codeeditor/view/b;->a(Ljava/lang/String; Ltj/a; I Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10424060 instructions=151 access=public final callers=2 callees=16
+callers: Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$findInitialLineToHighlight$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$formatCode$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Lcom/getmimo/ui/codeeditor/format/a;->b(Ljava/lang/String; Lcom/getmimo/data/content/model/track/CodeLanguage; I Z Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$findInitialLineToHighlight$1;-><init>(Lcom/getmimo/ui/codeeditor/view/b; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Lcom/getmimo/ui/codeeditor/view/b;->b()Lcom/getmimo/data/content/model/track/CodeLanguage;, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->toString()Ljava/lang/String;, Ljava/lang/Object;->toString()Ljava/lang/String;, Ljava/lang/String;->toCharArray()[C, Ljava/lang/String;->toCharArray()[C, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lwc/f;->i(Ljava/lang/String;)V
+  000000  instance-of v0, v14, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$findInitialLineToHighlight$1;
+  000004  const/4 v9, 3
+  000006  if-eqz v0, +01ah
+  00000a  const/4 v9, 6
+  00000c  move-object v0, v14
+  00000e  check-cast v0, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$findInitialLineToHighlight$1;
+  000012  const/4 v9, 7
+  000014  iget v1, v0, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$findInitialLineToHighlight$1;->e I
+  000018  const/4 v9, 7
+  00001a  const/high16 v8, -2147483648
+  00001e  move v2, v8
+  000020  and-int v3, v1, v2
+  000024  const/4 v9, 6
+  000026  if-eqz v3, +00ah
+  00002a  const/4 v9, 6
+  00002c  sub-int/2addr v1, v2
+  00002e  const/4 v9, 7
+  000030  iput v1, v0, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$findInitialLineToHighlight$1;->e I
+  000034  const/4 v9, 5
+  000036  move-object v6, v0
+  000038  goto +ah
+  00003a  const/4 v9, 5
+  00003c  new-instance v0, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$findInitialLineToHighlight$1;
+  000040  const/4 v9, 2
+  000042  invoke-direct v0, v10, v14, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$findInitialLineToHighlight$1;-><init>(Lcom/getmimo/ui/codeeditor/view/b; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000048  const/4 v9, 3
+  00004a  goto -ah
+  00004c  iget-object v14, v6, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$findInitialLineToHighlight$1;->c Ljava/lang/Object;
+  000050  const/4 v9, 1
+  000052  sget-object v0, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000056  const/4 v9, 7
+  000058  iget v1, v6, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$findInitialLineToHighlight$1;->e I
+  00005c  const/4 v9, 6
+  00005e  const/4 v8, 0
+  000060  move v7, v8
+  000062  const/4 v8, 1
+  000064  move v2, v8
+  000066  if-eqz v1, +01ah
+  00006a  const/4 v9, 6
+  00006c  if-ne v1, v2, +00eh
+  000070  const/4 v9, 2
+  000072  iget-object v12, v6, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$findInitialLineToHighlight$1;->b Ltj/a;
+  000076  const/4 v9, 5
+  000078  iget-object v11, v6, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$findInitialLineToHighlight$1;->a Ljava/lang/String;
+  00007c  const/4 v9, 1
+  00007e  invoke-static v14, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000084  const/4 v9, 7
+  000086  goto +2fh
+  000088  const/4 v9, 1
+  00008a  const-string v8, "call to 'resume' before 'invoke' with coroutine"
+  00008e  move-object v10, v8
+  000090  invoke-static v10, Lwc/f;->i(Ljava/lang/String;)V
+  000096  const/4 v9, 1
+  000098  return-object v7
+  00009a  const/4 v9, 3
+  00009c  invoke-static v14, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000a2  const/4 v9, 5
+  0000a4  invoke-virtual v10, Lcom/getmimo/ui/codeeditor/view/b;->b()Lcom/getmimo/data/content/model/track/CodeLanguage;
+  0000aa  move-result-object v8
+  0000ac  move-object v3, v8
+  0000ae  iput-object v11, v6, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$findInitialLineToHighlight$1;->a Ljava/lang/String;
+  0000b2  const/4 v9, 3
+  0000b4  iput-object v12, v6, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$findInitialLineToHighlight$1;->b Ltj/a;
+  0000b8  const/4 v9, 6
+  0000ba  iput v2, v6, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$findInitialLineToHighlight$1;->e I
+  0000be  const/4 v9, 7
+  0000c0  iget-object v1, v10, Lcom/getmimo/ui/codeeditor/view/b;->b Lcom/getmimo/ui/codeeditor/format/a;
+  0000c4  const/4 v9, 3
+  0000c6  const/4 v8, 0
+  0000c8  move v5, v8
+  0000ca  move-object v2, v11
+  0000cc  move v4, v13
+  0000ce  invoke-virtual/range v1 ... v6, Lcom/getmimo/ui/codeeditor/format/a;->b(Ljava/lang/String; Lcom/getmimo/data/content/model/track/CodeLanguage; I Z Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  0000d4  move-result-object v8
+  0000d6  move-object v14, v8
+  0000d8  if-ne v14, v0, +004h
+  0000dc  const/4 v9, 3
+  0000de  return-object v0
+  0000e0  const/4 v9, 1
+  0000e2  move-object v11, v2
+  0000e4  check-cast v14, Ltj/a;
+  0000e8  const/4 v9, 5
+  0000ea  iget-boolean v13, v12, Ltj/a;->b Z
+  0000ee  const/4 v9, 7
+  0000f0  if-eqz v13, +011h
+  0000f4  const/4 v9, 3
+  0000f6  iget-boolean v13, v14, Ltj/a;->b Z
+  0000fa  const/4 v9, 2
+  0000fc  if-eqz v13, +00bh
+  000100  const/4 v9, 1
+  000102  iget-object v11, v14, Ltj/a;->a Ljava/lang/CharSequence;
+  000106  const/4 v9, 5
+  000108  invoke-virtual v11, Ljava/lang/Object;->toString()Ljava/lang/String;
+  00010e  move-result-object v8
+  000110  move-object v11, v8
+  000112  const/4 v9, 1
+  000114  iget-object v12, v12, Ltj/a;->a Ljava/lang/CharSequence;
+  000118  const/4 v9, 5
+  00011a  invoke-virtual v12, Ljava/lang/Object;->toString()Ljava/lang/String;
+  000120  move-result-object v8
+  000122  move-object v12, v8
+  000124  invoke-virtual v11, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  00012a  invoke-virtual v12, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000130  invoke-virtual v11, Ljava/lang/String;->toCharArray()[C
+  000136  move-result-object v8
+  000138  move-object v11, v8
+  00013a  invoke-virtual v11, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000140  invoke-virtual v12, Ljava/lang/String;->toCharArray()[C
+  000146  move-result-object v8
+  000148  move-object v12, v8
+  00014a  invoke-virtual v12, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000150  array-length v13, v11
+  000152  const/4 v9, 3
+  000154  const/4 v8, 0
+  000156  move v14, v8
+  000158  move v0, v14
+  00015a  if-ge v14, v13, +027h
+  00015e  const/4 v9, 7
+  000160  aget-char v1, v11, v14
+  000164  const/4 v9, 5
+  000166  add-int/lit8 v2, v0, 1
+  00016a  const/4 v9, 7
+  00016c  array-length v3, v12
+  00016e  const/4 v9, 7
+  000170  if-lt v0, v3, +009h
+  000174  const/4 v9, 4
+  000176  invoke-static v0, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  00017c  move-result-object v8
+  00017e  move-object v7, v8
+  000180  goto +15h
+  000182  const/4 v9, 1
+  000184  aget-char v3, v12, v0
+  000188  const/4 v9, 2
+  00018a  if-eq v1, v3, +009h
+  00018e  const/4 v9, 4
+  000190  invoke-static v0, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+  000196  move-result-object v8
+  000198  move-object v7, v8
+  00019a  goto +8h
+  00019c  const/4 v9, 5
+  00019e  add-int/lit8 v14, v14, 1
+  0001a2  const/4 v9, 3
+  0001a4  move v0, v2
+  0001a6  goto -26h
+  0001a8  const/4 v9, 2
+  0001aa  iput-object v7, v10, Lcom/getmimo/ui/codeeditor/view/b;->i Ljava/lang/Integer;
+  0001ae  const/4 v9, 7
+  0001b0  sget-object v10, Lz60/q;->a Lz60/q;
+  0001b4  const/4 v9, 2
+  0001b6  return-object v10
+  0001b8  <androguard.core.dex.FillArrayData object at 0x7ff3fb0baa90>
+
+===== Lcom/getmimo/ui/codeeditor/view/b;->b()Lcom/getmimo/data/content/model/track/CodeLanguage; =====
+dex=classes.dex code_offset=10424572 instructions=16 access=public final callers=7 callees=1
+callers: Lcom/getmimo/ui/codeeditor/view/CodeEditView;->onSelectionChanged(I I)V, Lcom/getmimo/ui/codeeditor/view/CodeEditView;->onSelectionChanged(I I)V, Lcom/getmimo/ui/codeeditor/view/CodeEditView;->onSelectionChanged(I I)V, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$formatCode$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$setInitialCodeBlock$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/codeeditor/view/b;->a(Ljava/lang/String; Ltj/a; I Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lcom/getmimo/ui/codeeditor/view/b;->c(Ljava/lang/CharSequence; Lu70/f; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+callees: Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V
+  000000  move-object v0, v4
+  000002  iget-object v0, v0, Lcom/getmimo/ui/codeeditor/view/b;->e Lcom/getmimo/data/content/model/track/CodeLanguage;
+  000006  const/4 v3, 2
+  000008  if-eqz v0, +004h
+  00000c  const/4 v2, 1
+  00000e  return-object v0
+  000010  const/4 v2, 3
+  000012  const-string v2, "codeLanguage"
+  000016  move-object v0, v2
+  000018  invoke-static v0, Lkotlin/jvm/internal/h;->j(Ljava/lang/String;)V
+  00001e  const/4 v2, 2
+  000020  const/4 v3, 0
+  000022  move v0, v3
+  000024  throw v0
+  000026  const/4 v3, 2
+  000028  <androguard.core.dex.FillArrayData object at 0x7ff3fb0baf90>
+
+===== Lcom/getmimo/ui/codeeditor/view/b;->c(Ljava/lang/CharSequence; Lu70/f; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10424664 instructions=99 access=public final callers=2 callees=9
+callers: Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$highlightSyntax$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/codeeditor/view/b;->e(Ljava/lang/CharSequence; Lu70/f; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+callees: Lcom/getmimo/ui/codeeditor/highlight/a;->a(Ljava/lang/CharSequence; Lcom/getmimo/data/content/model/track/CodeLanguage; Ld70/b;)Ljava/lang/Object;, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$highlightSyntax$1;-><init>(Lcom/getmimo/ui/codeeditor/view/b; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Lcom/getmimo/ui/codeeditor/view/b;->b()Lcom/getmimo/data/content/model/track/CodeLanguage;, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lle0/a;->d(Ljava/lang/Throwable;)V, Lwc/f;->i(Ljava/lang/String;)V, Lyj/c;-><init>(Ljava/lang/CharSequence; Lu70/f;)V, Lyj/c;-><init>(Ljava/lang/CharSequence; Lu70/f;)V
+  000000  move-object v4, v8
+  000002  instance-of v0, v11, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$highlightSyntax$1;
+  000006  const/4 v7, 1
+  000008  if-eqz v0, +019h
+  00000c  const/4 v7, 3
+  00000e  move-object v0, v11
+  000010  check-cast v0, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$highlightSyntax$1;
+  000014  const/4 v6, 4
+  000016  iget v1, v0, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$highlightSyntax$1;->e I
+  00001a  const/4 v6, 5
+  00001c  const/high16 v7, -2147483648
+  000020  move v2, v7
+  000022  and-int v3, v1, v2
+  000026  const/4 v6, 7
+  000028  if-eqz v3, +009h
+  00002c  const/4 v6, 6
+  00002e  sub-int/2addr v1, v2
+  000030  const/4 v6, 6
+  000032  iput v1, v0, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$highlightSyntax$1;->e I
+  000036  const/4 v7, 7
+  000038  goto +9h
+  00003a  const/4 v7, 1
+  00003c  new-instance v0, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$highlightSyntax$1;
+  000040  const/4 v6, 5
+  000042  invoke-direct v0, v4, v11, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$highlightSyntax$1;-><init>(Lcom/getmimo/ui/codeeditor/view/b; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000048  const/4 v6, 6
+  00004a  iget-object v11, v0, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$highlightSyntax$1;->c Ljava/lang/Object;
+  00004e  const/4 v7, 1
+  000050  sget-object v1, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000054  const/4 v6, 5
+  000056  iget v2, v0, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$highlightSyntax$1;->e I
+  00005a  const/4 v7, 4
+  00005c  const/4 v7, 1
+  00005e  move v3, v7
+  000060  if-eqz v2, +022h
+  000064  const/4 v7, 1
+  000066  if-ne v2, v3, +014h
+  00006a  const/4 v6, 5
+  00006c  iget-object v10, v0, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$highlightSyntax$1;->b Lu70/f;
+  000070  const/4 v7, 6
+  000072  iget-object v4, v0, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$highlightSyntax$1;->a Ljava/lang/CharSequence;
+  000076  const/4 v6, 6
+  000078  move-object v9, v4
+  00007a  check-cast v9, Ljava/lang/CharSequence;
+  00007e  const/4 v6, 5
+  000080  const/4 v7, 2
+  000082  invoke-static v11, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000088  goto +33h
+  00008a  move-exception v4
+  00008c  goto +3bh
+  00008e  const/4 v6, 1
+  000090  const-string v7, "call to 'resume' before 'invoke' with coroutine"
+  000094  move-object v4, v7
+  000096  invoke-static v4, Lwc/f;->i(Ljava/lang/String;)V
+  00009c  const/4 v7, 2
+  00009e  const/4 v6, 0
+  0000a0  move v4, v6
+  0000a2  return-object v4
+  0000a4  const/4 v6, 1
+  0000a6  invoke-static v11, Lkotlin/b;->b(Ljava/lang/Object;)V
+  0000ac  const/4 v7, 4
+  0000ae  const/4 v6, 1
+  0000b0  iget-object v11, v4, Lcom/getmimo/ui/codeeditor/view/b;->c Lcom/getmimo/ui/codeeditor/highlight/a;
+  0000b4  const/4 v7, 1
+  0000b6  invoke-virtual v4, Lcom/getmimo/ui/codeeditor/view/b;->b()Lcom/getmimo/data/content/model/track/CodeLanguage;
+  0000bc  move-result-object v7
+  0000be  move-object v4, v7
+  0000c0  move-object v2, v9
+  0000c2  check-cast v2, Ljava/lang/CharSequence;
+  0000c6  const/4 v6, 3
+  0000c8  iput-object v2, v0, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$highlightSyntax$1;->a Ljava/lang/CharSequence;
+  0000cc  const/4 v6, 6
+  0000ce  iput-object v10, v0, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$highlightSyntax$1;->b Lu70/f;
+  0000d2  const/4 v6, 5
+  0000d4  iput v3, v0, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$highlightSyntax$1;->e I
+  0000d8  const/4 v6, 1
+  0000da  invoke-virtual v11, v9, v4, v0, Lcom/getmimo/ui/codeeditor/highlight/a;->a(Ljava/lang/CharSequence; Lcom/getmimo/data/content/model/track/CodeLanguage; Ld70/b;)Ljava/lang/Object;
+  0000e0  move-result-object v6
+  0000e2  move-object v11, v6
+  0000e4  if-ne v11, v1, +004h
+  0000e8  const/4 v7, 1
+  0000ea  return-object v1
+  0000ec  const/4 v7, 3
+  0000ee  check-cast v11, Ljava/lang/CharSequence;
+  0000f2  const/4 v6, 5
+  0000f4  new-instance v4, Lyj/c;
+  0000f8  const/4 v7, 4
+  0000fa  invoke-direct v4, v11, v10, Lyj/c;-><init>(Ljava/lang/CharSequence; Lu70/f;)V
+  000100  return-object v4
+  000102  sget-object v11, Lle0/b;->a Lle0/a;
+  000106  const/4 v7, 3
+  000108  invoke-virtual v11, v4, Lle0/a;->d(Ljava/lang/Throwable;)V
+  00010e  const/4 v6, 6
+  000110  new-instance v4, Lyj/c;
+  000114  const/4 v7, 3
+  000116  invoke-direct v4, v9, v10, Lyj/c;-><init>(Ljava/lang/CharSequence; Lu70/f;)V
+  00011c  const/4 v7, 2
+  00011e  return-object v4
+  000120  <androguard.core.dex.FillArrayData object at 0x7ff3fb0ccd50>
+
+===== Lcom/getmimo/ui/codeeditor/view/b;->d(Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet; Landroid/text/Editable; I Lu70/f;)Lyj/c; =====
+dex=classes.dex code_offset=10423296 instructions=195 access=public static callers=2 callees=56
+callers: Lcom/getmimo/ui/codeeditor/view/CodeEditView;->a(Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippetType;)V, Lcom/getmimo/ui/codeeditor/view/CodeEditView;->a(Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippetType;)V
+callees: La70/r;->i0(Ljava/lang/Iterable; I)I, Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet;->getPlaceholderRange()Lu70/f;, Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet;->getPlaceholderRange()Lu70/f;, Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet;->getPlaceholderRange()Lu70/f;, Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet;->getPlaceholderRange()Lu70/f;, Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet;->getPlaceholderRange()Lu70/f;, Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet;->getValue()Ljava/lang/String;, Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet;->getValue()Ljava/lang/String;, Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet;->getValue()Ljava/lang/String;, Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet;->getValue()Ljava/lang/String;, Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet;->getValue()Ljava/lang/String;, Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet;->getValue()Ljava/lang/String;, Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet;->getValue()Ljava/lang/String;, Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet;->isMultiLine()Z, Lfd/b0;->V(I I)Lu70/f;, Li30/m;->Y()V, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/lang/Object;->toString()Ljava/lang/String;, Ljava/lang/Object;->toString()Ljava/lang/String;, Ljava/lang/String;->charAt(I)C, Ljava/lang/String;->length()I, Ljava/lang/String;->length()I, Ljava/lang/String;->length()I, Ljava/lang/String;->length()I, Ljava/lang/String;->length()I, Ljava/lang/String;->substring(I I)Ljava/lang/String;, Ljava/lang/String;->substring(I I)Ljava/lang/String;, Ljava/lang/String;->substring(I I)Ljava/lang/String;, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;, Ljava/util/ArrayList;-><init>(I)V, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Ljava/util/Iterator;->hasNext()Z, Ljava/util/Iterator;->next()Ljava/lang/Object;, Lka0/j;->A0(Ljava/lang/String; I C)Ljava/lang/String;, Lka0/j;->E0(Ljava/lang/CharSequence; I I Ljava/lang/CharSequence;)Ljava/lang/StringBuilder;, Lka0/j;->E0(Ljava/lang/CharSequence; I I Ljava/lang/CharSequence;)Ljava/lang/StringBuilder;, Lka0/j;->I0(Ljava/lang/CharSequence; [Ljava/lang/String; I I)Ljava/util/List;, Lka0/q;->g0(Ljava/lang/String; Ljava/lang/String; Z)Z, Lkotlin/collections/a;->K0(Ljava/lang/Iterable; Ljava/lang/CharSequence; Ljava/lang/String; Ljava/lang/String; Lo70/j; I)Ljava/lang/String;, Lqf/a;->a(Ljava/lang/CharSequence; I)I, Ls7/a;->n(Ljava/lang/String; Ljava/lang/String; Ljava/lang/String;)Ljava/lang/String;, Lsb/j;->p(Ljava/lang/String; Ljava/lang/String;)Ljava/lang/String;, Lu70/d;-><init>(I I I)V, Lu70/d;-><init>(I I I)V, Lu70/d;-><init>(I I I)V, Lu70/f;->isEmpty()Z, Lwc/b;->C(I Ljava/lang/String;)Lvj/a;, Lx/n;->f(Ljava/lang/String; Ljava/lang/String;)Ljava/lang/String;, Lyj/c;-><init>(Ljava/lang/CharSequence; Lu70/f;)V, Lyj/c;-><init>(Ljava/lang/CharSequence; Lu70/f;)V
+  000000  move-object/from16 v0, v18
+  000004  move/from16 v1, v19
+  000008  move-object/from16 v2, v20
+  00000c  invoke-virtual/range v17, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000012  if-eqz v2, +005h
+  000016  iget v2, v2, Lu70/d;->a I
+  00001a  goto +5h
+  00001c  invoke-static/range v18 ... v19, Lqf/a;->a(Ljava/lang/CharSequence; I)I
+  000022  move-result v2
+  000024  invoke-virtual/range v17, Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet;->isMultiLine()Z
+  00002a  move-result v3
+  00002c  const/4 v4, 3
+  00002e  const/4 v4, 1
+  000030  if-eqz v3, +10dh
+  000034  const-string v3, ""
+  000038  invoke-static v0, v2, v1, v3, Lka0/j;->E0(Ljava/lang/CharSequence; I I Ljava/lang/CharSequence;)Ljava/lang/StringBuilder;
+  00003e  move-result-object v0
+  000040  invoke-virtual v0, Ljava/lang/Object;->toString()Ljava/lang/String;
+  000046  move-result-object v0
+  000048  invoke-static v2, v0, Lwc/b;->C(I Ljava/lang/String;)Lvj/a;
+  00004e  move-result-object v1
+  000050  iget v5, v1, Lvj/a;->a I
+  000054  iget-boolean v6, v1, Lvj/a;->b Z
+  000058  iget-boolean v1, v1, Lvj/a;->c Z
+  00005c  const-string v7, "
+"
+  000060  if-eqz v6, +00dh
+  000064  if-eqz v1, +00bh
+  000068  invoke-virtual/range v17, Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet;->getValue()Ljava/lang/String;
+  00006e  move-result-object v1
+  000070  invoke-static v7, v1, v7, Ls7/a;->n(Ljava/lang/String; Ljava/lang/String; Ljava/lang/String;)Ljava/lang/String;
+  000076  move-result-object v1
+  000078  goto +1bh
+  00007a  if-eqz v6, +00bh
+  00007e  invoke-virtual/range v17, Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet;->getValue()Ljava/lang/String;
+  000084  move-result-object v1
+  000086  invoke-static v7, v1, Lx/n;->f(Ljava/lang/String; Ljava/lang/String;)Ljava/lang/String;
+  00008c  move-result-object v1
+  00008e  goto +10h
+  000090  if-eqz v1, +00bh
+  000094  invoke-virtual/range v17, Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet;->getValue()Ljava/lang/String;
+  00009a  move-result-object v1
+  00009c  invoke-static v1, v7, Lsb/j;->p(Ljava/lang/String; Ljava/lang/String;)Ljava/lang/String;
+  0000a2  move-result-object v1
+  0000a4  goto +5h
+  0000a6  invoke-virtual/range v17, Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet;->getValue()Ljava/lang/String;
+  0000ac  move-result-object v1
+  0000ae  invoke-virtual v1, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  0000b4  filled-new-array v7, [Ljava/lang/String;
+  0000ba  move-result-object v6
+  0000bc  const/4 v8, 6
+  0000be  const/4 v8, 6
+  0000c0  const/4 v9, 4
+  0000c2  const/4 v9, 0
+  0000c4  invoke-static v1, v6, v9, v8, Lka0/j;->I0(Ljava/lang/CharSequence; [Ljava/lang/String; I I)Ljava/util/List;
+  0000ca  move-result-object v1
+  0000cc  new-instance v10, Ljava/util/ArrayList;
+  0000d0  const/16 v6, 3155
+  0000d4  const/16 v6, 10
+  0000d8  invoke-static v1, v6, La70/r;->i0(Ljava/lang/Iterable; I)I
+  0000de  move-result v8
+  0000e0  invoke-direct v10, v8, Ljava/util/ArrayList;-><init>(I)V
+  0000e6  invoke-interface v1, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+  0000ec  move-result-object v1
+  0000ee  move v8, v9
+  0000f0  invoke-interface v1, Ljava/util/Iterator;->hasNext()Z
+  0000f6  move-result v11
+  0000f8  const/16 v16, 9870
+  0000fc  const/16 v16, 0
+  000100  if-eqz v11, +025h
+  000104  invoke-interface v1, Ljava/util/Iterator;->next()Ljava/lang/Object;
+  00010a  move-result-object v11
+  00010c  add-int/lit8 v12, v8, 1
+  000110  if-ltz v8, +019h
+  000114  check-cast v11, Ljava/lang/String;
+  000118  if-nez v8, +003h
+  00011c  goto +eh
+  00011e  invoke-virtual v11, Ljava/lang/String;->length()I
+  000124  move-result v8
+  000126  add-int/2addr v8, v5
+  000128  const/16 v13, 31090
+  00012c  const/16 v13, 32
+  000130  invoke-static v11, v8, v13, Lka0/j;->A0(Ljava/lang/String; I C)Ljava/lang/String;
+  000136  move-result-object v11
+  000138  invoke-virtual v10, v11, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  00013e  move v8, v12
+  000140  goto -28h
+  000142  invoke-static Li30/m;->Y()V
+  000148  throw v16
+  00014a  const/4 v14, 2
+  00014c  const/4 v14, 0
+  00014e  const/16 v15, 5663
+  000152  const/16 v15, 62
+  000156  const-string v11, "
+"
+  00015a  const/4 v12, 0
+  00015c  const/4 v12, 0
+  00015e  const/4 v13, 4
+  000160  const/4 v13, 0
+  000162  invoke-static/range v10 ... v15, Lkotlin/collections/a;->K0(Ljava/lang/Iterable; Ljava/lang/CharSequence; Ljava/lang/String; Ljava/lang/String; Lo70/j; I)Ljava/lang/String;
+  000168  move-result-object v1
+  00016a  new-instance v8, Ljava/lang/StringBuilder;
+  00016e  invoke-virtual v0, v9, v2, Ljava/lang/String;->substring(I I)Ljava/lang/String;
+  000174  move-result-object v10
+  000176  invoke-direct v8, v10, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+  00017c  invoke-virtual v8, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  000182  invoke-virtual v0, Ljava/lang/String;->length()I
+  000188  move-result v10
+  00018a  invoke-virtual v0, v2, v10, Ljava/lang/String;->substring(I I)Ljava/lang/String;
+  000190  move-result-object v0
+  000192  invoke-virtual v8, v0, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  000198  invoke-virtual v8, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+  00019e  move-result-object v0
+  0001a0  invoke-virtual/range v17, Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet;->getPlaceholderRange()Lu70/f;
+  0001a6  move-result-object v8
+  0001a8  invoke-static v1, v7, v9, Lka0/q;->g0(Ljava/lang/String; Ljava/lang/String; Z)Z
+  0001ae  move-result v7
+  0001b0  if-eqz v8, +005h
+  0001b4  iget v8, v8, Lu70/d;->a I
+  0001b8  goto +2h
+  0001ba  move v8, v9
+  0001bc  add-int/2addr v8, v7
+  0001be  invoke-static v9, v8, Lfd/b0;->V(I I)Lu70/f;
+  0001c4  move-result-object v7
+  0001c6  invoke-virtual v7, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  0001cc  invoke-virtual v7, Lu70/f;->isEmpty()Z
+  0001d2  move-result v10
+  0001d4  if-eqz v10, +003h
+  0001d8  goto +ah
+  0001da  iget v3, v7, Lu70/d;->a I
+  0001de  iget v7, v7, Lu70/d;->b I
+  0001e2  add-int/2addr v7, v4
+  0001e4  invoke-virtual v1, v3, v7, Ljava/lang/String;->substring(I I)Ljava/lang/String;
+  0001ea  move-result-object v3
+  0001ec  move v1, v9
+  0001ee  invoke-virtual v3, Ljava/lang/String;->length()I
+  0001f4  move-result v7
+  0001f6  if-ge v9, v7, +00dh
+  0001fa  invoke-virtual v3, v9, Ljava/lang/String;->charAt(I)C
+  000200  move-result v7
+  000202  if-ne v7, v6, +004h
+  000206  add-int/lit8 v1, v1, 1
+  00020a  add-int/lit8 v9, v9, 1
+  00020e  goto -10h
+  000210  mul-int/2addr v5, v1
+  000212  add-int/2addr v5, v8
+  000214  add-int/2addr v5, v2
+  000216  invoke-virtual/range v17, Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet;->getPlaceholderRange()Lu70/f;
+  00021c  move-result-object v1
+  00021e  if-eqz v1, +00eh
+  000222  new-instance v2, Lu70/f;
+  000226  iget v3, v1, Lu70/d;->b I
+  00022a  iget v1, v1, Lu70/d;->a I
+  00022e  sub-int/2addr v3, v1
+  000230  add-int/2addr v3, v5
+  000232  invoke-direct v2, v5, v3, v4, Lu70/d;-><init>(I I I)V
+  000238  goto +3h
+  00023a  move-object/from16 v2, v16
+  00023e  new-instance v1, Lyj/c;
+  000242  invoke-direct v1, v0, v2, Lyj/c;-><init>(Ljava/lang/CharSequence; Lu70/f;)V
+  000248  return-object v1
+  00024a  invoke-virtual/range v17, Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet;->getValue()Ljava/lang/String;
+  000250  move-result-object v3
+  000252  invoke-static v0, v2, v1, v3, Lka0/j;->E0(Ljava/lang/CharSequence; I I Ljava/lang/CharSequence;)Ljava/lang/StringBuilder;
+  000258  move-result-object v0
+  00025a  invoke-virtual v0, Ljava/lang/Object;->toString()Ljava/lang/String;
+  000260  move-result-object v0
+  000262  invoke-virtual/range v17, Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet;->getPlaceholderRange()Lu70/f;
+  000268  move-result-object v1
+  00026a  if-eqz v1, +016h
+  00026e  new-instance v1, Lu70/f;
+  000272  invoke-virtual/range v17, Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet;->getPlaceholderRange()Lu70/f;
+  000278  move-result-object v3
+  00027a  iget v3, v3, Lu70/d;->a I
+  00027e  add-int/2addr v3, v2
+  000280  invoke-virtual/range v17, Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet;->getPlaceholderRange()Lu70/f;
+  000286  move-result-object v5
+  000288  iget v5, v5, Lu70/d;->b I
+  00028c  add-int/2addr v2, v5
+  00028e  invoke-direct v1, v3, v2, v4, Lu70/d;-><init>(I I I)V
+  000294  goto +18h
+  000296  new-instance v1, Lu70/f;
+  00029a  invoke-virtual/range v17, Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet;->getValue()Ljava/lang/String;
+  0002a0  move-result-object v3
+  0002a2  invoke-virtual v3, Ljava/lang/String;->length()I
+  0002a8  move-result v3
+  0002aa  add-int/2addr v3, v2
+  0002ac  invoke-virtual/range v17, Lcom/getmimo/data/model/codeeditor/codingkeyboard/CodingKeyboardSnippet;->getValue()Ljava/lang/String;
+  0002b2  move-result-object v5
+  0002b4  invoke-virtual v5, Ljava/lang/String;->length()I
+  0002ba  move-result v5
+  0002bc  add-int/2addr v5, v2
+  0002be  invoke-direct v1, v3, v5, v4, Lu70/d;-><init>(I I I)V
+  0002c4  new-instance v2, Lyj/c;
+  0002c8  invoke-direct v2, v0, v1, Lyj/c;-><init>(Ljava/lang/CharSequence; Lu70/f;)V
+  0002ce  return-object v2
+  0002d0  <androguard.core.dex.FillArrayData object at 0x7ff3fb0d8290>
+
+===== Lcom/getmimo/ui/codeeditor/view/b;->e(Ljava/lang/CharSequence; Lu70/f; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object; =====
+dex=classes.dex code_offset=10425080 instructions=76 access=public final callers=4 callees=6
+callers: Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$insertCodingSnippet$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$onTextChangedViaKeyboardInput$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$onTextChangedViaKeyboardInput$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$performHighlightSyntax$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+callees: Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$performHighlightSyntax$1;-><init>(Lcom/getmimo/ui/codeeditor/view/b; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V, Lcom/getmimo/ui/codeeditor/view/b;->c(Ljava/lang/CharSequence; Lu70/f; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlin/b;->b(Ljava/lang/Object;)V, Lkotlinx/coroutines/flow/k;->k(Ljava/lang/Object;)V, Lwc/f;->i(Ljava/lang/String;)V
+  000000  move-object v5, v9
+  000002  instance-of v0, v12, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$performHighlightSyntax$1;
+  000006  const/4 v7, 4
+  000008  if-eqz v0, +019h
+  00000c  const/4 v8, 4
+  00000e  move-object v0, v12
+  000010  check-cast v0, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$performHighlightSyntax$1;
+  000014  const/4 v8, 7
+  000016  iget v1, v0, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$performHighlightSyntax$1;->d I
+  00001a  const/4 v8, 7
+  00001c  const/high16 v8, -2147483648
+  000020  move v2, v8
+  000022  and-int v3, v1, v2
+  000026  const/4 v8, 3
+  000028  if-eqz v3, +009h
+  00002c  const/4 v7, 4
+  00002e  sub-int/2addr v1, v2
+  000030  const/4 v8, 6
+  000032  iput v1, v0, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$performHighlightSyntax$1;->d I
+  000036  const/4 v7, 2
+  000038  goto +9h
+  00003a  const/4 v8, 1
+  00003c  new-instance v0, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$performHighlightSyntax$1;
+  000040  const/4 v8, 1
+  000042  invoke-direct v0, v5, v12, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$performHighlightSyntax$1;-><init>(Lcom/getmimo/ui/codeeditor/view/b; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)V
+  000048  const/4 v8, 6
+  00004a  iget-object v12, v0, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$performHighlightSyntax$1;->b Ljava/lang/Object;
+  00004e  const/4 v7, 3
+  000050  sget-object v1, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+  000054  const/4 v7, 6
+  000056  iget v2, v0, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$performHighlightSyntax$1;->d I
+  00005a  const/4 v8, 7
+  00005c  const/4 v7, 1
+  00005e  move v3, v7
+  000060  if-eqz v2, +019h
+  000064  const/4 v8, 3
+  000066  if-ne v2, v3, +00bh
+  00006a  const/4 v7, 6
+  00006c  iget-object v5, v0, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$performHighlightSyntax$1;->a Lkotlinx/coroutines/flow/k;
+  000070  const/4 v7, 5
+  000072  invoke-static v12, Lkotlin/b;->b(Ljava/lang/Object;)V
+  000078  const/4 v8, 2
+  00007a  goto +27h
+  00007c  const/4 v8, 3
+  00007e  const-string v8, "call to 'resume' before 'invoke' with coroutine"
+  000082  move-object v5, v8
+  000084  invoke-static v5, Lwc/f;->i(Ljava/lang/String;)V
+  00008a  const/4 v8, 2
+  00008c  const/4 v7, 0
+  00008e  move v5, v7
+  000090  return-object v5
+  000092  const/4 v8, 1
+  000094  invoke-static v12, Lkotlin/b;->b(Ljava/lang/Object;)V
+  00009a  const/4 v7, 5
+  00009c  iget-object v12, v5, Lcom/getmimo/ui/codeeditor/view/b;->j Lkotlinx/coroutines/flow/k;
+  0000a0  const/4 v7, 1
+  0000a2  iput-object v12, v0, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$performHighlightSyntax$1;->a Lkotlinx/coroutines/flow/k;
+  0000a6  const/4 v8, 2
+  0000a8  iput v3, v0, Lcom/getmimo/ui/codeeditor/view/CodeEditViewModel$performHighlightSyntax$1;->d I
+  0000ac  const/4 v8, 2
+  0000ae  invoke-virtual v5, v10, v11, v0, Lcom/getmimo/ui/codeeditor/view/b;->c(Ljava/lang/CharSequence; Lu70/f; Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+  0000b4  move-result-object v8
+  0000b6  move-object v5, v8
+  0000b8  if-ne v5, v1, +004h
+  0000bc  const/4 v7, 6
+  0000be  return-object v1
+  0000c0  const/4 v8, 3
+  0000c2  move-object v4, v12
+  0000c4  move-object v12, v5
+  0000c6  move-object v5, v4
+  0000c8  invoke-virtual v5, v12, Lkotlinx/coroutines/flow/k;->k(Ljava/lang/Object;)V
+  0000ce  const/4 v8, 2
+  0000d0  sget-object v5, Lz60/q;->a Lz60/q;
+  0000d4  const/4 v8, 6
+  0000d6  return-object v5
+  0000d8  <androguard.core.dex.FillArrayData object at 0x7ff3fb0d9950>

@@ -1,0 +1,26 @@
+%% MISSION 06 — original Mimo 9.35 architecture, reconstructed from DEX bytecode.
+%% APK sha256 48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+%% Classification of each node is in the corresponding numbered report and EVIDENCE_DATABASE.json.
+%% Solid edges = VERIFIED_STATIC invoke/field xref; dashed = INFERRED or client-side boundary.
+stateDiagram-v2
+  [*] --> Locked: path map item Lvn/e0
+  Locked --> Unlocked: previous REQUIRED tutorial completed<br/>(GetPathMapState$invoke$3 walks backwards<br/>over last required item)
+  Locked --> UnlockedButNoKeys: Lvn/h0 (pro chapter &amp; zero keys)
+  UnlockedButNoKeys --> Unlocked: CanOpenChapterWithKeys / keys &gt; 0
+  Unlocked --> InChapter: ChapterActivity
+  InChapter --> LessonShown: InteractiveLessonViewModel.E()
+  LessonShown --> WrongAnswer: X() lessonSolvedIncorrectly
+  WrongAnswer --> LessonShown: retry (a0() lesson_reset)
+  LessonShown --> CorrectAnswer: V() lessonSolvedCorrectly
+  CorrectAnswer --> ProgressRecorded: H(tries=1,attempts=d)<br/>createLessonProgress → Room in_queue=1
+  ProgressRecorded --> NextLesson: LiveData e = chapterIndex
+  NextLesson --> LessonShown
+  NextLesson --> ChapterEnd: last lesson
+  ChapterEnd --> Completed: Lvn/d0 / chapter_completions
+  Completed --> Unlocked: next tutorial in section
+  note right of Locked
+    VERIFIED_STATIC: state classes and dispatch in
+    GetPathMapState$invoke$3 (659 insns @10129608).
+    Exact boolean combination of isCompleted /
+    hasProgress / proTier / keys is UNKNOWN.
+  end note

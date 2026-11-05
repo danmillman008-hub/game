@@ -1,0 +1,105 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lte/b; semantic=DSL_DatabaseModuleParser
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lte/b;->a(Lorg/xmlpull/v1/XmlPullParser;)Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Database; =====
+dex=classes.dex code_offset=14377448 instructions=92 access=public final callers=1 callees=21
+callers: Lte/c;->b(Ljava/lang/String;)Ljava/util/ArrayList;
+callees: Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Database;-><init>(Ljava/util/ArrayList; Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;)V, Lds/x;->o(Ljava/lang/String;)Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;, Ljava/lang/Object;->getClass()Ljava/lang/Class;, Ljava/util/ArrayList;-><init>()V, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z, Lorg/xmlpull/v1/XmlPullParser;->getAttributeValue(Ljava/lang/String; Ljava/lang/String;)Ljava/lang/String;, Lorg/xmlpull/v1/XmlPullParser;->getName()Ljava/lang/String;, Lorg/xmlpull/v1/XmlPullParser;->getNamespace()Ljava/lang/String;, Lorg/xmlpull/v1/XmlPullParser;->getNamespace()Ljava/lang/String;, Lorg/xmlpull/v1/XmlPullParser;->getNamespace()Ljava/lang/String;, Lorg/xmlpull/v1/XmlPullParser;->getNamespace()Ljava/lang/String;, Lorg/xmlpull/v1/XmlPullParser;->getNamespace()Ljava/lang/String;, Lorg/xmlpull/v1/XmlPullParser;->nextTag()I, Lorg/xmlpull/v1/XmlPullParser;->nextTag()I, Lorg/xmlpull/v1/XmlPullParser;->nextTag()I, Lorg/xmlpull/v1/XmlPullParser;->require(I Ljava/lang/String; Ljava/lang/String;)V, Lorg/xmlpull/v1/XmlPullParser;->require(I Ljava/lang/String; Ljava/lang/String;)V, Lorg/xmlpull/v1/XmlPullParser;->require(I Ljava/lang/String; Ljava/lang/String;)V, Lorg/xmlpull/v1/XmlPullParser;->require(I Ljava/lang/String; Ljava/lang/String;)V, Lte/f;->a(Lorg/xmlpull/v1/XmlPullParser;)Lcom/getmimo/data/content/lessonparser/interactive/model/Table;
+  000000  move-object v6, v10
+  000002  invoke-interface v11, Lorg/xmlpull/v1/XmlPullParser;->getNamespace()Ljava/lang/String;
+  000008  move-result-object v9
+  00000a  move-object v6, v9
+  00000c  sget-object v0, Lcom/getmimo/data/content/lessonparser/interactive/model/Tag;->a [Lcom/getmimo/data/content/lessonparser/interactive/model/Tag;
+  000010  const-string v9, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  000014  const/4 v8, 2
+  000016  move v0, v8
+  000018  const-string v9, "database"
+  00001c  move-object v1, v9
+  00001e  invoke-interface v11, v0, v6, v1, Lorg/xmlpull/v1/XmlPullParser;->require(I Ljava/lang/String; Ljava/lang/String;)V
+  000024  const/4 v8, 1
+  000026  invoke-interface v11, Lorg/xmlpull/v1/XmlPullParser;->getNamespace()Ljava/lang/String;
+  00002c  move-result-object v9
+  00002e  move-object v6, v9
+  000030  sget-object v2, Lcom/getmimo/data/content/lessonparser/interactive/model/Attribute;->a [Lcom/getmimo/data/content/lessonparser/interactive/model/Attribute;
+  000034  const/4 v8, 3
+  000036  const-string v9, "visible-if"
+  00003a  move-object v2, v9
+  00003c  invoke-interface v11, v6, v2, Lorg/xmlpull/v1/XmlPullParser;->getAttributeValue(Ljava/lang/String; Ljava/lang/String;)Ljava/lang/String;
+  000042  move-result-object v8
+  000044  move-object v6, v8
+  000046  if-nez v6, +009h
+  00004a  const/4 v9, 2
+  00004c  sget-object v6, Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;->b Lds/x;
+  000050  const/4 v8, 5
+  000052  const-string v8, "always"
+  000056  move-object v6, v8
+  000058  const/4 v9, 5
+  00005a  sget-object v2, Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;->b Lds/x;
+  00005e  const/4 v9, 7
+  000060  invoke-virtual v2, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+  000066  invoke-static v6, Lds/x;->o(Ljava/lang/String;)Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;
+  00006c  move-result-object v8
+  00006e  move-object v6, v8
+  000070  invoke-interface v11, Lorg/xmlpull/v1/XmlPullParser;->nextTag()I
+  000076  invoke-interface v11, Lorg/xmlpull/v1/XmlPullParser;->getNamespace()Ljava/lang/String;
+  00007c  move-result-object v9
+  00007e  move-object v2, v9
+  000080  const-string v8, "tables"
+  000084  move-object v3, v8
+  000086  invoke-interface v11, v0, v2, v3, Lorg/xmlpull/v1/XmlPullParser;->require(I Ljava/lang/String; Ljava/lang/String;)V
+  00008c  const/4 v9, 1
+  00008e  new-instance v0, Ljava/util/ArrayList;
+  000092  const/4 v8, 4
+  000094  invoke-direct v0, Ljava/util/ArrayList;-><init>()V
+  00009a  const/4 v9, 2
+  00009c  const/4 v8, 2
+  00009e  invoke-interface v11, Lorg/xmlpull/v1/XmlPullParser;->nextTag()I
+  0000a4  move-result v8
+  0000a6  move v2, v8
+  0000a8  const/4 v8, 3
+  0000aa  move v4, v8
+  0000ac  if-eq v2, v4, +01fh
+  0000b0  const/4 v9, 4
+  0000b2  invoke-interface v11, Lorg/xmlpull/v1/XmlPullParser;->getName()Ljava/lang/String;
+  0000b8  move-result-object v8
+  0000ba  move-object v2, v8
+  0000bc  sget-object v4, Lcom/getmimo/data/content/lessonparser/interactive/model/Tag;->a [Lcom/getmimo/data/content/lessonparser/interactive/model/Tag;
+  0000c0  const/4 v9, 3
+  0000c2  const-string v9, "table"
+  0000c6  move-object v4, v9
+  0000c8  invoke-static v2, v4, Lkotlin/jvm/internal/h;->c(Ljava/lang/Object; Ljava/lang/Object;)Z
+  0000ce  move-result v8
+  0000d0  move v2, v8
+  0000d2  if-eqz v2, -01bh
+  0000d6  const/4 v8, 2
+  0000d8  invoke-static v11, Lte/f;->a(Lorg/xmlpull/v1/XmlPullParser;)Lcom/getmimo/data/content/lessonparser/interactive/model/Table;
+  0000de  move-result-object v9
+  0000e0  move-object v2, v9
+  0000e2  invoke-virtual v0, v2, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+  0000e8  goto -25h
+  0000ea  const/4 v8, 1
+  0000ec  invoke-interface v11, Lorg/xmlpull/v1/XmlPullParser;->getNamespace()Ljava/lang/String;
+  0000f2  move-result-object v8
+  0000f4  move-object v2, v8
+  0000f6  sget-object v5, Lcom/getmimo/data/content/lessonparser/interactive/model/Tag;->a [Lcom/getmimo/data/content/lessonparser/interactive/model/Tag;
+  0000fa  const/4 v8, 4
+  0000fc  invoke-interface v11, v4, v2, v3, Lorg/xmlpull/v1/XmlPullParser;->require(I Ljava/lang/String; Ljava/lang/String;)V
+  000102  const/4 v9, 2
+  000104  invoke-interface v11, Lorg/xmlpull/v1/XmlPullParser;->nextTag()I
+  00010a  invoke-interface v11, Lorg/xmlpull/v1/XmlPullParser;->getNamespace()Ljava/lang/String;
+  000110  move-result-object v9
+  000112  move-object v2, v9
+  000114  invoke-interface v11, v4, v2, v1, Lorg/xmlpull/v1/XmlPullParser;->require(I Ljava/lang/String; Ljava/lang/String;)V
+  00011a  const/4 v8, 2
+  00011c  new-instance v11, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Database;
+  000120  const/4 v8, 7
+  000122  invoke-direct v11, v0, v6, Lcom/getmimo/data/content/lessonparser/interactive/model/LessonModule$Database;-><init>(Ljava/util/ArrayList; Lcom/getmimo/data/content/lessonparser/interactive/model/ModuleVisibility;)V
+  000128  const/4 v8, 4
+  00012a  return-object v11
+  00012c  <androguard.core.dex.FillArrayData object at 0x7ff3faf2f510>

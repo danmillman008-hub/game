@@ -1,0 +1,79 @@
+MISSION 06 — verbatim DEX disassembly (androguard 4.1.4, read-only)
+APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+class=Lcom/getmimo/data/content/lessonparser/interactive/ParserModule; semantic=ParserModule
+
+NOTE: interleaved `const/4 vN, <junk>` instructions are Smob-style no-op decoys;
+      they clobber registers that are not subsequently read. Trailing
+      fill-array-data-payload is a linear-decode artefact, not executed code.
+NOTE: caller/callee lists regenerated with the corrected xref cache (78,560 targets).
+
+===== Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;-><clinit>()V =====
+dex=classes.dex code_offset=9645068 instructions=38 access=static constructor callers=0 callees=4
+callees: Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V, Lkotlin/enums/a;->a([Ljava/lang/Enum;)Lg70/a;
+  000000  new-instance v0, Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;
+  000004  const-string v5, "Smob - Mod obfuscation tool v4.6 by Kirlif'"
+  000008  const-string v5, "CODE"
+  00000c  move-object v1, v5
+  00000e  const/4 v5, 0
+  000010  move v2, v5
+  000012  invoke-direct v0, v1, v2, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V
+  000018  const/4 v5, 3
+  00001a  sput-object v0, Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;->a Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;
+  00001e  const/4 v5, 4
+  000020  new-instance v1, Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;
+  000024  const/4 v5, 7
+  000026  const-string v5, "PARAGRAPH"
+  00002a  move-object v2, v5
+  00002c  const/4 v5, 1
+  00002e  move v3, v5
+  000030  invoke-direct v1, v2, v3, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V
+  000036  const/4 v5, 6
+  000038  sput-object v1, Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;->b Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;
+  00003c  const/4 v5, 2
+  00003e  new-instance v2, Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;
+  000042  const/4 v5, 2
+  000044  const-string v5, "SELECTION"
+  000048  move-object v3, v5
+  00004a  const/4 v5, 2
+  00004c  move v4, v5
+  00004e  invoke-direct v2, v3, v4, Ljava/lang/Enum;-><init>(Ljava/lang/String; I)V
+  000054  const/4 v5, 3
+  000056  sput-object v2, Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;->c Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;
+  00005a  const/4 v5, 7
+  00005c  filled-new-array v0, v1, v2, [Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;
+  000062  move-result-object v5
+  000064  move-object v0, v5
+  000066  sput-object v0, Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;->d [Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;
+  00006a  const/4 v5, 1
+  00006c  invoke-static v0, Lkotlin/enums/a;->a([Ljava/lang/Enum;)Lg70/a;
+  000072  return-void 
+  000074  <androguard.core.dex.FillArrayData object at 0x7ff3fadfb050>
+
+===== Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;->valueOf(Ljava/lang/String;)Lcom/getmimo/data/content/lessonparser/interactive/ParserModule; =====
+dex=classes.dex code_offset=9645300 instructions=11 access=public static callers=0 callees=1
+callees: Ljava/lang/Enum;->valueOf(Ljava/lang/Class; Ljava/lang/String;)Ljava/lang/Enum;
+  000000  move-object v1, v5
+  000002  const-class v0, Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;
+  000006  const/4 v3, 7
+  000008  invoke-static v0, v1, Ljava/lang/Enum;->valueOf(Ljava/lang/Class; Ljava/lang/String;)Ljava/lang/Enum;
+  00000e  move-result-object v4
+  000010  move-object v1, v4
+  000012  check-cast v1, Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;
+  000016  const/4 v3, 1
+  000018  return-object v1
+  00001a  nop 
+  00001c  <androguard.core.dex.FillArrayData object at 0x7ff3fadfb410>
+
+===== Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;->values()[Lcom/getmimo/data/content/lessonparser/interactive/ParserModule; =====
+dex=classes.dex code_offset=9645372 instructions=9 access=public static callers=1 callees=1
+callers: Lve/b;-><clinit>()V
+callees: Ljava/lang/Object;->clone()Ljava/lang/Object;
+  000000  sget-object v0, Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;->d [Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;
+  000004  const/4 v4, 7
+  000006  invoke-virtual v0, Ljava/lang/Object;->clone()Ljava/lang/Object;
+  00000c  move-result-object v1
+  00000e  move-object v0, v1
+  000010  check-cast v0, [Lcom/getmimo/data/content/lessonparser/interactive/ParserModule;
+  000014  const/4 v4, 6
+  000016  return-object v0
+  000018  <androguard.core.dex.FillArrayData object at 0x7ff3fadfb790>

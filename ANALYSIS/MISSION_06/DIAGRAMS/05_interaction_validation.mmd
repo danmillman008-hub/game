@@ -1,0 +1,43 @@
+%% MISSION 06 — original Mimo 9.35 architecture, reconstructed from DEX bytecode.
+%% APK sha256 48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+%% Classification of each node is in the corresponding numbered report and EVIDENCE_DATABASE.json.
+%% Solid edges = VERIFIED_STATIC invoke/field xref; dashed = INFERRED or client-side boundary.
+flowchart TD
+  subgraph FTG["fillTheGap"]
+    F1["Interaction$FillTheGap.c List&lt;Option&gt;<br/>Option{isCorrect,text,startIndex,endIndex}"]
+    F1 --> F2["correctTokens = options.filter{isCorrect}<br/>in content order"]
+    F1 --> F3["state.c = user-filled tokens"]
+    F3 --> F4["selected = state.c.filter{it.b}"]
+    F4 --> F5{"selected.size == correctTokens.size<br/>AND every selected[i].text == correctTokens[i].text"}
+    F5 -->|yes| OK["Y(true)"]
+    F5 -->|no| NO["Y(false)"]
+  end
+  subgraph SEL["selection / single / multiple choice"]
+    S1["Lsm/a;{b=selected, c=isCorrect}"] --> S2["Lkm/f;-&gt;b(list) = list.all{ it.b == it.c }"]
+    S2 --> OK
+    S2 --> NO
+  end
+  subgraph SPL["spell"]
+    P1["state.c answer tokens vs state.b expected tokens"] --> P2{"size equal AND every<br/>token.a string equal"}
+    P2 --> OK
+    P2 --> NO
+  end
+  subgraph VIN["validatedInput"]
+    V1["Lqm/d;-&gt;E() extracts expected =<br/>code.subSequence(startIndex,endIndex)"] --> V2["user text stored in field S by Lqm/b;"]
+    V2 --> V3["Lqm/i;-&gt;a(String) normalize:<br/>toLowerCase(Locale.US); keep letters/digits<br/>and &lt; &gt; ( ) : { } , ."]
+    V1 --> V3
+    V3 --> V4{"normalize(user)==normalize(expected)?"}
+    V4 -->|no| V5["Lqm/g; INCORRECT"]
+    V4 -->|yes| V6{"user.equals(expected)?"}
+    V6 -->|yes| V7["Lqm/e; CORRECT"]
+    V6 -->|no| V8["Lqm/f; PARTIAL MATCH (user,expected)"]
+    V5 --> V9["base/c;-&gt;Z(result)"]
+    V7 --> V9
+    V8 --> V9
+    V9 --> V10["onValidatedInputExecuted$1 after delay(300)"]
+    V10 -->|"Lqm/e"| VC2["V()"]
+    V10 -->|"Lqm/f"| WC["W(partial) lessonSolvedCorrectlyWithPartialMatch"]
+    V10 -->|"Lqm/g"| XC2["X()"]
+  end
+  OK --> ON["onLessonRun$1"]
+  NO --> ON
