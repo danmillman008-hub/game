@@ -1,0 +1,68 @@
+%% MIMO 9.35 core flow — APK SHA-256 48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+%% SERVER CONFIRMED = 0. No server response is drawn as observed.
+%% Green = VERIFIED_RUNTIME, blue = VERIFIED_STATIC, orange dashed = UNKNOWN.
+flowchart TD
+    subgraph NAV[Navigation / UI state machine - measured in M08 run 42042312640]
+      A[".ui.onboarding.OnboardingActivity<br/>26 measured transitions"] --> B[".ui.authentication.AuthenticationActivity<br/>Skip -> guest"]
+      B --> C[".ui.main.MainActivity<br/>bottom_navigation_item_track/practice/leaderboard/profile"]
+      C -->|"natural onboarding -> HTML welcome (measured)"| D[".ui.chapter.ChapterActivity<br/>LessonBundle 151410 / 151403 / FTG"]
+      C -->|"Practice tab guest guard G-AUTH"| P["Create a profile to access practice content"]
+      D -->|"quit dialog G-QUIT"| C
+    end
+
+    subgraph VMR[ViewModel answer chain - VERIFIED_RUNTIME M07 stage 6]
+      D --> U["c.U() NonInteractiveLessonBaseViewModel<br/>goToNextPage$1 auto-advance / WebView Continue"]
+      U --> H["c.H(1,1) solved(tries, attempts)"]
+      H --> R["LessonProgressRepository.createLessonProgress<br/>LessonBundle(151403, idx 1, ch 17742, tut 904, track 219)"]
+      R --> Q["LessonProgress(... tries=1 attempts=1<br/>isPracticeProgress=false inQueue=true v753)"]
+      Q --> E0["c.e0() -> LessonProgressQueue.storeLessonProgress"]
+      E0 --> F0["isSolvedCorrectly()=true -> c.f0(false,true) -> c.N()"]
+    end
+
+    subgraph VMS[ViewModel native path - VERIFIED_STATIC only]
+      V["base/c InteractiveLessonBaseViewModel<br/>Y(Z) double-run guard; onLessonRun$1"]
+      V -->|"exact / partial / wrong (static)"| X["V() / W() / X() / d0()<br/>jm/m, jm/n, jm/o feedback"]
+      X -.->|"NOT OBSERVED at runtime"| H
+    end
+
+    subgraph VAL[Validators - VERIFIED_BOTH]
+      V -.-> K1["qm/i.a normalizer + setupViews$2"]
+      V -.-> K2["km/f.b all selected==correct"]
+      V -.-> K3["im/d.E0 ordered token equality"]
+      V -.-> K4["q.I List.equals shipped solvedContent"]
+      V -.-> K5["lesson-webview.js correctLetter='D'<br/>mimo.activity.correct|wrong"]
+    end
+
+    subgraph REPO[Learner state stores - VERIFIED_RUNTIME]
+      Q --> DB[("Room mimo.db WAL<br/>lesson_progress 11 cols<br/>tutorial_completions / chapter_completions")]
+      Q --> PREFS["mimo_prefs.xml<br/>local_coins={coins:200}<br/>favorite_tracks / user_settings"]
+      CNT["getCorrectLessonProgressCount<br/>getCorrectLessonsFirstTryCount<br/>updateCorrectAnswersCount<br/>updateLessonStreakDetector<br/>(static signatures only)"]
+      DB -.-> CNT
+    end
+
+    subgraph SCORE[Scoring / rewards - UNKNOWN]
+      CNT -.->|"formula UNKNOWN"| SC["AnswersInChapter(correct,total) StateFlow<br/>ChapterFinishedViewModel"]
+      SC -.-> SRV["remote DTOs: Reward / Rewards / UserActivityResponse<br/>Leaderboard / Streak / Settings dailyGoal"]
+      SC -.->|"UNKNOWN"| XP["XP / streak length / keys / coins award"]
+    end
+
+    subgraph SYNC[Sync boundary - static + offline runtime]
+      DB -->|"SELECT in_queue=1"| POST["postUnsyncedLessonProgress<br/>network.a.a() WIFI|CELLULAR gate"]
+      POST -->|"online (static)"| API["POST /v1/tutorials/{id}/progress<br/>LessonProgressApi.postProgress"]
+      POST -->|"offline (measured)"| ERR["NoConnectionException<br/>SERVER CONFIRMED=0"]
+      API -.->|"response UNKNOWN"| SRV
+    end
+
+    subgraph NEXT[Next activity / progression - mixed]
+      F0 --> D
+      DB --> PM["GetPathMapState / CanOpenChapterWithKeys<br/>Completed|Locked|Unlocked|UnlockedButNoKeys (static)"]
+      PM -.-> C
+      C -.->|"M08 runs 2-4: main_activity_reached=false<br/>route_tour_skipped"| MAIN["bottom-nav route -> ViewModel -> Repository<br/>UNKNOWN at method level"]
+    end
+
+    classDef rt fill:#e8f4ea,stroke:#2d6a4f,color:#1b4332;
+    classDef st fill:#eef2ff,stroke:#3949ab,color:#1a237e;
+    classDef unk fill:#fff3e0,stroke:#e65100,color:#4e342e,stroke-dasharray: 4 3;
+    class A,B,C,D,P,U,H,R,Q,E0,F0,DB,PREFS rt;
+    class V,X,CNT,POST,API,PM,K1,K2,K3,K4,K5 st;
+    class SRV,XP,ERR,SC,MAIN unk;

@@ -1,0 +1,2104 @@
+{
+  "document": "MIMO_NAVIGATION_GRAPH — Mimo 9.35 UI / Activity state machine",
+  "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+  "method": "adb uiautomator XML + dumpsys activity activities (topResumedActivity) + LiveData Fragment/ViewModel records; state-aware taps computed from measured node bounds. Frida Application.ActivityLifecycleCallbacks failed on API 36 (extra default methods) and is recorded as a hook_error, so no activity names were inferred from it.",
+  "runs": [
+    "42042312640",
+    "42046336206",
+    "42049141553",
+    "42050715150"
+  ],
+  "screen_count": 46,
+  "edge_count": 45,
+  "evidence_class": "VERIFIED_RUNTIME",
+  "server_confirmed": 0,
+  "states": {
+    "STARTUP": {
+      "activity": ".ui.SplashActivity_default / .ui.onboarding.intro.IntroSlidesActivity",
+      "evidence": "E11 S013 startup_home; E12 p2_startup"
+    },
+    "ONBOARDING": {
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "substates": [
+        "goal",
+        "motivation",
+        "employment",
+        "work_field",
+        "experience",
+        "interest",
+        "path_result",
+        "daily_goal",
+        "reminder",
+        "device"
+      ],
+      "evidence": "E11 seq 25..123 (26 measured transitions); E19 S4NAV-01..22"
+    },
+    "AUTH_GATE": {
+      "activity": ".ui.authentication.AuthenticationActivity",
+      "note": "Skip leads to guest learner state; no credentials used",
+      "evidence": "E11 seq 129"
+    },
+    "MAIN": {
+      "activity": ".ui.main.MainActivity",
+      "tabs": [
+        "Learn (bottom_navigation_item_track)",
+        "Practice (bottom_navigation_item_practice)",
+        "Leaderboard (bottom_navigation_item_leaderboard)",
+        "Profile (bottom_navigation_item_profile)"
+      ],
+      "evidence": "E11 UI/S231_resume_02.xml, S229_resume_01_after.xml"
+    },
+    "CHAPTER": {
+      "activity": ".ui.chapter.ChapterActivity",
+      "lesson_screens": [
+        "non-interactive slide",
+        "WebView letter exercise",
+        "fill-the-gap code editor"
+      ],
+      "evidence": "E11 UI/S136_onboard_21.xml, S144_onboard_22.xml, S151_onboard_23_after.xml"
+    },
+    "QUIT_DIALOG": {
+      "activity": ".ui.chapter.ChapterActivity",
+      "text": "Are you sure you want to quit? / You will lose your progress from this lesson.",
+      "choices": [
+        "Quit lesson",
+        "Choose a different path",
+        "Cancel"
+      ],
+      "evidence": "E11 UI/S213_back_from_lesson_after.xml"
+    },
+    "PATH_PICKER": {
+      "activity": ".ui.main.MainActivity",
+      "text": "Select Path / Career Paths / Full-Stack Developer SECTION 0/20 / Python Developer SECTION 0/11",
+      "evidence": "E11 UI/S221_resume_00_after.xml"
+    },
+    "PRACTICE_GATE": {
+      "activity": ".ui.main.MainActivity",
+      "text": "Lock in your learning / Create a profile to access practice content",
+      "guard": "unauthenticated guest is blocked from Practice content; no auth bypass attempted",
+      "evidence": "E11 UI/S234_resume_02_after.xml"
+    }
+  },
+  "guards": [
+    {
+      "id": "G-AUTH",
+      "decision": "Practice content requires a profile",
+      "implementation": "Practice tab renders a Log in / Sign up screen for a guest",
+      "evidence_class": "VERIFIED_RUNTIME",
+      "evidence": "E11 UI/S234_resume_02_after.xml"
+    },
+    {
+      "id": "G-KEYS",
+      "decision": "chapter unlock by key-set membership",
+      "implementation": "ds/w.c(Set<String>,J,J,J): Set.contains(\"<trackId>:<tutorialId>:<chapterId>\") consumed by CanOpenChapterWithKeys$invoke$1",
+      "evidence_class": "VERIFIED_STATIC",
+      "evidence": "E20 08_PROGRESSION_AND_UNLOCK_LOGIC.md; E10 10_LEARNING_PROGRESSION.md"
+    },
+    {
+      "id": "G-QUIT",
+      "decision": "back from ChapterActivity requires explicit quit confirmation",
+      "implementation": "three-option dialog; Quit lesson returns to MainActivity",
+      "evidence_class": "VERIFIED_RUNTIME",
+      "evidence": "E11 UI/S213_back_from_lesson_after.xml"
+    },
+    {
+      "id": "G-NETWORK",
+      "decision": "queued progress posted only when online",
+      "implementation": "com.getmimo.network.a.a(): ConnectivityManager active network has WIFI or CELLULAR; offline throws NoConnectionException",
+      "evidence_class": "VERIFIED_BOTH",
+      "evidence": "E08 E4; E10 15_OFFLINE_BEHAVIOR_SPECIFICATION.md"
+    }
+  ],
+  "screens": {
+    "d420ea6de250": {
+      "screen_id": "d420ea6de250",
+      "activity": ".ui.onboarding.intro.IntroSlidesActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{599599 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity t9}",
+      "texts": [
+        "Learn at your own pace",
+        "Bite-sized lessons that fit your schedule",
+        "Get started",
+        "I already have an account"
+      ],
+      "clickable_nodes": 2,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S011_startup_home.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "fe05d602a5f5": {
+      "screen_id": "fe05d602a5f5",
+      "activity": ".ui.onboarding.intro.IntroSlidesActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{599599 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity t9}",
+      "texts": [
+        "Build projects",
+        "Apply what you've learned and build real-world projects with step-by-step guidance",
+        "Get started",
+        "I already have an account"
+      ],
+      "clickable_nodes": 2,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S016_onboard_start.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "5cd82a0bc5cc": {
+      "screen_id": "5cd82a0bc5cc",
+      "activity": ".ui.onboarding.intro.IntroSlidesActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{599599 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity t9}",
+      "texts": [
+        "Change your career",
+        "Use your portfolio of projects to apply for a job and change your career",
+        "Get started",
+        "I already have an account"
+      ],
+      "clickable_nodes": 2,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S018_onboard_00.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "ae1e4a1746ee": {
+      "screen_id": "ae1e4a1746ee",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{133388471 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [
+        "Welcome to Mimo!",
+        "To build your personal curriculum, we'll ask you a few questions.",
+        "Let's go"
+      ],
+      "clickable_nodes": 1,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S024_onboard_00_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "4a3497d1a97b": {
+      "screen_id": "4a3497d1a97b",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{133388471 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [
+        "Why are you learning to code?",
+        "Switch into a tech career",
+        "Build an app, website, or project",
+        "Do better at work or school",
+        "For fun, to learn something new",
+        "None of these"
+      ],
+      "clickable_nodes": 5,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S028_onboard_01_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "0a877cbbdd4d": {
+      "screen_id": "0a877cbbdd4d",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{133388471 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [
+        "What’s your main goal?",
+        "Understand technical topics better",
+        "Build something useful",
+        "Open up better opportunities"
+      ],
+      "clickable_nodes": 3,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S032_onboard_02_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "8cccd8d69d1a": {
+      "screen_id": "8cccd8d69d1a",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{133388471 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [
+        "You’re in the right place",
+        "Mimo helps you learn coding basics you can actually use.",
+        "Continue"
+      ],
+      "clickable_nodes": 1,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S040_onboard_03_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "fbdd4bb88a46": {
+      "screen_id": "fbdd4bb88a46",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{133388471 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [
+        "Which of these describes you best?",
+        "High school student",
+        "University student",
+        "Employed",
+        "Self-employed",
+        "Something else"
+      ],
+      "clickable_nodes": 5,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S045_onboard_04_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "dede5dddf7ef": {
+      "screen_id": "dede5dddf7ef",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{133388471 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [
+        "What kind of work do you do?",
+        "Marketing",
+        "Sales",
+        "Customer support",
+        "Software, IT &amp; data",
+        "Product management",
+        "Administration &amp; finance",
+        "Something else"
+      ],
+      "clickable_nodes": 7,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S051_onboard_05_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "6eacad034763": {
+      "screen_id": "6eacad034763",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{133388471 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [
+        "How much coding experience do you have?",
+        "NONE",
+        "A LITTLE",
+        "A LOT",
+        "You're about to write your first line of code",
+        "Continue"
+      ],
+      "clickable_nodes": 5,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S056_onboard_06_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "0393ad7eff82": {
+      "screen_id": "0393ad7eff82",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{133388471 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [],
+      "clickable_nodes": 0,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S061_onboard_07_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "7c8c05aa4e7e": {
+      "screen_id": "7c8c05aa4e7e",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{133388471 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [
+        "Which aspect of coding captivates you?",
+        "How things look (appearance)",
+        "How things work (logic)",
+        "I’m intrigued by both"
+      ],
+      "clickable_nodes": 3,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S069_onboard_08_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "6b6326b27f2f": {
+      "screen_id": "6b6326b27f2f",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{133388471 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [
+        "What do you find the most interesting?",
+        "Games",
+        "Web apps",
+        "I'm not sure"
+      ],
+      "clickable_nodes": 3,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S073_onboard_09_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "ab42fb2f351d": {
+      "screen_id": "ab42fb2f351d",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{133388471 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [
+        "Front-End Developer is the best choice for you!",
+        "You can switch paths at any time.",
+        "Front-End Developer",
+        "Unlock Web Development: dive deep into HTML, CSS, and JavaScript, and conquer React",
+        "TECHNOLOGIES",
+        "HTML",
+        "JAVASCRIPT",
+        "CSS",
+        "REACT",
+        "Continue",
+        "See all options"
+      ],
+      "clickable_nodes": 3,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S077_onboard_10_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "0ce1c092ec69": {
+      "screen_id": "0ce1c092ec69",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{133388471 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [
+        "10M+ people have learned Web Development with Mimo",
+        "It’s our mission to help you reach your coding goals too",
+        "Continue"
+      ],
+      "clickable_nodes": 1,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S085_onboard_11_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "1e2df1a4646b": {
+      "screen_id": "1e2df1a4646b",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{133388471 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [
+        "How long do you want to learn each day?",
+        "You can always change this goal later",
+        "Casual",
+        "5 minutes",
+        "Regular",
+        "10 minutes",
+        "Serious",
+        "20 minutes",
+        "Continue"
+      ],
+      "clickable_nodes": 4,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S089_onboard_12_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "8e65523787a5": {
+      "screen_id": "8e65523787a5",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{133388471 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [
+        "How long do you want to learn each day?",
+        "You can always change this goal later",
+        "Casual",
+        "5 minutes",
+        "Regular",
+        "10 minutes",
+        "Serious",
+        "20 minutes"
+      ],
+      "clickable_nodes": 4,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S093_onboard_13_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "40e9270b0221": {
+      "screen_id": "40e9270b0221",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{133388471 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [
+        "You’ll be creating programs in no time!"
+      ],
+      "clickable_nodes": 0,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S099_onboard_14.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "2e5065604657": {
+      "screen_id": "2e5065604657",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{133388471 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [
+        "You’ll be creating programs in no time!",
+        "Continue"
+      ],
+      "clickable_nodes": 1,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S102_onboard_14_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "4d8068fddbc8": {
+      "screen_id": "4d8068fddbc8",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{133388471 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [
+        "Start a coding habit, set a daily reminder",
+        "You can always change the time later",
+        "02:15 PM",
+        "Yes, turn on",
+        "Set later"
+      ],
+      "clickable_nodes": 3,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S106_onboard_15_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "0bbfe2833815": {
+      "screen_id": "0bbfe2833815",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{133388471 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [
+        "Where do you want to learn to code?",
+        "Mostly on the phone",
+        "Mostly on the computer",
+        "On the phone &amp; computer"
+      ],
+      "clickable_nodes": 3,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S114_onboard_16_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "ac757d69b56e": {
+      "screen_id": "ac757d69b56e",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{133388471 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [
+        "Mimo works on all your devices",
+        "You can use Mimo seamlessly on mobile and desktop. Access Mimo's web version at mimo.org.",
+        "Continue"
+      ],
+      "clickable_nodes": 1,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S118_onboard_17_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "9b203bd084bc": {
+      "screen_id": "9b203bd084bc",
+      "activity": ".ui.authentication.AuthenticationActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{227419773 u0 com.getmimo/.ui.authentication.AuthenticationActivity t9}",
+      "texts": [
+        "Just a second! We're putting together your personalized curriculum…"
+      ],
+      "clickable_nodes": 0,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S122_onboard_18_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "8c08e774cf0b": {
+      "screen_id": "8c08e774cf0b",
+      "activity": ".ui.authentication.AuthenticationActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{227419773 u0 com.getmimo/.ui.authentication.AuthenticationActivity t9}",
+      "texts": [
+        "Skip",
+        "Create an account to save your progress",
+        "Track your progress",
+        "Start a streak and form a habit",
+        "Compete with others",
+        "Make it to the top of your leaderboard",
+        "Connect with friends",
+        "Learn together and motivate each other",
+        "Sign up with Google",
+        "Sign up with email",
+        "By signing up you agree to our",
+        "Terms of service",
+        "You can delete your account in your settings"
+      ],
+      "clickable_nodes": 4,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S123_onboard_19.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "39fcd360f435": {
+      "screen_id": "39fcd360f435",
+      "activity": ".ui.main.MainActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{247282340 u0 com.getmimo/.ui.main.MainActivity t9}",
+      "texts": [
+        "Welcome to your learning path! Are you ready for your first lesson?"
+      ],
+      "clickable_nodes": 5,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S130_onboard_19_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "381cc9ef052c": {
+      "screen_id": "381cc9ef052c",
+      "activity": ".ui.chapter.ChapterActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{60379642 u0 com.getmimo/.ui.chapter.ChapterActivity t9}",
+      "texts": [
+        "Welcome! You're about to learn technologies like HTML, CSS, JavaScript, React, and everything else we'll need to build for the web.",
+        "Before you realize it, we'll be creating real-life projects. Let's start with HTML.",
+        "Continue"
+      ],
+      "clickable_nodes": 3,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S135_onboard_20_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "b2a5a94abfaf": {
+      "screen_id": "b2a5a94abfaf",
+      "activity": ".ui.chapter.ChapterActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{60379642 u0 com.getmimo/.ui.chapter.ChapterActivity t9}",
+      "texts": [
+        "Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.",
+        "On top of HTML, you can build stunning web pages and even powerful, full-featured web apps.",
+        "Guess the letter",
+        "_ O G",
+        "Q",
+        "R",
+        "D",
+        "Continue"
+      ],
+      "clickable_nodes": 6,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S143_onboard_21_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "f7d4a840d5c5": {
+      "screen_id": "f7d4a840d5c5",
+      "activity": ".ui.chapter.ChapterActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{60379642 u0 com.getmimo/.ui.chapter.ChapterActivity t9}",
+      "texts": [
+        "This is the code editor where we'll write code. Let’s jump in and start coding.",
+        "Click on &lt;button&gt;Like&lt;/button&gt; to add the HTML code to create a button with the label Like.",
+        "Tap the snippets below",
+        "index.html",
+        "W",
+        "&lt;button&gt;Like&lt;/button&gt;"
+      ],
+      "clickable_nodes": 6,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S147_onboard_22_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "7dd2f0e297b5": {
+      "screen_id": "7dd2f0e297b5",
+      "activity": ".ui.chapter.ChapterActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{60379642 u0 com.getmimo/.ui.chapter.ChapterActivity t9}",
+      "texts": [
+        "Are you sure you want to quit?",
+        "You'll lose your progress from this lesson.",
+        "Quit lesson",
+        "Choose a different path",
+        "Cancel"
+      ],
+      "clickable_nodes": 4,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S213_back_from_lesson_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "a5f47792dd98": {
+      "screen_id": "a5f47792dd98",
+      "activity": ".ui.main.MainActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{247282340 u0 com.getmimo/.ui.main.MainActivity t9}",
+      "texts": [
+        "Select Path",
+        "Career Paths",
+        "Full-Stack Developer",
+        "SECTION",
+        "0/20",
+        "Python Developer",
+        "SECTION",
+        "0/11",
+        "Back-End Developer",
+        "SECTION",
+        "0/9",
+        "Front-End Developer",
+        "SECTION",
+        "0/15"
+      ],
+      "clickable_nodes": 6,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S221_resume_00_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "03124f8c8523": {
+      "screen_id": "03124f8c8523",
+      "activity": ".ui.main.MainActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{247282340 u0 com.getmimo/.ui.main.MainActivity t9}",
+      "texts": [
+        "200",
+        "0",
+        "Python Developer",
+        "1. Intro to Python",
+        "Learn",
+        "Practice",
+        "Leaderboard",
+        "Profile"
+      ],
+      "clickable_nodes": 12,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S229_resume_01_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "03eb48576169": {
+      "screen_id": "03eb48576169",
+      "activity": ".ui.main.MainActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{247282340 u0 com.getmimo/.ui.main.MainActivity t9}",
+      "texts": [
+        "Practice",
+        "Log in",
+        "Lock in your learning",
+        "Create a profile to access practice content",
+        "Sign up with Google",
+        "Sign up with email",
+        "By logging in you agree to our Terms and Privacy Policy",
+        "You can delete your account in your settings",
+        "Learn",
+        "Practice",
+        "Leaderboard",
+        "Profile"
+      ],
+      "clickable_nodes": 6,
+      "fragments": [
+        "#0: AutofillManager",
+        "FixedContainerItems: id=-203 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@7bc6f targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0",
+        "FixedContainerItems: id=-114 itemCount=1 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a1ca63 targetComponent=null screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank",
+        "FixedContainerItems: id=-103 itemCount=10 item #0: ItemInfo(id=-1 type=APP container=# com.android.launcher3.logger.LauncherAtom$ContainerInfo@1a89011",
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "} targetComponent=ComponentInfo{com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Gmail supportsMultiInstance=false no",
+        "} targetComponent=ComponentInfo{com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=YouTube supportsMultiIn",
+        "} targetComponent=ComponentInfo{com.android.settings/com.android.settings.Settings} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Settings supportsMultiInstance=false nonResizeable=false) i",
+        "} targetComponent=ComponentInfo{com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Photos supportsMultiInstance=f",
+        "} targetComponent=ComponentInfo{com.google.android.deskclock/com.android.deskclock.DeskClock} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Clock supportsMultiInstance=false nonResizeable=f",
+        "} targetComponent=ComponentInfo{com.google.android.contacts/com.android.contacts.activities.PeopleActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Contacts supportsMultiInstance=fals",
+        "} targetComponent=ComponentInfo{com.google.android.calendar/com.android.calendar.AllInOneActivity} screen=-1 cell(-1,-1) span(1,1) minSpan(1,1) rank=0 user=UserHandle{0} title=Calendar supportsMultiInstance=false nonResi"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S234_resume_02_after.xml",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "d60c46922b4a": {
+      "screen_id": "d60c46922b4a",
+      "activity": ".ui.onboarding.intro.IntroSlidesActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{260788963 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity t9}",
+      "texts": [
+        "This release is provided by: youarefinished&#10;&#10;If you can afford, always buy and support the developers.&#10;&#10;For more mods, request, support etc., join us now.",
+        "Do not show again.",
+        "Cancel (7)",
+        "Join"
+      ],
+      "clickable_nodes": 3,
+      "fragments": [
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: "
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S177_p2_startup.xml",
+      "run_id": "42046336206",
+      "phase": 2,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "also_seen_in_run": "42049141553"
+    },
+    "e31fc57c130a": {
+      "screen_id": "e31fc57c130a",
+      "activity": ".ui.onboarding.intro.IntroSlidesActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{260788963 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity t9}",
+      "texts": [
+        "Build projects",
+        "Apply what you've learned and build real-world projects with step-by-step guidance",
+        "Get started",
+        "I already have an account"
+      ],
+      "clickable_nodes": 2,
+      "fragments": [
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: "
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S181_p2_onboard_00.xml",
+      "run_id": "42046336206",
+      "phase": 2,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "also_seen_in_run": "42049141553"
+    },
+    "fe2818665bc6": {
+      "screen_id": "fe2818665bc6",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{267361232 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [
+        "Welcome to Mimo!",
+        "To build your personal curriculum, we'll ask you a few questions.",
+        "Let's go"
+      ],
+      "clickable_nodes": 1,
+      "fragments": [
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: "
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S185_p2_onboard_00_after.xml",
+      "run_id": "42046336206",
+      "phase": 2,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "also_seen_in_run": "42049141553"
+    },
+    "f7c30cea54d7": {
+      "screen_id": "f7c30cea54d7",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{267361232 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [
+        "Why are you learning to code?",
+        "Switch into a tech career",
+        "Build an app, website, or project",
+        "Do better at work or school",
+        "For fun, to learn something new",
+        "None of these"
+      ],
+      "clickable_nodes": 5,
+      "fragments": [
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: "
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S190_p2_onboard_01_after.xml",
+      "run_id": "42046336206",
+      "phase": 2,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "also_seen_in_run": "42049141553"
+    },
+    "1d993f0f887a": {
+      "screen_id": "1d993f0f887a",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{267361232 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [
+        "What’s your main goal?",
+        "Understand technical topics better",
+        "Build something useful",
+        "Open up better opportunities"
+      ],
+      "clickable_nodes": 3,
+      "fragments": [
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: "
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S193_p2_onboard_02_after.xml",
+      "run_id": "42046336206",
+      "phase": 2,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "also_seen_in_run": "42049141553"
+    },
+    "e554154a92a0": {
+      "screen_id": "e554154a92a0",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{267361232 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [
+        "You’re in the right place",
+        "Mimo helps you learn coding basics you can actually use.",
+        "Continue"
+      ],
+      "clickable_nodes": 1,
+      "fragments": [
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: "
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S199_p2_onboard_03_after.xml",
+      "run_id": "42046336206",
+      "phase": 2,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "also_seen_in_run": "42049141553"
+    },
+    "0ef998fc17d3": {
+      "screen_id": "0ef998fc17d3",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{267361232 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [
+        "Which of these describes you best?",
+        "High school student",
+        "University student",
+        "Employed",
+        "Self-employed",
+        "Something else"
+      ],
+      "clickable_nodes": 5,
+      "fragments": [
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: "
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S203_p2_onboard_04_after.xml",
+      "run_id": "42046336206",
+      "phase": 2,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "also_seen_in_run": "42049141553"
+    },
+    "f01dcd1c8a62": {
+      "screen_id": "f01dcd1c8a62",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{267361232 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [
+        "What kind of work do you do?",
+        "Marketing",
+        "Sales",
+        "Customer support",
+        "Software, IT &amp; data",
+        "Product management",
+        "Administration &amp; finance",
+        "Something else"
+      ],
+      "clickable_nodes": 7,
+      "fragments": [
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: "
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S207_p2_onboard_05_after.xml",
+      "run_id": "42046336206",
+      "phase": 2,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "also_seen_in_run": "42049141553"
+    },
+    "89e08a29b873": {
+      "screen_id": "89e08a29b873",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{267361232 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [
+        "How much coding experience do you have?",
+        "NONE",
+        "A LITTLE",
+        "A LOT",
+        "You're about to write your first line of code",
+        "Continue"
+      ],
+      "clickable_nodes": 5,
+      "fragments": [
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: "
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S211_p2_onboard_06_after.xml",
+      "run_id": "42046336206",
+      "phase": 2,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "also_seen_in_run": "42049141553"
+    },
+    "e21077518901": {
+      "screen_id": "e21077518901",
+      "activity": ".ui.onboarding.OnboardingActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{267361232 u0 com.getmimo/.ui.onboarding.OnboardingActivity t9}",
+      "texts": [],
+      "clickable_nodes": 0,
+      "fragments": [
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: ",
+        "#0: b{cf60598} (5830fba3-04b8-4794-9c41-118a5d9abfac id=0x7f0a0673 tag=com.getmimo.ui.onboarding.selectpath.pickapath.b)"
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S221_p2_onboard_07_after.xml",
+      "run_id": "42046336206",
+      "phase": 2,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "also_seen_in_run": "42049141553"
+    },
+    "151fbcb421cb": {
+      "screen_id": "151fbcb421cb",
+      "activity": ".ui.onboarding.intro.IntroSlidesActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{239638877 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity t10}",
+      "texts": [
+        "This release is provided by: youarefinished&#10;&#10;If you can afford, always buy and support the developers.&#10;&#10;For more mods, request, support etc., join us now.",
+        "Do not show again.",
+        "Cancel (5)",
+        "Join"
+      ],
+      "clickable_nodes": 3,
+      "fragments": [
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: "
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S381_P2_BEFORE_PATH_EXPERIMENT_after_restore.xml",
+      "run_id": "42046336206",
+      "phase": 2,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "also_seen_in_run": "42049141553"
+    },
+    "c1bc5442addf": {
+      "screen_id": "c1bc5442addf",
+      "activity": ".ui.onboarding.intro.IntroSlidesActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{59963871 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity t11}",
+      "texts": [
+        "This release is provided by: youarefinished&#10;&#10;If you can afford, always buy and support the developers.&#10;&#10;For more mods, request, support etc., join us now.",
+        "Do not show again.",
+        "Cancel (4)",
+        "Join"
+      ],
+      "clickable_nodes": 3,
+      "fragments": [
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: "
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S478_p2_after_cold_start.xml",
+      "run_id": "42046336206",
+      "phase": 2,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "also_seen_in_run": "42049141553"
+    },
+    "1f90465d2823": {
+      "screen_id": "1f90465d2823",
+      "activity": ".ui.onboarding.intro.IntroSlidesActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{266341315 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity t9}",
+      "texts": [
+        "Change your career",
+        "Use your portfolio of projects to apply for a job and change your career",
+        "Get started",
+        "I already have an account"
+      ],
+      "clickable_nodes": 2,
+      "fragments": [
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: "
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S092_p3_pathmap_before.xml",
+      "run_id": "42050715150",
+      "phase": 4,
+      "evidence_class": "VERIFIED_RUNTIME"
+    },
+    "286a0291d66d": {
+      "screen_id": "286a0291d66d",
+      "activity": ".ui.onboarding.intro.IntroSlidesActivity",
+      "activity_dumpsys": "topResumedActivity=ActivityRecord{75974193 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity t10}",
+      "texts": [
+        "Learn at your own pace",
+        "Bite-sized lessons that fit your schedule",
+        "Get started",
+        "I already have an account"
+      ],
+      "clickable_nodes": 2,
+      "fragments": [
+        "} targetComponent=ComponentInfo{com.getmimo/com.getmimo.ui.SplashActivity_default} screen=3 cell(3,0) span(1,1) minSpan(1,1) rank=3 user=UserHandle{0} title=Mimo supportsMultiInstance=false nonResizeable=false) item #1: "
+      ],
+      "fragments_status": "VERIFIED_RUNTIME",
+      "xml": "ANALYSIS/RUNTIME/MISSION_08/UI/S266_p3_after_cold_start.xml",
+      "run_id": "42050715150",
+      "phase": 4,
+      "evidence_class": "VERIFIED_RUNTIME"
+    }
+  },
+  "edges": [
+    {
+      "from": "fe05d602a5f5",
+      "to": "ae1e4a1746ee",
+      "action": "onboard_00",
+      "x": 540,
+      "y": 2049,
+      "experiment": "EXP-R1-002",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_00"
+      ]
+    },
+    {
+      "from": "ae1e4a1746ee",
+      "to": "4a3497d1a97b",
+      "action": "onboard_01",
+      "x": 540,
+      "y": 2228,
+      "experiment": "EXP-R1-002",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_01"
+      ]
+    },
+    {
+      "from": "4a3497d1a97b",
+      "to": "0a877cbbdd4d",
+      "action": "onboard_02",
+      "x": 540,
+      "y": 1365,
+      "experiment": "EXP-R1-002",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_02"
+      ]
+    },
+    {
+      "from": "0a877cbbdd4d",
+      "to": "8cccd8d69d1a",
+      "action": "onboard_03",
+      "x": 540,
+      "y": 1324,
+      "experiment": "EXP-R1-002",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_03"
+      ]
+    },
+    {
+      "from": "8cccd8d69d1a",
+      "to": "fbdd4bb88a46",
+      "action": "onboard_04",
+      "x": 540,
+      "y": 2226,
+      "experiment": "EXP-R1-002",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_04"
+      ]
+    },
+    {
+      "from": "fbdd4bb88a46",
+      "to": "dede5dddf7ef",
+      "action": "onboard_05",
+      "x": 540,
+      "y": 1407,
+      "experiment": "EXP-R1-002",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_05"
+      ]
+    },
+    {
+      "from": "dede5dddf7ef",
+      "to": "6eacad034763",
+      "action": "onboard_06",
+      "x": 540,
+      "y": 1376,
+      "experiment": "EXP-R1-002",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_06"
+      ]
+    },
+    {
+      "from": "6eacad034763",
+      "to": "0393ad7eff82",
+      "action": "onboard_07",
+      "x": 540,
+      "y": 2228,
+      "experiment": "EXP-R1-002",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_07"
+      ]
+    },
+    {
+      "from": "0393ad7eff82",
+      "to": "7c8c05aa4e7e",
+      "action": "onboard_08",
+      "x": 540,
+      "y": 1265,
+      "experiment": "EXP-R1-002",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_08"
+      ]
+    },
+    {
+      "from": "7c8c05aa4e7e",
+      "to": "6b6326b27f2f",
+      "action": "onboard_09",
+      "x": 540,
+      "y": 1110,
+      "experiment": "EXP-R1-002",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_09"
+      ]
+    },
+    {
+      "from": "6b6326b27f2f",
+      "to": "ab42fb2f351d",
+      "action": "onboard_10",
+      "x": 540,
+      "y": 1362,
+      "experiment": "EXP-R1-002",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_10"
+      ]
+    },
+    {
+      "from": "ab42fb2f351d",
+      "to": "0ce1c092ec69",
+      "action": "onboard_11",
+      "x": 540,
+      "y": 2068,
+      "experiment": "EXP-R1-002",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_11"
+      ]
+    },
+    {
+      "from": "0ce1c092ec69",
+      "to": "1e2df1a4646b",
+      "action": "onboard_12",
+      "x": 540,
+      "y": 2226,
+      "experiment": "EXP-R1-002",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_12"
+      ]
+    },
+    {
+      "from": "1e2df1a4646b",
+      "to": "8e65523787a5",
+      "action": "onboard_13",
+      "x": 540,
+      "y": 2228,
+      "experiment": "EXP-R1-002",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_13"
+      ]
+    },
+    {
+      "from": "8e65523787a5",
+      "to": "2e5065604657",
+      "action": "onboard_14",
+      "x": 540,
+      "y": 1265,
+      "experiment": "EXP-R1-002",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_14"
+      ]
+    },
+    {
+      "from": "2e5065604657",
+      "to": "4d8068fddbc8",
+      "action": "onboard_15",
+      "x": 540,
+      "y": 2228,
+      "experiment": "EXP-R1-002",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_15"
+      ]
+    },
+    {
+      "from": "4d8068fddbc8",
+      "to": "0bbfe2833815",
+      "action": "onboard_16",
+      "x": 540,
+      "y": 2232,
+      "experiment": "EXP-R1-002",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_16"
+      ]
+    },
+    {
+      "from": "0bbfe2833815",
+      "to": "ac757d69b56e",
+      "action": "onboard_17",
+      "x": 540,
+      "y": 1362,
+      "experiment": "EXP-R1-002",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_17"
+      ]
+    },
+    {
+      "from": "ac757d69b56e",
+      "to": "9b203bd084bc",
+      "action": "onboard_18",
+      "x": 540,
+      "y": 2226,
+      "experiment": "EXP-R1-002",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_18"
+      ]
+    },
+    {
+      "from": "9b203bd084bc",
+      "to": "39fcd360f435",
+      "action": "onboard_19",
+      "x": 971,
+      "y": 199,
+      "experiment": "EXP-R1-002",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_19"
+      ]
+    },
+    {
+      "from": "39fcd360f435",
+      "to": "381cc9ef052c",
+      "action": "onboard_20",
+      "x": 607,
+      "y": 1604,
+      "experiment": "EXP-R1-002",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_20"
+      ]
+    },
+    {
+      "from": "381cc9ef052c",
+      "to": "b2a5a94abfaf",
+      "action": "onboard_21",
+      "x": 540,
+      "y": 2238,
+      "experiment": "EXP-R1-002",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_21"
+      ]
+    },
+    {
+      "from": "b2a5a94abfaf",
+      "to": "f7d4a840d5c5",
+      "action": "onboard_22",
+      "x": 540,
+      "y": 2238,
+      "experiment": "EXP-R1-002",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_22"
+      ]
+    },
+    {
+      "from": "7dd2f0e297b5",
+      "to": "a5f47792dd98",
+      "action": "resume_00",
+      "x": 540,
+      "y": 2078,
+      "experiment": "EXP-R1-005",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "resume_00"
+      ]
+    },
+    {
+      "from": "a5f47792dd98",
+      "to": "03124f8c8523",
+      "action": "resume_01",
+      "x": 540,
+      "y": 1236,
+      "experiment": "EXP-R1-005",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "resume_01"
+      ]
+    },
+    {
+      "from": "03124f8c8523",
+      "to": "03eb48576169",
+      "action": "resume_02",
+      "x": 405,
+      "y": 2263,
+      "experiment": "EXP-R1-005",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "resume_02"
+      ]
+    },
+    {
+      "from": "03eb48576169",
+      "to": "03124f8c8523",
+      "action": "resume_03",
+      "x": 135,
+      "y": 2263,
+      "experiment": "EXP-R1-005",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "resume_03"
+      ]
+    },
+    {
+      "from": "03124f8c8523",
+      "to": "03eb48576169",
+      "action": "resume_04",
+      "x": 405,
+      "y": 2263,
+      "experiment": "EXP-R1-005",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "resume_04"
+      ]
+    },
+    {
+      "from": "03eb48576169",
+      "to": "03124f8c8523",
+      "action": "resume_05",
+      "x": 135,
+      "y": 2263,
+      "experiment": "EXP-R1-005",
+      "run_id": "42042312640",
+      "phase": 1,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "resume_05"
+      ]
+    },
+    {
+      "from": "d60c46922b4a",
+      "to": "fe2818665bc6",
+      "action": "p2_onboard_00",
+      "x": 540,
+      "y": 2049,
+      "experiment": "EXP-R2-001",
+      "run_id": "42046336206",
+      "phase": 2,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_00",
+        "p2_onboard_00"
+      ]
+    },
+    {
+      "from": "fe2818665bc6",
+      "to": "f7c30cea54d7",
+      "action": "p2_onboard_01",
+      "x": 540,
+      "y": 2228,
+      "experiment": "EXP-R2-001",
+      "run_id": "42046336206",
+      "phase": 2,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_01",
+        "p2_onboard_01"
+      ]
+    },
+    {
+      "from": "f7c30cea54d7",
+      "to": "1d993f0f887a",
+      "action": "p2_onboard_02",
+      "x": 540,
+      "y": 1365,
+      "experiment": "EXP-R2-001",
+      "run_id": "42046336206",
+      "phase": 2,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_02",
+        "p2_onboard_02"
+      ]
+    },
+    {
+      "from": "1d993f0f887a",
+      "to": "e554154a92a0",
+      "action": "p2_onboard_03",
+      "x": 540,
+      "y": 1324,
+      "experiment": "EXP-R2-001",
+      "run_id": "42046336206",
+      "phase": 2,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_03",
+        "p2_onboard_03"
+      ]
+    },
+    {
+      "from": "e554154a92a0",
+      "to": "0ef998fc17d3",
+      "action": "p2_onboard_04",
+      "x": 540,
+      "y": 2226,
+      "experiment": "EXP-R2-001",
+      "run_id": "42046336206",
+      "phase": 2,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_04",
+        "p2_onboard_04"
+      ]
+    },
+    {
+      "from": "0ef998fc17d3",
+      "to": "f01dcd1c8a62",
+      "action": "p2_onboard_05",
+      "x": 540,
+      "y": 1407,
+      "experiment": "EXP-R2-001",
+      "run_id": "42046336206",
+      "phase": 2,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_05",
+        "p2_onboard_05"
+      ]
+    },
+    {
+      "from": "f01dcd1c8a62",
+      "to": "89e08a29b873",
+      "action": "p2_onboard_06",
+      "x": 540,
+      "y": 1376,
+      "experiment": "EXP-R2-001",
+      "run_id": "42046336206",
+      "phase": 2,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_06",
+        "p2_onboard_06"
+      ]
+    },
+    {
+      "from": "89e08a29b873",
+      "to": "e21077518901",
+      "action": "p2_onboard_07",
+      "x": 540,
+      "y": 2228,
+      "experiment": "EXP-R2-001",
+      "run_id": "42046336206",
+      "phase": 2,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_07",
+        "p2_onboard_07"
+      ]
+    },
+    {
+      "from": "d60c46922b4a",
+      "to": "fe2818665bc6",
+      "action": "p2_onboard_00",
+      "x": 540,
+      "y": 2049,
+      "experiment": "EXP-R2-001",
+      "run_id": "42049141553",
+      "phase": 3,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_00",
+        "p2_onboard_00"
+      ]
+    },
+    {
+      "from": "fe2818665bc6",
+      "to": "f7c30cea54d7",
+      "action": "p2_onboard_01",
+      "x": 540,
+      "y": 2228,
+      "experiment": "EXP-R2-001",
+      "run_id": "42049141553",
+      "phase": 3,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_01",
+        "p2_onboard_01"
+      ]
+    },
+    {
+      "from": "f7c30cea54d7",
+      "to": "1d993f0f887a",
+      "action": "p2_onboard_02",
+      "x": 540,
+      "y": 1365,
+      "experiment": "EXP-R2-001",
+      "run_id": "42049141553",
+      "phase": 3,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_02",
+        "p2_onboard_02"
+      ]
+    },
+    {
+      "from": "1d993f0f887a",
+      "to": "e554154a92a0",
+      "action": "p2_onboard_03",
+      "x": 540,
+      "y": 1324,
+      "experiment": "EXP-R2-001",
+      "run_id": "42049141553",
+      "phase": 3,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_03",
+        "p2_onboard_03"
+      ]
+    },
+    {
+      "from": "e554154a92a0",
+      "to": "0ef998fc17d3",
+      "action": "p2_onboard_04",
+      "x": 540,
+      "y": 2226,
+      "experiment": "EXP-R2-001",
+      "run_id": "42049141553",
+      "phase": 3,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_04",
+        "p2_onboard_04"
+      ]
+    },
+    {
+      "from": "0ef998fc17d3",
+      "to": "f01dcd1c8a62",
+      "action": "p2_onboard_05",
+      "x": 540,
+      "y": 1407,
+      "experiment": "EXP-R2-001",
+      "run_id": "42049141553",
+      "phase": 3,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_05",
+        "p2_onboard_05"
+      ]
+    },
+    {
+      "from": "f01dcd1c8a62",
+      "to": "89e08a29b873",
+      "action": "p2_onboard_06",
+      "x": 540,
+      "y": 1376,
+      "experiment": "EXP-R2-001",
+      "run_id": "42049141553",
+      "phase": 3,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_06",
+        "p2_onboard_06"
+      ]
+    },
+    {
+      "from": "89e08a29b873",
+      "to": "e21077518901",
+      "action": "p2_onboard_07",
+      "x": 540,
+      "y": 2228,
+      "experiment": "EXP-R2-001",
+      "run_id": "42049141553",
+      "phase": 3,
+      "evidence_class": "VERIFIED_RUNTIME",
+      "action_labels": [
+        "onboard_07",
+        "p2_onboard_07"
+      ]
+    }
+  ],
+  "unobserved_states": [
+    "chapter completion screen",
+    "native correct/wrong feedback after a submitted selection",
+    "leaderboard content",
+    "profile settings",
+    "streak modal",
+    "paywall",
+    "account creation"
+  ],
+  "unobserved_evidence_class": "UNKNOWN"
+}
