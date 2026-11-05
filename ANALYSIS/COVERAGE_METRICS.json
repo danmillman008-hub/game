@@ -1,0 +1,86 @@
+{
+ "document": "Measurable coverage denominators — Mimo 9.35",
+ "denominators": {
+  "dex_files": 12,
+  "dex_bytes": 28836088,
+  "class_defs": 29454,
+  "defined_methods": 129071,
+  "methods_with_code": 122546,
+  "methods_without_code": 6525,
+  "method_ids_references": 149567,
+  "field_ids_references": 89600,
+  "string_ids": 121252,
+  "type_ids": 40069,
+  "proto_ids": 37799,
+  "mimo_type_descriptors": 3133
+ },
+ "coverage": {
+  "dex_imported_by_ghidra": {
+   "count": 12,
+   "denominator": 12,
+   "pct": 100.0
+  },
+  "dex_auto_analysed_by_ghidra": {
+   "count": 12,
+   "denominator": 12,
+   "pct": 100.0
+  },
+  "ghidra_functions_vs_methods_with_code": {
+   "count": 122546,
+   "denominator": 122546,
+   "pct": 100.0
+  },
+  "smali_class_files_vs_class_defs": {
+   "count": 17626,
+   "denominator": 29454,
+   "pct": 59.8425
+  },
+  "smali_failures_vs_class_defs": {
+   "count": 11828,
+   "denominator": 29454,
+   "pct": 40.1575
+  },
+  "jadx_1_5_6_com_getmimo_java_vs_primary_dex_mimo_class_defs": {
+   "count": 2211,
+   "denominator": 3032,
+   "pct": 72.9222,
+   "note": "JADX 1.5.6 was run on classes.dex only; denominator is the com.getmimo class_defs of that DEX."
+  },
+  "jadx_1_5_6_stub_file_rate": {
+   "count": 2179,
+   "denominator": 2211,
+   "pct": 98.5527,
+   "note": "files containing \"Method not decompiled\" stubs / emitted Java files"
+  },
+  "ghidra_symbol_total_arithmetic_verified": {
+   "count": 1284542,
+   "denominator": 1284542,
+   "pct": 100.0,
+   "note": "composition remains UNKNOWN; see APK_COMPLETE_INVENTORY.json -> symbol_composition_probe"
+  },
+  "runtime_verified_behaviours": {
+   "count": 0,
+   "denominator": "undefined (no emulator/ADB available)",
+   "pct": 0.0
+  },
+  "server_confirmed_responses": {
+   "count": 0,
+   "denominator": "undefined (no authorized test environment)",
+   "pct": 0.0
+  }
+ },
+ "extra_denominators": {
+  "mimo_class_defs_all_dex": 3133,
+  "mimo_class_defs_primary_dex": 3032,
+  "mimo_type_descriptors_unique": 3133,
+  "dex_structural_id_baseline": 590287,
+  "ghidra_symbol_residual_generated_labels": 694255
+ },
+ "notes": [
+  "Ghidra functions = DEX code_item count exactly, per DEX and in total (independent reconciliation via dexlib.py).",
+  "Ghidra symbols are NOT reconciled to a DEX header count; Ghidra creates EXTERNAL and string_data labels beyond DEX structures.",
+  "Smali success is measured against class_defs; 11,828 failures are confined to classes.dex.",
+  "JADX 1.5.6 emitted only com.getmimo Java; its stub rate is measured over that set, not over all classes.",
+  "Runtime and server verification are 0 because no approved emulator/ADB or authorized test environment exists."
+ ]
+}
