@@ -116,15 +116,27 @@ adb exec-out screencap -p > "$R/UI/STEP-00.png" 2>/dev/null || true
   adb push "$FS" /data/local/tmp/frida-server 2>&1
   adb shell chmod 755 /data/local/tmp/frida-server 2>&1
   adb shell 'getprop ro.product.cpu.abi; file /data/local/tmp/frida-server 2>/dev/null' 2>&1
-  adb shell 'pkill -f frida-server 2>/dev/null; nohup /data/local/tmp/frida-server >/data/local/tmp/frida-server.log 2>&1 & echo started=$!' 2>&1
-  sleep 5
+  adb shell 'chmod 755 /data/local/tmp/frida-server; /data/local/tmp/frida-server --help' 2>&1 | head -25
+  sleep 3
   adb shell 'ps -A | grep frida' 2>&1
   adb shell 'cat /data/local/tmp/frida-server.log' 2>&1 | head -20
+  echo "== keep frida-server alive via host-side adb shell =="
+  echo "(the process is started below, outside this subshell)"
   echo "== frida-ps -U =="
   frida-ps -U 2>&1 | head -25
   echo "frida_ps_exit=$?"
 } > "$R/FRIDA/INSTALL.txt" 2>&1
 cat "$R/FRIDA/INSTALL.txt"
+
+# ---- 5b. Start frida-server as a HOST-SIDE long-lived adb shell process ----
+# A bare `nohup ... &` inside `adb shell` is reaped when that remote shell
+# session ends (measured: run 42018369099 — frida-ps succeeded, attach then
+# failed with ServerNotRunningError). Keeping `adb shell` alive on the runner
+# keeps frida-server's parent connection open.
+( adb shell /data/local/tmp/frida-server > "$R/FRIDA/SERVER.log" 2>&1 ) &
+FS_HOST_PID=$!
+sleep 6
+frida-ps -U 2>&1 | grep -i mimo >> "$R/FRIDA/INSTALL.txt" 2>&1
 
 # ---- 6. Deterministic experiment: direct runtime method invocation --------
 # Keep the Frida session alive for 50 s while one controlled UI tap executes.

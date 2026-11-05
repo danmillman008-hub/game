@@ -42,7 +42,26 @@ for p in dev.enumerate_processes():
 if proc is None:
     print('[driver] process not found; aborting (no spawn on jailed Android)'); sys.exit(3)
 print('[driver] attaching to pid=%d name=%s' % (proc.pid, proc.name))
-session = dev.attach(proc.pid)
+session = None
+for attempt in range(3):
+    try:
+        session = dev.attach(proc.pid)
+        break
+    except Exception as e:
+        write({'kind':'attach_retry','attempt':attempt+1,'pid':proc.pid,'error':str(e)})
+        print('[driver] attach attempt %d failed: %s; restarting frida-server' % (attempt+1, e))
+        # A host-side `adb shell` keeps the server alive; restart it if reaped.
+        try:
+            subprocess.Popen(['adb','shell','/data/local/tmp/frida-server'],
+                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except Exception as e2:
+            write({'kind':'attach_restart_error','error':str(e2)})
+        time.sleep(6)
+        try: dev = frida.get_usb_device(timeout=30)
+        except Exception: pass
+if session is None:
+    write({'kind':'driver_abort','reason':'frida-server not reachable after 3 attempts'})
+    print('[driver] aborting: frida-server not reachable'); sys.exit(4)
 write({'kind': 'attached', 'pid': proc.pid, 'name': proc.name})
 js = pathlib.Path(js_path).read_text(encoding='utf-8')
 script = session.create_script(js)
