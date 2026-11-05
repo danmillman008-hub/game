@@ -1,3 +1,7 @@
+> superseded / منسوخ: این پرونده مربوط به تلاش اولیهٔ BLOCKED است و صرفاً
+> برای حفظ تاریخچه نگهداری شده است (کپی در `PREVIOUS_BLOCKED_REPORTS/`).
+> نتیجهٔ نهایی و واقعی: `MISSION_04_FINAL_REVIEW.fa.md`، run `41998643355`، ۷/۷.
+
 # MISSION 04 — PREFLIGHT
 
 | شناسه | مقدار |

@@ -1,71 +1,62 @@
-# MISSION 04 — تحلیل کراش و خطا (CRASH AND ERROR ANALYSIS)
+# MISSION 04 — تحلیل خطاها، crashها و هشدارها
 
 | شناسه | مقدار |
 |---|---|
-| Workflow run ID (M04) | `41991896800` (presence-only probe، SUCCESS) |
-| مرجع دستگاه (M03) | `41951780483` — API 36 / Android 16 / `pixel_7` / `google_apis` / `x86_64` |
-| Branch / commit | `arena/aebb90b7-game` / `1ca5d6bc2c761c3555d189d5160e8f8316362fed` |
-| APK SHA-256 | `48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a` |
-| Timestamp | `2026-11-05T08:06Z` |
-| نتیجه | **`BLOCKED`** — هیچ فرآیند `com.getmimo`ـای وجود نداشت که کراش کند |
+| Workflow run ID | **`41998643355`** |
+| Branch / commit | `arena/aebb90b7-game` / `92e87fe8d061ea4c11089f40a7c8ce73d34d816a` |
+| Timestamp | `2026-11-05T09:01:45Z` |
+| پیکربندی شبیهساز | API 36 / Android 16 / `pixel_7` / `google_apis` / `x86_64` / headless |
+| نتیجه | **هیچ crash/ANR مربوط به `com.getmimo` در اجرای مرجع** |
 
-## ۱. تمایز بنیادین — `OBSERVED`
+## ۱. منابع جمعآوریشده — `OBSERVED`
 
-«نبود خطا» در لاگ **بهمعنای سالم بودن برنامه نیست**، بلکه بهمعنای
-**نبود برنامهای برای تولید خطا** است. بنابراین:
+`CRASH_AND_ERROR_LOGS.txt` شامل بافر `crash`، `AndroidRuntime`/`linker`،
+`ActivityManager` ANR و فیلتر `grep -i com.getmimo` است.
+`LOGS/LOGCAT_MIMO.txt` لاگ فیلترشدهٔ همان اجرا (PID `4266`) میباشد.
 
-| مورد §6C | وضعیت | برچسب |
+| بررسی | نتیجه |
+|---|---|
+| `FATAL EXCEPTION` با `Process: com.getmimo` | یافت نشد |
+| `ANR` / `Application Not Responding` برای `com.getmimo` | یافت نشد |
+| `UnsatisfiedLinkError` / `dlopen failed` / linker fatal برای Mimo | یافت نشد |
+| بافر crash | خالی / بدون تودهٔ بومی Mimo |
+| `am_start_exit` | `0` |
+| `install_exit` | `0` |
+
+تنها همخوانی با عبارت `collect_anrs` در لاگ، یک پیکربندی Firebase Sessions است
+(`"collect_anrs":true` در JSON تنظیمات) — **یک ANR رخنداده نیست** و نباید بهاشتباه
+شمارش شود.
+
+## ۲. هشدارهای غیرمرگبار مشاهدهشده — `OBSERVED`
+
+| پیام | منشأ | اثر |
 |---|---|---|
-| Full logcat around installation and launch | نصب/اجرا انجام نشد ⇒ logcat مربوطی وجود ندارد | `BLOCKED` |
-| `AndroidRuntime` errors | مشاهده نشد (بدون فرآیند برنامه) | `UNKNOWN` |
-| `FATAL EXCEPTION` entries | مشاهده نشد | `UNKNOWN` |
-| linker errors | مشاهده نشد | `UNKNOWN` |
-| `UnsatisfiedLinkError` | مشاهده نشد | `UNKNOWN` |
-| Application process termination | وجود نداشت | `UNKNOWN` |
-| Native crash records (`tombstone`) | بررسی نشد (بدون اجرا) | `UNKNOWN` |
+| `Google Play services out of date. Requires 261200000 but found 252635038` | GMS تصویر `google_apis` | هشدار؛ فرآیند Mimo و UI onboarding همچنان بالا آمد. برای مسیر «ورود با Google» در مأموریتهای بعدی میتواند مهم باشد |
+| `Unexpected CPU variant for x86: x86_64` / `Known variant ...` | ART هنگام `dex2oat` | هشدار شناختهشدهٔ شبیهساز x86_64، نه خطا |
+| `libcurve25519.so ... not found` (PrebuiltBugle / `com.google.android.apps.messaging`) | اپ سیستمی دیگر | ربطی به Mimo ندارد |
+| خطاهای `nativeloader` متعلق به `com.google.android.apps.nexuslauncher` / `uiautomator` | ابزار dump و لانچر | ربطی به Mimo ندارد |
+| `freezing <pid> com.getmimo` (ActivityManager) | freezer معمول سیستم هنگام پسزمینهرفتن کوتاه | بدون crash |
 
-هیچ `FATAL EXCEPTION`ـای **ساختگی**، هیچ `logcat` جعلی و هیچ شبیهسازی کراشی
-تولید نشد. §6C خواستهٔ «Full logcat around installation and launch» بهدلیل نبود
-آن دو رویداد قابل انجام نبود.
+## ۳. خطاهایی که در اجراهای پیشین رخ دادند و رفع شدند — `OBSERVED`
 
-## ۲. تنها لاگ واقعی M04 — `OBSERVED`
+| Run ID | خطا | علت واقعی | رفع |
+|---|---|---|---|
+| `41994008902` | `HTTP/2 403 e2b-traffic-access-token missing` + `curl (22)` | پروکسی preview نیازمند هدر موجودنبود | روش انتقال جایگزین (Drive) |
+| `41996366953` | `mimo_nodes_in_ui_hierarchy=false`؛ تصویر = صفحهٔ خانۀ Android | `keyevent 3` (HOME) **پس از** `am start` برنامه را بکگراند کرد | حذف HOME/Power پس از launch |
+| `41997137033` | dialog سیستم «Pixel Launcher isn't responding» روی تصویر | ANR لانچر (نه Mimo) | `keyevent 224` بجای `26`، ۲۰s settle، حلقهٔ `aerr_wait` |
+| `41997975847` | `sha_match=false` در JSON با وجود `SHA_MATCH_OK` در شواهد | برخورد متغیر شل `B` | `ANR_B` + خواندن `result=` |
+| `41998643355` | **هیچ** | — | اجرای مرجع، ۷/۷ |
 
-`LOGS/SECRET_PRESENCE_PROBE.txt`: خروجی probe منبع (۳۷ نام، ۰ PRESENT / ۳۷ ABSENT).
-این لاگ **هیچ ارتباطی با رفتار برنامه** ندارد و صرفاً شاهد انسداد منبع است.
-هیچ URL، token یا credentialـی در آن درج نشده است.
+هیچیک از موارد بالا شکست نصب، ناسازگاری ABI، یا کرش برنامه نبود؛
+همه در لایهٔ انتقال/اتوماسیون/گزارشدهی بودند و بهصراحت در اسناد جداگانه ثبت شدهاند.
 
-`LOGS/APK_SOURCE_INVESTIGATION.txt`: فرمانها و پاسخهای دقیق بررسی منبع، شامل
-`HTTP 403`ـها، فهرست artifactها و نتایج Drive. پیامهای 403 **خطای برنامه** نیستند؛
-خطای **دسترسی اداری**ـاند.
+## ۴. محدوده — `NOT OBSERVED`
 
-## ۳. خطاهای فرآیندی M04 (مستند، بدون پنهانکاری) — `OBSERVED`
+فقط مسیر «نصب ← Splash ← onboarding» پایش شد. رفتار طولانیمدت، نشت حافظه،
+crash صفحات بعدی، مسیر ورود، و پاسخهای سرور بررسی نشدند. نبود crash در این پنجره
+بهمعنای پایداری کلی برنامه نیست. `SERVER CONFIRMED = 0`.
 
-| خطا / محدودیت | پیام دقیق | تأثیر |
-|---|---|---|
-| Secrets enumeration | `HTTP 403: Resource not accessible by integration` | نمیتوان نام secretها را فهرست کرد |
-| Variables enumeration | همان 403 | نمیتوان متغیرها را فهرست کرد |
-| Secret creation | `failed to fetch public key: HTTP 403 .../actions/secrets/public-key` | نمیتوان secret ساخت |
-| `workflow_dispatch` (M03) | `HTTP 404` چون ورکفلو روی شاخهٔ غیرپیشفرض ثبت نمیشود | تریگر push فقطبا مسیر استفاده شد |
-| artifact/log blob host از sandbox | `EOF` / `HTTP 000` (خارج از allowlist) | لاگها فقط از طریق runner/commit قابلخواندناند |
-| `parseScript()` اکشن (M03) | `The process '/usr/bin/sh' failed with exit code 1` | با script تکخطی برطرف شد؛ همچنان پابرجا |
-
-هیچکدام از اینها خطای نصب/اجرای Mimo نیست و نباید بهحساب کراش برنامه گذاشته شود.
-
-## ۴. خطاهایی که در M03 رخ داده و رفع شد (زمینه)
-
-- دو اجرای نخست M03 بهدلیل تقسیم `script:` به خطوط جداگانه شکست خوردند.
-- `uiautomator dump` در اجراهای میانی `null root node` داد و در اجرای نهایی
-  `41951780483` موفق شد (۱۶ گره لانچر).
-- فریمبافر نخست خالی بود و پس از `keyevent 26/82/3` تصویر واقعی لانچر ثبت شد.
-
-اینها مربوط به **محیط**اند و در M04 تکرار نشدند.
-
-## ۵. حکم
-
-تحلیل کراش و کتابخانههای بومی §8/§12/8 «Must be based on real runtime logs».
-چنین لاگهایی وجود ندارند ⇒ **`BLOCKED`**؛ هیچ نتیجهای دربارهٔ سلامت،
-سازگاری ABI یا پایداری برنامه صادر نمیشود.
-
-**ارجاع شواهد:** `LOGS/SECRET_PRESENCE_PROBE.txt`،
-`LOGS/APK_SOURCE_INVESTIGATION.txt`، `../CRASH_AND_ERROR_LOGS.txt` (M03)،
-`ABI_COMPATIBILITY.fa.md`.
+**ارجاع شواهد:** `CRASH_AND_ERROR_LOGS.txt`، `LOGS/LOGCAT_MIMO.txt`،
+`APPLICATION_LAUNCH.txt`، `LOGS/ANR_DISMISSAL.txt`،
+`SCREENSHOT_RUN_41997137033_ANR_OVERLAY.png` (شاهد تاریخی)،
+`LOGS/EMULATOR_FAILURE_EXCERPT.txt`.

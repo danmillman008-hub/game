@@ -1,59 +1,45 @@
-# MISSION 04 — مشاهدات اولیه برنامه (INITIAL APPLICATION OBSERVATIONS)
+# MISSION 04 — مشاهدات اولیه از برنامه در حال اجرا
 
 | شناسه | مقدار |
 |---|---|
-| Workflow run ID (M04) | `41991896800` (presence-only probe) |
-| مرجع دستگاه (M03) | `41951780483`، API 36 / Android 16 / `pixel_7` / `google_apis` / `x86_64` |
-| Branch / commit | `arena/aebb90b7-game` / `1ca5d6bc2c761c3555d189d5160e8f8316362fed` |
-| APK SHA-256 | `48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a` |
-| Timestamp | `2026-11-05T08:06Z` |
-| نتیجه | **`BLOCKED`** — §8 «Only if the application launches successfully» محقق نشد |
+| Workflow run ID | **`41998643355`** |
+| Branch / commit | `arena/aebb90b7-game` / `92e87fe8d061ea4c11089f40a7c8ce73d34d816a` |
+| Timestamp | `2026-11-05T09:01:45Z` |
+| پیکربندی شبیهساز | API 36 / Android 16 / `pixel_7` / `google_apis` / `x86_64` / headless |
 
-## ۱. شرط ورود
+> این پرونده جایگزین نسخهٔ BLOCKED همنام (محفوظ در `PREVIOUS_BLOCKED_REPORTS/`) شده است.
 
-§8 صریح است: «Only if the application launches successfully». با توجه به
-`APPLICATION_LAUNCH.fa.md` (= `BLOCKED`)، **هیچ مشاهدهای از برنامه انجام نشد**
-و هیچکدام از شش مورد زیر پر نشدند:
+## `OBSERVED` — مشاهدات مستقیم
 
-| # | مورد §8 | نتیجه | برچسب |
-|---|---|---|---|
-| ۱ | First screen after launch | مشاهده نشد | `BLOCKED` |
-| ۲ | Login or onboarding state | مشاهده نشد | `BLOCKED` |
-| ۳ | Navigation structure visible without authentication | مشاهده نشد | `BLOCKED` |
-| ۴ | Whether a user session is required | مشاهده نشد | `UNKNOWN` |
-| ۵ | Whether the application displays network errors | مشاهده نشد | `UNKNOWN` |
-| ۶ | Whether it can reach its initial usable screen | مشاهده نشد | `UNKNOWN` |
+- `com.getmimo` نصب و با PID `4266` در حال اجرا است
+  (`adb shell ps -A`, `pidof`).
+- Activity پیشزمینه:
+  `com.getmimo/com.getmimo.ui.onboarding.intro.IntroSlidesActivity`
+  (`mCurrentFocus`، `topResumedActivity`).
+- صفحهٔ قابلرویت: سومین اسلاید کاروسل onboarding،
+  عنوان **Change your career**، توضیح
+  «Use your portfolio of projects to apply for a job and change your career»،
+  دکمهٔ **Get started** و پیوند **I already have an account**،
+  بههمراه نشانگر سه نقطهای صفحه.
+- سلسلهمراتب UI شامل ۱۵ گره با `package="com.getmimo"` است؛
+  شناسهها: `com.getmimo:id/vp_intro_slides`،
+  `tv_onboarding_page_title`، `tv_onboarding_page_description`،
+  `compose_content`، و عناصر دکمه/پیوند. متن اسلایدهای دیگر
+  (`Build projects`، «Apply what you've learned ...») نیز در همان XML موجود است،
+  که نشان میدهد کاروسل بارگذاری شده است.
+- تصویر `SCREENSHOTS/TEST-004_first_usable_screen.png` (`65373` B) همین محتوا را
+  بهصورت چشمی نشان میدهد؛ نه لانچر است و نه dialog سیستم.
+- چهار کتابخانهٔ بومی `arm64` بار شدند (`: ok`)؛ Google Play services هشدار
+  «out of date» داد ولی مانع رندر صفحه نشد.
+- بافر crash خالی از `FATAL EXCEPTION` متعلق به Mimo است.
 
-## ۲. ممنوعیتهای §8 — `OBSERVED` (همگی رعایت شد)
+## `NOT OBSERVED` — مرز مأموریت
 
-- هیچ credential تستـای ساخته نشد (`Do not invent test credentials`).
-- هیچ دسترسی غیرمجاز به حساب، bypass احراز هویت، پاسخ سرور جعلی،
-  تغییر حساب، خرید/پرداخت یا استفاده از دادهٔ شخصی انجام نشد.
-- هیچ نشست مجازی وجود نداشت؛ توقف **پیش از** مرز لاگین رخ داد،
-  زیرا اساساً برنامهای اجرا نشد. §8: «If a legitimate test account is unavailable,
-  stop at the authentication boundary and document it» — مستند شد.
+هیچ لمس دکمه، ورود به حساب، ناوبری درونبرنامه، بارگذاری درس، درخواست تأییدشده
+به سرور، یا مشاهدهٔ پاسخ بکاند انجام نشد. بنابراین دربارهٔ جریان ثبتنام،
+احراز هویت، محتوای دورهها، نمرهدهی، یا هندسۀ صفحات بعدی هیچ ادعایی ثبت نمیشود.
+`SERVER CONFIRMED = 0`؛ مأموریت در مرز احراز هویت متوقف شد.
 
-## ۳. شواهد تصویری موجود ≠ شواهد برنامه
-
-`../SCREENSHOTS/TEST-000_emulator_home.png` (صفحهٔ خانهٔ Android 16 با آیکونهای
-Gmail/Photos/YouTube/Phone/Messages/Chrome) و
-`../UI_HIERARCHY/TEST-000_emulator_home.xml` (۱۶ گره، بستهٔ
-`com.google.android.apps.nexuslauncher`) تنها شواهد **لانچر سیستم** M03اند.
-§5: «Do not confuse the Android launcher with Mimo's UI».
-در `SCREENSHOTS/README.txt` این پروندهها صریحاً **غیرقابلاستناد** برای Mimo علامت خوردند.
-
-`SCREENSHOTS/` و `UI_HIERARCHY/` در `MISSION_04/` **عمداً خالی**اند؛
-هیچ اسکرینشات یا XMLـای ساختگی تولید نشد.
-
-## ۴. آنچه پس از رفع انسداد باید ثبت شود (برنامهٔ کار، نه نتیجه)
-
-1. `adb shell am start` + `dumpsys activity activities` → اثبات Activity واقعی.
-2. `screencap -p` بلافاصله، صفحهٔ loading در صورت وجود، و نخستین صفحهٔ قابلاستفاده.
-3. `uiautomator dump` → XML اصلی، بدون ویرایش گرهها.
-4. `logcat -d -v threadtime` حول نصب/اجرا، پاکسازیشده.
-5. توقف در مرز لاگین در نبود حساب آزمایشی مجاز.
-
-هیچیک از اینها در M04 اجرا نشد و بهعنوان نتیجه گزارش نمیشود.
-
-**ارجاع شواهد:** `APPLICATION_LAUNCH.fa.md`، `SCREENSHOTS/README.txt`،
-`UI_HIERARCHY/README.txt`، `../SCREENSHOTS/TEST-000_emulator_home.png`.
+**ارجاع شواهد:** `SCREENSHOTS/TEST-004_first_usable_screen.png`،
+`UI_HIERARCHY/TEST-003_initial_screen.xml`، `APPLICATION_LAUNCH.txt`،
+`LOGS/LOGCAT_MIMO.txt`، `TEST_RESULTS.json`.

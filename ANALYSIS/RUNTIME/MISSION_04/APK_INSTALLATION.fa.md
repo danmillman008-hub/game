@@ -1,66 +1,81 @@
-# MISSION 04 — نصب APK (APK INSTALLATION)
+# MISSION 04 — نصب APK اصلی (APK INSTALLATION)
 
 | شناسه | مقدار |
 |---|---|
-| Workflow run ID (M04) | `41991896800` — **presence-only probe؛ هیچ شبیهساز/ADBـای اجرا نشد** |
-| مرجع پیکربندی دستگاه (M03) | run `41951780483`، API 36 / Android 16 / `pixel_7` / `google_apis` / `x86_64` |
-| Branch / commit | `arena/aebb90b7-game` / `1ca5d6bc2c761c3555d189d5160e8f8316362fed` |
-| APK SHA-256 | `48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a` |
-| Timestamp | `2026-11-05T08:06Z` |
-| نتیجه | **`BLOCKED`** — `adb install -r` اجرا نشد |
+| Workflow run ID | **`41998643355`** |
+| Branch / commit | `arena/aebb90b7-game` / `92e87fe8d061ea4c11089f40a7c8ce73d34d816a` |
+| Timestamp | `2026-11-05T09:01:45Z` |
+| پیکربندی شبیهساز | API 36 / Android 16 / `pixel_7` / `google_apis` / `x86_64` / headless |
+| نتیجه | `adb install -r` → **Success**، `install_exit=0` |
 
-## ۱. فرمانهای خواستهشده در §4 و وضعیت دقیق آنها
+## ۱. دستگاه و فرمانها — `OBSERVED`
 
-| فرمان | اجرا | خروجی |
-|---|---|---|
-| `adb devices -l` | ❌ در M04 اجرا نشد | (M03: `emulator-5554 device ... emu64xa`) |
-| `adb install -r ORIGINAL.apk` | ❌ **اجرا نشد** | `BLOCKED` |
-| `adb shell pm list packages -3` | ❌ اجرا نشد | `UNKNOWN` |
-| `adb shell pm path <verified_package_name>` | ❌ اجرا نشد | `UNKNOWN` |
+```
+$ adb devices -l
+List of devices attached
+emulator-5554   device product:sdk_gphone64_x86_64 model:sdk_gphone64_x86_64 device:emu64xa transport_id:1
 
-دلیل: طبق §13 «If APK access is blocked: Deliver a complete blocker report. Do not
-waste time repeating environment setup». ازآنجاکه `APK_SOURCE_AND_AUTHORIZATION.fa.md`
-نبود منبع مجاز را اثبات کرد، **هیچ بوت AVD و هیچ فرمان ADBـای تکرار نشد**.
-اجرای `adb devices` بدون APK هیچ شاهد جدیدی دربارهٔ نصب تولید نمیکرد.
+$ adb install -r MIMO_ORIGINAL.apk
+Performing Streamed Install
+Success
+install_exit=0
+```
 
-## ۲. نام بسته — `STATICALLY INFERRED` (نه `RUNTIME VERIFIED`)
+`adb devices -l` پیش از نصب اجرا شد تا مشخص شود نصب روی همان شبیهساز تأییدشده
+`emu64xa` انجام میشود، نه روی دستگاه دیگری. نصب با `install_exit=0` و پیام
+صریح `Success` تأیید شد؛ هیچ `INSTALL_FAILED_*` رخ نداد.
 
-§4: «Do not guess the package name». نام بسته **حدس زده نشد**؛ از manifest ایستای
-`APK_COMPLETE_INVENTORY.json` / `EV-0001` گرفته شد: `com.getmimo`، نسخهٔ `9.35`.
-اما تأیید آن روی دستگاه (`pm path` / `dumpsys package`) انجام **نشد**،
-پس برچسب آن `STATICALLY INFERRED` است و **نه** `RUNTIME VERIFIED`.
-هیچ `pm list packages -3`ـای برای کشف نام بستهٔ نصبشده اجرا نشد.
+## ۲. شناسایی بسته با `pm` (نه حدس) — `OBSERVED`
 
-## ۳. فیلدهای خواستهشده §4 — همگی `UNKNOWN` / `BLOCKED`
+```
+$ adb shell pm list packages -3
+package:com.getmimo
+discovered_package=com.getmimo
+```
+نام بسته از خروجی واقعی `pm list packages -3` استخراج شد؛
+`com.getmimo` در اسکریپت **حدس زده نشد** (متغیر `PKG` از خروجی `pm` پر میشود).
 
-| فیلد | مقدار | برچسب |
-|---|---|---|
-| Installation exit code | اجرا نشد | `BLOCKED` |
-| Complete installation output | وجود ندارد | `BLOCKED` |
-| Package name | `com.getmimo` (از manifest) | `STATICALLY INFERRED` |
-| Version name | `9.35` (از manifest) | `STATICALLY INFERRED` |
-| Version code | `1792759685` (از `APK_COMPLETE_INVENTORY.json`) | `STATICALLY INFERRED` |
-| Installed APK paths | اندازهگیری نشد | `UNKNOWN` |
-| APK SHA-256 (روی runner) | تطابق داده نشد | `BLOCKED` |
-| Device ABI | `x86_64,arm64-v8a` (M03، run `41951780483`) | `RUNTIME VERIFIED` (M03، حملشده) |
-| APK ABI list | `arm64-v8a` ۶ + `armeabi-v7a` ۶ = ۱۲ `.so` (M02) | `STATICALLY INFERRED` |
-| Native library directories | بررسی نشد | `UNKNOWN` |
+```
+$ adb shell pm path com.getmimo
+package:/data/app/~~879Bmb_9AvdhlA2xkfvv0g==/com.getmimo-x4L2K7k-G7wsdWMh6MHe7A==/base.apk
 
-## ۴. کلاسهای خطای احتمالی §4 — هیچکدام رخ نداد
+$ adb shell dumpsys package com.getmimo | grep -E 'primaryCpuAbi|versionCode|versionName|secondaryCpuAbi'
+    primaryCpuAbi=arm64-v8a
+    versionCode=1792759685 minSdk=28 targetSdk=36
+    versionName=9.35
+```
+`secondaryCpuAbi=null` و مسیر کتابخانهٔ بومی `.../lib/arm64` میباشد.
+نسخهٔ نصبشده دقیقاً **Mimo 9.35 / 1792759685** است، همان که در تحلیل ایستا
+شناسایی شده بود؛ بنابراین APK جایگزینی نصب نشده است.
 
-`ABI incompatibility`، `Missing native dependencies`، `SDK incompatibility`،
-`Signature conflict`، `Insufficient storage`، `Package parsing failure`،
-`Unsupported native library format`: **هیچکدام مشاهده نشد**، زیرا نصبی انجام نشد.
-هیچکدام نیز **رد نشدند**؛ بنابراین همگی `UNKNOWN`اند، نه «سالم».
-§4 میگوید «Use evidence, not assumptions» — بنابراین هیچ پیشبینیای دربارهٔ
-موفقیت یا شکست نصب ثبت نمیشود.
+## ۳. ABI دستگاه و کتابخانههای بومی داخل APK — `OBSERVED`
 
-## ۵. محافظتها — `OBSERVED`
+```
+ro.product.cpu.abilist=x86_64,arm64-v8a
+ro.product.cpu.abilist64=x86_64,arm64-v8a
+ro.product.cpu.abilist32=
+ro.dalvik.vm.native.bridge=libndk_translation.so
+```
+فهرست `lib/` داخل APK (از فایل اصلی، بدون استخراج/تغییر):
+`arm64-v8a`: ۶ کتابخانه، `armeabi-v7a`: ۶ کتابخانه، **بدون x86/x86_64**.
+تحلیل کاملتر در `ABI_COMPATIBILITY.fa.md`.
 
-- APK اصلاح، rebuild، repack، patch نشد؛ کتابخانههای بومی دستکاری نشدند.
-- هیچ APK غیرمرتبطی (سه_part Drive، `stock-*` release، artifact `app-debug-apk`،
-  شش APK دیگر Drive) جایگزین نشد.
-- نصب فقط پس از تطابق کامل SHA مجاز است (ر.ک. `APK_INTEGRITY.fa.md`).
+## ۴. تشخیص خطاهای نصب (§5، انجامشده ولی بدون وقوع خطا)
 
-**ارجاع شواهد:** `LOGS/SECRET_PRESENCE_PROBE.txt`، `APK_SOURCE_AND_AUTHORIZATION.fa.md`،
-`../DEVICE_PROPERTIES.json` (M03)، `ANALYSIS/APK_COMPLETE_INVENTORY.json`.
+دروازهٔ نصب برای ردهبندی خودکار خطاها آماده بود و خروجی `adb install` در
+`APK_INSTALLATION.txt` بهطور کامل ذخیره شد. در این اجرا هیچکدام رخ ندادند:
+`INSTALL_FAILED_NO_MATCHING_ABIS`، `INSTALL_FAILED_INVALID_APK`،
+`INSTALL_FAILED_UPDATE_INCOMPATIBLE`، `INSTALL_PARSE_FAILED_*`،
+`INSTALL_FAILED_INSUFFICIENT_STORAGE`، `dex2oat` failure.
+عدم رخداد `NO_MATCHING_ABIS` با وجود نبود `x86_64` در APK، ناشی از
+`arm64-v8a` در `cpu.abilist64` و پل ترجمهٔ `libndk_translation.so` است؛
+این یک `OBSERVED` از نصب موفق است، نه پیشبینی.
+
+## ۵. حفاظت از فایل اصلی — `OBSERVED`
+
+هیچ `apktool`, `zipalign`, `apksigner`, تغییر DEX/منیفست/منابع، وصلهٔ `.so`،
+بستهبندی مجدد یا `adb install --force-*` بهکار نرفت. تنها عملیات روی فایل،
+خواندن، تقسیم باینری، الحاق و `sha256sum` بود.
+
+**ارجاع شواهد:** `APK_INSTALLATION.txt`، `ABI_COMPATIBILITY.txt`،
+`APK_SHA256.txt`، `DEVICE_PROPERTIES.txt`، `DEVICE_PROPERTIES.json`.
