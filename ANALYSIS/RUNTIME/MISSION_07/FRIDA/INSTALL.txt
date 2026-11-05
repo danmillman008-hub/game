@@ -1,0 +1,46 @@
+MISSION 07 - FRIDA INSTALLATION
+timestamp_utc=2026-11-05T11:18:38Z
+== host python / pip ==
+Python 3.14.4
+pip 25.1.1 from /usr/lib/python3/dist-packages/pip (python 3.14)
+pip_exit=0
+frida_python_version=17.25.2
+== download frida-server ==
+                                 Dload  Upload  Total   Spent   Left   Speed
+  0      0   0      0   0      0      0      0                              0  0      0   0      0   0      0      0      0                              0  0      0   0      0   0      0      0      0                              0
+  0      0   0      0   0      0      0      0                              0100 42.80M 100 42.80M   0      0 86.46M      0                              0100 42.80M 100 42.80M   0      0 86.30M      0                              0100 42.80M 100 42.80M   0      0 86.14M      0                              0
+curl_exit=0 bytes=44889284
+xz_exit=0
+-rw-r--r-- 1 runner runner 172034312 Nov  5 11:18 /home/runner/work/_temp/frida-server
+== push + start as root ==
+/home/runner/work/_temp/frida-server: 1 file pushed, 0 skipped. 162.0 MB/s (172034312 bytes in 1.013s)
+x86_64
+/data/local/tmp/frida-server: ELF shared object, 64-bit LSB x86-64, dynamic (/system/bin/linker64), for Android 21, built by NDK r29 (14206865), stripped
+cat: /data/local/tmp/frida-server.log: No such file or directory
+== frida-ps -U ==
+ PID  Name
+----  -------------------------------------------------------------------------------------------------
+3355  Camera                                                                                           
+3874  Chrome                                                                                           
+3060  Files                                                                                            
+1730  Google                                                                                           
+4393  Messages                                                                                         
+3407  Mimo                                                                                             
+4041  Personal Safety                                                                                  
+2698  Phone                                                                                            
+1280  SIM Toolkit                                                                                      
+1383  Settings                                                                                         
+2685  abb                                                                                              
+2176  adbd                                                                                             
+ 479  android.hardware.audio.service                                                                   
+ 507  android.hardware.authsecret-service.example                                                      
+1052  android.hardware.biometrics.fingerprint-service.ranchu                                           
+ 496  android.hardware.bluetooth-service.default                                                       
+ 480  android.hardware.camera.provider.ranchu                                                          
+ 481  android.hardware.camera.provider@2.7-service-google                                              
+ 510  android.hardware.cas-service.example                                                             
+ 515  android.hardware.contexthub-service.example                                                      
+ 535  android.hardware.drm-service.widevine                                                            
+ 260  android.hardware.gatekeeper-service.nonsecure                                                    
+1154  android.hardware.gnss-service.ranchu                                                             
+frida_ps_exit=0
