@@ -118,6 +118,31 @@ export function mountViews(doc, { store, bank, curriculum }) {
   bankLink.innerHTML = '<span>بانک سؤال</span><span data-nav="practice-bank">＋ مرور و تمرین</span>';
   examHub.appendChild(bankLink);
 
+  // ---- 3d. LearnHarness status surface on the approved AI screen -----------
+  const ai = doc.querySelector('[data-screen="ai"]');
+  const aiTop = ai.querySelector('.krow.ai-top');
+  const harnessStatus = doc.createElement('div');
+  harnessStatus.className = 'cat-meta';
+  harnessStatus.id = 'harnessStatus';
+  harnessStatus.setAttribute('data-role', 'harness-status');
+  harnessStatus.style.margin = '0 14px 8px';
+  aiTop.parentNode.insertBefore(harnessStatus, aiTop.nextSibling);
+  const harnessPhases = doc.createElement('div');
+  harnessPhases.className = 'chips';
+  harnessPhases.id = 'harnessPhases';
+  harnessPhases.style.padding = '0 14px 8px';
+  harnessPhases.innerHTML = [
+    ['measure', 'سنجش'], ['plan', 'برنامهریزی'], ['teach', 'آموزش'], ['practice', 'تمرین'],
+  ].map(([k, v], i) => `<button type="button" class="chip ${i === 0 ? 'on' : ''}" data-harness-phase="${k}">${esc(v)}</button>`).join('');
+  aiTop.parentNode.insertBefore(harnessPhases, harnessStatus.nextSibling);
+  const harnessStart = doc.createElement('button');
+  harnessStart.type = 'button';
+  harnessStart.className = 'fchip ai-chip';
+  harnessStart.id = 'harnessStart';
+  harnessStart.setAttribute('data-harness-action', 'start');
+  harnessStart.textContent = 'شروع جلسه';
+  ai.querySelector('.ai-top-left').appendChild(harnessStart);
+
   // ---- 4. Settings / profile-actions modal (existing .modal-card language) ---
   insert(`
     <div class="modal" id="settingsModal" data-role="settings">
@@ -224,4 +249,18 @@ export function renderSettings(doc, store) {
     <div class="selfrow"><span>${esc(label)}</span><b><button class="btn ${on ? 'primary' : ''}" data-setting="${key}">${on ? 'روشن' : 'خاموش'}</button></b></div>`).join('')
     + `<div class="selfrow"><span>هدف روزانه</span><b><button class="btn" data-goal="1">${esc(store.get('settings.dailyGoal'))} دقیقه</button></b></div>`
     + `<div class="selfrow"><span>شناسهٔ محلی</span><b>${esc(store.get('identity.id'))}</b></div>`;
+}
+
+/** Render the LearnHarness-compatible local harness status (no fake AI). */
+export function renderHarnessStatus(doc, status) {
+  const box = doc.getElementById('harnessStatus');
+  if (!box) return;
+  doc.querySelectorAll('[data-harness-phase]').forEach((b) =>
+    b.classList.toggle('on', b.dataset.harnessPhase === status.phase));
+  const honest = status.honest === 'no-source-registered'
+    ? 'منبعی در فرم اطلاعاتی ثبت نشده؛ منابع در مرحلهٔ بعد اضافه میشوند.'
+    : `از ${status.availableLessons} درس و ${status.availableQuestions} تست موجود استفاده میشود.`;
+  box.textContent = `LearnHarness (موتور محلی) · فاز: ${status.phaseFa} · `
+    + `گزارهها: ${status.propositions} · ارائهدهندهٔ خارجی: ${status.externalProvider} · `
+    + `تولید متن: خیر · ${honest}`;
 }

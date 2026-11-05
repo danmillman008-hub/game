@@ -84,6 +84,7 @@ export function defaultState(now = Date.now()) {
     },
     ai: {
       threads: [],            // local chat log; no AI teacher / no network
+      harness: null,          // LearnHarness-compatible local teaching session
     },
     navigation: {
       screen: 'learn',

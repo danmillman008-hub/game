@@ -2,10 +2,10 @@
    cached copies keep the app usable when the device is completely offline. */
 const CACHE = 'mimo-offline-v1';
 const SHELL = [
-  './', './index.html', './assets/proto.css', './assets/motion.css',
+  './', './index.html', './assets/proto.css', './assets/motion.css', './assets/node-match.css',
   './assets/proto-data.js', './assets/proto-ui.js',
   './src/app.js', './src/store.js', './src/engine.js', './src/fixtures.js',
-  './src/routes.js', './src/views.js', './manifest.webmanifest',
+  './src/routes.js', './src/views.js', './src/nodes.js', './src/harness.js', './src/exam-template.js', './src/templates.js', './manifest.webmanifest',
 ];
 
 self.addEventListener('install', (event) => {

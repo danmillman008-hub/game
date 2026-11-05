@@ -23,6 +23,7 @@ TEMPLATE = '''<!doctype html>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="stylesheet" href="./assets/proto.css">
 <link rel="stylesheet" href="./assets/motion.css">
+<link rel="stylesheet" href="./assets/node-match.css">
 </head>
 <body class="app-body">
 <main class="app-stage" aria-label="اپلیکیشن آفلاین میمو">

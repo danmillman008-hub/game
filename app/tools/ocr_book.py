@@ -44,12 +44,17 @@ def ocr_page(n):
     api.SetImage(img)
     text = api.GetUTF8Text()
     conf = api.MeanTextConf()
+    # GetTSVText gives word-level boxes (left/top/width/height/conf) needed to
+    # reconstruct the book's TWO-COLUMN layout during structuring.
     words = []
     try:
-        for w in api.GetComponents(RIL.WORD) or []:
-            if isinstance(w, (tuple, list)) and len(w) >= 3 and w[0]:
-                words.append({'text': w[0], 'conf': round(float(w[2]), 1),
-                              'bbox': list(w[1]) if hasattr(w[1], '__iter__') else None})
+        for row in api.GetTSVText().splitlines()[1:]:
+            c = row.split('\t')
+            if len(c) < 12 or c[11].strip() == '' or c[0] != '5':
+                continue
+            words.append({'text': c[11], 'conf': float(c[10]),
+                          'bbox': [int(c[6]), int(c[7]), int(c[8]), int(c[9])],
+                          'block': int(c[2]), 'par': int(c[3]), 'line': int(c[4])})
     except Exception:
         pass
     rec = {

@@ -24,6 +24,17 @@ def resolve(schema, root):
 
 def validate(value, schema, root, path, errors):
     s = resolve(schema, root)
+    if 'anyOf' in s:
+        local = []
+        for branch in s['anyOf']:
+            probe = []
+            validate(value, branch, root, path, probe)
+            if not probe:
+                local = []
+                break
+            local = probe
+        errors.extend(local)
+        return
     t = s.get('type')
     if t == 'object':
         if not isinstance(value, dict):

@@ -1,0 +1,94 @@
+/* ---------------------------------------------------------------------------
+   NODE FIDELITY LAYER — user request: "گرههای آموزشی دقیقاً با اپ اصلی مچ بشه".
+   Loaded AFTER proto.css / motion.css. Values are NOT invented: they come from
+   mimo-ui/UPGRADE/CATALOGS/MIMO_PATH_NODES.csv (PN-01..PN-18, V10-01..V10-11)
+   and DESIGN/NODE_CODE_GEOMETRY.json (nodeGeometry.node / current / connector_paths).
+   Protected prototype assets stay byte-identical; this layer only aligns the
+   running app's nodes with the ORIGINAL Mimo path map.
+   --------------------------------------------------------------------------- */
+
+/* Exact 92dp / 26dp corner / 8dp 3D lip on EVERY state (PN-01, PN-03). */
+.pathwrap.l10 .node{
+  width:92px;height:92px;border-radius:26px;
+  box-shadow:0 8px 0 var(--primary-hi),0 12px 18px rgba(37,39,70,.18);
+  transition:transform .22s ease,box-shadow .22s ease,background .22s ease;
+}
+.pathwrap.l10 .node .ic{width:48px;height:48px}
+
+/* done = progress_chapter_primary -> button_primary gradient, white ic_check_white 44dp (PN-02, PN-07) */
+.pathwrap.l10 .node.done{
+  background:linear-gradient(158deg,var(--progress) 0%,var(--primary) 100%);
+  box-shadow:0 8px 0 var(--primary-hi),0 12px 18px rgba(37,39,70,.18);
+}
+.pathwrap.l10 .node.done .ic{width:44px;height:44px;color:#fff}
+
+/* current = white card + 3dp border + 7dp gap + 3dp outer ring + 2dp inner outline (PN-08, PN-09) */
+.pathwrap.l10 .node.cur,.pathwrap.l10 .node.half{
+  background:var(--card);border:3px solid var(--progress);
+  box-shadow:0 0 0 7px var(--card),0 0 0 10px var(--progress-weak),
+             0 8px 0 var(--primary-hi),0 12px 18px rgba(37,39,70,.16);
+}
+.pathwrap.l10 .node.cur:before,.pathwrap.l10 .node.half:before{
+  content:"";position:absolute;inset:6px;border:2px solid var(--line2);border-radius:20px;
+}
+/* play variant: dark navy ic_play (PN-11) */
+.pathwrap.l10 .node.cur.play .ic{width:46px;height:46px;color:var(--text)}
+/* 1/2 variant: 60dp ring / 8dp stroke / 55% arc (PN-10) */
+.pathwrap.l10 .hring{
+  width:60px;height:60px;border-radius:50%;
+  background:conic-gradient(from -90deg,var(--progress) 0 55%,var(--progress-bg) 55% 100%);
+  display:flex;align-items:center;justify-content:center;position:relative;
+}
+.pathwrap.l10 .hring:before{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--card)}
+.pathwrap.l10 .hring b{position:relative;z-index:1;font:700 13px/1 system-ui,sans-serif;color:var(--text)}
+
+/* next = light card_disabled squircle, UNLOCKED, no lock glyph (V10-18 / V9-12) */
+.pathwrap.l10 .node.next{
+  background:var(--disabled);box-shadow:0 8px 0 var(--card-pressed);opacity:1;
+}
+.pathwrap.l10 .node.next .ic{color:#fff;width:44px;height:44px}
+
+/* locked = light lavender + white lock + 3D lip (original mimo-01/02 screenshots).
+   Data-driven: only appears when real prerequisite state requires it. */
+.pathwrap.l10 .node.locked{
+  background:var(--disabled);box-shadow:0 8px 0 var(--card-pressed);
+}
+.pathwrap.l10 .node.locked .ic{color:#fff;width:44px;height:44px}
+
+/* bolt checkpoint (PN-12, PN-13): active purple 3D + navy flash, optional disabled + white bolt */
+.pathwrap.l10 .node.bolt.active{
+  background:linear-gradient(158deg,var(--progress),var(--primary));
+  box-shadow:0 8px 0 var(--primary-hi),0 12px 18px rgba(37,39,70,.18);
+}
+.pathwrap.l10 .node.bolt.active .ic{color:var(--text)}
+.pathwrap.l10 .node.bolt.optional{
+  background:var(--disabled);box-shadow:0 8px 0 var(--card-pressed);opacity:1;
+}
+.pathwrap.l10 .node.bolt.optional .ic{color:#fff}
+
+/* connector: 10dp, rounded Q elbows 32dp, purple done / light lavender next (PN-05, PN-06, V10-05/06) */
+.pathwrap.l10 .connector path[stroke]{stroke-width:10}
+
+/* dotted grid 1.6dp dot / 26dp spacing (PN-04) */
+.pathwrap.l10{background:radial-gradient(circle,var(--line2) 1.6px,transparent 1.7px) 0 0/26px 26px;background-color:var(--bg)}
+
+/* floating book/dictionary with «A» — present in mimo-01/02, archived in v12.5-fa (PN-15) */
+.pathwrap.l10 .gloss-fab{
+  position:absolute;left:294px;top:604px;width:56px;height:56px;border-radius:50%;
+  background:var(--card);border:1px solid var(--line2);
+  box-shadow:0 3px 10px rgba(37,39,70,.12);
+  display:flex;align-items:center;justify-content:center;z-index:3;cursor:pointer;
+}
+.pathwrap.l10 .gloss-fab .abook{
+  width:30px;height:32px;border:2.5px solid var(--text);border-radius:6px;position:relative;
+  display:flex;align-items:center;justify-content:center;
+  font:700 17px/1 Georgia,serif;color:var(--text);
+}
+.pathwrap.l10 .gloss-fab .abook:before{
+  content:"";position:absolute;left:4px;top:-2px;bottom:-2px;width:2px;background:var(--text);
+}
+
+/* checkpoint window timing from res/anim (PN-29 / V10-17) */
+.pathwrap.l10 .node.just-unlocked{animation:nodeUnlock .22s ease-out}
+@keyframes nodeUnlock{0%{transform:scale(.86);opacity:.55}55%{transform:scale(1.06)}100%{transform:scale(1);opacity:1}}
+body.reduce-motion .pathwrap.l10 .node.just-unlocked{animation:none}

@@ -66,7 +66,8 @@ def main():
                                         f'data-screen="{s}"' in (APP / 'src/views.js').read_text(encoding='utf-8')
                                         for s in screens))
     for rel in ['src/app.js', 'src/store.js', 'src/engine.js', 'src/fixtures.js',
-                'src/routes.js', 'src/views.js', 'server.js', 'sw.js', 'index.html']:
+                'src/routes.js', 'src/views.js', 'src/nodes.js', 'src/harness.js', 'src/exam-template.js',
+                'src/templates.js', 'assets/node-match.css', 'server.js', 'sw.js', 'index.html']:
         check(f'required file {rel}', (APP / rel).is_file())
     app_src = '\n'.join((APP / rel).read_text(encoding='utf-8') for rel in
                         ['src/app.js', 'src/store.js', 'src/engine.js', 'src/routes.js'])

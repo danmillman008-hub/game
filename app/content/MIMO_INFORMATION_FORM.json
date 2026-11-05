@@ -4,193 +4,638 @@
   "title": "Mimo Content Information Form v1 (فرم اطلاعاتی میمو)",
   "description": "Canonical target schema for ALL new content. Every unit extracted from the biology book must be written into this form; the offline app reads only form-conformant packages. Field names marked 'native' come verbatim from the decoded Mimo lesson assets (publishSetVersion 753); fields marked 'extension' are added for traceability of converted book content and are NOT claims about Mimo behaviour.",
   "type": "object",
-  "required": ["formVersion", "packageId", "locale", "source", "tracks", "questions", "exams", "provenance"],
+  "required": [
+    "formVersion",
+    "packageId",
+    "locale",
+    "source",
+    "tracks",
+    "questions",
+    "exams",
+    "provenance"
+  ],
   "additionalProperties": false,
   "properties": {
-    "formVersion": { "const": "1.0.0" },
-    "packageId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{2,63}$" },
-    "locale": { "type": "string", "examples": ["fa", "en"] },
-    "publishSetVersion": { "type": "integer", "const": 753, "description": "native: observed in tracks.json" },
-    "source": { "$ref": "#/$defs/source" },
-    "tracks": { "type": "array", "items": { "$ref": "#/$defs/track" }, "minItems": 1 },
-    "questions": { "type": "array", "items": { "$ref": "#/$defs/question" } },
-    "exams": { "type": "array", "items": { "$ref": "#/$defs/exam" } },
-    "provenance": { "$ref": "#/$defs/provenance" }
+    "formVersion": {
+      "const": "1.0.0"
+    },
+    "packageId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{2,63}$"
+    },
+    "locale": {
+      "type": "string",
+      "examples": [
+        "fa",
+        "en"
+      ]
+    },
+    "publishSetVersion": {
+      "type": "integer",
+      "const": 753,
+      "description": "native: observed in tracks.json"
+    },
+    "source": {
+      "$ref": "#/$defs/source"
+    },
+    "tracks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/track"
+      },
+      "minItems": 1
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/question"
+      }
+    },
+    "exams": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/exam"
+      }
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    }
   },
   "$defs": {
     "source": {
       "type": "object",
-      "required": ["kind", "title", "contentStatus"],
+      "required": [
+        "kind",
+        "title",
+        "contentStatus"
+      ],
       "additionalProperties": false,
       "properties": {
-        "kind": { "enum": ["native-mimo-asset", "converted-book", "placeholder"] },
-        "title": { "type": "string" },
-        "grade": { "type": "string" },
-        "subject": { "type": "string" },
-        "publisher": { "type": "string" },
-        "isbn": { "type": "string" },
-        "pageCount": { "type": "integer", "minimum": 0 },
-        "sha256": { "type": "string" },
-        "contentStatus": { "enum": ["placeholder", "extracted", "structured", "reviewed", "approved"] },
-        "note": { "type": "string" }
+        "kind": {
+          "enum": [
+            "native-mimo-asset",
+            "converted-book",
+            "placeholder"
+          ]
+        },
+        "title": {
+          "type": "string"
+        },
+        "grade": {
+          "type": "string"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "publisher": {
+          "type": "string"
+        },
+        "isbn": {
+          "type": "string"
+        },
+        "pageCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sha256": {
+          "type": "string"
+        },
+        "contentStatus": {
+          "enum": [
+            "placeholder",
+            "extracted",
+            "structured",
+            "reviewed",
+            "approved"
+          ]
+        },
+        "note": {
+          "type": "string"
+        }
       }
     },
-    "provenance": { "$ref": "#/$defs/trace" },
+    "provenance": {
+      "$ref": "#/$defs/trace"
+    },
     "trace": {
       "type": "object",
       "description": "extension: mandatory traceability for converted content. No sentence may exist without a source page.",
-      "required": ["sourceRef", "contentStatus"],
+      "required": [
+        "sourceRef",
+        "contentStatus"
+      ],
       "additionalProperties": false,
       "properties": {
-        "sourceRef": { "type": "string", "description": "e.g. book:biology-12:page-142:block-3" },
-        "sourcePage": { "type": "integer", "minimum": 1 },
-        "sourceLine": { "type": "integer", "minimum": 1 },
-        "ocrConfidence": { "type": "number", "minimum": 0, "maximum": 100 },
-        "ocrEngine": { "type": "string" },
-        "reviewStatus": { "enum": ["unreviewed", "in-review", "verified", "corrected"] },
-        "contentStatus": { "enum": ["placeholder", "extracted", "structured", "reviewed", "approved"] },
-        "reviewer": { "type": "string" },
-        "notes": { "type": "string" }
+        "sourceRef": {
+          "type": "string",
+          "description": "e.g. book:biology-12:page-142:block-3"
+        },
+        "sourcePage": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sourceLine": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "ocrConfidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "ocrEngine": {
+          "type": "string"
+        },
+        "reviewStatus": {
+          "enum": [
+            "unreviewed",
+            "in-review",
+            "verified",
+            "corrected"
+          ]
+        },
+        "contentStatus": {
+          "enum": [
+            "placeholder",
+            "extracted",
+            "structured",
+            "reviewed",
+            "approved"
+          ]
+        },
+        "reviewer": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        }
       }
     },
     "track": {
       "type": "object",
       "description": "native shape: tracks.json -> tracks[]",
-      "required": ["id", "version", "title", "descriptionContent", "sections"],
+      "required": [
+        "id",
+        "version",
+        "title",
+        "descriptionContent",
+        "sections"
+      ],
       "additionalProperties": false,
       "properties": {
-        "id": { "type": "integer" },
-        "version": { "type": "integer" },
-        "title": { "type": "string" },
-        "descriptionContent": { "type": "string" },
-        "onboardingCategory": { "type": "string" },
-        "isNew": { "type": "boolean" },
-        "isHidden": { "type": "boolean" },
-        "iconBanner": { "type": "string" },
-        "sections": { "type": "array", "items": { "$ref": "#/$defs/section" } },
-        "trace": { "$ref": "#/$defs/trace" }
+        "id": {
+          "type": "integer"
+        },
+        "version": {
+          "type": "integer"
+        },
+        "title": {
+          "type": "string"
+        },
+        "descriptionContent": {
+          "type": "string"
+        },
+        "onboardingCategory": {
+          "type": "string"
+        },
+        "isNew": {
+          "type": "boolean"
+        },
+        "isHidden": {
+          "type": "boolean"
+        },
+        "iconBanner": {
+          "type": "string"
+        },
+        "sections": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/section"
+          }
+        },
+        "trace": {
+          "$ref": "#/$defs/trace"
+        }
       }
     },
     "section": {
       "type": "object",
       "description": "native shape: a named group of tutorials inside a track",
-      "required": ["name", "tutorialIds"],
+      "required": [
+        "name",
+        "tutorialIds"
+      ],
       "additionalProperties": false,
       "properties": {
-        "name": { "type": "string" },
-        "description": { "type": "string" },
-        "startIndex": { "type": "integer", "minimum": 0 },
-        "endIndex": { "type": "integer", "minimum": 0 },
-        "tutorialIds": { "type": "array", "items": { "type": "integer" } },
-        "trace": { "$ref": "#/$defs/trace" }
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "startIndex": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "endIndex": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tutorialIds": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "trace": {
+          "$ref": "#/$defs/trace"
+        }
       }
     },
     "tutorial": {
       "type": "object",
       "description": "native shape: tutorial-*.json -> tutorial",
-      "required": ["id", "version", "type", "title", "descriptionContent", "chapters"],
+      "required": [
+        "id",
+        "version",
+        "type",
+        "title",
+        "descriptionContent",
+        "chapters"
+      ],
       "additionalProperties": false,
       "properties": {
-        "id": { "type": "integer" },
-        "version": { "type": "integer" },
-        "type": { "type": "string" },
-        "isNew": { "type": "boolean" },
-        "codeLanguage": { "type": "string" },
-        "title": { "type": "string" },
-        "descriptionContent": { "type": "string" },
-        "shortDescriptionContent": { "type": "string" },
-        "showInTrack": { "type": "boolean" },
-        "iconBanner": { "type": "string" },
-        "chapters": { "type": "array", "items": { "$ref": "#/$defs/chapter" } },
-        "learningObjectives": { "type": "array", "items": { "type": "string" }, "description": "extension" },
-        "prerequisiteTutorialIds": { "type": "array", "items": { "type": "integer" }, "description": "extension" },
-        "trace": { "$ref": "#/$defs/trace" }
+        "id": {
+          "type": "integer"
+        },
+        "version": {
+          "type": "integer"
+        },
+        "type": {
+          "type": "string"
+        },
+        "isNew": {
+          "type": "boolean"
+        },
+        "codeLanguage": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "descriptionContent": {
+          "type": "string"
+        },
+        "shortDescriptionContent": {
+          "type": "string"
+        },
+        "showInTrack": {
+          "type": "boolean"
+        },
+        "iconBanner": {
+          "type": "string"
+        },
+        "chapters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/chapter"
+          }
+        },
+        "learningObjectives": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "extension"
+        },
+        "prerequisiteTutorialIds": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "extension"
+        },
+        "trace": {
+          "$ref": "#/$defs/trace"
+        }
       }
     },
     "chapter": {
       "type": "object",
       "description": "native shape: chapters[]; type is one of the 6 observed levels",
-      "required": ["id", "title", "type", "lessons"],
+      "required": [
+        "id",
+        "title",
+        "type",
+        "lessons"
+      ],
       "additionalProperties": false,
       "properties": {
-        "id": { "type": "integer" },
-        "title": { "type": "string" },
-        "type": { "enum": ["practiceLevel1", "practiceLevel2", "practiceLevel3", "challengeLevel0", "challengeLevel1", "challengeLevel2"] },
-        "lessons": { "type": "array", "items": { "$ref": "#/$defs/lesson" }, "minItems": 1 },
-        "practiceQuestionIds": { "type": "array", "items": { "type": "string" }, "description": "extension: link to the converted question bank" },
-        "trace": { "$ref": "#/$defs/trace" }
+        "id": {
+          "type": "integer"
+        },
+        "title": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "practiceLevel1",
+            "practiceLevel2",
+            "practiceLevel3",
+            "challengeLevel0",
+            "challengeLevel1",
+            "challengeLevel2"
+          ]
+        },
+        "lessons": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/lesson"
+          },
+          "minItems": 1
+        },
+        "practiceQuestionIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "extension: link to the converted question bank"
+        },
+        "trace": {
+          "$ref": "#/$defs/trace"
+        }
       }
     },
     "lesson": {
       "type": "object",
       "description": "native shape: lessons[]. Mimo micro-lessons average ~21 words; keep one concept per lesson.",
-      "required": ["id", "title", "contentType", "blocks"],
+      "required": [
+        "id",
+        "title",
+        "contentType",
+        "blocks"
+      ],
       "additionalProperties": false,
       "properties": {
-        "id": { "type": "integer" },
-        "title": { "type": "string" },
-        "contentType": { "enum": ["interactive", "executableFiles"] },
-        "images": { "type": "array", "items": { "type": "object", "required": ["id"], "properties": { "id": { "type": "string" }, "captionFa": { "type": "string" } } } },
-        "interactiveContent": { "type": "string", "description": "native: HTML-ish payload; for converted content use blocks[] and generate this at build time" },
-        "hardModeSelected": { "type": "boolean" },
-        "pedagogicalRole": { "enum": ["hook", "explain", "example", "check", "practice", "feedback", "recap", "challenge"], "description": "extension: derived from the measured Mimo teaching grammar" },
-        "blocks": { "type": "array", "items": { "$ref": "#/$defs/block" }, "minItems": 1 },
-        "questionRefs": { "type": "array", "items": { "type": "string" } },
-        "trace": { "$ref": "#/$defs/trace" }
+        "id": {
+          "type": "integer"
+        },
+        "title": {
+          "type": "string"
+        },
+        "contentType": {
+          "enum": [
+            "interactive",
+            "executableFiles"
+          ]
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "captionFa": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "interactiveContent": {
+          "type": "string",
+          "description": "native: HTML-ish payload; for converted content use blocks[] and generate this at build time"
+        },
+        "hardModeSelected": {
+          "type": "boolean"
+        },
+        "pedagogicalRole": {
+          "enum": [
+            "hook",
+            "explain",
+            "example",
+            "check",
+            "practice",
+            "feedback",
+            "recap",
+            "challenge"
+          ],
+          "description": "extension: derived from the measured Mimo teaching grammar"
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/block"
+          },
+          "minItems": 1
+        },
+        "questionRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "trace": {
+          "$ref": "#/$defs/trace"
+        }
       }
     },
     "block": {
       "type": "object",
       "description": "extension: typed content atoms. Renderer names are the verbatim M09/Mimo renderer catalogue.",
-      "required": ["id", "renderer", "contentFa"],
+      "required": [
+        "id",
+        "renderer",
+        "contentFa"
+      ],
       "additionalProperties": false,
       "properties": {
-        "id": { "type": "string" },
-        "renderer": { "enum": ["text", "strong", "noninteractiveSlide", "fillTheGap", "MultipleChoice", "validatedInput", "executableFiles", "InteractiveWebView", "image", "feedback"] },
-        "contentFa": { "type": "string" },
-        "options": { "type": "array", "items": { "type": "string" } },
-        "correctIndex": { "type": "integer", "minimum": 0 },
-        "explanationFa": { "type": "string" },
-        "hintFa": { "type": "string" },
-        "questionId": { "type": "string" },
-        "trace": { "$ref": "#/$defs/trace" }
+        "id": {
+          "type": "string"
+        },
+        "renderer": {
+          "enum": [
+            "text",
+            "strong",
+            "noninteractiveSlide",
+            "fillTheGap",
+            "MultipleChoice",
+            "validatedInput",
+            "executableFiles",
+            "InteractiveWebView",
+            "image",
+            "feedback"
+          ]
+        },
+        "contentFa": {
+          "type": "string"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "correctIndex": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "explanationFa": {
+          "type": "string"
+        },
+        "hintFa": {
+          "type": "string"
+        },
+        "questionId": {
+          "type": "string"
+        },
+        "trace": {
+          "$ref": "#/$defs/trace"
+        }
       }
     },
     "question": {
       "type": "object",
       "description": "extension: converted book tests become the question bank AND exam topics.",
-      "required": ["id", "stemFa", "options", "correctIndex", "topicId", "trace"],
+      "required": [
+        "id",
+        "stemFa",
+        "options",
+        "correctIndex",
+        "topicId",
+        "trace"
+      ],
       "additionalProperties": false,
       "properties": {
-        "id": { "type": "string" },
-        "stemFa": { "type": "string" },
-        "options": { "type": "array", "items": { "type": "string" }, "minItems": 2, "maxItems": 6 },
-        "correctIndex": { "type": "integer", "minimum": 0 },
-        "explanationFa": { "type": "string" },
-        "topicId": { "type": "string" },
-        "chapterId": { "type": "integer" },
-        "difficulty": { "enum": ["easy", "medium", "hard", "unknown"] },
-        "questionNumberInBook": { "type": "integer" },
-        "sourcePage": { "type": "integer" },
-        "renderer": { "enum": ["MultipleChoice", "fillTheGap", "validatedInput", "unknown"] },
-        "contentStatus": { "enum": ["placeholder", "extracted", "structured", "reviewed", "approved"] },
-        "trace": { "$ref": "#/$defs/trace" }
+        "id": {
+          "type": "string"
+        },
+        "stemFa": {
+          "type": "string"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 2,
+          "maxItems": 6
+        },
+        "correctIndex": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "null = پاسخ صحیح هنوز از پاسخنامه استخراج نشده؛ استفاده از چنین سؤالی مجاز نیست"
+        },
+        "explanationFa": {
+          "type": "string"
+        },
+        "topicId": {
+          "type": "string"
+        },
+        "chapterId": {
+          "type": "integer"
+        },
+        "difficulty": {
+          "enum": [
+            "easy",
+            "medium",
+            "hard",
+            "unknown"
+          ]
+        },
+        "questionNumberInBook": {
+          "type": "integer"
+        },
+        "sourcePage": {
+          "type": "integer"
+        },
+        "renderer": {
+          "enum": [
+            "MultipleChoice",
+            "fillTheGap",
+            "validatedInput",
+            "unknown"
+          ]
+        },
+        "contentStatus": {
+          "enum": [
+            "placeholder",
+            "extracted",
+            "structured",
+            "reviewed",
+            "approved"
+          ]
+        },
+        "trace": {
+          "$ref": "#/$defs/trace"
+        }
       }
     },
     "exam": {
       "type": "object",
       "description": "extension: exam structure. The 7 prototype sections are the approved UI; no server policy is fabricated.",
-      "required": ["id", "titleFa", "kind", "questionIds"],
+      "required": [
+        "id",
+        "titleFa",
+        "kind",
+        "questionIds"
+      ],
       "additionalProperties": false,
       "properties": {
-        "id": { "type": "string" },
-        "titleFa": { "type": "string" },
-        "kind": { "enum": ["comprehensive", "timed", "single", "topic", "monthly", "analytical", "review"] },
-        "topicIds": { "type": "array", "items": { "type": "string" } },
-        "questionIds": { "type": "array", "items": { "type": "string" } },
-        "minutes": { "type": "integer", "minimum": 1 },
-        "policy": { "enum": ["during-answer-key", "end-answer-key", "unknown"] },
-        "trace": { "$ref": "#/$defs/trace" }
+        "id": {
+          "type": "string"
+        },
+        "titleFa": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "comprehensive",
+            "timed",
+            "single",
+            "topic",
+            "monthly",
+            "analytical",
+            "review"
+          ]
+        },
+        "topicIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "questionIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "minutes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "policy": {
+          "enum": [
+            "during-answer-key",
+            "end-answer-key",
+            "unknown"
+          ]
+        },
+        "trace": {
+          "$ref": "#/$defs/trace"
+        }
       }
     }
   }

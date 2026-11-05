@@ -32,6 +32,10 @@ export async function createApp({ seed = null } = {}) {
   globalThis.localStorage = w.localStorage;
   Object.defineProperty(globalThis, 'navigator', { value: w.navigator, configurable: true });
   globalThis.location = w.location;
+  globalThis.NODE = w.NODE;
+  globalThis.GEO = w.GEO;
+  globalThis.LEARN = w.LEARN;
+  globalThis.KONKUR = w.KONKUR;
 
   await import(`file://${path.join(APP, 'src/app.js')}?v=${counter}`);
 

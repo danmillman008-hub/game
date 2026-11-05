@@ -10,9 +10,11 @@
 | `MIMO_INFORMATION_FORM.md` | شرح فارسی فیلدها، قواعد و نحوهٔ پر کردن |
 | `PEDAGOGY.md` | پداگوژی و روش تدریس استخراجشده از تمام درسنامههای میمو |
 | `PEDAGOGY_STATS.json` | آمار اندازهگیری‌شدهٔ واقعی (خروجی `tools/analyze_mimo_lessons.py`) |
+| `EXAM_TEMPLATE.json` | قالب ۷ بخش آزمون بر اساس فرم و پداگوژی |
+| `PRACTICE_TEMPLATE.json` | قالب نشستهای تمرین (همان پاسخگویی آزمون، بدون تایمر) |
 | `source/` | خروجی خام OCR — **در `.gitignore` است، وارد گیت نمیشود** |
 
 ترتیب کار: `OCR` → `ساختاردهی` → `پر کردن فرم` → `اعتبارسنجی` → `اتصال به اپ`.
 
 ابزارها: `tools/analyze_mimo_lessons.py`، `tools/ocr_book.py`،
-`tools/validate_content.py`.
+`tools/structure_book.py`، `tools/emit_templates.py`، `tools/validate_content.py`.

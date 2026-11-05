@@ -1,0 +1,28 @@
+{
+  "templateVersion": "1.0.0",
+  "titleFa": "قالب نشستهای تمرین",
+  "basedOn": ["EXAM_TEMPLATE.json", "prototype section-practice + practice-bank"],
+  "contentStatus": "placeholder",
+  "decision": "تمرین از همان کامپوننتها و ساختار پاسخگویی آزمون استفاده میکند، ولی محدودیتهای زمانی آزمون را ندارد (بررسی شد: بخش تمرین در اپ وجود دارد و نباید آزمون دوم ساخته شود).",
+  "rules": {
+    "timed": false,
+    "timer": null,
+    "retryAllowed": true,
+    "immediateFeedback": true,
+    "answerKeyVisible": true,
+    "usesExamAnsweringComponents": true,
+    "scoring": "scoreSession() محلی؛ correct/wrong/blank و درصد پاسخهای زدهشده",
+    "persistence": "practice.sessions[] + practice.active (بازیابی پس از ریاستارت)"
+  },
+  "modes": [
+    { "id": "chapter", "titleFa": "تمرین فصل", "scope": "chapterId", "questionCount": 8,
+      "entry": "learn → bolt node → section-practice" },
+    { "id": "topic", "titleFa": "تمرین مبحث", "scope": "topicId", "questionCount": 10,
+      "entry": "exam-hub → بانک سؤال → practice-bank" },
+    { "id": "bank", "titleFa": "مرور بانک", "scope": "filter", "questionCount": "all-available",
+      "entry": "practice-bank" },
+    { "id": "mistakes", "titleFa": "مرور غلطها", "scope": "wrongQuestionIds", "questionCount": "all-wrong",
+      "entry": "exam-hub section ۷" }
+  ],
+  "note": "هیچ سؤال تازهای تولید نشده؛ سؤالها از questions[] بستهٔ محتوا یا بانک نمونهٔ پروتوتایپ میآیند."
+}

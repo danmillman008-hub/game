@@ -109,6 +109,19 @@ app/
 - رندر پیکسلی در مرورگر واقعی با اسکرینشات تأیید نشده (محیط فاقد مرورگر است)؛
   وفاداری با مقایسهٔ بایتبهبایت CSS/مارکاپ/داده + تست DOM در jsdom سنجیده شده است.
 
+## اتصالهای مرحلهٔ دوم
+
+- **گرهها دقیقاً مطابق اپ اصلی میمو**: `assets/node-match.css` + `src/nodes.js`
+  (92/26/8dp، حلقهٔ 1/2، حالتهای play/half/bolt/locked، واژهنامهٔ شناور) —
+  [docs/INTEGRATIONS.md](docs/INTEGRATIONS.md)
+- **قالب آزمون و تمرین**: `content/EXAM_TEMPLATE.json`،
+  `content/PRACTICE_TEMPLATE.json`، `src/exam-template.js` — تمرین همان
+  کامپوننتهای آزمون را دارد، بدون تایمر.
+- **LearnHarness در تب AI**: `src/harness.js` + `vendor/LEARNHARNESS_INTEGRATION.md`
+  — موتور محلی چهارفازه، بدون مدل زبانی و بدون تولید متن ساختگی.
+- **کتاب**: `tools/ocr_book.py` (در حال اجرا، ۸۴۸ صفحه) و
+  `tools/structure_book.py` (پیشنویس فرممحور، خارج از گیت).
+
 ## مرحلهٔ بعد: محتوای واقعی (فرم اطلاعاتی)
 
 `app/content/` مقصد **تمام اطلاعات تازه** است. پیش از ورود هر محتوای کتاب،

@@ -13,7 +13,10 @@ import {
 } from './engine.js';
 import { buildCurriculum, buildQuestionBank, PATHS, LEADERBOARD_PLACEHOLDER } from './fixtures.js';
 import { getRoute, setRoute, setPath, planStatus, advancePlan, activatePlan, STUDY_PLAN_STAGES } from './routes.js';
-import { mountViews, renderPlan, renderBank, renderLeaderboard, renderSettings, renderExamStatus } from './views.js';
+import { mountViews, renderPlan, renderBank, renderLeaderboard, renderSettings, renderExamStatus, renderHarnessStatus } from './views.js';
+import { createHarness } from './harness.js';
+import { buildExam, buildPracticeSession, templateSummary, EXAM_TEMPLATE, PRACTICE_TEMPLATE } from './exam-template.js';
+import { applyOriginalNodes, assertGeometry, NODE_SPEC } from './nodes.js';
 
 const doc = document;
 const PROTO = window.PROTO;
@@ -44,6 +47,11 @@ if (PROTO) {
 const view = mountViews(doc, { store, bank, curriculum });
 if (PROTO) PROTO.paintIcons(view.phone || doc);
 
+// LearnHarness-compatible LOCAL teaching harness. contentPackage stays null
+// until the user supplies the resources; mountContentPackage() attaches it.
+let harness = createHarness({ store, contentPackage: null });
+const geometryCheck = assertGeometry(typeof NODE !== 'undefined' ? NODE : null);
+
 // ---------------------------------------------------------------------------
 // Settings application (reproduces the prototype's own theme / mirror toggles)
 // ---------------------------------------------------------------------------
@@ -58,6 +66,17 @@ function applySettings() {
 }
 
 function toast(msg) { if (PROTO) PROTO.toast(msg); }
+
+function addHarnessBubble(text) {
+  const thread = doc.getElementById('chatThread');
+  if (!thread) return;
+  const b = doc.createElement('div');
+  b.className = 'bubble';
+  b.setAttribute('data-role', 'harness-message');
+  b.textContent = text;
+  thread.insertBefore(b, doc.getElementById('typing'));
+  thread.scrollTop = thread.scrollHeight;
+}
 
 // ---------------------------------------------------------------------------
 // Learn path state: approved done / current / locked nodes, driven by real
@@ -93,6 +112,14 @@ function renderLearnProgress(announce = false) {
   const card = doc.getElementById('overviewEntry');
   const bar = card && card.querySelector('.oc-bar i');
   if (bar) bar.style.width = `${Math.round((states.filter((s) => s === 'done').length / (states.length || 1)) * 100)}%`;
+  // Original-Mimo node states, derived from real progress (not static markup).
+  applyOriginalNodes(doc, {
+    ids, completions,
+    currentVariant: store.get('progress.currentLessonId') ? 'play' : 'half',
+    boltIndexes: [4, 5], PROTO,
+    seedStates: ['done', 'done', `cur-${store.get('progress.currentLessonId') ? 'play' : 'half'}`,
+      'next', 'bolt-active', 'bolt-optional'],
+  });
 }
 
 function completeCurrentLesson() {
@@ -140,8 +167,11 @@ function finishBankSession() {
   const s = activeSession();
   const questions = visibleBankQuestions();
   const result = scoreSession(questions, s.answers);
+  const template = buildPracticeSession('bank', questions);
   const record = {
     id: s.id, kind: 'question-bank', filter: bankFilter,
+    template: { id: template.id, mode: template.mode, timed: template.timed,
+      answeringComponents: template.answeringComponents },
     questionIds: questions.map((q) => q.id), answers: s.answers,
     result, finishedAt: Date.now(), placeholder: true,
   };
@@ -163,8 +193,10 @@ function recordSectionPractice() {
     if (sel) answers[`sp-${i}`] = Number(sel.dataset.o) - 1;
   });
   const result = scoreSession(questions, answers);
+  const template = buildPracticeSession('chapter', questions);
   store.push('practice.sessions', {
-    id: `sp-${Date.now()}`, kind: 'section-practice', scope: doc.getElementById('spScope')?.textContent || '',
+    id: `sp-${Date.now()}`, kind: 'section-practice',
+    template: { id: template.id, mode: template.mode, timed: false }, scope: doc.getElementById('spScope')?.textContent || '',
     questionIds: questions.map((q) => q.id), answers, result,
     finishedAt: Date.now(), placeholder: true,
   });
@@ -211,6 +243,7 @@ function onNavigate(name) {
     store.set('leaderboard.lastViewedAt', Date.now());
   }
   if (name === 'profile') renderSettings(doc, store);
+  if (name === 'ai') renderHarnessStatus(doc, harness.getStatus());
   if (name === 'learn') renderLearnProgress(false);
   if (name === 'exam-hub') {
     const saved = store.get('exam.saved');
@@ -237,6 +270,38 @@ window.PROTO_PERSIST = (snapshot) => {
 // Interaction delegation (runs alongside the prototype's own handlers)
 // ---------------------------------------------------------------------------
 doc.addEventListener('click', (e) => {
+  const examRow = e.target.closest('.nodek[data-exam]');
+  if (examRow) {
+    const built = buildExam(examRow.dataset.kind || 'comprehensive', bank);
+    if (built) {
+      store.set('exam.activeTemplate', built);
+      toast(`قالب ${built.titleFa} · ${faNum(built.questionIds.length)} سؤال · ${faNum(built.minutes)} دقیقه`);
+    }
+  }
+  const harnessAction = e.target.closest('[data-harness-action]');
+  if (harnessAction) {
+    const input = doc.getElementById('aiInput');
+    const goal = (input && input.value.trim()) || 'زیستشناسی دوازدهم';
+    const res = harness.start(goal);
+    if (res.ok) { harness.plan(80); harness.setPhase('teach'); }
+    addHarnessBubble(res.ok
+      ? `LearnHarness · جلسه «${goal}» شروع شد · فاز آموزش · ${harness.getStatus().steps} گام از منابع موجود (بدون تولید متن)`
+      : 'برای شروع جلسه، هدف یادگیری را بنویسید.');
+    renderHarnessStatus(doc, harness.getStatus());
+    return;
+  }
+  const hp = e.target.closest('[data-harness-phase]');
+  if (hp) {
+    harness.setPhase(hp.dataset.harnessPhase);
+    renderHarnessStatus(doc, harness.getStatus());
+    toast(`فاز LearnHarness: ${hp.textContent}`);
+    return;
+  }
+  const modeBtn = e.target.closest('#mode button');
+  if (modeBtn) {
+    harness.setPhase(modeBtn.dataset.mode === 'PRACTICE' ? 'practice' : 'teach');
+    renderHarnessStatus(doc, harness.getStatus());
+  }
   const routeChip = e.target.closest('[data-route]');
   if (routeChip) {
     const r = setRoute(store, routeChip.dataset.route);
@@ -379,6 +444,11 @@ doc.addEventListener('click', (e) => {
     const text = input ? input.value.trim() : '';
     if (text) {
       store.push('ai.threads', { id: `m-${Date.now()}`, role: 'user', text, at: Date.now(), local: true });
+      const step = harness.teach();
+      addHarnessBubble(step.ok
+        ? `LearnHarness · ${step.proposition.text} (از منبع موجود، بدون تولید متن)`
+        : (step.message || 'منبعی در فرم اطلاعاتی ثبت نشده است.'));
+      renderHarnessStatus(doc, harness.getStatus());
       toast('گفتگو بهصورت محلی ذخیره شد (بدون سرویس هوش مصنوعی)');
     }
   }
@@ -403,6 +473,7 @@ function restore() {
   renderBank(doc, { bank, filter: bankFilter, answers: store.get('practice.active')?.answers || {} });
   renderLeaderboard(doc, { state: store.get('leaderboard.view') || 'weekly', rows: LEADERBOARD_PLACEHOLDER });
   renderExamStatus(doc, store);
+  renderHarnessStatus(doc, harness.getStatus());
   renderLearnProgress(false);
 
   const saved = store.get('exam.saved');
@@ -434,6 +505,15 @@ restore();
 // Public, read-only-ish debug/test surface. Tests use it to drive the app.
 window.APP = {
   store, curriculum, bank, view, proto: PROTO,
+  harness, harnessStatus: () => harness.getStatus(),
+  examTemplate: EXAM_TEMPLATE, practiceTemplate: PRACTICE_TEMPLATE,
+  templateSummary: () => templateSummary(),
+  nodeSpec: NODE_SPEC, geometryCheck,
+  mountContentPackage(pkg) {
+    harness = createHarness({ store, contentPackage: pkg });
+    renderHarnessStatus(doc, harness.getStatus());
+    return harness.getStatus();
+  },
   routes: ROUTES, tabs: TAB_SCREENS,
   go: (name) => (PROTO ? PROTO.go(name) : onNavigate(name)),
   renderPlan: () => renderPlan(doc, store),

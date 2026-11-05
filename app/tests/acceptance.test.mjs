@@ -44,8 +44,11 @@ test('acceptance: Learn path — enter path, change lesson states, unlock feedba
     a.go('learn');
     const nodes = a.qa('[data-screen="learn"] .pathwrap .node');
     assert.equal(nodes.length, 6);
-    assert.equal(nodes[0].dataset.state, 'open');
-    assert.equal(nodes[1].dataset.state, 'locked');
+    assert.equal(nodes[0].dataset.state, 'done', 'original-Mimo baseline: completed node');
+    assert.equal(nodes[1].dataset.state, 'done');
+    assert.equal(nodes[2].dataset.state, 'cur-half');
+    assert.equal(nodes[4].dataset.state, 'bolt-active');
+    assert.ok(a.q('.gloss-fab'), 'original-Mimo floating dictionary affordance restored');
     a.click(a.q('#pathSwitchBtn'));
     assert.equal(a.proto.currentScreen(), 'select-path');
     assert.equal(a.qa('[data-route]').length, 3);
@@ -65,8 +68,9 @@ test('acceptance: Learn path — enter path, change lesson states, unlock feedba
     assert.equal(rows[0].isPracticeProgress, false);
     assert.equal(rows[0].publishSetVersion, 753);
     assert.ok(a.app.store.get('progress.tutorialCompletions')[rows[0].lessonId]);
-    assert.equal(a.qa('[data-screen="learn"] .pathwrap .node')[0].dataset.state, 'done');
-    assert.equal(a.qa('[data-screen="learn"] .pathwrap .node')[1].dataset.state, 'open');
+    const ns = a.qa('[data-screen="learn"] .pathwrap .node');
+    assert.equal(ns[0].dataset.state, 'done');
+    assert.ok(['cur-play', 'cur-half'].includes(ns[1].dataset.state), 'next lesson becomes current');
   } finally { a.close(); }
 });
 
