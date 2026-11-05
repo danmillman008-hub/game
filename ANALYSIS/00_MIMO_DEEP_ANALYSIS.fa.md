@@ -369,6 +369,42 @@ JADX مدرن ← `newPosition > limit`، JADX 1.5.6 ← `243002 errors` / ۱۱�
 
 ---
 
+### ۱۳. اصلاح مسیر تحلیل: زنجیرهٔ واقعی بهجای ابزار بیشتر (REVIEW، تأییدنشده)
+
+پس از اصلاحیهٔ معماری کاربر، **هیچ ابزار تازهای اضافه نشد**؛ REA/Ghidra حفظ شدند و مسیر تحلیل اصلاح گردید.
+جزئیات کامل در `ANALYSIS/01_ANALYSIS_CHAIN.fa.md`؛ خلاصهٔ شواهد:
+
+- **همهٔ ۱۲ DEX** در `ANALYSIS/_INPUT/` و `DEX_INVENTORY.json` (۲۸٬۸۳۶٬۰۸۸ بایت) موجود و توسط Ghidra import شدند
+  (`DEX_COVERAGE.txt`)؛ پیش از این فقط ۳ DEX و `-noanalysis` بود.
+- **Auto Analysis واقعی روی هر ۱۲ DEX**: ۵۴٬۵۳۰ + ۵۳٬۲۴۷ + ۱۴٬۷۰۴ + ۴۱ + ۳×۸ = **۱۲۲٬۵۴۶ تابع** و
+  **۱٬۲۸۴٬۵۴۲ نماد** (قبلاً `functions=0`). خروجی دستورالعمل Dalvik در `ANALYSIS/GHIDRA/CONTROL_FLOW.txt`
+  شامل ۶۰ تابع `ui::path::map` و ۶۲ تابع نمره/اتمام است.
+- **دو JDK جدا**: Temurin ۲۵ برای Ghidra، **full Temurin ۲۱ با `jdk.compiler@21.0.13`** برای REA؛
+  `rea doctor --provider jadx` → `healthy:true` ولی `environment_healthy:false` (drift نسخهٔ Ghidra ۱۲٫۲ در برابر
+  انتظار ۱۲٫۱.x، و Hopper/IDA خارج از دامنه). سلامت کامل محیط REA ادعا نمیشود.
+- **Smali**: baksmali ۲.۳.۴ و apktool ۲.۹.۳ (smali مدرن ۳.x) هر دو روی `classes.dex` دقیقاً ۱۱٬۸۲۸ شکست
+  `Invalid element width` میدهند؛ پس مشکل نسخهٔ ابزار نیست. ۱۷٬۶۲۶ فایل smali تولید شد ولی
+  **۰ فایل برای `com/getmimo/ui/path/map`**؛ پوشش کامل Smali ادعا نمیشود و جای آن را Ghidra پر کرد.
+- **ماشین حالت coroutine**: ۵۳۹ آنوتیشن `@f70/c` (= `DebugMetadata`، فقط `c/f/l/m/v`؛ جدول `n/i/s` توسط R8 حذف شده)،
+  ۸۴ فیلد `label/L$/I$/J$`، ۶۵۲ کلاس suspend در `COROUTINE_STATE_MACHINES.json`.
+- **هدف ۱ (نقشه مسیر)**: shipped v753 = ۱۹ مسیر / ۱۴۴ section / ۲٬۰۰۲ tutorial با `startIndex/endIndex`
+  کاملاً پیوسته (۰ نقض) و ۶ نوع گره؛ **هیچ `x/y`ای در JSONهای محتوا نیست** (فقط Lottie)، یعنی مختصات در کد
+  Compose محاسبه میشود. نام فیلدهای هندسی/اسکرول (`chapterIndexInSection`, `columnCount`, `mainAxisSpacing`,
+  `scrollPositionX`, `verticalEllipseRadius`, …) در `MIMO_COMPLETION_ENGINE.json` ثبت شد؛ ولی **۰ xref** در Ghidra
+  (آنالایزر Reference در PSPEC غیرفعال است) یعنی نسبت قطعی فیلد→کلاس هنوز باز است.
+- **هدف ۲ (نمره/اتمام)**: `LessonProgress` با ۱۱ مؤلفه و getterها، سازنده
+  `(LessonBundle, Instant, I, I)`، `isSolvedCorrectly` → `intField >= 1`؛ `LessonProgressQueue` با ۷ متد؛
+  جداول Room `chapter_completions` / `tutorial_completions` با SQL کامل؛
+  `PostProgressResponse::getDailyGoalCoinReward` و `/v1/user/rewards/{rewardId}/confirm` یعنی پاداش server‑confirm است؛
+  فیلدهای `rewardedSparksForCorrectAnswer` / `rewardMultiplier` / `correctLessonsFirstTry` و صفحههای
+  `ChapterFinished*` / ETA ¼‑½‑«۳ درس مانده» شناسایی شدند. **ضرایب عددی و ترتیب دقیق صفحهها ناشناختهاند.**
+- **محدودیت پابرجا**: بدون emulator/ADB/لاگ/اسکرینشات، **هیچ ادعای پیکسلبهپیکسل** دربارهٔ گرهها/منحنی/اسکرول
+  معتبر نیست. JADX بیشتر روی کل APK اجرا نشد؛ JEB اضافه/خریداری نشد؛ رفتار runtime/سرور مشاهده نشد.
+- `mimo-ui/UPGRADE`، ZIP، MANIFEST، وریفایر و طرح v12 در Drive همچنان **بدون تغییر**؛
+  تأیید نهایی v12.5‑fa و این اصلاحیه هر دو **انجام نشده**اند. `SAVED` فقط در حافظه است.
+
+---
+
 ### پیوست: اصل «شاهد» (از متدولوژی REA)
 
 همهٔ ادعاهای این سند از یکی از این سه منبع است: **(۱)** بایتهای shipped APK (هش بالا)، **(۲)** فایلهای استخراجشدهٔ ریپو، **(۳)** جدول `string_ids` DEX. جایی که نتیجه حدسی یا ناقص است، با ⚠️ / «ناشناخته» مشخص شده. هیچ ادعایی دربارهٔ **اجرای زنده**، **رفتار سرور**، یا **تأیید کاربر** وجود ندارد.

@@ -1,5 +1,5 @@
 {
-  "phase": "temporary analysis toolchain — FULLY INSTALLED, isolated from mimo-ui/UPGRADE",
+  "phase": "temporary analysis toolchain — FULLY INSTALLED, isolated from mimo-ui/UPGRADE; REAL ANALYSIS CHAIN (REVIEW, not approved)",
   "branch": "arena/aebb90b7-game",
   "isolation": {
     "in_upgrade_zip": false,
@@ -137,8 +137,128 @@
   "decompile_limitations": "JADX 1.1.0 (bogus element_width), modern JADX in jadx-mcp.jar (newPosition > limit), JADX 1.5.6 (243002 errors / 11628 Method-not-decompiled stubs) all fail on R8+Kotlin SuspendLambda method bodies; class/method signatures, Kotlin @Metadata, Retrofit annotations, strings, shipped assets and Ghidra symbols are complete",
   "rea_doctor_status": "environment_healthy=false: jdk4py provides java.compiler but not jdk.compiler/javac; REA needs a full JDK to compile its Java source bridge. JADX/apktool run without javac.",
   "verification_after_work": {
-    "verify_upgrade": "PASS 259/259, files_hashed=1954",
-    "design_index_html": "200 / 437972 B unchanged",
-    "upgrade_diff": "empty"
+    "verify_upgrade": "PASS 259/259 checks, files_hashed=1954",
+    "design_index_html": "200 / 437972 bytes, unchanged",
+    "upgrade_zip_manifest_verifier_v12_drive_plan": "unchanged",
+    "runtime_behavior_verification": "NOT DONE — required before any pixel-perfect claim"
+  },
+  "analysis_chain_correction": {
+    "user_directive": "keep REA/Ghidra, add NO further tools, fix the analysis chain instead; no more whole-APK JADX versions; no JEB purchase now",
+    "no_new_tools_added": true,
+    "jeb_added": false,
+    "jadx_extra_whole_apk_runs": 0,
+    "roles": {
+      "REA": "task/evidence director; does NOT auto-fix JADX failure with Ghidra",
+      "JADX": "Java/Kotlin names, @Metadata, DebugMetadata, signatures, 53 Retrofit endpoints",
+      "Ghidra": "low-level DEX/native control flow with Auto Analysis",
+      "Baksmali_Apktool": "exact Smali instruction/debug/annotation recovery"
+    },
+    "dex_coverage": {
+      "files": 12,
+      "bytes": 28836088,
+      "inventory": "ANALYSIS/DEX_INVENTORY.json",
+      "ghidra_import_all_12": "ANALYSIS/GHIDRA/DEX_COVERAGE.txt"
+    },
+    "ghidra_auto_analysis": {
+      "all_12_dex": true,
+      "noanalysis_flag_used": false,
+      "functions": {
+        "classes.dex": 54530,
+        "classes2.dex": 53247,
+        "classes3.dex": 14704,
+        "classes12.dex": 41,
+        "classes4_11_each": 3
+      },
+      "total_functions": 122546,
+      "total_symbols": 1284542,
+      "control_flow": "ANALYSIS/GHIDRA/CONTROL_FLOW.txt",
+      "target_functions": {
+        "ui_path_map": 60,
+        "scoring_completion": 62
+      }
+    },
+    "jdk_isolation": {
+      "ghidra": "Temurin JDK 25",
+      "rea": "separate full Temurin JDK 21 with jdk.compiler@21.0.13",
+      "rea_doctor": "ANALYSIS/GHIDRA/REA_DOCTOR.json",
+      "healthy": true,
+      "environment_healthy": false,
+      "drift": [
+        "REA expects Ghidra 12.1.x, installed 12.2",
+        "REA expects JDK 25+, we intentionally used isolated 21",
+        "hopper/ida missing, out of scope"
+      ]
+    },
+    "smali": {
+      "tool_versions": [
+        "baksmali 2.3.4 (JADX 1.1.0 bundle)",
+        "apktool 2.4.1",
+        "apktool 2.9.3 with smali 3.x"
+      ],
+      "files": 17626,
+      "classes_dex_failures": 11828,
+      "classes_dex_failure_kind": "Invalid element width 3/5/7/9/11/13/15/17/19 (identical on old and modern smali: DEX payload structure, not tool version)",
+      "path_map_smali_files": 0,
+      "complete_smali_coverage_claimed": false
+    },
+    "coroutine_state_machines": {
+      "debug_metadata_annotation": "Lf70/c;",
+      "annotations": 539,
+      "fields_present": [
+        "c",
+        "f",
+        "l",
+        "m",
+        "v"
+      ],
+      "fields_stripped_by_r8": [
+        "n",
+        "i",
+        "s"
+      ],
+      "state_fields": 84,
+      "label_I": 46,
+      "L_slots": 33,
+      "J_slots": 3,
+      "I_slots": 2,
+      "suspend_classes": 652,
+      "artifact": "ANALYSIS/COROUTINE_STATE_MACHINES.json"
+    },
+    "evidence_joins": {
+      "kotlin_metadata_classes": 212,
+      "ghidra_string_xrefs": 0,
+      "xref_limitation": "Reference analyzer disabled by DEX PSPEC; const_string uses string indices; field-to-class attribution still open"
+    },
+    "focus_targets": {
+      "path_map": "com.getmimo.ui.path.map — node coordinates, vertical/horizontal spacing, curve, scroll position, shipped v753 -> UI",
+      "scoring_completion": "ChapterFinishedViewModel, Progress and completion APIs -> scoring formula, lesson-end conditions, saved state, server result linkage"
+    },
+    "workflow_runs": [
+      "41939776550",
+      "41940117221",
+      "41940704898",
+      "41941513296"
+    ],
+    "artifacts": [
+      "ANALYSIS/01_ANALYSIS_CHAIN.fa.md",
+      "ANALYSIS/DEX_INVENTORY.json",
+      "ANALYSIS/COROUTINE_STATE_MACHINES.json",
+      "ANALYSIS/KOTLIN_METADATA.json",
+      "ANALYSIS/MIMO_COMPLETION_ENGINE.json",
+      "ANALYSIS/MIMO_SCORING_STRINGS.json",
+      "ANALYSIS/PATH_MAP_SIGNATURES.json",
+      "ANALYSIS/GHIDRA/CONTROL_FLOW.txt",
+      "ANALYSIS/GHIDRA/TARGET_FUNCTIONS.json"
+    ],
+    "not_claimed": [
+      "full JADX method-body decompile",
+      "complete Smali coverage",
+      "pixel-perfect Compose path-node reconstruction",
+      "runtime/server observation",
+      "emulator/ADB/logs/screenshots",
+      "full part-by-part understanding",
+      "REA environment full health",
+      "user approval"
+    ]
   }
 }
