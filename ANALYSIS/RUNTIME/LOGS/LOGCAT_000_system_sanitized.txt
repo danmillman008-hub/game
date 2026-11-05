@@ -1,0 +1,300 @@
+--------- beginning of kernel
+11-05 01:43:15.329     0     0 I         : Linux version 6.6.66-android15-8-gd0c43a640eab-ab13812146 (kleaf@build-host) (Android (11368308, +pgo, +bolt, +lto, +mlgo, based on r510928) clang version 18.0.0 (https://android.googlesource.com/toolchain/llvm-project 477610d4d0d988e69dbc3fae4fe86bff3f07f2b5), LLD 18.0.0) #1 SMP PREEMPT Mon Jul 21 17:41:13 UTC 2025
+11-05 01:43:15.329     0     0 I Command line: 8250.nr_uarts=1 clocksource=pit no_timer_check console=0 loop.max_part=7 ramoops.mem_address=0xff018000 ramoops.mem_size=0x10000 memmap=0x10000$0xff018000 printk.devkmsg=on bootconfig mac80211_hwsim.radios=0
+11-05 01:43:15.329     0     0 I         : BIOS-provided physical RAM map:
+11-05 01:43:15.329     0     0 I BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
+11-05 01:43:15.329     0     0 I BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
+11-05 01:43:15.329     0     0 I BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
+11-05 01:43:15.329     0     0 I BIOS-e820: [mem 0x0000000000100000-0x00000000bffd5fff] usable
+11-05 01:43:15.329     0     0 I BIOS-e820: [mem 0x00000000bffd6000-0x00000000bfffffff] reserved
+11-05 01:43:15.329     0     0 I BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff] reserved
+11-05 01:43:15.329     0     0 I BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff] reserved
+11-05 01:43:15.329     0     0 I BIOS-e820: [mem 0x0000000100000000-0x000000013fffffff] usable
+11-05 01:43:15.329     0     0 I stackdepot: disabled
+11-05 01:43:15.329     0     0 I         : NX (Execute Disable) protection: active
+11-05 01:43:15.329     0     0 I APIC    : Static calls initialized
+11-05 01:43:15.329     0     0 I         : user-defined physical RAM map:
+11-05 01:43:15.329     0     0 I user    : [mem 0x0000000000000000-0x000000000009fbff] usable
+11-05 01:43:15.329     0     0 I user    : [mem 0x000000000009fc00-0x000000000009ffff] reserved
+11-05 01:43:15.329     0     0 I user    : [mem 0x00000000000f0000-0x00000000000fffff] reserved
+11-05 01:43:15.329     0     0 I user    : [mem 0x0000000000100000-0x00000000bffd5fff] usable
+11-05 01:43:15.329     0     0 I user    : [mem 0x00000000bffd6000-0x00000000bfffffff] reserved
+11-05 01:43:15.329     0     0 I user    : [mem 0x00000000feffc000-0x00000000feffffff] reserved
+11-05 01:43:15.329     0     0 I user    : [mem 0x00000000ff018000-0x00000000ff027fff] reserved
+11-05 01:43:15.329     0     0 I user    : [mem 0x00000000fffc0000-0x00000000ffffffff] reserved
+11-05 01:43:15.329     0     0 I user    : [mem 0x0000000100000000-0x000000013fffffff] usable
+11-05 01:43:15.329     0     0 I         : SMBIOS 2.8 present.
+11-05 01:43:15.329     0     0 I DMI     : QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.1-0-g0551a4be2c-prebuilt.qemu-project.org 04/01/2014
+11-05 01:43:15.329     0     0 I Hypervisor detected: KVM
+11-05 01:43:15.329     0     0 I kvm-clock: Using msrs 4b564d01 and 4b564d00
+11-05 01:43:15.329     0     0 I kvm-clock: using sched offset of 244447335 cycles
+11-05 01:43:15.329     0     0 I clocksource: kvm-clock: mask: 0xffffffffffffffff max_cycles: 0x1cd42e4dffb, max_idle_ns: 881590591483 ns
+11-05 01:43:15.329     0     0 I tsc     : Detected 2596.142 MHz processor
+11-05 01:43:15.329     0     0 D e820    : update [mem 0x00000000-0x00000fff] usable ==> reserved
+11-05 01:43:15.329     0     0 D e820    : remove [mem 0x000a0000-0x000fffff] usable
+11-05 01:43:15.329     0     0 I         : last_pfn = 0x140000 max_arch_pfn = 0x400000000
+11-05 01:43:15.329     0     0 I MTRR map: 4 entries (3 fixed + 1 variable; max 19), built from 8 variable MTRRs
+11-05 01:43:15.329     0     0 I x86/PAT : Configuration [0-7]: WB  WC  UC- UC  WB  WP  UC- WT
+11-05 01:43:15.329     0     0 I         : last_pfn = 0xbffd6 max_arch_pfn = 0x400000000
+11-05 01:43:15.331     0     0 I         : found SMP MP-table at [mem 0x000f5ac0-0x000f5acf]
+11-05 01:43:15.331     0     0 I RAMDISK : [mem 0x7fdea000-0x7fffffff]
+11-05 01:43:15.331     0     0 I ACPI    : Early table checksum verification disabled
+11-05 01:43:15.331     0     0 I ACPI    : RSDP 0x00000000000F58A0 000014 (v00 BOCHS )
+11-05 01:43:15.331     0     0 I ACPI    : RSDT 0x00000000BFFE1C02 000030 (v01 BOCHS  BXPCRSDT 00000001 BXPC 00000001)
+11-05 01:43:15.331     0     0 I ACPI    : FACP 0x00000000BFFE1AC6 000074 (v01 BOCHS  BXPCFACP 00000001 BXPC 00000001)
+11-05 01:43:15.331     0     0 I ACPI    : DSDT 0x00000000BFFE0040 001A86 (v01 BOCHS  BXPCDSDT 00000001 BXPC 00000001)
+11-05 01:43:15.331     0     0 I ACPI    : FACS 0x00000000BFFE0000 000040
+11-05 01:43:15.331     0     0 I ACPI    : APIC 0x00000000BFFE1B3A 000090 (v01 BOCHS  BXPCAPIC 00000001 BXPC 00000001)
+11-05 01:43:15.331     0     0 I ACPI    : HPET 0x00000000BFFE1BCA 000038 (v01 BOCHS  BXPCHPET 00000001 BXPC 00000001)
+11-05 01:43:15.331     0     0 I ACPI    : Reserving FACP table memory at [mem 0xbffe1ac6-0xbffe1b39]
+11-05 01:43:15.331     0     0 I ACPI    : Reserving DSDT table memory at [mem 0xbffe0040-0xbffe1ac5]
+11-05 01:43:15.331     0     0 I ACPI    : Reserving FACS table memory at [mem 0xbffe0000-0xbffe003f]
+11-05 01:43:15.331     0     0 I ACPI    : Reserving APIC table memory at [mem 0xbffe1b3a-0xbffe1bc9]
+11-05 01:43:15.331     0     0 I ACPI    : Reserving HPET table memory at [mem 0xbffe1bca-0xbffe1c01]
+11-05 01:43:15.331     0     0 I Zone ranges:  
+11-05 01:43:15.331     0     0 I         : DMA32    [mem 0x0000000000001000-0x00000000ffffffff]
+11-05 01:43:15.331     0     0 I         : Normal   [mem 0x0000000100000000-0x000000013fffffff]
+11-05 01:43:15.331     0     0 I         : Movable zone start for each node
+11-05 01:43:15.331     0     0 I         : NoSplit zone start for each node
+11-05 01:43:15.331     0     0 I         : NoMerge zone start for each node
+11-05 01:43:15.331     0     0 I         : Early memory node ranges
+11-05 01:43:15.331     0     0 I node   0: [mem 0x0000000000001000-0x000000000009efff]
+11-05 01:43:15.331     0     0 I node   0: [mem 0x0000000000100000-0x00000000bffd5fff]
+11-05 01:43:15.331     0     0 I node   0: [mem 0x0000000100000000-0x000000013fffffff]
+11-05 01:43:15.331     0     0 I         : Initmem setup node 0 [mem 0x0000000000001000-0x000000013fffffff]
+11-05 01:43:15.332     0     0 I         : On node 0, zone DMA32: 1 pages in unavailable ranges
+11-05 01:43:15.336     0     0 I         : On node 0, zone DMA32: 97 pages in unavailable ranges
+11-05 01:43:15.337     0     0 I         : On node 0, zone Normal: 42 pages in unavailable ranges
+11-05 01:43:15.339     0     0 I ACPI    : LAPIC_NMI (acpi_id[0xff] dfl dfl lint[0x1])
+11-05 01:43:15.339     0     0 I IOAPIC[0]: apic_id 0, version 17, address 0xfec00000, GSI 0-23
+11-05 01:43:15.339     0     0 I ACPI    : INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+11-05 01:43:15.339     0     0 I ACPI    : INT_SRC_OVR (bus 0 bus_irq 5 global_irq 5 high level)
+11-05 01:43:15.339     0     0 I ACPI    : INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 high level)
+11-05 01:43:15.339     0     0 I ACPI    : INT_SRC_OVR (bus 0 bus_irq 10 global_irq 10 high level)
+11-05 01:43:15.339     0     0 I ACPI    : INT_SRC_OVR (bus 0 bus_irq 11 global_irq 11 high level)
+11-05 01:43:15.339     0     0 I ACPI    : Using ACPI (MADT) for SMP configuration information
+11-05 01:43:15.339     0     0 I ACPI    : HPET id: 0x8086a201 base: 0xfed00000
+11-05 01:43:15.339     0     0 I smpboot : Allowing 4 CPUs, 0 hotplug CPUs
+11-05 01:43:15.339     0     0 I kvm-guest: APIC: eoi() replaced with kvm_guest_apic_eoi_write()
+11-05 01:43:15.340     0     0 I PM      : hibernation: Registered nosave memory: [mem 0x00000000-0x00000fff]
+11-05 01:43:15.340     0     0 I PM      : hibernation: Registered nosave memory: [mem 0x0009f000-0x0009ffff]
+11-05 01:43:15.340     0     0 I PM      : hibernation: Registered nosave memory: [mem 0x000a0000-0x000effff]
+11-05 01:43:15.340     0     0 I PM      : hibernation: Registered nosave memory: [mem 0x000f0000-0x000fffff]
+11-05 01:43:15.340     0     0 I PM      : hibernation: Registered nosave memory: [mem 0xbffd6000-0xbfffffff]
+11-05 01:43:15.340     0     0 I PM      : hibernation: Registered nosave memory: [mem 0xc0000000-0xfeffbfff]
+11-05 01:43:15.340     0     0 I PM      : hibernation: Registered nosave memory: [mem 0xfeffc000-0xfeffffff]
+11-05 01:43:15.340     0     0 I PM      : hibernation: Registered nosave memory: [mem 0xff000000-0xff017fff]
+11-05 01:43:15.340     0     0 I PM      : hibernation: Registered nosave memory: [mem 0xff018000-0xff027fff]
+11-05 01:43:15.340     0     0 I PM      : hibernation: Registered nosave memory: [mem 0xff028000-0xfffbffff]
+11-05 01:43:15.340     0     0 I PM      : hibernation: Registered nosave memory: [mem 0xfffc0000-0xffffffff]
+11-05 01:43:15.340     0     0 I         : [mem 0xc0000000-0xfeffbfff] available for PCI devices
+11-05 01:43:15.340     0     0 I         : Booting paravirtualized kernel on KVM
+11-05 01:43:15.340     0     0 I clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645519600211568 ns
+11-05 01:43:15.340     0     0 I Load bootconfig: 1899 bytes 72 nodes
+11-05 01:43:15.340     0     0 I setup_percpu: NR_CPUS:32 nr_cpumask_bits:4 nr_cpu_ids:4 nr_node_ids:1
+11-05 01:43:15.340     0     0 I percpu  : Embedded 56 pages/cpu s192488 r8192 d28696 u524288
+11-05 01:43:15.340     0     0 D pcpu-alloc: s192488 r8192 d28696 u524288 alloc=1*2097152
+11-05 01:43:15.340     0     0 D pcpu-alloc: [0] 0 1 2 3
+11-05 01:43:15.340     0     0 I         : Kernel command line: console=ttynull stack_depot_disable=on cgroup_disable=pressure bootconfig 8250.nr_uarts=1 clocksource=pit no_timer_check console=0 loop.max_part=7 ramoops.mem_address=0xff018000 ramoops.mem_size=0x10000 memmap=0x10000$0xff018000 printk.devkmsg=on bootconfig mac80211_hwsim.radios=0
+11-05 01:43:15.340     0     0 I cgroup  : Disabling pressure control group feature
+11-05 01:43:15.340     0     0 I         : Dentry cache hash table entries: 524288 (order: 10, 4194304 bytes, linear)
+11-05 01:43:15.340     0     0 I         : Inode-cache hash table entries: 262144 (order: 9, 2097152 bytes, linear)
+11-05 01:43:15.340     0     0 I         : Built 1 zonelists, mobility grouping on.  Total pages: 1031896
+11-05 01:43:15.340     0     0 I mem auto-init: stack:all(zero), heap alloc:on, heap free:off
+11-05 01:43:15.340     0     0 I         : software IO TLB: area num 4.
+11-05 01:43:15.354     0     0 I Memory  : 4008032K/4193744K available (22528K kernel code, 2113K rwdata, 14024K rodata, 2964K init, 860K bss, 185452K reserved, 0K cma-reserved)
+11-05 01:43:15.356     0     0 I SLUB    : HWalign=64, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
+11-05 01:43:15.356     0     0 I rcu     : Preemptible hierarchical RCU implementation.
+11-05 01:43:15.356     0     0 I rcu     : RCU event tracing is enabled.
+11-05 01:43:15.356     0     0 I rcu     : RCU restricting CPUs from NR_CPUS=32 to nr_cpu_ids=4.
+11-05 01:43:15.356     0     0 I rcu     : RCU priority boosting: priority 1 delay 500 ms.
+11-05 01:43:15.356     0     0 I         : Trampoline variant of Tasks RCU enabled.
+11-05 01:43:15.356     0     0 I         : Tracing variant of Tasks RCU enabled.
+11-05 01:43:15.356     0     0 I rcu     : RCU calculated value of scheduler-enlistment delay is 25 jiffies.
+11-05 01:43:15.356     0     0 I rcu     : Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=4
+11-05 01:43:15.357     0     0 I NR_IRQS : 4352, nr_irqs: 456, preallocated irqs: 16
+11-05 01:43:15.358     0     0 I rcu     : srcu_init: Setting srcu_struct sizes based on contention.
+11-05 01:43:15.358     0     0 I kfence  : initialized - using 524288 bytes for 63 objects at 0x(____ptrval____)-0x(____ptrval____)
+11-05 01:43:15.358     0     0 I printk  : console [ttyS0] enabled
+11-05 01:43:15.512     0     0 I ACPI    : Core revision 20230628
+11-05 01:43:15.513     0     0 I clocksource: hpet: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112604467 ns
+11-05 01:43:15.515     0     0 I APIC    : Switch to symmetric I/O mode setup
+11-05 01:43:15.517     0     0 I         : x2apic enabled
+11-05 01:43:15.518     0     0 I APIC    : Switched APIC routing to: physical x2apic
+11-05 01:43:15.522     0     0 I ..TIMER : vector=0x30 apic1=0 pin1=2 apic2=-1 pin2=-1
+11-05 01:43:15.523     0     0 I tsc     : Marking TSC unstable due to TSCs unsynchronized
+11-05 01:43:15.524     0     0 I         : Calibrating delay loop (skipped) preset value.. 5192.28 BogoMIPS (lpj=10384568)
+11-05 01:43:15.526     0     0 I         : Last level iTLB entries: 4KB 0, 2MB 0, 4MB 0
+11-05 01:43:15.527     0     0 I         : Last level dTLB entries: 4KB 0, 2MB 0, 4MB 0, 1GB 0
+11-05 01:43:15.528     0     0 I Spectre V1: Mitigation: usercopy/swapgs barriers and __user pointer sanitization
+11-05 01:43:15.530     0     0 I Spectre V2: Mitigation: Retpolines
+11-05 01:43:15.531     0     0 I Spectre V2: Spectre v2 / SpectreRSB mitigation: Filling RSB on context switch
+11-05 01:43:15.532     0     0 I Spectre V2: Spectre v2 / SpectreRSB : Filling RSB on VMEXIT
+11-05 01:43:15.534     0     0 I         : Speculative Store Bypass: Vulnerable
+11-05 01:43:15.535     0     0 I x86/fpu : Supporting XSAVE feature 0x001: 'x87 floating point registers'
+11-05 01:43:15.536     0     0 I x86/fpu : Supporting XSAVE feature 0x002: 'SSE registers'
+11-05 01:43:15.538     0     0 I x86/fpu : Supporting XSAVE feature 0x004: 'AVX registers'
+11-05 01:43:15.540     0     0 I x86/fpu : xstate_offset[2]:  576, xstate_sizes[2]:  256
+11-05 01:43:15.542     0     0 I x86/fpu : Enabled xstate features 0x7, context size is 832 bytes, using 'standard' format.
+11-05 01:43:15.563     0     0 I SMP alternatives: Using kCFI
+11-05 01:43:15.582     0     0 I         : Freeing SMP alternatives memory: 56K
+11-05 01:43:15.583     0     0 I pid_max : default: 32768 minimum: 301
+11-05 01:43:15.585     0     0 I LSM     : initializing lsm=capability,selinux,bpf,integrity
+11-05 01:43:15.587     0     0 I SELinux : Initializing.
+11-05 01:43:15.588     0     0 I         : LSM support for eBPF active
+11-05 01:43:15.588     0     0 I         : Mount-cache hash table entries: 8192 (order: 4, 65536 bytes, linear)
+11-05 01:43:15.590     0     0 I         : Mountpoint-cache hash table entries: 8192 (order: 4, 65536 bytes, linear)
+11-05 01:43:15.811     0     0 I smpboot : CPU0: AMD Android virtual processor (family: 0x6, model: 0x6, stepping: 0x3)
+11-05 01:43:15.812     0     0 I RCU Tasks: Setting shift to 2 and lim to 1 rcu_task_cb_adjust=1.
+11-05 01:43:15.812     0     0 I         : RCU Tasks Trace: Setting shift to 2 and lim to 1 rcu_task_cb_adjust=1.
+11-05 01:43:15.814     0     0 I Performance Events: PMU not available due to virtualization, using software events only.
+11-05 01:43:15.816     0     0 I signal  : max sigframe size: 1776
+11-05 01:43:15.818     0     0 I rcu     : Hierarchical SRCU implementation.
+11-05 01:43:15.820     0     0 I rcu     : Max phase no-delay instances is 1000.
+11-05 01:43:15.824     0     0 I dyndbg  : Ignore empty _ddebug table in a CONFIG_DYNAMIC_DEBUG_CORE build
+11-05 01:43:15.827     0     0 I smp     : Bringing up secondary CPUs ...
+11-05 01:43:15.828     0     0 I smpboot : x86: Booting SMP configuration:
+11-05 01:43:15.830     0     0 I         : .... node  #0, CPUs:      #1 #2 #3
+11-05 01:43:15.864     0     0 I smp     : Brought up 1 node, 4 CPUs
+11-05 01:43:15.869     0     0 I smpboot : Max logical packages: 1
+11-05 01:43:15.871     0     0 I smpboot : Total of 4 processors activated (20769.13 BogoMIPS)
+11-05 01:43:15.874     0     0 I x86/mm  : Memory block size: 128MB
+11-05 01:43:15.877     0     0 I clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+11-05 01:43:15.879     0     0 I         : futex hash table entries: 1024 (order: 4, 65536 bytes, linear)
+11-05 01:43:15.881     0     0 I NET     : Registered PF_NETLINK/PF_ROUTE protocol family
+11-05 01:43:15.884     0     0 I audit   : initializing netlink subsys (disabled)
+11-05 01:43:15.886     0     0 I ramoops : using module parameters
+11-05 01:43:15.891     0     0 I pstore  : Using crash dump compression: deflate
+11-05 01:43:15.892     0     0 I printk  : console [ramoops-1] enabled
+11-05 01:43:15.894     0     0 I pstore  : Registered ramoops as persistent store backend
+11-05 01:43:15.895     0     0 I ramoops : using 0x10000@0xff018000, ecc: 0
+11-05 01:43:15.896     0     0 I thermal_sys: Registered thermal governor 'bang_bang'
+11-05 01:43:15.896     0     0 I thermal_sys: Registered thermal governor 'step_wise'
+11-05 01:43:15.898     0     0 I thermal_sys: Registered thermal governor 'user_space'
+11-05 01:43:15.900     0     0 I cpuidle : using governor menu
+11-05 01:43:15.905     0     0 I PCI     : Using configuration type 1 for base access
+11-05 01:43:15.906     0     0 I kprobes : kprobe jump-optimization is enabled. All kprobes are optimized if possible.
+11-05 01:43:15.908     0     0 I cryptd  : max_cpu_qlen set to 1000
+11-05 01:43:15.908     0     0 I ACPI    : Added _OSI(Module Device)
+11-05 01:43:15.910     0     0 I ACPI    : Added _OSI(Processor Device)
+11-05 01:43:15.911     0     0 I ACPI    : Added _OSI(3.0 _SCP Extensions)
+11-05 01:43:15.912     0     0 I ACPI    : Added _OSI(Processor Aggregator Device)
+11-05 01:43:15.914     0     0 I ACPI    : 1 ACPI AML tables successfully acquired and loaded
+11-05 01:43:15.920     0     0 I ACPI    : _OSC evaluation for CPUs failed, trying _PDC
+11-05 01:43:15.922     0     0 I ACPI    : Interpreter enabled
+11-05 01:43:15.923     0     0 I ACPI    : PM: (supports S0 S3 S4 S5)
+11-05 01:43:15.924     0     0 I ACPI    : Using IOAPIC for interrupt routing
+11-05 01:43:15.926     0     0 I PCI     : Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and report a bug
+11-05 01:43:15.928     0     0 I PCI     : Using E820 reservations for host bridge windows
+11-05 01:43:15.930     0     0 I ACPI    : Enabled 2 GPEs in block 00 to 0F
+11-05 01:43:15.933     0     0 I ACPI    : PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+11-05 01:43:15.935     0     0 I acpi PNP0A03: 00: _OSC: OS supports [ASPM ClockPM Segments MSI HPX-Type3]
+11-05 01:43:15.936     0     0 I acpi PNP0A03: 00: _OSC: not requesting OS control; OS requires [ExtendedConfig ASPM ClockPM MSI]
+11-05 01:43:15.939     0     0 W acpi PNP0A03: 00: fail to add MMCONFIG information, can't access extended configuration space under this bridge
+11-05 01:43:15.940     0     0 I         : PCI host bridge to bus 0000:00
+11-05 01:43:15.942     0     0 I pci_bus 0000: 00: root bus resource [io  0x0000-0x0cf7 window]
+11-05 01:43:15.944     0     0 I pci_bus 0000: 00: root bus resource [io  0x0d00-0xffff window]
+11-05 01:43:15.946     0     0 I pci_bus 0000: 00: root bus resource [mem 0x000a0000-0x000bffff window]
+11-05 01:43:15.948     0     0 I pci_bus 0000: 00: root bus resource [mem 0xc0000000-0xfebfffff window]
+11-05 01:43:15.950     0     0 I pci_bus 0000: 00: root bus resource [mem 0x400000000-0x800057fff window]
+11-05 01:43:15.952     0     0 I pci_bus 0000: 00: root bus resource [bus 00-ff]
+11-05 01:43:15.954  8086  8086 I pci 0000: 00:00.0: [8086:1237] type 00 class 0x060000
+11-05 01:43:15.957  8086  8086 I pci 0000: 00:01.0: [8086:7000] type 00 class 0x060100
+11-05 01:43:15.962  8086  8086 I pci 0000: 00:01.1: [8086:7010] type 00 class 0x010180
+11-05 01:43:15.967     0     0 I pci 0000: 00:01.1: reg 0x20: [io  0xc260-0xc26f]
+11-05 01:43:15.971     0     0 I pci 0000: 00:01.1: legacy IDE quirk: reg 0x10: [io  0x01f0-0x01f7]
+11-05 01:43:15.972     0     0 I pci 0000: 00:01.1: legacy IDE quirk: reg 0x14: [io  0x03f6]
+11-05 01:43:15.974     0     0 I pci 0000: 00:01.1: legacy IDE quirk: reg 0x18: [io  0x0170-0x0177]
+11-05 01:43:15.976     0     0 I pci 0000: 00:01.1: legacy IDE quirk: reg 0x1c: [io  0x0376]
+11-05 01:43:15.980  8086  8086 I pci 0000: 00:01.3: [8086:7113] type 00 class 0x068000
+11-05 01:43:15.983     0     0 I pci 0000: 00:01.3: quirk: [io  0x0600-0x063f] claimed by PIIX4 ACPI
+11-05 01:43:15.984     0     0 I pci 0000: 00:01.3: quirk: [io  0x0700-0x070f] claimed by PIIX4 SMB
+11-05 01:43:15.987     0     0 I pci 0000: 00:02.0: [1af4:1019] type 00 class 0x040100
+11-05 01:43:15.990     0     0 I pci 0000: 00:02.0: reg 0x10: [io  0xc1c0-0xc1df]
+11-05 01:43:15.998     0     0 I pci 0000: 00:02.0: reg 0x20: [mem 0x800000000-0x800003fff 64bit pref]
+11-05 01:43:16.006     0     0 I pci 0000: 00:03.0: [1af4:1001] type 00 class 0x010000
+11-05 01:43:16.011     0     0 I pci 0000: 00:03.0: reg 0x10: [io  0xc000-0xc03f]
+11-05 01:43:16.015     0     0 I pci 0000: 00:03.0: reg 0x14: [mem 0xfebc0000-0xfebc0fff]
+11-05 01:43:16.020     0     0 I pci 0000: 00:03.0: reg 0x18: [io  0xc270-0xc273]
+11-05 01:43:16.027     0     0 I pci 0000: 00:03.0: reg 0x20: [mem 0x800004000-0x800007fff 64bit pref]
+11-05 01:43:16.037     0     0 I pci 0000: 00:04.0: [1af4:1001] type 00 class 0x010000
+11-05 01:43:16.040     0     0 I pci 0000: 00:04.0: reg 0x10: [io  0xc040-0xc07f]
+11-05 01:43:16.046     0     0 I pci 0000: 00:04.0: reg 0x14: [mem 0xfebc1000-0xfebc1fff]
+11-05 01:43:16.051     0     0 I pci 0000: 00:04.0: reg 0x18: [io  0xc274-0xc277]
+11-05 01:43:16.059     0     0 I pci 0000: 00:04.0: reg 0x20: [mem 0x800008000-0x80000bfff 64bit pref]
+11-05 01:43:16.069     0     0 I pci 0000: 00:05.0: [1af4:1001] type 00 class 0x010000
+11-05 01:43:16.073     0     0 I pci 0000: 00:05.0: reg 0x10: [io  0xc080-0xc0bf]
+11-05 01:43:16.077     0     0 I pci 0000: 00:05.0: reg 0x14: [mem 0xfebc2000-0xfebc2fff]
+11-05 01:43:16.082     0     0 I pci 0000: 00:05.0: reg 0x18: [io  0xc278-0xc27b]
+11-05 01:43:16.090     0     0 I pci 0000: 00:05.0: reg 0x20: [mem 0x80000c000-0x80000ffff 64bit pref]
+11-05 01:43:16.100     0     0 I pci 0000: 00:06.0: [1af4:1001] type 00 class 0x010000
+11-05 01:43:16.103     0     0 I pci 0000: 00:06.0: reg 0x10: [io  0xc0c0-0xc0ff]
+11-05 01:43:16.109     0     0 I pci 0000: 00:06.0: reg 0x14: [mem 0xfebc3000-0xfebc3fff]
+11-05 01:43:16.114     0     0 I pci 0000: 00:06.0: reg 0x18: [io  0xc27c-0xc27f]
+11-05 01:43:16.123     0     0 I pci 0000: 00:06.0: reg 0x20: [mem 0x800010000-0x800013fff 64bit pref]
+11-05 01:43:16.132     0     0 I pci 0000: 00:07.0: [1af4:1001] type 00 class 0x010000
+11-05 01:43:16.135     0     0 I pci 0000: 00:07.0: reg 0x10: [io  0xc100-0xc13f]
+11-05 01:43:16.139     0     0 I pci 0000: 00:07.0: reg 0x14: [mem 0xfebc4000-0xfebc4fff]
+11-05 01:43:16.145     0     0 I pci 0000: 00:07.0: reg 0x18: [io  0xc280-0xc283]
+11-05 01:43:16.152     0     0 I pci 0000: 00:07.0: reg 0x20: [mem 0x800014000-0x800017fff 64bit pref]
+11-05 01:43:16.162     0     0 I pci 0000: 00:08.0: [1af4:1000] type 00 class 0x020000
+11-05 01:43:16.165     0     0 I pci 0000: 00:08.0: reg 0x10: [io  0xc1e0-0xc1ff]
+11-05 01:43:16.169     0     0 I pci 0000: 00:08.0: reg 0x14: [mem 0xfebc5000-0xfebc5fff]
+11-05 01:43:16.177     0     0 I pci 0000: 00:08.0: reg 0x20: [mem 0x800018000-0x80001bfff 64bit pref]
+11-05 01:43:16.184     0     0 I pci 0000: 00:08.0: reg 0x30: [mem 0xfeb80000-0xfebbffff pref]
+11-05 01:43:16.189     0     0 I pci 0000: 00:09.0: [1af4:1003] type 00 class 0x078000
+11-05 01:43:16.192     0     0 I pci 0000: 00:09.0: reg 0x10: [io  0xc140-0xc17f]
+11-05 01:43:16.196     0     0 I pci 0000: 00:09.0: reg 0x14: [mem 0xfebc6000-0xfebc6fff]
+11-05 01:43:16.204     0     0 I pci 0000: 00:09.0: reg 0x20: [mem 0x80001c000-0x80001ffff 64bit pref]
+11-05 01:43:16.209     0     0 I pci 0000: 00:0a.0: [1af4:1003] type 00 class 0x078000
+11-05 01:43:16.212     0     0 I pci 0000: 00:0a.0: reg 0x10: [io  0xc180-0xc1bf]
+11-05 01:43:16.217     0     0 I pci 0000: 00:0a.0: reg 0x14: [mem 0xfebc7000-0xfebc7fff]
+11-05 01:43:16.224     0     0 I pci 0000: 00:0a.0: reg 0x20: [mem 0x800020000-0x800023fff 64bit pref]
+11-05 01:43:16.232     0     0 I pci 0000: 00:0b.0: [607d:f153] type 00 class 0x00ff00
+11-05 01:43:16.235     0     0 I pci 0000: 00:0b.0: reg 0x10: [mem 0xfebc8000-0xfebc8fff]
+11-05 01:43:16.238     0     0 I pci 0000: 00:0b.0: reg 0x14: [mem 0x400000000-0x7ffffffff 64bit]
+11-05 01:43:16.247     0     0 I pci 0000: 00:0c.0: [1af4:1005] type 00 class 0x00ff00
+11-05 01:43:16.250     0     0 I pci 0000: 00:0c.0: reg 0x10: [io  0xc200-0xc21f]
+11-05 01:43:16.259     0     0 I pci 0000: 00:0c.0: reg 0x20: [mem 0x800024000-0x800027fff 64bit pref]
+11-05 01:43:16.264     0     0 I pci 0000: 00:0d.0: [1af4:1052] type 00 class 0x098000
+11-05 01:43:16.270     0     0 I pci 0000: 00:0d.0: reg 0x14: [mem 0xfebc9000-0xfebc9fff]
+11-05 01:43:16.275     0     0 I pci 0000: 00:0d.0: reg 0x20: [mem 0x800028000-0x80002bfff 64bit pref]
+11-05 01:43:16.283     0     0 I pci 0000: 00:0e.0: [1af4:1052] type 00 class 0x098000
+11-05 01:43:16.287     0     0 I pci 0000: 00:0e.0: reg 0x14: [mem 0xfebca000-0xfebcafff]
+11-05 01:43:16.293     0     0 I pci 0000: 00:0e.0: reg 0x20: [mem 0x80002c000-0x80002ffff 64bit pref]
+11-05 01:43:16.298     0     0 I pci 0000: 00:0f.0: [1af4:1052] type 00 class 0x098000
+11-05 01:43:16.304     0     0 I pci 0000: 00:0f.0: reg 0x14: [mem 0xfebcb000-0xfebcbfff]
+11-05 01:43:16.310     0     0 I pci 0000: 00:0f.0: reg 0x20: [mem 0x800030000-0x800033fff 64bit pref]
+11-05 01:43:16.318     0     0 I pci 0000: 00:10.0: [1af4:1052] type 00 class 0x098000
+11-05 01:43:16.322     0     0 I pci 0000: 00:10.0: reg 0x14: [mem 0xfebcc000-0xfebccfff]
+11-05 01:43:16.330     0     0 I pci 0000: 00:10.0: reg 0x20: [mem 0x800034000-0x800037fff 64bit pref]
+11-05 01:43:16.335     0     0 I pci 0000: 00:11.0: [1af4:1052] type 00 class 0x098000
+11-05 01:43:16.342     0     0 I pci 0000: 00:11.0: reg 0x14: [mem 0xfebcd000-0xfebcdfff]
+11-05 01:43:16.347     0     0 I pci 0000: 00:11.0: reg 0x20: [mem 0x800038000-0x80003bfff 64bit pref]
+11-05 01:43:16.351     0     0 I pci 0000: 00:12.0: [1af4:1052] type 00 class 0x098000
+11-05 01:43:16.355     0     0 I pci 0000: 00:12.0: reg 0x14: [mem 0xfebce000-0xfebcefff]
+11-05 01:43:16.363     0     0 I pci 0000: 00:12.0: reg 0x20: [mem 0x80003c000-0x80003ffff 64bit pref]
+11-05 01:43:16.371     0     0 I pci 0000: 00:13.0: [1af4:1052] type 00 class 0x098000
+11-05 01:43:16.375     0     0 I pci 0000: 00:13.0: reg 0x14: [mem 0xfebcf000-0xfebcffff]
+11-05 01:43:16.381     0     0 I pci 0000: 00:13.0: reg 0x20: [mem 0x800040000-0x800043fff 64bit pref]
+11-05 01:43:16.389     0     0 I pci 0000: 00:14.0: [1af4:1052] type 00 class 0x098000
+11-05 01:43:16.394     0     0 I pci 0000: 00:14.0: reg 0x14: [mem 0xfebd0000-0xfebd0fff]
+11-05 01:43:16.401     0     0 I pci 0000: 00:14.0: reg 0x20: [mem 0x800044000-0x800047fff 64bit pref]
+11-05 01:43:16.409     0     0 I pci 0000: 00:15.0: [1af4:1052] type 00 class 0x098000
+11-05 01:43:16.413     0     0 I pci 0000: 00:15.0: reg 0x14: [mem 0xfebd1000-0xfebd1fff]
+11-05 01:43:16.421     0     0 I pci 0000: 00:15.0: reg 0x20: [mem 0x800048000-0x80004bfff 64bit pref]
+11-05 01:43:16.426     0     0 I pci 0000: 00:16.0: [1af4:1052] type 00 class 0x098000
+11-05 01:43:16.431     0     0 I pci 0000: 00:16.0: reg 0x14: [mem 0xfebd2000-0xfebd2fff]
+11-05 01:43:16.438     0     0 I pci 0000: 00:16.0: reg 0x20: [mem 0x80004c000-0x80004ffff 64bit pref]
+11-05 01:43:16.445     0     0 I pci 0000: 00:17.0: [1af4:1052] type 00 class 0x098000
+11-05 01:43:16.451     0     0 I pci 0000: 00:17.0: reg 0x14: [mem 0xfebd3000-0xfebd3fff]
+11-05 01:43:16.457     0     0 I pci 0000: 00:17.0: reg 0x20: [mem 0x800050000-0x800053fff 64bit pref]
+11-05 01:43:16.463     0     0 I pci 0000: 00:18.0: [1af4:100a] type 00 class 0x020000
+11-05 01:43:16.466     0     0 I pci 0000: 00:18.0: reg 0x10: [io  0xc220-0xc23f]
+11-05 01:43:16.469     0     0 I pci 0000: 00:18.0: reg 0x14: [mem 0xfebd4000-0xfebd4fff]
+11-05 01:43:16.481     0     0 I pci 0000: 00:19.0: [1af4:1012] type 00 class 0x078000
+11-05 01:43:16.486     0     0 I pci 0000: 00:19.0: reg 0x10: [io  0xc240-0xc25f]
+11-05 01:43:16.490     0     0 I pci 0000: 00:19.0: reg 0x14: [mem 0xfebd5000-0xfebd5fff]
+11-05 01:43:16.499     0     0 I pci 0000: 00:19.0: reg 0x20: [mem 0x800054000-0x800057fff 64bit pref]
+11-05 01:43:16.505     0     0 D pci_bus 0000: 00: on NUMA node 0
+11-05 01:43:16.508     0     0 I ACPI    : PCI: Interrupt link LNKA configured for IRQ 10
