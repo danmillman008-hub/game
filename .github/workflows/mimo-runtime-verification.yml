@@ -200,6 +200,55 @@ jobs:
           echo "kvm_group=$(getent group kvm || echo absent)"
 
       # ---------------------------------------------------------------------
+      # DIAGNOSTIC: record the EXACT sdkmanager/avdmanager result for the
+      # requested image, so any primary-action failure can be explained from
+      # committed evidence rather than guessed. Uses the runner's preinstalled
+      # SDK only; it does NOT create a second SDK and does NOT replace the action.
+      # ---------------------------------------------------------------------
+      - name: AVD compatibility diagnostic (exact image / profile / libraries)
+        shell: bash
+        run: |
+          set +e
+          R=ANALYSIS/RUNTIME; mkdir -p "$R/LOGS"
+          SDK="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          SM="$SDK/cmdline-tools/latest/bin/sdkmanager"
+          AM="$SDK/cmdline-tools/latest/bin/avdmanager"
+          PKG="system-images;android-$REQUESTED_API;$REQUESTED_TARGET;$REQUESTED_ARCH"
+          {
+            echo "MIMO MISSION 03 - AVD COMPATIBILITY DIAGNOSTIC"
+            echo "timestamp_utc=$(date -u +%FT%TZ)"
+            echo "requested_package=$PKG"
+            echo "sdkmanager=$SM avdmanager=$AM"
+            echo
+            echo "== exact package in sdkmanager --list =="
+            timeout 200 "$SM" --list 2>&1 | grep -F "$PKG" | head -5
+            echo
+            echo "== pixel_7 device profile =="
+            "$AM" list device 2>&1 | grep -i -A3 'pixel_7' | head -30
+            echo "avdmanager_list_device_exit=$?"
+            echo
+            echo "== install platform + system image (action would do this too) =="
+            yes | timeout 900 "$SM" "platforms;android-$REQUESTED_API" "$PKG" 2>&1 | tail -25
+            echo "sdkmanager_install_exit=${PIPESTATUS[1]}"
+            echo
+            echo "== create a diagnostic AVD (exact package + pixel_7) =="
+            echo no | "$AM" create avd --force -n m03_diag \
+              -k "$PKG" --device "pixel_7" 2>&1 | tail -25
+            echo "avdmanager_create_exit=${PIPESTATUS[1]}"
+            echo
+            echo "== emulator binary shared-library gaps =="
+            ldd "$SDK/emulator/emulator" 2>&1 | grep -i 'not found' | head -20
+            echo "ldd_missing_libs_exit=$?"
+            echo
+            echo "== ncurses / libtinfo availability (classic emulator blocker) =="
+            ldconfig -p | grep -iE 'ncurses|tinfo' | head -12
+            echo
+            echo "== installed system images =="
+            "$SM" --list_installed 2>&1 | grep -i 'system-images' | head -20
+          } > "$R/AVD_SETUP_DIAGNOSTIC.txt" 2>&1
+          tail -60 "$R/AVD_SETUP_DIAGNOSTIC.txt"
+
+      # ---------------------------------------------------------------------
       # 4/5/6/7. Boot emulator via pinned primary action and run smoke tests
       # ---------------------------------------------------------------------
       - name: Boot Android Emulator and execute controlled smoke tests
@@ -376,6 +425,34 @@ jobs:
               echo "      No purchase, payment, TLS bypass, root or private-DB extraction performed." \
                 >> "$R/LESSON_FLOW_OBSERVATIONS.txt"
             fi
+
+      # ---------------------------------------------------------------------
+      # The runner (unlike this sandbox) can reach the GitHub log blob host.
+      # Capture the failed step's exact output into committed evidence.
+      # ---------------------------------------------------------------------
+      - name: Capture emulator-step failure details
+        if: failure()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          R=ANALYSIS/RUNTIME; mkdir -p "$R/LOGS"
+          JOB_ID=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/jobs" \
+            --jq '.jobs[0].id' 2>/dev/null)
+          echo "job_id=$JOB_ID" > "$R/LOGS/EMULATOR_FAILURE_EXCERPT.txt"
+          LOC=$(gh api -i "repos/$GITHUB_REPOSITORY/actions/jobs/$JOB_ID/logs" 2>&1 \
+            | grep -oE 'https://productionresultssa[0-9]+\.blob\.core\.windows\.net/[^"[:space:]]+' | head -1)
+          if [ -n "$LOC" ]; then
+            curl -sSL -m 90 "$LOC" -o "$R/LOGS/JOB_LOG_FAILED.txt" 2>&1
+            echo "job_log_bytes=$(stat -c %s "$R/LOGS/JOB_LOG_FAILED.txt" 2>/dev/null || echo 0)" \
+              >> "$R/LOGS/EMULATOR_FAILURE_EXCERPT.txt"
+            grep -iE 'error|fail|fatal|not found|exception|exit code|emulator|avd|sdkmanager|kvm|libncurses' \
+              "$R/LOGS/JOB_LOG_FAILED.txt" | tail -160 >> "$R/LOGS/EMULATOR_FAILURE_EXCERPT.txt" 2>&1
+          else
+            echo "log_location_unavailable" >> "$R/LOGS/EMULATOR_FAILURE_EXCERPT.txt"
+          fi
+          cat "$R/LOGS/EMULATOR_FAILURE_EXCERPT.txt" | tail -60
 
       # ---------------------------------------------------------------------
       # 11. Persist evidence (text only; never the APK; cap binary size)
