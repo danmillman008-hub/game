@@ -74,12 +74,72 @@ PY
 
 # --------------------------------------------------------------------------
 # TEST-000: real screenshot + UI hierarchy of the booted device
+# NOTE: the FIRST run produced a uniformly blank framebuffer and uiautomator
+# returned "null root node". That is recorded honestly; here we additionally
+# wake/unlock the device, wait for the launcher, and retry the hierarchy dump.
 # --------------------------------------------------------------------------
+adb shell input keyevent 26 > /dev/null 2>&1   # wake
+sleep 2
+adb shell input keyevent 82 > /dev/null 2>&1   # dismiss keyguard
+sleep 2
+adb shell input keyevent 3  > /dev/null 2>&1   # HOME
+sleep 15
+
+{
+  echo "MIMO MISSION 03 - DISPLAY / WINDOW STATE"
+  echo "timestamp_utc=$(date -u +%FT%TZ)"
+  echo "-- power / wakefulness --"
+  adb shell dumpsys power 2>&1 | grep -iE 'mWakefulness|mScreenOn|Display Power' | head -10
+  echo "-- animator scales (disable-animations: false must keep these at 1.0) --"
+  for K in window_animation_scale transition_animation_scale animator_duration_scale; do
+    echo "  $K=$(adb shell settings get global $K)"
+  done
+  echo "-- cpu abilist32 --"
+  adb shell getprop ro.product.cpu.abilist32
+  echo "-- focused window / resumed activity --"
+  adb shell dumpsys window 2>&1 | grep -iE 'mCurrentFocus|mFocusedApp' | head -6
+  adb shell dumpsys activity activities 2>&1 \
+    | grep -iE 'mResumedActivity|topResumedActivity|ResumedActivity' | head -6
+  echo "-- installed launcher packages --"
+  adb shell pm list packages 2>&1 | grep -iE 'launcher|pixel|trebuchet' | head -10
+} > "$R/LOGS/DISPLAY_STATE.txt" 2>&1
+
 adb exec-out screencap -p > "$R/SCREENSHOTS/TEST-000_emulator_home.png" 2>/dev/null
-echo "screenshot_bytes=$(stat -c %s "$R/SCREENSHOTS/TEST-000_emulator_home.png" 2>/dev/null || echo 0)"
-adb shell uiautomator dump /sdcard/window.xml > "$R/LOGS/uiautomator_000.txt" 2>&1
+SHOT="$R/SCREENSHOTS/TEST-000_emulator_home.png"
+echo "screenshot_bytes=$(stat -c %s "$SHOT" 2>/dev/null || echo 0)"
+# Framebuffer content proxy: decompress PNG IDAT and measure byte diversity.
+# A blank screen gives near-zero diversity; this is NOT a UI-content proof.
+python3 - "$SHOT" > "$R/LOGS/SCREENSHOT_ENTROPY.txt" 2>&1 <<'PY'
+import sys, struct, zlib, os
+p = sys.argv[1]
+try:
+    d = open(p, 'rb').read()
+    pos, idat, w, h = 8, b'', 0, 0
+    while pos < len(d):
+        ln = struct.unpack('>I', d[pos:pos+4])[0]
+        typ = d[pos+4:pos+8]
+        body = d[pos+8:pos+8+ln]
+        if typ == b'IHDR':
+            w, h = struct.unpack('>II', body[:8])
+        elif typ == b'IDAT':
+            idat += body
+        pos += 12 + ln
+    raw = zlib.decompress(idat)
+    sample = raw[:400000]
+    print('png_bytes=%d width=%d height=%d idat_raw_bytes=%d' % (len(d), w, h, len(raw)))
+    print('distinct_byte_values_in_sample=%d' % len(set(sample)))
+    print('compressed_ratio=%.4f' % (len(zlib.compress(sample)) / max(len(sample), 1)))
+    print('NOTE: entropy proxy only; a blank framebuffer has very low diversity.')
+except Exception as e:
+    print('PNG_PARSE_ERROR: %s' % e)
+PY
+
+adb shell uiautomator dump --compressed /sdcard/window.xml > "$R/LOGS/uiautomator_000.txt" 2>&1
+echo "uiautomator_exit=$?" >> "$R/LOGS/uiautomator_000.txt"
 adb pull /sdcard/window.xml "$R/UI_HIERARCHY/TEST-000_emulator_home.xml" \
   >> "$R/LOGS/uiautomator_000.txt" 2>&1
+echo "uiautomator_pull_exit=$?" >> "$R/LOGS/uiautomator_000.txt"
+
 adb logcat -d -v threadtime > "$R/LOGS/.logcat_raw.tmp" 2>&1
 grep -viE '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}|Bearer |token=|api[_-]?key=|password=' \
   "$R/LOGS/.logcat_raw.tmp" | head -300 > "$R/LOGS/LOGCAT_000_system_sanitized.txt"
@@ -99,6 +159,17 @@ BLOCK_REASON+=' The GitHub release apk-latest contains unrelated stock-* test bu
 
 if [ -z "$APK_URL" ]; then
   echo "== APK_URL empty: TEST-001..TEST-009 BLOCKED (emulator-only run) =="
+  {
+    echo "MIMO MISSION 03 - CRASH AND ERROR LOGS"
+    echo "timestamp_utc=$(date -u +%FT%TZ)"
+    echo "STATUS: NO com.getmimo PROCESS EXISTED ON THIS DEVICE."
+    echo "There are therefore NO application crash logs, NO ANR traces and NO app-level errors."
+    echo "Only sanitised emulator/system logcat lines are reproduced below."
+    echo
+    echo "-- system/emulator error lines (sanitised) --"
+    grep -iE 'AndroidRuntime|FATAL|ANR |UnsatisfiedLink| E/|emulator.*error|qemu.*error' \
+      "$R/LOGS/LOGCAT_000_system_sanitized.txt" 2>/dev/null | head -60
+  } > "$R/CRASH_AND_ERROR_LOGS.txt"
   python3 - > "$R/TEST_RESULTS.json" <<'PY'
 import json, os
 tests = [
