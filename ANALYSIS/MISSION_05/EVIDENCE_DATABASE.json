@@ -13,12 +13,12 @@
  "apk_modified": false,
  "original_evidence_preserved": true,
  "counts": {
-  "total": 68,
+  "total": 84,
   "VERIFIED_STATIC": 49,
-  "VERIFIED_RUNTIME": 9,
+  "VERIFIED_RUNTIME": 24,
   "VERIFIED_BOTH": 0,
   "INFERRED": 3,
-  "UNKNOWN": 7
+  "UNKNOWN": 8
  },
  "evidence": [
   {
@@ -924,6 +924,222 @@
    "class_or_method": "",
    "address_or_offset": "",
    "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-069",
+   "claim": "Run 42002808217 SUCCESS; 16 real taps through onboarding + offline cold start",
+   "classification": "VERIFIED_RUNTIME",
+   "source_paths": [
+    "ANALYSIS/RUNTIME/MISSION_05/RUN_42002808217/LOGS/INTERACTION_TRACE.txt",
+    "ANALYSIS/RUNTIME/MISSION_05/RUN_42002808217/README.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-070",
+   "claim": "Get started → com.getmimo.ui.onboarding.OnboardingActivity \"Welcome to Mimo!\"",
+   "classification": "VERIFIED_RUNTIME",
+   "source_paths": [
+    "ANALYSIS/RUNTIME/MISSION_05/RUN_42002808217/UI_HIERARCHY/STEP-01.xml",
+    "ANALYSIS/RUNTIME/MISSION_05/RUN_42002808217/SCREENSHOTS/STEP-01.png"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-071",
+   "claim": "Onboarding is a 12+ step questionnaire in a single OnboardingActivity with onboarding_progress_bar",
+   "classification": "VERIFIED_RUNTIME",
+   "source_paths": [
+    "ANALYSIS/RUNTIME/MISSION_05/RUN_42002808217/RUNTIME/STATES.jsonl"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-072",
+   "claim": "Observed onboarding states: Welcome, motive (5 options), main goal (3), \"You are in the right place\", role (5+), work type (6+), experience (NONE/A LITTLE/A LOT), loading (7 nodes, no text), aspect, interest, path recommendation, social proof",
+   "classification": "VERIFIED_RUNTIME",
+   "source_paths": [
+    "ANALYSIS/RUNTIME/MISSION_05/RUN_42002808217/LOGS/INTERACTION_TRACE.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-073",
+   "claim": "Path recommendation \"Front-End Developer is the best choice for you!\" with HTML/JAVASCRIPT/CSS/REACT technologies and \"See all options\" — produced without an account",
+   "classification": "VERIFIED_RUNTIME",
+   "source_paths": [
+    "ANALYSIS/RUNTIME/MISSION_05/RUN_42002808217/UI_HIERARCHY/STEP-11.xml",
+    "ANALYSIS/RUNTIME/MISSION_05/RUN_42002808217/SCREENSHOTS/STEP-11.png"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+   "evidence_excerpt": "",
+   "notes": "Computation source is INFERRED on-device; no server response observed."
+  },
+  {
+   "id": "M05-074",
+   "claim": "Cold start after svc wifi disable + svc data disable: \"Active default network: none\", ping \"connect: Network is unreachable\"",
+   "classification": "VERIFIED_RUNTIME",
+   "source_paths": [
+    "ANALYSIS/RUNTIME/MISSION_05/RUN_42002808217/LOGS/OFFLINE_PHASE.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-075",
+   "claim": "Offline cold start reaches IntroSlidesActivity (pid 6084) with full Get started / I already have an account CTA",
+   "classification": "VERIFIED_RUNTIME",
+   "source_paths": [
+    "ANALYSIS/RUNTIME/MISSION_05/RUN_42002808217/UI_HIERARCHY/OFFLINE-00.xml",
+    "ANALYSIS/RUNTIME/MISSION_05/RUN_42002808217/SCREENSHOTS/OFFLINE-00.png"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-076",
+   "claim": "Offline Get started → Welcome → motive → goal; same three transitions as online",
+   "classification": "VERIFIED_RUNTIME",
+   "source_paths": [
+    "ANALYSIS/RUNTIME/MISSION_05/RUN_42002808217/UI_HIERARCHY/OFFLINE-01.xml",
+    "ANALYSIS/RUNTIME/MISSION_05/RUN_42002808217/UI_HIERARCHY/OFFLINE-02.xml",
+    "ANALYSIS/RUNTIME/MISSION_05/RUN_42002808217/UI_HIERARCHY/OFFLINE-03.xml"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-077",
+   "claim": "UI_HIERARCHY STEP-01/02/03.xml are byte-identical to OFFLINE-01/02/03.xml (same SHA-256)",
+   "classification": "VERIFIED_RUNTIME",
+   "source_paths": [
+    "ANALYSIS/RUNTIME/MISSION_05/RUN_42002808217/RUNTIME/OFFLINE_EQUALITY_PROOF.json"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+   "evidence_excerpt": "badd1942…2ef / 1f078675…81f / c3f4e29b…86f",
+   "notes": ""
+  },
+  {
+   "id": "M05-078",
+   "claim": "STEP-00 vs OFFLINE-00 differ only because the intro slides ViewPager rotated to a different slide",
+   "classification": "VERIFIED_RUNTIME",
+   "source_paths": [
+    "ANALYSIS/RUNTIME/MISSION_05/RUN_42002808217/SCREENSHOTS/STEP-00.png",
+    "ANALYSIS/RUNTIME/MISSION_05/RUN_42002808217/SCREENSHOTS/OFFLINE-00.png"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-079",
+   "claim": "Intro slides observed across runs: \"Change your career\", \"Build projects\", \"Learn at your own pace\"",
+   "classification": "VERIFIED_RUNTIME",
+   "source_paths": [
+    "ANALYSIS/RUNTIME/MISSION_05/RUN_42002808217/SCREENSHOTS/",
+    "ANALYSIS/RUNTIME/MISSION_04/SCREENSHOTS/"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-080",
+   "claim": "ping 8.8.8.8 was 100% loss BEFORE isolation too (emulator ICMP blocked); isolation proof is the connectivity state, not a baseline ping",
+   "classification": "VERIFIED_RUNTIME",
+   "source_paths": [
+    "ANALYSIS/RUNTIME/MISSION_05/RUN_42002808217/LOGS/OFFLINE_PHASE.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+   "evidence_excerpt": "",
+   "notes": "Honest limitation."
+  },
+  {
+   "id": "M05-081",
+   "claim": "svc wifi/data enable did NOT restore connectivity within the run; reconnect behaviour not claimed",
+   "classification": "VERIFIED_RUNTIME",
+   "source_paths": [
+    "ANALYSIS/RUNTIME/MISSION_05/RUN_42002808217/LOGS/OFFLINE_PHASE.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-082",
+   "claim": "STEP-13..16 stalled on the reassurance screen due to an accumulated tap avoid-list; capture() state was lost in a $(...) subshell",
+   "classification": "VERIFIED_RUNTIME",
+   "source_paths": [
+    "ANALYSIS/RUNTIME/MISSION_05/RUN_42002808217/LOGS/INTERACTION_TRACE.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+   "evidence_excerpt": "",
+   "notes": "Both fixed for run 42003884423."
+  },
+  {
+   "id": "M05-083",
+   "claim": "No lesson answer, completion screen, XP/streak observation or persistence-after-restart observation in M05",
+   "classification": "UNKNOWN",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/LEARNING_ENGINE.md"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-084",
+   "claim": "No FATAL/tombstone/SIGSEGV in run 42002808217 logcat",
+   "classification": "VERIFIED_RUNTIME",
+   "source_paths": [
+    "ANALYSIS/RUNTIME/MISSION_05/RUN_42002808217/CRASH_AND_ERROR_LOGS.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
    "evidence_excerpt": "",
    "notes": ""
   }

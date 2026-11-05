@@ -14,15 +14,22 @@ APK `48ce1740…7c7a`, `com.getmimo` 9.35, Android 16 / API 36 / `pixel_7`.
 | Intro carousel slides | M04 `41997975847` ("Learn at your own pace"), `41998643355` ("Change your career"), M05 `42001925381` ("Build projects") | `SCREENSHOTS/TEST-004_first_usable_screen.png`, `ANALYSIS/RUNTIME/MISSION_05/SCREENSHOTS/STEP-00.png` |
 | Buttons `Get started` / `I already have an account` | M04 + M05 | `UI_HIERARCHY/STEP-00.xml` (exact bounds `[68,1989][1012,2110]` and `[204,2148][876,2274]`) |
 | `com.getmimo:id/vp_intro_slides` (ViewPager), `tv_onboarding_page_title`, `tv_onboarding_page_description`, `compose_content` | M04 + M05 | XML resource ids |
-| No system ANR dialog on the final runs | M04 `41998643355`, M05 `42001925381` | `LOGS/ANR_DISMISSAL.txt`, `INTERACTION_TRACE.txt` |
+| No system ANR dialog on the final runs | M04 `41998643355`, M05 `42001925381`, `42002808217` | `LOGS/ANR_DISMISSAL.txt`, `INTERACTION_TRACE.txt` |
+| `Get started` → `OnboardingActivity` "Welcome to Mimo!" | M05 `42002808217` | `STEP-01.png/.xml`, `mCurrentFocus=…OnboardingActivity` |
+| 12-step onboarding questionnaire, all in `OnboardingActivity` | M05 `42002808217` | `STEP-01..12.*`, `RUNTIME/STATES.jsonl` |
+| On-device path recommendation "Front-End Developer is the best choice for you!" (HTML/CSS/JS/React) | M05 `42002808217` | `STEP-11.png/.xml` |
+| Transient loading screen (7 nodes, no text) → next question | M05 `42002808217` | `STEP-08.*` → `STEP-09.*` |
+| Cold start with `Active default network: none` → full intro + 3 onboarding states, UI XML byte-identical to online | M05 `42002808217` | `OFFLINE-00..03.*`, `RUNTIME/OFFLINE_EQUALITY_PROOF.json` |
 | System ANR dialog over dimmed Mimo (resolved automation failure) | `41997137033` | `LOGS/SCREENSHOT_RUN_41997137033_ANR_OVERLAY.png` |
 
 `VERIFIED_RUNTIME` **stops here for run 1** (`42001925381`): the tap-picker
-classified the intro slide as an authentication boundary and made **zero taps**.
-Exact reason recorded in `ANALYSIS/RUNTIME/MISSION_05/LOGS/INTERACTION_TRACE.txt`
-(`STEP-01 stop_reason=NONE auth_boundary`). Run 2 uses the fixed picker; its
-outcome is recorded in `RUNTIME/` once pulled. **No transition beyond the intro
-slide is claimed unless its PNG/XML exists.**
+classified the intro slide as an authentication boundary and made **zero taps**
+(exact reason in `LOGS/INTERACTION_TRACE.txt`). Run `42002808217` used the fixed
+picker and captured **16 taps through onboarding** plus an offline cold start;
+its verbatim evidence is archived in `../RUNTIME/MISSION_05/RUN_42002808217/`
+and analysed in `RUNTIME/RUN_42002808217_FINDINGS.md`. Run `42003884423` extends
+the chain further (daily goal → auth boundary / path). **No transition beyond a
+captured PNG/XML is claimed.**
 
 ## 2. Screen/component inventory — `VERIFIED_STATIC` (DEX class names)
 
@@ -59,8 +66,10 @@ Recovered from `classes.dex` string table and JADX package tree
 `trigger_paywall_onboarding_exit_offer`,
 `experiment_adapted_onboarding_android_local`.
 
-> **`UNKNOWN`:** the exact linear order, which steps are skippable, and whether
-> an account is mandatory before reaching the path map. `signUpAndProceed`
+> **`VERIFIED_RUNTIME` (run `42002808217`):** the first 12 onboarding states and
+> their exact order are now observed (table above). **`UNKNOWN`:** the states
+> after the "10M+ people" reassurance screen, which steps are skippable, and
+> whether an account is mandatory before reaching the path map. `signUpAndProceed`
  suggests authentication is embedded in onboarding; no credential was created
  and no auth boundary was crossed in M05.
 
@@ -116,9 +125,13 @@ Interactors: `GetChapterEndSuccessState`, `CreateChapterEndScreens`,
 ```
 [launcher] --resolve-activity--> SplashActivity_default      VERIFIED_RUNTIME
 SplashActivity_default --> IntroSlidesActivity               VERIFIED_RUNTIME
-IntroSlidesActivity --Get started--> OnboardingActivity      INFERRED
+IntroSlidesActivity --Get started--> OnboardingActivity      VERIFIED_RUNTIME (42002808217)
 IntroSlidesActivity --I already have an account--> auth      INFERRED (not taken)
-OnboardingActivity --> step2/selectpath/reassurance/dailygoal INFERRED (declared fragments)
+OnboardingActivity --> Welcome --> motive/goal/reassurance
+      --> role/work/experience --> loading --> interest
+      --> PATH RECOMMENDATION (Front-End Developer)
+      --> "10M+ people" reassurance                         VERIFIED_RUNTIME (STEP-01..12)
+OnboardingActivity --> step2/selectpath/dailygoal            INFERRED (declared fragments beyond STEP-12)
 dailygoal --signUpAndProceed--> PreparingCurriculum          INFERRED
 PreparingCurriculum --> MainActivity / PathMapFragment       INFERRED
 PathMapFragment --onTutorialClick / navigateToChapter--> ChapterActivity  INFERRED

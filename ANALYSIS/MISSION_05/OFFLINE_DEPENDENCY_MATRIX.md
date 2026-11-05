@@ -35,7 +35,7 @@ No backend business logic is reconstructed. `SERVER CONFIRMED = 0`.
 | 20 | Chapter-end success screen (rewards/leaderboard/ETA/streak) | ⚠️ `handleOnlineState` / `handleOfflineState` branches exist | ⚠️ partial | ✅ | ✅ | ✅ | ✅ local variant from Room | exact offline fallback composition (`UNKNOWN`) |
 | 21 | Leaderboard / leagues | ❌ (`/v1/leaderboards/*`) | ❌ | ✅ | ✅ | ✅ | ❌ not reproducible offline (multi-user) | — genuinely requires other users |
 | 22 | Favourite tracks | ⚠️ local `FavoriteTracks` + remote sync (`/v1/user/favorites/tracks`) | ✅ | ✅ for cross-device | ✅ | ❌ | ✅ local list | sync conflict rule (`UNKNOWN`) |
-| 23 | Onboarding questionnaire + path selection | ✅ `VERIFIED_STATIC` (fragments/ViewModels) | ✅ (`LoadOnboardingPaths`, 19 tracks) | ⚠️ `sendOnboardingData` | ⚠️ `signUpAndProceed` | ✅ `INFERRED` (A/B experiments) | ✅ | exact order, gating, and which steps call the server (`UNKNOWN`) |
+| 23 | Onboarding questionnaire + path selection | ✅ `VERIFIED_STATIC` + **`VERIFIED_RUNTIME`** (12 states, run `42002808217`) | ✅ (`LoadOnboardingPaths`, 19 tracks) | ❌ for the first 12 states (**cold start offline works**) | ❌ for the first 12 states | ✅ `INFERRED` (A/B experiments) | ✅ | states after "10M+ people" reassurance, gating, and which later steps call the server (`UNKNOWN`) |
 | 24 | Authentication / signup / login | ❌ | ❌ | ✅ | ✅ | ✅ | ❌ out of scope | user account data — deliberately not created |
 | 25 | AI tutor | ❌ (`/v1/aiTutor/...`) | ❌ | ✅ | ✅ | ✅ | ❌ (must be replaced by a local model or removed) | model/prompts (`UNKNOWN`) |
 | 26 | Subscriptions / paywall / purchases / certificates | ❌ (`/v1/products/user`, `/v1/package/preview`, `/v1/tracks/{id}/certificates`) | ❌ | ✅ | ✅ | ✅ | ✅ remove/omit | — out of scope for offline learning |
@@ -92,8 +92,17 @@ needs no change.
   completion thresholds (#10), scoring formulas (#17–19), `validatedInput`
   index algorithm (#5), and the 4,257 external references (#30).
 
-`VERIFIED_RUNTIME` boundary: M05 captured onboarding and a cold start with
-network isolation attempted; no lesson answer or completion screen was observed.
+`VERIFIED_RUNTIME` offline proof (run `42002808217`, archived):
+`svc wifi disable` + `svc data disable` → `Active default network: none` →
+`am force-stop` + `am start` → `IntroSlidesActivity` (pid 6084) →
+`Get started` → `Welcome to Mimo!` → motive → goal. The dumped UI hierarchies
+`STEP-01/02/03.xml` and `OFFLINE-01/02/03.xml` are **byte-identical**
+(`RUNTIME/OFFLINE_EQUALITY_PROOF.json`). Limitation: `ping` was already 100%
+loss before isolation (ICMP blocked on emulator); the isolation proof is
+`Active default network: none` + `connect: Network is unreachable`. Restore
+commands did not bring the network back within the run — no reconnect claim.
+
+`VERIFIED_RUNTIME` boundary: no lesson answer or completion screen was observed.
 Therefore **no claim of runtime-verified offline lesson completion** is made.
 `SERVER CONFIRMED = 0`.
 

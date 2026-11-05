@@ -75,11 +75,16 @@ text do not traverse the network. **Only the sync and the economy do.**
 ## 4. Data flow: application start — `VERIFIED_STATIC` + `VERIFIED_RUNTIME`
 
 ```
-launcher intent → com.getmimo/.ui.SplashActivity_default        VERIFIED_RUNTIME (41998643355)
-  → IntroSlidesActivity (ViewPager, 3 slides)                   VERIFIED_RUNTIME (PNG+XML)
+launcher intent → com.getmimo/.ui.SplashActivity_default        VERIFIED_RUNTIME (41998643355, 42002808217)
+  → IntroSlidesActivity (ViewPager, rotating slides)           VERIFIED_RUNTIME (PNG+XML)
   → Get started / I already have an account                     VERIFIED_RUNTIME (XML bounds)
-  → OnboardingActivity … dailygoal … PreparingCurriculum        INFERRED (declared fragments)
-  → MainActivity → PathMapFragment (Compose)                    INFERRED
+  → OnboardingActivity: Welcome → 12-step questionnaire
+      → "Front-End Developer is the best choice for you!"       VERIFIED_RUNTIME (STEP-01..12)
+  → dailygoal … PreparingCurriculum … PathMapFragment           INFERRED (declared fragments)
+
+OFFLINE COLD START (42002808217, wifi+data disabled, "Active default network: none"):
+  IntroSlidesActivity → Welcome → motive → goal                 VERIFIED_RUNTIME (OFFLINE-00..03)
+  UI_HIERARCHY STEP-01/02/03 == OFFLINE-01/02/03 byte-for-byte VERIFIED_RUNTIME (equality proof)
 ```
 
 Application init order (`App.onCreate`, DI graph, `InitializationProvider`),
@@ -126,8 +131,8 @@ of 4,257 external references, (f) a local substitute for the economy. See
 | Is the curriculum inside the APK? | **Yes**, 10,298 JSON files, v753 | `VERIFIED_STATIC` |
 | Are answer keys inside the APK? | **Yes**, `correct=`, ranges, `solvedContent` | `VERIFIED_STATIC` |
 | Is there a local progress DB? | **Yes**, Room `mimo.db`, 3 tables with exact SQL | `VERIFIED_STATIC` |
-| Does the client handle offline? | `handleOfflineState` + `in_queue` exist | `VERIFIED_STATIC` (classes), `UNKNOWN` (behaviour) |
-| Does the app run offline end-to-end? | **Not observed** | `UNKNOWN` |
+| Does the client handle offline? | `handleOfflineState` + `in_queue` exist; **cold start + 3 onboarding steps work with no network** | `VERIFIED_STATIC` (classes) + `VERIFIED_RUNTIME` (42002808217) |
+| Does the app run offline end-to-end (lesson → completion)? | **Not observed** | `UNKNOWN` |
 | Are scoring formulas known? | **No** | `UNKNOWN` |
 | Does the client launch real Mimo? | **Yes** | `VERIFIED_RUNTIME` (M04 `41998643355`, M05 `42001925381`) |
 | Any server behaviour confirmed? | **No** | `SERVER CONFIRMED = 0` |

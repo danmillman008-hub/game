@@ -8,12 +8,20 @@ stateDiagram-v2
     [Get started] [I already have an account]
     VERIFIED_RUNTIME: PNG + UI_HIERARCHY/STEP-00.xml
   end note
-  IntroSlides --> Onboarding: Get started (INFERRED, not yet observed)
+  IntroSlides --> Onboarding: Get started (VERIFIED_RUNTIME 42002808217)
   IntroSlides --> Auth: I already have an account (INFERRED, deliberately not taken)
-  Onboarding --> SetExperience: INFERRED
-  Onboarding --> SelectPath: INFERRED
-  Onboarding --> Reassurance: INFERRED
-  Onboarding --> DailyGoal: INFERRED
+  Onboarding --> Welcome: VERIFIED_RUNTIME (STEP-01)
+  Welcome --> Motive: VERIFIED_RUNTIME (STEP-02)
+  Motive --> Goal: VERIFIED_RUNTIME (STEP-03)
+  Goal --> Reassurance: VERIFIED_RUNTIME (STEP-04)
+  Reassurance --> RoleWorkExperience: VERIFIED_RUNTIME (STEP-05..07)
+  RoleWorkExperience --> Loading: VERIFIED_RUNTIME (STEP-08)
+  Loading --> Interest: VERIFIED_RUNTIME (STEP-09..10)
+  Interest --> PathRecommendation: Front-End Developer, VERIFIED_RUNTIME (STEP-11)
+  PathRecommendation --> SocialProofReassurance: VERIFIED_RUNTIME (STEP-12)
+  SocialProofReassurance --> SetExperience: INFERRED (beyond STEP-12)
+  SocialProofReassurance --> SelectPath: INFERRED
+  SocialProofReassurance --> DailyGoal: INFERRED
   DailyGoal --> PreparingCurriculum: signUpAndProceed (INFERRED)
   PreparingCurriculum --> MainPath: goToMainActivity (INFERRED)
   MainPath --> Chapter: navigateToChapter / onTutorialClick (INFERRED)
@@ -30,6 +38,10 @@ stateDiagram-v2
   MainPath --> [*]: force-stop / restart (resume behaviour UNKNOWN)
 ```
 
-Only `Splash → IntroSlides` and the intro-slide contents are
-`VERIFIED_RUNTIME`. Every other transition is `INFERRED` from DEX class names.
+Run `42002808217` verified the intro and the first 12 onboarding states
+(`VERIFIED_RUNTIME`); run `42003884423` continues from the reassurance screen.
+Transitions after STEP-12 remain `INFERRED` from DEX class names.
+Offline cold start with `Active default network: none` reproduced the intro and
+the first 3 onboarding states with byte-identical UI hierarchies
+(`VERIFIED_RUNTIME`, `RUNTIME/OFFLINE_EQUALITY_PROOF.json`).
 `SERVER CONFIRMED = 0`.
