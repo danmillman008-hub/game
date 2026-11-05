@@ -1,21 +1,25 @@
-MISSION 05 - OFFLINE PHASE
-timestamp_utc=2026-11-05T09:27:07Z
-== connectivity before ==
-  9: OemPaidWifiNetworkFactory
-  7: UntrustedWifiNetworkFactory
-  8: RestrictedWifiNetworkFactory
-  6: WifiNetworkFactory
-  10: MultiInternetWifiNetworkFactory
-Active default network: 101
-  NetworkAgentInfo{network{100}  handle{432902426637}  ni{MOBILE[LTE] CONNECTED extra: epc.tmobile.com} created=2026-11-05T09:26:10.517Z Score(Policies : TRANSPORT_PRIMARY&EVER_EVALUATED&EVER_VALIDATED&IS_VALIDATED ; KeepConnected : 0)  created 46301 firstValidated 47368 lastValidated 47368  lp{{InterfaceName: eth0 LinkAddresses: [ 10.0.2.15/24 ] DnsAddresses: [ /10.0.2.3 ] Domains: null MTU: 1500 TcpBufferSizes: 2097152,6291456,16777216,512000,2097152,8388608 Routes: [ 0.0.0.0/0 -> 10.0.2.2 eth0 mtu 1500,10.0.2.0/24 -> 0.0.0.0 eth0 mtu 0 ]}}  nc{[ Transports: CELLULAR Capabilities: MMS&SUPL&DUN&FOTA&IMS&CBS&INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN&VALIDATED&NOT_ROAMING&NOT_CONGESTED&NOT_SUSPENDED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED LinkUpBandwidth>=60000Kbps LinkDnBandwidth>=145000Kbps Specifier: <TelephonyNetworkSpecifier [mSubId = 1]> SubscriptionIds: {1} UnderlyingNetworks: Null]}  factorySerialNumber=5}
-      NetworkRequest [ LISTEN id=39, [ Transports: CELLULAR|WIFI Capabilities: NOT_VPN RequestorUid: 10186 RequestorPkg: com.android.systemui MatchNonThreadLocalNetworks UnderlyingNetworks: Null] ]
-  NetworkAgentInfo{network{101}  handle{437197393933}  ni{WIFI CONNECTED extra: } created=2026-11-05T09:26:17.645Z Score(Policies : TRANSPORT_PRIMARY&EVER_EVALUATED&IS_UNMETERED&EVER_VALIDATED&IS_VALIDATED ; KeepConnected : 0)  created 53588 firstValidated 59176 lastValidated 59176  lp{{InterfaceName: wlan0 LinkAddresses: [ fe80::9459:74f8:d268:5652/64,fec0::7ecc:93b9:f1a:2217/64,fec0::b0e1:f3bc:2bbc:bbfd/64,10.0.2.16/24 ] DnsAddresses: [ /10.0.2.3 ] Domains: null MTU: 0 ServerAddress: /10.0.2.2 TcpBufferSizes: 524288,1048576,2097152,262144,524288,1048576 Routes: [ fe80::/64 -> :: wlan0 mtu 0,::/0 -> fe80::2 wlan0 mtu 0,fec0::/64 -> :: wlan0 mtu 0,10.0.2.0/24 -> 0.0.0.0 wlan0 mtu 0,0.0.0.0/0 -> 10.0.2.2 wlan0 mtu 0 ]}}  nc{[ Transports: WIFI Capabilities: NOT_METERED&INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN&VALIDATED&NOT_ROAMING&FOREGROUND&NOT_CONGESTED&NOT_SUSPENDED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED LinkUpBandwidth>=12000Kbps LinkDnBandwidth>=30000Kbps Specifier: <WifiNetworkAgentSpecifier [WifiConfiguration=, SSID="AndroidWifi", BSSID=02:15:b2:00:00:01, band=1, mMatchLocalOnlySpecifiers=false]> TransportInfo: <SSID: "AndroidWifi", BSSID: 02:15:b2:00:00:01, MAC: 02:15:b2:00:00:00, IP: /10.0.2.16, Security type: 0, Supplicant state: COMPLETED, Wi-Fi standard: legacy, RSSI: -50, Link speed: 2Mbps, Tx Link speed: 2Mbps, Max Supported Tx Link speed: 54Mbps, Rx Link speed: 2Mbps, Max Supported Rx Link speed: 54Mbps, Frequency: 2437MHz, Net ID: 0, Metered hint: false, score: 60, isUsable: true, CarrierMerged: false, SubscriptionId: -1, IsPrimary: 1, Trusted: true, Restricted: false, Ephemeral: false, OEM paid: false, OEM private: false, OSU AP: false, FQDN: <none>, Provider friendly name: <none>, Requesting package name: <none>"AndroidWifi"openMLO Information: , Is TID-To-Link negotiation supported by the AP: false, AP MLD Address: <none>, AP MLO Link Id: <none>, AP MLO Affiliated links: <none>, Vendor Data: <none>> SignalStrength: -50 OwnerUid: 10183 AdminUids: [10183] SSID: "AndroidWifi" UnderlyingNetworks: Null]}  factorySerialNumber=6}
-      NetworkRequest [ LISTEN id=18, [ Transports: WIFI Capabilities: NOT_RESTRICTED&TRUSTED&NOT_VPN&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 1073 RequestorUid: 1073 RequestorPkg: com.google.android.networkstack MatchNonThreadLocalNetworks UnderlyingNetworks: Null] ]
-      NetworkRequest [ LISTEN id=26, [ Transports: WIFI Capabilities: INTERNET&TRUSTED&NOT_VPN&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 1001 RequestorUid: 1001 RequestorPkg: com.android.phone MatchNonThreadLocalNetworks UnderlyingNetworks: Null] ]
-      NetworkRequest [ LISTEN id=33, [ Transports: WIFI Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 1001 RequestorUid: 1001 RequestorPkg: com.android.phone MatchNonThreadLocalNetworks UnderlyingNetworks: Null] ]
+MISSION 05 - OFFLINE PHASE (client-side dependency probe)
+timestamp_utc=2026-11-05T09:35:16Z package=com.getmimo
+== ping BEFORE isolation ==
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+
+--- 8.8.8.8 ping statistics ---
+1 packets transmitted, 0 received, 100% packet loss, time 0ms
+
+== active network BEFORE ==
+Active default network: 102
+  NetworkAgentInfo{network{101}  handle{437197393933}  ni{MOBILE[LTE] CONNECTED extra: epc.tmobile.com} created=2026-11-05T09:32:28.307Z Score(Policies : TRANSPORT_PRIMARY&EVER_EVALUATED&EVER_VALIDATE
 == adb shell svc wifi disable ==
 wifi_disable_exit=0
 == adb shell svc data disable ==
 data_disable_exit=0
+== ping AFTER isolation ==
+connect: Network is unreachable
+== active network AFTER ==
+Active default network: none
+online_logcat_lines=54616
+Starting: Intent { cmp=com.getmimo/.ui.SplashActivity_default }
 == restore ==
-restore_done=2026-11-05T09:27:16Z
+restore_done=2026-11-05T09:36:06Z
+== ping AFTER restore ==
+connect: Network is unreachable
