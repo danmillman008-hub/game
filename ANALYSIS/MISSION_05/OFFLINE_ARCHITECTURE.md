@@ -82,9 +82,19 @@ launcher intent → com.getmimo/.ui.SplashActivity_default        VERIFIED_RUNTI
       → "Front-End Developer is the best choice for you!"       VERIFIED_RUNTIME (STEP-01..12)
   → dailygoal … PreparingCurriculum … PathMapFragment           INFERRED (declared fragments)
 
+  → AuthenticationActivity (signup screen, built-in "Skip")      VERIFIED_RUNTIME (STEP-21)
+  → MainActivity → ChapterActivity → "Guess the letter" lesson    VERIFIED_RUNTIME (STEP-22..24)
+
 OFFLINE COLD START (42002808217, wifi+data disabled, "Active default network: none"):
   IntroSlidesActivity → Welcome → motive → goal                 VERIFIED_RUNTIME (OFFLINE-00..03)
   UI_HIERARCHY STEP-01/02/03 == OFFLINE-01/02/03 byte-for-byte VERIFIED_RUNTIME (equality proof)
+
+OFFLINE COLD START (42003884423, after a complete onboarding run):
+  resumes at AuthenticationActivity (onboarding state persisted)  VERIFIED_RUNTIME
+  → MainActivity learning path + "Connect to the internet to
+    progress further" banner, coins 200 / keys ∞ / streak -      VERIFIED_RUNTIME
+  → Practice optional chapter card → executable lesson fully
+    rendered (instructions, index.html, Browser, Code Editor)     VERIFIED_RUNTIME
 ```
 
 Application init order (`App.onCreate`, DI graph, `InitializationProvider`),
@@ -108,8 +118,15 @@ NavHost and back stack remain `UNKNOWN` (M02 gap #11/#13).
 business logic.** What is missing is not content but: (a) the exact unlock /
 completion thresholds, (b) scoring formulas, (c) the `validatedInput` token
 algorithm, (d) a local code runner for 4,024 executable lessons, (e) a mirror
-of 4,257 external references, (f) a local substitute for the economy. See
-`OPEN_QUESTIONS.md` and `OFFLINE_DEPENDENCY_MATRIX.md`.
+of 4,257 external references, (f) a local substitute for the economy, and
+(g) bypassing the client's own "Connect to the internet to progress further"
+gate. See `OPEN_QUESTIONS.md` and `OFFLINE_DEPENDENCY_MATRIX.md`.
+
+**`VERIFIED_BOTH` (run `42003884423`):** `tutorial-904.json` lesson 151403
+renders as the "Guess the letter" WebView exercise in `STEP-24`, and
+`tutorial-2199.json` lesson 63259 renders as the offline executable
+`HTML Basics 1` lesson in `OFFLINE-03/05`. The shipped curriculum **is** the
+runtime content.
 
 ## 6. What M05 did **not** do
 
@@ -131,8 +148,9 @@ of 4,257 external references, (f) a local substitute for the economy. See
 | Is the curriculum inside the APK? | **Yes**, 10,298 JSON files, v753 | `VERIFIED_STATIC` |
 | Are answer keys inside the APK? | **Yes**, `correct=`, ranges, `solvedContent` | `VERIFIED_STATIC` |
 | Is there a local progress DB? | **Yes**, Room `mimo.db`, 3 tables with exact SQL | `VERIFIED_STATIC` |
-| Does the client handle offline? | `handleOfflineState` + `in_queue` exist; **cold start + 3 onboarding steps work with no network** | `VERIFIED_STATIC` (classes) + `VERIFIED_RUNTIME` (42002808217) |
-| Does the app run offline end-to-end (lesson → completion)? | **Not observed** | `UNKNOWN` |
+| Does the client handle offline? | `handleOfflineState` + `in_queue` exist; **cold start, onboarding, path UI and lesson content all render with no network** | `VERIFIED_STATIC` (classes) + `VERIFIED_RUNTIME` (42002808217, 42003884423) |
+| Does the app run offline end-to-end (lesson → completion)? | **Not observed**; client shows "Connect to the internet to progress further" | `UNKNOWN` |
+| Is the shipped curriculum the content the app renders? | **Yes** — two exact asset↔runtime matches | `VERIFIED_BOTH` (`EVIDENCE/RUNTIME_STATIC_MATCH.json`) |
 | Are scoring formulas known? | **No** | `UNKNOWN` |
 | Does the client launch real Mimo? | **Yes** | `VERIFIED_RUNTIME` (M04 `41998643355`, M05 `42001925381`) |
 | Any server behaviour confirmed? | **No** | `SERVER CONFIRMED = 0` |

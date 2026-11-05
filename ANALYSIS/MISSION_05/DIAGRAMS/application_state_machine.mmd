@@ -4,9 +4,9 @@ stateDiagram-v2
   Splash --> IntroSlides: VERIFIED_RUNTIME 41998643355 / 42001925381
   note right of IntroSlides
     ViewPager vp_intro_slides
-    "Build projects" / "Change your career"
+    "Build projects" / "Change your career" / "Learn at your own pace"
     [Get started] [I already have an account]
-    VERIFIED_RUNTIME: PNG + UI_HIERARCHY/STEP-00.xml
+    PNG + UI_HIERARCHY/STEP-00.xml
   end note
   IntroSlides --> Onboarding: Get started (VERIFIED_RUNTIME 42002808217)
   IntroSlides --> Auth: I already have an account (INFERRED, deliberately not taken)
@@ -17,31 +17,39 @@ stateDiagram-v2
   Reassurance --> RoleWorkExperience: VERIFIED_RUNTIME (STEP-05..07)
   RoleWorkExperience --> Loading: VERIFIED_RUNTIME (STEP-08)
   Loading --> Interest: VERIFIED_RUNTIME (STEP-09..10)
-  Interest --> PathRecommendation: Front-End Developer, VERIFIED_RUNTIME (STEP-11)
+  Interest --> PathRecommendation: "Front-End Developer" (STEP-11)
   PathRecommendation --> SocialProofReassurance: VERIFIED_RUNTIME (STEP-12)
-  SocialProofReassurance --> SetExperience: INFERRED (beyond STEP-12)
-  SocialProofReassurance --> SelectPath: INFERRED
-  SocialProofReassurance --> DailyGoal: INFERRED
-  DailyGoal --> PreparingCurriculum: signUpAndProceed (INFERRED)
-  PreparingCurriculum --> MainPath: goToMainActivity (INFERRED)
-  MainPath --> Chapter: navigateToChapter / onTutorialClick (INFERRED)
-  Chapter --> Lesson: startChapterFlow (INFERRED)
-  Chapter --> HardModeLesson: showHardModeIntro (INFERRED)
-  Lesson --> Lesson: wrong → showWrongFeedbackBlock (retry, INFERRED)
-  Lesson --> Lesson: correct → lessonSolvedAndProceedToNextLesson (INFERRED)
-  Lesson --> ChapterFinished: last lesson (INFERRED)
-  ChapterFinished --> MainPath: onChapterFinishedContinue (INFERRED)
+  SocialProofReassurance --> DailyGoal: Casual 5 / Regular 10 / Serious 20 min (STEP-13)
+  DailyGoal --> Reminder: 09:45 AM + notification permission (STEP-16..18)
+  Reminder --> DeviceReassurance: VERIFIED_RUNTIME (STEP-19..20)
+  DeviceReassurance --> AuthenticationActivity: VERIFIED_RUNTIME (STEP-21)
+  AuthenticationActivity --> MainActivity: built-in Skip (STEP-22)
+  MainActivity --> ChapterActivity: VERIFIED_RUNTIME (STEP-23)
+  ChapterActivity --> InteractiveLesson: "Guess the letter" (STEP-24)
+  InteractiveLesson --> InteractiveLesson: wrong / retry (INFERRED; run 42005358012 probes)
+  InteractiveLesson --> InteractiveLesson: correct / next lesson (INFERRED)
+  InteractiveLesson --> ChapterFinished: last lesson (INFERRED)
+  ChapterFinished --> MainActivity: onChapterFinishedContinue (INFERRED)
   ChapterFinished --> ChapterFinishedOffline: handleOfflineState (INFERRED)
   ChapterFinishedOffline --> ChapterFinished: retry when online (INFERRED)
-  Chapter --> MainPath: tryExitLesson / showConfirmExitDialog (INFERRED)
-  Auth --> [*]: BOUNDARY — no credentials, no bypass
-  MainPath --> [*]: force-stop / restart (resume behaviour UNKNOWN)
+  ChapterActivity --> MainActivity: tryExitLesson / showConfirmExitDialog (INFERRED)
+  AuthenticationActivity --> PreparingCurriculum: signUpAndProceed, signed-in branch (INFERRED, not taken)
+  PreparingCurriculum --> MainActivity: goToMainActivity (INFERRED)
+  MainActivity --> HardModeLesson: showHardModeIntro (INFERRED)
+  Auth --> [*]: BOUNDARY - no credentials, no bypass
+  MainActivity --> [*]: force-stop; offline cold start resumes at AuthenticationActivity (VERIFIED_RUNTIME 42003884423)
 ```
 
-Run `42002808217` verified the intro and the first 12 onboarding states
-(`VERIFIED_RUNTIME`); run `42003884423` continues from the reassurance screen.
-Transitions after STEP-12 remain `INFERRED` from DEX class names.
-Offline cold start with `Active default network: none` reproduced the intro and
-the first 3 onboarding states with byte-identical UI hierarchies
-(`VERIFIED_RUNTIME`, `RUNTIME/OFFLINE_EQUALITY_PROOF.json`).
+Runs `42002808217` and `42003884423` verified the intro and the **entire**
+onboarding chain up to a real interactive lesson (`VERIFIED_RUNTIME`,
+STEP-00..24). Only the signed-in `signUpAndProceed` branch and the in-lesson
+answer/retry transitions remain `INFERRED`.
+
+Offline cold start with `Active default network: none` (run `42002808217`)
+reproduced the intro + first 3 onboarding states with byte-identical UI
+hierarchies (`RUNTIME/OFFLINE_EQUALITY_PROOF.json`); run `42003884423` showed an
+offline cold start resuming at `AuthenticationActivity` (state persisted) and a
+learning path with "Connect to the internet to progress further" while lesson
+content still rendered. No account was created; `Skip` is a shipped UI control.
+
 `SERVER CONFIRMED = 0`.

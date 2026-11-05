@@ -20,16 +20,20 @@ APK `48ce1740…7c7a`, `com.getmimo` 9.35, Android 16 / API 36 / `pixel_7`.
 | On-device path recommendation "Front-End Developer is the best choice for you!" (HTML/CSS/JS/React) | M05 `42002808217` | `STEP-11.png/.xml` |
 | Transient loading screen (7 nodes, no text) → next question | M05 `42002808217` | `STEP-08.*` → `STEP-09.*` |
 | Cold start with `Active default network: none` → full intro + 3 onboarding states, UI XML byte-identical to online | M05 `42002808217` | `OFFLINE-00..03.*`, `RUNTIME/OFFLINE_EQUALITY_PROOF.json` |
+| **Full 24-tap chain**: intro → 20-screen onboarding → path recommendation → daily goal (5/10/20 min) → notification permission → device reassurance → `AuthenticationActivity` | M05 `42003884423` | `RUN_42003884423/LOGS/INTERACTION_TRACE.txt`, `STEP-00..21.*` |
+| Built-in **`Skip`** on the signup screen → `MainActivity` "Welcome to your learning path!" → `ChapterActivity` → **real lesson** "Guess the letter" | M05 `42003884423` | `STEP-21..24.png/.xml` |
+| Offline cold start resumes at `AuthenticationActivity` (onboarding state persisted across `am force-stop`) | M05 `42003884423` | `OFFLINE-00.*` |
+| Offline learning path shows red banner **"Connect to the internet to progress further"**; practice-optional chapter and executable lesson still open | M05 `42003884423` | `OFFLINE-01..05.*` |
 | System ANR dialog over dimmed Mimo (resolved automation failure) | `41997137033` | `LOGS/SCREENSHOT_RUN_41997137033_ANR_OVERLAY.png` |
 
 `VERIFIED_RUNTIME` **stops here for run 1** (`42001925381`): the tap-picker
 classified the intro slide as an authentication boundary and made **zero taps**
-(exact reason in `LOGS/INTERACTION_TRACE.txt`). Run `42002808217` used the fixed
-picker and captured **16 taps through onboarding** plus an offline cold start;
-its verbatim evidence is archived in `../RUNTIME/MISSION_05/RUN_42002808217/`
-and analysed in `RUNTIME/RUN_42002808217_FINDINGS.md`. Run `42003884423` extends
-the chain further (daily goal → auth boundary / path). **No transition beyond a
-captured PNG/XML is claimed.**
+(exact reason in `LOGS/INTERACTION_TRACE.txt`). Run `42002808217` captured 16
+taps + an offline cold start (`RUNTIME/RUN_42002808217_FINDINGS.md`). Run
+`42003884423` captured **24 taps through to a real lesson** and an offline chain
+that reached the learning path and an executable practice lesson
+(`RUNTIME/RUN_42003884423_FINDINGS.md`). Run `42005358012` probes correct/wrong
+answer states. **No transition beyond a captured PNG/XML is claimed.**
 
 ## 2. Screen/component inventory — `VERIFIED_STATIC` (DEX class names)
 
@@ -66,10 +70,14 @@ Recovered from `classes.dex` string table and JADX package tree
 `trigger_paywall_onboarding_exit_offer`,
 `experiment_adapted_onboarding_android_local`.
 
-> **`VERIFIED_RUNTIME` (run `42002808217`):** the first 12 onboarding states and
-> their exact order are now observed (table above). **`UNKNOWN`:** the states
-> after the "10M+ people" reassurance screen, which steps are skippable, and
-> whether an account is mandatory before reaching the path map. `signUpAndProceed`
+> **`VERIFIED_RUNTIME` (runs `42002808217`, `42003884423`):** the **entire**
+> onboarding chain is now observed: 20+ screens, daily goal
+> (Casual 5 / Regular 10 / Serious 20 min), reminder + notification permission,
+> device reassurance, `AuthenticationActivity`, the built-in `Skip`, and entry
+> into `MainActivity` → `ChapterActivity` → a real lesson. An account is **not**
+> required to reach the first lesson. **`UNKNOWN`:** the signed-in branch
+> (`signUpAndProceed` → `PreparingCurriculum`), which onboarding steps call the
+> server, and remote-config gating of individual reassurance screens. `signUpAndProceed`
  suggests authentication is embedded in onboarding; no credential was created
  and no auth boundary was crossed in M05.
 
@@ -132,8 +140,11 @@ OnboardingActivity --> Welcome --> motive/goal/reassurance
       --> PATH RECOMMENDATION (Front-End Developer)
       --> "10M+ people" reassurance                         VERIFIED_RUNTIME (STEP-01..12)
 OnboardingActivity --> step2/selectpath/dailygoal            INFERRED (declared fragments beyond STEP-12)
-dailygoal --signUpAndProceed--> PreparingCurriculum          INFERRED
-PreparingCurriculum --> MainActivity / PathMapFragment       INFERRED
+dailygoal --> reminder/permissions --> AuthenticationActivity  VERIFIED_RUNTIME (42003884423)
+AuthenticationActivity --built-in Skip--> MainActivity       VERIFIED_RUNTIME (42003884423)
+MainActivity --> ChapterActivity --> InteractiveLesson       VERIFIED_RUNTIME (STEP-23..24)
+dailygoal --signUpAndProceed--> PreparingCurriculum          INFERRED (signed-in branch, not taken)
+PreparingCurriculum --> PathMapFragment                      INFERRED
 PathMapFragment --onTutorialClick / navigateToChapter--> ChapterActivity  INFERRED
 ChapterActivity --startChapterFlow--> InteractiveLessonFragment / executable  INFERRED
 lesson --correct--> next lesson (lessonSolvedAndProceedToNextLesson)  INFERRED
@@ -150,7 +161,7 @@ last lesson --> ChapterFinishedFragment --> PathMapFragment   INFERRED
 | Completion | `ChapterCompletion`, `TutorialCompletion` Room rows; `SELECT COUNT(DISTINCT chapter_id)` |
 | Locked/unlocked | `GetPathMapState$invoke$3` reads `isCompleted`, `isRequired`, `getType`; `ChapterActivity$showUnlockAnimation`; mapping `UNKNOWN` |
 | Progress persistence | `storeLessonProgressInMemory` → `storeLessonProgress` → Room `lesson_progress` (`in_queue`) |
-| Resume after restart | `resume_onboarding_from_select_path`, `GET /v1/tracks/completion/lastInteracted`, `MainViewModel$fetchLessonProgressAndPostUnsyncedToBackend`; exact behaviour `UNKNOWN` |
+| Resume after restart | `VERIFIED_RUNTIME` (42003884423): offline cold start after `am force-stop` resumed at `AuthenticationActivity` with the chosen path, i.e. onboarding selections persisted. Static hooks: `resume_onboarding_from_select_path`, `GET /v1/tracks/completion/lastInteracted`, `MainViewModel$fetchLessonProgressAndPostUnsyncedToBackend`. Exact per-lesson resume `UNKNOWN` |
 | Offline / online | `ChapterFinishedViewModel$handleOfflineState$1`, `$handleOnlineState$1`, `ChapterFinishedSynchronizationException` |
 | Back / exit | `ChapterActivity$showConfirmExitDialog`, `tryExitLesson`, `OnboardingPickAPathViewModel$onBack$1` |
 | Hard mode | `setupHardModeState`, `setHardModeEnabled`, `StoreSyntheticHardModeProgress`, `openHardModeSessionFromIntro` |
@@ -169,7 +180,10 @@ last lesson --> ChapterFinishedFragment --> PathMapFragment   INFERRED
 
 No credentials were invented, no account was created, no login/signup button
 was pressed, no `I already have an account` was tapped, no private DB was read,
-no fake server response was injected. `SERVER CONFIRMED = 0`.
+no fake server response was injected. The **shipped `Skip` control** on the
+signup screen was tapped once; that is a normal UI path of the original app,
+not an authentication bypass. The signup screen itself is captured at
+`STEP-21.png/.xml`. `SERVER CONFIRMED = 0`.
 
 **Evidence:** `ANALYSIS/RUNTIME/MISSION_04/*`, `ANALYSIS/RUNTIME/MISSION_05/*`,
 `EVIDENCE/STORAGE_AND_ONBOARDING_STRINGS.txt`, `ANALYSIS/MIMO_COMPLETION_ENGINE.json`,

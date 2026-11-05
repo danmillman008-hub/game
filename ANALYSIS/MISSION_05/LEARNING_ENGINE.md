@@ -55,7 +55,7 @@ are the recorded dimensions. `getCorrectLessonProgressCount`,
 | Sparks | `rewardedSparksForCorrectAnswer`, `dailySparksGoal`, `earnedSparks`, `formattedSparks`, `sparksCount`, `sparksGoal`, `DailySparksProgress`, `double_sparks_24h` | `UNKNOWN` — `rewardMultiplier` is a named getter only |
 | Coins | `GET /v1/user/coins`, `dailyGoalCoinReward`, `userCoins`, `Coins(coins=`, `coinPrice`, `You earned %1$d coins!` | `UNKNOWN`, server-owned (`VERIFIED_STATIC` endpoint) |
 | Keys | `GET /v1/user/keys`, `POST /v1/user/keys/consume`, `consumeKeyIfNeeded`, `ACTIVE_COIN_COUNT` | `UNKNOWN`; unlock semantics `UNKNOWN` |
-| Daily goal | levels `1 Casual / 2 Regular / 3 Serious`; states `DAILY_GOAL_REACHED`, `DAILY_GOAL_NOT_REACHED`, `DAILY_GOAL_ALREADY_REACHED_EARLIER_TODAY`; `setDailyGoal`, `getUserDailyGoal`, `OnboardingSetDailyGoalFragment` | `UNKNOWN` — `getReachedGoal` / `getDailyGoalCoinReward` are inferred server-owned in M02 |
+| Daily goal | levels `1 Casual / 2 Regular / 3 Serious`; **`VERIFIED_RUNTIME` (42003884423 STEP-13): Casual = 5 min, Regular = 10 min, Serious = 20 min**; states `DAILY_GOAL_REACHED`, `DAILY_GOAL_NOT_REACHED`, `DAILY_GOAL_ALREADY_REACHED_EARLIER_TODAY` | `UNKNOWN` — `getReachedGoal` / `getDailyGoalCoinReward` are inferred server-owned |
 | Streak | `activeStreakLength`, `longestStreakLength`, `userCurrentStreak`, `userLongestStreak`, `GET /v1/user/activity`, `STREAK_FREEZE`, `WEEKEND_FREEZE`, `STREAK_REPAIR`, `FREE_STREAK_REPAIR`, streak challenges 3/5/7-day, widgets | `UNKNOWN` — break/repair/promotion rules not observed |
 | Leaderboard | 5 leagues (Wooden→Golden), "Finish in the top 15 to advance", `/v1/leaderboards/*`, `hasActiveLeagueFreeze`, `hasActiveLeagueProtection` | rule is a **string**, not verified behaviour |
 | Rewards | `GET /v1/user/rewards/next`, `POST /v1/user/rewards/{rewardId}/confirm`, `DefaultRewardRepository$retrieveOutstandingRewards`, `sendConfirmationRequestToBackend`, `Rewards`, `Reward` | server-owned (`VERIFIED_STATIC` endpoints) |
@@ -111,9 +111,15 @@ correct/wrong → feedback → next lesson → local progress) is fully local.
 The *economy and authoring/execution services* are not. See
 `OFFLINE_DEPENDENCY_MATRIX.md`.
 
-`VERIFIED_RUNTIME` status: no answer was submitted and no completion screen was
-observed in M05 runs 1/2. Every behaviour in §2–§5 above is static evidence or
-inference, **not** a runtime observation. `SERVER CONFIRMED = 0`.
+`VERIFIED_RUNTIME` status: run `42003884423` reached a **real lesson**
+("Guess the letter", shipped `tutorial-904.json` lesson 151403) and an
+**offline executable lesson** (`tutorial-2199.json` lesson 63259); run
+`42005358012` probes answer states. The offline learning-path toolbar showed
+coins **200**, keys **∞**, streak **`-`** (`OFFLINE-01.png`) — these are
+`VERIFIED_RUNTIME` UI values, **not** scoring formulas. No answer was submitted
+and no completion screen was observed in runs 1–3. Every behaviour in §2–§5
+above remains static evidence or inference unless explicitly marked.
+`SERVER CONFIRMED = 0`.
 
 **Evidence:** `ANALYSIS/MIMO_SCORING_MODEL.json`,
 `ANALYSIS/MIMO_COMPLETION_ENGINE.json`, `ANALYSIS/MIMO_SCORING_STRINGS.json`,

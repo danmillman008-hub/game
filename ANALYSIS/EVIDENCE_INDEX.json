@@ -4199,12 +4199,12 @@
   },
   "server_confirmed": 0,
   "counts": {
-   "total": 84,
+   "total": 102,
    "VERIFIED_STATIC": 49,
-   "VERIFIED_RUNTIME": 24,
-   "VERIFIED_BOTH": 0,
+   "VERIFIED_RUNTIME": 39,
+   "VERIFIED_BOTH": 2,
    "INFERRED": 3,
-   "UNKNOWN": 8
+   "UNKNOWN": 9
   },
   "evidence": [
    {
@@ -5322,6 +5322,257 @@
     "classification": "VERIFIED_RUNTIME",
     "source_paths": [
      "ANALYSIS/RUNTIME/MISSION_05/RUN_42002808217/CRASH_AND_ERROR_LOGS.txt"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": ""
+   },
+   {
+    "id": "M05-085",
+    "claim": "Run 42003884423 SUCCESS: 24 real taps from intro slides to a real interactive lesson, plus an offline chain",
+    "classification": "VERIFIED_RUNTIME",
+    "source_paths": [
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/LOGS/INTERACTION_TRACE.txt",
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/README.txt"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": ""
+   },
+   {
+    "id": "M05-086",
+    "claim": "Complete onboarding chain: Welcome, motive, goal, reassurance, role, work, experience (NONE/A LITTLE/A LOT), loading, aspect, interest, path recommendation, social proof, daily goal, reminder, notification permission, device reassurance",
+    "classification": "VERIFIED_RUNTIME",
+    "source_paths": [
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/LOGS/INTERACTION_TRACE.txt",
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/RUNTIME/STATES.jsonl"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": ""
+   },
+   {
+    "id": "M05-087",
+    "claim": "Daily goal levels confirmed at runtime: Casual = 5 minutes, Regular = 10 minutes, Serious = 20 minutes",
+    "classification": "VERIFIED_RUNTIME",
+    "source_paths": [
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/UI_HIERARCHY/STEP-13.xml",
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/SCREENSHOTS/STEP-13.png"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": ""
+   },
+   {
+    "id": "M05-088",
+    "claim": "Daily reminder step shows 09:45 AM with \"Yes, turn on\" and \"Set later\"; tapping Yes opens Android GrantPermissionsActivity for notifications",
+    "classification": "VERIFIED_RUNTIME",
+    "source_paths": [
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/UI_HIERARCHY/STEP-16.xml",
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/UI_HIERARCHY/STEP-17.xml"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": ""
+   },
+   {
+    "id": "M05-089",
+    "claim": "Onboarding ends at com.getmimo.ui.authentication.AuthenticationActivity: \"Create an account to save your progress\", Sign up with Google / email, Terms of service, and a shipped \"Skip\" control",
+    "classification": "VERIFIED_RUNTIME",
+    "source_paths": [
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/UI_HIERARCHY/STEP-21.xml",
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/SCREENSHOTS/STEP-21.png"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": ""
+   },
+   {
+    "id": "M05-090",
+    "claim": "Tapping the shipped Skip control leads to com.getmimo.ui.main.MainActivity \"Welcome to your learning path! Are you ready for your first lesson?\" — no account created",
+    "classification": "VERIFIED_RUNTIME",
+    "source_paths": [
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/UI_HIERARCHY/STEP-22.xml",
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/SCREENSHOTS/STEP-22.png"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": "Skip is a normal UI control, not an auth bypass."
+   },
+   {
+    "id": "M05-091",
+    "claim": "MainActivity → ChapterActivity → a real interactive lesson: HTML prose + \"Guess the letter\", \"_ O G\", clickable Q/R/D, Continue",
+    "classification": "VERIFIED_RUNTIME",
+    "source_paths": [
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/UI_HIERARCHY/STEP-24.xml",
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/SCREENSHOTS/STEP-24.png"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": ""
+   },
+   {
+    "id": "M05-092",
+    "claim": "Shipped tutorial-904.json lesson 151403 (\"HTML\") is exactly the lesson rendered at STEP-24 (identical prose + inline webview Guess the letter/Q/R/D)",
+    "classification": "VERIFIED_BOTH",
+    "source_paths": [
+     "ANALYSIS/MISSION_05/SAMPLES/runtime_matched_lesson_151403.txt",
+     "ANALYSIS/MISSION_05/EVIDENCE/RUNTIME_STATIC_MATCH.json",
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/SCREENSHOTS/STEP-24.png"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": ""
+   },
+   {
+    "id": "M05-093",
+    "claim": "Offline cold start after am force-stop resumes at AuthenticationActivity (onboarding selections persisted); intro slides do not reappear",
+    "classification": "VERIFIED_RUNTIME",
+    "source_paths": [
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/UI_HIERARCHY/OFFLINE-00.xml",
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/LOGS/OFFLINE_PHASE.txt"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": ""
+   },
+   {
+    "id": "M05-094",
+    "claim": "Offline learning path displays red banner \"Connect to the internet to progress further\", coins 200, keys ∞, streak -, Front-End Developer / \"1. Intro to Web Development\", 5+ play nodes and one lightning node; bottom tabs Learn/Practice/Leaderboard/Profile",
+    "classification": "VERIFIED_RUNTIME",
+    "source_paths": [
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/SCREENSHOTS/OFFLINE-01.png",
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/UI_HIERARCHY/OFFLINE-01.xml"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": ""
+   },
+   {
+    "id": "M05-095",
+    "claim": "Offline: \"Practice optional, HTML Basics 1\" chapter card shows CHAPTER 0/3 and \"Start practicing\"",
+    "classification": "VERIFIED_RUNTIME",
+    "source_paths": [
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/UI_HIERARCHY/OFFLINE-02.xml"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": ""
+   },
+   {
+    "id": "M05-096",
+    "claim": "Offline: ChapterActivity renders the executable lesson \"Add an h1 element and a p element with some text of your choice\" with index.html, Browser, Code Editor and starting <html><body></body></html>",
+    "classification": "VERIFIED_RUNTIME",
+    "source_paths": [
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/UI_HIERARCHY/OFFLINE-03.xml",
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/UI_HIERARCHY/OFFLINE-05.xml",
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/SCREENSHOTS/OFFLINE-05.png"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": ""
+   },
+   {
+    "id": "M05-097",
+    "claim": "Shipped tutorial-2199.json lesson 63259 (\"Code 1\", practiceLevel3) is exactly that offline executable lesson",
+    "classification": "VERIFIED_BOTH",
+    "source_paths": [
+     "ANALYSIS/MISSION_05/SAMPLES/runtime_matched_executable_lesson_63259.json",
+     "ANALYSIS/MISSION_05/EVIDENCE/RUNTIME_STATIC_MATCH.json",
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/SCREENSHOTS/OFFLINE-05.png"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": ""
+   },
+   {
+    "id": "M05-098",
+    "claim": "Offline: btn_lesson_close returns from ChapterActivity to the chapter card (exit path)",
+    "classification": "VERIFIED_RUNTIME",
+    "source_paths": [
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/UI_HIERARCHY/OFFLINE-04.xml"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": ""
+   },
+   {
+    "id": "M05-099",
+    "claim": "Offline: \"Introducing Your Personal AI Tutor\" / \"Exclusive with Mimo Pro\" / \"Got it\" sheet appears",
+    "classification": "VERIFIED_RUNTIME",
+    "source_paths": [
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/UI_HIERARCHY/OFFLINE-06.xml"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": ""
+   },
+   {
+    "id": "M05-100",
+    "claim": "During network isolation logcat shows UnknownHostException cdp.customer.io (Customer.io analytics) and repeated ConnectivityService.requestNetwork by com.getmimo; no FATAL/tombstone/SIGSEGV",
+    "classification": "VERIFIED_RUNTIME",
+    "source_paths": [
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/LOGS/LOGCAT_MIMO.txt",
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/CRASH_AND_ERROR_LOGS.txt"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": "Client-side attempts only; SERVER CONFIRMED = 0."
+   },
+   {
+    "id": "M05-101",
+    "claim": "Whether the \"Connect to the internet to progress further\" gate actually blocks lesson progression, and whether code execution works offline",
+    "classification": "UNKNOWN",
+    "source_paths": [
+     "ANALYSIS/MISSION_05/OFFLINE_DEPENDENCY_MATRIX.md"
+    ],
+    "class_or_method": "",
+    "address_or_offset": "",
+    "tool_and_method": "GitHub Actions Android 16 emulator / adb / uiautomator",
+    "evidence_excerpt": "",
+    "notes": ""
+   },
+   {
+    "id": "M05-102",
+    "claim": "STEP-20 kept the previous screen text while focus had already moved to AuthenticationActivity — a uiautomator capture-timing artefact; STEP-21 is correct",
+    "classification": "VERIFIED_RUNTIME",
+    "source_paths": [
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/UI_HIERARCHY/STEP-20.xml",
+     "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/UI_HIERARCHY/STEP-21.xml"
     ],
     "class_or_method": "",
     "address_or_offset": "",

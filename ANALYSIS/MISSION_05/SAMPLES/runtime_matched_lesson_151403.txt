@@ -1,0 +1,116 @@
+SHIPPED ASSET: assets/lessons-en/tracks/tutorial-904.json
+tutorial=904 "Discovering HTML and Tags" chapter=17742 "HTML Tags" lesson=151403 "HTML"
+Rendered at runtime in run 42003884423 STEP-24.png / STEP-24.xml ("Guess the letter", "_ O G", Q R D).
+
+--- interactiveContent (verbatim, truncated at 4000 chars) ---
+<!DOCTYPE html ><html><body><p>Hypertext Markup Language, or <strong>HTML</strong>, is the computer language that structures the web pages on the internet.</p><p>On top of HTML, you can build stunning web pages and even powerful, full-featured web apps.</p><webview version="2" visible-if="always" content="&lt;html&gt;&#xA; &lt;head&gt;&#xA;  &lt;style&gt;&#xA;   body {&#xA;    font-family: sans-serif;&#xA;    color: #2C3E50;&#xA;    background-color: #9aa4d2;&#xA;    margin-top: 5%;&#xA;   }&#xA;   &#xA;   button[disabled] {&#xA;    opacity: 0.5;&#xA;    cursor: default;&#xA;   }&#xA;   &#xA;   h2,&#xA;   h1,&#xA;   #result {&#xA;    text-align: center;&#xA;    margin: 5px;&#xA;   }&#xA;   &#xA;   #letterButtons {&#xA;    display: flex;&#xA;    flex-direction: row;&#xA;    flex-wrap: wrap;&#xA;    width: 100%;&#xA;    padding: 0;&#xA;    justify-content: center;&#xA;   }&#xA;   &#xA;   button {&#xA;    width: 40px;&#xA;    height: 40px;&#xA;    background-color: #34495E;&#xA;    color: #FFF;&#xA;    font-size: 14px;&#xA;    border: none;&#xA;    border-radius: 5px;&#xA;    cursor: pointer;&#xA;    margin: 7px;&#xA;    text-align: center;&#xA;   }&#xA;   &#xA;   #result {&#xA;    width: 80%;&#xA;    height: 20px;&#xA;    padding: 10px;&#xA;    font-size: 1.3em;&#xA;    margin: 0px auto;&#xA;    border-radius: 5px;&#xA;    color: white;&#xA;    font-weight: bold;&#xA;   }&#xA;   &#xA;   img {&#xA;    width: 80%;&#xA;    max-width:150px;&#xA;    height: auto;&#xA;    border-radius: 5px;&#xA;    margin: 10px auto;&#xA;    text-align: center;&#xA;    display: none;&#xA;    justify-content: center;&#xA;    border: white 2px solid;&#xA;   }&#xA;  &lt;/style&gt;&#xA; &lt;/head&gt;&#xA; &lt;body&gt;&#xA;  &lt;h1 id=&quot;result&quot;&gt;Guess the letter&lt;/h1&gt;&#xA;  &lt;h2&gt;_ O G&lt;/h2&gt;&#xA;  &lt;img&gt;&#xA;  &lt;div id=&quot;letterButtons&quot;&gt;&#xA;   &lt;button&gt;Q&lt;/button&gt;&#xA;   &lt;button&gt;R&lt;/button&gt;&#xA;   &lt;button&gt;D&lt;/button&gt;&#xA;  &lt;/div&gt;&#xA;  &lt;script&gt;&#xA;   let letterButtons = document.querySelectorAll(&#xA;    '#letterButtons button');&#xA;   let result = document.getElementById('result');&#xA;   let image = document.getElementsByTagName(&quot;img&quot;)[0];&#xA;   let correctLetter = 'D';&#xA;   let word = document.querySelector('h2');&#xA;   letterButtons.forEach(button =&gt; {&#xA;    button.addEventListener('click', function() {&#xA;     let letter = this.textContent;&#xA;     if (letter !== correctLetter) {&#xA;      button.disabled = true;&#xA;     }&#xA;     if (letter === correctLetter) {&#xA;      result.innerHTML = 'Correct!';&#xA;      result.style.color = &quot;#046865&quot;;&#xA;      image.style.display = &quot;flex&quot;;&#xA;      image.src = 'https://mimo.app/i/dog_yawn.png';&#xA;      word.textContent = 'D O G';&#xA;      letterButtons.forEach(button =&gt; {&#xA;       button.disabled = true;&#xA;      });&#xA;     } else {&#xA;      result.innerHTML = 'Try again';&#xA;      result.style.color = &quot;#D1345B&quot;;&#xA;     }&#xA;    });&#xA;   });&#xA;  &lt;/script&gt;&#xA; &lt;/body&gt;&#xA;&lt;/html&gt;&#xA;" /></body></html>
+
+--- decoded <webview> HTML (verbatim) ---
+<html>
+ <head>
+  <style>
+   body {
+    font-family: sans-serif;
+    color: #2C3E50;
+    background-color: #9aa4d2;
+    margin-top: 5%;
+   }
+   
+   button[disabled] {
+    opacity: 0.5;
+    cursor: default;
+   }
+   
+   h2,
+   h1,
+   #result {
+    text-align: center;
+    margin: 5px;
+   }
+   
+   #letterButtons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 0;
+    justify-content: center;
+   }
+   
+   button {
+    width: 40px;
+    height: 40px;
+    background-color: #34495E;
+    color: #FFF;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 7px;
+    text-align: center;
+   }
+   
+   #result {
+    width: 80%;
+    height: 20px;
+    padding: 10px;
+    font-size: 1.3em;
+    margin: 0px auto;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+   }
+   
+   img {
+    width: 80%;
+    max-width:150px;
+    height: auto;
+    border-radius: 5px;
+    margin: 10px auto;
+    text-align: center;
+    display: none;
+    justify-content: center;
+    border: white 2px solid;
+   }
+  </style>
+ </head>
+ <body>
+  <h1 id="result">Guess the letter</h1>
+  <h2>_ O G</h2>
+  <img>
+  <div id="letterButtons">
+   <button>Q</button>
+   <button>R</button>
+   <button>D</button>
+  </div>
+  <script>
+   let letterButtons = document.querySelectorAll(
+    '#letterButtons button');
+   let result = document.getElementById('result');
+   let image = document.getElementsByTagName("img")[0];
+   let correctLetter = 'D';
+   let word = document.querySelector('h2');
+   letterButtons.forEach(button => {
+    button.addEventListener('click', function() {
+     let letter = this.textContent;
+     if (letter !== correctLetter) {
+      button.disabled = true;
+     }
+     if (letter === correctLetter) {
+      result.innerHTML = 'Correct!';
+      result.style.color = "#046865";
+      image.style.display = "flex";
+      image.src = 'https://mimo.app/i/dog_yawn.png';
+      word.textContent = 'D O G';
+      letterButtons.forEach(button => {
+       button.disabled = true;
+      });
+     } else {
+      result.innerHTML = 'Try again';
+      result.style.color = "#D1345B";
+     }
+    });
+   });
+  </script>
+ </body>
+</html>

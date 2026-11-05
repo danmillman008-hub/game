@@ -34,6 +34,11 @@ the answer-validation contract from the shipped bytes.
 **Evidence:** `SCHEMAS/SHIPPED_CONTENT_STATS.json`, `SAMPLES/`, `EVIDENCE/ASSET_MANIFEST.txt`,
 `ANALYSIS/MIMO_CONTENT_SCHEMA.json` (prior counts), `ANALYSIS/APK_COMPLETE_INVENTORY.json`.
 
+**Runtime confirmation (`VERIFIED_BOTH`, run `42003884423`):** two shipped
+lessons were located by their exact runtime strings and rendered by the real app
+— see `EVIDENCE/RUNTIME_STATIC_MATCH.json`. The APK's curriculum JSON **is** the
+content the running client displays.
+
 ---
 
 ## 2. Object graph — `VERIFIED_STATIC` (asset JSON) + `VERIFIED_STATIC` (JADX classes)
@@ -331,6 +336,18 @@ Classes: `com.getmimo.data.content.tracks.DefaultTrackLoader`
 All offsets above are byte offsets of the first literal match in the DEX file; full list in `EVIDENCE/DEX_STRING_OFFSETS.txt`.
 
 ---
+
+## 7b. Shipped lesson ↔ running app — `VERIFIED_BOTH` (run `42003884423`)
+
+| Runtime state | Shipped asset | Proof |
+|---|---|---|
+| `STEP-24`: "Guess the letter", `_ O G`, `Q/R/D` + two HTML prose paragraphs | `tutorial-904.json` · tutorial 904 · chapter 17742 · **lesson 151403 "HTML"** (`<webview version="2" visible-if="always">` with inline HTML/CSS/JS) | `SAMPLES/runtime_matched_lesson_151403.txt`, `EVIDENCE/RUNTIME_STATIC_MATCH.json` |
+| `OFFLINE-03/05`: "Add an `h1` element and a `p` element…", `index.html`, `Browser`, `Code Editor`, starting code | `tutorial-2199.json` · tutorial 2199 "HTML Basics 1" · chapter 7280 `practiceLevel3` · **lesson 63259 "Code 1"** (`executableContent`) | `SAMPLES/runtime_matched_executable_lesson_63259.json` |
+
+The `<webview>` accessibility tree exposes its inline `Q`/`R`/`D` buttons as
+clickable nodes in `UI_HIERARCHY/STEP-24.xml`, which is why `uiautomator` can
+interact with them. This also confirms §4.3(5): interactive exercises are
+**local WebView content**, not server-rendered.
 
 ## 7. What is still `UNKNOWN` here
 

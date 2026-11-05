@@ -23,19 +23,19 @@ No backend business logic is reconstructed. `SERVER CONFIRMED = 0`.
 | 8 | Hints / instructions / reference solution for executable lessons | ✅ `VERIFIED_STATIC` (`executableContent.hints`, `files[].solvedContent`) | ✅ | ❌ | ❌ | ❌ | ✅ | whether `solvedContent` is used locally for validation (`INFERRED`, `UNKNOWN`) |
 | 9 | Per-lesson progress record | ✅ `VERIFIED_STATIC` (Room `lesson_progress`, `in_queue`) | n/a | ❌ for write; ✅ for sync | ❌ | ❌ | ✅ | none for local-only; sync queue needs a local equivalent of `POST /v1/tutorials/{id}/progress` |
 | 10 | Chapter / tutorial completion rows | ✅ `VERIFIED_STATIC` (Room `chapter_completions`, `tutorial_completions`) | n/a | ❌ for write; ✅ for sync | ❌ | ❌ | ✅ | exact completion threshold (`UNKNOWN`) |
-| 11 | Locked / unlocked path nodes | `INFERRED` (`GetPathMapState$invoke$3`: `isCompleted`/`isRequired`/`getType`) | ✅ node list shipped | ❌ for shipped nodes; ✅ for remote completion | ❌ | ⚠️ `INFERRED` (feature gates) | ✅ **if** the rule is recovered | exact unlock mapping (`UNKNOWN`, M02 gap #1) |
+| 11 | Locked / unlocked path nodes | `INFERRED` (`GetPathMapState$invoke$3`); **path with 5+ play nodes and a lightning node renders offline (`VERIFIED_RUNTIME` 42003884423 OFFLINE-01)** | ✅ node list shipped | ⚠️ client shows **"Connect to the internet to progress further"** offline | ❌ | ⚠️ `INFERRED` (feature gates) | ✅ **if** the rule is recovered | exact unlock mapping and the exact condition behind the offline banner (`UNKNOWN`, M02 gap #1) |
 | 12 | Path-map geometry / scroll / animation | ✅ `VERIFIED_STATIC` (146 constants, Compose composables) | ✅ | ❌ | ❌ | ❌ | ✅ | X/Y assignment, curve function, scroll restore (`UNKNOWN`, M02 gaps #2–5) |
-| 13 | Executable lesson code RUN + automated tests | ⚠️ partly: `spieglein/editor.bundle.js` + WebView for HTML/CSS/JS | ✅ starting code | ✅ `POST …/runFiles`, `/v1/code/runfiles` | ⚠️ `INFERRED` | ❌ | ✅ **replaceable** by a local JS engine / interpreter per language | exact test-case semantics, per-language runner behaviour, `ExecuteFilesResponse.tests[]` shape at runtime (`UNKNOWN`) |
+| 13 | Executable lesson code RUN + automated tests | ⚠️ partly: `spieglein/editor.bundle.js` + WebView; **lesson + editor render offline (`VERIFIED_RUNTIME` 42003884423 OFFLINE-03/05)** | ✅ starting code | ✅ `POST …/runFiles`, `/v1/code/runfiles` for automated checks | ⚠️ `INFERRED` | ❌ | ✅ **replaceable** by a local JS engine / interpreter per language | exact test-case semantics; whether code *execution* itself works offline (`UNKNOWN` — no code was submitted) |
 | 14 | Saved code / user project files | ❌ (`/v1/code`, `…/savefiles`, `…/savedFiles`) | ❌ (user-generated) | ✅ | ✅ `INFERRED` | ❌ | ✅ local file store | exact file model and sync conflict rule (`UNKNOWN`) |
 | 15 | Track ETA / estimated completion date | ❌ (`GET /v1/tracks/{id}/eta`) | ❌ | ✅ | ⚠️ | ✅ `INFERRED` | ✅ omit or compute locally from local progress | `TrackEta` computation formula (`UNKNOWN`) |
 | 16 | Track completion / last-interacted sync | ❌ (`GET /v1/tracks/{id}/completion`, `/completion/lastInteracted`) | ✅ local Room rows | ✅ | ✅ `INFERRED` | ❌ | ✅ use Room rows only | merge/conflict rule (`UNKNOWN`) |
 | 17 | XP / Sparks / Coins / Keys balances | ❌ (`/v1/user/coins`, `/keys`, `/v2/client-config`) | ❌ | ✅ | ✅ `INFERRED` | ✅ | ✅ define a local economy | all formulas and starting values (`UNKNOWN`) |
 | 18 | Streak (current, longest, freeze, repair) | ❌ (`GET /v1/user/activity`) | ❌ | ✅ | ✅ | ✅ | ✅ compute from local timestamps | break/repair/freeze rules (`UNKNOWN`) |
-| 19 | Daily goal (level, progress, reward) | ⚠️ local level in DataStore; result server-side (`getReachedGoal`) | ❌ | ✅ | ✅ | ✅ | ✅ compute locally | `dailySparksGoal` per level, coin reward (`UNKNOWN`) |
+| 19 | Daily goal (level, progress, reward) | ⚠️ local level in DataStore; **levels confirmed `VERIFIED_RUNTIME`: Casual 5 min / Regular 10 min / Serious 20 min** | ❌ | ✅ for reward | ✅ | ✅ | ✅ compute locally | `dailySparksGoal` per level, coin reward (`UNKNOWN`) |
 | 20 | Chapter-end success screen (rewards/leaderboard/ETA/streak) | ⚠️ `handleOnlineState` / `handleOfflineState` branches exist | ⚠️ partial | ✅ | ✅ | ✅ | ✅ local variant from Room | exact offline fallback composition (`UNKNOWN`) |
 | 21 | Leaderboard / leagues | ❌ (`/v1/leaderboards/*`) | ❌ | ✅ | ✅ | ✅ | ❌ not reproducible offline (multi-user) | — genuinely requires other users |
 | 22 | Favourite tracks | ⚠️ local `FavoriteTracks` + remote sync (`/v1/user/favorites/tracks`) | ✅ | ✅ for cross-device | ✅ | ❌ | ✅ local list | sync conflict rule (`UNKNOWN`) |
-| 23 | Onboarding questionnaire + path selection | ✅ `VERIFIED_STATIC` + **`VERIFIED_RUNTIME`** (12 states, run `42002808217`) | ✅ (`LoadOnboardingPaths`, 19 tracks) | ❌ for the first 12 states (**cold start offline works**) | ❌ for the first 12 states | ✅ `INFERRED` (A/B experiments) | ✅ | states after "10M+ people" reassurance, gating, and which later steps call the server (`UNKNOWN`) |
+| 23 | Onboarding questionnaire + path selection | ✅ `VERIFIED_RUNTIME` — **full 24-tap chain to a real lesson** (`42003884423`) | ✅ (`LoadOnboardingPaths`, 19 tracks) | ❌ for the whole chain (**no account, no credentials**) | ❌ | ✅ `INFERRED` (A/B experiments) | ✅ | signed-in branch, which steps call the server, remote-config gating of reassurance screens (`UNKNOWN`) |
 | 24 | Authentication / signup / login | ❌ | ❌ | ✅ | ✅ | ✅ | ❌ out of scope | user account data — deliberately not created |
 | 25 | AI tutor | ❌ (`/v1/aiTutor/...`) | ❌ | ✅ | ✅ | ✅ | ❌ (must be replaced by a local model or removed) | model/prompts (`UNKNOWN`) |
 | 26 | Subscriptions / paywall / purchases / certificates | ❌ (`/v1/products/user`, `/v1/package/preview`, `/v1/tracks/{id}/certificates`) | ❌ | ✅ | ✅ | ✅ | ✅ remove/omit | — out of scope for offline learning |
@@ -92,7 +92,7 @@ needs no change.
   completion thresholds (#10), scoring formulas (#17–19), `validatedInput`
   index algorithm (#5), and the 4,257 external references (#30).
 
-`VERIFIED_RUNTIME` offline proof (run `42002808217`, archived):
+`VERIFIED_RUNTIME` offline proof (runs `42002808217` and `42003884423`):
 `svc wifi disable` + `svc data disable` → `Active default network: none` →
 `am force-stop` + `am start` → `IntroSlidesActivity` (pid 6084) →
 `Get started` → `Welcome to Mimo!` → motive → goal. The dumped UI hierarchies
@@ -102,9 +102,28 @@ loss before isolation (ICMP blocked on emulator); the isolation proof is
 `Active default network: none` + `connect: Network is unreachable`. Restore
 commands did not bring the network back within the run — no reconnect claim.
 
-`VERIFIED_RUNTIME` boundary: no lesson answer or completion screen was observed.
-Therefore **no claim of runtime-verified offline lesson completion** is made.
-`SERVER CONFIRMED = 0`.
+### Run `42003884423` — deeper offline result
+
+After a full online onboarding run, `am force-stop` + `am start` with
+`Active default network: none` resumed at **`AuthenticationActivity`** (onboarding
+state persisted). The built-in `Skip` opened `MainActivity`, whose screenshot
+`OFFLINE-01.png` shows: coins **200**, keys **∞**, streak **`-`**, and a red
+banner **"Connect to the internet to progress further"**, plus the
+`Front-End Developer` / `1. Intro to Web Development` path with 5+ play nodes.
+Tapping a `Practice optional, HTML Basics 1` node opened the chapter card
+(`0/3`) and then `ChapterActivity` with the **executable lesson** — instructions,
+`index.html`, `Browser`, `Code Editor` and starting code all rendered with no
+network. Offline logcat: `UnknownHostException: cdp.customer.io` (analytics) and
+repeated `ConnectivityService.requestNetwork` by `com.getmimo`; no FATAL.
+
+⇒ **`VERIFIED_RUNTIME`:** path UI, chapter cards and lesson *content* are local
+and navigable offline. **`UNKNOWN`:** whether progression is truly blocked by the
+banner, whether code execution works offline, whether offline progress survives,
+and what the chapter-end screen does offline.
+
+`VERIFIED_RUNTIME` boundary: no lesson answer or completion screen was observed
+in runs 1–3 (run `42005358012` probes answer states). Therefore **no claim of
+runtime-verified offline lesson completion** is made. `SERVER CONFIRMED = 0`.
 
 **Evidence:** `CONTENT_MODEL.md`, `LOCAL_STORAGE_MODEL.md`, `LEARNING_ENGINE.md`,
 `APPLICATION_STATE_MACHINE.md`, `NATIVE_LIBRARIES.md`,

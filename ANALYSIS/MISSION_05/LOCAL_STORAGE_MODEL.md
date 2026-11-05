@@ -159,10 +159,15 @@ DEX literals (`VERIFIED_STATIC`, examples): `user_preferences`, `.preferences_pb
 - `INFERRED`: on cold start the client reads `user_preferences` for onboarding
   stage, reads the three Room tables for progress, and optionally refreshes
   completion state from the server for a signed-in user.
-- `UNKNOWN` (`VERIFIED_RUNTIME` not yet obtained): exact screen shown on restart
-  without an account, whether progress written while offline survives a
-  force-stop, and whether the intro slides reappear. M05 runtime run 2 probes a
-  **cold start with network disabled**; see `../RUNTIME/MISSION_05/`.
+- `VERIFIED_RUNTIME` (run `42003884423`): after a full onboarding run, an
+  offline cold start (`am force-stop` + `am start`) resumed at
+  **`AuthenticationActivity`** with the chosen `Front-End Developer` path — the
+  intro slides did **not** reappear, so onboarding selections were persisted
+  locally across process death. `OFFLINE-00.xml/.png`.
+- `UNKNOWN`: exact per-lesson resume screen, whether `lesson_progress` rows
+  written offline survive, whether `in_queue` sync replays on reconnect, and
+  the exact DataStore keys holding the onboarding stage (class names only).
+  See `../RUNTIME/MISSION_05/RUN_42003884423_FINDINGS.md`.
 
 ## 7. What is NOT stored locally — `VERIFIED_STATIC` (endpoint evidence)
 

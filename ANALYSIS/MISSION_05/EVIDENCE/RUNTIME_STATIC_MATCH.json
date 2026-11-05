@@ -1,0 +1,49 @@
+{
+ "document": "MISSION 05 — VERIFIED_BOTH: shipped APK lessons rendered by the real app",
+ "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+ "matches": [
+  {
+   "id": "MATCH-1",
+   "runtime_run": "42003884423",
+   "runtime_state": "STEP-24",
+   "runtime_evidence": [
+    "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/SCREENSHOTS/STEP-24.png",
+    "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/UI_HIERARCHY/STEP-24.xml"
+   ],
+   "shipped_source": "assets/lessons-en/tracks/tutorial-904.json tutorial=904 chapter=17742 lesson=151403 \"HTML\"",
+   "shipped_sample": "ANALYSIS/MISSION_05/SAMPLES/runtime_matched_lesson_151403.txt",
+   "shared_literals": [
+    "Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.",
+    "On top of HTML, you can build stunning web pages and even powerful, full-featured web apps.",
+    "Guess the letter",
+    "_ O G",
+    "Q",
+    "R",
+    "D"
+   ],
+   "classification": "VERIFIED_BOTH",
+   "note": "<webview version=\"2\" visible-if=\"always\"> with inline HTML/CSS/JS; the WebView accessibility tree exposes the Q/R/D buttons as clickable nodes."
+  },
+  {
+   "id": "MATCH-2",
+   "runtime_run": "42003884423",
+   "runtime_state": "OFFLINE-03 / OFFLINE-05 (network disabled)",
+   "runtime_evidence": [
+    "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/SCREENSHOTS/OFFLINE-03.png",
+    "ANALYSIS/RUNTIME/MISSION_05/RUN_42003884423/SCREENSHOTS/OFFLINE-05.png"
+   ],
+   "shipped_source": "assets/lessons-en/tracks/tutorial-2199.json tutorial=2199 \"HTML Basics 1\" chapter=7280 practiceLevel3 lesson=63259 \"Code 1\"",
+   "shipped_sample": "ANALYSIS/MISSION_05/SAMPLES/runtime_matched_executable_lesson_63259.json",
+   "shared_literals": [
+    "Add an `h1` element and a `p` element with some text of your choice.",
+    "index.html",
+    "Browser",
+    "Code Editor",
+    "<html>\n<body>\n\n</body>\n</html>"
+   ],
+   "classification": "VERIFIED_BOTH",
+   "note": "executableContent has instructions, preselectedFileIndex, hasVisualOutput=true, files[index.html] with content+solvedContent, hints=[]; fully rendered with no network."
+  }
+ ],
+ "server_confirmed": 0
+}
