@@ -1,0 +1,16 @@
+{
+  "name": "mimo-offline-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Independent offline application shell built on the approved v12.5-fa prototype",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test tests/*.test.mjs",
+    "build": "python3 tools/extract_from_prototype.py && python3 tools/build_index.py",
+    "verify": "python3 tools/verify_app.py"
+  },
+  "devDependencies": {
+    "jsdom": "^26.0.0"
+  }
+}

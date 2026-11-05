@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#F6F7FB">
+<meta name="description" content="اپلیکیشن آفلاین یادگیری بر پایهٔ طرح نهایی v12.5-fa">
+<title>میمو · اپلیکیشن آفلاین</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="stylesheet" href="./assets/proto.css">
+<link rel="stylesheet" href="./assets/motion.css">
+</head>
+<body class="app-body">
+<main class="app-stage" aria-label="اپلیکیشن آفلاین میمو">
+<!-- APPROVED v12.5-fa PHONE MARKUP: byte-identical to assets/phone.html -->
+<div class="phone" id="phone">
+      <div class="statusbar">
+        <span>9:41&nbsp; ☾</span>
+        <span class="sb-r"><span class="sb-sig"><i style="height:4px"></i><i style="height:6px"></i><i style="height:8px"></i><i style="height:11px"></i></span><span class="sb-wifi"></span><span class="sb-bat"><i style="width:80%"></i></span></span>
+      </div>
+
+      <!-- ============ 1. LEARN / PATH MAP = v8 EXACT nodes, data-driven from code ============ -->
+      <section class="screen mimo on" data-screen="learn">
+        <div class="mimo-hdr l6">
+          <div class="pill"><span data-icon="ic_coin" data-size="26"></span><b>1,272</b></div>
+          <div class="pill"><span data-icon="ic_key" data-size="24"></span><span class="inf" data-icon="ic_infinity" data-size="20" data-mono="1"></span></div>
+          <div class="pill"><span data-icon="ic_streak_active" data-size="26"></span><b>0</b></div>
+        </div>
+        <div class="coursebar l6">
+          <button class="lst" id="pathSwitchBtn" data-nav="select-path" data-code="ic_list_bulleted → select_path"><span data-icon="ic_list_bulleted" data-size="24" data-mono="1"></span></button>
+          <b id="learnPathTitle" data-fa="یادگیری همگام با برنامه آزمون دوازدهم" data-code="track_switcher_selected_path">یادگیری همگام با برنامه آزمون دوازدهم</b>
+        </div>
+        <button class="overview-card" id="overviewEntry" data-nav="path-overview" data-code="ViewsKt$OverviewEntryPointHeader → path_see_course_overview">
+          <span class="oc-kicker" data-fa="یادگیری برنامه محور" data-code="ViewsKt$OverviewEntryPointHeader / path_see_course_overview">یادگیری برنامه محور</span>
+          <span class="oc-title" data-fa="۳. سلول و بافت" data-code="path_overview_section_ordinal">۳. سلول و بافت</span>
+          <span class="oc-bar"><i style="width:43%"></i></span>
+        </button>
+        <div class="pathwrap l6 l10">
+          <svg class="connector" viewBox="0 0 392 720" preserveAspectRatio="none">
+            <path d="M242 70 H280 Q312 70 312 102 V140 M312 232 V270 Q312 302 280 302 H242" fill="none" stroke="var(--progress)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity=".85"/>
+            <path d="M150 302 H112 Q80 302 80 334 V372 M80 464 V502 Q80 534 112 534 H150 M196 580 V618 Q196 650 164 650 H126" fill="none" stroke="var(--progress-bg)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+          </svg>
+          <div class="node done l10n1" data-icon="ic_check_white" data-size="48" data-mono="1" data-nav="chapter" data-section="1" data-code="ic_check_white · completed chapter (PathMapViewModel$onTutorialClick)"></div>
+          <div class="node done l10n2" data-icon="ic_check_white" data-size="48" data-mono="1" data-nav="chapter" data-section="2" data-code="ic_check_white · completed chapter (PathMapViewModel$onTutorialClick)"></div>
+          <div class="node cur l10n3" id="curNode" data-nav="chapter" data-code="white double ring · ic_play / 1/2 · bg_circular.xml"><span class="cur-inner" id="curInner"><span class="hring"><b>1/2</b></span></span></div>
+          <div class="node next l10n4" data-icon="ic_square_rounded" data-size="48" data-mono="1" data-nav="chapter" data-section="4" data-code="ic_square_rounded · UNLOCKED next chapter · test-tracks.json section"></div>
+          <div class="node bolt active l10n5" data-icon="ic_bolt_charged" data-size="48" data-nav="section-practice" data-practice="4" data-section="5" data-code="ic_bolt_charged · charged practice checkpoint"></div>
+          <div class="node bolt optional l10n6" data-icon="ic_bolt_mastered" data-size="48" data-nav="section-practice" data-practice="6" data-section="6" data-code="ic_bolt_mastered · optional/mastered practice"></div>
+        </div>
+      </section>
+
+      <!-- ============ 2. SELECT PATH = the three-lines icon ============ -->
+      <section class="screen mimo" data-screen="select-path">
+        <div class="sp-top"><button class="x" data-nav="learn"><span data-icon="ic_close" data-size="24" data-mono="1"></span></button><b data-fa="انتخاب مسیر">انتخاب مسیر</b></div>
+        <div class="sp-body">
+          <h3 id="careerHeading" data-fa="یادگیری برنامه محور" data-code="track_switcher_career_paths = Career Paths (relabelled)">یادگیری برنامه محور</h3>
+          <div id="careerCards" data-code="Full-Stack Developer / Python Developer / Back-End Developer / Front-End Developer"></div>
+          <h3 class="sub" id="courseHeading" data-fa="یادگیری مبحثی" data-code="track_switcher_courses = Courses (relabelled)">یادگیری مبحثی</h3>
+          <div id="courseRows" data-code="TypeScript / JS required / 6/14 / tutorialIds from test-tracks.json"></div>
+        </div>
+      </section>
+
+      <!-- ============ 3. PATH OVERVIEW = certificate + numbered sections ============ -->
+      <section class="screen mimo" data-screen="path-overview">
+        <div class="po-top"><button class="x" data-nav="learn"><span data-icon="ic_close" data-size="24" data-mono="1"></span></button></div>
+        <div class="po-head">
+          <span class="kick" id="poKicker" data-fa="یادگیری برنامه محور" data-code="onboarding_path_type_career_path">یادگیری برنامه محور</span>
+          <h1 id="poTitle" data-fa="یادگیری همگام با برنامه آزمون دوازدهم">یادگیری همگام با برنامه آزمون دوازدهم</h1>
+          <button class="sw" id="overviewSwitch" data-nav="select-path" data-code="ic_switch → select_path"><span data-icon="ic_switch" data-size="28"></span></button>
+        </div>
+        <div class="cert-card" id="certCard" data-modal="unfinishedModal" data-code="certificates_unfinished_track_dialog_* · Professional Certificate / 22% Complete / path_overview_certificate_percent_complete">
+          <span class="cb" data-icon="ic_cap_filled" data-size="48"></span>
+          <div class="cc">
+            <b data-fa="مدرک پایان دوره">مدرک پایان دوره</b>
+            <div class="cbar"><i></i></div>
+            <div class="cm"><span data-fa="۲۲ درصد کامل شده">۲۲ درصد کامل شده</span><span>2/9</span></div>
+          </div>
+        </div>
+        <div class="po-secs" id="sectionRows" data-code="path_overview_section_ordinal · tutorialIds · Section Project · Coming soon"></div>
+      </section>
+
+      <!-- ============ 4. SECTION DETAIL = inside a topic ============ -->
+      <section class="screen mimo" data-screen="section-detail">
+        <div class="sd-top"><button class="x" data-nav="path-overview"><span data-icon="ic_arrow_back_24" data-size="24" data-mono="1"></span></button><b data-fa="فصل">فصل</b></div>
+        <div class="sd-hero">
+          <span class="kick" id="sdKicker" data-fa="فصل ۱" data-code="section_details">فصل ۱</span>
+          <h2 id="sdTitle" data-fa="سلول و بافت">سلول و بافت</h2>
+          <p id="sdDesc">دروس: زیست، شیمی، ریاضی، فیزیک</p>
+          <div class="cbar"><i></i></div>
+        </div>
+        <div class="sd-list" id="lessonRows" data-code="tutorialIds from test-tracks.json · lesson_continue"></div>
+        <button class="sd-cta" id="sdContinue" data-nav="chapter" data-fa="ادامه">ادامه</button>
+        <button class="sd-link" id="sdOverview" data-nav="path-overview" data-fa="نمای دوره">نمای دوره</button>
+      </section>
+
+      <!-- ============ 3. LESSON = chapter_toolbar.xml ============ -->
+      <section class="screen mimo" data-screen="lesson">
+        <div class="lesson">
+          <div class="lesson-toolbar">
+            <span class="ib" data-icon="ic_close" data-size="24" data-mono="1" data-code="btn_lesson_close"></span>
+            <span class="heart"><span data-icon="ic_streak" data-size="30"></span><span class="inf" data-icon="ic_infinity" data-size="14"></span></span>
+            <span class="ib" data-icon="ic_flag" data-size="24" data-mono="1" data-code="btn_lesson_report"></span>
+          </div>
+          <div class="lprogress"><i></i></div>
+          <div class="lesson-body">
+            <p data-fa="گاهی لازم است متنها را با شکستن خطوط، خواناتر کنیم.">گاهی لازم است متنها را با شکستن خطوط، خواناتر کنیم.</p>
+            <p data-fa="مثلاً این جمله خیلی بهتر میشد اگر &lt;span class=&quot;codechip&quot;&gt;غضروف&lt;/span&gt; در یک خط و &lt;span class=&quot;codechip&quot;&gt;استخوان&lt;/span&gt; در خط بعدی قرار میگرفت.">مثلاً این جمله خیلی بهتر میشد اگر <span class="codechip">غضروف</span> در یک خط و <span class="codechip">استخوان</span> در خط بعدی قرار میگرفت.</p>
+            <div class="browser">
+              <div class="browser-bar"><span data-icon="browser_view_header_dots" data-size="24"></span></div>
+              <div class="browser-in">
+                <h3 data-fa="بافتها">بافتها</h3>
+                <p data-fa="بافت پوششی، بافت پیوندی، بافت ماهیچهای و بافت عصبی">بافت پوششی، بافت پیوندی، بافت ماهیچهای و بافت عصبی</p>
+              </div>
+            </div>
+          </div>
+          <button class="continue-btn" data-nav="learn" data-fa="ادامه">ادامه</button>
+        </div>
+      </section>
+
+      <!-- ============ 4. LEADERBOARD = Mimo + own info ============ -->
+      <section class="screen mimo" data-screen="leaderboard">
+        <div class="sec-h" data-fa="وضعیت من" data-code="profile_info_card_view.xml · My status (archived EN label)">وضعیت من</div>
+        <div class="statcards">
+          <div class="statcard"><span class="ic" data-icon="ic_streak_active" data-size="32"></span><b>1</b><small data-fa="روز متوالی">روز متوالی</small></div>
+          <div class="statcard"><span class="ic" data-icon="ic_flash_filled" data-size="32" data-mono="1" style="color:var(--yellow)"></span><b>480</b><small data-fa="امتیاز کل">امتیاز کل</small></div>
+          <div class="statcard"><span class="ic" data-icon="ic_trophy" data-size="32"></span><b>۷</b><small data-fa="آزمونهای من">آزمونهای من</small></div>
+        </div>
+        <div class="selfbox">
+          <h4 data-fa="آزمونها و امتیازات من">آزمونها و امتیازات من</h4>
+          <div class="selfrow"><span data-fa="آزمون جامع تجربی">آزمون جامع تجربی</span><b>۶۸٪ · رتبه ۱۲۴۰</b></div>
+          <div class="selfrow"><span data-fa="آزمون تکدرسی زیست">آزمون تکدرسی زیست</span><b>۸۲٪ · ۴۰ سؤال</b></div>
+          <div class="selfrow"><span data-fa="آزمون زماندار شیمی">آزمون زماندار شیمی</span><b>۷۱٪ · ۳۰ دقیقه</b></div>
+          <div class="selfrow"><span data-fa="آزمون تحلیلی غلطها">آزمون تحلیلی غلطها</span><b>۴ غلط · ۵ نزده</b></div>
+          <div class="selfrow"><span data-fa="امتیاز این هفته">امتیاز این هفته</span><b>۳۳۰ ⚡</b></div>
+        </div>
+      </section>
+
+      <!-- ============ 5. USER PROFILE = public_profile_fragment.xml ============ -->
+      <section class="screen mimo" data-screen="user-profile">
+        <div class="up-head"><span class="bk" data-nav="leaderboard">‹ بازگشت</span><b data-fa="پروفایل کاربر">پروفایل کاربر</b><span data-icon="ic_user_alert" data-size="22" data-mono="1"></span></div>
+        <div class="up-body">
+          <div class="up-av"></div>
+          <h3 data-fa="سارا">سارا</h3>
+          <p data-fa="هنوز اطلاعاتی از سارا ثبت نشده است">هنوز اطلاعاتی از سارا ثبت نشده است</p>
+          <button class="follow" data-fa="دنبال کردن">دنبال کردن</button>
+        </div>
+        <div class="statcards" style="margin-top:14px">
+          <div class="statcard"><span class="ic" data-icon="ic_streak_active" data-size="32"></span><b>1</b><small data-fa="روز متوالی">روز متوالی</small></div>
+          <div class="statcard"><span class="ic" data-icon="ic_flash_filled" data-size="32" data-mono="1" style="color:var(--yellow)"></span><b>480</b><small data-fa="امتیاز کل">امتیاز کل</small></div>
+          <div class="statcard"><span class="ic" data-icon="img_brain" data-size="32"></span><b data-fa="چوبی">چوبی</b><small data-fa="لیگ">لیگ</small></div>
+        </div>
+        <div class="sec-h" data-fa="آزمونهای من">آزمونهای من</div>
+        <div class="dash"><div class="boxmascot"><div class="bt"><i></i><i></i></div><div class="bx"></div></div><b data-fa="هیچ آزمونی نیست">هیچ آزمونی نیست</b><p data-fa="برای ساختن آزمون تازه، روی «ساخت آزمون» بزن">برای ساختن آزمون تازه، روی «ساخت آزمون» بزن</p></div>
+      </section>
+
+      <!-- ============ 6. PROFILE = profile_fragment.xml ============ -->
+      <section class="screen mimo" data-screen="profile">
+        <div class="prof-head"><b data-fa="پروفایل">پروفایل</b><span class="gear" data-icon="ic_settings" data-size="24" data-mono="1" data-code="settings"></span></div>
+        <div class="prof-course">
+          <span class="badge" data-icon="ic_cap_filled" data-size="52" data-mono="1" style="color:var(--progress-weak)"></span>
+          <b data-fa="زیست دهم" data-code="HTML (archived EN course label)">زیست دهم</b><span class="pct">0%</span>
+        </div>
+        <div class="sec-h" data-fa="جامهای امتیازها">جامهای امتیازها</div>
+        <div class="dash">
+          <span style="display:flex;justify-content:center"><span data-icon="ic_leaderboard_locked" data-size="80"></span></span>
+          <b data-fa="هنوز جامی ندارید">هنوز جامی ندارید</b>
+          <p data-fa="به بالای لیدربورد برسید تا جام بگیرید">به بالای لیدربورد برسید تا جام بگیرید</p>
+        </div>
+        <div class="plink"><span data-fa="آزمونهای من">آزمونهای من</span><span data-sheet="playgroundSheet" data-fa="＋ ساخت آزمون">＋ ساخت آزمون</span></div>
+        <div class="dash">
+          <div class="boxmascot"><div class="bt"><i></i><i></i></div><div class="bx"></div></div>
+          <b data-fa="ایدههایتان را کاوش کنید">ایدههایتان را کاوش کنید</b>
+          <p data-fa="آزمون بسازید، تست بزنید و نتیجه را از گوشی دنبال کنید">آزمون بسازید، تست بزنید و نتیجه را از گوشی دنبال کنید</p>
+        </div>
+      </section>
+
+<!-- ============ 8. EXAM HUB (new section) ============ -->
+      <section class="screen exv12" data-screen="exam-hub" data-code="quiz_introduction_fragment.xml">
+        <div class="appbar"><b>آزمونها</b><div class="left"><button class="iconbtn" data-help="هاب آزمون"><span data-icon="ic_help" data-size="18" data-mono="1"></span></button></div></div>
+        <div class="eh-hero" data-code="quiz_introduction_fragment.xml · iv_quiz_introduction / TextH1 / TextP1">
+          <div class="eh-art" data-code="res/drawable/ic_survey.xml · quiz_introduction_fragment.xml iv_quiz_introduction"><span data-icon="ic_survey" data-size="54"></span></div>
+          <div><b>آزمونها</b><p>هر آزمون، یک قدم نزدیکتر به هدف کنکور</p></div>
+        </div>
+        <div class="chips" data-code="Mimo filter chips — functional section filters">
+          <button type="button" class="chip on" data-filter="all">همه</button>
+          <button type="button" class="chip" data-filter="0">جامع</button>
+          <button type="button" class="chip" data-filter="1">زماندار</button>
+          <button type="button" class="chip" data-filter="2">تکدرسی</button>
+          <button type="button" class="chip" data-filter="2">مبحثی</button>
+          <button type="button" class="chip" data-filter="3">این ماه</button>
+          <button type="button" class="chip" data-filter="4">تحلیلی</button>
+          <button type="button" class="chip" data-filter="5,6">جمع بندی</button>
+        </div>
+        <div class="resume-bar" id="resumeBar" hidden data-code="v12.5 · خروج و ذخیره → resume the same exam from the saved question"><span id="resumeText">آزمون ذخیرهشده</span><button class="btn primary" id="resumeBtn">ادامهٔ آزمون ذخیرهشده</button></div>
+        <div class="sec">۱ · آزمونهای جامع</div>
+        <div class="cat-meta">قالب: <b>زمان ثابت ۲۷۰ دقیقه</b> بهعنوان پیشفرض (مدت در تنظیم زمان، برای همهٔ آزمونها قابل تغییر است) · ۲۰۰–۴۰۰ سؤال · نمرهٔ منفی ⅓ · «زمان خالص آزمون» · پاسخنامه در پایان آزمون باز میشود</div>
+        <div class="grid3"><div><div class="nodek" data-exam="آزمون جامع کنکور" data-kind="comprehensive"><span data-icon="ic_trophy" data-size="28" data-mono="1"></span><span class="mini">۲۰۰ سؤال</span></div><div class="label">آزمون جامع<br>کنکور</div></div><div><div class="nodek" data-exam="آزمون جامع تجربی" data-kind="comprehensive"><span data-icon="ic_trophy" data-size="28" data-mono="1"></span><span class="mini">قابل تغییر</span></div><div class="label">جامع<br>تجربی</div></div><div><div class="nodek" data-exam="آزمون جامع ریاضی" data-kind="comprehensive"><span data-icon="ic_trophy" data-size="28" data-mono="1"></span><span class="mini">قابل تغییر</span></div><div class="label">جامع<br>ریاضی</div></div></div>
+        <div class="sec">۲ · آزمونهای زماندار</div>
+        <div class="cat-meta">قالب: <b>مدت قابلتنظیم</b> (کلیک روی تایمر داخل آزمون ← عدد ← شروع) · ۵–۴۰۰ سؤال · پاسخبرگ + پاسخنامه حین آزمون</div>
+        <div class="grid3"><div><div class="nodek" data-exam="آزمون زماندار ۳۰ دقیقه" data-kind="timed"><span data-icon="ic_clock_black_24dp" data-size="28" data-mono="1"></span><span class="mini">۳۰ د</span></div><div class="label">زماندار<br>۳۰ دقیقه</div></div><div><div class="nodek" data-exam="آزمون سرعتی" data-kind="timed"><span data-icon="ic_clock_black_24dp" data-size="28" data-mono="1"></span><span class="mini">۱۰ د</span></div><div class="label">سرعتی<br>۱۰ دقیقه</div></div><div><div class="nodek" data-exam="پومودورو تست" data-kind="timed"><span data-icon="ic_clock_black_24dp" data-size="28" data-mono="1"></span><span class="mini">۲۵ د</span></div><div class="label">پومودورو<br>تست</div></div></div>
+        <div class="sec">۳ · تکدرسی و مبحثی</div>
+        <div class="cat-meta">قالب: ۲۰–۶۰ سؤال · ۴۵–۹۰ دقیقه · ضریب درس ×۲ · پاسخبرگ + پاسخنامه حین آزمون · نتیجه و تحلیل</div>
+        <div class="grid3"><div><div class="nodek" data-exam="آزمون تکدرسی زیست" data-kind="normal"><span data-icon="ic_file" data-size="28" data-mono="1"></span><span class="mini">۲۰ سؤال</span></div><div class="label">تکدرسی<br>زیست</div></div><div><div class="nodek" data-exam="آزمون مبحثی سمها" data-kind="normal"><span data-icon="ic_task_completed" data-size="28" data-mono="1"></span><span class="mini">انجام شد</span></div><div class="label">مبحثی<br>سمها</div></div><div><div class="nodek" data-exam="آزمون فصل ۱ شیمی" data-kind="normal"><span data-icon="ic_file" data-size="28" data-mono="1"></span><span class="mini">۴۰ سؤال</span></div><div class="label">فصل ۱<br>شیمی</div></div></div>
+        <div class="sec">۴ · آزمونهای این ماه</div>
+        <div class="cat-meta">قالب: تقویم ماه · تراز و رتبه · قفل تا زمان انتشار · پاسخنامه بعد از اتمام · پاداش ماهانه</div>
+        <div class="grid3"><div><div class="nodek" data-exam="آزمون این ماه" data-kind="normal"><span data-icon="ic_file" data-size="28" data-mono="1"></span><span class="mini">جدید</span></div><div class="label">آزمون<br>این ماه</div></div><div><div class="nodek" data-exam="آزمون هفتۀ سوم" data-kind="normal"><span data-icon="ic_file" data-size="28" data-mono="1"></span><span class="mini">تراز</span></div><div class="label">هفتۀ<br>سوم</div></div><div><div class="nodek" data-exam="آزمون ماه قبل" data-kind="normal"><span data-icon="ic_task_completed" data-size="28" data-mono="1"></span><span class="mini">انجام شد</span></div><div class="label">ماه<br>قبل</div></div></div>
+        <div class="sec">۵ · آزمونهای تحلیلی</div>
+        <div class="cat-meta">قالب: <b>پاسخبرگ + پاسخنامه حین و بعد</b> · شبیهسازی «اگر غلطها نزده میذاشتی» · نقشهٔ ضعف · تحلیل مبحثبهمبحث</div>
+        <div class="grid3"><div><div class="nodek" data-exam="آزمون تحلیلی زیست" data-kind="analytical"><span data-icon="ic_target" data-size="28" data-mono="1"></span><span class="mini">تحلیل</span></div><div class="label">تحلیلی<br>زیست</div></div><div><div class="nodek" data-exam="تحلیل آزمون جامع" data-kind="analytical"><span data-icon="ic_target" data-size="28" data-mono="1"></span><span class="mini">گزارش</span></div><div class="label">تحلیل<br>جامع</div></div><div><div class="nodek" data-exam="تحلیل غلطها" data-kind="analytical"><span data-icon="ic_target" data-size="28" data-mono="1"></span><span class="mini">گزارش</span></div><div class="label">تحلیل<br>غلطها</div></div></div>
+        <div class="sec">۶ · جمع بندی و دوره</div>
+        <div class="cat-meta">قالب: <b>بدون پاسخنامه حین آزمون</b> (زمان خالص آزمون) · پاسخنامه در پایان آزمون باز میشود</div>
+        <div class="grid3"><div><div class="nodek" data-exam="آزمون جمع بندی" data-kind="review"><span data-icon="ic_sparks_alt" data-size="28" data-mono="1"></span><span class="mini">زمان خالص</span></div><div class="label">جمع بندی<br>فصلها</div></div><div><div class="nodek" data-exam="دورۀ فشرده" data-kind="review"><span data-icon="ic_sparks_alt" data-size="28" data-mono="1"></span><span class="mini">زمان خالص</span></div><div class="label">دورۀ<br>فشرده</div></div><div><div class="nodek" data-exam="آزمون نهایی" data-kind="review"><span data-icon="ic_lock_alt_02" data-size="28" data-mono="1"></span><span class="mini">قفل</span></div><div class="label">آزمون<br>نهایی</div></div></div>
+        <div class="sec">۷ · مرور غلطها / آزمون دوباره / تشریحی</div>
+        <div class="cat-meta">قالب: فقط غلطهای ذخیرهشده · پاسخنامهٔ تشریحی · «تعویض سوال» · تصحیح دستی برای تشریحی</div>
+        <div class="grid3"><div><div class="nodek" data-exam="آزمون دوباره" data-kind="normal"><span data-icon="ic_file" data-size="28" data-mono="1"></span><span class="mini">فقط غلطها</span></div><div class="label">آزمون<br>دوباره</div></div><div><div class="nodek" data-exam="مرور غلطها" data-kind="normal"><span data-icon="ic_file" data-size="28" data-mono="1"></span><span class="mini">مرور</span></div><div class="label">مرور<br>غلطها</div></div><div><div class="nodek" data-exam="آزمون تشریحی" data-kind="normal"><span data-icon="ic_file" data-size="28" data-mono="1"></span><span class="mini">تشریحی</span></div><div class="label">آزمون<br>تشریحی</div></div></div>
+        <div class="progress"><i style="width:62%"></i></div>
+      </section>
+
+      <!-- ============ 9. EXAM RUN · Mimo lesson_interactive_multiplechoice (v12) ============ -->
+      <section class="screen exv12" data-screen="exam-run" data-code="lesson_interactive_multiplechoice_fragment.xml">
+        <!-- chapter_toolbar.xml : 52dp · btn_lesson_close / pb_chapter / btn_lesson_report -->
+        <div class="ln" data-code="chapter_toolbar.xml · lesson_progress_navbar_height=52dp · pb_chapter=6dp">
+          <button class="ln-x" data-sheet="exitSheet" aria-label="خروج"><span data-icon="ic_close" data-size="24" data-mono="1"></span></button>
+          <div class="ln-mid"><b id="examTitle">آزمون جامع کنکور</b><div class="ln-prog" data-code="ProgressBarChapter / progress_bar_chapter.xml"><i id="examProgress" style="width:5%"></i></div></div>
+          <div class="timerchip ln-timer" id="timerWrap" data-code="timer ONLY inside exam · ONE chip: tap to set / pause / resume · manual minutes for EVERY exam kind · 270 = comprehensive preset only">
+            <button class="tm-main" id="timerChip" aria-label="تنظیم زمان"><span data-icon="ic_clock_black_24dp" data-size="16" data-mono="1"></span><span id="timerLabel">تنظیم زمان</span></button>
+            <span class="tm-controls" id="timerControls" hidden>
+              <button class="tm-btn" id="timerPause" aria-label="توقف تایمر"><span class="tm-bars"></span><span class="tm-play" data-icon="ic_play" data-size="12" data-mono="1" hidden></span></button>
+              <button class="tm-btn" id="timerReset" aria-label="پاک کردن تایمر"><span class="tm-square"></span></button>
+            </span>
+          </div>
+        </div>
+
+        <!-- ScrollView nsv_multiplechoice_lesson_content / LessonDescriptionView / ChoiceView -->
+        <div class="lb-body" data-code="nsv_multiplechoice_lesson_content · layout_lesson_description · lesson_multiplechoice_view">
+          <div class="lb-step"><span id="examStep">سؤال ۱ از ۲۰</span></div>
+          <div class="lb-subject" id="examSubject"><span class="lb-dot"></span>زیست<span class="lb-sep">·</span>سمها<span class="lb-sep">·</span>دشواری متوسط</div>
+          <h2 class="qtext" id="qText" data-code="LessonDescriptionView · TextH2 20sp / TextP1 18sp">کدامیک از گزینههای زیر دربارهٔ «سمها» درست است؟ اگر پاسخ را نمیدانید میتوانید علامت بزنید و بعداً برگردید.</h2>
+          <div class="lb-hint" data-code="tv_multiplechoice_hint · interaction_hint_single_choice = Tap the correct answer"><span data-icon="ic_help" data-size="14" data-mono="1"></span>گزینهٔ درست را انتخاب کنید</div>
+          <div class="lb-choices" id="exChoices" data-code="rv_multiplechoice_options · choice_list_item.xml · layout_choice_card_item.xml">
+            <button class="opt" data-opt="1"><span class="opt-num">۱.</span><span class="opt-txt">گزینهٔ اول</span></button>
+            <button class="opt" data-opt="2"><span class="opt-num">۲.</span><span class="opt-txt">گزینهٔ دوم</span></button>
+            <button class="opt" data-opt="3"><span class="opt-num">۳.</span><span class="opt-txt">گزینهٔ سوم</span></button>
+            <button class="opt" data-opt="4"><span class="opt-num">۴.</span><span class="opt-txt">گزینهٔ چهارم</span></button>
+          </div>
+          <div class="lb-feedback" id="exFeedback" hidden data-code="lesson_interactive_feedback_bottom_sheet_dialog.xml">
+            <span class="fb-ic" data-icon="ic_check_white" data-size="18" data-mono="1"></span>
+            <div><b id="exFeedbackTitle">پاسخ درست است</b><p id="exFeedbackText">توضیح مبحث و ارجاع به کتاب درسی.</p></div>
+          </div>
+          <div id="examFinished"></div>
+          <div class="hint" id="policyHint" hidden></div>
+          <div class="lb-tools" data-code="v12.5 · THREE quiet chips exactly as v12.1: پاسخبرگ / پاسخنامه / توضیح با هوش مصنوعی · exit via chapter-toolbar X · end exam via پاسخبرگ or exitSheet">
+            <button class="lb-chip" id="answerSheetBtn" data-sheet="paletteSheet"><span data-icon="ic_list_bulleted" data-size="16" data-mono="1"></span>پاسخبرگ</button>
+            <button class="lb-chip" id="answerKeyBtn" data-sheet="keySheet"><span data-icon="ic_file" data-size="16" data-mono="1"></span>پاسخنامه</button>
+            <button class="lb-chip" id="askAiBtn"><span data-icon="ic_magic_wand" data-size="16" data-mono="1"></span>توضیح با هوش مصنوعی</button>
+          </div>
+        </div>
+
+        <!-- interaction_keyboard_view.xml / run_button_view.xml : NO prev/next pill pair -->
+        <div class="lk" data-code="interaction_keyboard_view.xml · run_button_view.xml · lesson_skip=Skip is handled by «ادامه» with no selection">
+          <div class="lk-row">
+            <button class="lk-square" id="prevQ" aria-label="سؤال قبل" data-code="btn_undo · 48dp square"><span data-icon="ic_arrow_right" data-arrow="prev" data-size="22" data-mono="1"></span></button>
+            <button class="lk-square" id="markQ" aria-label="علامتگذاری" data-code="btn_reset · 48dp square"><span data-icon="bookmark" data-size="20" data-mono="1"></span></button>
+            <button class="lk-cta" id="nextQ" data-code="btn_continue_big / btn_submit · lesson_continue=Continue · lesson_submit=Submit"><b id="nextQLabel">ادامه</b><span data-icon="ic_arrow_left" data-arrow="next" data-size="18" data-mono="1"></span></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 10. EXAM RESULT · Mimo chapter-finished (v12) ============ -->
+      <section class="screen exv12" data-screen="exam-result" data-code="lesson_awesome_fragment.xml / chapter_finished_leaderboard_fragment.xml">
+        <div class="ln">
+          <button class="ln-x" data-nav="exam-hub" aria-label="بازگشت"><span data-icon="ic_arrow_right" data-arrow="back" data-size="22" data-mono="1"></span></button>
+          <div class="ln-mid"><b>نتیجهٔ آزمون</b><div class="ln-prog"><i style="width:100%"></i></div></div>
+          <span class="tag" id="resultKind">جامع</span>
+        </div>
+        <div class="rf-hero" data-code="chapter finished celebration · full-width CTA at bottom">
+          <div class="rf-art" data-code="res/drawable/ic_cap.xml"><span data-icon="ic_cap" data-size="52" data-mono="1"></span></div>
+          <h2 id="resTitle">آزمون تمام شد!</h2>
+          <p id="resSub">۳ سؤال نیاز به مرور دارد. پاسخنامهٔ تشریحی آماده است.</p>
+        </div>
+        <div class="card">
+          <b>نتیجه و تحلیل</b>
+          <div class="kv"><span id="resPctLabel">درصد با نمرهٔ منفی</span><span id="resPct">۶۸٪</span></div>
+          <div class="kv"><span>اگر غلطها نزده میذاشتی</span><span id="resPctNoNeg">۷۴٪</span></div>
+          <div class="kv"><span>غلط / نزده</span><span id="resWrongBlank">۴ / ۵</span></div>
+          <div class="kv"><span>رتبه / تراز</span><span id="resRank">۱۲۴۰ / ۶۲۰۰</span></div>
+        </div>
+        <div class="banner warn" id="resPartial" hidden data-code="v12.5 · خروج و دیدن درصد: computed only from answered-so-far"></div>
+        <div class="card">
+          <b>صورت اشتباهات (منتقلشونده به هوش مصنوعی)</b>
+          <div class="wrong">سؤال ۲ · زیست / سمها — صورت سؤال: «کدام گزینه دربارهٔ سمها درست است؟» · پاسخ شما: گزینهٔ ۴ · پاسخ صحیح: گزینهٔ ۱</div>
+          <div class="wrong">سؤال ۴ · شیمی / تعادل — صورت سؤال: «ثابت تعادل در دمای ثابت…» · پاسخ شما: نزده · پاسخ صحیح: گزینهٔ ۴</div>
+          <div class="wrong">سؤال ۹ · فیزیک / ترمودینامیک — صورت سؤال: «کار انجامشده در فرایند همحجم…» · پاسخ شما: گزینهٔ ۲ · پاسخ صحیح: گزینهٔ ۳</div>
+        </div>
+        <div class="qfoot result-foot">
+          <button class="btn" id="resultBargBtn" data-sheet="paletteSheet"><span data-icon="ic_list_bulleted" data-size="15" data-mono="1"></span>پاسخبرگ</button>
+          <button class="btn" id="resultKeyBtn" data-sheet="keySheet"><span data-icon="ic_file" data-size="15" data-mono="1"></span>پاسخنامه</button>
+          <button class="btn" id="askAiResultBtn"><span data-icon="ic_magic_wand" data-size="15" data-mono="1"></span>توضیح با هوش مصنوعی</button>
+        </div>
+      </section>
+
+      <!-- ============ 11. AI CHAT ============ -->
+      <section class="screen konkur" data-screen="ai">
+        <div class="appbar"><div class="ai-head"><div class="mascot" data-icon="ic_ai_tutor" data-size="20"></div><div><b>دستیار هوشمند</b></div></div><button class="iconbtn" data-sheet="historySheet"><span data-icon="ic_clock_black_24dp" data-size="18" data-mono="1"></span></button></div>
+        <div class="krow ai-top" style="justify-content:space-between;margin:0 0 6px">
+          <div class="ai-top-left">
+            <button class="fchip ai-chip" data-lh="Import notes..."><span data-icon="attachment" data-size="14" data-mono="1"></span><b>اضافه کردن فایل</b></button>
+            <button class="fchip ai-chip" data-lh="Chains"><span data-icon="ic_link_external" data-size="14" data-mono="1"></span><b>زنجیره گفت و گو</b></button>
+          </div><span class="cost" data-lh="Cost $0.01">۰٫۰۱ دلار</span>
+        </div>
+        <div class="thread" id="chatThread">
+          <div class="ctx" id="aiContext" hidden></div>
+          <div class="bubble">سلام! روی کدوم مبحث میخوای کار کنیم؟ </div>
+          <div class="bubble me">مشتقات رو برام توضیح بده</div>
+          <div class="bubble">اول ببینیم از کجا شروع کنیم. یه مثال ساده حل میکنیم، بعدش میریم سراغ تست.</div>
+          <div class="typing" id="typing" hidden>در حال نوشتن…</div>
+        </div>
+        <div class="composer">
+          <div class="in"><input id="aiInput" placeholder="دربارهٔ کدام مبحث میخواهی یاد بگیری؟" data-code="ai_tutor_input_placeholder · What do you want to learn?"><button class="send" id="aiSend"><span data-icon="ic_arrow_right" data-size="16" data-mono="1"></span></button></div>
+          <div class="foot ai-foot" data-code="gemini-flash-lite-latest · medium · TEACH / PRACTICE">
+            <span class="mode" id="mode"><button class="on" data-mode="TEACH" data-lh="TEACH mode" data-fa="آموزش">آموزش</button><button data-mode="PRACTICE" data-lh="PRACTICE mode" data-fa="تمرین">تمرین</button></span>
+            <button class="fchip ai-foot-chip" data-lh="Model picker">مدل سریع <span data-icon="ic_chevron_down" data-size="11" data-mono="1"></span></button>
+            <button class="fchip ai-foot-chip" data-lh="Effort">تلاش متوسط <span data-icon="ic_chevron_down" data-size="11" data-mono="1"></span></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ v7 · SECTION PRACTICE = bolt checkpoint quiz (LEARN ONLY) ============ -->
+      <section class="screen mimo" data-screen="section-practice" data-scope="learn-practice" data-isolated="exam">
+        <div class="sp-top"><button class="x" data-nav="learn"><span data-icon="ic_arrow_left" data-size="22" data-mono="1"></span></button><b data-fa="تمرین مبحث">تمرین مبحث</b></div>
+        <div class="sd-hero">
+          <span class="kick">مبحث · تمرین</span>
+          <h2 id="spTitle" data-code="HTML Basics (archived EN section)">ساختار سلول و بافت</h2>
+          <p>تمرینهای کوتاه و طبقهبندیشدهٔ مباحث تا فصل ۴</p>
+          <span class="sp-scope" id="spScope">تا فصل ۳ · ۰ درس</span>
+          <div class="cbar"><i style="width:43%"></i></div>
+        </div>
+        <div class="sp-list" id="practiceQuestions"></div>
+        <div id="practiceResult"></div>
+        <button class="sd-cta" id="practiceStart">شروع تمرین</button>
+        <button class="sd-link" data-modal="practiceModal">شارژ کامل!</button>
+      </section>
+
+      <!-- ============ sheets & modal ============ -->
+      <div class="sheet" id="timerSheet"><div class="handle"></div><h4>تنظیم زمان آزمون</h4>
+        <div class="field"><label>مدت (دقیقه)</label><input type="number" id="timerMinutes" min="1" step="1" value="270" inputmode="numeric" data-code="v12.5 · editable in EVERY exam kind · 270 = comprehensive preset only"></div>
+        <p class="note" id="timerHint">مدت دلخواه به دقیقه — در همهٔ آزمونها، حتی جامع، قابل تغییر است.</p>
+        <div class="krow" style="margin:0 0 10px"><button class="mini-btn" data-min="15">۱۵</button><button class="mini-btn" data-min="30">۳۰</button><button class="mini-btn" data-min="45">۴۵</button><button class="mini-btn" data-min="60">۶۰</button><button class="mini-btn" data-min="90">۹۰</button><button class="mini-btn" data-min="120">۱۲۰</button></div>
+        <div class="krow" style="margin:0"><button class="btn primary" id="timerStart">شروع آزمون ⏱</button><button class="btn" data-close="timerSheet">انصراف</button></div>
+      </div>
+      <div class="sheet" id="paletteSheet"><div class="handle"></div><h4>پاسخبرگ</h4>
+        <p class="note">شمارهٔ سؤالها و <b>گزینهای که زدهاید</b>. پاسخهای صحیح تا «اتمام آزمون» نمایش داده نمیشوند.</p>
+        <div class="palette" id="palette"></div>
+        <div class="krow" style="margin:12px 0 0"><button class="btn primary" data-close="paletteSheet">بستن</button><button class="btn" id="submitExam">ثبت پاسخها و پایان</button></div>
+      </div>
+      <div class="sheet" id="keySheet"><div class="handle"></div><h4>پاسخنامه · جواب تشریحی و توضیحات سؤال</h4>
+        <div class="keytabs" id="keytabs"><button data-key="keyDescSheet" class="on">پاسخ تشریحی</button><button data-key="keyTestSheet">پاسخ تستی</button></div>
+        <div class="keypanel on" id="keyDescSheet">
+          <div class="wrong"><b>سؤال ۲ · زیست / سمها:</b> پاسخ صحیح گزینهٔ ۱ است، چون… (پاسخ تشریحی کامل + ارجاع به مبحث و صفحهٔ کتاب).</div>
+          <div class="wrong"><b>سؤال ۴ · شیمی / تعادل:</b> نزده مانده؛ توضیح گامبهگام + نکتۀ پرتکرار.</div>
+          <div class="wrong"><b>سؤال ۹ · فیزیک / ترمودینامیک:</b> گزینهٔ ۳؛ فرمول و توضیح مرحلهبهمرحله.</div>
+        </div>
+        <div class="keypanel" id="keyTestSheet">
+          <div>سؤال ۱ ← <b>گزینهٔ ۳</b> · پاسخ شما: ۳ ✓</div><div>سؤال ۲ ← <b>گزینهٔ ۱</b> · پاسخ شما: ۴ ✗</div>
+          <div>سؤال ۳ ← <b>گزینهٔ ۲</b> · پاسخ شما: ۲ ✓</div><div>سؤال ۴ ← <b>گزینهٔ ۴</b> · نزده</div>
+          <div>… تا سؤال ۲۰ · کلید نسخهٔ </div>
+        </div>
+        <div class="krow" style="margin:12px 0 0"><button class="btn primary" data-close="keySheet">بستن</button></div>
+      </div>
+      <div class="sheet" id="exitSheet"><div class="handle"></div><h4>خروج از آزمون؟</h4><p class="note">پاسخها تا این لحظه ذخیره میشوند. «خروج و ذخیره» بعداً از همان سؤال قابل ادامه است و در انتها کارنامه میدهد؛ گزینهٔ سوم همانجا درصد پاسخهای زدهشده را نشان میدهد.</p><div class="krow exit-actions" style="margin:0"><button class="btn primary" id="exitSaveBtn" data-close="exitSheet" data-nav="exam-hub">خروج و ذخیره</button><button class="btn" data-close="exitSheet">ادامهٔ آزمون</button><button class="btn" id="exitFinishBtn">پایان آزمون و دیدن کارنامه<small>خروج و دیدن درصد تا همینجا</small></button></div></div>
+      <div class="sheet" id="historySheet"><div class="handle"></div><h4>تاریخچهٔ گفتگوها</h4><div id="histList"></div><div class="krow" style="margin:10px 0 0"><button class="btn primary" id="newChat">＋ گفتگوی تازه</button><button class="btn" data-close="historySheet">بستن</button></div></div>
+      <div class="sheet mimo" id="playgroundSheet"><div class="handle"></div>
+        <div style="display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:14px"><span style="position:absolute;left:0;cursor:pointer" data-close="playgroundSheet" data-icon="ic_close" data-size="22" data-mono="1"></span><b style="font:700 18px/1 system-ui,sans-serif">ساخت آزمون</b></div>
+        <div class="lbl" style="color:var(--text-weak);font:700 14px/1 system-ui,sans-serif;margin-bottom:12px">انتخاب قالب آزمون</div>
+        <div class="tpl-row" data-code="Python (archived EN template)"><div class="tpl-thumb"><span data-icon="ic_file" data-size="40"></span></div><div><b>آزمون جامع</b><p>همهٔ درسها، با زمانبندی و کارنامهٔ کامل</p></div></div>
+        <div class="tpl-row" data-code="JavaScript (archived EN template)"><div class="tpl-thumb"><span data-icon="ic_square_rounded" data-size="40"></span></div><div><b>آزمون تکدرس</b><p>یک مبحث مشخص، مثلاً «زیست دهم»</p></div></div>
+        <div class="tpl-row" data-code="Static website (archived EN template)"><div class="tpl-thumb"><span data-icon="ic_task_completed" data-size="40"></span></div><div><b>آزمون زماندار</b><p>زمان محدود و تمرین سرعت پاسخگویی</p></div></div>
+        <div class="tpl-row" data-code="React app (archived EN template)"><div class="tpl-thumb"><span data-icon="ic_sparks" data-size="40"></span></div><div><b>آزمون تحلیلی</b><p>بررسی غلطها و سؤالهای نزده</p></div></div>
+      </div>
+      <div class="modal" id="unfinishedModal"><div class="modal-card ut-card">
+        <span class="utx" data-modal-close="unfinishedModal"><span data-icon="ic_close" data-size="22" data-mono="1"></span></span>
+        <div class="ut-art"><span data-icon="ic_mimo_mascot" data-size="104"></span></div>
+        <h2 data-fa="مسیر ناتمام">مسیر ناتمام</h2>
+        <p data-fa="مسیر را تمام کنید تا گواهی شخصیشدهاقتان را بگیرید">مسیر را تمام کنید تا گواهی شخصیشدهاقتان را بگیرید</p>
+        <button class="utok" data-modal-close="unfinishedModal" data-fa="باشه">باشه</button>
+      </div></div>
+      <div class="modal" id="practiceModal"><div class="modal-card ut-card">
+        <span class="utx" data-modal-close="practiceModal"><span data-icon="ic_close" data-size="22" data-mono="1"></span></span>
+        <div class="ut-art"><span data-icon="ic_mascot_practice" data-size="104"></span></div>
+        <h2 id="practiceModalTitle">شارژ کامل!</h2>
+        <p id="practiceModalText">هر روز کمی تمرین کردن، مؤثرترین راه یادگیری است.</p>
+        <button class="utok" data-modal-close="practiceModal">بااینحال تمرین میکنم</button>
+      </div></div>
+      <div class="modal" id="chapterModal"><div class="modal-card">
+        <div class="mtop"><span class="lbl" data-fa="یادگیری">یادگیری</span><span class="cap" data-icon="ic_cap_filled" data-size="44" data-mono="1"></span></div>
+        <h2 data-fa="ساختار سلول و بافت">ساختار سلول و بافت</h2>
+        <div class="chapter-row"><span data-fa="فصل">فصل</span><span>0/2</span></div>
+        <div class="mprogress"><i></i></div>
+        <button class="startbtn" id="startLearning"><span data-fa="شروع یادگیری">شروع یادگیری</span><span class="circ"></span></button>
+        <div class="krow" style="margin:10px 0 0;justify-content:center"><button class="btn" data-close="chapterModal">بستن</button></div>
+      </div></div>
+
+      <!-- ============ BOTTOM NAV = 5 tabs (v8: روتین روزانه removed; MAX forbidden) ============ -->
+      <div class="tabs" id="tabs">
+        <div class="tab on" data-tab="Learn"><span class="ir i-off" data-icon="ic_cap" data-size="22" data-mono="1"></span><span class="ir i-on" data-icon="ic_cap_filled" data-size="22" data-mono="1"></span><span data-fa="یادگیری">یادگیری</span></div>
+        <div class="tab" data-tab="Practice"><span class="ir i-off" data-icon="ic_flash" data-size="22" data-mono="1"></span><span class="ir i-on" data-icon="ic_flash_filled" data-size="22" data-mono="1"></span><span data-fa="تمرین">تمرین</span></div>
+        <div class="tab" data-tab="AI"><span class="ir i-off" data-icon="ic_magic_wand" data-size="22" data-mono="1"></span><span class="ir i-on" data-icon="ic_magic_wand_filled" data-size="22" data-mono="1"></span><span data-fa="هوش مصنوعی" data-code="AI (archived EN tab label)">هوش مصنوعی</span></div>
+        <div class="tab" data-tab="Leaderboard"><span class="ir i-off" data-icon="ic_trophy" data-size="22" data-mono="1"></span><span class="ir i-on" data-icon="ic_trophy_filled" data-size="22" data-mono="1"></span><span data-fa="امتیازها">امتیازها</span></div>
+        <div class="tab" data-tab="Profile"><span class="ir i-off" data-icon="ic_user_circle" data-size="22" data-mono="1"></span><span class="ir i-on" data-icon="ic_user_circle_filled" data-size="22" data-mono="1"></span><span data-fa="پروفایل">پروفایل</span></div>
+      </div>
+    </div>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<noscript><div class="banner warn">برای اجرای اپلیکیشن، جاوااسکریپت را فعال کنید.</div></noscript>
+
+<!-- Approved design payloads and UI renderer (working copies, read-only source). -->
+<script src="./assets/proto-data.js"></script>
+<script src="./assets/proto-ui.js"></script>
+<!-- Application controller: state, routes, lifecycle, offline persistence. -->
+<script type="module" src="./src/app.js"></script>
+<script>
+if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('./sw.js', {scope: './'}).catch(function () {});
+  });
+}
+</script>
+</body>
+</html>

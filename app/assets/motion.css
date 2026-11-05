@@ -1,0 +1,55 @@
+/* ---------------------------------------------------------------------------
+   ADDITIVE MOTION / STAGE ONLY. Loaded AFTER proto.css.
+   No approved selector is overridden in a way that changes its resting look:
+   every rule below is a transition on interaction or a transient animation.
+   --------------------------------------------------------------------------- */
+
+.app-body{min-height:100vh;display:block}
+.app-stage{min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:20px;background:var(--bg);transition:background .2s}
+.app-stage .phone{flex-shrink:0}
+
+/* Page transition: fades/slides IN, then settles on the approved layout. */
+@keyframes screenIn{from{opacity:.35;transform:translateY(9px)}to{opacity:1;transform:none}}
+.screen.screen-enter{animation:screenIn .24s cubic-bezier(.22,.61,.36,1) both}
+
+/* Tactile feedback on the approved components. */
+.tab,.btn,.chip,.nodek,.career-card,.course-row,.sp-opt,.opt,.node,.sd-cta,.sd-link,.continue-btn,.startbtn{
+  transition:transform .14s cubic-bezier(.22,.61,.36,1),box-shadow .14s ease,
+    border-color .14s ease,background .14s ease,opacity .14s ease}
+.tab:active,.btn:active,.chip:active,.nodek:active,.career-card:active,.course-row:active,
+.sp-opt:active,.opt:active,.sd-cta:active,.continue-btn:active,.startbtn:active{transform:scale(.96)}
+.tab{transition:color .18s ease,transform .14s ease}
+.tab.on{transform:translateY(-1px)}
+.chip.on,.sp-opt.on{transition:transform .18s cubic-bezier(.34,1.56,.64,1),background .18s ease,color .18s ease}
+
+/* Lock / unlock feedback on the path nodes. */
+@keyframes unlockPulse{0%{box-shadow:0 0 0 0 var(--progress-weak)}55%{box-shadow:0 0 0 13px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.node.just-unlocked{animation:unlockPulse .85s ease-out}
+@keyframes lockedShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.node.locked:active{animation:lockedShake .25s ease}
+
+/* Cards that open/close screens. */
+.sp-q,.selfbox,.statcard,.banner{transition:box-shadow .18s ease,transform .18s ease}
+.sp-q:hover{box-shadow:0 2px 10px rgba(37,39,70,.07)}
+.overview-card,.cert-card{transition:transform .16s ease,box-shadow .16s ease}
+.overview-card:hover,.cert-card:hover{transform:translateY(-2px)}
+
+/* State-change loading hint for local transitions. */
+@keyframes softPulse{0%,100%{opacity:.55}50%{opacity:1}}
+.is-loading{animation:softPulse 1s ease-in-out infinite;pointer-events:none}
+
+/* Respect the user's setting and the OS preference. */
+body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{
+  animation-duration:.001ms !important;transition-duration:.001ms !important}
+@media (prefers-reduced-motion:reduce){
+  .screen.screen-enter,.node.just-unlocked{animation:none}
+}
+
+/* On a real handset the approved 392×780 frame fills the viewport; the inner
+   layout, spacing, tokens and components stay exactly as designed. */
+@media (max-width:480px){
+  .app-stage{padding:0;align-items:stretch}
+  .app-stage .phone{width:100%;max-width:100%;height:100vh;height:100dvh;
+    border:0;border-radius:0;box-shadow:none;margin:0}
+}
