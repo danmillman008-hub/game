@@ -1,0 +1,11 @@
+flowchart TD
+    J["java_bridge_frida17.js<br/>237,079 B"] --> S["session.create_script()"]
+    A["m07_frida_stage2.js"] --> S
+    S --> H1["Java hooks: base/c.* (19)<br/>repository / queue / network (9)<br/>validators + DSL (6)<br/>coroutines + run methods (8)"]
+    S --> H2["SQLiteDatabase + SQLiteStatement<br/>5,222 + 1,735 events (stage 4 online)"]
+    S --> H3["androidx.lifecycle.m0.l/k<br/>38 LiveData values"]
+    S --> E["direct invocations E1–E6<br/>53 calls online / 58 offline"]
+    H1 --> T["TRACES/STAGE4_*.jsonl"]
+    H2 --> T
+    H3 --> T
+    E --> T

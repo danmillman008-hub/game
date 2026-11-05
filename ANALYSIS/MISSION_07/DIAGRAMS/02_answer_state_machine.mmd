@@ -1,0 +1,12 @@
+stateDiagram-v2
+    [*] --> SlideLesson: shipped tutorial-904 lesson 151410
+    SlideLesson --> SolvedLocally: Continue
+    SolvedLocally --> LessonProgressRow: c.U() → H() → e0() → queue_store
+    LessonProgressRow --> WebViewLesson: in_queue=1, tries=1, attempts=1
+    WebViewLesson --> TryAgain: tap wrong Q (398,1017)
+    TryAgain --> WebViewLesson: Q disabled, R/D enabled, no native hook
+    WebViewLesson --> Correct: tap correct D (683,1017) [stage 5]
+    Correct --> NextLesson: Continue (540,2238)
+    SolvedLocally --> OfflineColdStart: force-stop + airplane mode
+    OfflineColdStart --> QueueDeleted: postUnsynced throws NoConnectionException
+    QueueDeleted --> PathMap: DELETE FROM lesson_progress WHERE in_queue = 1

@@ -1,0 +1,16 @@
+flowchart TD
+    A["ORIGINAL APK<br/>SHA 48ce1740…7c7a<br/>142,353,499 B"] --> B["GitHub Actions<br/>Android 16 / API 36<br/>sdk_gphone64_x86_64"]
+    B --> C["adb root + setenforce 0<br/>private /data/data/com.getmimo"]
+    B --> D["frida-server 17.25.2<br/>host-side persistent adb shell"]
+    D --> E["frida_tools/bridges/java.js<br/>globalThis.Java (Frida 17 fix)"]
+    E --> F["m07_frida_stage2.js<br/>42 hooks + 8 direct experiments"]
+    C --> G["sqlite3 .backup<br/>SNAPSHOT_A…I JSON + raw DB"]
+    F --> H["TRACES/STAGE*_ONLINE.jsonl<br/>entry/exit, sql, liveData, call"]
+    G --> I["row-level before/after diff"]
+    H --> I
+    J["uiautomator XML<br/>m07_tap_target / lesson_plan"] --> K["controlled wrong→correct taps"]
+    K --> G
+    B --> L["svc wifi/data disable<br/>airplane-mode enable<br/>Active default network: none"]
+    L --> M["offline cold start<br/>NoConnectionException<br/>DELETE … WHERE in_queue=1"]
+    M --> G
+    I --> N["MISSION 07 reports 01–18<br/>16_EVIDENCE_DATABASE.json"]

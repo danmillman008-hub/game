@@ -1,0 +1,11 @@
+flowchart LR
+    subgraph mimo.db["mimo.db (WAL)"]
+      LP["lesson_progress<br/>11 cols · PK(lesson_id,tutorial_id)"]
+      CC["chapter_completions<br/>0 rows measured"]
+      TC["tutorial_completions<br/>672 / 868 seeded rows<br/>is_completed=0"]
+      RM["room_master_table<br/>42 / 2b8ab6d3…"]
+    end
+    ST2["stage 2"] -->|"0 rows"| LP
+    ST4C["stage 4 C/G"] -->|"1 row: 151410, tries=1, in_queue=1"| LP
+    ST4H["stage 4 H/I offline"] -->|"0 rows after DELETE … in_queue=1"| LP
+    M05["M05 ROOM_SQL.txt"] -.->|"schema match"| mimo.db

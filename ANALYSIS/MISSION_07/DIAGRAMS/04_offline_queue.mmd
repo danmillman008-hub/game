@@ -1,0 +1,17 @@
+sequenceDiagram
+    participant U as User / automation
+    participant V as InteractiveLessonBaseViewModel
+    participant Q as LessonProgressQueue
+    participant R as LessonProgressRepository
+    participant DB as mimo.db (Room)
+    U->>V: continue past slide lesson 151410
+    V->>V: U() → H(1,1) → createLessonProgress
+    V->>Q: storeLessonProgress(progress,false,true)
+    V->>DB: e0() INSERT lesson_progress (in_queue=1)
+    V->>V: f0(false, true) → N()
+    Note over DB: row measured in S4_C / S4_G
+    U->>R: force-stop + offline cold start
+    R->>DB: SELECT * FROM lesson_progress WHERE in_queue = 1
+    R-->>R: NoConnectionException (12:44:04)
+    R->>DB: DELETE FROM lesson_progress WHERE in_queue = 1
+    Note over DB: S4_H / S4_I show 0 rows
