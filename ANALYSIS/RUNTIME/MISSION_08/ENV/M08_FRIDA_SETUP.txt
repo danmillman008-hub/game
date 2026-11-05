@@ -1,5 +1,24 @@
+== host frida ==
 frida=17.25.2
-adb: error: cannot stat '/home/runner/work/_temp/frida-server': No such file or directory
-chmod: /data/local/tmp/frida-server: No such file or directory
-3315  Mimo                                                                                             
-3315  Mimo                                                                                             
+== attempt 1: curl GitHub release asset ==
+curl: (22) The requested URL returned error: 504
+Warning: Problem : HTTP error. Will retry in 3 seconds. 1 retry left.
+  0      0   0      0   0      0      0      0                              0
+curl: (22) The requested URL returned error: 504
+curl_exit=22 bytes=0
+== attempt 2: python lzma decompression (independent of xz binary) ==
+lzma_failed [Errno 2] No such file or directory: '/home/runner/work/_temp/frida-server.xz'
+== attempt 3: authenticated GitHub API asset (if curl/CDN failed) ==
+asset_id=703359388
+api_asset_bytes=44889284
+api_lzma_ok bytes= 172034312
+local_server_file=-rw-r--r-- 1 runner runner 172034312 Nov  5 14:38 /home/runner/work/_temp/frida-server
+== device install ==
+/home/runner/work/_temp/frida-server: 1 file pushed, 0 skipped. 132.9 MB/s (172034312 bytes in 1.234s)
+17.25.2
+device_file=-rwxr-xr-x 1 root root 172034312 2026-11-05 14:38 /data/local/tmp/frida-server
+== post-start verification ==
+frida_ps=3279  Mimo                                                                                             
+device_ps=root          4763  2138   15221168 169720 do_sys_poll         0 S frida-server
+== actual attach preflight ==
+{"attach_ok": true, "pid": 3279, "name": "Mimo"}
