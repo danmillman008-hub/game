@@ -6,7 +6,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const ROOT = path.dirname(fileURLToPath(import.meta.url));
+// MIMO_ROOT lets the same zero-dependency server host the one-file PWA build
+// (app/dist) on a second port for the live preview; default is the app folder.
+const ROOT = process.env.MIMO_ROOT
+  ? path.resolve(process.env.MIMO_ROOT)
+  : path.dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.PORT || 3000);
 const TYPES = {
   '.html': 'text/html; charset=utf-8',

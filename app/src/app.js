@@ -17,6 +17,8 @@ import { mountViews, renderPlan, renderBank, renderLeaderboard, renderSettings, 
 import { createHarness } from './harness.js';
 import { buildExam, buildPracticeSession, templateSummary, EXAM_TEMPLATE, PRACTICE_TEMPLATE } from './exam-template.js';
 import { applyOriginalNodes, assertGeometry, NODE_SPEC } from './nodes.js';
+import { STARTER_PACKAGE, STARTER_SUMMARY } from './starter-package.js';
+import { mountPlus } from './plus.js';
 
 const doc = document;
 const PROTO = window.PROTO;
@@ -47,10 +49,20 @@ if (PROTO) {
 const view = mountViews(doc, { store, bank, curriculum });
 if (PROTO) PROTO.paintIcons(view.phone || doc);
 
-// LearnHarness-compatible LOCAL teaching harness. contentPackage stays null
-// until the user supplies the resources; mountContentPackage() attaches it.
-let harness = createHarness({ store, contentPackage: null });
+// LearnHarness-compatible LOCAL teaching harness. The starter package is built
+// ONLY from the approved v12.5-fa prototype fixtures (20 real stems/answers/
+// explanations); nothing is generated. A user-supplied form package replaces it
+// through mountContentPackage() / the AI studio importer.
+let harness = createHarness({ store, contentPackage: STARTER_PACKAGE });
 const geometryCheck = assertGeometry(typeof NODE !== 'undefined' ? NODE : null);
+
+// One-click output layer: full learning path, the three token structures,
+// the four-phase local AI studio, and self-contained HTML / ZIP export.
+const plus = mountPlus(doc, {
+  store, proto: PROTO, toast,
+  harnessRef: () => harness,
+  mountPackage: (pkg) => window.APP.mountContentPackage(pkg),
+});
 
 // ---------------------------------------------------------------------------
 // Settings application (reproduces the prototype's own theme / mirror toggles)
@@ -259,7 +271,7 @@ function onNavigate(name) {
   }
 }
 
-window.PROTO_NAV = onNavigate;
+window.PROTO_NAV = (name) => { onNavigate(name); if (plus && plus.onNavigate) plus.onNavigate(name); };
 window.PROTO_PERSIST = (snapshot) => {
   store.set('exam.saved', snapshot);
   store.set('exam.status', snapshot ? 'paused' : 'idle');
@@ -444,6 +456,10 @@ doc.addEventListener('click', (e) => {
     const text = input ? input.value.trim() : '';
     if (text) {
       store.push('ai.threads', { id: `m-${Date.now()}`, role: 'user', text, at: Date.now(), local: true });
+      // Make sure the four-phase local session exists before teaching: the chat
+      // input doubles as a diagnostic goal (still no network, no generated text).
+      const hst = harness.getStatus();
+      if (!hst.active || !(harness.state.plan || []).length) { harness.start(text); harness.plan(60); }
       const step = harness.teach();
       addHarnessBubble(step.ok
         ? `LearnHarness · ${step.proposition.text} (از منبع موجود، بدون تولید متن)`
@@ -511,9 +527,18 @@ window.APP = {
   nodeSpec: NODE_SPEC, geometryCheck,
   mountContentPackage(pkg) {
     harness = createHarness({ store, contentPackage: pkg });
+    window.APP.harness = harness;
     renderHarnessStatus(doc, harness.getStatus());
+    if (plus && plus.aiStudio) plus.aiStudio.render();
     return harness.getStatus();
   },
+  harnessRef: () => harness,
+  plus,
+  economy: plus ? plus.economy : null,
+  learningPath: plus ? plus.learningPath : null,
+  aiStudio: plus ? plus.aiStudio : null,
+  outputKit: plus ? plus.outputKit : null,
+  starter: STARTER_SUMMARY,
   routes: ROUTES, tabs: TAB_SCREENS,
   go: (name) => (PROTO ? PROTO.go(name) : onNavigate(name)),
   renderPlan: () => renderPlan(doc, store),
@@ -523,5 +548,5 @@ window.APP = {
   completeCurrentLesson,
   finishBankSession,
   restore,
-  version: '1.0.0-offline',
+  version: '1.0.0-offline+one-click',
 };

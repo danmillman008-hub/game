@@ -67,7 +67,13 @@ def main():
                                         for s in screens))
     for rel in ['src/app.js', 'src/store.js', 'src/engine.js', 'src/fixtures.js',
                 'src/routes.js', 'src/views.js', 'src/nodes.js', 'src/harness.js', 'src/exam-template.js',
-                'src/templates.js', 'assets/node-match.css', 'server.js', 'sw.js', 'index.html']:
+                'src/templates.js', 'src/util.js', 'src/token-economy.js',
+                'src/learning-path.js', 'src/ai-studio.js', 'src/output-kit.js',
+                'src/plus.js', 'src/design-tokens.js', 'src/starter-package.js',
+                'src/pwa-assets.js', 'assets/node-match.css', 'assets/extra.css',
+                'content/STARTER_PACKAGE.json', 'tools/build_output.py',
+                'dist/Mimo.html', 'dist/index.html', 'dist/Mimo.zip',
+                'server.js', 'sw.js', 'index.html']:
         check(f'required file {rel}', (APP / rel).is_file())
     app_src = '\n'.join((APP / rel).read_text(encoding='utf-8') for rel in
                         ['src/app.js', 'src/store.js', 'src/engine.js', 'src/routes.js'])

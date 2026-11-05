@@ -67,3 +67,23 @@ python3 mimo-ui/UPGRADE/tools/verify_upgrade.py mimo-ui/UPGRADE
 - رندر پیکسلی/اسکرینشات در مرورگر واقعی: محیط فاقد Chromium است؛ وفاداری با
   مقایسهٔ بایتبهبایت CSS/HTML/داده و تست DOM در jsdom سنجیده شد.
 - رفتارهای سروری، نصب واقعی PWA روی دستگاه، و لمس/هاپتیک سختافزاری تست نشدند.
+
+
+---
+
+## تستهای خروجی یککلیکه
+
+`tests/output.test.mjs` (۷ تست) فایل `dist/Mimo.html` را با `runScripts:
+'dangerously'` در jsdom از **`https://` و `file://`** بوت میکند، مسیر آموزشی
+(۱۸۰ درس، بازشدن ترتیبی، پاسخ و پاداش)، هر سه معنای توکنها، چهار فاز استودیوی
+AI، و **دوربرگردان خودخروجی** (فایل صادرشده بایتبهبایت همان فایل است و دوباره
+بوت میشود) را بررسی مینماید.
+
+`tools/verify_output.py` (۴۵ بررسی استاتیک) نبود منابع خارجی، نبود
+`fetch/XHR/WebSocket/ESM`، درستی base64 درونجاسازی، manifest/SW/آیکونهای PNG،
+سلامت ZIP و انطباق hashهای `BUILD_MANIFEST.json` را تأیید میکند.
+
+```bash
+cd app && npm test && npm run verify
+python3 app/tools/validate_content.py app/content/STARTER_PACKAGE.json
+```

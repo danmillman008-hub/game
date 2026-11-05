@@ -24,6 +24,7 @@ TEMPLATE = '''<!doctype html>
 <link rel="stylesheet" href="./assets/proto.css">
 <link rel="stylesheet" href="./assets/motion.css">
 <link rel="stylesheet" href="./assets/node-match.css">
+<link rel="stylesheet" href="./assets/extra.css">
 </head>
 <body class="app-body">
 <main class="app-stage" aria-label="اپلیکیشن آفلاین میمو">

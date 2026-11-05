@@ -17,16 +17,22 @@ npm start
 # → http://localhost:3000  (سرور روی 0.0.0.0:3000 برای پیشنمایش زنده)
 ```
 
-همچنین `app/index.html` خودکفاست و بدون سرور هم (با `file://`) باز میشود؛ در حالت
-`http(s)` یک Service Worker پوسته را کش میکند تا بعد از قطع کامل شبکه هم بالا بیاید.
+> **خروجی یککلیکه:** `app/dist/Mimo.html` یک فایل کاملاً خودکفاست؛ دوبار کلیک
+> کنید و تمام شد (بدون سرور، بدون `npm`، بدون اینترنت). `app/dist/index.html`
+> همان اپ بهصورت PWA نصبشدنی روی گوشی، و `app/dist/Mimo.zip` بستهٔ کامل است.
+> جزئیات: [`docs/OUTPUT_GUIDE.md`](docs/OUTPUT_GUIDE.md) و
+> [`OUTPUT_REPORT.md`](OUTPUT_REPORT.md).
+
+`app/index.html` نسخهٔ توسعهٔ چندفایلهای است (CSS/JS/ESM جدا)؛ در حالت `http(s)`
+یک Service Worker پوسته را کش میکند تا بعد از قطع کامل شبکه هم بالا بیاید.
 
 برای تستها (`jsdom` تنها وابستگی dev است):
 
 ```bash
 cd app
 npm install     # فقط بار اول؛ node_modules در گیت نیست
-npm test        # ۲۴ تست
-npm run verify  # بررسی یکپارچگی استاتیک طرح نهایی
+npm test        # ۳۹ تست (شامل ۷ تست خروجی تکفایل)
+npm run verify  # بررسی یکپارچگی طرح نهایی + خروجی (۹۹ بررسی)
 ```
 
 ## ناوبری محصول

@@ -100,3 +100,21 @@ python3 app/tools/validate_content.py app/content/biology-12.package.json
 
 اعتبارسنجی بدون وابستگی خارجی اجرا میشود و `$ref`, `enum`, `const`,
 `required`, `minItems`, `pattern`, `additionalProperties:false` را چک میکند.
+
+
+---
+
+## افزودهٔ خروجی یککلیکه: `tutorials[]`
+
+برای اینکه موتور محلی LearnHarness واقعاً درس داشته باشد، به اسکیمای سطحبالا یک
+ویژگی `tutorials[]` (آرایهای از `$defs.tutorial`) اضافه شد. تا پیش از این،
+`$defs.tutorial` تعریف شده بود و `tracks[].sections[].tutorialIds` به آن ارجاع
+میداد، ولی هیچ جایی برای نگهداری خود tutorialها وجود نداشت. افزودن این ویژگی
+فقط **جای خالی** را پر میکند؛ هیچ فیلد، رفتار سروری یا ادعای تازهای اضافه نکرده
+است و `additionalProperties:false` همچنان برقرار است.
+
+`app/content/STARTER_PACKAGE.json` نمونهای معتبر و `placeholder` از همین فرم است
+(۲۰ سؤال، ۲۰ tutorial، ۲۰ درس، همگی با `trace` به ردیفهای پروتوتایپ
+`v12.5-fa`). برای جایگزینی منابع نهایی، همان ساختار را با
+`contentStatus: reviewed|approved` پر کنید و از طریق ابزار اعتبارسنجی و سپس
+واردکنندهٔ درون اپ بارگذاری نمایید.
