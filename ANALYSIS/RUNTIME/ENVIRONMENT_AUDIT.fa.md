@@ -2,7 +2,7 @@
 
 **وضعیت کلی:** `RUNTIME VERIFIED` برای حقایق مربوط به runner، SDK، شبکه و شبیهساز.
 **برچسبها:** فقط `OBSERVED` / `STATICALLY INFERRED` / `RUNTIME VERIFIED` / `SERVER CONFIRMED` / `UNKNOWN`.
-**تاریخ:** ۲۰۲۶‑۱۱‑۰۵ (UTC ۰۱:۳۰–۰۱:۵۰) · **شاخه:** `arena/aebb90b7-game`
+**تاریخ:** ۲۰۲۶‑۱۱‑۰۵ (UTC ۰۱:۵۵–۰۱:۵۸) · **شاخه:** `arena/aebb90b7-game`
 **SHA مورد انتظار APK اصلی:** `48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a`
 
 ## ۰. شناسهٔ اجراها
@@ -12,7 +12,8 @@
 | `41949014303` | FAIL | `script:` چندخطی؛ خطا `/usr/bin/sh failed with exit code 1` |
 | `41949615333` | FAIL | همان علت؛ تشخیص AVD اضافه شد و سالم بودن نصب اثبات شد |
 | `41950152436` | SUCCESS | شبیهساز API 36 بوت شد؛ اسکرینشات یکنواخت خاکستری (خالی) |
-| `41950695024` | SUCCESS **(مرجع نهایی)** | بیدار/آنلاک + انتظار؛ اسکرینشات واقعی لانچر Android 16 |
+| `41950695024` | SUCCESS | بیدار/آنلاک؛ اسکرینشات واقعی لانچر، ولی `uiautomator` هنوز شکست خورد |
+| `41951780483` | SUCCESS **(مرجع نهایی)** | اسکرینشات کامل لانچر + سلسلهٔ UI (۱۶ گره) + شش معیار در `TEST_RESULTS.json` |
 
 پروندهها: `ENVIRONMENT_AUDIT.txt`، `ENVIRONMENT_HOST.json`، `AVD_SETUP_DIAGNOSTIC.txt`، `RUN_INFO.txt`،
 `DEVICE_PROPERTIES.txt` / `.json`، `LOGS/DISPLAY_STATE.txt`.
@@ -103,17 +104,25 @@
 هیچکدام `RUNTIME VERIFIED` نیست، زیرا **APK نصب نشد**. تصویر `arm64-v8a` API 36 نیز بوت نشد تا
 این فرضیه مستقیماً آزمون شود؛ بنابراین ناسازگاری ABI همچنان `UNKNOWN` باقی میماند.
 
-## ۶. محدودیتهای ثبتشده
+## ۶. محدودیتها و تصحیح ابزاری
 
-- `uiautomator dump --compressed` → `ERROR: null root node returned by UiTestAutomationBridge`؛
-  `/sdcard/window.xml` ساخته نشد و `adb pull` با `exit=1` شکست خورد (`LOGS/uiautomator_000.txt`).
-  بنابراین `UI_HIERARCHY/` خالی است (توضیح در `UI_HIERARCHY/README.txt`).
-- این شکست **سطح سیستم** است و **نباید** بهعنوان «محدودیت Compose/UIAutomator» گزارش شود:
-  هیچ برنامهای — و هیچ صفحهای مبتنی بر Compose — اجرا نشده تا آن محدودیت آزمون شود.
-  محدودیت Compose در نتیجه `UNKNOWN` است.
+- در اجراهای پیشین (`41950152436` و اجرای تشخیصی بعدی)، `uiautomator dump` با
+  `ERROR: null root node returned by UiTestAutomationBridge` شکست خورد،
+  `/sdcard/window.xml` ساخته نشد و `adb pull` با `exit=1` رد شد.
+- در **اجرای مرجع نهایی `41951780483`** همان فرمان موفق شد
+  (`LOGS/uiautomator_000.txt`): `UI hierchary dumped to: /sdcard/window.xml`،
+  `uiautomator_exit=0`، `1 file pulled ... (6661 bytes)`، `uiautomator_pull_exit=0`.
+  اکنون `UI_HIERARCHY/TEST-000_emulator_home.xml` موجود است: **۱۶ گره**،
+  همگی از بستهٔ `com.google.android.apps.nexuslauncher`،
+  متنهای `Thu, Nov 5` / `Gmail` / `Photos` / `YouTube` / `Phone` / `Messages` / `Chrome`،
+  و `bounds` ریشه `[0,0][1080,2400]` ⇒ `RUNTIME VERIFIED` برای **UI لانچر سیستم**.
+- این سلسلهٔ UI **فقط لانچر سیستم** است. محدودیت «عدم نمایش مؤلفههای Compose توسط
+  UIAutomator» آزمون **نشد**، چون هیچ صفحهای Compose و هیچ برنامهای از Mimo اجرا نشد؛
+  آن محدودیت `UNKNOWN` است. شکستهای موقت سطح سیستم نباید بهحساب Compose گذاشته شوند.
 - اجرای `41950152436` پیش از بیدار کردن دستگاه، فریمبافر **کاملاً خالی** (۱۵٬۵۸۴ بایت) داد؛
-  پس از `keyevent 26/82/3` و انتظار، تصویر واقعی لانچر (۴۰۸٬۷۳۵ بایت) ثبت شد.
-  `LOGS/SCREENSHOT_ENTROPY.txt` فقط یک **شاخص تقریبی** تنوع بایت است، نه اثبات محتوای UI.
+  پس از `keyevent 26/82/3` و انتظار، تصویر واقعی لانچر (۱٬۳۷۰٬۵۶۱ بایت،
+  شاخص تنوع بایت ۱۲۵ مقدار متمایز / نسبت فشردهسازی ۰٫۱۳۳۷) ثبت شد.
+  `LOGS/SCREENSHOT_ENTROPY.txt` فقط یک **شاخص تقریبی** است، نه اثبات محتوای UI.
 
 ## ۷. دامنهٔ تغییرات
 

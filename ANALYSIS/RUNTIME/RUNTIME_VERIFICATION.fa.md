@@ -4,7 +4,7 @@
 > «آنچه روی شبیهساز واقعی دیدیم» از «آنچه از کد استنتاج کردیم» است.
 > مأموریت **کامل اعلام نمیشود**.
 
-**شاخه:** `arena/aebb90b7-game` · **Run مرجع:** `41950695024` (موفق) · **تاریخ UTC:** ۲۰۲۶‑۱۱‑۰۵T01:43–01:50
+**شاخه:** `arena/aebb90b7-game` · **Run مرجع:** `41951780483` (موفق) · **تاریخ UTC:** ۲۰۲۶‑۱۱‑۰۵T01:55–01:58
 **ورکفلو:** `.github/workflows/mimo-runtime-verification.yml`
 **اکشن:** `reactivecircus/android-emulator-runner@b530d96654c385303d652368551fb075bc2f0b6b` (v2.35.0)
 **API/پروفایل:** 36 / Android 16 / `google_apis` / `x86_64` / `pixel_7` / headless
@@ -42,17 +42,17 @@
 
 | Test ID | زمان UTC | مشاهده | نتیجه | برچسب | ارجاع |
 |---|---|---|---|---|---|
-| `ENV-001` | 01:30:54 | Ubuntu 26.04.1، 4 vCPU، 15 GiB RAM، 88 GiB آزاد، `vmx`، `/dev/kvm` | موفق | `RUNTIME VERIFIED` | `ENVIRONMENT_AUDIT.txt` |
-| `ENV-002` | 01:30:54 | ADB 1.0.41 / 37.0.1، SDK در `/usr/local/lib/android/sdk` | موفق | `RUNTIME VERIFIED` | همان |
-| `ENV-003` | 01:30:54 | `dl.google.com` → 302، `repository2-3.xml` → 200 | موفق | `RUNTIME VERIFIED` | همان |
-| `ENV-004` | 01:37:12 | `android-36;google_apis;x86_64` نصب شد؛ `pixel_7` موجود؛ AVD ساخته شد | موفق | `RUNTIME VERIFIED` | `AVD_SETUP_DIAGNOSTIC.txt` |
-| `TEST-000` | 01:43:55 | `sys.boot_completed=1`، API **36** / Android **16**، مدل `sdk_gphone64_x86_64` | موفق | `RUNTIME VERIFIED` | `DEVICE_PROPERTIES.json` |
-| `TEST-000` | 01:43:55 | `1080x2400` px، density `420` | موفق | `RUNTIME VERIFIED` | همان |
-| `TEST-000` | 01:49:09 | `mWakefulness=Awake`، لانچر `NexusLauncherActivity` resumed | موفق | `RUNTIME VERIFIED` | `LOGS/DISPLAY_STATE.txt` |
-| `TEST-000` | 01:49:09 | انیمیشنها `1.0` (`disable-animations: false`) | موفق | `RUNTIME VERIFIED` | همان |
-| `TEST-000` | 01:49:09 | اسکرینشات واقعی صفحهٔ خانهٔ Android 16، ۴۰۸٬۷۳۵ بایت | موفق | `RUNTIME VERIFIED` | `SCREENSHOTS/TEST-000_emulator_home.png` |
-| `TEST-000` | 01:49:09 | `uiautomator dump` → `null root node`؛ XML تولید نشد | **شکست** | `OBSERVED` (محدودیت) | `LOGS/uiautomator_000.txt` |
-| `TEST-001..009` | 01:44:01 | بدون APK مجاز ⇒ **۰/۹ اجرا، ۹/۹ BLOCKED** | مسدود | `UNKNOWN` | `TEST_RESULTS.json` |
+| `ENV-001` | 01:55:48 | Ubuntu 26.04.1، 4 vCPU، 15 GiB RAM، 88 GiB آزاد، `vmx`، `/dev/kvm` | موفق | `RUNTIME VERIFIED` | `ENVIRONMENT_AUDIT.txt` |
+| `ENV-002` | 01:55:48 | ADB 1.0.41 / 37.0.1، SDK در `/usr/local/lib/android/sdk` | موفق | `RUNTIME VERIFIED` | همان |
+| `ENV-003` | 01:55:48 | `dl.google.com` → 302، `repository2-3.xml` → 200 | موفق | `RUNTIME VERIFIED` | همان |
+| `ENV-004` | 01:56:32 | `android-36;google_apis;x86_64` نصب شد؛ `pixel_7` موجود؛ AVD ساخته شد | موفق | `RUNTIME VERIFIED` | `AVD_SETUP_DIAGNOSTIC.txt` |
+| `TEST-000` | 01:57:58 | `sys.boot_completed=1`، API **36** / Android **16**، مدل `sdk_gphone64_x86_64` | موفق | `RUNTIME VERIFIED` | `DEVICE_PROPERTIES.json` |
+| `TEST-000` | 01:57:58 | `1080x2400` px، density `420` | موفق | `RUNTIME VERIFIED` | همان |
+| `TEST-000` | 01:58:21 | `mWakefulness=Awake`، لانچر `NexusLauncherActivity` resumed | موفق | `RUNTIME VERIFIED` | `LOGS/DISPLAY_STATE.txt` |
+| `TEST-000` | 01:58:21 | انیمیشنها `1.0` (`disable-animations: false`) | موفق | `RUNTIME VERIFIED` | همان |
+| `TEST-000` | 01:58:21 | اسکرینشات واقعی صفحهٔ خانهٔ Android 16، ۱٬۳۷۰٬۵۶۱ بایت | موفق | `RUNTIME VERIFIED` | `SCREENSHOTS/TEST-000_emulator_home.png` |
+| `TEST-000` | 01:58:21 | `uiautomator dump` موفق؛ XML با **۱۶ گره** لانچر (۶٬۶۶۱ بایت) | موفق | `RUNTIME VERIFIED` | `UI_HIERARCHY/TEST-000_emulator_home.xml` |
+| `TEST-001..009` | 01:58:26 | بدون APK مجاز ⇒ **۰/۹ اجرا، ۹/۹ BLOCKED** | مسدود | `UNKNOWN` | `TEST_RESULTS.json` |
 
 **شش معیار موفقیت (تفکیکشده، همانطور که خواسته شد):**
 
@@ -87,7 +87,7 @@ deobfuscation کامل R8. به اینها اضافه میشود: نصبپذیر
 |---|---|---|---|
 | TEST-001..009 اجراشده | ۹ | **۰** | ۰٪ |
 | TEST-001..009 مسدود | ۹ | ۹ | ۱۰۰٪ |
-| حقایق دستگاه تأییدشده در اجرا | ۹ ردیف `TEST-000`/`ENV` | ۹ | ۱۰۰٪ (فقط محیط) |
+| حقایق دستگاه تأییدشده در اجرا | ۱۰ ردیف `TEST-000`/`ENV` | ۱۰ | ۱۰۰٪ (فقط محیط) |
 | پاسخهای `SERVER CONFIRMED` | ۵۳ نقطهٔ HTTP | **۰** | ۰٪ |
 | یالهای `RUNTIME VERIFIED` | ۶٬۰۱۶ جفت / ۱۰٬۹۵۴ یال | **۰** | ۰٪ |
 | هندسی قطعی | ۷ | **۰** | ۰٪ |

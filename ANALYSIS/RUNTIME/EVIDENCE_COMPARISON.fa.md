@@ -4,7 +4,7 @@
 شمارش `OBSERVED=246 / STATICALLY INFERRED=67 / UNKNOWN=23 / RUNTIME VERIFIED=0 / SERVER CONFIRMED=0`.
 **توجه دامنهای:** این پرونده **فقط میخواند** و ایندکس را تغییر نمیدهد؛ مأموریت ۰۳ اجازهٔ
 تغییر خارج از ورکفلو و `ANALYSIS/RUNTIME/` نداد. دلتاها در همین پرونده ثبت میشوند.
-**Run:** `41950695024` · **APK SHA:** `48ce1740…7c7a` · **تاریخ UTC:** ۲۰۲۶‑۱۱‑۰۵T01:43–01:50
+**Run:** `41951780483` · **APK SHA:** `48ce1740…7c7a` · **تاریخ UTC:** ۲۰۲۶‑۱۱‑۰۵T01:55–01:58
 
 ## ۱. نگاشت رکوردها
 
@@ -31,7 +31,8 @@
 | `M03-004` | لانچر `NexusLauncherActivity` و اسکرینشات واقعی | `RUNTIME VERIFIED` |
 | `M03-005` | `cpu_abilist=x86_64,arm64-v8a`، `libndk_translation.so`، `abilist32` خالی | `RUNTIME VERIFIED` |
 | `M03-006` | GMS Core حاضر؛ انیمیشنها `1.0` | `RUNTIME VERIFIED` |
-| `M03-007` | `uiautomator` شکست سطح سیستم (`null root node`) | `OBSERVED` |
+| `M03-007` | شکست موقت `uiautomator` در اجراهای پیشین (`null root node`) | `OBSERVED` |
+| `M03-011` | اجرای نهایی: XML سلسلهٔ UI لانچر، ۱۶ گره، ۶٬۶۶۱ بایت | `RUNTIME VERIFIED` |
 | `M03-008` | NativeBridge ⇒ `arm64-v8a` محتملاً قابل بارگذاری | `STATICALLY INFERRED` |
 | `M03-009` | نصب/اجرای APK، UI برنامه، تعامل، پاسخ سرور | `UNKNOWN` |
 | `M03-010` | هیچ پاسخ backendـای | `SERVER CONFIRMED` = ۰ |
@@ -43,10 +44,10 @@
 | `OBSERVED` | ۲۴۶ / ۳۳۶ | +۱ (`M03-007`) |
 | `STATICALLY INFERRED` | ۶۷ / ۳۳۶ | +۱ (`M03-008`) |
 | `UNKNOWN` | ۲۳ / ۳۳۶ | +۱ (`M03-009`)؛ ۹ تست همچنان ۰/۹ |
-| `RUNTIME VERIFIED` | **۰ / ۳۳۶** | +۶ (`M03-001..006`) — همگی **حقایق محیط/دستگاه** |
+| `RUNTIME VERIFIED` | **۰ / ۳۳۶** | +۷ (`M03-001..006`, `M03-011`) — همگی **حقایق محیط/دستگاه** |
 | `SERVER CONFIRMED` | **۰ / ۳۳۶** | **۰** |
 
-> حیاتی: شش `RUNTIME VERIFIED` جدید **همگی مربوط به runner و شبیهساز**اند،
+> حیاتی: هفت `RUNTIME VERIFIED` جدید **همگی مربوط به runner و شبیهساز**اند،
 > نه به معماری، هندسه، امتیازدهی یا API برنامه. بنابراین تعداد
 > `RUNTIME VERIFIED` مربوط به **رفتار Mimo** همچنان **۰** است.
 > اسکرینشات لانچر سیستم هیچ گواهی بر backend یا برنامه Mimo نیست.

@@ -1,7 +1,7 @@
 # مأموریت ۰۳ — نصب APK (APK INSTALLATION)
 
 **نتیجه:** `BLOCKED` — **هیچ APKـای نصب نشد.** Test ID: `TEST-001` · وضعیت: `UNKNOWN` (نه `RUNTIME VERIFIED`).
-**شناسهٔ اجرای مرجع:** `41950695024` · تاریخ UTC: `2026-11-05T01:44`–`01:50`
+**شناسهٔ اجرای مرجع:** `41951780483` · تاریخ UTC: `2026-11-05T01:58`
 **API/پروفایل:** API 36 / Android 16 / `pixel_7` / `google_apis` / `x86_64` / headless
 **SHA-256 مورد انتظار:** `48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a`
 **اندازهٔ مورد انتظار:** ۱۴۲٬۳۵۳٬۴۹۹ بایت · بسته: `com.getmimo` · نسخه: `9.35`
@@ -30,7 +30,7 @@
 | ورکفلوهای موجود شاخه و `main` | هیچ `APK_URL` / `MIMO_APK` / لینک دانلود Drive / مکانیزم دریافت APK یافت نشد |
 | Secrets / Variables اکشنها | `gh secret list` ↔ `HTTP 403: Resource not accessible by integration`؛ `gh api .../actions/secrets` و `/variables` ↔ 403؛ `gh variable list` ↔ دستور ناشناخته. **نام هیچ credential خصوصی قابل enumeration نیست** |
 | Release `apk-latest` (۲۰۲۶‑۱۰‑۲۵) | ۸ فایل `stock-*-{debug,release}-11e617d4…apk` با SHA و اندازههای کاملاً متفاوت (۱۳–۱۱۰ مگابایت). **Mimo 9.35 نیست** |
-| Google Drive (پوشهٔ mimo) | سه_part آرشیو `Mimo_9.35 (1).z01` (۵۲٬۴۲۸٬۸۰۰ B)، `.z02` (همان)، `.zip` (۳۱٬۰۶۹٬۳۶۸ B) = ۱۳۵٬۹۲۶٬۹۶۸ B. مجوزها: **فقط owner** (`danmillman008@gmail.com`)، بدون لینک عمومی |
+| Google Drive (پوشهٔ mimo) | سه_part آرشیو `Mimo_9.35 (1).z01` (۵۲٬۴۲۸٬۸۰۰ B)، `.z02` (همان)، `.zip` (۳۱٬۰۶۹٬۳۶۸ B) = ۱۳۵٬۹۲۶٬۹۶۸ B. مجوزها: **فقط owner** (آدرس ایمیل مالک بهدلیل محرمانگی حذف شد)، بدون لینک عمومی |
 | sandbox محلی | پروندهٔ `Mimo_9.35 (1).apk` با SHA تأییدشده موجود است، ولی sandbox اجازهٔ خروجی به مقصد runner را ندارد و ** commit کردن APK در مخزن عمومی ممنوع است** |
 
 نتیجه: **هیچ URL قابلدسترس و مجاز برای runner وجود ندارد.** آرشیوهای Drive خصوصیاند و باز کردن

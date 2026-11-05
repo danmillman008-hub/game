@@ -1,7 +1,7 @@
 # مأموریت ۰۳ — اجرای برنامه (APPLICATION LAUNCH)
 
 **نتیجه:** `BLOCKED` — برنامه اجرا **نشد**. Test ID: `TEST-002`، `TEST-003` · وضعیت: `UNKNOWN`.
-**شناسهٔ اجرای مرجع:** `41950695024` · API 36 / Android 16 / `pixel_7` / `google_apis` / `x86_64`
+**شناسهٔ اجرای مرجع:** `41951780483` · API 36 / Android 16 / `pixel_7` / `google_apis` / `x86_64`
 **SHA APK:** `48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a` (فقط مقدار مورد انتظار؛ فایل روی دستگاه وجود نداشت)
 **ارجاع اسکرینشات:** `SCREENSHOTS/TEST-000_emulator_home.png` — لانچر `NexusLauncherActivity`، **نه** Mimo
 **ارجاع لاگ:** `LOGS/DISPLAY_STATE.txt`، `CRASH_AND_ERROR_LOGS.txt`
@@ -23,7 +23,8 @@
 `APPLICATION_LAUNCH.txt` یا لاگ crash سطح برنامهای تولید نشد.
 بنابراین موارد زیر `UNKNOWN`اند: صفحهٔ ورود/اسپلش، اولین screen واقعی،
 خرابی بلافاصله پس از اجرا، مسیر `SplashActivity → MainActivity`، وابستگی به ورود به حساب،
-و رفتار Compose در UIAutomator.
+و رفتار Compose در UIAutomator. (پروندهٔ `UI_HIERARCHY/TEST-000_emulator_home.xml`
+موجود است ولی **فقط** سلسلهٔ UI لانچر سیستم را دارد؛ هیچ `TEST-003`ـای تولید نشد.)
 
 ## ۳. مقایسه با معماری ایستا (بدون ادعای اجرا)
 
