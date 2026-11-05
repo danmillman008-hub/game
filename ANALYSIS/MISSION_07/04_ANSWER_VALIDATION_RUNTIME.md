@@ -132,4 +132,28 @@ lesson 151403 produced `Try again` → `Correct!` / `D O G` → next lesson and 
 **new `lesson_progress` row for lesson 151403** (`tries=1, attempts=1,
 in_queue=1`). See `05_ANSWER_STATE_TRANSITIONS.md` and
 `06_DATABASE_BEFORE_AFTER.md`. The native `V()/W()/X()` dispatch for
-*validatedInput/selection* exercises remains `UNKNOWN` (stage 6 targets it).
+*validatedInput/selection/fillTheGap* exercises remains `UNKNOWN`: stage 6
+measured the fill-the-gap module and `RUN_DISABLED` state but did not submit a
+native exercise answer.
+
+## Stage 6 additions (`VERIFIED_RUNTIME`, run `42033599909`)
+* `gm.h.a(nonEmptyList)` on a real shipped module list returned
+  **`FillTheGap(interactionTypeName=fill_the_gap)`** — the non-empty mapping is
+  now verified for this case (`interactionSelector#24` exit).
+* `te.c.b()` on **real shipped lesson HTML** returned, verbatim:
+  `[Paragraph(texts=[Let's do this step by step. To create a button, first we
+  need an opening , <button>,  tag.], visibilty=ALWAYS), Code(content=<button>,
+  interactions=[FillTheGap(isDefault=true, options=[Option(correct=true, text=,
+  startIndex=0, endIndex=8)])], output=null, visibilty=ALWAYS, language=HTML,
+  name=index.html, collapsibleLines=[]), Paragraph(texts=[Make sure to pick ,
+  <button>, .], visibilty=WRONG)]`. A second shipped lesson added
+  `Option(correct=false, text=</button>, startIndex=0, endIndex=0)` and
+  `Option(correct=false, text=button, startIndex=0, endIndex=0)`. This confirms
+  the `interaction type="fillTheGap"`, `option correct=` and
+  `visible-if="wrong"` DSL semantics at runtime.
+* `LessonProgressRepository.createLessonProgress` returned the real 11-field
+  `LessonProgress` for lesson 151403 (see `03`/`06`).
+* `isSolvedCorrectly()` returned `true` for the real rows 151410 and 151403,
+  both with `tries=1`.
+* `c.U()` returned `COROUTINE_SUSPENDED` on the first suspension and
+  `kotlin.Unit` on completion — confirming it is a suspend function.

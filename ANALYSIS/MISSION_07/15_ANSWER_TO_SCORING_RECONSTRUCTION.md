@@ -61,7 +61,10 @@ The exact room row measured after the correct answer:
 * Absolute XP / points / streak / daily-goal / leaderboard formulas. No XP
   column in `mimo.db`; no arithmetic in `V/W/d0`; remote DTOs only.
 * Native `onLessonRun$1 → Y(true)/Y(false) → V/W/X` dispatch with a real
-  validatedInput / fillTheGap / spell / executable answer.
+  validatedInput / fillTheGap / spell / executable answer. Stage 6 confirmed
+  (negative) that the WebView letter exercise uses `U()/H()` instead; the
+  fill-the-gap module, `FillTheGap` interaction type and `RUN_DISABLED` state
+  were measured but not answered.
 * `jm/m`, `jm/n`, `jm/o` LiveData instances and the resulting native feedback UI.
 * Chapter completion / tutorial completion transitions and the chapter-end
   screen; `cc/b.y` section classification at runtime.
@@ -75,6 +78,12 @@ The exact room row measured after the correct answer:
   `in_queue=1` rows are deleted at offline cold start.
 
 ## Honest verdict
+Stage 6 additionally verified the live `LessonBundle(lessonId=151403,
+lessonIndex=1, tutorialTitle=Discovering HTML and Tags)`,
+`gm.h.a(...) = FillTheGap(interactionTypeName=fill_the_gap)`, the real
+`te.c.b()` output for a shipped fill-the-gap lesson, and the `RunButton$State`
+/ `LessonOutput` LiveData objects.
+
 MISSION 07 **reconstructs the local answer→Room persistence path** for the
 shipped WebView exercise, including the exact row, the wrong/correct UI and the
 offline queue behaviour, and it **verifies five pure validators/parsers at

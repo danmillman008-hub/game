@@ -78,3 +78,58 @@ logs `validated_input_execution_correct_partial_match`; `V()` builds `jm/m`
 and requires `solutionFeedbackCorrect`. `d0()` builds `jm/o` (7 booleans) and
 contains **no XP/scoring arithmetic**. Full smali in
 `RUNTIME_TRACE/STATIC_DECODE/`.
+
+## Stage 6 — the exact answer-moment hook chain (`VERIFIED_RUNTIME`)
+All records below are `13:20:08` in `TRACES/STAGE6_ONLINE.jsonl` (run
+`42033599909`, Frida attached at 13:19:50 right at the lesson).
+
+```
+entry lessonSolvedAndProceed#1  c.U()  args=[Continuation at
+   NonInteractiveLessonFragment$goToNextPage$1.invokeSuspend]  N=true
+exit  lessonSolvedAndProceed#1  ret=COROUTINE_SUSPENDED
+entry createLessonProgress#2   c.H(1, 1)
+entry repo_createProgress#4    LessonProgressRepository.createLessonProgress
+   args[0]=LessonBundle(lessonId=151403, lessonIndex=1, chapterIndex=0,
+        chapterId=17742, tutorialId=904, trackId=219, trackVersion=82,
+        tutorialVersion=161, tutorialIndex=0, tutorialType=Learn,
+        chapterType=PRACTICE_LEVEL_1, isChapterAlreadyCompleted=false,
+        isLastLesson=false, isPracticeRedo=false, isChallengeRedo=false,
+        sectionIndex=0, tutorialTitle=Discovering HTML and Tags, …)
+exit  repo_createProgress#4    ret=LessonProgress(lessonId=151403,
+        completedAt=2026-11-05T13:20:08.763Z,
+        startedAt=2026-11-05T13:19:35.988Z, tries=1, tutorialId=904,
+        tutorialVersion=161, trackId=219, publishSetVersion=753,
+        attempts=1, isPracticeProgress=false, inQueue=true)
+exit  createLessonProgress#2   same LessonProgress, ret_fields include
+        $stable=8, inQueue=true, publishSetVersion=753, trackId=219
+entry storeProgressInMemory#5 c.e0(progress, Continuation at
+        InteractiveLessonBaseViewModel.lessonSolvedAndProceedToNextLesson)
+entry queue_store#7  storeLessonProgress(progress, false, true, cont)
+entry queue_store#8/#13  storeLessonProgress(null, false, false, cont)
+entry isSolved#11  LessonProgress(lessonId=151410, tries=1) -> exit ret=true
+entry isSolved#12  LessonProgress(lessonId=151403, tries=1) -> exit ret=true
+entry isSolved#14  same row -> exit ret=true
+entry lessonSolvedAndProceed#15 c.U() from
+        InteractiveLessonBaseViewModel.lessonSolvedAndProceedToNextLesson
+        -> exit ret=kotlin.Unit
+entry trackLessonResult#17  c.f0(false, true) -> exit ret=undefined
+entry resetInputState#26 c.N()  this_fields {N: im.b, O: d, P:false,
+        Q:null, R:androidx.lifecycle.m0}
+```
+
+This is direct runtime proof that the WebView correct answer is persisted by
+the **generic `U()/H(1,1)/e0()` proceed chain** with `tries=1, attempts=1`,
+and that `f0` receives `(false, true)` — not by `V()`/`W()`.
+
+### LiveData values at the next (fill-the-gap) lesson, 13:20:09
+* `java.lang.Boolean` `true` → `false`
+* `com.getmimo.ui.lesson.view.InteractionKeyboardButtonState` `DISABLED`
+  (enum `ENABLED / DISABLED / HIDDEN`)
+* `jm.g` (input-state holder object)
+* `jm.q` = `LessonOutput(outputItems=[], isVisible=false)`
+* `com.getmimo.ui.common.runbutton.RunButton$State` `RUN_DISABLED`
+  (enum `RUN_ENABLED, RUN_DISABLED, SUBMIT_ENABLED, SUBMIT_DISABLED,
+  PROCESSING, CONTINUE_BIG, CONTINUE_DISABLED, NOT_SHOWN`)
+
+No `jm/m`, `jm/n` or `jm/o` value was posted: no native correct/partial/wrong
+feedback object was created for the WebView exercise.

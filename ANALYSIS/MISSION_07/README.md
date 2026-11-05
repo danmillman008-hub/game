@@ -57,4 +57,9 @@ reconstructed; M01–M06 evidence is preserved verbatim.
   `postUnsyncedLessonProgress` throws `NoConnectionException`; queued rows are
   deleted at cold start (`2 → 0`), which **does not** confirm M05/M06's
   assumption that unsynced rows restore after force-stop.
+* Stage 6 (`42033599909`) attached Frida at the lesson moment and recorded the
+  full `U()/H(1,1)/e0()/f0(false,true)` chain, the real `LessonBundle` for
+  lesson 151403, `gm.h.a → FillTheGap`, shipped fill-the-gap DSL output and
+  `RunButton$State` / `LessonOutput` LiveData — while showing that native
+  `V()/W()/X()` is **not** the WebView answer path.
 * Scoring/XP/unlock/code-execution internals remain explicitly `UNKNOWN`.

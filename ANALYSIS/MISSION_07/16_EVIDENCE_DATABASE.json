@@ -1,7 +1,7 @@
 {
  "schema_version": "1.0",
  "mission": "07",
- "generated_utc": "2026-11-05T13:14:01Z",
+ "generated_utc": "2026-11-05T13:36:51Z",
  "branch": "arena/aebb90b7-game",
  "apk": {
   "sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
@@ -13,12 +13,12 @@
  },
  "server_confirmed": 0,
  "status_counts": {
-  "VERIFIED_RUNTIME": 116,
-  "VERIFIED_BOTH": 53,
+  "VERIFIED_RUNTIME": 137,
+  "VERIFIED_BOTH": 54,
   "VERIFIED_STATIC": 5,
   "UNKNOWN": 6
  },
- "total_entries": 180,
+ "total_entries": 202,
  "missing_evidence_paths": [],
  "runs": [
   42017453045,
@@ -26,7 +26,8 @@
   42019353340,
   42025423068,
   42028049247,
-  42030594857
+  42030594857,
+  42033599909
  ],
  "evidence_status_vocabulary": [
   "VERIFIED_RUNTIME",
@@ -242,8 +243,8 @@
     {
      "path": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8d798170133dfae7",
-     "bytes": 7453
+     "sha256_16": "c6fc4635de838a28",
+     "bytes": 8982
     }
    ],
    "run": "42025423068 / 42028049247",
@@ -263,8 +264,8 @@
     {
      "path": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8d798170133dfae7",
-     "bytes": 7453
+     "sha256_16": "c6fc4635de838a28",
+     "bytes": 8982
     }
    ],
    "run": "42028049247",
@@ -284,8 +285,8 @@
     {
      "path": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8d798170133dfae7",
-     "bytes": 7453
+     "sha256_16": "c6fc4635de838a28",
+     "bytes": 8982
     }
    ],
    "run": "42025423068",
@@ -347,8 +348,8 @@
     {
      "path": "ANALYSIS/MISSION_07/10_CODE_EDITOR_AND_WEBVIEW_BOUNDARY.md",
      "exists": true,
-     "sha256_16": "438889d4b4bab9b9",
-     "bytes": 5991
+     "sha256_16": "b7b74c06ca34c602",
+     "bytes": 7234
     }
    ],
    "run": "42028049247",
@@ -434,8 +435,8 @@
     {
      "path": "ANALYSIS/MISSION_07/03_INTERACTIVE_LESSON_VIEWMODEL_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8b8dd9a638ccc35e",
-     "bytes": 4595
+     "sha256_16": "7ebbc60b076e8635",
+     "bytes": 7646
     }
    ],
    "run": "42028049247",
@@ -491,8 +492,8 @@
     {
      "path": "ANALYSIS/MISSION_07/06_DATABASE_BEFORE_AFTER.md",
      "exists": true,
-     "sha256_16": "42e17721edd9faa0",
-     "bytes": 6348
+     "sha256_16": "5311d39c54aa7680",
+     "bytes": 6972
     }
    ],
    "run": "42019353340",
@@ -512,8 +513,8 @@
     {
      "path": "ANALYSIS/MISSION_07/06_DATABASE_BEFORE_AFTER.md",
      "exists": true,
-     "sha256_16": "42e17721edd9faa0",
-     "bytes": 6348
+     "sha256_16": "5311d39c54aa7680",
+     "bytes": 6972
     }
    ],
    "run": "42028049247",
@@ -707,8 +708,8 @@
     {
      "path": "ANALYSIS/MISSION_07/12_UI_STATE_MACHINE.md",
      "exists": true,
-     "sha256_16": "3def6122722bdfe5",
-     "bytes": 3811
+     "sha256_16": "58527ad3ecaec3e3",
+     "bytes": 3816
     }
    ],
    "run": "42019353340 / 42028049247",
@@ -758,8 +759,8 @@
     {
      "path": "ANALYSIS/MISSION_07/05_ANSWER_STATE_TRANSITIONS.md",
      "exists": true,
-     "sha256_16": "c7f0afe9e527ca52",
-     "bytes": 6430
+     "sha256_16": "b5ca1831e8f074c2",
+     "bytes": 7682
     }
    ],
    "run": "pending stage 5",
@@ -803,8 +804,8 @@
     {
      "path": "ANALYSIS/MISSION_07/10_CODE_EDITOR_AND_WEBVIEW_BOUNDARY.md",
      "exists": true,
-     "sha256_16": "438889d4b4bab9b9",
-     "bytes": 5991
+     "sha256_16": "b7b74c06ca34c602",
+     "bytes": 7234
     },
     {
      "path": "ANALYSIS/MISSION_07/13_NATIVE_RUNTIME_FINDINGS.md",
@@ -855,7 +856,22 @@
   {
    "id": "M07-043",
    "status": "VERIFIED_RUNTIME",
-   "claim": "Stage 5 answer driver executed 3 key events (see claim notes)",
+   "claim": "S4 answer driver executed 6 key events (notes contain the event list)",
+   "evidence": [
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/EXPERIMENTS/S4_ANSWER_LOG.jsonl",
+     "exists": true,
+     "sha256_16": "4dddc752f59c991c",
+     "bytes": 13185
+    }
+   ],
+   "run": "42028049247",
+   "notes": "[{\"event\": \"lesson_detected\", \"step\": \"S4NAV-26\", \"plan\": {\"source_xml\": \"ANALYSIS/RUNTIME/MISSION_07/UI/S4NAV-26.xml\", \"clickable_count\": 6, \"texts\": [\"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"com.getmimo:id/chapter_appbarlayout\", \"com.getmimo:id/chapter_toolbar\", \"com.getmimo:id/btn_lesson_close\", \"com.getmimo:id/pb_chapter\", \"com.getmimo:id/v_line\", \"Report\", \"com.getmimo:id/layout_chapter_finished_share_fragment\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\""
+  },
+  {
+   "id": "M07-044",
+   "status": "VERIFIED_RUNTIME",
+   "claim": "S5 answer driver executed 10 key events (notes contain the event list)",
    "evidence": [
     {
      "path": "ANALYSIS/RUNTIME/MISSION_07/EXPERIMENTS/S5_ANSWER_LOG.jsonl",
@@ -865,12 +881,246 @@
     }
    ],
    "run": "42030594857",
-   "notes": "[{\"event\": \"experiment_start\", \"prefix\": \"S5_1\", \"lesson\": \"WEBVIEW_LETTER_151403\", \"shipped_ref\": \"assets/lessons-en/tracks/tutorial-904.json lesson 151403\", \"hypothesis\": \"wrong then correct answer executes distinct runtime paths and writes lesson_progress\", \"prepared_state\": \"fresh install, lesson opened, no prior answer\", \"operation\": \"one wrong tap then one correct tap\", \"ts\": \"2026-11-05T13:02:01Z\"}, {\"event\": \"wrong_feedback\", \"prefix\": \"S5_1\", \"mechanism\": \"WebView JS (button.disabled=true, result=Try again)\", \"plan_type_after_wrong\": \"WEBVIEW_LETTER_WRONG_FEEDBACK\", \"ui_texts\": [\"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"On top of HTML, you can build stunning web pages and even powerful, full-featured web apps.\", \"Try again\", \"_ O G\", \"Q\", \"R\", \"D\", \"Continue\"], \"ts\": \"2026-11-05T13:02:15Z\"}, {\"event\": \"experiment_complete\", \"prefix\": \"S5_1\", \"lesson\": \"WEBVIEW_LETTER_151403\", \"ts\": \"2026-11-05T13:02:34Z\"}]"
+   "notes": "[{\"event\": \"lesson_detected\", \"step\": \"S5NAV-42\", \"plan\": {\"source_xml\": \"ANALYSIS/RUNTIME/MISSION_07/UI/S5NAV-42.xml\", \"clickable_count\": 6, \"texts\": [\"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"com.getmimo:id/chapter_appbarlayout\", \"com.getmimo:id/chapter_toolbar\", \"com.getmimo:id/btn_lesson_close\", \"com.getmimo:id/pb_chapter\", \"com.getmimo:id/v_line\", \"Report\", \"com.getmimo:id/layout_chapter_finished_share_fragment\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\""
   },
   {
-   "id": "M07-044",
+   "id": "M07-045",
    "status": "VERIFIED_RUNTIME",
-   "claim": "Trace STAGE5_ONLINE.jsonl event kinds: {\"driver_start\": 1, \"attached\": 1, \"bridge_loaded\": 1, \"ready\": 1, \"call\": 53, \"experiment_error\": 1, \"hook_installed\": 42, \"hook_error\": 1, \"done\": 1, \"sql\": 1346, \"sql_statement\": 236, \"driver_done\": 1}",
+   "claim": "S6 answer driver executed 10 key events (notes contain the event list)",
+   "evidence": [
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/EXPERIMENTS/S6_ANSWER_LOG.jsonl",
+     "exists": true,
+     "sha256_16": "98505620c09673be",
+     "bytes": 30220
+    }
+   ],
+   "run": "42033599909",
+   "notes": "[{\"event\": \"lesson_detected\", \"step\": \"S6NAV-24\", \"plan\": {\"source_xml\": \"ANALYSIS/RUNTIME/MISSION_07/UI/S6NAV-24.xml\", \"clickable_count\": 6, \"texts\": [\"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"com.getmimo:id/chapter_appbarlayout\", \"com.getmimo:id/chapter_toolbar\", \"com.getmimo:id/btn_lesson_close\", \"com.getmimo:id/pb_chapter\", \"com.getmimo:id/v_line\", \"Report\", \"com.getmimo:id/layout_chapter_finished_share_fragment\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\", \"Hypertext Markup Language, or HTML, is the computer language that structures the web pages on the internet.\""
+  },
+  {
+   "id": "M07-046",
+   "status": "VERIFIED_RUNTIME",
+   "claim": "Stage 5: wrong Q -> Try again -> correct D -> Correct!/D O G -> Continue -> code-editor lesson",
+   "evidence": [
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/UI/S5_1_C_BEFORE_ANSWER.xml",
+     "exists": true,
+     "sha256_16": "ce2b16d1c6017b73",
+     "bytes": 16646
+    },
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/UI/S5_1_D1_AFTER_WRONG_OPTION.xml",
+     "exists": true,
+     "sha256_16": "dab4fc5e2c90a5f8",
+     "bytes": 16641
+    },
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/UI/S5_1_E1_AFTER_CORRECT_OPTION.xml",
+     "exists": true,
+     "sha256_16": "ba56fe300bcae46b",
+     "bytes": 16996
+    },
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/UI/S5_1_F_AFTER_CORRECT_SUBMIT.xml",
+     "exists": true,
+     "sha256_16": "dfb43cbccb4c248f",
+     "bytes": 20132
+    }
+   ],
+   "run": "42030594857",
+   "notes": ""
+  },
+  {
+   "id": "M07-047",
+   "status": "VERIFIED_RUNTIME",
+   "claim": "Stage 5: new lesson_progress row 151403 tries=1 attempts=1 in_queue=1 after correct answer submit",
+   "evidence": [
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/DB/SNAPSHOT_S5_1_F_AFTER_CORRECT_SUBMIT.json",
+     "exists": true,
+     "sha256_16": "a02ff9f996ae3036",
+     "bytes": 88370
+    },
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/DB/SNAPSHOT_S5_1_C_BEFORE_ANSWER.json",
+     "exists": true,
+     "sha256_16": "4efa19eed1c18782",
+     "bytes": 98042
+    }
+   ],
+   "run": "42030594857",
+   "notes": ""
+  },
+  {
+   "id": "M07-048",
+   "status": "VERIFIED_RUNTIME",
+   "claim": "Stage 6 hooks at 13:20:08: c.U() -> c.H(1,1) -> repo_createProgress(LessonBundle 151403) -> e0() -> queue_store -> isSolved=true -> f0(false,true) -> N()",
+   "evidence": [
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE6_ONLINE.jsonl",
+     "exists": true,
+     "sha256_16": "53ad6bdeb9236a30",
+     "bytes": 109590
+    },
+    {
+     "path": "ANALYSIS/MISSION_07/03_INTERACTIVE_LESSON_VIEWMODEL_RUNTIME.md",
+     "exists": true,
+     "sha256_16": "7ebbc60b076e8635",
+     "bytes": 7646
+    }
+   ],
+   "run": "42033599909",
+   "notes": ""
+  },
+  {
+   "id": "M07-049",
+   "status": "VERIFIED_RUNTIME",
+   "claim": "Stage 6 measured negative: no V/W/X/d0/onLessonRun/wrongFeedback entry during the WebView answer",
+   "evidence": [
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE6_ONLINE.jsonl",
+     "exists": true,
+     "sha256_16": "53ad6bdeb9236a30",
+     "bytes": 109590
+    },
+    {
+     "path": "ANALYSIS/MISSION_07/05_ANSWER_STATE_TRANSITIONS.md",
+     "exists": true,
+     "sha256_16": "b5ca1831e8f074c2",
+     "bytes": 7682
+    }
+   ],
+   "run": "42033599909",
+   "notes": ""
+  },
+  {
+   "id": "M07-050",
+   "status": "VERIFIED_BOTH",
+   "claim": "gm.h.a(nonEmptyList) = FillTheGap(interactionTypeName=fill_the_gap)",
+   "evidence": [
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE6_ONLINE.jsonl",
+     "exists": true,
+     "sha256_16": "53ad6bdeb9236a30",
+     "bytes": 109590
+    }
+   ],
+   "run": "42033599909",
+   "notes": ""
+  },
+  {
+   "id": "M07-051",
+   "status": "VERIFIED_RUNTIME",
+   "claim": "te.c.b() on real shipped HTML yields Paragraph/Code/FillTheGap(options with correct flags, startIndex/endIndex)/Paragraph(visibilty=WRONG)",
+   "evidence": [
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE6_ONLINE.jsonl",
+     "exists": true,
+     "sha256_16": "53ad6bdeb9236a30",
+     "bytes": 109590
+    },
+    {
+     "path": "ANALYSIS/MISSION_07/10_CODE_EDITOR_AND_WEBVIEW_BOUNDARY.md",
+     "exists": true,
+     "sha256_16": "b7b74c06ca34c602",
+     "bytes": 7234
+    }
+   ],
+   "run": "42033599909",
+   "notes": ""
+  },
+  {
+   "id": "M07-052",
+   "status": "VERIFIED_RUNTIME",
+   "claim": "LiveData RunButton$State.RUN_DISABLED, InteractionKeyboardButtonState.DISABLED, jm.q=LessonOutput(outputItems=[],isVisible=false), jm.g",
+   "evidence": [
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE6_ONLINE.jsonl",
+     "exists": true,
+     "sha256_16": "53ad6bdeb9236a30",
+     "bytes": 109590
+    }
+   ],
+   "run": "42033599909",
+   "notes": ""
+  },
+  {
+   "id": "M07-053",
+   "status": "VERIFIED_RUNTIME",
+   "claim": "Offline isolation repeated in stage 6; S6_G rows -> S6_H/S6_I 0 rows",
+   "evidence": [
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/EXPERIMENTS/S6_OFFLINE_ISOLATION.txt",
+     "exists": true,
+     "sha256_16": "4a614a397a65c021",
+     "bytes": 782
+    },
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/DB/SNAPSHOT_S6_G_BEFORE_FORCESTOP.json",
+     "exists": true,
+     "sha256_16": "a6409788f0df73f1",
+     "bytes": 87711
+    },
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/DB/SNAPSHOT_S6_H_OFFLINE_COLD_START.json",
+     "exists": true,
+     "sha256_16": "8ea99de6e640ecff",
+     "bytes": 127022
+    }
+   ],
+   "run": "42033599909",
+   "notes": ""
+  },
+  {
+   "id": "M07-054",
+   "status": "VERIFIED_RUNTIME",
+   "claim": "Trace STAGE3_ONLINE event kinds: {\"driver_start\": 1, \"attached\": 1, \"bridge_loaded\": 1, \"ready\": 1, \"call\": 46, \"experiment_error\": 2, \"hook_installed\": 41, \"hook_error\": 1, \"done\": 1, \"sql\": 818, \"driver_done\": 1}",
+   "evidence": [
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE3_ONLINE.jsonl",
+     "exists": true,
+     "sha256_16": "a44fc5069cd68684",
+     "bytes": 224816
+    }
+   ],
+   "run": "42025423068 / 42028049247 / 42030594857 / 42033599909",
+   "notes": ""
+  },
+  {
+   "id": "M07-055",
+   "status": "VERIFIED_RUNTIME",
+   "claim": "Trace STAGE4_ONLINE event kinds: {\"driver_start\": 1, \"attached\": 1, \"bridge_loaded\": 1, \"ready\": 1, \"call\": 53, \"experiment_error\": 1, \"hook_installed\": 42, \"hook_error\": 1, \"done\": 1, \"sql\": 5222, \"sql_statement\": 1735, \"liveData\": 38, \"entry\": 117, \"exit\": 117, \"driver_done\": 1}",
+   "evidence": [
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE4_ONLINE.jsonl",
+     "exists": true,
+     "sha256_16": "202bfac3377f42b6",
+     "bytes": 1630072
+    }
+   ],
+   "run": "42025423068 / 42028049247 / 42030594857 / 42033599909",
+   "notes": ""
+  },
+  {
+   "id": "M07-056",
+   "status": "VERIFIED_RUNTIME",
+   "claim": "Trace STAGE4_OFFLINE event kinds: {\"driver_start\": 1, \"attached\": 1, \"bridge_loaded\": 1, \"ready\": 1, \"call\": 58, \"hook_installed\": 42, \"hook_error\": 1, \"done\": 1, \"sql\": 1394, \"sql_statement\": 245, \"entry\": 45, \"exit\": 44, \"throw\": 1, \"liveData\": 4, \"driver_done\": 1}",
+   "evidence": [
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE4_OFFLINE.jsonl",
+     "exists": true,
+     "sha256_16": "53da5a826c27408d",
+     "bytes": 410035
+    }
+   ],
+   "run": "42025423068 / 42028049247 / 42030594857 / 42033599909",
+   "notes": ""
+  },
+  {
+   "id": "M07-057",
+   "status": "VERIFIED_RUNTIME",
+   "claim": "Trace STAGE5_ONLINE event kinds: {\"driver_start\": 1, \"attached\": 1, \"bridge_loaded\": 1, \"ready\": 1, \"call\": 53, \"experiment_error\": 1, \"hook_installed\": 42, \"hook_error\": 1, \"done\": 1, \"sql\": 1346, \"sql_statement\": 236, \"driver_done\": 1}",
    "evidence": [
     {
      "path": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE5_ONLINE.jsonl",
@@ -879,13 +1129,13 @@
      "bytes": 391081
     }
    ],
-   "run": "42030594857",
+   "run": "42025423068 / 42028049247 / 42030594857 / 42033599909",
    "notes": ""
   },
   {
-   "id": "M07-045",
+   "id": "M07-058",
    "status": "VERIFIED_RUNTIME",
-   "claim": "Trace STAGE5_OFFLINE.jsonl event kinds: {\"driver_start\": 1, \"attached\": 1, \"bridge_loaded\": 1, \"ready\": 1, \"call\": 58, \"hook_installed\": 42, \"hook_error\": 1, \"done\": 1, \"sql\": 903, \"sql_statement\": 161, \"entry\": 24, \"exit\": 24, \"driver_done\": 1}",
+   "claim": "Trace STAGE5_OFFLINE event kinds: {\"driver_start\": 1, \"attached\": 1, \"bridge_loaded\": 1, \"ready\": 1, \"call\": 58, \"hook_installed\": 42, \"hook_error\": 1, \"done\": 1, \"sql\": 903, \"sql_statement\": 161, \"entry\": 24, \"exit\": 24, \"driver_done\": 1}",
    "evidence": [
     {
      "path": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE5_OFFLINE.jsonl",
@@ -894,11 +1144,41 @@
      "bytes": 270944
     }
    ],
-   "run": "42030594857",
+   "run": "42025423068 / 42028049247 / 42030594857 / 42033599909",
    "notes": ""
   },
   {
-   "id": "M07-046",
+   "id": "M07-059",
+   "status": "VERIFIED_RUNTIME",
+   "claim": "Trace STAGE6_ONLINE event kinds: {\"driver_start\": 1, \"attached\": 1, \"bridge_loaded\": 1, \"ready\": 1, \"call\": 73, \"hook_installed\": 42, \"hook_error\": 1, \"done\": 1, \"sql\": 138, \"sql_statement\": 24, \"entry\": 32, \"liveData\": 14, \"exit\": 32, \"driver_done\": 1}",
+   "evidence": [
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE6_ONLINE.jsonl",
+     "exists": true,
+     "sha256_16": "53ad6bdeb9236a30",
+     "bytes": 109590
+    }
+   ],
+   "run": "42025423068 / 42028049247 / 42030594857 / 42033599909",
+   "notes": ""
+  },
+  {
+   "id": "M07-060",
+   "status": "VERIFIED_RUNTIME",
+   "claim": "Trace STAGE6_OFFLINE event kinds: {\"driver_start\": 1, \"attached\": 1, \"bridge_loaded\": 1, \"ready\": 1, \"call\": 58, \"hook_installed\": 42, \"hook_error\": 1, \"done\": 1, \"sql\": 945, \"sql_statement\": 167, \"entry\": 25, \"exit\": 25, \"driver_done\": 1}",
+   "evidence": [
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE6_OFFLINE.jsonl",
+     "exists": true,
+     "sha256_16": "7d9f8248b91ec03a",
+     "bytes": 282892
+    }
+   ],
+   "run": "42025423068 / 42028049247 / 42030594857 / 42033599909",
+   "notes": ""
+  },
+  {
+   "id": "M07-061",
    "status": "VERIFIED_BOTH",
    "claim": "E1_normalizer exact -> \"d\"",
    "evidence": [
@@ -911,15 +1191,15 @@
     {
      "path": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8d798170133dfae7",
-     "bytes": 7453
+     "sha256_16": "c6fc4635de838a28",
+     "bytes": 8982
     }
    ],
    "run": "42025423068 / 42028049247",
    "notes": "{\"input\": \"D\"}"
   },
   {
-   "id": "M07-047",
+   "id": "M07-062",
    "status": "VERIFIED_BOTH",
    "claim": "E1_normalizer case_upper -> \"d\"",
    "evidence": [
@@ -932,15 +1212,15 @@
     {
      "path": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8d798170133dfae7",
-     "bytes": 7453
+     "sha256_16": "c6fc4635de838a28",
+     "bytes": 8982
     }
    ],
    "run": "42025423068 / 42028049247",
    "notes": "{\"input\": \"D\"}"
   },
   {
-   "id": "M07-048",
+   "id": "M07-063",
    "status": "VERIFIED_BOTH",
    "claim": "E1_normalizer case_lower -> \"d\"",
    "evidence": [
@@ -953,15 +1233,15 @@
     {
      "path": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8d798170133dfae7",
-     "bytes": 7453
+     "sha256_16": "c6fc4635de838a28",
+     "bytes": 8982
     }
    ],
    "run": "42025423068 / 42028049247",
    "notes": "{\"input\": \"d\"}"
   },
   {
-   "id": "M07-049",
+   "id": "M07-064",
    "status": "VERIFIED_BOTH",
    "claim": "E1_normalizer leading_ws -> \"d\"",
    "evidence": [
@@ -974,15 +1254,15 @@
     {
      "path": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8d798170133dfae7",
-     "bytes": 7453
+     "sha256_16": "c6fc4635de838a28",
+     "bytes": 8982
     }
    ],
    "run": "42025423068 / 42028049247",
    "notes": "{\"input\": \"  D\"}"
   },
   {
-   "id": "M07-050",
+   "id": "M07-065",
    "status": "VERIFIED_BOTH",
    "claim": "E1_normalizer trailing_ws -> \"d\"",
    "evidence": [
@@ -995,15 +1275,15 @@
     {
      "path": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8d798170133dfae7",
-     "bytes": 7453
+     "sha256_16": "c6fc4635de838a28",
+     "bytes": 8982
     }
    ],
    "run": "42025423068 / 42028049247",
    "notes": "{\"input\": \"D  \"}"
   },
   {
-   "id": "M07-051",
+   "id": "M07-066",
    "status": "VERIFIED_BOTH",
    "claim": "E1_normalizer both_ws -> \"d\"",
    "evidence": [
@@ -1016,15 +1296,15 @@
     {
      "path": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8d798170133dfae7",
-     "bytes": 7453
+     "sha256_16": "c6fc4635de838a28",
+     "bytes": 8982
     }
    ],
    "run": "42025423068 / 42028049247",
    "notes": "{\"input\": \"  D  \"}"
   },
   {
-   "id": "M07-052",
+   "id": "M07-067",
    "status": "VERIFIED_BOTH",
    "claim": "E1_normalizer repeated_ws -> \"dog\"",
    "evidence": [
@@ -1037,15 +1317,15 @@
     {
      "path": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8d798170133dfae7",
-     "bytes": 7453
+     "sha256_16": "c6fc4635de838a28",
+     "bytes": 8982
     }
    ],
    "run": "42025423068 / 42028049247",
    "notes": "{\"input\": \"D   O   G\"}"
   },
   {
-   "id": "M07-053",
+   "id": "M07-068",
    "status": "VERIFIED_BOTH",
    "claim": "E1_normalizer internal_ws -> \"dog\"",
    "evidence": [
@@ -1058,15 +1338,15 @@
     {
      "path": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8d798170133dfae7",
-     "bytes": 7453
+     "sha256_16": "c6fc4635de838a28",
+     "bytes": 8982
     }
    ],
    "run": "42025423068 / 42028049247",
    "notes": "{\"input\": \"D O G\"}"
   },
   {
-   "id": "M07-054",
+   "id": "M07-069",
    "status": "VERIFIED_BOTH",
    "claim": "E1_normalizer punctuation_allowed -> \"<button>hi:<button>{a,b.c}\"",
    "evidence": [
@@ -1079,15 +1359,15 @@
     {
      "path": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8d798170133dfae7",
-     "bytes": 7453
+     "sha256_16": "c6fc4635de838a28",
+     "bytes": 8982
     }
    ],
    "run": "42025423068 / 42028049247",
    "notes": "{\"input\": \"<button>Hi:</button>{a,b.c}\"}"
   },
   {
-   "id": "M07-055",
+   "id": "M07-070",
    "status": "VERIFIED_BOTH",
    "claim": "E1_normalizer punctuation_disallowed -> \"abcdefghijklmnopq\"",
    "evidence": [
@@ -1100,15 +1380,15 @@
     {
      "path": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8d798170133dfae7",
-     "bytes": 7453
+     "sha256_16": "c6fc4635de838a28",
+     "bytes": 8982
     }
    ],
    "run": "42025423068 / 42028049247",
    "notes": "{\"input\": \"a+b-c=d;e/f\\\"g'h!i?j@k#l$m%n^o&p*q\"}"
   },
   {
-   "id": "M07-056",
+   "id": "M07-071",
    "status": "VERIFIED_BOTH",
    "claim": "E1_normalizer digits -> \"a1b2c3\"",
    "evidence": [
@@ -1121,15 +1401,15 @@
     {
      "path": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8d798170133dfae7",
-     "bytes": 7453
+     "sha256_16": "c6fc4635de838a28",
+     "bytes": 8982
     }
    ],
    "run": "42025423068 / 42028049247",
    "notes": "{\"input\": \"A1b2C3\"}"
   },
   {
-   "id": "M07-057",
+   "id": "M07-072",
    "status": "VERIFIED_BOTH",
    "claim": "E1_normalizer empty -> \"\"",
    "evidence": [
@@ -1142,15 +1422,15 @@
     {
      "path": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8d798170133dfae7",
-     "bytes": 7453
+     "sha256_16": "c6fc4635de838a28",
+     "bytes": 8982
     }
    ],
    "run": "42025423068 / 42028049247",
    "notes": "{\"input\": \"\"}"
   },
   {
-   "id": "M07-058",
+   "id": "M07-073",
    "status": "VERIFIED_BOTH",
    "claim": "E1_normalizer only_ws -> \"\"",
    "evidence": [
@@ -1163,15 +1443,15 @@
     {
      "path": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8d798170133dfae7",
-     "bytes": 7453
+     "sha256_16": "c6fc4635de838a28",
+     "bytes": 8982
     }
    ],
    "run": "42025423068 / 42028049247",
    "notes": "{\"input\": \"   \"}"
   },
   {
-   "id": "M07-059",
+   "id": "M07-074",
    "status": "VERIFIED_BOTH",
    "claim": "E1_normalizer unicode_accent -> \"café\"",
    "evidence": [
@@ -1184,15 +1464,15 @@
     {
      "path": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8d798170133dfae7",
-     "bytes": 7453
+     "sha256_16": "c6fc4635de838a28",
+     "bytes": 8982
     }
    ],
    "run": "42025423068 / 42028049247",
    "notes": "{\"input\": \"Café\"}"
   },
   {
-   "id": "M07-060",
+   "id": "M07-075",
    "status": "VERIFIED_BOTH",
    "claim": "E1_normalizer unicode_turkish -> \"istanbulıii\"",
    "evidence": [
@@ -1205,15 +1485,15 @@
     {
      "path": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8d798170133dfae7",
-     "bytes": 7453
+     "sha256_16": "c6fc4635de838a28",
+     "bytes": 8982
     }
    ],
    "run": "42025423068 / 42028049247",
    "notes": "{\"input\": \"İstanbul ı I i\"}"
   },
   {
-   "id": "M07-061",
+   "id": "M07-076",
    "status": "VERIFIED_BOTH",
    "claim": "E1_normalizer unicode_german -> \"straßeäöüß\"",
    "evidence": [
@@ -1226,15 +1506,15 @@
     {
      "path": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8d798170133dfae7",
-     "bytes": 7453
+     "sha256_16": "c6fc4635de838a28",
+     "bytes": 8982
     }
    ],
    "run": "42025423068 / 42028049247",
    "notes": "{\"input\": \"Straße ÄÖÜ ß\"}"
   },
   {
-   "id": "M07-062",
+   "id": "M07-077",
    "status": "VERIFIED_BOTH",
    "claim": "E1_normalizer unicode_cjk -> \"你好\"",
    "evidence": [
@@ -1247,15 +1527,15 @@
     {
      "path": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8d798170133dfae7",
-     "bytes": 7453
+     "sha256_16": "c6fc4635de838a28",
+     "bytes": 8982
     }
    ],
    "run": "42025423068 / 42028049247",
    "notes": "{\"input\": \"你好\"}"
   },
   {
-   "id": "M07-063",
+   "id": "M07-078",
    "status": "VERIFIED_BOTH",
    "claim": "E1_normalizer emoji -> \"d\"",
    "evidence": [
@@ -1268,15 +1548,15 @@
     {
      "path": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8d798170133dfae7",
-     "bytes": 7453
+     "sha256_16": "c6fc4635de838a28",
+     "bytes": 8982
     }
    ],
    "run": "42025423068 / 42028049247",
    "notes": "{\"input\": \"D🐶\"}"
   },
   {
-   "id": "M07-064",
+   "id": "M07-079",
    "status": "VERIFIED_BOTH",
    "claim": "E1_normalizer tab_newline -> \"dog\"",
    "evidence": [
@@ -1289,15 +1569,15 @@
     {
      "path": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8d798170133dfae7",
-     "bytes": 7453
+     "sha256_16": "c6fc4635de838a28",
+     "bytes": 8982
     }
    ],
    "run": "42025423068 / 42028049247",
    "notes": "{\"input\": \"D\\tO\\nG\"}"
   },
   {
-   "id": "M07-065",
+   "id": "M07-080",
    "status": "VERIFIED_BOTH",
    "claim": "E1_normalizer allowed_all -> \"<>():{},.\"",
    "evidence": [
@@ -1310,15 +1590,15 @@
     {
      "path": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8d798170133dfae7",
-     "bytes": 7453
+     "sha256_16": "c6fc4635de838a28",
+     "bytes": 8982
     }
    ],
    "run": "42025423068 / 42028049247",
    "notes": "{\"input\": \"< > ( ) : { } , .\"}"
   },
   {
-   "id": "M07-066",
+   "id": "M07-081",
    "status": "VERIFIED_BOTH",
    "claim": "E1_normalizer disallowed_all -> \"\"",
    "evidence": [
@@ -1331,15 +1611,15 @@
     {
      "path": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8d798170133dfae7",
-     "bytes": 7453
+     "sha256_16": "c6fc4635de838a28",
+     "bytes": 8982
     }
    ],
    "run": "42025423068 / 42028049247",
    "notes": "{\"input\": \"-_=+;!?@#$%^&*\"}"
   },
   {
-   "id": "M07-067",
+   "id": "M07-082",
    "status": "VERIFIED_BOTH",
    "claim": "E2_selection_validator empty -> true",
    "evidence": [
@@ -1354,7 +1634,7 @@
    "notes": "{\"items\": []}"
   },
   {
-   "id": "M07-068",
+   "id": "M07-083",
    "status": "VERIFIED_BOTH",
    "claim": "E2_selection_validator one_match_true_true -> true",
    "evidence": [
@@ -1369,7 +1649,7 @@
    "notes": "{\"items\": [{\"text\": \"Q\", \"selected\": true, \"correct\": true}]}"
   },
   {
-   "id": "M07-069",
+   "id": "M07-084",
    "status": "VERIFIED_BOTH",
    "claim": "E2_selection_validator one_mismatch_true_false -> false",
    "evidence": [
@@ -1384,7 +1664,7 @@
    "notes": "{\"items\": [{\"text\": \"Q\", \"selected\": true, \"correct\": false}]}"
   },
   {
-   "id": "M07-070",
+   "id": "M07-085",
    "status": "VERIFIED_BOTH",
    "claim": "E2_selection_validator one_mismatch_false_true -> false",
    "evidence": [
@@ -1399,7 +1679,7 @@
    "notes": "{\"items\": [{\"text\": \"Q\", \"selected\": false, \"correct\": true}]}"
   },
   {
-   "id": "M07-071",
+   "id": "M07-086",
    "status": "VERIFIED_BOTH",
    "claim": "E2_selection_validator one_false_false -> true",
    "evidence": [
@@ -1414,7 +1694,7 @@
    "notes": "{\"items\": [{\"text\": \"Q\", \"selected\": false, \"correct\": false}]}"
   },
   {
-   "id": "M07-072",
+   "id": "M07-087",
    "status": "VERIFIED_BOTH",
    "claim": "E2_selection_validator three_all_match -> true",
    "evidence": [
@@ -1429,7 +1709,7 @@
    "notes": "{\"items\": [{\"text\": \"A\", \"selected\": true, \"correct\": true}, {\"text\": \"B\", \"selected\": false, \"correct\": false}, {\"text\": \"C\", \"selected\": true, \"correct\": true}]}"
   },
   {
-   "id": "M07-073",
+   "id": "M07-088",
    "status": "VERIFIED_BOTH",
    "claim": "E2_selection_validator three_one_wrong -> false",
    "evidence": [
@@ -1444,7 +1724,7 @@
    "notes": "{\"items\": [{\"text\": \"A\", \"selected\": true, \"correct\": true}, {\"text\": \"B\", \"selected\": true, \"correct\": false}, {\"text\": \"C\", \"selected\": true, \"correct\": true}]}"
   },
   {
-   "id": "M07-074",
+   "id": "M07-089",
    "status": "VERIFIED_BOTH",
    "claim": "E2_selection_validator three_one_missing -> false",
    "evidence": [
@@ -1459,7 +1739,7 @@
    "notes": "{\"items\": [{\"text\": \"A\", \"selected\": true, \"correct\": true}, {\"text\": \"B\", \"selected\": false, \"correct\": true}, {\"text\": \"C\", \"selected\": true, \"correct\": true}]}"
   },
   {
-   "id": "M07-075",
+   "id": "M07-090",
    "status": "VERIFIED_BOTH",
    "claim": "E3_isSolvedCorrectly tries=-1 attempts=-1 -> false",
    "evidence": [
@@ -1474,7 +1754,7 @@
    "notes": "{\"tries\": -1, \"attempts\": -1, \"tostring\": \"LessonProgress(lessonId=151403, completedAt=2026-11-05T12:36:19.211Z, startedAt=2026-11-05T12:36:19.211Z, tries=-1, tutorialId=904, tutorialVersion=2, trackId=1, publishSetVersion=753, attempts=-1, isPracticeProgress=false, inQueue=true)\"}"
   },
   {
-   "id": "M07-076",
+   "id": "M07-091",
    "status": "VERIFIED_BOTH",
    "claim": "E3_isSolvedCorrectly tries=-1 attempts=0 -> false",
    "evidence": [
@@ -1489,7 +1769,7 @@
    "notes": "{\"tries\": -1, \"attempts\": 0, \"tostring\": \"LessonProgress(lessonId=151403, completedAt=2026-11-05T12:36:19.212Z, startedAt=2026-11-05T12:36:19.212Z, tries=-1, tutorialId=904, tutorialVersion=2, trackId=1, publishSetVersion=753, attempts=0, isPracticeProgress=false, inQueue=true)\"}"
   },
   {
-   "id": "M07-077",
+   "id": "M07-092",
    "status": "VERIFIED_BOTH",
    "claim": "E3_isSolvedCorrectly tries=-1 attempts=1 -> false",
    "evidence": [
@@ -1504,7 +1784,7 @@
    "notes": "{\"tries\": -1, \"attempts\": 1, \"tostring\": \"LessonProgress(lessonId=151403, completedAt=2026-11-05T12:36:19.212Z, startedAt=2026-11-05T12:36:19.212Z, tries=-1, tutorialId=904, tutorialVersion=2, trackId=1, publishSetVersion=753, attempts=1, isPracticeProgress=false, inQueue=true)\"}"
   },
   {
-   "id": "M07-078",
+   "id": "M07-093",
    "status": "VERIFIED_BOTH",
    "claim": "E3_isSolvedCorrectly tries=-1 attempts=3 -> false",
    "evidence": [
@@ -1519,7 +1799,7 @@
    "notes": "{\"tries\": -1, \"attempts\": 3, \"tostring\": \"LessonProgress(lessonId=151403, completedAt=2026-11-05T12:36:19.212Z, startedAt=2026-11-05T12:36:19.212Z, tries=-1, tutorialId=904, tutorialVersion=2, trackId=1, publishSetVersion=753, attempts=3, isPracticeProgress=false, inQueue=true)\"}"
   },
   {
-   "id": "M07-079",
+   "id": "M07-094",
    "status": "VERIFIED_BOTH",
    "claim": "E3_isSolvedCorrectly tries=0 attempts=-1 -> false",
    "evidence": [
@@ -1534,7 +1814,7 @@
    "notes": "{\"tries\": 0, \"attempts\": -1, \"tostring\": \"LessonProgress(lessonId=151403, completedAt=2026-11-05T12:36:19.213Z, startedAt=2026-11-05T12:36:19.213Z, tries=0, tutorialId=904, tutorialVersion=2, trackId=1, publishSetVersion=753, attempts=-1, isPracticeProgress=false, inQueue=true)\"}"
   },
   {
-   "id": "M07-080",
+   "id": "M07-095",
    "status": "VERIFIED_BOTH",
    "claim": "E3_isSolvedCorrectly tries=0 attempts=0 -> false",
    "evidence": [
@@ -1549,7 +1829,7 @@
    "notes": "{\"tries\": 0, \"attempts\": 0, \"tostring\": \"LessonProgress(lessonId=151403, completedAt=2026-11-05T12:36:19.213Z, startedAt=2026-11-05T12:36:19.213Z, tries=0, tutorialId=904, tutorialVersion=2, trackId=1, publishSetVersion=753, attempts=0, isPracticeProgress=false, inQueue=true)\"}"
   },
   {
-   "id": "M07-081",
+   "id": "M07-096",
    "status": "VERIFIED_BOTH",
    "claim": "E3_isSolvedCorrectly tries=0 attempts=1 -> false",
    "evidence": [
@@ -1564,7 +1844,7 @@
    "notes": "{\"tries\": 0, \"attempts\": 1, \"tostring\": \"LessonProgress(lessonId=151403, completedAt=2026-11-05T12:36:19.213Z, startedAt=2026-11-05T12:36:19.213Z, tries=0, tutorialId=904, tutorialVersion=2, trackId=1, publishSetVersion=753, attempts=1, isPracticeProgress=false, inQueue=true)\"}"
   },
   {
-   "id": "M07-082",
+   "id": "M07-097",
    "status": "VERIFIED_BOTH",
    "claim": "E3_isSolvedCorrectly tries=0 attempts=3 -> false",
    "evidence": [
@@ -1579,7 +1859,7 @@
    "notes": "{\"tries\": 0, \"attempts\": 3, \"tostring\": \"LessonProgress(lessonId=151403, completedAt=2026-11-05T12:36:19.214Z, startedAt=2026-11-05T12:36:19.214Z, tries=0, tutorialId=904, tutorialVersion=2, trackId=1, publishSetVersion=753, attempts=3, isPracticeProgress=false, inQueue=true)\"}"
   },
   {
-   "id": "M07-083",
+   "id": "M07-098",
    "status": "VERIFIED_BOTH",
    "claim": "E3_isSolvedCorrectly tries=1 attempts=-1 -> true",
    "evidence": [
@@ -1594,7 +1874,7 @@
    "notes": "{\"tries\": 1, \"attempts\": -1, \"tostring\": \"LessonProgress(lessonId=151403, completedAt=2026-11-05T12:36:19.215Z, startedAt=2026-11-05T12:36:19.216Z, tries=1, tutorialId=904, tutorialVersion=2, trackId=1, publishSetVersion=753, attempts=-1, isPracticeProgress=false, inQueue=true)\"}"
   },
   {
-   "id": "M07-084",
+   "id": "M07-099",
    "status": "VERIFIED_BOTH",
    "claim": "E3_isSolvedCorrectly tries=1 attempts=0 -> true",
    "evidence": [
@@ -1609,7 +1889,7 @@
    "notes": "{\"tries\": 1, \"attempts\": 0, \"tostring\": \"LessonProgress(lessonId=151403, completedAt=2026-11-05T12:36:19.216Z, startedAt=2026-11-05T12:36:19.216Z, tries=1, tutorialId=904, tutorialVersion=2, trackId=1, publishSetVersion=753, attempts=0, isPracticeProgress=false, inQueue=true)\"}"
   },
   {
-   "id": "M07-085",
+   "id": "M07-100",
    "status": "VERIFIED_BOTH",
    "claim": "E3_isSolvedCorrectly tries=1 attempts=1 -> true",
    "evidence": [
@@ -1624,7 +1904,7 @@
    "notes": "{\"tries\": 1, \"attempts\": 1, \"tostring\": \"LessonProgress(lessonId=151403, completedAt=2026-11-05T12:36:19.216Z, startedAt=2026-11-05T12:36:19.216Z, tries=1, tutorialId=904, tutorialVersion=2, trackId=1, publishSetVersion=753, attempts=1, isPracticeProgress=false, inQueue=true)\"}"
   },
   {
-   "id": "M07-086",
+   "id": "M07-101",
    "status": "VERIFIED_BOTH",
    "claim": "E3_isSolvedCorrectly tries=1 attempts=3 -> true",
    "evidence": [
@@ -1639,7 +1919,7 @@
    "notes": "{\"tries\": 1, \"attempts\": 3, \"tostring\": \"LessonProgress(lessonId=151403, completedAt=2026-11-05T12:36:19.217Z, startedAt=2026-11-05T12:36:19.217Z, tries=1, tutorialId=904, tutorialVersion=2, trackId=1, publishSetVersion=753, attempts=3, isPracticeProgress=false, inQueue=true)\"}"
   },
   {
-   "id": "M07-087",
+   "id": "M07-102",
    "status": "VERIFIED_BOTH",
    "claim": "E3_isSolvedCorrectly tries=2 attempts=-1 -> true",
    "evidence": [
@@ -1654,7 +1934,7 @@
    "notes": "{\"tries\": 2, \"attempts\": -1, \"tostring\": \"LessonProgress(lessonId=151403, completedAt=2026-11-05T12:36:19.217Z, startedAt=2026-11-05T12:36:19.217Z, tries=2, tutorialId=904, tutorialVersion=2, trackId=1, publishSetVersion=753, attempts=-1, isPracticeProgress=false, inQueue=true)\"}"
   },
   {
-   "id": "M07-088",
+   "id": "M07-103",
    "status": "VERIFIED_BOTH",
    "claim": "E3_isSolvedCorrectly tries=2 attempts=0 -> true",
    "evidence": [
@@ -1669,7 +1949,7 @@
    "notes": "{\"tries\": 2, \"attempts\": 0, \"tostring\": \"LessonProgress(lessonId=151403, completedAt=2026-11-05T12:36:19.218Z, startedAt=2026-11-05T12:36:19.218Z, tries=2, tutorialId=904, tutorialVersion=2, trackId=1, publishSetVersion=753, attempts=0, isPracticeProgress=false, inQueue=true)\"}"
   },
   {
-   "id": "M07-089",
+   "id": "M07-104",
    "status": "VERIFIED_BOTH",
    "claim": "E3_isSolvedCorrectly tries=2 attempts=1 -> true",
    "evidence": [
@@ -1684,7 +1964,7 @@
    "notes": "{\"tries\": 2, \"attempts\": 1, \"tostring\": \"LessonProgress(lessonId=151403, completedAt=2026-11-05T12:36:19.218Z, startedAt=2026-11-05T12:36:19.218Z, tries=2, tutorialId=904, tutorialVersion=2, trackId=1, publishSetVersion=753, attempts=1, isPracticeProgress=false, inQueue=true)\"}"
   },
   {
-   "id": "M07-090",
+   "id": "M07-105",
    "status": "VERIFIED_BOTH",
    "claim": "E3_isSolvedCorrectly tries=2 attempts=3 -> true",
    "evidence": [
@@ -1699,7 +1979,7 @@
    "notes": "{\"tries\": 2, \"attempts\": 3, \"tostring\": \"LessonProgress(lessonId=151403, completedAt=2026-11-05T12:36:19.218Z, startedAt=2026-11-05T12:36:19.218Z, tries=2, tutorialId=904, tutorialVersion=2, trackId=1, publishSetVersion=753, attempts=3, isPracticeProgress=false, inQueue=true)\"}"
   },
   {
-   "id": "M07-091",
+   "id": "M07-106",
    "status": "VERIFIED_BOTH",
    "claim": "E3_isSolvedCorrectly tries=5 attempts=-1 -> true",
    "evidence": [
@@ -1714,7 +1994,7 @@
    "notes": "{\"tries\": 5, \"attempts\": -1, \"tostring\": \"LessonProgress(lessonId=151403, completedAt=2026-11-05T12:36:19.219Z, startedAt=2026-11-05T12:36:19.219Z, tries=5, tutorialId=904, tutorialVersion=2, trackId=1, publishSetVersion=753, attempts=-1, isPracticeProgress=false, inQueue=true)\"}"
   },
   {
-   "id": "M07-092",
+   "id": "M07-107",
    "status": "VERIFIED_BOTH",
    "claim": "E3_isSolvedCorrectly tries=5 attempts=0 -> true",
    "evidence": [
@@ -1729,7 +2009,7 @@
    "notes": "{\"tries\": 5, \"attempts\": 0, \"tostring\": \"LessonProgress(lessonId=151403, completedAt=2026-11-05T12:36:19.219Z, startedAt=2026-11-05T12:36:19.219Z, tries=5, tutorialId=904, tutorialVersion=2, trackId=1, publishSetVersion=753, attempts=0, isPracticeProgress=false, inQueue=true)\"}"
   },
   {
-   "id": "M07-093",
+   "id": "M07-108",
    "status": "VERIFIED_BOTH",
    "claim": "E3_isSolvedCorrectly tries=5 attempts=1 -> true",
    "evidence": [
@@ -1744,7 +2024,7 @@
    "notes": "{\"tries\": 5, \"attempts\": 1, \"tostring\": \"LessonProgress(lessonId=151403, completedAt=2026-11-05T12:36:19.219Z, startedAt=2026-11-05T12:36:19.219Z, tries=5, tutorialId=904, tutorialVersion=2, trackId=1, publishSetVersion=753, attempts=1, isPracticeProgress=false, inQueue=true)\"}"
   },
   {
-   "id": "M07-094",
+   "id": "M07-109",
    "status": "VERIFIED_BOTH",
    "claim": "E3_isSolvedCorrectly tries=5 attempts=3 -> true",
    "evidence": [
@@ -1759,7 +2039,7 @@
    "notes": "{\"tries\": 5, \"attempts\": 3, \"tostring\": \"LessonProgress(lessonId=151403, completedAt=2026-11-05T12:36:19.219Z, startedAt=2026-11-05T12:36:19.219Z, tries=5, tutorialId=904, tutorialVersion=2, trackId=1, publishSetVersion=753, attempts=3, isPracticeProgress=false, inQueue=true)\"}"
   },
   {
-   "id": "M07-095",
+   "id": "M07-110",
    "status": "VERIFIED_RUNTIME",
    "claim": "E5_dsl_parser only_paragraph -> \"[Paragraph(texts=[Hello , world], visibilty=ALWAYS)]\"",
    "evidence": [
@@ -1772,15 +2052,15 @@
     {
      "path": "ANALYSIS/MISSION_07/10_CODE_EDITOR_AND_WEBVIEW_BOUNDARY.md",
      "exists": true,
-     "sha256_16": "438889d4b4bab9b9",
-     "bytes": 5991
+     "sha256_16": "b7b74c06ca34c602",
+     "bytes": 7234
     }
    ],
    "run": "42025423068 / 42028049247",
    "notes": "{\"input\": \"<html><body><p>Hello <strong>world</strong></p></body></html>\", \"size\": 1}"
   },
   {
-   "id": "M07-096",
+   "id": "M07-111",
    "status": "VERIFIED_RUNTIME",
    "claim": "E5_dsl_parser paragraph_and_code -> \"[Paragraph(texts=[Intro], visibilty=ALWAYS), Code(content=<h1>Hi</h1>, interactions=[], output=null, visibilty=ALWAYS, ",
    "evidence": [
@@ -1793,15 +2073,15 @@
     {
      "path": "ANALYSIS/MISSION_07/10_CODE_EDITOR_AND_WEBVIEW_BOUNDARY.md",
      "exists": true,
-     "sha256_16": "438889d4b4bab9b9",
-     "bytes": 5991
+     "sha256_16": "b7b74c06ca34c602",
+     "bytes": 7234
     }
    ],
    "run": "42025423068 / 42028049247",
    "notes": "{\"input\": \"<html><body><p>Intro</p><code version=\\\"2\\\" codelang=\\\"html\\\" name=\\\"index.html\\\" visible-if=\\\"always\\\"><content><text value=\\\"&lt;h1&gt;Hi&lt;/h1&gt;\\\" /></content></code></body></html>\", \"size\": 2}"
   },
   {
-   "id": "M07-097",
+   "id": "M07-112",
    "status": "VERIFIED_RUNTIME",
    "claim": "E5_dsl_parser selection -> \"[Paragraph(texts=[Pick], visibilty=ALWAYS), Selection(selectionItems=[SelectionItem(correct=true, text=Yes), SelectionI",
    "evidence": [
@@ -1814,15 +2094,15 @@
     {
      "path": "ANALYSIS/MISSION_07/10_CODE_EDITOR_AND_WEBVIEW_BOUNDARY.md",
      "exists": true,
-     "sha256_16": "438889d4b4bab9b9",
-     "bytes": 5991
+     "sha256_16": "b7b74c06ca34c602",
+     "bytes": 7234
     }
    ],
    "run": "42025423068 / 42028049247",
    "notes": "{\"input\": \"<html><body><p>Pick</p><selection multiple=\\\"multiple\\\"><item value=\\\"1\\\" correct=\\\"true\\\">Yes</item><item value=\\\"2\\\" correct=\\\"false\\\">No</item></selection></body></html>\", \"size\": 2}"
   },
   {
-   "id": "M07-098",
+   "id": "M07-113",
    "status": "VERIFIED_RUNTIME",
    "claim": "E5_dsl_parser unknown_tag -> \"[Paragraph(texts=[ok], visibilty=ALWAYS)]\"",
    "evidence": [
@@ -1835,15 +2115,15 @@
     {
      "path": "ANALYSIS/MISSION_07/10_CODE_EDITOR_AND_WEBVIEW_BOUNDARY.md",
      "exists": true,
-     "sha256_16": "438889d4b4bab9b9",
-     "bytes": 5991
+     "sha256_16": "b7b74c06ca34c602",
+     "bytes": 7234
     }
    ],
    "run": "42025423068 / 42028049247",
    "notes": "{\"input\": \"<html><body><foo>a</foo><p>ok</p></body></html>\", \"size\": 1}"
   },
   {
-   "id": "M07-099",
+   "id": "M07-114",
    "status": "VERIFIED_RUNTIME",
    "claim": "E5_dsl_parser malformed -> \"[]\"",
    "evidence": [
@@ -1856,15 +2136,15 @@
     {
      "path": "ANALYSIS/MISSION_07/10_CODE_EDITOR_AND_WEBVIEW_BOUNDARY.md",
      "exists": true,
-     "sha256_16": "438889d4b4bab9b9",
-     "bytes": 5991
+     "sha256_16": "b7b74c06ca34c602",
+     "bytes": 7234
     }
    ],
    "run": "42025423068 / 42028049247",
    "notes": "{\"input\": \"<p>unclosed\", \"size\": 0}"
   },
   {
-   "id": "M07-100",
+   "id": "M07-115",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: onLessonRun (com.getmimo.ui.lesson.interactive.base.c Y, overloads=1)",
    "evidence": [
@@ -1879,7 +2159,7 @@
    "notes": ""
   },
   {
-   "id": "M07-101",
+   "id": "M07-116",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: lessonSolvedCorrectly (com.getmimo.ui.lesson.interactive.base.c V, overloads=1)",
    "evidence": [
@@ -1894,7 +2174,7 @@
    "notes": ""
   },
   {
-   "id": "M07-102",
+   "id": "M07-117",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: lessonSolvedIncorrectly (com.getmimo.ui.lesson.interactive.base.c X, overloads=1)",
    "evidence": [
@@ -1909,7 +2189,7 @@
    "notes": ""
   },
   {
-   "id": "M07-103",
+   "id": "M07-118",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: lessonSolvedAndProceed (com.getmimo.ui.lesson.interactive.base.c U, overloads=1)",
    "evidence": [
@@ -1924,7 +2204,7 @@
    "notes": ""
   },
   {
-   "id": "M07-104",
+   "id": "M07-119",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: partialMatch (com.getmimo.ui.lesson.interactive.base.c W, overloads=1)",
    "evidence": [
@@ -1939,7 +2219,7 @@
    "notes": ""
   },
   {
-   "id": "M07-105",
+   "id": "M07-120",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: createLessonProgress (com.getmimo.ui.lesson.interactive.base.c H, overloads=1)",
    "evidence": [
@@ -1954,7 +2234,7 @@
    "notes": ""
   },
   {
-   "id": "M07-106",
+   "id": "M07-121",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: storeAnswerText (com.getmimo.ui.lesson.interactive.base.c b0, overloads=1)",
    "evidence": [
@@ -1969,7 +2249,7 @@
    "notes": ""
   },
   {
-   "id": "M07-107",
+   "id": "M07-122",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: solutionFeedback (com.getmimo.ui.lesson.interactive.base.c c0, overloads=1)",
    "evidence": [
@@ -1984,7 +2264,7 @@
    "notes": ""
   },
   {
-   "id": "M07-108",
+   "id": "M07-123",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: wrongFeedback (com.getmimo.ui.lesson.interactive.base.c d0, overloads=1)",
    "evidence": [
@@ -1999,7 +2279,7 @@
    "notes": ""
   },
   {
-   "id": "M07-109",
+   "id": "M07-124",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: storeProgressInMemory (com.getmimo.ui.lesson.interactive.base.c e0, overloads=1)",
    "evidence": [
@@ -2014,7 +2294,7 @@
    "notes": ""
   },
   {
-   "id": "M07-110",
+   "id": "M07-125",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: trackLessonResult (com.getmimo.ui.lesson.interactive.base.c f0, overloads=1)",
    "evidence": [
@@ -2029,7 +2309,7 @@
    "notes": ""
   },
   {
-   "id": "M07-111",
+   "id": "M07-126",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: lessonReset (com.getmimo.ui.lesson.interactive.base.c a0, overloads=1)",
    "evidence": [
@@ -2044,7 +2324,7 @@
    "notes": ""
   },
   {
-   "id": "M07-112",
+   "id": "M07-127",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: initialiseViewModel (com.getmimo.ui.lesson.interactive.base.c O, overloads=1)",
    "evidence": [
@@ -2059,7 +2339,7 @@
    "notes": ""
   },
   {
-   "id": "M07-113",
+   "id": "M07-128",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: resetInputState (com.getmimo.ui.lesson.interactive.base.c N, overloads=1)",
    "evidence": [
@@ -2074,7 +2354,7 @@
    "notes": ""
   },
   {
-   "id": "M07-114",
+   "id": "M07-129",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: cleanup (com.getmimo.ui.lesson.interactive.base.c I, overloads=1)",
    "evidence": [
@@ -2089,7 +2369,7 @@
    "notes": ""
   },
   {
-   "id": "M07-115",
+   "id": "M07-130",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: feedbackCondition (com.getmimo.ui.lesson.interactive.base.c S, overloads=1)",
    "evidence": [
@@ -2104,7 +2384,7 @@
    "notes": ""
   },
   {
-   "id": "M07-116",
+   "id": "M07-131",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: feedbackSuspend (com.getmimo.ui.lesson.interactive.base.c P, overloads=1)",
    "evidence": [
@@ -2119,7 +2399,7 @@
    "notes": ""
   },
   {
-   "id": "M07-117",
+   "id": "M07-132",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: awaitBrowserOutput (com.getmimo.ui.lesson.interactive.base.c i0, overloads=1)",
    "evidence": [
@@ -2134,7 +2414,7 @@
    "notes": ""
   },
   {
-   "id": "M07-118",
+   "id": "M07-133",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: getLessonBundle (com.getmimo.ui.lesson.interactive.base.c K, overloads=1)",
    "evidence": [
@@ -2149,7 +2429,7 @@
    "notes": ""
   },
   {
-   "id": "M07-119",
+   "id": "M07-134",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: repo_createProgress (com.getmimo.data.source.remote.progress.LessonProgressRepository createLessonProgress, overloads=1)",
    "evidence": [
@@ -2164,7 +2444,7 @@
    "notes": ""
   },
   {
-   "id": "M07-120",
+   "id": "M07-135",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: repo_postUnsynced (com.getmimo.data.source.remote.progress.LessonProgressRepository postUnsyncedLessonProgress, overloads=1)",
    "evidence": [
@@ -2179,7 +2459,7 @@
    "notes": ""
   },
   {
-   "id": "M07-121",
+   "id": "M07-136",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: queue_store (com.getmimo.data.source.remote.progress.LessonProgressQueue storeLessonProgress, overloads=1)",
    "evidence": [
@@ -2194,7 +2474,7 @@
    "notes": ""
   },
   {
-   "id": "M07-122",
+   "id": "M07-137",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: queue_count (com.getmimo.data.source.remote.progress.LessonProgressQueue updateCorrectAnswersCount, overloads=1)",
    "evidence": [
@@ -2209,7 +2489,7 @@
    "notes": ""
   },
   {
-   "id": "M07-123",
+   "id": "M07-138",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: queue_postAll (com.getmimo.data.source.remote.progress.LessonProgressQueue storeAndPostAllLessonProgress, overloads=1)",
    "evidence": [
@@ -2224,7 +2504,7 @@
    "notes": ""
   },
   {
-   "id": "M07-124",
+   "id": "M07-139",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: net_isOnline (com.getmimo.network.a a, overloads=1)",
    "evidence": [
@@ -2239,7 +2519,7 @@
    "notes": ""
   },
   {
-   "id": "M07-125",
+   "id": "M07-140",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: net_isOnline_b (com.getmimo.network.a b, overloads=1)",
    "evidence": [
@@ -2254,7 +2534,7 @@
    "notes": ""
   },
   {
-   "id": "M07-126",
+   "id": "M07-141",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: normalizer (qm.i a, overloads=1)",
    "evidence": [
@@ -2269,7 +2549,7 @@
    "notes": ""
   },
   {
-   "id": "M07-127",
+   "id": "M07-142",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: selectionValidator (km.f b, overloads=1)",
    "evidence": [
@@ -2284,7 +2564,7 @@
    "notes": ""
   },
   {
-   "id": "M07-128",
+   "id": "M07-143",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: dslParser (te.c b, overloads=1)",
    "evidence": [
@@ -2299,7 +2579,7 @@
    "notes": ""
   },
   {
-   "id": "M07-129",
+   "id": "M07-144",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: interactionSelector (gm.h a, overloads=1)",
    "evidence": [
@@ -2314,7 +2594,7 @@
    "notes": ""
   },
   {
-   "id": "M07-130",
+   "id": "M07-145",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: onLessonRunCoroutine (com.getmimo.ui.lesson.interactive.base.InteractiveLessonBaseViewModel$onLessonRun$1 invokeSuspend, overloads=1)",
    "evidence": [
@@ -2329,7 +2609,7 @@
    "notes": ""
   },
   {
-   "id": "M07-131",
+   "id": "M07-146",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: onValidatedInputCoroutine (com.getmimo.ui.lesson.interactive.base.InteractiveLessonBaseViewModel$onValidatedInputExecuted$1 invokeSuspend, overloads=1)",
    "evidence": [
@@ -2344,7 +2624,7 @@
    "notes": ""
   },
   {
-   "id": "M07-132",
+   "id": "M07-147",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: setupViewsCoroutine (com.getmimo.ui.lesson.interactive.validatedinput.InteractiveLessonValidatedInputFragment$setupViews$2 invokeSuspend, overloads=1)",
    "evidence": [
@@ -2359,7 +2639,7 @@
    "notes": ""
   },
   {
-   "id": "M07-133",
+   "id": "M07-148",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: executableValidator (com.getmimo.ui.lesson.executable.q I, overloads=1)",
    "evidence": [
@@ -2374,7 +2654,7 @@
    "notes": ""
   },
   {
-   "id": "M07-134",
+   "id": "M07-149",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: fillTheGapRun (im.d E0, overloads=1)",
    "evidence": [
@@ -2389,7 +2669,7 @@
    "notes": ""
   },
   {
-   "id": "M07-135",
+   "id": "M07-150",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: spellRun (pm.b E0, overloads=1)",
    "evidence": [
@@ -2404,7 +2684,7 @@
    "notes": ""
   },
   {
-   "id": "M07-136",
+   "id": "M07-151",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: selectionRun (km.c E0, overloads=1)",
    "evidence": [
@@ -2419,7 +2699,7 @@
    "notes": ""
   },
   {
-   "id": "M07-137",
+   "id": "M07-152",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: selectionRun2 (om.d E0, overloads=1)",
    "evidence": [
@@ -2434,7 +2714,7 @@
    "notes": ""
   },
   {
-   "id": "M07-138",
+   "id": "M07-153",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: selectionRun3 (mm.b E0, overloads=1)",
    "evidence": [
@@ -2449,7 +2729,7 @@
    "notes": ""
   },
   {
-   "id": "M07-139",
+   "id": "M07-154",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: isSolved (com.getmimo.data.model.room.LessonProgress isSolvedCorrectly, overloads=1)",
    "evidence": [
@@ -2464,7 +2744,7 @@
    "notes": ""
   },
   {
-   "id": "M07-140",
+   "id": "M07-155",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: sql (android.database.sqlite.SQLiteDatabase , overloads=None)",
    "evidence": [
@@ -2479,7 +2759,7 @@
    "notes": ""
   },
   {
-   "id": "M07-141",
+   "id": "M07-156",
    "status": "VERIFIED_RUNTIME",
    "claim": "Hook installed: sql_statement (android.database.sqlite.SQLiteStatement , overloads=None)",
    "evidence": [
@@ -2494,7 +2774,7 @@
    "notes": ""
   },
   {
-   "id": "M07-142",
+   "id": "M07-157",
    "status": "VERIFIED_RUNTIME",
    "claim": "Snapshot SNAPSHOT_C_LESSON_BEFORE_ANSWER: lesson_progress=0 chapter_completions=0 tutorial_completions=672 files=91",
    "evidence": [
@@ -2509,7 +2789,7 @@
    "notes": ""
   },
   {
-   "id": "M07-143",
+   "id": "M07-158",
    "status": "VERIFIED_RUNTIME",
    "claim": "Snapshot SNAPSHOT_G_BEFORE_FORCESTOP: lesson_progress=0 chapter_completions=0 tutorial_completions=672 files=91",
    "evidence": [
@@ -2524,7 +2804,7 @@
    "notes": ""
   },
   {
-   "id": "M07-144",
+   "id": "M07-159",
    "status": "VERIFIED_RUNTIME",
    "claim": "Snapshot SNAPSHOT_H_OFFLINE_COLD_START: lesson_progress=0 chapter_completions=0 tutorial_completions=672 files=91",
    "evidence": [
@@ -2539,7 +2819,7 @@
    "notes": ""
   },
   {
-   "id": "M07-145",
+   "id": "M07-160",
    "status": "VERIFIED_RUNTIME",
    "claim": "Snapshot SNAPSHOT_I_OFFLINE_RESTORED: lesson_progress=0 chapter_completions=0 tutorial_completions=672 files=91",
    "evidence": [
@@ -2554,7 +2834,7 @@
    "notes": ""
   },
   {
-   "id": "M07-146",
+   "id": "M07-161",
    "status": "VERIFIED_RUNTIME",
    "claim": "Snapshot SNAPSHOT_S3_G_BEFORE_FORCESTOP: lesson_progress=2 chapter_completions=0 tutorial_completions=700 files=89",
    "evidence": [
@@ -2569,7 +2849,7 @@
    "notes": ""
   },
   {
-   "id": "M07-147",
+   "id": "M07-162",
    "status": "VERIFIED_RUNTIME",
    "claim": "Snapshot SNAPSHOT_S3_H_OFFLINE_COLD_START: lesson_progress=0 chapter_completions=0 tutorial_completions=700 files=89",
    "evidence": [
@@ -2584,7 +2864,7 @@
    "notes": ""
   },
   {
-   "id": "M07-148",
+   "id": "M07-163",
    "status": "VERIFIED_RUNTIME",
    "claim": "Snapshot SNAPSHOT_S3_I_OFFLINE_RESTORED: lesson_progress=0 chapter_completions=0 tutorial_completions=700 files=89",
    "evidence": [
@@ -2599,7 +2879,7 @@
    "notes": ""
   },
   {
-   "id": "M07-149",
+   "id": "M07-164",
    "status": "VERIFIED_RUNTIME",
    "claim": "Snapshot SNAPSHOT_S4_C_BEFORE_ANSWER: lesson_progress=1 chapter_completions=0 tutorial_completions=868 files=88",
    "evidence": [
@@ -2614,7 +2894,7 @@
    "notes": ""
   },
   {
-   "id": "M07-150",
+   "id": "M07-165",
    "status": "VERIFIED_RUNTIME",
    "claim": "Snapshot SNAPSHOT_S4_D1_AFTER_WRONG_OPTION: lesson_progress=1 chapter_completions=0 tutorial_completions=868 files=88",
    "evidence": [
@@ -2629,7 +2909,7 @@
    "notes": ""
   },
   {
-   "id": "M07-151",
+   "id": "M07-166",
    "status": "VERIFIED_RUNTIME",
    "claim": "Snapshot SNAPSHOT_S4_G_BEFORE_FORCESTOP: lesson_progress=1 chapter_completions=0 tutorial_completions=868 files=88",
    "evidence": [
@@ -2644,7 +2924,7 @@
    "notes": ""
   },
   {
-   "id": "M07-152",
+   "id": "M07-167",
    "status": "VERIFIED_RUNTIME",
    "claim": "Snapshot SNAPSHOT_S4_H_OFFLINE_COLD_START: lesson_progress=0 chapter_completions=0 tutorial_completions=868 files=88",
    "evidence": [
@@ -2659,7 +2939,7 @@
    "notes": ""
   },
   {
-   "id": "M07-153",
+   "id": "M07-168",
    "status": "VERIFIED_RUNTIME",
    "claim": "Snapshot SNAPSHOT_S4_I_OFFLINE_RESTORED: lesson_progress=0 chapter_completions=0 tutorial_completions=868 files=88",
    "evidence": [
@@ -2674,7 +2954,7 @@
    "notes": ""
   },
   {
-   "id": "M07-154",
+   "id": "M07-169",
    "status": "VERIFIED_RUNTIME",
    "claim": "Snapshot SNAPSHOT_S5_1_C_BEFORE_ANSWER: lesson_progress=1 chapter_completions=0 tutorial_completions=868 files=89",
    "evidence": [
@@ -2689,7 +2969,7 @@
    "notes": ""
   },
   {
-   "id": "M07-155",
+   "id": "M07-170",
    "status": "VERIFIED_RUNTIME",
    "claim": "Snapshot SNAPSHOT_S5_1_D1_AFTER_WRONG_OPTION: lesson_progress=1 chapter_completions=0 tutorial_completions=868 files=89",
    "evidence": [
@@ -2704,7 +2984,7 @@
    "notes": ""
   },
   {
-   "id": "M07-156",
+   "id": "M07-171",
    "status": "VERIFIED_RUNTIME",
    "claim": "Snapshot SNAPSHOT_S5_1_E1_AFTER_CORRECT_OPTION: lesson_progress=1 chapter_completions=0 tutorial_completions=868 files=89",
    "evidence": [
@@ -2719,7 +2999,7 @@
    "notes": ""
   },
   {
-   "id": "M07-157",
+   "id": "M07-172",
    "status": "VERIFIED_RUNTIME",
    "claim": "Snapshot SNAPSHOT_S5_1_F_AFTER_CORRECT_SUBMIT: lesson_progress=2 chapter_completions=0 tutorial_completions=868 files=89",
    "evidence": [
@@ -2734,7 +3014,7 @@
    "notes": ""
   },
   {
-   "id": "M07-158",
+   "id": "M07-173",
    "status": "VERIFIED_RUNTIME",
    "claim": "Snapshot SNAPSHOT_S5_G_BEFORE_FORCESTOP: lesson_progress=2 chapter_completions=0 tutorial_completions=868 files=89",
    "evidence": [
@@ -2749,7 +3029,7 @@
    "notes": ""
   },
   {
-   "id": "M07-159",
+   "id": "M07-174",
    "status": "VERIFIED_RUNTIME",
    "claim": "Snapshot SNAPSHOT_S5_H_OFFLINE_COLD_START: lesson_progress=0 chapter_completions=0 tutorial_completions=868 files=89",
    "evidence": [
@@ -2764,7 +3044,7 @@
    "notes": ""
   },
   {
-   "id": "M07-160",
+   "id": "M07-175",
    "status": "VERIFIED_RUNTIME",
    "claim": "Snapshot SNAPSHOT_S5_I_OFFLINE_RESTORED: lesson_progress=0 chapter_completions=0 tutorial_completions=868 files=89",
    "evidence": [
@@ -2779,7 +3059,112 @@
    "notes": ""
   },
   {
-   "id": "M07-161",
+   "id": "M07-176",
+   "status": "VERIFIED_RUNTIME",
+   "claim": "Snapshot SNAPSHOT_S6_1_C_BEFORE_ANSWER: lesson_progress=1 chapter_completions=0 tutorial_completions=868 files=88",
+   "evidence": [
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/DB/SNAPSHOT_S6_1_C_BEFORE_ANSWER.json",
+     "exists": true,
+     "sha256_16": "8346898c3f0fad9a",
+     "bytes": 97393
+    }
+   ],
+   "run": "42019353340 / 42028049247 / 42030594857",
+   "notes": ""
+  },
+  {
+   "id": "M07-177",
+   "status": "VERIFIED_RUNTIME",
+   "claim": "Snapshot SNAPSHOT_S6_1_D1_AFTER_WRONG_OPTION: lesson_progress=1 chapter_completions=0 tutorial_completions=868 files=88",
+   "evidence": [
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/DB/SNAPSHOT_S6_1_D1_AFTER_WRONG_OPTION.json",
+     "exists": true,
+     "sha256_16": "a44e9b36a37722c8",
+     "bytes": 87351
+    }
+   ],
+   "run": "42019353340 / 42028049247 / 42030594857",
+   "notes": ""
+  },
+  {
+   "id": "M07-178",
+   "status": "VERIFIED_RUNTIME",
+   "claim": "Snapshot SNAPSHOT_S6_1_E1_AFTER_CORRECT_OPTION: lesson_progress=1 chapter_completions=0 tutorial_completions=868 files=88",
+   "evidence": [
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/DB/SNAPSHOT_S6_1_E1_AFTER_CORRECT_OPTION.json",
+     "exists": true,
+     "sha256_16": "f3f20b6bce7ecc99",
+     "bytes": 87355
+    }
+   ],
+   "run": "42019353340 / 42028049247 / 42030594857",
+   "notes": ""
+  },
+  {
+   "id": "M07-179",
+   "status": "VERIFIED_RUNTIME",
+   "claim": "Snapshot SNAPSHOT_S6_1_F_AFTER_CORRECT_SUBMIT: lesson_progress=2 chapter_completions=0 tutorial_completions=868 files=88",
+   "evidence": [
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/DB/SNAPSHOT_S6_1_F_AFTER_CORRECT_SUBMIT.json",
+     "exists": true,
+     "sha256_16": "2417bfa6b9485c08",
+     "bytes": 94429
+    }
+   ],
+   "run": "42019353340 / 42028049247 / 42030594857",
+   "notes": ""
+  },
+  {
+   "id": "M07-180",
+   "status": "VERIFIED_RUNTIME",
+   "claim": "Snapshot SNAPSHOT_S6_G_BEFORE_FORCESTOP: lesson_progress=2 chapter_completions=0 tutorial_completions=868 files=88",
+   "evidence": [
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/DB/SNAPSHOT_S6_G_BEFORE_FORCESTOP.json",
+     "exists": true,
+     "sha256_16": "a6409788f0df73f1",
+     "bytes": 87711
+    }
+   ],
+   "run": "42019353340 / 42028049247 / 42030594857",
+   "notes": ""
+  },
+  {
+   "id": "M07-181",
+   "status": "VERIFIED_RUNTIME",
+   "claim": "Snapshot SNAPSHOT_S6_H_OFFLINE_COLD_START: lesson_progress=0 chapter_completions=0 tutorial_completions=868 files=88",
+   "evidence": [
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/DB/SNAPSHOT_S6_H_OFFLINE_COLD_START.json",
+     "exists": true,
+     "sha256_16": "8ea99de6e640ecff",
+     "bytes": 127022
+    }
+   ],
+   "run": "42019353340 / 42028049247 / 42030594857",
+   "notes": ""
+  },
+  {
+   "id": "M07-182",
+   "status": "VERIFIED_RUNTIME",
+   "claim": "Snapshot SNAPSHOT_S6_I_OFFLINE_RESTORED: lesson_progress=0 chapter_completions=0 tutorial_completions=868 files=88",
+   "evidence": [
+    {
+     "path": "ANALYSIS/RUNTIME/MISSION_07/DB/SNAPSHOT_S6_I_OFFLINE_RESTORED.json",
+     "exists": true,
+     "sha256_16": "08b7cc57bba68ff2",
+     "bytes": 157916
+    }
+   ],
+   "run": "42019353340 / 42028049247 / 42030594857",
+   "notes": ""
+  },
+  {
+   "id": "M07-183",
    "status": "VERIFIED_RUNTIME",
    "claim": "MISSION 07 deliverable 00_MISSION_07_PLAN.md exists (4309 bytes)",
    "evidence": [
@@ -2794,7 +3179,7 @@
    "notes": ""
   },
   {
-   "id": "M07-162",
+   "id": "M07-184",
    "status": "VERIFIED_RUNTIME",
    "claim": "MISSION 07 deliverable 01_RUNTIME_ENVIRONMENT.md exists (6366 bytes)",
    "evidence": [
@@ -2809,82 +3194,82 @@
    "notes": ""
   },
   {
-   "id": "M07-163",
+   "id": "M07-185",
    "status": "VERIFIED_RUNTIME",
-   "claim": "MISSION 07 deliverable 02_LIVE_INSTRUMENTATION_AND_HOOKS.md exists (4415 bytes)",
+   "claim": "MISSION 07 deliverable 02_LIVE_INSTRUMENTATION_AND_HOOKS.md exists (5609 bytes)",
    "evidence": [
     {
      "path": "ANALYSIS/MISSION_07/02_LIVE_INSTRUMENTATION_AND_HOOKS.md",
      "exists": true,
-     "sha256_16": "715df8a589f31438",
-     "bytes": 4415
+     "sha256_16": "76b24cc9127337f1",
+     "bytes": 5609
     }
    ],
    "run": "workspace",
    "notes": ""
   },
   {
-   "id": "M07-164",
+   "id": "M07-186",
    "status": "VERIFIED_RUNTIME",
-   "claim": "MISSION 07 deliverable 03_INTERACTIVE_LESSON_VIEWMODEL_RUNTIME.md exists (4595 bytes)",
+   "claim": "MISSION 07 deliverable 03_INTERACTIVE_LESSON_VIEWMODEL_RUNTIME.md exists (7646 bytes)",
    "evidence": [
     {
      "path": "ANALYSIS/MISSION_07/03_INTERACTIVE_LESSON_VIEWMODEL_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8b8dd9a638ccc35e",
-     "bytes": 4595
+     "sha256_16": "7ebbc60b076e8635",
+     "bytes": 7646
     }
    ],
    "run": "workspace",
    "notes": ""
   },
   {
-   "id": "M07-165",
+   "id": "M07-187",
    "status": "VERIFIED_RUNTIME",
-   "claim": "MISSION 07 deliverable 04_ANSWER_VALIDATION_RUNTIME.md exists (7453 bytes)",
+   "claim": "MISSION 07 deliverable 04_ANSWER_VALIDATION_RUNTIME.md exists (8982 bytes)",
    "evidence": [
     {
      "path": "ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
      "exists": true,
-     "sha256_16": "8d798170133dfae7",
-     "bytes": 7453
+     "sha256_16": "c6fc4635de838a28",
+     "bytes": 8982
     }
    ],
    "run": "workspace",
    "notes": ""
   },
   {
-   "id": "M07-166",
+   "id": "M07-188",
    "status": "VERIFIED_RUNTIME",
-   "claim": "MISSION 07 deliverable 05_ANSWER_STATE_TRANSITIONS.md exists (6430 bytes)",
+   "claim": "MISSION 07 deliverable 05_ANSWER_STATE_TRANSITIONS.md exists (7682 bytes)",
    "evidence": [
     {
      "path": "ANALYSIS/MISSION_07/05_ANSWER_STATE_TRANSITIONS.md",
      "exists": true,
-     "sha256_16": "c7f0afe9e527ca52",
-     "bytes": 6430
+     "sha256_16": "b5ca1831e8f074c2",
+     "bytes": 7682
     }
    ],
    "run": "workspace",
    "notes": ""
   },
   {
-   "id": "M07-167",
+   "id": "M07-189",
    "status": "VERIFIED_RUNTIME",
-   "claim": "MISSION 07 deliverable 06_DATABASE_BEFORE_AFTER.md exists (6348 bytes)",
+   "claim": "MISSION 07 deliverable 06_DATABASE_BEFORE_AFTER.md exists (6972 bytes)",
    "evidence": [
     {
      "path": "ANALYSIS/MISSION_07/06_DATABASE_BEFORE_AFTER.md",
      "exists": true,
-     "sha256_16": "42e17721edd9faa0",
-     "bytes": 6348
+     "sha256_16": "5311d39c54aa7680",
+     "bytes": 6972
     }
    ],
    "run": "workspace",
    "notes": ""
   },
   {
-   "id": "M07-168",
+   "id": "M07-190",
    "status": "VERIFIED_RUNTIME",
    "claim": "MISSION 07 deliverable 07_PERSISTENCE_RESTORATION_AND_QUEUE.md exists (4296 bytes)",
    "evidence": [
@@ -2899,7 +3284,7 @@
    "notes": ""
   },
   {
-   "id": "M07-169",
+   "id": "M07-191",
    "status": "VERIFIED_RUNTIME",
    "claim": "MISSION 07 deliverable 08_PROGRESSION_AND_UNLOCK_LOGIC.md exists (3714 bytes)",
    "evidence": [
@@ -2914,7 +3299,7 @@
    "notes": ""
   },
   {
-   "id": "M07-170",
+   "id": "M07-192",
    "status": "VERIFIED_RUNTIME",
    "claim": "MISSION 07 deliverable 09_OFFLINE_EXECUTION_RESULTS.md exists (5975 bytes)",
    "evidence": [
@@ -2929,22 +3314,22 @@
    "notes": ""
   },
   {
-   "id": "M07-171",
+   "id": "M07-193",
    "status": "VERIFIED_RUNTIME",
-   "claim": "MISSION 07 deliverable 10_CODE_EDITOR_AND_WEBVIEW_BOUNDARY.md exists (5991 bytes)",
+   "claim": "MISSION 07 deliverable 10_CODE_EDITOR_AND_WEBVIEW_BOUNDARY.md exists (7234 bytes)",
    "evidence": [
     {
      "path": "ANALYSIS/MISSION_07/10_CODE_EDITOR_AND_WEBVIEW_BOUNDARY.md",
      "exists": true,
-     "sha256_16": "438889d4b4bab9b9",
-     "bytes": 5991
+     "sha256_16": "b7b74c06ca34c602",
+     "bytes": 7234
     }
    ],
    "run": "workspace",
    "notes": ""
   },
   {
-   "id": "M07-172",
+   "id": "M07-194",
    "status": "VERIFIED_RUNTIME",
    "claim": "MISSION 07 deliverable 11_SCORING_AND_REWARD_LOGIC.md exists (2942 bytes)",
    "evidence": [
@@ -2959,22 +3344,22 @@
    "notes": ""
   },
   {
-   "id": "M07-173",
+   "id": "M07-195",
    "status": "VERIFIED_RUNTIME",
-   "claim": "MISSION 07 deliverable 12_UI_STATE_MACHINE.md exists (3811 bytes)",
+   "claim": "MISSION 07 deliverable 12_UI_STATE_MACHINE.md exists (3816 bytes)",
    "evidence": [
     {
      "path": "ANALYSIS/MISSION_07/12_UI_STATE_MACHINE.md",
      "exists": true,
-     "sha256_16": "3def6122722bdfe5",
-     "bytes": 3811
+     "sha256_16": "58527ad3ecaec3e3",
+     "bytes": 3816
     }
    ],
    "run": "workspace",
    "notes": ""
   },
   {
-   "id": "M07-174",
+   "id": "M07-196",
    "status": "VERIFIED_RUNTIME",
    "claim": "MISSION 07 deliverable 13_NATIVE_RUNTIME_FINDINGS.md exists (2078 bytes)",
    "evidence": [
@@ -2989,90 +3374,90 @@
    "notes": ""
   },
   {
-   "id": "M07-175",
+   "id": "M07-197",
    "status": "VERIFIED_RUNTIME",
-   "claim": "MISSION 07 deliverable 14_EXPERIMENT_LOG_AND_LIMITATIONS.md exists (4336 bytes)",
+   "claim": "MISSION 07 deliverable 14_EXPERIMENT_LOG_AND_LIMITATIONS.md exists (4634 bytes)",
    "evidence": [
     {
      "path": "ANALYSIS/MISSION_07/14_EXPERIMENT_LOG_AND_LIMITATIONS.md",
      "exists": true,
-     "sha256_16": "a56c11a4cf11f5a9",
-     "bytes": 4336
+     "sha256_16": "587084226b821706",
+     "bytes": 4634
     }
    ],
    "run": "workspace",
    "notes": ""
   },
   {
-   "id": "M07-176",
+   "id": "M07-198",
    "status": "VERIFIED_RUNTIME",
-   "claim": "MISSION 07 deliverable 15_ANSWER_TO_SCORING_RECONSTRUCTION.md exists (4792 bytes)",
+   "claim": "MISSION 07 deliverable 15_ANSWER_TO_SCORING_RECONSTRUCTION.md exists (5310 bytes)",
    "evidence": [
     {
      "path": "ANALYSIS/MISSION_07/15_ANSWER_TO_SCORING_RECONSTRUCTION.md",
      "exists": true,
-     "sha256_16": "fa220c1cd32be236",
-     "bytes": 4792
+     "sha256_16": "0b09668b7a67910c",
+     "bytes": 5310
     }
    ],
    "run": "workspace",
    "notes": ""
   },
   {
-   "id": "M07-177",
+   "id": "M07-199",
    "status": "VERIFIED_RUNTIME",
-   "claim": "MISSION 07 deliverable 17_ACCEPTANCE_CRITERIA.md exists (3503 bytes)",
+   "claim": "MISSION 07 deliverable 17_ACCEPTANCE_CRITERIA.md exists (3767 bytes)",
    "evidence": [
     {
      "path": "ANALYSIS/MISSION_07/17_ACCEPTANCE_CRITERIA.md",
      "exists": true,
-     "sha256_16": "4cafb31fce7245bc",
-     "bytes": 3503
+     "sha256_16": "d4169728225619af",
+     "bytes": 3767
     }
    ],
    "run": "workspace",
    "notes": ""
   },
   {
-   "id": "M07-178",
+   "id": "M07-200",
    "status": "VERIFIED_RUNTIME",
-   "claim": "MISSION 07 deliverable 18_OPEN_QUESTIONS.md exists (4363 bytes)",
+   "claim": "MISSION 07 deliverable 18_OPEN_QUESTIONS.md exists (4595 bytes)",
    "evidence": [
     {
      "path": "ANALYSIS/MISSION_07/18_OPEN_QUESTIONS.md",
      "exists": true,
-     "sha256_16": "98d20077a882bc3d",
-     "bytes": 4363
+     "sha256_16": "8f8127043c842e8f",
+     "bytes": 4595
     }
    ],
    "run": "workspace",
    "notes": ""
   },
   {
-   "id": "M07-179",
+   "id": "M07-201",
    "status": "VERIFIED_RUNTIME",
-   "claim": "MISSION 07 deliverable README.md exists (4124 bytes)",
+   "claim": "MISSION 07 deliverable README.md exists (4484 bytes)",
    "evidence": [
     {
      "path": "ANALYSIS/MISSION_07/README.md",
      "exists": true,
-     "sha256_16": "f76b086e6faca1d8",
-     "bytes": 4124
+     "sha256_16": "2a71e6d4f1735cb9",
+     "bytes": 4484
     }
    ],
    "run": "workspace",
    "notes": ""
   },
   {
-   "id": "M07-180",
+   "id": "M07-202",
    "status": "VERIFIED_RUNTIME",
-   "claim": "MISSION 07 deliverable 16_EVIDENCE_DATABASE.json exists (25188 bytes)",
+   "claim": "MISSION 07 deliverable 16_EVIDENCE_DATABASE.json exists (105521 bytes)",
    "evidence": [
     {
      "path": "ANALYSIS/MISSION_07/16_EVIDENCE_DATABASE.json",
      "exists": true,
-     "sha256_16": "04a1b9ba5dfccec4",
-     "bytes": 25188
+     "sha256_16": "033aebf9a8a71449",
+     "bytes": 105521
     }
    ],
    "run": "workspace",

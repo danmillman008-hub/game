@@ -93,3 +93,24 @@ This is a real code-editor boundary UI; whether its snippets are evaluated
 locally or remotely remains `UNKNOWN` (no JS-interface/native hook evidence).
 Stage 6 installs `android.webkit.WebView.addJavascriptInterface` hooks to
 record the bridge object class if one is registered.
+
+## Stage 6 — real fill-the-gap module and RunButton state (`VERIFIED_RUNTIME`)
+`TRACES/STAGE6_ONLINE.jsonl` at 13:20:09 shows the lesson **after** the correct
+WebView answer being initialised with real shipped HTML:
+```
+te.c.b(...) -> [Paragraph(..., visibilty=ALWAYS),
+  Code(content=<button>, interactions=[FillTheGap(isDefault=true,
+       options=[Option(correct=true, text=, startIndex=0, endIndex=8),
+                Option(correct=false, text=</button>, startIndex=0, endIndex=0),
+                Option(correct=false, text=button, ..., ...)])],
+       output=null, visibilty=ALWAYS, language=HTML, name=index.html,
+       collapsibleLines=[]),
+  Paragraph(texts=[Make sure to pick , <button>, .], visibilty=WRONG)]
+gm.h.a(...) -> FillTheGap(interactionTypeName=fill_the_gap)
+LiveData: RunButton$State.RUN_DISABLED, InteractionKeyboardButtonState.DISABLED,
+          jm.q = LessonOutput(outputItems=[], isVisible=false), jm.g
+```
+This is a verified local code-editor/fill-the-gap state: options carry
+`correct` flags and `startIndex/endIndex` spans, and wrong-only paragraphs are
+tagged `visibilty=WRONG`. `WebView.addJavascriptInterface` emitted no event in
+the attach window, so the JS→native interface object remains `UNKNOWN`.

@@ -6873,5 +6873,236 @@
    }
   ],
   "note": "M06 adds 113 entries. The original 336 M01–M04 entries, mission_02_append and mission_05_append are unchanged. No new emulator run; runtime claims explicitly cross-reference M05."
+ },
+ "mission_07_append": {
+  "document": "MISSION 07 — live runtime reconstruction and offline state forensics (M01–M06 entries preserved verbatim)",
+  "database": "ANALYSIS/MISSION_07/16_EVIDENCE_DATABASE.json",
+  "classification_vocabulary": {
+   "VERIFIED_RUNTIME": "measured on the GitHub Actions emulator with root/Frida/SQLite/uiautomator evidence",
+   "VERIFIED_STATIC": "read directly from DEX bytecode or verbatim shipped APK assets",
+   "VERIFIED_BOTH": "both of the above",
+   "INFERRED": "named interpretation of verified evidence",
+   "UNKNOWN": "insufficient evidence; no claim made"
+  },
+  "server_confirmed": 0,
+  "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+  "runs": [
+   42017453045,
+   42018369099,
+   42019353340,
+   42025423068,
+   42028049247,
+   42030594857,
+   42033599909
+  ],
+  "counts": {
+   "VERIFIED_RUNTIME": 137,
+   "VERIFIED_BOTH": 54,
+   "VERIFIED_STATIC": 5,
+   "UNKNOWN": 6,
+   "total": 202
+  },
+  "headline_results": [
+   "Frida 17.25.2 requires an explicit Java bridge; bundled frida-tools 14.11.0 java.js enabled 42 Java hooks",
+   "qm.i.a Unicode-aware normaliser, km.f.b all-match selection predicate, isSolvedCorrectly()=tries>=1, te.c.b DSL parser verified at runtime",
+   "wrong Q -> Try again; correct D -> Correct!/D O G -> Continue -> new lesson_progress row 151403 (tries=1, attempts=1, in_queue=1)",
+   "stage 6 hooks: c.U() -> c.H(1,1) -> createLessonProgress -> e0() -> queue_store -> f0(false,true) -> N(); no V/W/X for the WebView exercise",
+   "offline: Active default network: none; postUnsyncedLessonProgress throws NoConnectionException; DELETE FROM lesson_progress WHERE in_queue = 1 removes queued rows at cold start",
+   "scoring/XP/streak/unlock/code-execution internals remain UNKNOWN"
+  ],
+  "evidence": [
+   {
+    "id": "M07-001",
+    "claim": "Local sandbox has no adb/emulator/java/KVM; runtime executes on GitHub Actions",
+    "classification": "VERIFIED_RUNTIME",
+    "topic": "MISSION_07_RUNTIME",
+    "source_path": "ANALYSIS/MISSION_07/00_MISSION_07_PLAN.md, ANALYSIS/MISSION_07/01_RUNTIME_ENVIRONMENT.md",
+    "run": "42017453045"
+   },
+   {
+    "id": "M07-002",
+    "claim": "Android 16 / API 36 sdk_gphone64_x86_64 userdebug/dev-keys, ro.debuggable=1, ro.secure=1",
+    "classification": "VERIFIED_RUNTIME",
+    "topic": "MISSION_07_RUNTIME",
+    "source_path": "ANALYSIS/RUNTIME/MISSION_07/ENV/DEVICE_AND_ROOT.txt",
+    "run": "42017453045"
+   },
+   {
+    "id": "M07-003",
+    "claim": "adb root -> uid=0(root) context=u:r:su:s0; /system/xbin/su present",
+    "classification": "VERIFIED_RUNTIME",
+    "topic": "MISSION_07_RUNTIME",
+    "source_path": "ANALYSIS/RUNTIME/MISSION_07/ENV/DEVICE_AND_ROOT.txt",
+    "run": "42017453045"
+   },
+   {
+    "id": "M07-004",
+    "claim": "SELinux Enforcing -> Permissive via setenforce 0; /system/bin/sqlite3 and strace present",
+    "classification": "VERIFIED_RUNTIME",
+    "topic": "MISSION_07_RUNTIME",
+    "source_path": "ANALYSIS/RUNTIME/MISSION_07/ENV/DEVICE_AND_ROOT.txt",
+    "run": "42017453045"
+   },
+   {
+    "id": "M07-005",
+    "claim": "Private /data/data/com.getmimo read via root; consistent sqlite3 .backup copies captured",
+    "classification": "VERIFIED_RUNTIME",
+    "topic": "MISSION_07_RUNTIME",
+    "source_path": "ANALYSIS/RUNTIME/MISSION_07/DB/SNAPSHOT_C_LESSON_BEFORE_ANSWER.json",
+    "run": "42019353340"
+   },
+   {
+    "id": "M07-006",
+    "claim": "Frida 17.25.2 server x86_64 runs; frida-ps -U lists process name Mimo",
+    "classification": "VERIFIED_RUNTIME",
+    "topic": "MISSION_07_RUNTIME",
+    "source_path": "ANALYSIS/RUNTIME/MISSION_07/FRIDA/INSTALL.txt, ANALYSIS/RUNTIME/MISSION_07/FRIDA/STAGE3_SETUP.txt",
+    "run": "42025423068"
+   },
+   {
+    "id": "M07-007",
+    "claim": "Frida attach must be by PID; get_process(\"com.getmimo\") and spawn() both fail",
+    "classification": "VERIFIED_RUNTIME",
+    "topic": "MISSION_07_RUNTIME",
+    "source_path": "ANALYSIS/RUNTIME/MISSION_07/FRIDA/DRIVER.log, ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE1_FRIDA.jsonl",
+    "run": "42017453045"
+   },
+   {
+    "id": "M07-008",
+    "claim": "Frida 17 scripts using global Java fail ReferenceError; bundled frida-tools 14.11.0 java.js fixes it",
+    "classification": "VERIFIED_RUNTIME",
+    "topic": "MISSION_07_RUNTIME",
+    "source_path": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE2_ONLINE.jsonl, ANALYSIS/RUNTIME/MISSION_07/FRIDA/java_bridge_frida17.js",
+    "run": "42019353340 / 42025423068"
+   },
+   {
+    "id": "M07-009",
+    "claim": "36,825 loaded classes, 85 com.getmimo.* classes at attach",
+    "classification": "VERIFIED_RUNTIME",
+    "topic": "MISSION_07_RUNTIME",
+    "source_path": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE3_ONLINE.jsonl",
+    "run": "42025423068"
+   },
+   {
+    "id": "M07-010",
+    "claim": "Offline isolation: Active default network: none + Network is unreachable + airplane_mode_on=1",
+    "classification": "VERIFIED_RUNTIME",
+    "topic": "MISSION_07_RUNTIME",
+    "source_path": "ANALYSIS/RUNTIME/MISSION_07/EXPERIMENTS/G_OFFLINE_ISOLATION.txt, ANALYSIS/RUNTIME/MISSION_07/EXPERIMENTS/S4_OFFLINE_ISOLATION.txt",
+    "run": "42019353340 / 42028049247"
+   },
+   {
+    "id": "M07-011",
+    "claim": "qm.i.a normalizer = lowercase(Locale.US) + keep Unicode letters/digits and < > ( ) : { } , . ; 21 runtime cases",
+    "classification": "VERIFIED_BOTH",
+    "topic": "MISSION_07_RUNTIME",
+    "source_path": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE3_ONLINE.jsonl, ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE4_ONLINE.jsonl",
+    "run": "42025423068 / 42028049247"
+   },
+   {
+    "id": "M07-012",
+    "claim": "km.f.b(List) = true iff for every sm.a item selected == correct; 8 runtime cases incl. empty -> true",
+    "classification": "VERIFIED_BOTH",
+    "topic": "MISSION_07_RUNTIME",
+    "source_path": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE4_ONLINE.jsonl, ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
+    "run": "42028049247"
+   },
+   {
+    "id": "M07-013",
+    "claim": "LessonProgress.isSolvedCorrectly() = tries >= 1, independent of attempts; 20 constructed objects",
+    "classification": "VERIFIED_BOTH",
+    "topic": "MISSION_07_RUNTIME",
+    "source_path": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE3_ONLINE.jsonl, ANALYSIS/MISSION_07/04_ANSWER_VALIDATION_RUNTIME.md",
+    "run": "42025423068"
+   },
+   {
+    "id": "M07-014",
+    "claim": "f0(false, isSolvedCorrectly()) — M07 correction of M06 which reported true as first arg",
+    "classification": "VERIFIED_BOTH",
+    "topic": "MISSION_07_RUNTIME",
+    "source_path": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE4_ONLINE.jsonl, ANALYSIS/MISSION_07/RUNTIME_TRACE/STATIC_DECODE/00_STATIC_DECODE_M07.md",
+    "run": "42028049247"
+   },
+   {
+    "id": "M07-015",
+    "claim": "network.a: online a()=true b()=false; offline a()=false b()=true",
+    "classification": "VERIFIED_RUNTIME",
+    "topic": "MISSION_07_RUNTIME",
+    "source_path": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE4_ONLINE.jsonl, ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE4_OFFLINE.jsonl",
+    "run": "42028049247"
+   },
+   {
+    "id": "M07-016",
+    "claim": "te.c.b(String) parses Paragraph/Code/Selection, drops unknown tags, returns [] on malformed XML (5 cases)",
+    "classification": "VERIFIED_RUNTIME",
+    "topic": "MISSION_07_RUNTIME",
+    "source_path": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE4_OFFLINE.jsonl, ANALYSIS/MISSION_07/10_CODE_EDITOR_AND_WEBVIEW_BOUNDARY.md",
+    "run": "42028049247"
+   },
+   {
+    "id": "M07-017",
+    "claim": "gm.h.a(emptyList) = None(interactionTypeName=slide)",
+    "classification": "VERIFIED_RUNTIME",
+    "topic": "MISSION_07_RUNTIME",
+    "source_path": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE3_ONLINE.jsonl",
+    "run": "42025423068"
+   },
+   {
+    "id": "M07-018",
+    "claim": "c.W() @10953916 = partial-match correct path (jm/n + analytics validated_input_execution_correct_partial_match)",
+    "classification": "VERIFIED_STATIC",
+    "topic": "MISSION_07_RUNTIME",
+    "source_path": "ANALYSIS/MISSION_07/RUNTIME_TRACE/STATIC_DECODE/00_STATIC_DECODE_M07.md, ANALYSIS/MISSION_07/RUNTIME_TRACE/STATIC_DECODE/W.smali.txt",
+    "run": "static decode 3735cfdf"
+   },
+   {
+    "id": "M07-019",
+    "claim": "c.d0() wrong-feedback builds jm/o with solutionFeedbackWrong and contains no XP/scoring arithmetic",
+    "classification": "VERIFIED_STATIC",
+    "topic": "MISSION_07_RUNTIME",
+    "source_path": "ANALYSIS/MISSION_07/RUNTIME_TRACE/STATIC_DECODE/d0.smali.txt",
+    "run": "static decode 3735cfdf"
+   },
+   {
+    "id": "M07-020",
+    "claim": "ds/w.c unlock key = \"<long>:<long>:<long>\" membership test in Set<String>",
+    "classification": "VERIFIED_STATIC",
+    "topic": "MISSION_07_RUNTIME",
+    "source_path": "ANALYSIS/MISSION_07/RUNTIME_TRACE/STATIC_DECODE/00_STATIC_DECODE_M07.md",
+    "run": "static decode 3735cfdf"
+   },
+   {
+    "id": "M07-021",
+    "claim": "Non-interactive slide 151410 solved locally: c.U() -> H() -> e0() -> queue_store -> f0(false,true) -> N()",
+    "classification": "VERIFIED_RUNTIME",
+    "topic": "MISSION_07_RUNTIME",
+    "source_path": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE4_ONLINE.jsonl, ANALYSIS/MISSION_07/03_INTERACTIVE_LESSON_VIEWMODEL_RUNTIME.md",
+    "run": "42028049247"
+   },
+   {
+    "id": "M07-022",
+    "claim": "Live LessonBundle(lessonId=151410, tutorialId=904, trackId=219, chapterType=PRACTICE_LEVEL_1, …)",
+    "classification": "VERIFIED_RUNTIME",
+    "topic": "MISSION_07_RUNTIME",
+    "source_path": "ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE4_ONLINE.jsonl",
+    "run": "42028049247"
+   },
+   {
+    "id": "M07-023",
+    "claim": "mimo.db schema exactly matches M05 ROOM_SQL.txt; journal_mode=wal; room_master hash 2b8ab6d3…",
+    "classification": "VERIFIED_RUNTIME",
+    "topic": "MISSION_07_RUNTIME",
+    "source_path": "ANALYSIS/RUNTIME/MISSION_07/DB/SNAPSHOT_S4_C_BEFORE_ANSWER.json, ANALYSIS/MISSION_05/EVIDENCE/ROOM_SQL.txt",
+    "run": "42028049247"
+   },
+   {
+    "id": "M07-024",
+    "claim": "Stage 2: lesson_progress=0, chapter_completions=0, tutorial_completions=672 in all C..I snapshots",
+    "classification": "VERIFIED_RUNTIME",
+    "topic": "MISSION_07_RUNTIME",
+    "source_path": "ANALYSIS/RUNTIME/MISSION_07/LOGS/STAGE2_SUMMARY.json, ANALYSIS/MISSION_07/06_DATABASE_BEFORE_AFTER.md",
+    "run": "42019353340"
+   }
+  ]
  }
 }

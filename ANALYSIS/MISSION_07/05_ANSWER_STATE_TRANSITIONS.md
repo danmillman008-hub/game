@@ -61,7 +61,7 @@ in_queue = 1` at 12:44:37, and
 | S1 | wrong WebView letter | `Try again`, `Q disabled` | unchanged | **none** | A local (JS) |
 | S2 | non-interactive slide solved | next slide / Continue | 1 `lesson_progress` row, `in_queue=1` | `U,H,e0,queue_store,f0,N` | A local + B queued |
 | S3 | offline cold start | path map | `lesson_progress` 0 rows | `repo_postUnsynced` throws `NoConnectionException` | B queued, not durable |
-| S4 | native correct / partial / wrong answer | `Correct!` / `D O G` / `jm/o` | not yet measured | `V()`/`W()`/`X()` | `UNKNOWN` (stage 5 targets this) |
+| S4 | native correct / partial / wrong answer | `jm/m` / `jm/n` / `jm/o` | not measured | `V()`/`W()`/`X()` | `UNKNOWN` — stage 6 proved the WebView answer uses `U()/H()` instead |
 
 ## Feedback object catalogue (`VERIFIED_STATIC`)
 `jm/m` correct (requires `solutionFeedbackCorrect`), `jm/n(userInput,
@@ -100,3 +100,18 @@ Frida at the answer moment and targets a native selection lesson to test the
 
 `second_lesson_not_found` is recorded honestly: the post-answer search did not
 reach a second classified lesson; no selection-answer claim is made from it.
+
+## STAGE 6 — same chain with hooks live (`VERIFIED_RUNTIME`, run `42033599909`)
+Attaching Frida at `S6_LESSON_READY` (13:19:50) captured the entire
+13:20:08 transition. `TRACES/STAGE6_ONLINE.jsonl` records
+`c.U() → c.H(1,1) → LessonProgressRepository.createLessonProgress(LessonBundle(lessonId=151403, lessonIndex=1, tutorialTitle=Discovering HTML and Tags)) → c.e0() → LessonProgressQueue.storeLessonProgress → isSolvedCorrectly()=true → c.f0(false,true) → c.N()`.
+No `V()`, `W()`, `X()`, `d0()` or `onLessonRun` entry occurred. Therefore the
+native validator branches belong to **other interaction types** (validatedInput,
+fillTheGap, selection, spell, executable), not to the shipped WebView letter
+exercise. The next lesson's `gm.h.a` returned
+`FillTheGap(interactionTypeName=fill_the_gap)` and its LiveData carried
+`RunButton$State.RUN_DISABLED`, `InteractionKeyboardButtonState.DISABLED`,
+`jm.q = LessonOutput(outputItems=[], isVisible=false)` — i.e. the state machine
+for a real code/fill-the-gap exercise, measured but not yet answered.
+`S6_1_*` UI dumps reproduce `Try again` → `Correct!` → code-editor lesson.
+`second_lesson_not_found` again means no native selection answer was exercised.

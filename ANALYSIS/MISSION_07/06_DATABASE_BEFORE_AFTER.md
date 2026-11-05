@@ -117,3 +117,17 @@ hook records after 12:58:01 (app process restart), so the INSERT itself is
 evidenced by the row diff, not by a hook. `LOGS/STAGE5_SUMMARY.json` confirms
 `online_frida_messages=1685`, `offline_frida_messages=1219`,
 `server_confirmed=0`.
+
+## Stage 6 (run `42033599909`) — independent reproduction
+`S6_1_C` → `S6_1_F` reproduces the stage-5 row diff, and
+`TRACES/STAGE6_ONLINE.jsonl` supplies the `createLessonProgress` return value
+for the new row verbatim:
+```
+LessonProgress(lessonId=151403, completedAt=2026-11-05T13:20:08.763Z,
+startedAt=2026-11-05T13:19:35.988Z, tries=1, tutorialId=904,
+tutorialVersion=161, trackId=219, publishSetVersion=753, attempts=1,
+isPracticeProgress=false, inQueue=true)
+```
+`S6_G` / `S6_H` / `S6_I` again show the `in_queue=1` rows disappearing at
+offline cold start. `LOGS/STAGE6_SUMMARY.json` records
+`server_confirmed: 0`.

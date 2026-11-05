@@ -12,12 +12,14 @@
 | Q-16 | `q.I()` equality with `solvedContent` | **PARTIAL**: `km.f.b` all-match predicate verified; `q.I` not exercised |
 | Q-19 | offline exception UI | **PARTIAL**: `NoConnectionException` thrown in repository; the user-visible UI of that exception was not captured |
 | Q-23 | force-stop restore | **RESOLVED (negative)**: `in_queue=1` rows are deleted at offline cold start |
-| Q-12 | loader / interaction selection | **PARTIAL**: `gm.h.a(emptyList)=None(slide)` verified; non-empty mapping `UNKNOWN` |
+| Q-12 | loader / interaction selection | **MOSTLY RESOLVED**: `gm.h.a(emptyList)=None(slide)` AND `gm.h.a(shippedFillTheGapModules)=FillTheGap(interactionTypeName=fill_the_gap)` verified; other types `UNKNOWN` |
 | Q-9 | SingleChoice / MultipleChoice / Reveal dispatch | **PARTIAL**: `Selection`/`SelectionItem` DSL objects verified; dispatch `UNKNOWN` |
 
 ## Still `UNKNOWN`
 1. Live `onLessonRun$1 → Y(true)/Y(false) → V()/W()/X()` dispatch for a native
-   validatedInput / selection / fillTheGap / spell / executable answer.
+   validatedInput / selection / fillTheGap / spell / executable answer. Stage 6
+   proved the WebView letter exercise bypasses these (`U()/H()` instead) but
+   did not submit a native fill-the-gap or selection answer.
 2. Live `jm/m` (correct), `jm/n` (partial), `jm/o` (wrong) LiveData values and the
    seven booleans of `jm/o`.
 3. `solutionFeedbackCorrect` / `solutionFeedbackWrong` / `solutionFeedbackTryAgain`

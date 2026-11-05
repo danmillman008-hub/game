@@ -51,7 +51,7 @@ WEBVIEW_LETTER --tap wrong Q--> "Try again", Q disabled, R/D enabled
                --tap correct D--> "Correct!", "D O G"   [shipped JS; stage 5]
                --Continue--> next lesson
 SELECTION_TEXT --tap option--> bottom Submit container becomes enabled
-               --Submit--> correct/wrong feedback        [not yet measured]
+               --Submit--> correct/wrong feedback        [UNKNOWN, not measured]
 ```
 `UI/S4_D1_AFTER_WRONG_OPTION.xml` clickable node bounds:
 `Q [343,963][454,1071] enabled=false`, `R [485,963][595,1071]`,

@@ -21,10 +21,14 @@ Branch `arena/aebb90b7-game` · original APK unchanged ·
 | 14 | Code editor / WebView boundary examined | **PARTIAL** | `10_CODE_EDITOR_AND_WEBVIEW_BOUNDARY.md` — UI + DSL verified; evaluation path `UNKNOWN` |
 | 15 | Progression / unlock / chapter completion fully reconstructed | **NOT MET** | `08_PROGRESSION_AND_UNLOCK_LOGIC.md` — key shape static only, live values `UNKNOWN` |
 | 16 | Scoring / XP / streak formulas reconstructed | **NOT MET** | `11_SCORING_AND_REWARD_LOGIC.md` — no local formula found, remote DTOs |
-| 17 | Native `V()/W()/X()` dispatch and `jm/m/n/o` feedback at runtime | **NOT MET / stage 6 target** | `05_ANSWER_STATE_TRANSITIONS.md` — WebView answer is JS-local |
+| 17 | Native `V()/W()/X()` dispatch and `jm/m/n/o` feedback at runtime | **PARTIAL (measured negative)** | stage 6 hooks prove the WebView answer uses `U()/H()` and never `V/W/X`; native feedback for other interaction types still `UNKNOWN` |
 | 18 | 18 numbered deliverables, evidence database, diagrams, README | **PASS** | `ANALYSIS/MISSION_07/01…18`, `16_EVIDENCE_DATABASE.json`, `DIAGRAMS/01..05.mmd` |
 | 19 | Every claim labelled `VERIFIED_RUNTIME` / `VERIFIED_STATIC` / `VERIFIED_BOTH` / `INFERRED` / `UNKNOWN` | **PASS** | `16_EVIDENCE_DATABASE.json`, all reports |
 | 20 | No server reconstruction / no credentials / no APK patch | **PASS** | `server_confirmed: 0` in all summaries |
+
+Stage 6 (`42033599909`) attached Frida at the lesson moment and captured the
+full 13:20:08 answer→Room hook chain, so criterion 17 is now a measured
+negative rather than an unexamined gap.
 
 **Overall:** the mission's core runtime-forensics requirement (live answer →
 correct/wrong UI → exact Room row → offline queue behaviour, with measured

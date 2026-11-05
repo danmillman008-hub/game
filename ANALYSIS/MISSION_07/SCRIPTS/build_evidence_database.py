@@ -141,24 +141,52 @@ def main():
       ['ANALYSIS/MISSION_07/01_RUNTIME_ENVIRONMENT.md','ANALYSIS/MISSION_07/13_NATIVE_RUNTIME_FINDINGS.md'],'not exercised, not declared unavailable')
     A('UNKNOWN','Server acknowledgement / response body for lesson progress',
       ['ANALYSIS/MISSION_07/07_PERSISTENCE_RESTORATION_AND_QUEUE.md'],'SERVER CONFIRMED=0')
-    # --- stage 5 (filled if evidence exists) ---
-    s5 = R/'EXPERIMENTS/S5_ANSWER_LOG.jsonl'
-    if s5.exists():
-        evs = []
-        for l in s5.read_text(errors='replace').splitlines():
+    # --- controlled answer experiments (stage 4/5/6) -----------------------
+    for st, run in (('S4','42028049247'),('S5','42030594857'),('S6','42033599909')):
+        lg = R/('EXPERIMENTS/%s_ANSWER_LOG.jsonl' % st)
+        if not lg.exists(): continue
+        key_events = []
+        for l in lg.read_text(errors='replace').splitlines():
             try: o = json.loads(l)
             except Exception: continue
-            if o.get('event') in ('experiment_start','experiment_complete','wrong_feedback','cta_skipped','second_lesson_detected'):
-                evs.append(o)
-        if evs:
-            A('VERIFIED_RUNTIME','Stage 5 answer driver executed %d key events (see claim notes)' % len(evs),
-              ['ANALYSIS/RUNTIME/MISSION_07/EXPERIMENTS/S5_ANSWER_LOG.jsonl'],'42030594857',
-              json.dumps(evs[:12], ensure_ascii=False)[:1400])
-    for f in ['STAGE5_ONLINE.jsonl','STAGE5_OFFLINE.jsonl']:
-        p = 'ANALYSIS/RUNTIME/MISSION_07/TRACES/'+f
-        if (ROOT/p).exists():
-            A('VERIFIED_RUNTIME','Trace %s event kinds: %s' % (f, json.dumps(trace_counts(p))),
-              [p],'42030594857')
+            if o.get('event') in ('lesson_detected','experiment_start','experiment_complete',
+                                  'wrong_feedback','cta_skipped','second_lesson_detected',
+                                  'second_lesson_not_found','snapshot','driver_done'):
+                key_events.append(o)
+        if key_events:
+            A('VERIFIED_RUNTIME','%s answer driver executed %d key events (notes contain the event list)' % (st,len(key_events)),
+              ['ANALYSIS/RUNTIME/MISSION_07/EXPERIMENTS/%s_ANSWER_LOG.jsonl' % st], run,
+              json.dumps(key_events[:16],ensure_ascii=False)[:1600])
+
+    A('VERIFIED_RUNTIME','Stage 5: wrong Q -> Try again -> correct D -> Correct!/D O G -> Continue -> code-editor lesson',
+      ['ANALYSIS/RUNTIME/MISSION_07/UI/S5_1_C_BEFORE_ANSWER.xml',
+       'ANALYSIS/RUNTIME/MISSION_07/UI/S5_1_D1_AFTER_WRONG_OPTION.xml',
+       'ANALYSIS/RUNTIME/MISSION_07/UI/S5_1_E1_AFTER_CORRECT_OPTION.xml',
+       'ANALYSIS/RUNTIME/MISSION_07/UI/S5_1_F_AFTER_CORRECT_SUBMIT.xml'],'42030594857')
+    A('VERIFIED_RUNTIME','Stage 5: new lesson_progress row 151403 tries=1 attempts=1 in_queue=1 after correct answer submit',
+      ['ANALYSIS/RUNTIME/MISSION_07/DB/SNAPSHOT_S5_1_F_AFTER_CORRECT_SUBMIT.json',
+       'ANALYSIS/RUNTIME/MISSION_07/DB/SNAPSHOT_S5_1_C_BEFORE_ANSWER.json'],'42030594857')
+    A('VERIFIED_RUNTIME','Stage 6 hooks at 13:20:08: c.U() -> c.H(1,1) -> repo_createProgress(LessonBundle 151403) -> e0() -> queue_store -> isSolved=true -> f0(false,true) -> N()',
+      ['ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE6_ONLINE.jsonl',
+       'ANALYSIS/MISSION_07/03_INTERACTIVE_LESSON_VIEWMODEL_RUNTIME.md'],'42033599909')
+    A('VERIFIED_RUNTIME','Stage 6 measured negative: no V/W/X/d0/onLessonRun/wrongFeedback entry during the WebView answer',
+      ['ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE6_ONLINE.jsonl',
+       'ANALYSIS/MISSION_07/05_ANSWER_STATE_TRANSITIONS.md'],'42033599909')
+    A('VERIFIED_BOTH','gm.h.a(nonEmptyList) = FillTheGap(interactionTypeName=fill_the_gap)',
+      ['ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE6_ONLINE.jsonl'],'42033599909')
+    A('VERIFIED_RUNTIME','te.c.b() on real shipped HTML yields Paragraph/Code/FillTheGap(options with correct flags, startIndex/endIndex)/Paragraph(visibilty=WRONG)',
+      ['ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE6_ONLINE.jsonl',
+       'ANALYSIS/MISSION_07/10_CODE_EDITOR_AND_WEBVIEW_BOUNDARY.md'],'42033599909')
+    A('VERIFIED_RUNTIME','LiveData RunButton$State.RUN_DISABLED, InteractionKeyboardButtonState.DISABLED, jm.q=LessonOutput(outputItems=[],isVisible=false), jm.g',
+      ['ANALYSIS/RUNTIME/MISSION_07/TRACES/STAGE6_ONLINE.jsonl'],'42033599909')
+    A('VERIFIED_RUNTIME','Offline isolation repeated in stage 6; S6_G rows -> S6_H/S6_I 0 rows',
+      ['ANALYSIS/RUNTIME/MISSION_07/EXPERIMENTS/S6_OFFLINE_ISOLATION.txt',
+       'ANALYSIS/RUNTIME/MISSION_07/DB/SNAPSHOT_S6_G_BEFORE_FORCESTOP.json',
+       'ANALYSIS/RUNTIME/MISSION_07/DB/SNAPSHOT_S6_H_OFFLINE_COLD_START.json'],'42033599909')
+    for st in ('STAGE3_ONLINE','STAGE4_ONLINE','STAGE4_OFFLINE','STAGE5_ONLINE','STAGE5_OFFLINE','STAGE6_ONLINE','STAGE6_OFFLINE'):
+        q = 'ANALYSIS/RUNTIME/MISSION_07/TRACES/%s.jsonl' % st
+        if (ROOT/q).exists():
+            A('VERIFIED_RUNTIME','Trace %s event kinds: %s' % (st, json.dumps(trace_counts(q))),[q],'42025423068 / 42028049247 / 42030594857 / 42033599909')
 
     # --- auto-generated granular entries from the measured traces -----------
     def cases(trace_path, experiment, status, evidence_extra=()):
@@ -234,7 +262,7 @@ def main():
       'status_counts':dict(counts),
       'total_entries':len(entries),
       'missing_evidence_paths':missing,
-      'runs':[42017453045,42018369099,42019353340,42025423068,42028049247,42030594857],
+      'runs':[42017453045,42018369099,42019353340,42025423068,42028049247,42030594857,42033599909],
       'evidence_status_vocabulary':['VERIFIED_RUNTIME','VERIFIED_STATIC','VERIFIED_BOTH','INFERRED','UNKNOWN'],
       'entries':[dict(id='M07-%03d'%(i+1), **e) for i,e in enumerate(entries)]
     }

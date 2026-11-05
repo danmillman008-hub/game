@@ -65,3 +65,22 @@ observation, not a failure of the parser.
 No Xposed/LSPosed, no JVMTI, no native/JNI hooks, no `strace`, no heap dump,
 no `WebView.addJavascriptInterface` hook, no `System.loadLibrary` hook. See
 `13_NATIVE_RUNTIME_FINDINGS.md`.
+
+## Stage 6 — hooks attached at the answer moment (`VERIFIED_RUNTIME`, run `42033599909`)
+Because onboarding restarts the app process, stage 6 waited for
+`EXPERIMENTS/S6_LESSON_READY` (written by `m07_answer_driver.py` when the
+classified lesson appears) and only then attached Frida. Result:
+`TRACES/STAGE6_ONLINE.jsonl` has 32 `entry` / 32 `exit`, 14 `liveData`,
+138 `sql`, 24 `sql_statement`, 73 `call`, 42 `hook_installed`; events run
+13:19:50–13:21:09, i.e. **across the 13:20:08 answer**. Hook tag counts:
+`getLessonBundle` 26, `isSolved` 6, `queue_store` 6, `lessonSolvedAndProceed` 4,
+`createLessonProgress` 2, `repo_createProgress` 2, `storeProgressInMemory` 2,
+`trackLessonResult` 2, `queue_count` 4, `dslParser` 4,
+`interactionSelector` 2, `initialiseViewModel` 2, `resetInputState` 2.
+Still **zero** entries for `onLessonRun`, `V`, `W`, `X`, `d0`,
+`wrongFeedback`, `solutionFeedback` — a measured negative confirming that
+lesson 151403's answer does not go through the native validator branches.
+
+`WebView.addJavascriptInterface` hook installed but emitted no event during
+that window (the WebView was created before attach). Recorded as `UNKNOWN`, not
+as "no bridge exists".
