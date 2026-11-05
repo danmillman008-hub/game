@@ -1,5 +1,17 @@
-[2026-11-05T14:37:14Z] MISSION 08 START phase=2 run=42046336206 sha=bcf77003e1566f1c5e04cc18143bf2b9fc738fcf
-[2026-11-05T14:37:14Z] sha_gate=SHA_MATCH_OK bytes=142353499
-[2026-11-05T14:39:03Z] frida_setup_done preflight=attach_ok": true, "pid": 3279, "name": "Mimo"
-[2026-11-05T14:42:54Z] orchestrator_exit=0 timeline_lines=485
-[2026-11-05T14:42:54Z] MISSION 08 COMPLETE phase=2
+[2026-11-05T14:54:07Z] MISSION 08 START phase=3 run=42049141553 sha=1186413c31419567424f58adf4b6a4ce65438c63
+[2026-11-05T14:54:07Z] sha_gate=SHA_MATCH_OK bytes=142353499
+[2026-11-05T14:55:15Z] frida_setup_done preflight=attach_ok": true, "pid": 3542, "name": "Mimo"
+[2026-11-05T14:55:42Z] phase3_natural_restore_done rows=restored_lesson_progress_rows=2
+[2026-11-05T14:56:07Z] orchestrator_exit=1 timeline_lines=176
+Traceback (most recent call last):
+  File "/home/runner/work/game/game/ANALYSIS/RUNTIME/MISSION_08/m08_unified.py", line 920, in <module>
+    main()
+    ~~~~^^
+  File "/home/runner/work/game/game/ANALYSIS/RUNTIME/MISSION_08/m08_unified.py", line 831, in main
+    run_phase3(sup, args.duration)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/game/game/ANALYSIS/RUNTIME/MISSION_08/m08_unified.py", line 724, in run_phase3
+    emit('orchestrator', 'route_target', route=route, node=n, source='measured_bounds')
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: emit() got multiple values for argument 'source'
+[2026-11-05T14:56:07Z] MISSION 08 COMPLETE phase=3
