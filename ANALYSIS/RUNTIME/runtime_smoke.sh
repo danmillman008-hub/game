@@ -359,11 +359,24 @@ else
       echo "monkey_exit=$?" >> "$R/APPLICATION_LAUNCH.txt"
     fi
 
-    # Wake / unlock / wait so a real framebuffer and UI hierarchy exist.
-    adb shell input keyevent 26 >/dev/null 2>&1
-    adb shell input keyevent 82 >/dev/null 2>&1
-    adb shell input keyevent 3 >/dev/null 2>&1
-    sleep 15
+    # MISSION 04: wait for the REAL application UI.
+    # IMPORTANT: do NOT send keyevent 3 (HOME) after launch - that backgrounds
+    # the app and gives a launcher screenshot instead of Mimo's UI.
+    sleep 3
+    adb exec-out screencap -p > "$R/SCREENSHOTS/TEST-002_splash.png" 2>/dev/null
+    sleep 16
+    F0=$(adb shell dumpsys window 2>/dev/null | tr -d '\r' | grep -m1 -i 'mCurrentFocus')
+    case "$F0" in
+      *"$M04_PKG"*) echo "initial_focus_on_mimo=yes" >> "$R/APPLICATION_LAUNCH.txt" ;;
+      *)
+        echo "initial_focus_on_mimo=no focus=$F0" >> "$R/APPLICATION_LAUNCH.txt"
+        echo "== dismiss possible system overlay (keyevent 4 BACK) ==" >> "$R/APPLICATION_LAUNCH.txt"
+        adb shell input keyevent 4 >/dev/null 2>&1
+        echo "== relaunch: adb shell monkey -p $M04_PKG 1 ==" >> "$R/APPLICATION_LAUNCH.txt"
+        adb shell monkey -p "$M04_PKG" 1 >> "$R/APPLICATION_LAUNCH.txt" 2>&1
+        echo "monkey_relaunch_exit=$?" >> "$R/APPLICATION_LAUNCH.txt"
+        sleep 12 ;;
+    esac
     M04_PID=$(adb shell pidof "$M04_PKG" 2>/dev/null | tr -d '\r')
     M04_FOCUS=$(adb shell dumpsys window 2>/dev/null | tr -d '\r' \
       | grep -m1 -iE 'mCurrentFocus|mFocusedApp' | sed 's/^ *//')

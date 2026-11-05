@@ -1,0 +1,18 @@
+MISSION 04 - APPLICATION LAUNCH
+timestamp_utc=2026-11-05T08:44:14Z run_id=41996366953
+package=com.getmimo
+== command: adb shell cmd package resolve-activity --brief -c android.intent.category.LAUNCHER com.getmimo ==
+priority=0 preferredOrder=0 match=0x108000 specificIndex=-1 isDefault=false
+com.getmimo/.ui.SplashActivity_default
+resolved_launcher=com.getmimo/.ui.SplashActivity_default
+== command: adb shell am start -n com.getmimo/.ui.SplashActivity_default ==
+Starting: Intent { cmp=com.getmimo/.ui.SplashActivity_default }
+am_start_exit=0
+== process / foreground state after launch ==
+package=com.getmimo
+pid=4160
+mCurrentFocus=mCurrentFocus=Window{7d8e266 u0 com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity}
+mResumedActivity=topResumedActivity=ActivityRecord{30119293 u0 com.google.android.apps.nexuslauncher/.NexusLauncherActivity t6}
+== command: adb shell dumpsys activity activities (Mimo lines) ==
+== command: adb shell ps -A (Mimo process) ==
+u0_a216       4160   474   33386852 206488 0                   0 S com.getmimo

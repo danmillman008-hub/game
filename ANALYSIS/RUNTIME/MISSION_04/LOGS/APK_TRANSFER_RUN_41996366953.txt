@@ -1,0 +1,52 @@
+MISSION 04 - ORIGINAL APK TRANSFER (runner side)
+timestamp_utc=2026-11-05T08:41:11Z
+run_id=41996366953 ref=refs/heads/arena/aebb90b7-game sha=bf873e89075e99c120674ec47cd6372468b7bbb0
+expected_sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a expected_bytes=142353499
+URL values are intentionally never logged.
+
+== METHOD 1: temporary authenticated HTTP endpoint ==
+m1_health[plain]=HTTP/2 403 
+m1_first_headers[plain]:
+content-type: application/json; charset=utf-8
+x-ratelimit-limit: 60000
+x-ratelimit-remaining: 60000
+x-ratelimit-reset: 0
+via: 1.1 google
+m1_body_prefix[plain]:
+{"sandboxId":"iva1ml3c5fnbp9nrajhq7","message":"Sandbox is secured with traffic access token. Token header 'e2b-traffic-access-token' is missing","code":403}
+m1_health[noproxy]=HTTP/2 403 
+m1_first_headers[noproxy]:
+content-type: application/json; charset=utf-8
+x-ratelimit-limit: 60000
+x-ratelimit-remaining: 60000
+x-ratelimit-reset: 0
+via: 1.1 google
+m1_body_prefix[noproxy]:
+
+m1_health[browser]=HTTP/2 403 
+m1_first_headers[browser]:
+content-type: text/html; charset=utf-8
+x-ratelimit-limit: 60000
+x-ratelimit-remaining: 60000
+x-ratelimit-reset: 0
+via: 1.1 google
+m1_body_prefix[browser]:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="robots" content="noindex">
+    <title>Missing traffic access token · E2B</title>
+    <style>
+
+== METHOD 2: Google Drive staged chunks (link-only, temporary) ==
+m2_part1_host=drive.usercontent.google.com exit=0 bytes=71176749 want=71176749
+m2_part2_host=drive.usercontent.google.com exit=0 bytes=71176750 want=71176750
+m2_concat_bytes=142353499
+m2_part1_sha=bc4f1f194495f59da1f40adc6e33cae83d5759a8ad8add01a385009e9fc854c5
+m2_part2_sha=d3756c70bba9c1c7e8e060415259e6b13e13bd449c76f50152a40b04ccf05c67
+downloaded_bytes=142353499
+downloaded_sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+TRANSFER_RESULT=SHA_MATCH_OK

@@ -45,7 +45,10 @@ redact() {
 
 # ---------------------------------------------------------------- METHOD 1
 echo "== METHOD 1: temporary authenticated HTTP endpoint ==" >> "$LOG"
-for VARIANT in plain noproxy browser; do
+if [ -z "$PREVIEW" ]; then
+  echo "m1=SKIPPED (disproved in run 41996366953: e2b-traffic-access-token required)" >> "$LOG"
+fi
+for VARIANT in $( [ -n "$PREVIEW" ] && echo plain noproxy browser ); do
   case "$VARIANT" in
     plain)   OPTS="" ;;
     noproxy) OPTS="--noproxy *" ;;
