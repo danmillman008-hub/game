@@ -1,287 +1,303 @@
 MISSION 05 - CRASH / ERROR / NETWORK OBSERVATIONS
-timestamp_utc=2026-11-05T09:45:41Z package=com.getmimo
+timestamp_utc=2026-11-05T09:56:45Z package=com.getmimo
 == FATAL / ANR / linker ==
-11-05 09:45:09.830  6730  7064 I ApexCodecsLazy: Failed to load libcom.android.media.swcodec.apexcodecs.so: dlopen failed: library "libcom.android.media.swcodec.apexcodecs.so" not found
+11-05 09:55:37.312  6841  6841 I com.getmimo: Waiting for a blocking GC ClassLinker
+11-05 09:55:37.698  6841  6841 I com.getmimo: WaitForGcToComplete blocked ClassLinker on Background for 385.299ms
+11-05 09:55:37.698  6841  6895 I com.getmimo: WaitForGcToComplete blocked Alloc on ClassLinker for 37.491ms
+11-05 09:55:37.698  6841  7008 I com.getmimo: WaitForGcToComplete blocked Alloc on ClassLinker for 37.195ms
+11-05 09:55:37.698  6841  6894 I com.getmimo: WaitForGcToComplete blocked Alloc on ClassLinker for 34.878ms
+11-05 09:55:37.700  6841  6998 I com.getmimo: WaitForGcToComplete blocked Alloc on ClassLinker for 39.107ms
+11-05 09:56:13.683  6841  7198 I ApexCodecsLazy: Failed to load libcom.android.media.swcodec.apexcodecs.so: dlopen failed: library "libcom.android.media.swcodec.apexcodecs.so" not found
 == network / connectivity / offline hints ==
-11-05 09:44:27.466   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
-11-05 09:44:27.466   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
-11-05 09:44:27.466   685  1024 D InetDiagMessage: Destroyed live tcp sockets for uids={10216} in 1ms
-11-05 09:44:27.467   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
-11-05 09:44:27.467   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
-11-05 09:44:27.467   685  1024 D InetDiagMessage: Destroyed live tcp sockets for uids={20216} in 1ms
-11-05 09:44:27.590   685  1024 D ConnectivityService: releasing NetworkRequest [ REQUEST id=203, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ] (release request)
-11-05 09:44:27.590   685  1024 D ConnectivityService: releasing NetworkRequest [ REQUEST id=207, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ] (release request)
-11-05 09:44:27.590   685  1024 D ConnectivityService: releasing NetworkRequest [ REQUEST id=205, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ] (release request)
-11-05 09:44:27.656   556   556 I adbd    : Remote process closed the socket (on MSG_PEEK)
-11-05 09:44:29.017  6730  6829 E [CIO]   : SettingsFail(cause=NetworkUnknown(uri=https://cdp.customer.io/v1/projects/ae86ede257503e4274ff/settings, cause=java.io.IOException: Connection failed))
-11-05 09:44:29.017  6730  6829 E [CIO]   : Caused by: NetworkUnknown(uri=https://cdp.customer.io/v1/projects/ae86ede257503e4274ff/settings, cause=java.io.IOException: Connection failed)
-11-05 09:44:29.017  6730  6829 E [CIO]   : Caused by: java.io.IOException: Connection failed
-11-05 09:44:29.017  6730  6829 E [CIO]   : Caused by: java.net.UnknownHostException: Unable to resolve host "cdp.customer.io": No address associated with hostname
-11-05 09:44:29.017  6730  6829 E [CIO]   : 	at com.google.firebase.perf.network.FirebasePerfOkHttpClient.execute(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:15)
-11-05 09:44:29.302  6730  6841 D nativeloader: InitLlndkLibrariesProduct: libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libRS.so:libandroid_net.so:libapexsupport.so:libavf.so:libbinder_ndk.so:libc.so:libcgrouprc.so:libclang_rt.asan-x86_64-android.so:libcom.android.tethering.connectivity_native.so:libdl.so:libft2.so:liblog.so:libm.so:libmediandk.so:libnativewindow.so:libneuralnetworks.so:libselinux.so:libsync.so:libvendorsupport.so:libvndksupport.so:libvulkan.so
-11-05 09:44:30.113   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
-11-05 09:44:30.114   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
-11-05 09:44:30.117   685  1024 D InetDiagMessage: Destroyed live tcp sockets for uids={10114} in 4ms
-11-05 09:44:30.120   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
-11-05 09:44:30.121   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
-11-05 09:44:30.121   685  1024 D InetDiagMessage: Destroyed live tcp sockets for uids={20114} in 4ms
-11-05 09:44:30.530   685  1098 D ConnectivityService: requestNetwork for uid/pid:10216/6730 activeRequest: null callbackRequest: 210 [NetworkRequest [ REQUEST id=211, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647 isUidTracked: false declaredMethods: AVAIL|LOST
-11-05 09:44:30.533   685  1018 D WifiNetworkFactory: got request NetworkRequest [ REQUEST id=211, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:30.533   685  1018 V WifiNetworkFactory: Accepted network request NetworkRequest [ REQUEST id=211, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:30.533   685  1018 D UntrustedWifiNetworkFactory: got request NetworkRequest [ REQUEST id=211, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:30.533   685  1018 D OemPaidWifiNetworkFactory: got request NetworkRequest [ REQUEST id=211, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:30.533   685  1018 D MultiInternetWifiNetworkFactory: got request NetworkRequest [ REQUEST id=211, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:35.140   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
-11-05 09:44:35.143   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
-11-05 09:44:35.144   685  1024 D InetDiagMessage: Destroyed live tcp sockets for uids={10114} in 5ms
-11-05 09:44:40.510   685   776 D ConnectivityService: requestNetwork for uid/pid:10216/6730 activeRequest: null callbackRequest: 212 [NetworkRequest [ REQUEST id=213, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647 isUidTracked: false declaredMethods: AVAIL|LOST
-11-05 09:44:40.514   685  1018 D WifiNetworkFactory: got request NetworkRequest [ REQUEST id=213, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:40.514   685  1018 V WifiNetworkFactory: Accepted network request NetworkRequest [ REQUEST id=213, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:40.514   685  1018 D UntrustedWifiNetworkFactory: got request NetworkRequest [ REQUEST id=213, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:40.514   685  1018 D OemPaidWifiNetworkFactory: got request NetworkRequest [ REQUEST id=213, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:40.514   685  1018 D MultiInternetWifiNetworkFactory: got request NetworkRequest [ REQUEST id=213, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:40.545   685   776 D ConnectivityService: requestNetwork for uid/pid:10216/6730 activeRequest: null callbackRequest: 214 [NetworkRequest [ REQUEST id=215, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647 isUidTracked: false declaredMethods: AVAIL|LOST
-11-05 09:44:40.546   685  1018 D WifiNetworkFactory: got request NetworkRequest [ REQUEST id=215, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:40.546   685  1018 V WifiNetworkFactory: Accepted network request NetworkRequest [ REQUEST id=215, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:40.546   685  1018 D UntrustedWifiNetworkFactory: got request NetworkRequest [ REQUEST id=215, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:40.549   685  1018 D OemPaidWifiNetworkFactory: got request NetworkRequest [ REQUEST id=215, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:40.549   685  1018 D MultiInternetWifiNetworkFactory: got request NetworkRequest [ REQUEST id=215, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:42.940  1425  1576 W GetConfigSnapshotOp: Succeeded but not registered: com.google.android.platform.network_security [CONTEXT service_id=51 ]
-11-05 09:44:42.942  1425  6919 W PlatformConfigurator: Committing snapshot for network_security failed [CONTEXT service_id=204 ]
-11-05 09:44:43.031  1425  1576 W GetConfigSnapshotOp: Succeeded but not registered: com.google.android.platform.desktop_networking [CONTEXT service_id=51 ]
-11-05 09:44:43.561   685  5141 E SettingsToPropertiesMapper: invalid flag name: anomaly_network_connecting_timeout
-11-05 09:44:43.564   685  5141 E SettingsToPropertiesMapper: invalid flag name: anomaly_network_disconnecting_timeout
-11-05 09:44:43.564   685  5141 E SettingsToPropertiesMapper: invalid flag name: anomaly_network_handover_timeout
-11-05 09:44:43.568   685  5141 E SettingsToPropertiesMapper: invalid flag name: anomaly_network_unwanted
-11-05 09:44:43.568   685  5141 E SettingsToPropertiesMapper: invalid flag name: anomaly_qns_change_network
-11-05 09:44:43.834  1425  1576 W GetConfigSnapshotOp: Succeeded but not registered: com.google.android.platform.android_core_networking [CONTEXT service_id=51 ]
-11-05 09:44:45.194  1425  4545 W GetConfigSnapshotOp: Succeeded but not registered: com.google.android.platform.core_networking_ipsec [CONTEXT service_id=51 ]
-11-05 09:44:45.263   685  5141 E SettingsToPropertiesMapper: invalid flag name: INIT_gd_hal_snoop_logger_socket
-11-05 09:44:48.561   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
-11-05 09:44:48.561   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
-11-05 09:44:48.561   685  1024 D InetDiagMessage: Destroyed live tcp sockets for uids={10136} in 0ms
-11-05 09:44:48.562   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
-11-05 09:44:48.562   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
-11-05 09:44:48.562   685  1024 D InetDiagMessage: Destroyed live tcp sockets for uids={20136} in 1ms
-11-05 09:44:53.548   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
-11-05 09:44:53.548   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
-11-05 09:44:53.548   685  1024 D InetDiagMessage: Destroyed live tcp sockets for uids={10208} in 1ms
-11-05 09:44:58.570   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
-11-05 09:44:58.571   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
-11-05 09:44:58.571   685  1024 D InetDiagMessage: Destroyed live tcp sockets for uids={10136} in 1ms
-11-05 09:45:07.446   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
-11-05 09:45:07.447   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
-11-05 09:45:07.447   685  1024 D InetDiagMessage: Destroyed live tcp sockets for uids={10191} in 1ms
-11-05 09:45:07.447   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
-11-05 09:45:07.447   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
-11-05 09:45:07.447   685  1024 D InetDiagMessage: Destroyed live tcp sockets for uids={20191} in 0ms
-11-05 09:45:10.725     0     0 W servicemanager: Isolated app with UID 99002 requested 'network_management', but the service is not allowed for isolated apps.
-11-05 09:45:10.676   685  1352 D ConnectivityService: requestNetwork for uid/pid:10216/6730 activeRequest: null callbackRequest: 216 [NetworkRequest [ REQUEST id=217, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647 isUidTracked: false declaredMethods: AVAIL|LOST|NC|LP
-11-05 09:45:10.691   685  1018 D WifiNetworkFactory: got request NetworkRequest [ REQUEST id=217, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:45:10.691   685  1018 V WifiNetworkFactory: Accepted network request NetworkRequest [ REQUEST id=217, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:45:10.691   685  1018 D UntrustedWifiNetworkFactory: got request NetworkRequest [ REQUEST id=217, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:45:10.692   685  1018 D OemPaidWifiNetworkFactory: got request NetworkRequest [ REQUEST id=217, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:45:10.692   685  1018 D MultiInternetWifiNetworkFactory: got request NetworkRequest [ REQUEST id=217, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:45:16.463   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
-11-05 09:45:16.463   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
-11-05 09:45:16.463   685  1024 D InetDiagMessage: Destroyed live tcp sockets for uids={10166} in 0ms
-11-05 09:45:16.464   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
-11-05 09:45:16.464   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
-11-05 09:45:16.464   685  1024 D InetDiagMessage: Destroyed live tcp sockets for uids={20166} in 0ms
-11-05 09:45:21.458   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
-11-05 09:45:21.459   685  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
-11-05 09:45:21.459   685  1024 D InetDiagMessage: Destroyed live tcp sockets for uids={10166} in 1ms
-11-05 09:45:31.530  1710  1975 I NetworkInfoNotification: NetworkInfoNotification$Listener.onReceive():112 onNetworkLost: networkState = NO_CONNECTION, isAirplaneModeOn = false
-11-05 09:45:31.657   685  1011 D ConnectivityService: requestNetwork for uid/pid:10144/1425 activeRequest: null callbackRequest: 219 [NetworkRequest [ REQUEST id=220, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10144 RequestorUid: 10144 RequestorPkg: com.google.android.gms UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647 isUidTracked: false declaredMethods: AVAIL|LOST
-11-05 09:45:31.660   685  1018 D WifiNetworkFactory: got request NetworkRequest [ REQUEST id=220, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10144 RequestorUid: 10144 RequestorPkg: com.google.android.gms UnderlyingNetworks: Null] ]
-11-05 09:45:31.660   685  1018 V WifiNetworkFactory: Accepted network request NetworkRequest [ REQUEST id=220, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10144 RequestorUid: 10144 RequestorPkg: com.google.android.gms UnderlyingNetworks: Null] ]
-11-05 09:45:31.662   685  1018 D UntrustedWifiNetworkFactory: got request NetworkRequest [ REQUEST id=220, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10144 RequestorUid: 10144 RequestorPkg: com.google.android.gms UnderlyingNetworks: Null] ]
-11-05 09:45:31.662   685  1018 D OemPaidWifiNetworkFactory: got request NetworkRequest [ REQUEST id=220, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10144 RequestorUid: 10144 RequestorPkg: com.google.android.gms UnderlyingNetworks: Null] ]
-11-05 09:45:31.662   685  1018 D MultiInternetWifiNetworkFactory: got request NetworkRequest [ REQUEST id=220, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10144 RequestorUid: 10144 RequestorPkg: com.google.android.gms UnderlyingNetworks: Null] ]
-11-05 09:45:40.682   685  1018 E WifiChipAidlImpl: enableStaChannelForPeerNetwork failed with service-specific exception: android.os.ServiceSpecificException:  (code 4)
-11-05 09:45:40.696   685  1643 D ConnectivityService: registerNetworkAgent NetworkAgentInfo{network{103}  handle{445787328525}  ni{MOBILE[NR] CONNECTING extra: epc.tmobile.com} created=2026-11-05T09:45:40.696Z Score(Policies : TRANSPORT_PRIMARY ; KeepConnected : 0)   lp{{LinkAddresses: [ ] DnsAddresses: [ ] Domains: null MTU: 0 Routes: [ ]}}  nc{[ Transports: CELLULAR Capabilities: MMS&SUPL&DUN&FOTA&IMS&CBS&INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN&NOT_ROAMING&NOT_CONGESTED&NOT_SUSPENDED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED LinkUpBandwidth>=14Kbps LinkDnBandwidth>=14Kbps Specifier: <TelephonyNetworkSpecifier [mSubId = 1]> SubscriptionIds: {1} UnderlyingNetworks: Null]}  factorySerialNumber=5}
-11-05 09:45:40.709   471   511 I netd    : getFwmarkForNetwork(103) -> {MarkMaskParcel{mark: 103, mask: 65535}} <0.00ms>
-11-05 09:45:40.903     0     0 I init    : Created socket '/dev/socket/wpa_wlan0', mode 660, user 1010, group 1010
-11-05 09:45:40.713   685  1024 D ConnectivityService: Message EVENT_NETWORK_PROPERTIES_CHANGED enqueued for agent with netId 103
-11-05 09:45:40.713   685  1024 D ConnectivityService: Message EVENT_NETWORK_INFO_CHANGED enqueued for agent with netId 103
-11-05 09:45:40.717   685  1024 D ConnectivityService: [103 CELLULAR] EVENT_NETWORK_INFO_CHANGED, going from CONNECTING to CONNECTING
-11-05 09:45:40.717   471   511 I netd    : networkCreate(NativeNetworkConfig{netId: 103, networkType: PHYSICAL, permission: 0, secure: false, vpnType: -1, excludeLocalRoutes: false}) <0.02ms>
-11-05 09:45:40.717   471   511 I netd    : createNetworkCache(103) <0.06ms>
-11-05 09:45:40.718   685  1024 D ConnectivityService: Setting DNS servers for network 103 to []
-11-05 09:45:40.718   685  1024 D DnsManager: sendDnsConfigurationForNetwork(ResolverParamsParcel{netId: 103, sampleValiditySeconds: 1800, successThreshold: 25, minSamples: 8, maxSamples: 64, baseTimeoutMsec: 0, retryCount: 0, servers: [], domains: [], tlsName: , tlsServers: [], tlsFingerprints: [], caCertificate: , tlsConnectTimeoutMs: 0, resolverOptions: null, transportTypes: [0], meteredNetwork: true, dohParams: null, interfaceNames: []})
-11-05 09:45:40.718   471   511 I netd    : setResolverConfiguration(ResolverParamsParcel{netId: 103, sampleValiditySeconds: 1800, successThreshold: 25, minSamples: 8, maxSamples: 64, baseTimeoutMsec: 0, retryCount: 0, servers: [], domains: [], tlsName: , tlsServers: [], tlsFingerprints: [], caCertificate: , tlsConnectTimeoutMs: 0, resolverOptions: (null), transportTypes: [0], meteredNetwork: true, dohParams: (null), interfaceNames: []}) <0.03ms>
-11-05 09:45:40.720  1218  7352 D NetworkMonitor/103: checkAndRenewResourceConfig: update captive portal https urls to [https://www.google.com/generate_204]
-11-05 09:45:40.720  1218  7352 D NetworkMonitor/103: checkAndRenewResourceConfig: update captive portal http urls to [http://connectivitycheck.gstatic.com/generate_204]
-11-05 09:45:40.720  1218  7352 D NetworkMonitor/103: checkAndRenewResourceConfig: update captive portal fallback urls to[http://www.google.com/gen_204, http://play.googleapis.com/generate_204]
-11-05 09:45:40.721  1218  7352 D NetworkMonitor: Starting on network 103 with capport HTTPS URL [https://www.google.com/generate_204] and HTTP URL [http://connectivitycheck.gstatic.com/generate_204]
-11-05 09:45:40.722  1425  4545 I NearbyMediums: WifiNetwork setTelephonyIsDataConnected:true
-11-05 09:45:40.747   471   511 I netd    : setNetworkAllowlist([NativeUidRangeConfig{netId: 103, uidRanges: [UidRangeParcel{start: 0, stop: 99999}], subPriority: 0}]) <0.00ms>
-11-05 09:45:40.747   685  1024 D ConnectivityService: Adding iface eth0 to network 103
-11-05 09:45:40.769   471   511 I netd    : networkAddInterface(103, eth0) <21.72ms>
-11-05 09:45:40.775   471   512 I netd    : networkAddRouteParcel(103, RouteInfoParcel{destination: 10.0.2.0/24, ifName: eth0, nextHop: , mtu: 0}) <0.11ms>
-11-05 09:45:40.780   471   512 I netd    : networkAddRouteParcel(103, RouteInfoParcel{destination: 0.0.0.0/0, ifName: eth0, nextHop: 10.0.2.2, mtu: 1500}) <0.07ms>
-11-05 09:45:40.780   685  1024 D ConnectivityService: Setting DNS servers for network 103 to [/10.0.2.3]
-11-05 09:45:40.780   685  1024 D DnsManager: sendDnsConfigurationForNetwork(ResolverParamsParcel{netId: 103, sampleValiditySeconds: 1800, successThreshold: 25, minSamples: 8, maxSamples: 64, baseTimeoutMsec: 0, retryCount: 0, servers: [10.0.2.3], domains: [], tlsName: , tlsServers: [], tlsFingerprints: [], caCertificate: , tlsConnectTimeoutMs: 0, resolverOptions: null, transportTypes: [0], meteredNetwork: true, dohParams: null, interfaceNames: [eth0]})
-11-05 09:45:40.780   471   512 I netd    : setResolverConfiguration(ResolverParamsParcel{netId: 103, sampleValiditySeconds: 1800, successThreshold: 25, minSamples: 8, maxSamples: 64, baseTimeoutMsec: 0, retryCount: 0, servers: [10.0.2.3], domains: [], tlsName: , tlsServers: [], tlsFingerprints: [], caCertificate: , tlsConnectTimeoutMs: 0, resolverOptions: (null), transportTypes: [0], meteredNetwork: true, dohParams: (null), interfaceNames: [eth0]}) <0.10ms>
+11-05 09:55:31.202   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+11-05 09:55:31.203   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+11-05 09:55:31.203   682  1030 D InetDiagMessage: Destroyed live tcp sockets for uids={10216} in 1ms
+11-05 09:55:31.203   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+11-05 09:55:31.203   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+11-05 09:55:31.203   682  1030 D InetDiagMessage: Destroyed live tcp sockets for uids={20216} in 0ms
+11-05 09:55:31.389   551   551 I adbd    : Remote process closed the socket (on MSG_PEEK)
+11-05 09:55:31.404   682  1030 D ConnectivityService: releasing NetworkRequest [ REQUEST id=207, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ] (release request)
+11-05 09:55:31.405   682  1030 D ConnectivityService: releasing NetworkRequest [ REQUEST id=211, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ] (release request)
+11-05 09:55:31.405   682  1030 D ConnectivityService: releasing NetworkRequest [ REQUEST id=209, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ] (release request)
+11-05 09:55:32.180   682  1030 D ConnectivityService: releasing NetworkRequest [ REQUEST id=199, [ Transports: CELLULAR Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10147 RequestorUid: 10147 RequestorPkg: com.google.android.googlequicksearchbox UnderlyingNetworks: Null] ] (release request)
+11-05 09:55:33.810   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+11-05 09:55:33.810   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+11-05 09:55:33.811   682  1030 D InetDiagMessage: Destroyed live tcp sockets for uids={10115} in 2ms
+11-05 09:55:33.815   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+11-05 09:55:33.816   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+11-05 09:55:33.816   682  1030 D InetDiagMessage: Destroyed live tcp sockets for uids={20115} in 5ms
+11-05 09:55:34.012  6841  6944 E [CIO]   : SettingsFail(cause=NetworkUnknown(uri=https://cdp.customer.io/v1/projects/ae86ede257503e4274ff/settings, cause=java.io.IOException: Connection failed))
+11-05 09:55:34.012  6841  6944 E [CIO]   : Caused by: NetworkUnknown(uri=https://cdp.customer.io/v1/projects/ae86ede257503e4274ff/settings, cause=java.io.IOException: Connection failed)
+11-05 09:55:34.012  6841  6944 E [CIO]   : Caused by: java.io.IOException: Connection failed
+11-05 09:55:34.012  6841  6944 E [CIO]   : Caused by: java.net.UnknownHostException: Unable to resolve host "cdp.customer.io": No address associated with hostname
+11-05 09:55:34.013  6841  6944 E [CIO]   : 	at com.google.firebase.perf.network.FirebasePerfOkHttpClient.execute(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:15)
+11-05 09:55:34.286  6841  6970 D nativeloader: InitLlndkLibrariesProduct: libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libRS.so:libandroid_net.so:libapexsupport.so:libavf.so:libbinder_ndk.so:libc.so:libcgrouprc.so:libclang_rt.asan-x86_64-android.so:libcom.android.tethering.connectivity_native.so:libdl.so:libft2.so:liblog.so:libm.so:libmediandk.so:libnativewindow.so:libneuralnetworks.so:libselinux.so:libsync.so:libvendorsupport.so:libvndksupport.so:libvulkan.so
+11-05 09:55:35.308   682  1098 D ConnectivityService: requestNetwork for uid/pid:10216/6841 activeRequest: null callbackRequest: 214 [NetworkRequest [ REQUEST id=215, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647 isUidTracked: false declaredMethods: AVAIL|LOST
+11-05 09:55:35.326   682  1024 D WifiNetworkFactory: got request NetworkRequest [ REQUEST id=215, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
+11-05 09:55:35.327   682  1024 V WifiNetworkFactory: Accepted network request NetworkRequest [ REQUEST id=215, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
+11-05 09:55:35.327   682  1024 D UntrustedWifiNetworkFactory: got request NetworkRequest [ REQUEST id=215, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
+11-05 09:55:35.327   682  1024 D OemPaidWifiNetworkFactory: got request NetworkRequest [ REQUEST id=215, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
+11-05 09:55:35.327   682  1024 D MultiInternetWifiNetworkFactory: got request NetworkRequest [ REQUEST id=215, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
+11-05 09:55:38.849   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+11-05 09:55:38.850   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+11-05 09:55:38.850   682  1030 D InetDiagMessage: Destroyed live tcp sockets for uids={10115} in 2ms
+11-05 09:55:41.336   682  2645 D ConnectivityService: requestNetwork for uid/pid:10216/6841 activeRequest: null callbackRequest: 216 [NetworkRequest [ REQUEST id=217, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647 isUidTracked: false declaredMethods: AVAIL|LOST
+11-05 09:55:41.343   682  1024 D WifiNetworkFactory: got request NetworkRequest [ REQUEST id=217, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
+11-05 09:55:41.343   682  1024 V WifiNetworkFactory: Accepted network request NetworkRequest [ REQUEST id=217, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
+11-05 09:55:41.343   682  1024 D UntrustedWifiNetworkFactory: got request NetworkRequest [ REQUEST id=217, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
+11-05 09:55:41.343   682  1024 D OemPaidWifiNetworkFactory: got request NetworkRequest [ REQUEST id=217, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
+11-05 09:55:41.343   682  1024 D MultiInternetWifiNetworkFactory: got request NetworkRequest [ REQUEST id=217, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
+11-05 09:55:46.757  1480  4354 W GetConfigSnapshotOp: Succeeded but not registered: com.google.android.platform.network_security [CONTEXT service_id=51 ]
+11-05 09:55:46.758  1480  7060 W PlatformConfigurator: Committing snapshot for network_security failed [CONTEXT service_id=204 ]
+11-05 09:55:47.157  1480  4354 W GetConfigSnapshotOp: Succeeded but not registered: com.google.android.platform.desktop_networking [CONTEXT service_id=51 ]
+11-05 09:55:47.791  1480  4354 W GetConfigSnapshotOp: Succeeded but not registered: com.google.android.platform.android_core_networking [CONTEXT service_id=51 ]
+11-05 09:55:48.878  1480  4354 W GetConfigSnapshotOp: Succeeded but not registered: com.google.android.platform.core_networking_ipsec [CONTEXT service_id=51 ]
+11-05 09:55:52.266   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+11-05 09:55:52.266   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+11-05 09:55:52.266   682  1030 D InetDiagMessage: Destroyed live tcp sockets for uids={10135} in 1ms
+11-05 09:55:52.266   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+11-05 09:55:52.266   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+11-05 09:55:52.266   682  1030 D InetDiagMessage: Destroyed live tcp sockets for uids={20135} in 0ms
+11-05 09:55:57.594   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+11-05 09:55:57.599   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+11-05 09:55:57.599   682  1030 D InetDiagMessage: Destroyed live tcp sockets for uids={10203} in 6ms
+11-05 09:56:02.271   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+11-05 09:56:02.271   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+11-05 09:56:02.271   682  1030 D InetDiagMessage: Destroyed live tcp sockets for uids={10135} in 1ms
+11-05 09:56:11.761   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+11-05 09:56:11.762   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+11-05 09:56:11.762   682  1030 D InetDiagMessage: Destroyed live tcp sockets for uids={10210} in 1ms
+11-05 09:56:11.762   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+11-05 09:56:11.763   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+11-05 09:56:11.763   682  1030 D InetDiagMessage: Destroyed live tcp sockets for uids={20210} in 1ms
+11-05 09:56:14.645     0     0 W servicemanager: Isolated app with UID 99002 requested 'network_management', but the service is not allowed for isolated apps.
+11-05 09:56:14.514   682  2002 D ConnectivityService: requestNetwork for uid/pid:10216/6841 activeRequest: null callbackRequest: 218 [NetworkRequest [ REQUEST id=219, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647 isUidTracked: false declaredMethods: AVAIL|LOST|NC|LP
+11-05 09:56:14.516   682  1024 D WifiNetworkFactory: got request NetworkRequest [ REQUEST id=219, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
+11-05 09:56:14.516   682  1024 V WifiNetworkFactory: Accepted network request NetworkRequest [ REQUEST id=219, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
+11-05 09:56:14.516   682  1024 D UntrustedWifiNetworkFactory: got request NetworkRequest [ REQUEST id=219, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
+11-05 09:56:14.516   682  1024 D OemPaidWifiNetworkFactory: got request NetworkRequest [ REQUEST id=219, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
+11-05 09:56:14.516   682  1024 D MultiInternetWifiNetworkFactory: got request NetworkRequest [ REQUEST id=219, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
+11-05 09:56:20.512   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+11-05 09:56:20.512   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+11-05 09:56:20.512   682  1030 D InetDiagMessage: Destroyed live tcp sockets for uids={10165} in 1ms
+11-05 09:56:20.513   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+11-05 09:56:20.513   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+11-05 09:56:20.513   682  1030 D InetDiagMessage: Destroyed live tcp sockets for uids={20165} in 1ms
+11-05 09:56:25.499   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+11-05 09:56:25.554   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+11-05 09:56:25.554   682  1030 D InetDiagMessage: Destroyed live tcp sockets for uids={10165} in 56ms
+11-05 09:56:35.649  1746  1993 I NetworkInfoNotification: NetworkInfoNotification$Listener.onReceive():112 onNetworkLost: networkState = NO_CONNECTION, isAirplaneModeOn = false
+11-05 09:56:35.791  1480  2412 I NetworkScheduler: Error inserting flex_time=1000 extras={"fetchReason":{"6":0},"fetchPackage":{"com.google.android.libraries.consentverifier#com.google.android.inputmethod.latin":4}} job_id=-1 period=2000 source=16 requires_charging=0 preferred_network_type=1 target_class=com.google.android.gms.phenotype.service.sync.PhenotypeConfigurator user_id=0 target_package=com.google.android.gms tag=PhenotypeSyncImmediately task_type=0 required_idleness_state=0 service_kind=0 source_version=252635000 persistence_level=1 required_network_type=0 runtime=1793872279879 retry_strategy={"maximum_backoff_seconds":{"3600":0},"initial_backoff_seconds":{"30":0},"retry_policy":{"0":0}} last_runtime=0 [CONTEXT service_id=218 ]
+11-05 09:56:35.951  2527  2622 D WM-ConstraintTracker: fkd: initial state = NetworkState(isConnected=false, isValidated=false, isMetered=true, isNotRoaming=false)
+11-05 09:56:35.951  2527  2622 D WM-NetworkStateTracker: Registering network callback
+11-05 09:56:35.952   682  1947 D ConnectivityService: requestNetwork for uid/pid:10136/2527 activeRequest: null callbackRequest: 221 [NetworkRequest [ REQUEST id=222, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10136 RequestorUid: 10136 RequestorPkg: com.google.android.dialer UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647 isUidTracked: false declaredMethods: AVAIL|LOST|NC
+11-05 09:56:35.953   682  1024 D WifiNetworkFactory: got request NetworkRequest [ REQUEST id=222, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10136 RequestorUid: 10136 RequestorPkg: com.google.android.dialer UnderlyingNetworks: Null] ]
+11-05 09:56:35.954   682  1024 V WifiNetworkFactory: Accepted network request NetworkRequest [ REQUEST id=222, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10136 RequestorUid: 10136 RequestorPkg: com.google.android.dialer UnderlyingNetworks: Null] ]
+11-05 09:56:35.957   682  1024 D UntrustedWifiNetworkFactory: got request NetworkRequest [ REQUEST id=222, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10136 RequestorUid: 10136 RequestorPkg: com.google.android.dialer UnderlyingNetworks: Null] ]
+11-05 09:56:35.957   682  1024 D OemPaidWifiNetworkFactory: got request NetworkRequest [ REQUEST id=222, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10136 RequestorUid: 10136 RequestorPkg: com.google.android.dialer UnderlyingNetworks: Null] ]
+11-05 09:56:35.957   682  1024 D MultiInternetWifiNetworkFactory: got request NetworkRequest [ REQUEST id=222, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10136 RequestorUid: 10136 RequestorPkg: com.google.android.dialer UnderlyingNetworks: Null] ]
+11-05 09:56:36.203   682  2387 D ConnectivityService: requestNetwork for uid/pid:10146/1480 activeRequest: null callbackRequest: 223 [NetworkRequest [ REQUEST id=224, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10146 RequestorUid: 10146 RequestorPkg: com.google.android.gms UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647 isUidTracked: false declaredMethods: AVAIL|LOST
+11-05 09:56:36.205   682  1024 D WifiNetworkFactory: got request NetworkRequest [ REQUEST id=224, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10146 RequestorUid: 10146 RequestorPkg: com.google.android.gms UnderlyingNetworks: Null] ]
+11-05 09:56:36.206   682  1024 V WifiNetworkFactory: Accepted network request NetworkRequest [ REQUEST id=224, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10146 RequestorUid: 10146 RequestorPkg: com.google.android.gms UnderlyingNetworks: Null] ]
+11-05 09:56:36.206   682  1024 D UntrustedWifiNetworkFactory: got request NetworkRequest [ REQUEST id=224, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10146 RequestorUid: 10146 RequestorPkg: com.google.android.gms UnderlyingNetworks: Null] ]
+11-05 09:56:36.206   682  1024 D OemPaidWifiNetworkFactory: got request NetworkRequest [ REQUEST id=224, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10146 RequestorUid: 10146 RequestorPkg: com.google.android.gms UnderlyingNetworks: Null] ]
+11-05 09:56:36.206   682  1024 D MultiInternetWifiNetworkFactory: got request NetworkRequest [ REQUEST id=224, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10146 RequestorUid: 10146 RequestorPkg: com.google.android.gms UnderlyingNetworks: Null] ]
+11-05 09:56:36.242  1480  6731 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.tapandpay.gcmtask.TapAndPayGcmTaskService started execution. cause:4 exec_start_elapsed_seconds: 397 [CONTEXT service_id=218 ]
+11-05 09:56:36.254  1480  6731 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.tapandpay.gcmtask.TapAndPayGcmTaskService finished executing. cause:4 result: 3 elapsed_millis: 439 uptime_millis: 439 exec_start_elapsed_seconds: 397 [CONTEXT service_id=218 ]
+11-05 09:56:36.306  1480  6196 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.tapandpay.gcmtask.TapAndPayGcmTaskService started execution. cause:5 exec_start_elapsed_seconds: 398 [CONTEXT service_id=218 ]
+11-05 09:56:36.315  1480  3290 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.tapandpay.gcmtask.TapAndPayGcmTaskService finished executing. cause:5 result: 1 elapsed_millis: 15 uptime_millis: 15 exec_start_elapsed_seconds: 398 [CONTEXT service_id=218 ]
+11-05 09:56:41.098   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+11-05 09:56:41.098   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+11-05 09:56:41.098   682  1030 D InetDiagMessage: Destroyed live tcp sockets for uids={10136} in 1ms
+11-05 09:56:41.099   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+11-05 09:56:41.099   682  1030 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+11-05 09:56:41.099   682  1030 D InetDiagMessage: Destroyed live tcp sockets for uids={20136} in 1ms
+11-05 09:56:44.686   682  1024 E WifiChipAidlImpl: enableStaChannelForPeerNetwork failed with service-specific exception: android.os.ServiceSpecificException:  (code 4)
+11-05 09:56:44.701   682  1228 D ConnectivityService: registerNetworkAgent NetworkAgentInfo{network{103}  handle{445787328525}  ni{MOBILE[NR] CONNECTING extra: epc.tmobile.com} created=2026-11-05T09:56:44.701Z Score(Policies : TRANSPORT_PRIMARY ; KeepConnected : 0)   lp{{LinkAddresses: [ ] DnsAddresses: [ ] Domains: null MTU: 0 Routes: [ ]}}  nc{[ Transports: CELLULAR Capabilities: MMS&SUPL&DUN&FOTA&IMS&CBS&INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN&NOT_ROAMING&NOT_CONGESTED&NOT_SUSPENDED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED LinkUpBandwidth>=14Kbps LinkDnBandwidth>=14Kbps Specifier: <TelephonyNetworkSpecifier [mSubId = 1]> SubscriptionIds: {1} UnderlyingNetworks: Null]}  factorySerialNumber=5}
+11-05 09:56:44.709   467   505 I netd    : getFwmarkForNetwork(103) -> {MarkMaskParcel{mark: 103, mask: 65535}} <0.00ms>
+11-05 09:56:44.727   682  1030 D ConnectivityService: [103 CELLULAR] EVENT_NETWORK_INFO_CHANGED, going from CONNECTING to CONNECTING
+11-05 09:56:44.728   467   505 I netd    : networkCreate(NativeNetworkConfig{netId: 103, networkType: PHYSICAL, permission: 0, secure: false, vpnType: -1, excludeLocalRoutes: false}) <0.60ms>
+11-05 09:56:44.728   467   505 I netd    : createNetworkCache(103) <0.07ms>
+11-05 09:56:44.728   682  1030 D ConnectivityService: Setting DNS servers for network 103 to []
+11-05 09:56:44.728   682  1030 D DnsManager: sendDnsConfigurationForNetwork(ResolverParamsParcel{netId: 103, sampleValiditySeconds: 1800, successThreshold: 25, minSamples: 8, maxSamples: 64, baseTimeoutMsec: 0, retryCount: 0, servers: [], domains: [], tlsName: , tlsServers: [], tlsFingerprints: [], caCertificate: , tlsConnectTimeoutMs: 0, resolverOptions: null, transportTypes: [0], meteredNetwork: true, dohParams: null, interfaceNames: []})
+11-05 09:56:44.729   467   505 I netd    : setResolverConfiguration(ResolverParamsParcel{netId: 103, sampleValiditySeconds: 1800, successThreshold: 25, minSamples: 8, maxSamples: 64, baseTimeoutMsec: 0, retryCount: 0, servers: [], domains: [], tlsName: , tlsServers: [], tlsFingerprints: [], caCertificate: , tlsConnectTimeoutMs: 0, resolverOptions: (null), transportTypes: [0], meteredNetwork: true, dohParams: (null), interfaceNames: []}) <0.03ms>
+11-05 09:56:44.729  1219  7482 D NetworkMonitor/103: checkAndRenewResourceConfig: update captive portal https urls to [https://www.google.com/generate_204]
+11-05 09:56:44.732  1219  7482 D NetworkMonitor/103: checkAndRenewResourceConfig: update captive portal http urls to [http://connectivitycheck.gstatic.com/generate_204]
+11-05 09:56:44.732  1219  7482 D NetworkMonitor/103: checkAndRenewResourceConfig: update captive portal fallback urls to[http://www.google.com/gen_204, http://play.googleapis.com/generate_204]
+11-05 09:56:44.732  1219  7482 D NetworkMonitor: Starting on network 103 with capport HTTPS URL [https://www.google.com/generate_204] and HTTP URL [http://connectivitycheck.gstatic.com/generate_204]
+11-05 09:56:44.933     0     0 I init    : Created socket '/dev/socket/wpa_wlan0', mode 660, user 1010, group 1010
+11-05 09:56:44.748  1480  2709 I NearbyMediums: WifiNetwork setTelephonyIsDataConnected:true
+11-05 09:56:44.762   467   505 I netd    : setNetworkAllowlist([NativeUidRangeConfig{netId: 103, uidRanges: [UidRangeParcel{start: 0, stop: 99999}], subPriority: 0}]) <0.01ms>
+11-05 09:56:44.763   682  1030 D ConnectivityService: Adding iface eth0 to network 103
+11-05 09:56:44.767   467   505 I netd    : networkAddInterface(103, eth0) <4.00ms>
+11-05 09:56:44.769   467   505 I netd    : networkAddRouteParcel(103, RouteInfoParcel{destination: 10.0.2.0/24, ifName: eth0, nextHop: , mtu: 0}) <0.14ms>
+11-05 09:56:44.769   467   505 I netd    : networkAddRouteParcel(103, RouteInfoParcel{destination: 0.0.0.0/0, ifName: eth0, nextHop: 10.0.2.2, mtu: 1500}) <0.07ms>
+11-05 09:56:44.769   682  1030 D ConnectivityService: Setting DNS servers for network 103 to [/10.0.2.3]
+11-05 09:56:44.769   682  1030 D DnsManager: sendDnsConfigurationForNetwork(ResolverParamsParcel{netId: 103, sampleValiditySeconds: 1800, successThreshold: 25, minSamples: 8, maxSamples: 64, baseTimeoutMsec: 0, retryCount: 0, servers: [10.0.2.3], domains: [], tlsName: , tlsServers: [], tlsFingerprints: [], caCertificate: , tlsConnectTimeoutMs: 0, resolverOptions: null, transportTypes: [0], meteredNetwork: true, dohParams: null, interfaceNames: [eth0]})
+11-05 09:56:44.770   467   505 I netd    : setResolverConfiguration(ResolverParamsParcel{netId: 103, sampleValiditySeconds: 1800, successThreshold: 25, minSamples: 8, maxSamples: 64, baseTimeoutMsec: 0, retryCount: 0, servers: [10.0.2.3], domains: [], tlsName: , tlsServers: [], tlsFingerprints: [], caCertificate: , tlsConnectTimeoutMs: 0, resolverOptions: (null), transportTypes: [0], meteredNetwork: true, dohParams: (null), interfaceNames: [eth0]}) <0.09ms>
+11-05 09:56:44.802   682  1030 D ConnectivityService: [103 CELLULAR] EVENT_NETWORK_INFO_CHANGED, going from CONNECTING to CONNECTED
+11-05 09:56:44.803   682  1030 D ConnectivityService: Setting DNS servers for network 103 to [/10.0.2.3]
+11-05 09:56:44.803   682  1030 D DnsManager: sendDnsConfigurationForNetwork(ResolverParamsParcel{netId: 103, sampleValiditySeconds: 1800, successThreshold: 25, minSamples: 8, maxSamples: 64, baseTimeoutMsec: 0, retryCount: 0, servers: [10.0.2.3], domains: [], tlsName: , tlsServers: [10.0.2.3], tlsFingerprints: [], caCertificate: , tlsConnectTimeoutMs: 0, resolverOptions: null, transportTypes: [0], meteredNetwork: true, dohParams: null, interfaceNames: [eth0]})
+11-05 09:56:44.803   467   505 I netd    : setResolverConfiguration(ResolverParamsParcel{netId: 103, sampleValiditySeconds: 1800, successThreshold: 25, minSamples: 8, maxSamples: 64, baseTimeoutMsec: 0, retryCount: 0, servers: [10.0.2.3], domains: [], tlsName: , tlsServers: [10.0.2.3], tlsFingerprints: [], caCertificate: , tlsConnectTimeoutMs: 0, resolverOptions: (null), transportTypes: [0], meteredNetwork: true, dohParams: (null), interfaceNames: [eth0]}) <0.24ms>
 == Mimo-tagged lines (head) ==
-11-05 09:44:27.461   685  1957 I ActivityManager: Force stopping com.getmimo appid=10216 user=0: from pid 6719
-11-05 09:44:27.464   685  1957 I ActivityManager: Killing 3483:com.getmimo/u0a216 (adj 0): stop com.getmimo due to from pid 6719
-11-05 09:44:27.470   685  1957 W ActivityTaskManager: Force removing ActivityRecord{142744158 u0 com.getmimo/.ui.chapter.ChapterActivity t8 f}}: app died, no saved state
-11-05 09:44:27.472   685  1957 W ActivityTaskManager: Force removing ActivityRecord{145114955 u0 com.getmimo/.ui.main.MainActivity t8 f}}: app died, no saved state
-11-05 09:44:27.473   685   787 W UsageStatsService: Unexpected activity event reported! (com.getmimo/com.getmimo.ui.main.MainActivity event : 23 instanceId : 126313768)
-11-05 09:44:27.487   685  1957 I AppsFilter: interaction: PackageSetting{803284 com.android.microdroid.empty_payload/10206} -> PackageSetting{c47ca6c com.getmimo/10216} BLOCKED
-11-05 09:44:27.505  1280  1280 D CarrierSvcBindHelper: onHandleForceStop: [com.getmimo]
-11-05 09:44:27.509   685  1053 I AppWidgetServiceImpl: Updating package stopped masked state for uid 10216 package com.getmimo isStopped true
-11-05 09:44:27.519   685  1053 I AppWidgetServiceImpl: cancelBroadcastsLocked() for Provider{ProviderId{user:0, app:10216, cmp:ComponentInfo{com.getmimo/com.getmimo.ui.widget.MimoStreakSmallWidgetReceiver}}}
-11-05 09:44:27.519   685  1053 I AppWidgetServiceImpl: cancelBroadcastsLocked() for Provider{ProviderId{user:0, app:10216, cmp:ComponentInfo{com.getmimo/com.getmimo.ui.widget.MimoStreakMediumWidgetReceiver}}}
-11-05 09:44:27.519   685  1053 I AppWidgetServiceImpl: cancelBroadcastsLocked() for Provider{ProviderId{user:0, app:10216, cmp:ComponentInfo{com.getmimo/com.getmimo.ui.widget.MimoStreakLargeWidgetReceiver}}}
-11-05 09:44:27.535   685   712 W ActivityTaskManager: Unable to send transaction to client proc com.getmimo: no app thread
-11-05 09:44:27.582   685  1098 I ActivityTaskManager: Add Task{ba8b8a6 #8 type=standard A=10216:com.getmimo} to hidden list because adding Task{94720ff #9 type=standard A=10216:com.getmimo}
-11-05 09:44:27.583   685  1098 I ActivityTaskManager: START u0 {flg=0x10000000 xflg=0x5 cmp=com.getmimo/.ui.SplashActivity_default} with LAUNCH_MULTIPLE from uid 2000 (BAL_ALLOW_PERMISSION) result code=0
-11-05 09:44:27.588   685   776 V ActivityManager: Got obituary of 3483:com.getmimo
-11-05 09:44:27.588   685  2368 I WindowManager: WIN DEATH: Window{4517e6a u0 com.getmimo/com.getmimo.ui.chapter.ChapterActivity}
-11-05 09:44:27.589   685  2368 I WindowManager: WIN DEATH: Window{f60337a u0 com.getmimo/com.getmimo.ui.main.MainActivity}
-11-05 09:44:27.590   685  1024 D ConnectivityService: releasing NetworkRequest [ REQUEST id=203, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ] (release request)
-11-05 09:44:27.590   685  1024 D ConnectivityService: releasing NetworkRequest [ REQUEST id=207, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ] (release request)
-11-05 09:44:27.590   685  1024 D ConnectivityService: releasing NetworkRequest [ REQUEST id=205, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ] (release request)
-11-05 09:44:27.610   685   776 I ImeTracker: com.getmimo:6f684be6: onRequestHide at ORIGIN_SERVER reason HIDE_REMOVE_CLIENT fromUser false
-11-05 09:44:27.617   685   776 I ImeTracker: com.getmimo:6f684be6: onCancelled at PHASE_SERVER_SHOULD_HIDE
-11-05 09:44:27.658   685   719 I ActivityManager: Start proc 6730:com.getmimo/u0a216 for next-top-activity {com.getmimo/com.getmimo.ui.SplashActivity_default}
-11-05 09:44:27.684  6730  6730 I com.getmimo: Using CollectorTypeCMC GC.
-11-05 09:44:27.685  6730  6730 W com.getmimo: Unexpected CPU variant for x86: x86_64.
-11-05 09:44:27.685  6730  6730 W com.getmimo: Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, goldmont-without-sha-xsaves, tremont, kabylake, alderlake, default
-11-05 09:44:27.936  6730  6730 D nativeloader: Configuring clns-9 for other apk /data/app/~~_1pa4ArV1uSHBjd50PyXmg==/com.getmimo-yCxLUE4cDbqJCT-j72myBQ==/base.apk. target_sdk_version=36, uses_libraries=, library_path=/data/app/~~_1pa4ArV1uSHBjd50PyXmg==/com.getmimo-yCxLUE4cDbqJCT-j72myBQ==/lib/arm64:/data/app/~~_1pa4ArV1uSHBjd50PyXmg==/com.getmimo-yCxLUE4cDbqJCT-j72myBQ==/base.apk!/lib/arm64-v8a, permitted_path=/data:/mnt/expand:/data/user/0/com.getmimo
-11-05 09:44:27.968  6730  6730 I com.getmimo: AssetManager2(0x700a8fae3fd8) locale list changing from [] to [en-US]
-11-05 09:44:27.971  6730  6730 V GraphicsEnvironment: com.getmimo is not listed in per-application setting
-11-05 09:44:27.971  6730  6730 V GraphicsEnvironment: com.getmimo is not listed in ANGLE allowlist or settings, returning default
-11-05 09:44:28.056  6730  6730 D nativeloader: Load /data/app/~~_1pa4ArV1uSHBjd50PyXmg==/com.getmimo-yCxLUE4cDbqJCT-j72myBQ==/lib/arm64/libyrf.so using class loader ns clns-9 (caller=/data/app/~~_1pa4ArV1uSHBjd50PyXmg==/com.getmimo-yCxLUE4cDbqJCT-j72myBQ==/base.apk!classes12.dex): ok
-11-05 09:44:28.094   685   711 I AppsFilter: interaction: PackageSetting{803284 com.android.microdroid.empty_payload/10206} -> PackageSetting{37047ef com.getmimo/10216} BLOCKED
-11-05 09:44:28.097   685  1053 I AppWidgetServiceImpl: Updating package stopped masked state for uid 10216 package com.getmimo isStopped false
-11-05 09:44:28.116  6730  6730 I FirebaseCrashlytics: Initializing Firebase Crashlytics 20.1.1 for com.getmimo
-11-05 09:44:28.144  6730  6751 W GooglePlayServicesUtil: Google Play services out of date for com.getmimo.  Requires 261200000 but found 252635038
-11-05 09:44:28.324  6730  6730 D nativeloader: Load /data/app/~~_1pa4ArV1uSHBjd50PyXmg==/com.getmimo-yCxLUE4cDbqJCT-j72myBQ==/lib/arm64/libdatastore_shared_counter.so using class loader ns clns-9 (caller=/data/app/~~_1pa4ArV1uSHBjd50PyXmg==/com.getmimo-yCxLUE4cDbqJCT-j72myBQ==/base.apk!classes2.dex): ok
-11-05 09:44:28.356  6730  6730 I FirebaseApp: Device unlocked: initializing all Firebase APIs for app mimo-auth-production
-11-05 09:44:28.369  6730  6751 W GooglePlayServicesUtil: Google Play services out of date for com.getmimo.  Requires 261200000 but found 252635038
-11-05 09:44:28.436  6730  6730 D nativeloader: Load /data/app/~~_1pa4ArV1uSHBjd50PyXmg==/com.getmimo-yCxLUE4cDbqJCT-j72myBQ==/lib/arm64/librive-android.so using class loader ns clns-9 (caller=/data/app/~~_1pa4ArV1uSHBjd50PyXmg==/com.getmimo-yCxLUE4cDbqJCT-j72myBQ==/base.apk): ok
-11-05 09:44:28.524   685   712 W ActivityTaskManager: Unable to send transaction to client proc com.getmimo: no app thread
-11-05 09:44:28.617  6730  6770 I FA      :   adb shell setprop debug.firebase.analytics.app com.getmimo
-11-05 09:44:28.629  6730  6730 D nativeloader: Load /data/app/~~_1pa4ArV1uSHBjd50PyXmg==/com.getmimo-yCxLUE4cDbqJCT-j72myBQ==/lib/arm64/libsigner.so using class loader ns clns-9 (caller=/data/app/~~_1pa4ArV1uSHBjd50PyXmg==/com.getmimo-yCxLUE4cDbqJCT-j72myBQ==/base.apk): ok
-11-05 09:44:28.908  6730  6730 I com.getmimo: AssetManager2(0x700a8fae6878) locale list changing from [] to [en-US]
-11-05 09:44:28.911  6730  6730 I com.getmimo: AssetManager2(0x700a8faefb58) locale list changing from [] to [en]
-11-05 09:44:28.912  6730  6730 I com.getmimo: AssetManager2(0x700a8faee258) locale list changing from [] to [en-US]
-11-05 09:44:29.098  6730  6730 D FirebaseSessions: App foregrounded on com.getmimo
-11-05 09:44:29.098  6730  6730 D FirebaseSessions: Process com.getmimo is stale
-11-05 09:44:29.206  6730  6768 D FirebaseSessions: Process com.getmimo is stale
-11-05 09:44:29.292  6730  6841 I com.getmimo: AssetManager2(0x700a8faebff8) locale list changing from [] to [en-US]
-11-05 09:44:29.863  1425  4545 I PhenotypeResourceReader: unable to find any Phenotype resource metadata for com.getmimo
-11-05 09:44:29.863   685  1098 D CoreBackPreview: Window{fe3aadd u0 com.getmimo/com.getmimo.ui.SplashActivity_default}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@28d687f, mPriority=-1, mIsAnimationCallback=false, mOverrideBehavior=0}
-11-05 09:44:29.889  6730  6780 W com.getmimo: Long monitor contention with owner pool-22-thread-1 (6784) at void com.google.android.gms.ads.identifier.AdvertisingIdClient.a()(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:92) waiters=0 in com.google.android.gms.ads.identifier.AdvertisingIdClient$Info com.google.android.gms.ads.identifier.AdvertisingIdClient.e() for 1.429s
-11-05 09:44:29.939  6730  6783 W com.getmimo: Long monitor contention with owner pool-22-thread-1 (6784) at wc.j mr.e.j(com.facebook.appevents.AccessTokenAppIdPair)(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:48) waiters=0 in java.util.Set mr.e.n() for 1.563s
-11-05 09:44:29.942   685  1957 I ActivityTaskManager: START u0 {flg=0x14008000 xflg=0x4 cmp=com.getmimo/.ui.main.MainActivity (has extras)} with LAUNCH_MULTIPLE from uid 10216 (sr=186171422) (BAL_ALLOW_VISIBLE_WINDOW) result code=0
-11-05 09:44:30.069   685   712 W ActivityTaskManager: Unable to send transaction to client proc com.getmimo: no app thread
-11-05 09:44:30.151  6730  6730 D FirebaseSessions: App backgrounded on com.getmimo
-11-05 09:44:30.161  6730  6737 W com.getmimo: Suspending all threads took: 9.364ms
-11-05 09:44:30.219  6730  6829 E [CIO]   :  fileUrl="/data/user/0/com.getmimo/app_segment-disk-queue/ae86ede257503e4274ff-3"
-11-05 09:44:30.345   685   708 V WindowManager:         {WCT{RemoteToken{1f3dbbd Task{94720ff #9 type=standard A=10216:com.getmimo}}} m=OPEN f=MOVE_TO_TOP leash=Surface(name=Task=9)/@0x5be8d26 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 taskParent=-1},
-11-05 09:44:30.345   685   708 V WindowManager:         {WCT{RemoteToken{830af96 Task{ba8b8a6 #8 type=standard A=10216:com.getmimo}}} m=TO_BACK f=NONE leash=Surface(name=Task=8)/@0xef0bd58 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 taskParent=-1}
-11-05 09:44:30.360  6730  6737 I com.getmimo: Background concurrent mark compact GC freed 26MB AllocSpace bytes, 197(19MB) LOS objects, 49% free, 11MB/22MB, paused 19.658ms,11.833ms total 519.113ms
-11-05 09:44:30.467  6730  6730 I com.getmimo: AssetManager2(0x700a8faee258) locale list changing from [] to [en-US]
-11-05 09:44:30.530   685  1098 D ConnectivityService: requestNetwork for uid/pid:10216/6730 activeRequest: null callbackRequest: 210 [NetworkRequest [ REQUEST id=211, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647 isUidTracked: false declaredMethods: AVAIL|LOST
-11-05 09:44:30.533   685  1018 D WifiNetworkFactory: got request NetworkRequest [ REQUEST id=211, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:30.533   685  1018 V WifiNetworkFactory: Accepted network request NetworkRequest [ REQUEST id=211, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:30.533   685  1018 D UntrustedWifiNetworkFactory: got request NetworkRequest [ REQUEST id=211, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:30.533   685  1018 D OemPaidWifiNetworkFactory: got request NetworkRequest [ REQUEST id=211, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:30.533   685  1018 D MultiInternetWifiNetworkFactory: got request NetworkRequest [ REQUEST id=211, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:30.553  6730  6765 W com.getmimo: Long monitor contention with owner Firebase Background Thread #0 (6764) at java.lang.Object uv.b.call()(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:54) waiters=1 in java.lang.Object uv.b.call() for 156ms
-11-05 09:44:30.609  6730  6768 W com.getmimo: Long monitor contention with owner Firebase Background Thread #0 (6764) at java.lang.Object uv.b.call()(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:54) waiters=0 in java.lang.Object uv.b.call() for 205ms
-11-05 09:44:30.612  6730  6767 W com.getmimo: Long monitor contention with owner Firebase Background Thread #0 (6764) at java.lang.Object uv.b.call()(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:54) waiters=2 in java.lang.Object uv.b.call() for 153ms
-11-05 09:44:30.624   685  1957 I ActivityTaskManager: START u0 {xflg=0x4 cmp=com.getmimo/.ui.authentication.AuthenticationActivity (has extras)} with LAUNCH_MULTIPLE from uid 10216 (sr=105965841) (BAL_ALLOW_VISIBLE_WINDOW) result code=0
-11-05 09:44:30.671   685   712 W ActivityTaskManager: Unable to send transaction to client proc com.getmimo: no app thread
-11-05 09:44:30.689  6730  6730 D FirebaseSessions: App foregrounded on com.getmimo
-11-05 09:44:30.733   685  1957 D CoreBackPreview: Window{d5a8bd6 u0 com.getmimo/com.getmimo.ui.main.MainActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@f8a2d44, mPriority=-1, mIsAnimationCallback=false, mOverrideBehavior=0}
-11-05 09:44:30.733   685  1957 D CoreBackPreview: Window{d5a8bd6 u0 com.getmimo/com.getmimo.ui.main.MainActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@e382e2d, mPriority=0, mIsAnimationCallback=true, mOverrideBehavior=0}
-11-05 09:44:30.836  6730  6730 W Adjust-pool-50-: type=1400 audit(0.0:123): avc:  denied  { read } for  name="tcp" dev="proc" ino=4026532053 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:proc_net_tcp_udp:s0 tclass=file permissive=0 app=com.getmimo
-11-05 09:44:30.914   685  1957 W WindowManager: Exception thrown during dispatchAppVisibility Window{4517e6a u0 com.getmimo/com.getmimo.ui.chapter.ChapterActivity EXITING}
-11-05 09:44:30.951  6730  6765 W com.getmimo: Long monitor contention with owner Firebase Background Thread #3 (6768) at java.lang.Object uv.b.call()(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:54) waiters=2 in java.lang.Object uv.b.call() for 326ms
-11-05 09:44:31.116   685   711 W ActivityTaskManager: Activity top resumed state loss timeout for ActivityRecord{105965841 u0 com.getmimo/.ui.main.MainActivity t9}
-11-05 09:44:31.125   685   711 W ActivityTaskManager: Activity pause timeout for ActivityRecord{105965841 u0 com.getmimo/.ui.main.MainActivity t9}
-11-05 09:44:31.145  1110  1202 V WindowManagerShell:         {m=OPEN f=STARTING_WINDOW_TRANSFER|FILLS_TASK|IS_BEHIND_STARTING_WINDOW leash=Surface(name=ActivityRecord{191896318 u0 com.getmimo/.ui.authentication.AuthenticationActivity)/@0xb370ff4 sb=Rect(0, 0 - 0, 0) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=-1->0 r=-1->0:-1 bc=fff6f7fb component=com.getmimo/.ui.authentication.AuthenticationActivity},
-11-05 09:44:31.145  1110  1202 V WindowManagerShell:         {m=TO_BACK f=FILLS_TASK|IS_BEHIND_STARTING_WINDOW leash=Surface(name=ActivityRecord{105965841 u0 com.getmimo/.ui.main.MainActivity)/@0x806531d sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 bc=fff6f7fb component=com.getmimo/.ui.main.MainActivity}
-11-05 09:44:31.156   685   708 V WindowManager:         {m=OPEN f=STARTING_WINDOW_TRANSFER|FILLS_TASK|IS_BEHIND_STARTING_WINDOW leash=Surface(name=ActivityRecord{191896318 u0 com.getmimo/.ui.authentication.AuthenticationActivity)/@0x372c599 sb=Rect(0, 0 - 0, 0) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=-1->0 r=-1->0:-1 bc=fff6f7fb component=com.getmimo/.ui.authentication.AuthenticationActivity},
-11-05 09:44:31.156   685   708 V WindowManager:         {m=TO_BACK f=FILLS_TASK|IS_BEHIND_STARTING_WINDOW leash=Surface(name=ActivityRecord{105965841 u0 com.getmimo/.ui.main.MainActivity)/@0xdb40ee0 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 bc=fff6f7fb component=com.getmimo/.ui.main.MainActivity}
-11-05 09:44:31.288  6730  6730 W Adjust-pool-50-: type=1400 audit(0.0:124): avc:  denied  { read } for  name="drivers" dev="proc" ino=4026531854 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:proc_tty_drivers:s0 tclass=file permissive=0 app=com.getmimo
-11-05 09:44:31.336  6730  6730 W Adjust-pool-50-: type=1400 audit(0.0:125): avc:  denied  { read } for  name="version" dev="proc" ino=4026532032 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:proc_version:s0 tclass=file permissive=0 app=com.getmimo
-11-05 09:44:31.452  6730  6730 W Adjust-pool-50-: type=1400 audit(0.0:126): avc:  denied  { read } for  name="u:object_r:serialno_prop:s0" dev="tmpfs" ino=320 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:serialno_prop:s0 tclass=file permissive=0 app=com.getmimo
-11-05 09:44:31.512  6730  6730 W Adjust-pool-50-: type=1400 audit(0.0:127): avc:  denied  { read } for  name="u:object_r:userdebug_or_eng_prop:s0" dev="tmpfs" ino=375 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:userdebug_or_eng_prop:s0 tclass=file permissive=0 app=com.getmimo
-11-05 09:44:31.744  6730  6737 I com.getmimo: Background concurrent mark compact GC freed 7465KB AllocSpace bytes, 118(6596KB) LOS objects, 49% free, 18MB/36MB, paused 1.908ms,3.773ms total 715.945ms
-11-05 09:44:32.118  6730  6730 D FirebaseSessions: App backgrounded on com.getmimo
-11-05 09:44:32.223  6730  6730 I com.getmimo: AssetManager2(0x700a8faf7538) locale list changing from [] to [en-US]
-11-05 09:44:32.239  6730  6737 I com.getmimo: Background concurrent mark compact GC freed 8932KB AllocSpace bytes, 567(22MB) LOS objects, 49% free, 19MB/38MB, paused 657us,8.538ms total 261.674ms
-11-05 09:44:32.250  6730  6730 I com.getmimo: AssetManager2(0x700a8faf2a38) locale list changing from [] to [en-US]
-11-05 09:44:32.255  6730  6730 I com.getmimo: AssetManager2(0x700a8faedc18) locale list changing from [] to [en-US]
-11-05 09:44:32.256  6730  6730 I com.getmimo: AssetManager2(0x700a8fb001d8) locale list changing from [] to [en-US]
-11-05 09:44:32.256  6730  6730 I com.getmimo: AssetManager2(0x700a8fafaa58) locale list changing from [] to [en-US]
-11-05 09:44:32.257  6730  6730 I com.getmimo: AssetManager2(0x700a8fafc358) locale list changing from [] to [en]
-11-05 09:44:32.258  6730  6730 I com.getmimo: AssetManager2(0x700a8faff558) locale list changing from [] to [en-US]
-11-05 09:44:32.258  6730  6730 I com.getmimo: AssetManager2(0x700a8fafbd18) locale list changing from [] to [en-US]
-11-05 09:44:32.261  6730  6730 W com.getmimo: Failed to find entry 'classes.dex': Entry not found
-11-05 09:44:32.334  6730  6730 D FirebaseSessions: App foregrounded on com.getmimo
-11-05 09:44:32.365   685  2864 D CoreBackPreview: Window{fe3aadd u0 com.getmimo/com.getmimo.ui.SplashActivity_default}: Setting back callback null
-11-05 09:44:32.431   685  1098 D CoreBackPreview: Window{3b7f5be u0 com.getmimo/com.getmimo.ui.authentication.AuthenticationActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@dd8b458, mPriority=-1, mIsAnimationCallback=false, mOverrideBehavior=0}
-11-05 09:44:32.478   685   708 W system_server: Failed to determine oat file name for dex location /data/app/~~_1pa4ArV1uSHBjd50PyXmg==/com.getmimo-yCxLUE4cDbqJCT-j72myBQ==/base.apk: Dalvik cache directory does not exist
-11-05 09:44:32.487   685   708 I ActivityTaskManager: Displayed com.getmimo/.ui.authentication.AuthenticationActivity for user 0: +4s901ms
-11-05 09:44:32.488   685  2864 D CoreBackPreview: Window{3b7f5be u0 com.getmimo/com.getmimo.ui.authentication.AuthenticationActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@1b0650f, mPriority=0, mIsAnimationCallback=true, mOverrideBehavior=0}
-11-05 09:44:32.650  6730  6891 W com.getmimo: Long monitor contention with owner DefaultDispatcher-worker-7 (6874) at java.io.InputStream android.content.res.AssetManager.open(java.lang.String, int)(AssetManager.java:1016) waiters=2 in java.io.InputStream android.content.res.AssetManager.open(java.lang.String, int) for 123ms
-11-05 09:44:32.734   685  1098 D CoreBackPreview: Window{3b7f5be u0 com.getmimo/com.getmimo.ui.authentication.AuthenticationActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@37e8fa5, mPriority=-1, mIsAnimationCallback=false, mOverrideBehavior=0}
-11-05 09:44:32.908  6730  6737 I com.getmimo: Background concurrent mark compact GC freed 13MB AllocSpace bytes, 770(32MB) LOS objects, 46% free, 27MB/51MB, paused 955us,10.621ms total 604.800ms
-11-05 09:44:33.185   685   817 I ImeTracker: com.getmimo:1c35a88e: onRequestHide at ORIGIN_SERVER reason HIDE_UNSPECIFIED_WINDOW fromUser false
-11-05 09:44:33.219  1710  1710 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1293 onStartInput(EditorInfo{EditorInfo{packageName=com.getmimo, inputType=0, inputTypeString=NULL, enableLearning=false, autoCorrection=false, autoComplete=false, imeOptions=0, privateImeOptions=null, actionName=UNSPECIFIED, actionLabel=null, initialSelStart=-1, initialSelEnd=-1, initialCapsMode=0, label=null, fieldId=0, fieldName=null, extras=null, hintText=null, hintLocales=[]}}, false)
-11-05 09:44:33.221   685   776 W PackageConfigPersister: App-specific configuration not found for packageName: com.getmimo and userId: 0
-11-05 09:44:33.521  6730  6737 W com.getmimo: Suspending all threads took: 6.936ms
-11-05 09:44:33.741  6730  6730 I ImeTracker: com.getmimo:1c35a88e: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
-11-05 09:44:34.099  6730  6737 I com.getmimo: Background concurrent mark compact GC freed 15MB AllocSpace bytes, 941(39MB) LOS objects, 35% free, 44MB/68MB, paused 9.542ms,3.554ms total 797.088ms
-11-05 09:44:35.112  6730  6737 I com.getmimo: Background concurrent mark compact GC freed 16MB AllocSpace bytes, 1224(42MB) LOS objects, 32% free, 50MB/74MB, paused 1.323ms,6.463ms total 644.218ms
-11-05 09:44:35.172   685  2864 D CoreBackPreview: Window{de09ff7 u0 com.getmimo/com.getmimo.ui.authentication.AuthenticationActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@53ba4c9, mPriority=-1, mIsAnimationCallback=false, mOverrideBehavior=0}
-11-05 09:44:35.671  6730  6914 D ProfileInstaller: Skipping profile installation for com.getmimo
-11-05 09:44:36.220  6730  6875 W com.getmimo: Long monitor contention with owner DefaultDispatcher-worker-3 (6777) at java.io.InputStream android.content.res.AssetManager.open(java.lang.String, int)(AssetManager.java:1016) waiters=1 in java.io.InputStream android.content.res.AssetManager.open(java.lang.String, int) for 237ms
-11-05 09:44:36.258  6730  6891 W com.getmimo: Long monitor contention with owner DefaultDispatcher-worker-3 (6777) at java.io.InputStream android.content.res.AssetManager.open(java.lang.String, int)(AssetManager.java:1016) waiters=2 in java.io.InputStream android.content.res.AssetManager.open(java.lang.String, int) for 266ms
-11-05 09:44:37.478  6730  6737 I com.getmimo: Background concurrent mark compact GC freed 28MB AllocSpace bytes, 1968(75MB) LOS objects, 23% free, 79MB/103MB, paused 1.210ms,13.294ms total 2.094s
-11-05 09:44:39.155  6730  6737 I com.getmimo: Background concurrent mark compact GC freed 25MB AllocSpace bytes, 1688(76MB) LOS objects, 22% free, 81MB/105MB, paused 1.106ms,3.440ms total 1.409s
-11-05 09:44:39.488  6730  6730 W Adjust-pool-50-: type=1400 audit(0.0:131): avc:  denied  { read } for  name="tcp" dev="proc" ino=4026532053 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:proc_net_tcp_udp:s0 tclass=file permissive=0 app=com.getmimo
-11-05 09:44:39.772  6730  6730 W Adjust-pool-50-: type=1400 audit(0.0:132): avc:  denied  { read } for  name="drivers" dev="proc" ino=4026531854 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:proc_tty_drivers:s0 tclass=file permissive=0 app=com.getmimo
-11-05 09:44:39.796  6730  6730 W Adjust-pool-50-: type=1400 audit(0.0:133): avc:  denied  { read } for  name="version" dev="proc" ino=4026532032 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:proc_version:s0 tclass=file permissive=0 app=com.getmimo
-11-05 09:44:39.844  6730  6730 W Adjust-pool-50-: type=1400 audit(0.0:134): avc:  denied  { read } for  name="u:object_r:serialno_prop:s0" dev="tmpfs" ino=320 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:serialno_prop:s0 tclass=file permissive=0 app=com.getmimo
-11-05 09:44:39.876  6730  6730 W Adjust-pool-50-: type=1400 audit(0.0:135): avc:  denied  { read } for  name="u:object_r:userdebug_or_eng_prop:s0" dev="tmpfs" ino=375 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:userdebug_or_eng_prop:s0 tclass=file permissive=0 app=com.getmimo
-11-05 09:44:40.510   685   776 D ConnectivityService: requestNetwork for uid/pid:10216/6730 activeRequest: null callbackRequest: 212 [NetworkRequest [ REQUEST id=213, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647 isUidTracked: false declaredMethods: AVAIL|LOST
-11-05 09:44:40.514   685  1018 D WifiNetworkFactory: got request NetworkRequest [ REQUEST id=213, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:40.514   685  1018 V WifiNetworkFactory: Accepted network request NetworkRequest [ REQUEST id=213, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:40.514   685  1018 D UntrustedWifiNetworkFactory: got request NetworkRequest [ REQUEST id=213, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:40.514   685  1018 D OemPaidWifiNetworkFactory: got request NetworkRequest [ REQUEST id=213, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:40.514   685  1018 D MultiInternetWifiNetworkFactory: got request NetworkRequest [ REQUEST id=213, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:40.526  6730  6737 I com.getmimo: Background concurrent mark compact GC freed 30MB AllocSpace bytes, 1554(110MB) LOS objects, 38% free, 38MB/62MB, paused 4.130ms,24.376ms total 1.018s
-11-05 09:44:40.545   685   776 D ConnectivityService: requestNetwork for uid/pid:10216/6730 activeRequest: null callbackRequest: 214 [NetworkRequest [ REQUEST id=215, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647 isUidTracked: false declaredMethods: AVAIL|LOST
-11-05 09:44:40.546   685  1018 D WifiNetworkFactory: got request NetworkRequest [ REQUEST id=215, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:40.546   685  1018 V WifiNetworkFactory: Accepted network request NetworkRequest [ REQUEST id=215, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:40.546   685  1018 D UntrustedWifiNetworkFactory: got request NetworkRequest [ REQUEST id=215, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:40.549   685  1018 D OemPaidWifiNetworkFactory: got request NetworkRequest [ REQUEST id=215, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:40.549   685  1018 D MultiInternetWifiNetworkFactory: got request NetworkRequest [ REQUEST id=215, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
-11-05 09:44:41.479  6730  6737 I com.getmimo: Background concurrent mark compact GC freed 15MB AllocSpace bytes, 834(44MB) LOS objects, 50% free, 18MB/36MB, paused 964us,13.718ms total 554.733ms
-11-05 09:44:42.346  6730  6737 I com.getmimo: Background concurrent mark compact GC freed 7836KB AllocSpace bytes, 512(19MB) LOS objects, 50% free, 23MB/46MB, paused 2.963ms,5.748ms total 554.378ms
-11-05 09:44:44.025  6730  6737 I com.getmimo: Background concurrent mark compact GC freed 15MB AllocSpace bytes, 990(50MB) LOS objects, 40% free, 35MB/59MB, paused 1.539ms,41.419ms total 1.090s
-11-05 09:44:45.660   685  1098 D CoreBackPreview: Window{de09ff7 u0 com.getmimo/com.getmimo.ui.authentication.AuthenticationActivity}: Setting back callback null
-11-05 09:44:45.864   685   817 I ImeTracker: com.getmimo:74554adc: onRequestHide at ORIGIN_SERVER reason HIDE_SAME_WINDOW_FOCUSED_WITHOUT_EDITOR fromUser false
-11-05 09:44:45.881  1710  1710 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1293 onStartInput(EditorInfo{EditorInfo{packageName=com.getmimo, inputType=0, inputTypeString=NULL, enableLearning=false, autoCorrection=false, autoComplete=false, imeOptions=0, privateImeOptions=null, actionName=UNSPECIFIED, actionLabel=null, initialSelStart=-1, initialSelEnd=-1, initialCapsMode=0, label=null, fieldId=0, fieldName=null, extras=null, hintText=null, hintLocales=[]}}, false)
-11-05 09:44:45.890   685  2864 W PackageConfigPersister: App-specific configuration not found for packageName: com.getmimo and userId: 0
-11-05 09:44:45.911  6730  6730 I ImeTracker: com.getmimo:74554adc: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
-11-05 09:44:46.181  6730  6737 I com.getmimo: Background concurrent mark compact GC freed 14MB AllocSpace bytes, 1007(51MB) LOS objects, 33% free, 47MB/71MB, paused 5.667ms,11.048ms total 1.500s
-11-05 09:44:46.560  6730  6737 I com.getmimo: Background concurrent mark compact GC freed 13MB AllocSpace bytes, 1168(57MB) LOS objects, 48% free, 25MB/49MB, paused 620us,1.838ms total 148.138ms
-11-05 09:44:46.727  6730  6737 I com.getmimo: Background concurrent mark compact GC freed 13MB AllocSpace bytes, 957(37MB) LOS objects, 47% free, 26MB/50MB, paused 717us,1.396ms total 107.168ms
-11-05 09:44:46.871  6730  6804 W com.getmimo: Long monitor contention with owner Adjust-pool-50-thread-1-ActivityPackageSender (6884) at void com.adjust.sdk.sig.Signer.sign(android.content.Context, java.util.Map, java.util.Map, java.util.Map)(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:33) waiters=0 in void com.adjust.sdk.sig.Signer.onResume() for 14.536s
-11-05 09:44:47.507  6730  6737 I com.getmimo: Background concurrent mark compact GC freed 9408KB AllocSpace bytes, 455(36MB) LOS objects, 49% free, 22MB/45MB, paused 727us,1.719ms total 170.348ms
-11-05 09:44:50.819  6730  6730 D FirebaseSessions: App backgrounded on com.getmimo
-11-05 09:44:50.976  6730  6730 D FirebaseSessions: App foregrounded on com.getmimo
-11-05 09:44:51.681   685   708 V WindowManager:         {m=CLOSE f=FILLS_TASK leash=Surface(name=ActivityRecord{191896318 u0 com.getmimo/.ui.authentication.AuthenticationActivity)/@0x372c599 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 bc=fff6f7fb component=com.getmimo/.ui.authentication.AuthenticationActivity},
-11-05 09:44:51.681   685   708 V WindowManager:         {m=TO_FRONT f=FILLS_TASK leash=Surface(name=ActivityRecord{105965841 u0 com.getmimo/.ui.main.MainActivity)/@0xdb40ee0 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 bc=fff6f7fb component=com.getmimo/.ui.main.MainActivity}
-11-05 09:44:51.685  1110  1202 V WindowManagerShell:         {m=CLOSE f=FILLS_TASK leash=Surface(name=ActivityRecord{191896318 u0 com.getmimo/.ui.authentication.AuthenticationActivity)/@0x6bdf13 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 bc=fff6f7fb component=com.getmimo/.ui.authentication.AuthenticationActivity},
-11-05 09:44:51.685  1110  1202 V WindowManagerShell:         {m=TO_FRONT f=FILLS_TASK leash=Surface(name=ActivityRecord{105965841 u0 com.getmimo/.ui.main.MainActivity)/@0x797f550 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 bc=fff6f7fb component=com.getmimo/.ui.main.MainActivity}
+11-05 09:55:31.195   682  1649 I ActivityManager: Force stopping com.getmimo appid=10216 user=0: from pid 6830
+11-05 09:55:31.197   682  1649 I ActivityManager: Killing 3305:com.getmimo/u0a216 (adj 0): stop com.getmimo due to from pid 6830
+11-05 09:55:31.200   682  1649 W ActivityTaskManager: Force removing ActivityRecord{103815974 u0 com.getmimo/.ui.chapter.ChapterActivity t8 f}}: app died, no saved state
+11-05 09:55:31.204   682  1649 W ActivityTaskManager: Force removing ActivityRecord{117388608 u0 com.getmimo/.ui.main.MainActivity t8 f}}: app died, no saved state
+11-05 09:55:31.204   682   792 W UsageStatsService: Unexpected activity event reported! (com.getmimo/com.getmimo.ui.main.MainActivity event : 23 instanceId : 207838329)
+11-05 09:55:31.213   682  1649 I AppsFilter: interaction: PackageSetting{4165ad4 com.android.microdroid.empty_payload/10191} -> PackageSetting{f56d246 com.getmimo/10216} BLOCKED
+11-05 09:55:31.230  1282  1282 D CarrierSvcBindHelper: onHandleForceStop: [com.getmimo]
+11-05 09:55:31.233   682  1060 I AppWidgetServiceImpl: Updating package stopped masked state for uid 10216 package com.getmimo isStopped true
+11-05 09:55:31.233   682  1060 I AppWidgetServiceImpl: cancelBroadcastsLocked() for Provider{ProviderId{user:0, app:10216, cmp:ComponentInfo{com.getmimo/com.getmimo.ui.widget.MimoStreakSmallWidgetReceiver}}}
+11-05 09:55:31.233   682  1060 I AppWidgetServiceImpl: cancelBroadcastsLocked() for Provider{ProviderId{user:0, app:10216, cmp:ComponentInfo{com.getmimo/com.getmimo.ui.widget.MimoStreakMediumWidgetReceiver}}}
+11-05 09:55:31.233   682  1060 I AppWidgetServiceImpl: cancelBroadcastsLocked() for Provider{ProviderId{user:0, app:10216, cmp:ComponentInfo{com.getmimo/com.getmimo.ui.widget.MimoStreakLargeWidgetReceiver}}}
+11-05 09:55:31.270   682   713 W ActivityTaskManager: Unable to send transaction to client proc com.getmimo: no app thread
+11-05 09:55:31.320   682  2387 I ActivityTaskManager: Add Task{1f6c541 #8 type=standard A=10216:com.getmimo} to hidden list because adding Task{6ac080b #9 type=standard A=10216:com.getmimo}
+11-05 09:55:31.320   682  2387 I ActivityTaskManager: START u0 {flg=0x10000000 xflg=0x5 cmp=com.getmimo/.ui.SplashActivity_default} with LAUNCH_MULTIPLE from uid 2000 (BAL_ALLOW_PERMISSION) result code=0
+11-05 09:55:31.330   682   712 W ActivityManager: ProcessRecord{c73e51f 0:com.getmimo/u0a216} is attached to a previous process 3305
+11-05 09:55:31.393   682   704 I WindowManager: WIN DEATH: Window{5fa0b7b u0 com.getmimo/com.getmimo.ui.chapter.ChapterActivity}
+11-05 09:55:31.395   682   704 I WindowManager: WIN DEATH: Window{54ddc93 u0 com.getmimo/com.getmimo.ui.main.MainActivity}
+11-05 09:55:31.398   682  1097 I ImeTracker: com.getmimo:7dbe428a: onRequestHide at ORIGIN_SERVER reason HIDE_REMOVE_CLIENT fromUser false
+11-05 09:55:31.398   682  1097 I ImeTracker: com.getmimo:7dbe428a: onCancelled at PHASE_SERVER_SHOULD_HIDE
+11-05 09:55:31.399   682  2403 V ActivityManager: Got obituary of 3305:com.getmimo
+11-05 09:55:31.404   682  1030 D ConnectivityService: releasing NetworkRequest [ REQUEST id=207, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ] (release request)
+11-05 09:55:31.405   682  1030 D ConnectivityService: releasing NetworkRequest [ REQUEST id=211, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ] (release request)
+11-05 09:55:31.405   682  1030 D ConnectivityService: releasing NetworkRequest [ REQUEST id=209, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ] (release request)
+11-05 09:55:31.422   682   719 I ActivityManager: Start proc 6841:com.getmimo/u0a216 for next-top-activity {com.getmimo/com.getmimo.ui.SplashActivity_default}
+11-05 09:55:31.467  6841  6841 I com.getmimo: Using CollectorTypeCMC GC.
+11-05 09:55:31.468  6841  6841 W com.getmimo: Unexpected CPU variant for x86: x86_64.
+11-05 09:55:31.468  6841  6841 W com.getmimo: Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, goldmont-without-sha-xsaves, tremont, kabylake, alderlake, default
+11-05 09:55:31.822   682   712 I AppsFilter: interaction: PackageSetting{4165ad4 com.android.microdroid.empty_payload/10191} -> PackageSetting{9ec1c32 com.getmimo/10216} BLOCKED
+11-05 09:55:31.852   682  1060 I AppWidgetServiceImpl: Updating package stopped masked state for uid 10216 package com.getmimo isStopped false
+11-05 09:55:32.295  6841  6841 D nativeloader: Configuring clns-9 for other apk /data/app/~~9KI_TS2XViExntrszYmtug==/com.getmimo-Eu2dau7I0bevugQByyBloQ==/base.apk. target_sdk_version=36, uses_libraries=, library_path=/data/app/~~9KI_TS2XViExntrszYmtug==/com.getmimo-Eu2dau7I0bevugQByyBloQ==/lib/arm64:/data/app/~~9KI_TS2XViExntrszYmtug==/com.getmimo-Eu2dau7I0bevugQByyBloQ==/base.apk!/lib/arm64-v8a, permitted_path=/data:/mnt/expand:/data/user/0/com.getmimo
+11-05 09:55:32.336  6841  6841 I com.getmimo: AssetManager2(0x7182b31118d8) locale list changing from [] to [en-US]
+11-05 09:55:32.357  6841  6841 V GraphicsEnvironment: com.getmimo is not listed in per-application setting
+11-05 09:55:32.357  6841  6841 V GraphicsEnvironment: com.getmimo is not listed in ANGLE allowlist or settings, returning default
+11-05 09:55:32.680  6841  6841 D nativeloader: Load /data/app/~~9KI_TS2XViExntrszYmtug==/com.getmimo-Eu2dau7I0bevugQByyBloQ==/lib/arm64/libyrf.so using class loader ns clns-9 (caller=/data/app/~~9KI_TS2XViExntrszYmtug==/com.getmimo-Eu2dau7I0bevugQByyBloQ==/base.apk!classes12.dex): ok
+11-05 09:55:32.895  6841  6841 D nativeloader: Load /data/app/~~9KI_TS2XViExntrszYmtug==/com.getmimo-Eu2dau7I0bevugQByyBloQ==/lib/arm64/libdatastore_shared_counter.so using class loader ns clns-9 (caller=/data/app/~~9KI_TS2XViExntrszYmtug==/com.getmimo-Eu2dau7I0bevugQByyBloQ==/base.apk!classes2.dex): ok
+11-05 09:55:32.919  6841  6841 I FirebaseCrashlytics: Initializing Firebase Crashlytics 20.1.1 for com.getmimo
+11-05 09:55:32.953  6841  6879 W GooglePlayServicesUtil: Google Play services out of date for com.getmimo.  Requires 261200000 but found 252635038
+11-05 09:55:32.962   682   713 W ActivityTaskManager: Unable to send transaction to client proc com.getmimo: no app thread
+11-05 09:55:33.012  6841  6883 I FA      :   adb shell setprop debug.firebase.analytics.app com.getmimo
+11-05 09:55:33.124  1120  1780 E SurfaceSyncGroup: Failed to receive transaction ready in 1000ms. Marking SurfaceSyncGroup(wmsSync-VRI[getmimo]#23) as ready
+11-05 09:55:33.202  6841  6841 I FirebaseApp: Device unlocked: initializing all Firebase APIs for app mimo-auth-production
+11-05 09:55:33.240  6841  6879 W GooglePlayServicesUtil: Google Play services out of date for com.getmimo.  Requires 261200000 but found 252635038
+11-05 09:55:33.522  6841  6841 D nativeloader: Load /data/app/~~9KI_TS2XViExntrszYmtug==/com.getmimo-Eu2dau7I0bevugQByyBloQ==/lib/arm64/librive-android.so using class loader ns clns-9 (caller=/data/app/~~9KI_TS2XViExntrszYmtug==/com.getmimo-Eu2dau7I0bevugQByyBloQ==/base.apk): ok
+11-05 09:55:33.667  6841  6841 D nativeloader: Load /data/app/~~9KI_TS2XViExntrszYmtug==/com.getmimo-Eu2dau7I0bevugQByyBloQ==/lib/arm64/libsigner.so using class loader ns clns-9 (caller=/data/app/~~9KI_TS2XViExntrszYmtug==/com.getmimo-Eu2dau7I0bevugQByyBloQ==/base.apk): ok
+11-05 09:55:33.996  6841  6901 W com.getmimo: Long monitor contention with owner pool-27-thread-1 (6905) at void com.google.android.gms.ads.identifier.AdvertisingIdClient.a()(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:92) waiters=0 in com.google.android.gms.ads.identifier.AdvertisingIdClient$Info com.google.android.gms.ads.identifier.AdvertisingIdClient.e() for 727ms
+11-05 09:55:34.033  6841  6841 I com.getmimo: AssetManager2(0x7182b311b518) locale list changing from [] to [en-US]
+11-05 09:55:34.034  6841  6841 I com.getmimo: AssetManager2(0x7182b3117cd8) locale list changing from [] to [en]
+11-05 09:55:34.037  1480  2709 I PhenotypeResourceReader: unable to find any Phenotype resource metadata for com.getmimo
+11-05 09:55:34.041  6841  6841 I com.getmimo: AssetManager2(0x7182b311d458) locale list changing from [] to [en-US]
+11-05 09:55:34.120  6841  6841 D FirebaseSessions: App foregrounded on com.getmimo
+11-05 09:55:34.121  6841  6841 D FirebaseSessions: Process com.getmimo is stale
+11-05 09:55:34.173  6841  6883 I com.getmimo: IncrementDisableThreadFlip blocked for 65.849ms
+11-05 09:55:34.201  6841  6878 D FirebaseSessions: Process com.getmimo is stale
+11-05 09:55:34.202  6841  6847 I com.getmimo: Background concurrent mark compact GC freed 23MB AllocSpace bytes, 163(17MB) LOS objects, 49% free, 10MB/21MB, paused 1.451ms,2.507ms total 181.556ms
+11-05 09:55:34.229  6841  6970 I com.getmimo: AssetManager2(0x7182b31179b8) locale list changing from [] to [en-US]
+11-05 09:55:34.450  6841  6973 I fkev    : Unable to retrieve flag snapshot for com.google.android.gms.providerinstaller#com.getmimo, using defaults.
+11-05 09:55:34.497   682   709 V WindowManager:         {WCT{RemoteToken{b99fd03 Task{6ac080b #9 type=standard A=10216:com.getmimo}}} m=OPEN f=MOVE_TO_TOP leash=Surface(name=Task=9)/@0xedb167 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 taskParent=-1},
+11-05 09:55:34.497   682   709 V WindowManager:         {WCT{RemoteToken{b48b2c9 Task{1f6c541 #8 type=standard A=10216:com.getmimo}}} m=TO_BACK f=NONE leash=Surface(name=Task=8)/@0xc456b1b sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 taskParent=-1}
+11-05 09:55:34.708   682  1098 I ActivityTaskManager: START u0 {flg=0x14008000 xflg=0x4 cmp=com.getmimo/.ui.main.MainActivity (has extras)} with LAUNCH_MULTIPLE from uid 10216 (sr=61598682) (BAL_ALLOW_VISIBLE_WINDOW) result code=0
+11-05 09:55:34.733   682  1947 D CoreBackPreview: Window{a1eaab9 u0 com.getmimo/com.getmimo.ui.SplashActivity_default}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@c62b429, mPriority=-1, mIsAnimationCallback=false, mOverrideBehavior=0}
+11-05 09:55:34.747   682   713 W ActivityTaskManager: Unable to send transaction to client proc com.getmimo: no app thread
+11-05 09:55:34.785  6841  6971 W FlagRegistrar: Failed to register com.google.android.gms.providerinstaller#com.getmimo
+11-05 09:55:34.798  6841  6944 E [CIO]   :  fileUrl="/data/user/0/com.getmimo/app_segment-disk-queue/ae86ede257503e4274ff-2"
+11-05 09:55:34.862  6841  6877 W com.getmimo: Long monitor contention with owner Firebase Background Thread #3 (6881) at java.lang.Object uv.b.call()(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:54) waiters=1 in java.lang.Object uv.b.call() for 201ms
+11-05 09:55:34.952  6841  6841 W Adjust-pool-51-: type=1400 audit(0.0:127): avc:  denied  { read } for  name="tcp" dev="proc" ino=4026532053 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:proc_net_tcp_udp:s0 tclass=file permissive=0 app=com.getmimo
+11-05 09:55:34.973  6841  6841 D FirebaseSessions: App backgrounded on com.getmimo
+11-05 09:55:34.995   682   709 V WindowManager:         {m=OPEN f=STARTING_WINDOW_TRANSFER|FILLS_TASK|IS_BEHIND_STARTING_WINDOW leash=Surface(name=ActivityRecord{176027633 u0 com.getmimo/.ui.main.MainActivity)/@0xc8132c8 sb=Rect(0, 0 - 0, 0) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=-1->0 r=-1->0:-1 component=com.getmimo/.ui.main.MainActivity opt={t=CUSTOM enterResId=17432576 changeResId=0 exitResId=17432577 mUserId=0}},
+11-05 09:55:34.995   682   709 V WindowManager:         {m=CLOSE f=FILLS_TASK|IS_BEHIND_STARTING_WINDOW|IS_OCCLUDED leash=Surface(name=ActivityRecord{61598682 u0 com.getmimo/.ui.SplashActivity_default)/@0x796476b sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 component=com.getmimo/.ui.SplashActivity opt={t=CUSTOM enterResId=17432576 changeResId=0 exitResId=17432577 mUserId=0}}
+11-05 09:55:35.026  1120  1204 V WindowManagerShell:         {m=OPEN f=STARTING_WINDOW_TRANSFER|FILLS_TASK|IS_BEHIND_STARTING_WINDOW leash=Surface(name=ActivityRecord{176027633 u0 com.getmimo/.ui.main.MainActivity)/@0x798ec6 sb=Rect(0, 0 - 0, 0) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=-1->0 r=-1->0:-1 component=com.getmimo/.ui.main.MainActivity opt={t=CUSTOM enterResId=17432576 changeResId=0 exitResId=17432577 mUserId=0}},
+11-05 09:55:35.026  1120  1204 V WindowManagerShell:         {m=CLOSE f=FILLS_TASK|IS_BEHIND_STARTING_WINDOW|IS_OCCLUDED leash=Surface(name=ActivityRecord{61598682 u0 com.getmimo/.ui.SplashActivity_default)/@0x664e87 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 component=com.getmimo/.ui.SplashActivity opt={t=CUSTOM enterResId=17432576 changeResId=0 exitResId=17432577 mUserId=0}}
+11-05 09:55:35.076  6841  6841 I com.getmimo: AssetManager2(0x7182b3122598) locale list changing from [] to [en-US]
+11-05 09:55:35.087   682  1947 W WindowManager: Exception thrown during dispatchAppVisibility Window{5fa0b7b u0 com.getmimo/com.getmimo.ui.chapter.ChapterActivity EXITING}
+11-05 09:55:35.308   682  1098 D ConnectivityService: requestNetwork for uid/pid:10216/6841 activeRequest: null callbackRequest: 214 [NetworkRequest [ REQUEST id=215, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647 isUidTracked: false declaredMethods: AVAIL|LOST
+11-05 09:55:35.326   682  1024 D WifiNetworkFactory: got request NetworkRequest [ REQUEST id=215, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
+11-05 09:55:35.327   682  1024 V WifiNetworkFactory: Accepted network request NetworkRequest [ REQUEST id=215, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
+11-05 09:55:35.327   682  1024 D UntrustedWifiNetworkFactory: got request NetworkRequest [ REQUEST id=215, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
+11-05 09:55:35.327   682  1024 D OemPaidWifiNetworkFactory: got request NetworkRequest [ REQUEST id=215, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
+11-05 09:55:35.327   682  1024 D MultiInternetWifiNetworkFactory: got request NetworkRequest [ REQUEST id=215, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
+11-05 09:55:35.377  6841  6847 W com.getmimo: Suspending all threads took: 13.784ms
+11-05 09:55:35.416   682  1098 I ActivityTaskManager: START u0 {xflg=0x4 cmp=com.getmimo/.ui.authentication.AuthenticationActivity (has extras)} with LAUNCH_MULTIPLE from uid 10216 (sr=176027633) (BAL_ALLOW_VISIBLE_WINDOW) result code=0
+11-05 09:55:35.551  6841  6841 D FirebaseSessions: App foregrounded on com.getmimo
+11-05 09:55:35.644  6841  6847 I com.getmimo: Background concurrent mark compact GC freed 8315KB AllocSpace bytes, 92(4928KB) LOS objects, 49% free, 15MB/30MB, paused 15.415ms,4.930ms total 487.011ms
+11-05 09:55:35.650   682  2399 D CoreBackPreview: Window{a597b09 u0 com.getmimo/com.getmimo.ui.main.MainActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@444f72f, mPriority=-1, mIsAnimationCallback=false, mOverrideBehavior=0}
+11-05 09:55:35.651   682  2399 D CoreBackPreview: Window{a597b09 u0 com.getmimo/com.getmimo.ui.main.MainActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@207c13c, mPriority=0, mIsAnimationCallback=true, mOverrideBehavior=0}
+11-05 09:55:35.724  6841  6841 W Adjust-pool-51-: type=1400 audit(0.0:128): avc:  denied  { read } for  name="drivers" dev="proc" ino=4026531854 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:proc_tty_drivers:s0 tclass=file permissive=0 app=com.getmimo
+11-05 09:55:35.745  6841  6872 W com.getmimo: Long monitor contention with owner Firebase Background Thread #1 (6877) at java.lang.Object uv.b.call()(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:54) waiters=2 in java.lang.Object uv.b.call() for 412ms
+11-05 09:55:35.788  6841  6841 W Adjust-pool-51-: type=1400 audit(0.0:129): avc:  denied  { read } for  name="version" dev="proc" ino=4026532032 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:proc_version:s0 tclass=file permissive=0 app=com.getmimo
+11-05 09:55:35.896  6841  6841 W Adjust-pool-51-: type=1400 audit(0.0:130): avc:  denied  { read } for  name="u:object_r:serialno_prop:s0" dev="tmpfs" ino=320 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:serialno_prop:s0 tclass=file permissive=0 app=com.getmimo
+11-05 09:55:35.961   682   712 W ActivityTaskManager: Activity top resumed state loss timeout for ActivityRecord{176027633 u0 com.getmimo/.ui.main.MainActivity t9}
+11-05 09:55:35.962   682   712 W ActivityTaskManager: Activity pause timeout for ActivityRecord{176027633 u0 com.getmimo/.ui.main.MainActivity t9}
+11-05 09:55:35.924  6841  6841 W Adjust-pool-51-: type=1400 audit(0.0:131): avc:  denied  { read } for  name="u:object_r:userdebug_or_eng_prop:s0" dev="tmpfs" ino=375 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:userdebug_or_eng_prop:s0 tclass=file permissive=0 app=com.getmimo
+11-05 09:55:36.015  1120  1204 V WindowManagerShell:         {m=OPEN f=STARTING_WINDOW_TRANSFER|FILLS_TASK|IS_BEHIND_STARTING_WINDOW leash=Surface(name=ActivityRecord{189522340 u0 com.getmimo/.ui.authentication.AuthenticationActivity)/@0xb555ed9 sb=Rect(0, 0 - 0, 0) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=-1->0 r=-1->0:-1 bc=fff6f7fb component=com.getmimo/.ui.authentication.AuthenticationActivity},
+11-05 09:55:36.015  1120  1204 V WindowManagerShell:         {m=TO_BACK f=STARTING_WINDOW_TRANSFER|FILLS_TASK|IS_BEHIND_STARTING_WINDOW leash=Surface(name=ActivityRecord{176027633 u0 com.getmimo/.ui.main.MainActivity)/@0xb15b09e sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 bc=fff6f7fb component=com.getmimo/.ui.main.MainActivity}
+11-05 09:55:36.016   682   709 V WindowManager:         {m=OPEN f=STARTING_WINDOW_TRANSFER|FILLS_TASK|IS_BEHIND_STARTING_WINDOW leash=Surface(name=ActivityRecord{189522340 u0 com.getmimo/.ui.authentication.AuthenticationActivity)/@0x6aa017d sb=Rect(0, 0 - 0, 0) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=-1->0 r=-1->0:-1 bc=fff6f7fb component=com.getmimo/.ui.authentication.AuthenticationActivity},
+11-05 09:55:36.016   682   709 V WindowManager:         {m=TO_BACK f=STARTING_WINDOW_TRANSFER|FILLS_TASK|IS_BEHIND_STARTING_WINDOW leash=Surface(name=ActivityRecord{176027633 u0 com.getmimo/.ui.main.MainActivity)/@0xc8132c8 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 bc=fff6f7fb component=com.getmimo/.ui.main.MainActivity}
+11-05 09:55:36.076  6841  6841 W Adjust-pool-51-: type=1400 audit(0.0:133): avc:  denied  { read } for  name="product_name" dev="sysfs" ino=1162 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:sysfs:s0 tclass=file permissive=0 app=com.getmimo
+11-05 09:55:36.076  6841  6841 W Adjust-pool-51-: type=1400 audit(0.0:134): avc:  denied  { read } for  name="sys_vendor" dev="sysfs" ino=1161 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:sysfs:s0 tclass=file permissive=0 app=com.getmimo
+11-05 09:55:36.703  6841  6847 I com.getmimo: Background concurrent mark compact GC freed 10MB AllocSpace bytes, 461(20MB) LOS objects, 50% free, 21MB/43MB, paused 2.803ms,2.709ms total 472.677ms
+11-05 09:55:37.165  6841  6847 I com.getmimo: Background concurrent mark compact GC freed 10MB AllocSpace bytes, 674(24MB) LOS objects, 49% free, 16MB/32MB, paused 1.010ms,4.765ms total 154.946ms
+11-05 09:55:37.166  6841  6841 D FirebaseSessions: App backgrounded on com.getmimo
+11-05 09:55:37.205  6841  6841 I com.getmimo: AssetManager2(0x7182b311da98) locale list changing from [] to [en-US]
+11-05 09:55:37.275  6841  6841 I com.getmimo: AssetManager2(0x7182b3122bd8) locale list changing from [] to [en-US]
+11-05 09:55:37.286  6841  6841 I com.getmimo: AssetManager2(0x7182b312c4f8) locale list changing from [] to [en-US]
+11-05 09:55:37.286  6841  6841 I com.getmimo: AssetManager2(0x7182b3128cb8) locale list changing from [] to [en-US]
+11-05 09:55:37.286  6841  6841 I com.getmimo: AssetManager2(0x7182b3126d78) locale list changing from [] to [en-US]
+11-05 09:55:37.287  6841  6841 I com.getmimo: AssetManager2(0x7182b3128fd8) locale list changing from [] to [en]
+11-05 09:55:37.288  6841  6841 I com.getmimo: AssetManager2(0x7182b3128038) locale list changing from [] to [en-US]
+11-05 09:55:37.288  6841  6841 I com.getmimo: AssetManager2(0x7182b3127d18) locale list changing from [] to [en-US]
+11-05 09:55:37.290  6841  6841 W com.getmimo: Failed to find entry 'classes.dex': Entry not found
+11-05 09:55:37.312  6841  6841 I com.getmimo: Waiting for a blocking GC ClassLinker
+11-05 09:55:37.660  6841  6895 I com.getmimo: Waiting for a blocking GC Alloc
+11-05 09:55:37.661  6841  6998 I com.getmimo: Waiting for a blocking GC Alloc
+11-05 09:55:37.661  6841  7008 I com.getmimo: Waiting for a blocking GC Alloc
+11-05 09:55:37.663  6841  6894 I com.getmimo: Waiting for a blocking GC Alloc
+11-05 09:55:37.697  6841  6847 I com.getmimo: Background concurrent mark compact GC freed 39MB AllocSpace bytes, 2687(106MB) LOS objects, 34% free, 46MB/70MB, paused 1.820ms,3.243ms total 388.636ms
+11-05 09:55:37.698  6841  6841 I com.getmimo: WaitForGcToComplete blocked ClassLinker on Background for 385.299ms
+11-05 09:55:37.698  6841  6895 I com.getmimo: WaitForGcToComplete blocked Alloc on ClassLinker for 37.491ms
+11-05 09:55:37.698  6841  7008 I com.getmimo: WaitForGcToComplete blocked Alloc on ClassLinker for 37.195ms
+11-05 09:55:37.698  6841  6894 I com.getmimo: WaitForGcToComplete blocked Alloc on ClassLinker for 34.878ms
+11-05 09:55:37.700  6841  6998 I com.getmimo: WaitForGcToComplete blocked Alloc on ClassLinker for 39.107ms
+11-05 09:55:37.725  6841  6841 D FirebaseSessions: App foregrounded on com.getmimo
+11-05 09:55:37.752   682  2645 D CoreBackPreview: Window{a1eaab9 u0 com.getmimo/com.getmimo.ui.SplashActivity_default}: Setting back callback null
+11-05 09:55:37.829   682  2387 D CoreBackPreview: Window{aa343ed u0 com.getmimo/com.getmimo.ui.authentication.AuthenticationActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@77d31e9, mPriority=-1, mIsAnimationCallback=false, mOverrideBehavior=0}
+11-05 09:55:37.926   682   709 W system_server: Failed to determine oat file name for dex location /data/app/~~9KI_TS2XViExntrszYmtug==/com.getmimo-Eu2dau7I0bevugQByyBloQ==/base.apk: Dalvik cache directory does not exist
+11-05 09:55:37.937   682   709 I ActivityTaskManager: Displayed com.getmimo/.ui.authentication.AuthenticationActivity for user 0: +6s618ms
+11-05 09:55:37.978   682  2387 D CoreBackPreview: Window{aa343ed u0 com.getmimo/com.getmimo.ui.authentication.AuthenticationActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@38ae788, mPriority=0, mIsAnimationCallback=true, mOverrideBehavior=0}
+11-05 09:55:38.195   682  2645 D CoreBackPreview: Window{aa343ed u0 com.getmimo/com.getmimo.ui.authentication.AuthenticationActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@7a9bb07, mPriority=-1, mIsAnimationCallback=false, mOverrideBehavior=0}
+11-05 09:55:38.200   682   822 I ImeTracker: com.getmimo:abc150ef: onRequestHide at ORIGIN_SERVER reason HIDE_UNSPECIFIED_WINDOW fromUser false
+11-05 09:55:38.261  1746  1746 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1293 onStartInput(EditorInfo{EditorInfo{packageName=com.getmimo, inputType=0, inputTypeString=NULL, enableLearning=false, autoCorrection=false, autoComplete=false, imeOptions=0, privateImeOptions=null, actionName=UNSPECIFIED, actionLabel=null, initialSelStart=-1, initialSelEnd=-1, initialCapsMode=0, label=null, fieldId=0, fieldName=null, extras=null, hintText=null, hintLocales=[]}}, false)
+11-05 09:55:38.297   682  2645 W PackageConfigPersister: App-specific configuration not found for packageName: com.getmimo and userId: 0
+11-05 09:55:38.377  6841  6847 W com.getmimo: Suspending all threads took: 30.264ms
+11-05 09:55:38.420  6841  7028 W com.getmimo: Weak pointer dereference blocked for 32 milliseconds.
+11-05 09:55:38.563  6841  6841 I ImeTracker: com.getmimo:abc150ef: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+11-05 09:55:39.119  6841  6847 I com.getmimo: Background concurrent mark compact GC freed 23MB AllocSpace bytes, 1465(65MB) LOS objects, 25% free, 69MB/93MB, paused 37.238ms,27.238ms total 1.369s
+11-05 09:55:40.042  6841  6847 I com.getmimo: Background concurrent mark compact GC freed 23MB AllocSpace bytes, 1460(63MB) LOS objects, 28% free, 61MB/85MB, paused 1.047ms,3.903ms total 739.774ms
+11-05 09:55:40.239  6841  7053 D ProfileInstaller: Skipping profile installation for com.getmimo
+11-05 09:55:40.244   682  2645 D CoreBackPreview: Window{5173f7 u0 com.getmimo/com.getmimo.ui.authentication.AuthenticationActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@800bbce, mPriority=-1, mIsAnimationCallback=false, mOverrideBehavior=0}
+11-05 09:55:41.036  6841  7008 I com.getmimo: Waiting for a blocking GC Alloc
+11-05 09:55:41.046  6841  6998 I com.getmimo: Waiting for a blocking GC Alloc
+11-05 09:55:41.053  6841  6894 I com.getmimo: Waiting for a blocking GC Alloc
+11-05 09:55:41.186  6841  6847 I com.getmimo: Background concurrent mark compact GC freed 27MB AllocSpace bytes, 1624(90MB) LOS objects, 24% free, 73MB/97MB, paused 1.345ms,20.768ms total 983.267ms
+11-05 09:55:41.186  6841  7008 I com.getmimo: WaitForGcToComplete blocked Alloc on Background for 149.960ms
+11-05 09:55:41.189  6841  6998 I com.getmimo: WaitForGcToComplete blocked Alloc on Background for 143.207ms
+11-05 09:55:41.206  6841  6894 I com.getmimo: WaitForGcToComplete blocked Alloc on Background for 153.408ms
+11-05 09:55:41.336   682  2645 D ConnectivityService: requestNetwork for uid/pid:10216/6841 activeRequest: null callbackRequest: 216 [NetworkRequest [ REQUEST id=217, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647 isUidTracked: false declaredMethods: AVAIL|LOST
+11-05 09:55:41.343   682  1024 D WifiNetworkFactory: got request NetworkRequest [ REQUEST id=217, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
+11-05 09:55:41.343   682  1024 V WifiNetworkFactory: Accepted network request NetworkRequest [ REQUEST id=217, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
+11-05 09:55:41.343   682  1024 D UntrustedWifiNetworkFactory: got request NetworkRequest [ REQUEST id=217, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
+11-05 09:55:41.343   682  1024 D OemPaidWifiNetworkFactory: got request NetworkRequest [ REQUEST id=217, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
+11-05 09:55:41.343   682  1024 D MultiInternetWifiNetworkFactory: got request NetworkRequest [ REQUEST id=217, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10216 RequestorUid: 10216 RequestorPkg: com.getmimo UnderlyingNetworks: Null] ]
+11-05 09:55:41.578  6841  6877 W com.getmimo: Long monitor contention with owner Firebase Background Thread #3 (6881) at java.lang.Object uv.b.call()(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:54) waiters=0 in java.lang.Object uv.b.call() for 134ms
+11-05 09:55:41.916  6841  6924 W com.getmimo: Long monitor contention with owner Adjust-pool-51-thread-1-ActivityPackageSender (6991) at void com.adjust.sdk.sig.Signer.sign(android.content.Context, java.util.Map, java.util.Map, java.util.Map)(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:33) waiters=0 in void com.adjust.sdk.sig.Signer.onResume() for 6.301s
+11-05 09:55:42.132  6841  6841 W Adjust-pool-51-: type=1400 audit(0.0:135): avc:  denied  { read } for  name="tcp" dev="proc" ino=4026532053 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:proc_net_tcp_udp:s0 tclass=file permissive=0 app=com.getmimo
+11-05 09:55:42.393  6841  6847 W com.getmimo: Suspending all threads took: 10.259ms
+11-05 09:55:42.548  6841  6841 W Adjust-pool-51-: type=1400 audit(0.0:136): avc:  denied  { read } for  name="drivers" dev="proc" ino=4026531854 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:proc_tty_drivers:s0 tclass=file permissive=0 app=com.getmimo
+11-05 09:55:42.556  6841  6841 W Adjust-pool-51-: type=1400 audit(0.0:137): avc:  denied  { read } for  name="version" dev="proc" ino=4026532032 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:proc_version:s0 tclass=file permissive=0 app=com.getmimo
+11-05 09:55:42.636  6841  6841 W Adjust-pool-51-: type=1400 audit(0.0:138): avc:  denied  { read } for  name="u:object_r:serialno_prop:s0" dev="tmpfs" ino=320 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:serialno_prop:s0 tclass=file permissive=0 app=com.getmimo
+11-05 09:55:42.644  6841  6841 W Adjust-pool-51-: type=1400 audit(0.0:139): avc:  denied  { read } for  name="u:object_r:userdebug_or_eng_prop:s0" dev="tmpfs" ino=375 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:userdebug_or_eng_prop:s0 tclass=file permissive=0 app=com.getmimo
+11-05 09:55:42.644  6841  6841 W Adjust-pool-51-: type=1400 audit(0.0:140): avc:  denied  { read } for  name="u:object_r:serialno_prop:s0" dev="tmpfs" ino=320 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:serialno_prop:s0 tclass=file permissive=0 app=com.getmimo
+11-05 09:55:42.656  6841  6841 W Adjust-pool-51-: type=1400 audit(0.0:141): avc:  denied  { read } for  name="product_name" dev="sysfs" ino=1162 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:sysfs:s0 tclass=file permissive=0 app=com.getmimo
 == crash buffer ==
