@@ -125,7 +125,7 @@ PY
 
 # ---- 4. Baseline + bounded real interaction chain ------------------------
 BASE=$(capture STEP-00 "onboarding_baseline")
-MAX=12
+MAX=16
 for I in $(seq 1 $MAX); do
   N=$(printf 'STEP-%02d' "$I")
   TAP=$(python3 ANALYSIS/RUNTIME/MISSION_05/choose_tap.py "$BASE" "$AVOID" 2>/dev/null | head -1)
@@ -146,36 +146,68 @@ done
 log "interaction_chain_finished steps_captured=$(grep -c '^step=' "$TRACE")"
 
 # ---- 5. Bounded offline dependency probe ---------------------------------
-log "OFFLINE_PHASE begin: disable wifi + mobile data on the emulator only"
+log "OFFLINE_PHASE begin: isolate network, then COLD START the real app offline"
 {
-  echo "MISSION 05 - OFFLINE PHASE"
-  echo "timestamp_utc=$(date -u +%FT%TZ)"
-  echo "== connectivity before =="
-  adb shell dumpsys connectivity 2>/dev/null | tr -d '\r' | grep -iE 'NetworkAgentInfo|Active default|WIFI|MOBILE' | head -12
+  echo "MISSION 05 - OFFLINE PHASE (client-side dependency probe)"
+  echo "timestamp_utc=$(date -u +%FT%TZ) package=$PKG"
+  echo "== ping BEFORE isolation =="
+  adb shell ping -c 1 -W 2 8.8.8.8 2>&1 | tr -d '\r' | head -6
+  echo "== active network BEFORE =="
+  adb shell dumpsys connectivity 2>/dev/null | tr -d '\r' | grep -m2 -E 'Active default network|NetworkAgentInfo\{network' | cut -c1-200
   echo "== adb shell svc wifi disable =="
-  adb shell svc wifi disable 2>&1 | tr -d '\r'
-  echo "wifi_disable_exit=$?"
+  adb shell svc wifi disable 2>&1 | tr -d '\r'; echo "wifi_disable_exit=$?"
   echo "== adb shell svc data disable =="
-  adb shell svc data disable 2>&1 | tr -d '\r'
-  echo "data_disable_exit=$?"
+  adb shell svc data disable 2>&1 | tr -d '\r'; echo "data_disable_exit=$?"
+  sleep 2
+  echo "== ping AFTER isolation =="
+  adb shell ping -c 1 -W 2 8.8.8.8 2>&1 | tr -d '\r' | head -6
+  echo "== active network AFTER =="
+  adb shell dumpsys connectivity 2>/dev/null | tr -d '\r' | grep -m2 -E 'Active default network|NetworkAgentInfo\{network' | cut -c1-200
 } > "$R/LOGS/OFFLINE_PHASE.txt" 2>&1
-sleep 4
-OFF1=$(capture OFFLINE-00 "network_disabled_still_on_current_screen")
-TAP2=$(python3 ANALYSIS/RUNTIME/MISSION_05/choose_tap.py "$OFF1" "" 2>/dev/null | head -1)
-log "OFFLINE-01 choose_tap=$TAP2"
-case "$TAP2" in
-  NONE*|'') log "OFFLINE-01 no_safe_target (auth boundary or no clickable node)" ;;
-  *) X2=$(printf '%s' "$TAP2" | awk '{print $1}'); Y2=$(printf '%s' "$TAP2" | awk '{print $2}')
-     adb shell input tap "$X2" "$Y2" >> "$TRACE" 2>&1
-     log "OFFLINE-01 action=input_tap x=$X2 y=$Y2"
-     sleep 4
-     capture OFFLINE-01 "after_tap_with_network_disabled" >/dev/null ;;
-esac
+adb logcat -d -v threadtime > "$R/LOGS/LOGCAT_ONLINE.txt" 2>&1
+echo "online_logcat_lines=$(wc -l < "$R/LOGS/LOGCAT_ONLINE.txt")" >> "$R/LOGS/OFFLINE_PHASE.txt"
+adb logcat -c >/dev/null 2>&1
+log "OFFLINE cold start: am force-stop + am start -n $LAUNCH"
+adb shell am force-stop "$PKG" >> "$R/LOGS/OFFLINE_PHASE.txt" 2>&1
+adb shell am start -n "$LAUNCH" >> "$R/LOGS/OFFLINE_PHASE.txt" 2>&1
+log "offline_am_start_exit=$?"
+sleep 18
+# dismiss a system ANR overlay if one appeared during the cold start
+for ATT in 1 2; do
+  adb shell uiautomator dump --compressed /sdcard/window.xml >/dev/null 2>&1
+  adb pull /sdcard/window.xml "$R/UI_HIERARCHY/.anr2.xml" >/dev/null 2>&1
+  NODE=$(grep -o '<node[^>]*aerr_wait[^>]*>' "$R/UI_HIERARCHY/.anr2.xml" 2>/dev/null | head -1)
+  ANR_B=$(printf '%s' "$NODE" | grep -o 'bounds="\[[0-9]*,[0-9]*\]\[[0-9]*,[0-9]*\]"' | head -1)
+  if [ -n "$ANR_B" ]; then
+    NUMS=$(printf '%s' "$ANR_B" | grep -oE '[0-9]+' | tr '\n' ' '); set -- $NUMS
+    CX=$(( ( $1 + $3 ) / 2 )); CY=$(( ( $2 + $4 ) / 2 ))
+    log "offline_anr_dialog_attempt_$ATT tap=$CX,$CY"; adb shell input tap "$CX" "$CY" >/dev/null 2>&1; sleep 3
+  else break; fi
+done
+rm -f "$R/UI_HIERARCHY/.anr2.xml"
+OFFBASE=$(capture OFFLINE-00 "cold_start_with_network_disabled")
+OFFAVOID=""
+for J in 1 2 3; do
+  ON=$(printf 'OFFLINE-%02d' "$J")
+  TAP2=$(python3 ANALYSIS/RUNTIME/MISSION_05/choose_tap.py "$OFFBASE" "$OFFAVOID" 2>/dev/null | head -1)
+  log "$ON choose_tap=$TAP2"
+  case "$TAP2" in
+    NONE*|'') log "$ON stop_reason=$TAP2"; break ;;
+  esac
+  X2=$(printf '%s' "$TAP2" | awk '{print $1}'); Y2=$(printf '%s' "$TAP2" | awk '{print $2}')
+  log "$ON action=input_tap x=$X2 y=$Y2 target=$(printf '%s' "$TAP2" | awk '{print $3}')"
+  adb shell input tap "$X2" "$Y2" >> "$TRACE" 2>&1
+  OFFAVOID="${OFFAVOID:+$OFFAVOID;}$X2,$Y2"
+  sleep 4
+  OFFBASE=$(capture "$ON" "offline_after_tap_$J")
+done
 {
   echo "== restore =="
   adb shell svc wifi enable 2>&1 | tr -d '\r'
   adb shell svc data enable 2>&1 | tr -d '\r'
   echo "restore_done=$(date -u +%FT%TZ)"
+  echo "== ping AFTER restore =="
+  adb shell ping -c 1 -W 2 8.8.8.8 2>&1 | tr -d '\r' | head -6
 } >> "$R/LOGS/OFFLINE_PHASE.txt" 2>&1
 
 # ---- 6. logs + summary ----------------------------------------------------

@@ -1,0 +1,373 @@
+{
+ "document": "Mimo 9.35 — reconstructed SHIPPED content schema (MISSION 05)",
+ "basis": "VERIFY_STATIC: original APK asset JSON + JADX-decompiled Kotlin data classes",
+ "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+ "serialization": "kotlinx.serialization JSON (@Serializable on *Json classes); HTML-like XML/DSL string for interactive lessons",
+ "locales": [
+  "ru",
+  "en",
+  "es",
+  "pt",
+  "de",
+  "fr",
+  "it",
+  "id",
+  "tr",
+  "pl"
+ ],
+ "root": {
+  "file": "assets/lessons-<locale>/tracks/tracks.json",
+  "class": "com.getmimo.data.content.model.track.TracksJson",
+  "fields": {
+   "publishSetVersion": "Long (753 in this APK)",
+   "tracks": "List<TrackJson> (19)"
+  }
+ },
+ "entities": {
+  "TrackJson": {
+   "fields": {
+    "id": "Long",
+    "version": "Long",
+    "title": "String",
+    "descriptionContent": "String",
+    "onboardingCategory": "String (build|none)",
+    "isNew": "Boolean",
+    "isHidden": "Boolean",
+    "iconBanner": "String|null",
+    "sections": "List<SectionJson>",
+    "tutorials": "List<TutorialRef>"
+   },
+   "count": 19
+  },
+  "TutorialRef": {
+   "fields": {
+    "id": "Long",
+    "version": "Long",
+    "type": "String",
+    "title": "String"
+   },
+   "count": 2002
+  },
+  "SectionJson": {
+   "fields": {
+    "name": "String",
+    "description": "String",
+    "startIndex": "Int",
+    "endIndex": "Int",
+    "tutorialIds": "List<Long>"
+   },
+   "count": 144,
+   "invariant": "endIndex-startIndex+1 == tutorialIds.size() (all 144 verified)"
+  },
+  "TutorialJson": {
+   "file": "assets/lessons-<locale>/tracks/tutorial-<id>.json",
+   "fields": {
+    "tutorial": "Tutorial (single-key wrapper)"
+   },
+   "count": 1029
+  },
+  "Tutorial": {
+   "fields": {
+    "id": "Long",
+    "version": "Int",
+    "type": "TutorialType",
+    "isNew": "Boolean",
+    "codeLanguage": "CodeLanguage",
+    "title": "String",
+    "descriptionContent": "String",
+    "shortDescriptionContent": "String",
+    "showInTrack": "Boolean",
+    "iconBanner": "String|null",
+    "chapters": "List<Chapter>"
+   },
+   "runtime_added_fields": [
+    "hasProgress",
+    "isCompleted"
+   ]
+  },
+  "Chapter": {
+   "fields": {
+    "id": "Long",
+    "title": "String",
+    "type": "ChapterType",
+    "lessons": "List<Lesson>"
+   },
+   "runtime_added_fields": [
+    "isCompleted"
+   ],
+   "count": 1947
+  },
+  "Lesson": {
+   "fields": {
+    "id": "Long",
+    "title": "String",
+    "contentType": "LessonContentType",
+    "images": "List<LessonImage>",
+    "interactiveContent": "String? (HTML-like DSL)",
+    "executableContent": "Object?",
+    "hardModeSelected": "Boolean?",
+    "hardModeContent": "String?"
+   },
+   "count": 18272
+  },
+  "LessonContent.Interactive": {
+   "fields": {
+    "lessonModules": "List<LessonModule>",
+    "hardModeLessonModules": "List<LessonModule>"
+   }
+  },
+  "LessonContent.Executable": {
+   "fields": {
+    "instructions": "String",
+    "preselectedFileIndex": "Int",
+    "files": "List<File>",
+    "hints": "List",
+    "hasVisualOutput": "Boolean (JSON key, not in JADX fields)",
+    "sourceDatabaseTables": "? (269)",
+    "solutionDatabaseTables": "? (269)",
+    "httpOptions": "? (85)"
+   }
+  },
+  "LessonContent.Executable.File": {
+   "fields": {
+    "name": "String",
+    "codeLanguage": "CodeLanguage",
+    "content": "String (starting code)",
+    "solvedContent": "String|null (shipped reference solution)"
+   }
+  },
+  "LessonImage": {
+   "fields": {
+    "id": "String"
+   }
+  }
+ },
+ "enums": {
+  "TutorialType": {
+   "values": [
+    "course",
+    "practiceRequired",
+    "practiceOptional",
+    "guidedProject",
+    "guidedProjectOptional",
+    "challenges",
+    "mobileProject",
+    "quiz",
+    "proficiencyProject",
+    "recreateProject"
+   ],
+   "shipped_counts": {
+    "course": 507,
+    "practiceRequired": 157,
+    "practiceOptional": 134,
+    "guidedProjectOptional": 117,
+    "guidedProject": 74,
+    "challenges": 40
+   },
+   "accessors": [
+    "isRequired",
+    "isPractice",
+    "isChallenge",
+    "trackingField"
+   ]
+  },
+  "ChapterType": {
+   "values": [
+    "none",
+    "practiceLevel1",
+    "practiceLevel2",
+    "practiceLevel3",
+    "quiz",
+    "challengeLevel0",
+    "challengeLevel1",
+    "challengeLevel2",
+    "challengeLevel3",
+    "challengeLevel4"
+   ],
+   "shipped_counts": {
+    "practiceLevel1": 810,
+    "practiceLevel3": 522,
+    "challengeLevel2": 382,
+    "practiceLevel2": 174,
+    "challengeLevel0": 45,
+    "challengeLevel1": 14
+   },
+   "accessors": [
+    "level",
+    "isChallengeLevel"
+   ]
+  },
+  "LessonContentType": {
+   "values": [
+    "interactive",
+    "executableFiles"
+   ],
+   "shipped_counts": {
+    "interactive": 14248,
+    "executableFiles": 4024
+   }
+  },
+  "CodeLanguage": {
+   "shipped_counts": {
+    "html": 139,
+    "css": 169,
+    "javascript": 283,
+    "python": 195,
+    "sql": 64,
+    "node": 47,
+    "jsx": 46,
+    "bash": 1,
+    "swift": 43,
+    "typescript": 23,
+    "none": 19
+   },
+   "fields": [
+    "language",
+    "title",
+    "icon",
+    "defaultFileName",
+    "extension"
+   ]
+  },
+  "ContentLocale": {
+   "values": [
+    "RU",
+    "EN",
+    "ES",
+    "PT",
+    "DE",
+    "FR",
+    "IT",
+    "ID",
+    "TR",
+    "PL"
+   ],
+   "methods": [
+    "fromLocale",
+    "toLocale"
+   ]
+  },
+  "LessonInteractionType": {
+   "values": [
+    "FillTheGap",
+    "Spell",
+    "Selection",
+    "ValidatedInput",
+    "InteractiveWebView",
+    "MultipleChoice",
+    "SingleChoice",
+    "Reveal",
+    "None"
+   ]
+  },
+  "ModuleVisibility": {
+   "derived_from_DSL": [
+    "always",
+    "correct",
+    "wrong"
+   ]
+  }
+ },
+ "dsl": {
+  "container": "HTML-like XML string in Lesson.interactiveContent",
+  "top_tags": {
+   "text": 369108,
+   "code": 94981,
+   "p": 46388,
+   "option": 44225,
+   "content": 41221,
+   "body": 23177,
+   "html": 23162,
+   "item": 20249,
+   "interactions": 11729,
+   "interaction": 11729,
+   "data": 10474,
+   "options": 9957,
+   "selection": 7356,
+   "output": 5784,
+   "row": 5232,
+   "div": 4970,
+   "header": 3340,
+   "link": 1877,
+   "head": 1834,
+   "strong": 1568,
+   "img": 1533,
+   "h1": 1445,
+   "button": 1335,
+   "table": 1301,
+   "li": 1211,
+   "a": 1103,
+   "input": 1061,
+   "br": 1040,
+   "webview": 930,
+   "h2": 926,
+   "h3": 838,
+   "script": 819,
+   "title": 645,
+   "database": 574,
+   "tables": 574,
+   "em": 525,
+   "label": 378,
+   "h4": 377,
+   "span": 328,
+   "ul": 327
+  },
+  "interaction_types": {
+   "fillTheGap": 9957,
+   "validatedInput": 1772
+  },
+  "selection_tag_count": 7356,
+  "visible_if": {
+   "always": 18869,
+   "wrong": 19101,
+   "correct": 173
+  },
+  "correct_attribute": {
+   "false": 27762,
+   "true": 7356
+  },
+  "bridge_messages": [
+   "mimo.activity.correct",
+   "mimo.activity.wrong",
+   "mimo.activity.completed"
+  ],
+  "bridge_source_asset": "assets/lesson-webview.js"
+ },
+ "identifiers": {
+  "LessonIdentifier": [
+   "chapterId",
+   "lessonId",
+   "trackId",
+   "trackVersion",
+   "tutorialId"
+  ],
+  "ChapterIdentifier": [
+   "chapterId",
+   "trackId",
+   "tutorialId"
+  ],
+  "TrackIdentifier": [
+   "trackId",
+   "trackVersion"
+  ]
+ },
+ "loaders": [
+  "DefaultTrackLoader.getAllTracks",
+  "getTutorial",
+  "getInteractiveLesson",
+  "getExecutableLesson",
+  "DefaultTracksRepository.getTracksJson",
+  "getTrackById",
+  "getTrackWithChapters",
+  "loadTrackWithChapters",
+  "getPublishSetVersion"
+ ],
+ "answer_key_location": "VERIFY_STATIC: shipped data (correct attributes, startIndex/endIndex ranges, solvedContent, visible-if feedback); NOT server",
+ "unknowns": [
+  "exact validatedInput index-to-token algorithm",
+  "chapter/tutorial completion threshold",
+  "unlock rule",
+  "solvedContent local diff usage",
+  "content update mechanism"
+ ]
+}
