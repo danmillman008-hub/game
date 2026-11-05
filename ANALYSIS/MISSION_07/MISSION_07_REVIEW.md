@@ -90,9 +90,10 @@ without modifying the APK or reconstructing a server.
 * No server response, no credentials, no APK patch. `SERVER CONFIRMED = 0`.
 
 ## Acceptance summary
-`17_ACCEPTANCE_CRITERIA.md`: **14 PASS, 4 PARTIAL, 3 NOT MET** (the NOT MET
-items are scoring/unlock/native-dispatch reconstruction — explicitly reported
-as `UNKNOWN` rather than fabricated). The mission's core requirement — live
+`17_ACCEPTANCE_CRITERIA.md`: **15 PASS, 3 PARTIAL, 2 NOT MET** (the two NOT
+MET items are scoring/XP reconstruction and unlock/chapter-completion
+reconstruction; native validator dispatch is a measured-negative PARTIAL — all
+explicitly reported as `UNKNOWN` rather than fabricated). The mission's core requirement — live
 answer → correct/wrong UI → exact Room row → offline queue behaviour with
 runtime-verified validators — is met.
 
