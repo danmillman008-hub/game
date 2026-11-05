@@ -1,10 +1,15 @@
 //@category Mimo.Analysis
 // Runs AFTER Ghidra Auto Analysis (no -noanalysis) on the original Mimo DEX.
-// Extracts function inventory + real Dalvik instructions (control flow evidence)
-// for the two analysis targets: learning-path geometry and lesson-end scoring.
+// Extracts the function inventory and real Dalvik instructions (branch / call
+// evidence) for the two analysis targets: learning-path geometry and the
+// lesson-end scoring / completion engine.
 
 import ghidra.app.script.GhidraScript;
-import ghidra.program.model.listing.*;
+import ghidra.program.model.listing.Function;
+import ghidra.program.model.listing.FunctionManager;
+import ghidra.program.model.listing.Instruction;
+import ghidra.program.model.listing.InstructionIterator;
+import ghidra.program.model.listing.Program;
 import ghidra.program.model.symbol.Symbol;
 import ghidra.program.model.symbol.SymbolIterator;
 import java.io.FileWriter;
@@ -27,7 +32,7 @@ public class MimoControlFlow extends GhidraScript {
         Program p = currentProgram;
         StringBuilder sb = new StringBuilder();
         FunctionManager fm = p.getFunctionManager();
-        int funcs = fm.getFunctionCount(true);
+        int funcs = fm.getFunctionCount();
         sb.append("=== PROGRAM ").append(p.getName())
           .append(" language=").append(p.getLanguage().getLanguageID().getIdAsString())
           .append(" functions=").append(funcs)
@@ -46,13 +51,26 @@ public class MimoControlFlow extends GhidraScript {
                 ns++;
             }
         }
+        sb.append("  [namespace_symbols_shown=").append(ns).append("]\n");
 
-        sb.append("-- function control flow (instructions, not Java) --\n");
-        int dumped = 0, totalInsns = 0;
+        sb.append("-- function control flow (real Dalvik instructions, not Java) --\n");
+        int dumped = 0, totalInsns = 0, branches = 0, calls = 0, scanned = 0;
         for (Function f : fm.getFunctions(true)) {
-            if (dumped >= 40) break;
+            scanned++;
             String n = f.getName();
-            if (!target(n)) continue;
+            // count branch / call instructions across the whole program (bounded)
+            if (scanned <= 6000) {
+                InstructionIterator ci = p.getListing().getInstructions(f.getBody(), true);
+                while (ci.hasNext()) {
+                    Instruction c = ci.next();
+                    String mn = c.getMnemonicString();
+                    if (mn == null) continue;
+                    if (mn.startsWith("if-") || mn.equals("goto") || mn.startsWith("goto/")
+                        || mn.contains("switch")) branches++;
+                    if (mn.startsWith("invoke-")) calls++;
+                }
+            }
+            if (dumped >= 40 || !target(n)) continue;
             sb.append("FUNC ").append(n).append(" @").append(f.getEntryPoint())
               .append(" body_bytes=").append(f.getBody().getNumAddresses()).append('\n');
             int k = 0;
@@ -66,7 +84,10 @@ public class MimoControlFlow extends GhidraScript {
             sb.append("  [instructions_shown=").append(k).append("]\n");
             dumped++;
         }
-        sb.append("DUMPED_FUNCS=").append(dumped)
+        sb.append("SCANNED_FUNCS=").append(scanned)
+          .append(" BRANCH_INSNS=").append(branches)
+          .append(" INVOKE_INSNS=").append(calls)
+          .append(" DUMPED_FUNCS=").append(dumped)
           .append(" INSTRUCTIONS_SHOWN=").append(totalInsns).append('\n');
 
         String ws = System.getenv("GITHUB_WORKSPACE");
