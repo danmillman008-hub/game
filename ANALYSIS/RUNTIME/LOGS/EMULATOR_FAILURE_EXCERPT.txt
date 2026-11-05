@@ -1,2 +1,20 @@
-job_id=126990172959
-log_location_unavailable
+HISTORICAL NOTE - superseded diagnostic artifact
+================================================
+This file was produced by run 41949615333 (the SECOND, failed M03 run), NOT by
+the final successful reference run 41950695024. It is preserved unchanged in
+meaning as evidence of the diagnostic attempt, but the log-capture method used
+then could not resolve the GitHub log blob location from inside the runner.
+
+The root cause was subsequently identified directly from the pinned action's
+source (src/script-parser.ts + src/main.ts): parseScript() splits `script:`
+into individual lines and runs each in a separate `sh -c`. Runs 41949014303
+and 41949615333 therefore failed at the third line (`mkdir -p "$R/..."` with
+an empty $R). Fixed in run 41950152436 by invoking a single-line script
+`bash ANALYSIS/RUNTIME/runtime_smoke.sh`.
+
+Original captured content of this file from run 41949615333:
+  job_id=126990172959
+  log_location_unavailable
+
+No application crash occurred in any run: no com.getmimo process ever existed
+on the device. See ../CRASH_AND_ERROR_LOGS.txt.
