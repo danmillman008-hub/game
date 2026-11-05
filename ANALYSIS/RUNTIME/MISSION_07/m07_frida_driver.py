@@ -64,6 +64,26 @@ if session is None:
     print('[driver] aborting: frida-server not reachable'); sys.exit(4)
 write({'kind': 'attached', 'pid': proc.pid, 'name': proc.name})
 js = pathlib.Path(js_path).read_text(encoding='utf-8')
+# Frida 17 removed the built-in Java/ObjC bridges (frida 17.0.0 release notes;
+# frida/frida#3473). frida-tools 14.11.0 ships the compiled bridge as
+# frida_tools/bridges/java.js: `var bridge = function(){...}();`. We commit an
+# exact copy and bind it as globalThis.Java before our agent code runs.
+bridge_path = pathlib.Path(__file__).with_name('FRIDA') / 'java_bridge_frida17.js'
+bridge_src = None
+if bridge_path.exists():
+    bridge_src = bridge_path.read_text(encoding='utf-8')
+else:
+    try:
+        import frida_tools, os
+        candidate = os.path.join(os.path.dirname(frida_tools.__file__), 'bridges', 'java.js')
+        bridge_src = pathlib.Path(candidate).read_text(encoding='utf-8')
+    except Exception as e:
+        write({'kind':'bridge_error','error':str(e)})
+if bridge_src:
+    js = '(function(){\n' + bridge_src + '\nObject.defineProperty(globalThis,"Java",{value:bridge,configurable:true});\n})();\n' + js
+    write({'kind':'bridge_loaded','bytes':len(bridge_src),'source':str(bridge_path)})
+else:
+    write({'kind':'bridge_missing','note':'script will fail if it uses Java'})
 script = session.create_script(js)
 
 def on_message(message, data):

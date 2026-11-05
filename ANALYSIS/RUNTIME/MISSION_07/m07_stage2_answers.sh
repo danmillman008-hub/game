@@ -51,7 +51,7 @@ log "snapshot=A_BEFORE_ONBOARDING"
 
 # ---- Frida server (measured install; attach by PID) ------------------------
 {
-  python3 -m pip install --quiet "frida==$FRIDA_VER" frida-tools 2>&1 | tail -5
+  python3 -m pip install --quiet "frida==$FRIDA_VER" "frida-tools==14.11.0" 2>&1 | tail -5
   python3 -c 'import frida;print("frida="+frida.__version__)'
   U="https://github.com/frida/frida/releases/download/$FRIDA_VER/frida-server-$FRIDA_VER-android-x86_64.xz"
   curl -fL --retry 2 --max-time 600 -o "${RUNNER_TEMP:-/tmp}/frida-server.xz" "$U" >/dev/null 2>&1

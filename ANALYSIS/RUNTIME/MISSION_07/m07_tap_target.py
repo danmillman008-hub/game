@@ -9,6 +9,9 @@ import sys, re, xml.etree.ElementTree as ET, subprocess, pathlib
 xml_path = sys.argv[1]
 expected = sys.argv[2] if len(sys.argv) > 2 else ''
 avoid = set(x.strip() for x in (sys.argv[3].split(';') if len(sys.argv) > 3 else []) if x.strip())
+# Optional 4th arg: comma-separated PREFERRED label keywords. A matching node
+# wins over the generic chooser, making onboarding deterministic.
+prefer = [x.strip() for x in (sys.argv[4].split('|') if len(sys.argv) > 4 else []) if x.strip()]
 
 def bounds(n):
     m = re.match(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]', n.get('bounds') or '')
@@ -40,6 +43,17 @@ for n in root.iter('node'):
     nodes.append(dict(x=b[0], y=b[1], y2=b[2], label=label, alltext=alltext,
                       clickable=n.get('clickable')=='true', enabled=n.get('enabled')=='true',
                       rid=rid, key='%d,%d'%(b[0],b[1])))
+
+# Preferred labels first (e.g. "Web apps" to select the HTML path).
+if prefer:
+    for kw in prefer:
+        k = norm(kw)
+        for mode, fn in [('preferred_exact', lambda n: norm(n['label']) == k),
+                         ('preferred_contains', lambda n: k in norm(n['alltext']))]:
+            for n in nodes:
+                if n['enabled'] and n['clickable'] and n['key'] not in avoid and fn(n):
+                    print('%d %d %s %s' % (n['x'], n['y'], n['label'][:90].replace(' ', '_'), mode))
+                    sys.exit(0)
 
 e = norm(expected)
 if e:

@@ -7,6 +7,9 @@ T=ANALYSIS/RUNTIME/_DISPATCH_TRIGGER
 R=ANALYSIS/RUNTIME/MISSION_07
 mkdir -p "$R/LOGS"
 echo "M07 dispatcher $(date -u +%FT%TZ) run=$GITHUB_RUN_ID sha=$GITHUB_SHA marker=$(tr '\n' ' ' < "$T")" | tee "$R/LOGS/DISPATCH.txt"
+if grep -q 'M07-STAGE-3' "$T"; then
+  exec bash "$R/m07_stage3_answers.sh"
+fi
 if grep -q 'M07-STAGE-2' "$T"; then
   exec bash "$R/m07_stage2_answers.sh"
 fi

@@ -102,7 +102,7 @@ adb exec-out screencap -p > "$R/UI/STEP-00.png" 2>/dev/null || true
   echo "MISSION 07 - FRIDA INSTALLATION"
   echo "timestamp_utc=$(date -u +%FT%TZ)"
   echo "== host python / pip =="; python3 --version; python3 -m pip --version
-  python3 -m pip install --quiet "frida==$FRIDA_VER" "frida-tools" 2>&1 | tail -8
+  python3 -m pip install --quiet "frida==$FRIDA_VER" "frida-tools==14.11.0" 2>&1 | tail -8
   echo "pip_exit=$?"
   python3 -c 'import frida; print("frida_python_version="+frida.__version__)' 2>&1
   echo "== download frida-server =="
