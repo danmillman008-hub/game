@@ -62,7 +62,11 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # MISSION 04: a probe-only dispatch (commit message contains M04-PROBE-ONLY)
+  # runs ONLY source_probe; the already-verified M03 emulator job is skipped so
+  # environment setup is not repeated. Normal workflow_dispatch still boots it.
   runtime:
+    if: ${{ !contains(github.event.head_commit.message || '', 'M04-PROBE-ONLY') }}
     runs-on: ubuntu-latest
     timeout-minutes: 75
     env:
@@ -329,4 +333,150 @@ jobs:
             echo "push attempt $i failed"
           done
           echo "final_push_exit=$?"
+          exit 0
+
+  # ---------------------------------------------------------------------
+  # MISSION 04 - AUTHORIZED-SOURCE PRESENCE PROBE
+  # Investigates options 2/3 of MISSION 04 section 2 WITHOUT printing or
+  # committing any secret, credential, token or URL value. Only PRESENT/ABSENT.
+  # No emulator, no SDK setup, no APK download, no change to M03 evidence.
+  # ---------------------------------------------------------------------
+  source_probe:
+    if: ${{ contains(github.event.head_commit.message || '', 'M04-PROBE-ONLY') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      EXPECTED_APK_SHA256: '48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a'
+      # ---- candidate URL secrets (option 2) ----
+      S_MIMO_APK_URL: ${{ secrets.MIMO_APK_URL }}
+      S_APK_URL: ${{ secrets.APK_URL }}
+      S_MIMO_APK: ${{ secrets.MIMO_APK }}
+      S_ORIGINAL_APK_URL: ${{ secrets.ORIGINAL_APK_URL }}
+      S_APK_DOWNLOAD_URL: ${{ secrets.APK_DOWNLOAD_URL }}
+      S_MIMO_APK_DOWNLOAD_URL: ${{ secrets.MIMO_APK_DOWNLOAD_URL }}
+      S_MIMO_935_APK_URL: ${{ secrets.MIMO_935_APK_URL }}
+      S_MIMO935_APK_URL: ${{ secrets.MIMO935_APK_URL }}
+      S_ANDROID_APK_URL: ${{ secrets.ANDROID_APK_URL }}
+      S_PRIVATE_APK_URL: ${{ secrets.PRIVATE_APK_URL }}
+      S_APK_SOURCE_URL: ${{ secrets.APK_SOURCE_URL }}
+      S_MIMO_APK_SIGNED_URL: ${{ secrets.MIMO_APK_SIGNED_URL }}
+      S_MIMO_DOWNLOAD_URL: ${{ secrets.MIMO_DOWNLOAD_URL }}
+      S_MIMO_PRIVATE_URL: ${{ secrets.MIMO_PRIVATE_URL }}
+      S_APK_PRIVATE_URL: ${{ secrets.APK_PRIVATE_URL }}
+      S_DRIVE_APK_URL: ${{ secrets.DRIVE_APK_URL }}
+      S_GDRIVE_APK_URL: ${{ secrets.GDRIVE_APK_URL }}
+      S_GOOGLE_DRIVE_APK_URL: ${{ secrets.GOOGLE_DRIVE_APK_URL }}
+      S_MIMO_DRIVE_URL: ${{ secrets.MIMO_DRIVE_URL }}
+      S_APK_ARTIFACT_URL: ${{ secrets.APK_ARTIFACT_URL }}
+      S_MIMO_ARTIFACT_URL: ${{ secrets.MIMO_ARTIFACT_URL }}
+      S_PRIVATE_ARTIFACT_URL: ${{ secrets.PRIVATE_ARTIFACT_URL }}
+      # ---- candidate credential secrets (option 3) ----
+      S_GDRIVE_TOKEN: ${{ secrets.GDRIVE_TOKEN }}
+      S_GOOGLE_DRIVE_TOKEN: ${{ secrets.GOOGLE_DRIVE_TOKEN }}
+      S_DRIVE_ACCESS_TOKEN: ${{ secrets.DRIVE_ACCESS_TOKEN }}
+      S_DRIVE_CREDENTIALS: ${{ secrets.DRIVE_CREDENTIALS }}
+      S_GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
+      S_GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+      S_GCS_CREDENTIALS: ${{ secrets.GCS_CREDENTIALS }}
+      S_AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      S_AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+      S_BLOB_SAS_URL: ${{ secrets.BLOB_SAS_URL }}
+      S_MIMO_ARTIFACT_TOKEN: ${{ secrets.MIMO_ARTIFACT_TOKEN }}
+      S_PRIVATE_ARTIFACT_TOKEN: ${{ secrets.PRIVATE_ARTIFACT_TOKEN }}
+      S_APK_DOWNLOAD_TOKEN: ${{ secrets.APK_DOWNLOAD_TOKEN }}
+      # ---- repository variables (NOT secrets; recorded separately) ----
+      V_MIMO_APK_URL: ${{ vars.MIMO_APK_URL }}
+      V_APK_URL: ${{ vars.APK_URL }}
+    steps:
+      - name: Checkout the existing analysis branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Presence-only authorized-source probe
+        shell: bash
+        run: |
+          set +e
+          R=ANALYSIS/RUNTIME/MISSION_04
+          mkdir -p "$R/LOGS" "$R/SCREENSHOTS" "$R/UI_HIERARCHY"
+          OUT="$R/LOGS/SECRET_PRESENCE_PROBE.txt"
+          check() {
+            if [ -n "$2" ]; then echo "$1=PRESENT"; else echo "$1=ABSENT"; fi
+          }
+          {
+            echo "MISSION 04 - AUTHORIZED SOURCE PRESENCE PROBE"
+            echo "timestamp_utc=$(date -u +%FT%TZ)"
+            echo "run_id=$GITHUB_RUN_ID run_attempt=$GITHUB_RUN_ATTEMPT"
+            echo "ref=$GITHUB_REF sha=$GITHUB_SHA trigger=$GITHUB_EVENT_NAME"
+            echo "expected_apk_sha256=$EXPECTED_APK_SHA256"
+            echo
+            echo "SECURITY: only PRESENT / ABSENT is emitted. No secret value, URL,"
+            echo "credential or token is printed, logged, cached or committed."
+            echo "A PRESENT result is NOT sufficient: the value's authorization and"
+            echo "format still have to be established before any download is attempted."
+            echo
+            echo "== repository Actions SECRETS - candidate URL names =="
+            check MIMO_APK_URL "$S_MIMO_APK_URL"
+            check APK_URL "$S_APK_URL"
+            check MIMO_APK "$S_MIMO_APK"
+            check ORIGINAL_APK_URL "$S_ORIGINAL_APK_URL"
+            check APK_DOWNLOAD_URL "$S_APK_DOWNLOAD_URL"
+            check MIMO_APK_DOWNLOAD_URL "$S_MIMO_APK_DOWNLOAD_URL"
+            check MIMO_935_APK_URL "$S_MIMO_935_APK_URL"
+            check MIMO935_APK_URL "$S_MIMO935_APK_URL"
+            check ANDROID_APK_URL "$S_ANDROID_APK_URL"
+            check PRIVATE_APK_URL "$S_PRIVATE_APK_URL"
+            check APK_SOURCE_URL "$S_APK_SOURCE_URL"
+            check MIMO_APK_SIGNED_URL "$S_MIMO_APK_SIGNED_URL"
+            check MIMO_DOWNLOAD_URL "$S_MIMO_DOWNLOAD_URL"
+            check MIMO_PRIVATE_URL "$S_MIMO_PRIVATE_URL"
+            check APK_PRIVATE_URL "$S_APK_PRIVATE_URL"
+            check DRIVE_APK_URL "$S_DRIVE_APK_URL"
+            check GDRIVE_APK_URL "$S_GDRIVE_APK_URL"
+            check GOOGLE_DRIVE_APK_URL "$S_GOOGLE_DRIVE_APK_URL"
+            check MIMO_DRIVE_URL "$S_MIMO_DRIVE_URL"
+            check APK_ARTIFACT_URL "$S_APK_ARTIFACT_URL"
+            check MIMO_ARTIFACT_URL "$S_MIMO_ARTIFACT_URL"
+            check PRIVATE_ARTIFACT_URL "$S_PRIVATE_ARTIFACT_URL"
+            echo "== repository Actions SECRETS - candidate credential names =="
+            check GDRIVE_TOKEN "$S_GDRIVE_TOKEN"
+            check GOOGLE_DRIVE_TOKEN "$S_GOOGLE_DRIVE_TOKEN"
+            check DRIVE_ACCESS_TOKEN "$S_DRIVE_ACCESS_TOKEN"
+            check DRIVE_CREDENTIALS "$S_DRIVE_CREDENTIALS"
+            check GOOGLE_SERVICE_ACCOUNT "$S_GOOGLE_SERVICE_ACCOUNT"
+            check GCP_SA_KEY "$S_GCP_SA_KEY"
+            check GCS_CREDENTIALS "$S_GCS_CREDENTIALS"
+            check AWS_ACCESS_KEY_ID "$S_AWS_ACCESS_KEY_ID"
+            check AZURE_STORAGE_CONNECTION_STRING "$S_AZURE_STORAGE_CONNECTION_STRING"
+            check BLOB_SAS_URL "$S_BLOB_SAS_URL"
+            check MIMO_ARTIFACT_TOKEN "$S_MIMO_ARTIFACT_TOKEN"
+            check PRIVATE_ARTIFACT_TOKEN "$S_PRIVATE_ARTIFACT_TOKEN"
+            check APK_DOWNLOAD_TOKEN "$S_APK_DOWNLOAD_TOKEN"
+            echo "== repository VARIABLES (not secrets) =="
+            check vars.MIMO_APK_URL "$V_MIMO_APK_URL"
+            check vars.APK_URL "$V_APK_URL"
+            echo
+            echo "LIMITATION: GitHub provides no API or workflow context to ENUMERATE"
+            echo "secret names. This probe covers 37 plausible names only; an unknown"
+            echo "name remains UNKNOWN, not proven absent."
+          } > "$OUT" 2>&1
+          cat "$OUT"
+          echo "present_count=$(grep -c '=PRESENT' "$OUT")"
+          echo "absent_count=$(grep -c '=ABSENT' "$OUT")"
+
+      - name: Commit probe evidence only
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          git config user.name  'mimo-runtime-verification[bot]'
+          git config user.email 'mimo-runtime-verification[bot]@users.noreply.github.com'
+          git add -f ANALYSIS/RUNTIME/MISSION_04
+          git diff --cached --quiet && { echo 'nothing to commit'; exit 0; }
+          git commit -m "runtime: MISSION 04 authorized-source presence probe for run $GITHUB_RUN_ID"
+          for i in 1 2 3; do
+            git pull --rebase origin arena/aebb90b7-game
+            git push origin HEAD:arena/aebb90b7-game && break
+            echo "push attempt $i failed"
+          done
           exit 0
