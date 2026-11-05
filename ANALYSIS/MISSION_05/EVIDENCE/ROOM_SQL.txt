@@ -1,0 +1,66 @@
+MISSION 05 — Room / SQLite statements extracted from classes.dex (VERIFY_STATIC)
+apk_sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+Only literals relating to the three Mimo progress tables; third-party WorkManager/Firebase tables excluded.
+
+offset=2183130
+  CREATE TABLE IF NOT EXISTS `chapter_completions` (`chapter_id` INTEGER NOT NULL, `created_at` INTEGER NOT NULL, `track_id` INTEGER NOT NULL, `tutorial_id` INTEGER NOT NULL, PRIMARY KEY(`chapter_id`, `track_id`))
+offset=2183344
+  CREATE TABLE IF NOT EXISTS `lesson_progress` (`lesson_id` INTEGER NOT NULL, `completed_at` INTEGER NOT NULL, `started_at` INTEGER NOT NULL, `tries` INTEGER NOT NULL, `tutorial_id` INTEGER NOT NULL, `tutorial_version` INTEGER NOT NULL, `track_id` INTEGER NOT NULL, `publish_set_version` INTEGER NOT NULL, `attempts` INTEGER NOT NULL, `is_practice_progress` INTEGER NOT NULL, `in_queue` INTEGER NOT NULL, PRIMARY KEY(`lesson_id`, `tutorial_id`))
+offset=2183790
+  CREATE TABLE IF NOT EXISTS `tutorial_completions` (`tutorial_id` INTEGER NOT NULL, `is_completed` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, `track_id` INTEGER NOT NULL, PRIMARY KEY(`tutorial_id`, `track_id`))
+offset=2184006
+  XCREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)
+offset=2223460
+  .DELETE FROM lesson_progress WHERE in_queue = 1
+offset=2223508
+  0DELETE FROM lesson_progress WHERE lesson_id IN (
+offset=2225139
+  *DROP TABLE IF EXISTS `chapter_completions`
+offset=2225183
+  &DROP TABLE IF EXISTS `lesson_progress`
+offset=2225223
+  +DROP TABLE IF EXISTS `tutorial_completions`
+offset=2292261
+  gINSERT INTO `chapter_completions` (`chapter_id`,`created_at`,`track_id`,`tutorial_id`) VALUES (?,?,?,?)
+offset=2292368
+  INSERT INTO `lesson_progress` (`lesson_id`,`completed_at`,`started_at`,`tries`,`tutorial_id`,`tutorial_version`,`track_id`,`publish_set_version`,`attempts`,`is_practice_progress`,`in_queue`) VALUES (?,?,?,?,?,?,?,?,?,?,?)
+offset=2292590
+  jINSERT INTO `tutorial_completions` (`tutorial_id`,`is_completed`,`updated_at`,`track_id`) VALUES (?,?,?,?)
+offset=2294120
+  jINSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '08b926448d86528e697981ddd30459f7')
+offset=2294228
+  jINSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2b8ab6d303d9a501bd8c8fb78d8352fc')
+offset=2933250
+  4SELECT * FROM chapter_completions WHERE track_id = ?
+offset=2933304
+  ISELECT * FROM chapter_completions WHERE track_id = ? AND tutorial_id in (
+offset=2933380
+  SELECT * FROM lesson_progress
+offset=2933410
+  0SELECT * FROM lesson_progress WHERE in_queue = 1
+offset=2933525
+  5SELECT * FROM tutorial_completions WHERE track_id = ?
+offset=2933580
+  JSELECT * FROM tutorial_completions WHERE track_id = ? AND tutorial_id in (
+offset=2934685
+  :SELECT COUNT(DISTINCT chapter_id) FROM chapter_completions
+offset=2984020
+  UPDATE `chapter_completions` SET `chapter_id` = ?,`created_at` = ?,`track_id` = ?,`tutorial_id` = ? WHERE `chapter_id` = ? AND `track_id` = ?
+offset=2984164
+  UPDATE `lesson_progress` SET `lesson_id` = ?,`completed_at` = ?,`started_at` = ?,`tries` = ?,`tutorial_id` = ?,`tutorial_version` = ?,`track_id` = ?,`publish_set_version` = ?,`attempts` = ?,`is_practice_progress` = ?,`in_queue` = ? WHERE `lesson_id` = ? AND `tutorial_id` = ?
+offset=2984442
+  UPDATE `tutorial_completions` SET `tutorial_id` = ?,`is_completed` = ?,`updated_at` = ?,`track_id` = ? WHERE `tutorial_id` = ? AND `track_id` = ?
+offset=2984647
+  :UPDATE lesson_progress SET in_queue = 0 WHERE in_queue = 1
+offset=3160344
+  chapter_completions
+offset=3160364
+  Ochapter_completions(com.getmimo.data.model.room.ChapterCompletion).
+offset=3423742
+  lesson_progress
+offset=3423758
+  Hlesson_progress(com.getmimo.data.model.room.LessonProgress).
+offset=3546321
+  tutorial_completions
+offset=3546342
+  Qtutorial_completions(com.getmimo.data.model.room.TutorialCompletion).

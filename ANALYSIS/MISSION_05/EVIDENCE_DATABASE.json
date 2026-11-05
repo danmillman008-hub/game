@@ -1,0 +1,931 @@
+{
+ "document": "MISSION 05 — EVIDENCE DATABASE (offline architecture reconstruction)",
+ "branch": "arena/aebb90b7-game",
+ "source_of_truth": "original APK sha256=48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+ "classification_vocabulary": {
+  "VERIFIED_STATIC": "read directly from APK/DEX/JADX/resources",
+  "VERIFIED_RUNTIME": "observed on the GitHub Actions Android 16 emulator (PNG/XML/logcat/dumpsys)",
+  "VERIFIED_BOTH": "both of the above",
+  "INFERRED": "argued from verified facts; never presented as confirmed",
+  "UNKNOWN": "insufficient evidence; no claim made"
+ },
+ "server_confirmed": 0,
+ "apk_modified": false,
+ "original_evidence_preserved": true,
+ "counts": {
+  "total": 68,
+  "VERIFIED_STATIC": 49,
+  "VERIFIED_RUNTIME": 9,
+  "VERIFIED_BOTH": 0,
+  "INFERRED": 3,
+  "UNKNOWN": 7
+ },
+ "evidence": [
+  {
+   "id": "M05-001",
+   "claim": "Original APK unchanged; SHA-256 and byte size re-verified read-only",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "/home/user/_work/apk/Mimo_9.35 (1).apk",
+    "ANALYSIS/RUNTIME/MISSION_05/APK_SHA256.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "sha256sum / stat / Python zipfile",
+   "evidence_excerpt": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a / 142353499 bytes",
+   "notes": ""
+  },
+  {
+   "id": "M05-002",
+   "claim": "Shipped curriculum root is assets/lessons-<locale>/tracks/tracks.json with publishSetVersion=753",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/SCHEMAS/SHIPPED_CONTENT_STATS.json",
+    "ANALYSIS/MISSION_05/SAMPLES/tracks_json_head.json"
+   ],
+   "class_or_method": "com.getmimo.data.content.model.track.TracksJson",
+   "address_or_offset": "classes.dex @2130911 (/tracks.json)",
+   "tool_and_method": "Python json.loads on APK asset",
+   "evidence_excerpt": "publishSetVersion=753, tracks=19",
+   "notes": ""
+  },
+  {
+   "id": "M05-003",
+   "claim": "English shipped content: 1,029 tutorial files, 57,274,569 uncompressed bytes",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/SCHEMAS/SHIPPED_CONTENT_STATS.json",
+    "ANALYSIS/MISSION_05/EVIDENCE/ASSET_MANIFEST.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "read-only zipfile extraction + full JSON scan",
+   "evidence_excerpt": "1029 files / 57274569 bytes",
+   "notes": ""
+  },
+  {
+   "id": "M05-004",
+   "claim": "All 10 locales ship ~1,030 tutorial JSON files each (10,298 total)",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/APK_COMPLETE_INVENTORY.json",
+    "ANALYSIS/MIMO_CONTENT_SCHEMA.json"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "APK member inventory",
+   "evidence_excerpt": "de/en/es/fr/id/it/pl/pt/ru/tr",
+   "notes": ""
+  },
+  {
+   "id": "M05-005",
+   "claim": "Content hierarchy counts: 19 tracks / 144 sections / 2,002 tutorial refs / 1,947 chapters / 18,272 lessons; 0 duplicate lesson IDs",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/SCHEMAS/SHIPPED_CONTENT_STATS.json"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "full recomputation over 1,029 tutorial JSON files",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-006",
+   "claim": "All 144 sections satisfy endIndex-startIndex+1 == tutorialIds.size()",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/SCHEMAS/SHIPPED_CONTENT_STATS.json"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "full recomputation",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-007",
+   "claim": "Section/tutorial sequencing is positional; no prerequisiteId/locked/unlockAfter fields exist in shipped JSON",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/SCHEMAS/CONTENT_SCHEMA.json"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "key enumeration over all shipped objects",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-008",
+   "claim": "Tutorial JSON root is a single-key {\"tutorial\": {...}} wrapper",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/SCHEMAS/CONTENT_SCHEMA.json"
+   ],
+   "class_or_method": "TutorialJson.tutorial",
+   "address_or_offset": "",
+   "tool_and_method": "direct file read",
+   "evidence_excerpt": "",
+   "notes": "Earlier assumption of root \"chapters\" was wrong (KeyError); corrected."
+  },
+  {
+   "id": "M05-009",
+   "claim": "contentType counts: interactive=14,248 / executableFiles=4,024",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/SCHEMAS/SHIPPED_CONTENT_STATS.json"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-010",
+   "claim": "Interaction DSL counts: fillTheGap=9,957, validatedInput=1,772, <selection>=7,356",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/SCHEMAS/SHIPPED_CONTENT_STATS.json",
+    "ANALYSIS/MISSION_05/SAMPLES/*.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-011",
+   "claim": "visible-if values: always=18,869, wrong=19,101, correct=173; correct attr: true=7,356, false=27,762",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/SCHEMAS/SHIPPED_CONTENT_STATS.json"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-012",
+   "claim": "Answer keys are shipped in the assets (correct=, startIndex/endIndex, solvedContent) — not server-supplied",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/SAMPLES/selection_lesson.txt",
+    "ANALYSIS/MISSION_05/SAMPLES/fillthegap_lesson.txt",
+    "ANALYSIS/MISSION_05/SAMPLES/executable_lesson.json"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-013",
+   "claim": "assets/lesson-webview.js implements MimoLesson.postMessage and forwards mimo.activity.correct/wrong/completed",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/SAMPLES/lesson-webview.js"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "classes.dex @3432650/3432675/3432698",
+   "tool_and_method": "verbatim asset copy + DEX literal scan",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-014",
+   "claim": "mimo.activity.* literals are DEX string-pool constants; no Java call site recovered in JADX",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/EVIDENCE/DEX_STRING_OFFSETS.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": "Do not claim a Java implementation from the asset JS alone."
+  },
+  {
+   "id": "M05-015",
+   "claim": "4,257 external URL references in shipped lesson bodies, ~60 hosts (mimo.app 2,282 etc.)",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/SCHEMAS/SHIPPED_CONTENT_STATS.json"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": "Content strings only; NOT observed network responses."
+  },
+  {
+   "id": "M05-016",
+   "claim": "Executable lessons ship instructions, hints, files[].content and files[].solvedContent; 269 carry database tables, 85 httpOptions",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/SAMPLES/executable_lesson.json"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-017",
+   "claim": "6,058 lessons carry hardModeContent and 4,054 hardModeSelected=true",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/SCHEMAS/SHIPPED_CONTENT_STATS.json",
+    "ANALYSIS/MISSION_05/SAMPLES/hardmode_lesson.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-018",
+   "claim": "TutorialType/ChapterType/LessonContentType/LessonInteractionType/ContentLocale/CodeLanguage enum values",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/SCHEMAS/JADX_MODEL_FIELDS.json"
+   ],
+   "class_or_method": "data/content/model/track/*, data/content/lessonparser/interactive/model/*",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-019",
+   "claim": "Runtime content models add derived state (hasProgress, isCompleted, index) absent from shipped JSON",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/SCHEMAS/JADX_MODEL_FIELDS.json"
+   ],
+   "class_or_method": "Track, Section, Tutorial, Chapter",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-020",
+   "claim": "LessonIdentifier(chapterId,lessonId,trackId,trackVersion,tutorialId) and Parcelable lesson models",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/SCHEMAS/JADX_MODEL_FIELDS.json"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-021",
+   "claim": "Content loader path literals /tracks.json, /tutorial-, .json, lessons-, file:///android_asset/lessons-common/icons",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/EVIDENCE/DEX_STRING_OFFSETS.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "2130911 / 2130925 / 3326905 / 3326883",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-022",
+   "claim": "classes2.dex path-regex literals %s[0-9]+.json$ and ^(%s|%s|%s)[0-9]+.json$",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/EVIDENCE/DEX_STRING_OFFSETS.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "classes2.dex @8586633 / 8586649",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-023",
+   "claim": "Room table lesson_progress CREATE TABLE with 11 columns and PK(lesson_id,tutorial_id)",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/EVIDENCE/ROOM_SQL.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "classes.dex @2183344",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-024",
+   "claim": "Room tables chapter_completions and tutorial_completions exact CREATE TABLE statements",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/EVIDENCE/ROOM_SQL.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "classes.dex @2183130 / 2183790",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-025",
+   "claim": "Room DAO SQL: SELECT * FROM lesson_progress WHERE in_queue=1, UPDATE … SET in_queue=0, DELETE … WHERE in_queue=1",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/EVIDENCE/ROOM_SQL.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "classes.dex @2933410 / 2984647 / 2223460",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-026",
+   "claim": "Room aggregate SELECT COUNT(DISTINCT chapter_id) FROM chapter_completions",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/EVIDENCE/ROOM_SQL.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "classes.dex @2934685",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-027",
+   "claim": "LessonProgress.isSolvedCorrectly() is attempts>=1",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MIMO_COMPLETION_ENGINE.json"
+   ],
+   "class_or_method": "com.getmimo.data.model.room.LessonProgress",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": "M02 bytecode evidence, reused."
+  },
+  {
+   "id": "M05-028",
+   "claim": "DataStore user_preferences + .preferences_pb + SharedPreferencesMigration",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/EVIDENCE/STORAGE_AND_ONBOARDING_STRINGS.txt",
+    "ANALYSIS/MISSION_05/EVIDENCE/DEX_STRING_OFFSETS.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "classes.dex @3551076 / 1994520",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-029",
+   "claim": "Database name literal mimo.db",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/EVIDENCE/DEX_STRING_OFFSETS.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "classes.dex @3432719",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-030",
+   "claim": "Room identity hashes 08b926448d86528e697981ddd30459f7 / 2b8ab6d303d9a501bd8c8fb78d8352fc",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/EVIDENCE/ROOM_SQL.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "classes.dex @2294120 / 2294228",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-031",
+   "claim": "DataStoreUserPreferences accessors for hard mode, first-run flags, onboarding and path overview",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/EVIDENCE/STORAGE_AND_ONBOARDING_STRINGS.txt"
+   ],
+   "class_or_method": "com.getmimo.data.local.DataStoreUserPreferences",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-032",
+   "claim": "Offline outbox classes: LessonProgressQueue, LessonProgressRepository, storeAndPostAllLessonProgress, postUnsyncedLessonProgress",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/EVIDENCE/STORAGE_AND_ONBOARDING_STRINGS.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-033",
+   "claim": "ChapterFinishedViewModel has handleOfflineState / handleOnlineState / handleChapterAlreadyCompletedState / getChapterEndSuccessStateWithRetry",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/EVIDENCE/STORAGE_AND_ONBOARDING_STRINGS.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-034",
+   "claim": "53 Retrofit endpoints resolved incl. POST /v1/tutorials/{tutorialId}/progress and POST …/runFiles",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MIMO_RETROFIT_ENDPOINTS.json"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": "Endpoint definitions only; no response body observed."
+  },
+  {
+   "id": "M05-035",
+   "claim": "Scoring/economy symbols: rewardedSparksForCorrectAnswer, getRewardMultiplier, dailyGoalCoinReward, activeStreakLength, hasActiveLeagueFreeze",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MIMO_SCORING_MODEL.json"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-036",
+   "claim": "No numerical scoring formula recovered (XP/sparks per lesson, first-try bonus, streak break/repair, daily-goal thresholds)",
+   "classification": "UNKNOWN",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/LEARNING_ENGINE.md",
+    "ANALYSIS/FINAL_KNOWN_GAPS.fa.md"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-037",
+   "claim": "InteractiveLessonBaseViewModel states: lessonSolvedCorrectly / Incorrectly / WithPartialMatch / onValidatedInputExecuted / showWrongFeedbackBlock",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/EVIDENCE/STORAGE_AND_ONBOARDING_STRINGS.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-038",
+   "claim": "Exercise-specific ViewModels: fillthegap, selection, spell, validatedinput, webview, nointeraction",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/EVIDENCE/STORAGE_AND_ONBOARDING_STRINGS.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-039",
+   "claim": "Onboarding fragments/ViewModels: IntroSlides, step2/SetExperience, selectpath/PickAPath, reassurance×3, dailygoal, postsignup/PreparingCurriculum",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/EVIDENCE/STORAGE_AND_ONBOARDING_STRINGS.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-040",
+   "claim": "PathMapViewModel navigateToChapter / onTutorialClick / showUnlockAnimation / fetchTrackEta / setHardModeEnabled",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/EVIDENCE/STORAGE_AND_ONBOARDING_STRINGS.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-041",
+   "claim": "GetPathMapState$invoke$3 reads isCompleted/isRequired/getType — unlock mapping not recovered",
+   "classification": "UNKNOWN",
+   "source_paths": [
+    "ANALYSIS/MIMO_CONTENT_SCHEMA.json",
+    "ANALYSIS/MISSION_05/APPLICATION_STATE_MACHINE.md"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-042",
+   "claim": "ChapterActivity startChapterFlow / tryExitLesson / showConfirmExitDialog / showHardModeIntro / releaseChapterContent",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/EVIDENCE/STORAGE_AND_ONBOARDING_STRINGS.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-043",
+   "claim": "6 native libraries per ABI; libsigner.so exports Java_com_adjust_sdk_sig_NativeLibHelper_nSign/nOnResume",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/APK_COMPLETE_INVENTORY.json",
+    "ANALYSIS/MISSION_05/NATIVE_LIBRARIES.md"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "strings on .so extracted read-only from APK",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-044",
+   "claim": "libdatastore_shared_counter.so exports NativeSharedCounter JNI functions",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/NATIVE_LIBRARIES.md"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-045",
+   "claim": "libyrf.so references bin/ghost/YRF, MainActivity, Subscription$Type, HttpURLConnection, AlertDialog",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/NATIVE_LIBRARIES.md"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": "Purpose INFERRED as integrity/anti-tamper; not claimed."
+  },
+  {
+   "id": "M05-046",
+   "claim": "librive-android.so is the app.rive.* renderer; com.getmimo.ui.compose.animation.rive.* are its call sites",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/NATIVE_LIBRARIES.md"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-047",
+   "claim": "libandroidx.graphics.path.so exports PathIterator/ConicConverter JNI; libc++_shared.so is the C++ runtime",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/NATIVE_LIBRARIES.md"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-048",
+   "claim": "Native libs libyrf, libdatastore_shared_counter, librive-android, libsigner load : ok on x86_64 emulator via ARM translation",
+   "classification": "VERIFIED_RUNTIME",
+   "source_paths": [
+    "ANALYSIS/RUNTIME/MISSION_04/ABI_COMPATIBILITY.txt",
+    "ANALYSIS/RUNTIME/MISSION_05/LOGS/LOGCAT_MIMO.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "logcat 09:26:37.250 / 09:26:38.154 (run 42001925381)",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-049",
+   "claim": "Launcher resolved as com.getmimo/.ui.SplashActivity_default; am start exit 0",
+   "classification": "VERIFIED_RUNTIME",
+   "source_paths": [
+    "ANALYSIS/RUNTIME/MISSION_05/LOGS/APPLICATION_LAUNCH.txt",
+    "ANALYSIS/RUNTIME/MISSION_04/APPLICATION_LAUNCH.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-050",
+   "claim": "IntroSlidesActivity is foreground/resumed; 13 com.getmimo UI nodes",
+   "classification": "VERIFIED_RUNTIME",
+   "source_paths": [
+    "ANALYSIS/RUNTIME/MISSION_05/UI_HIERARCHY/STEP-00.xml",
+    "ANALYSIS/RUNTIME/MISSION_05/LOGS/INTERACTION_TRACE.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "mCurrentFocus=Window{… com.getmimo.ui.onboarding.intro.IntroSlidesActivity}",
+   "notes": ""
+  },
+  {
+   "id": "M05-051",
+   "claim": "Intro slide 3 shows \"Build projects\" + \"Apply what you have learned…\" with Get started / I already have an account",
+   "classification": "VERIFIED_RUNTIME",
+   "source_paths": [
+    "ANALYSIS/RUNTIME/MISSION_05/SCREENSHOTS/STEP-00.png",
+    "ANALYSIS/RUNTIME/MISSION_05/UI_HIERARCHY/STEP-00.xml"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-052",
+   "claim": "Exact clickable bounds: Get started [68,1989][1012,2110]; I already have an account [204,2148][876,2274]",
+   "classification": "VERIFIED_RUNTIME",
+   "source_paths": [
+    "ANALYSIS/RUNTIME/MISSION_05/UI_HIERARCHY/STEP-00.xml"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": "Compose clickable Views have no text of their own; label comes from a descendant TextView."
+  },
+  {
+   "id": "M05-053",
+   "claim": "Run 42001925381 made ZERO taps — tap-picker misclassified intro as auth boundary; exact reason logged",
+   "classification": "VERIFIED_RUNTIME",
+   "source_paths": [
+    "ANALYSIS/RUNTIME/MISSION_05/LOGS/INTERACTION_TRACE.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": "Honest failure record; fixed in run 42002808217."
+  },
+  {
+   "id": "M05-054",
+   "claim": "No ANR dialog on runs 41998643355 and 42001925381",
+   "classification": "VERIFIED_RUNTIME",
+   "source_paths": [
+    "ANALYSIS/RUNTIME/MISSION_04/LOGS/ANR_DISMISSAL.txt",
+    "ANALYSIS/RUNTIME/MISSION_05/LOGS/INTERACTION_TRACE.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-055",
+   "claim": "Google Drive two-chunk transfer re-verified SHA_MATCH_OK and wrote evidence to MISSION_05/ (M04 files untouched)",
+   "classification": "VERIFIED_RUNTIME",
+   "source_paths": [
+    "ANALYSIS/RUNTIME/MISSION_05/APK_SHA256.txt",
+    "ANALYSIS/RUNTIME/MISSION_05/LOGS/APK_TRANSFER.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": "Method 1 E2B endpoint remains disproved; not retried."
+  },
+  {
+   "id": "M05-056",
+   "claim": "No server response body, no account, no credentials, no auth bypass, no fake responses, no purchases",
+   "classification": "VERIFIED_RUNTIME",
+   "source_paths": [
+    "ANALYSIS/RUNTIME/MISSION_05/LOGS/INTERACTION_TRACE.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": "SERVER CONFIRMED = 0"
+  },
+  {
+   "id": "M05-057",
+   "claim": "No runtime answer submission, no completion screen, no scoring observation in M05 runs",
+   "classification": "UNKNOWN",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/LEARNING_ENGINE.md"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-058",
+   "claim": "Actual mimo.db / user_preferences file contents not extracted (allowBackup=false, no root/run-as)",
+   "classification": "UNKNOWN",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/LOCAL_STORAGE_MODEL.md"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-059",
+   "claim": "validatedInput index-to-token algorithm: one confirmed example (Login at 108:113) but not universal",
+   "classification": "INFERRED",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/SAMPLES/validatedinput_lesson.txt"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": "Naive <text>+break reconstruction produced fragments on other samples; do not generalise."
+  },
+  {
+   "id": "M05-060",
+   "claim": "Unlock/prerequisite rule derived from Room completions + TutorialType.isRequired",
+   "classification": "INFERRED",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/APPLICATION_STATE_MACHINE.md"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-061",
+   "claim": "Progress sync order: answer → Room(in_queue=1) → storeAndPostAllLessonProgress → POST /progress → in_queue=0",
+   "classification": "INFERRED",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/LEARNING_ENGINE.md"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-062",
+   "claim": "Chapter/tutorial completion threshold",
+   "classification": "UNKNOWN",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/CONTENT_MODEL.md",
+    "ANALYSIS/FINAL_KNOWN_GAPS.fa.md"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-063",
+   "claim": "Content-update mechanism for a newer publishSetVersion",
+   "classification": "UNKNOWN",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/CONTENT_MODEL.md"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-064",
+   "claim": "Exact NavHost/back-stack and App.onCreate DI init order",
+   "classification": "UNKNOWN",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/APPLICATION_STATE_MACHINE.md"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-065",
+   "claim": "External lesson images/demo APIs (4,257 refs) are the largest offline fidelity gap",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/OFFLINE_DEPENDENCY_MATRIX.md",
+    "ANALYSIS/MISSION_05/SCHEMAS/SHIPPED_CONTENT_STATS.json"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-066",
+   "claim": "M05 runtime scripts: isolated branch in runtime_smoke.sh, one-line workflow script preserved",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/RUNTIME/runtime_smoke.sh",
+    ".github/workflows/mimo-runtime-verification.yml",
+    "ANALYSIS/RUNTIME/MISSION_05/m05_interaction.sh"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  },
+  {
+   "id": "M05-067",
+   "claim": "Compose tap targeting fixed to derive labels from descendant TextView nodes",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/RUNTIME/MISSION_05/choose_tap.py"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": "Dry-run against real STEP-00.xml returns \"540 2049 Get_started\"."
+  },
+  {
+   "id": "M05-068",
+   "claim": "MISSION 05 deliverables A–I written under ANALYSIS/MISSION_05/",
+   "classification": "VERIFIED_STATIC",
+   "source_paths": [
+    "ANALYSIS/MISSION_05/"
+   ],
+   "class_or_method": "",
+   "address_or_offset": "",
+   "tool_and_method": "",
+   "evidence_excerpt": "",
+   "notes": ""
+  }
+ ]
+}

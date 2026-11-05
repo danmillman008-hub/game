@@ -1,0 +1,35 @@
+```mermaid
+stateDiagram-v2
+  [*] --> Splash: launcher intent (VERIFIED_RUNTIME)
+  Splash --> IntroSlides: VERIFIED_RUNTIME 41998643355 / 42001925381
+  note right of IntroSlides
+    ViewPager vp_intro_slides
+    "Build projects" / "Change your career"
+    [Get started] [I already have an account]
+    VERIFIED_RUNTIME: PNG + UI_HIERARCHY/STEP-00.xml
+  end note
+  IntroSlides --> Onboarding: Get started (INFERRED, not yet observed)
+  IntroSlides --> Auth: I already have an account (INFERRED, deliberately not taken)
+  Onboarding --> SetExperience: INFERRED
+  Onboarding --> SelectPath: INFERRED
+  Onboarding --> Reassurance: INFERRED
+  Onboarding --> DailyGoal: INFERRED
+  DailyGoal --> PreparingCurriculum: signUpAndProceed (INFERRED)
+  PreparingCurriculum --> MainPath: goToMainActivity (INFERRED)
+  MainPath --> Chapter: navigateToChapter / onTutorialClick (INFERRED)
+  Chapter --> Lesson: startChapterFlow (INFERRED)
+  Chapter --> HardModeLesson: showHardModeIntro (INFERRED)
+  Lesson --> Lesson: wrong → showWrongFeedbackBlock (retry, INFERRED)
+  Lesson --> Lesson: correct → lessonSolvedAndProceedToNextLesson (INFERRED)
+  Lesson --> ChapterFinished: last lesson (INFERRED)
+  ChapterFinished --> MainPath: onChapterFinishedContinue (INFERRED)
+  ChapterFinished --> ChapterFinishedOffline: handleOfflineState (INFERRED)
+  ChapterFinishedOffline --> ChapterFinished: retry when online (INFERRED)
+  Chapter --> MainPath: tryExitLesson / showConfirmExitDialog (INFERRED)
+  Auth --> [*]: BOUNDARY — no credentials, no bypass
+  MainPath --> [*]: force-stop / restart (resume behaviour UNKNOWN)
+```
+
+Only `Splash → IntroSlides` and the intro-slide contents are
+`VERIFIED_RUNTIME`. Every other transition is `INFERRED` from DEX class names.
+`SERVER CONFIRMED = 0`.

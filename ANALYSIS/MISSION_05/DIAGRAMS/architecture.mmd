@@ -1,0 +1,55 @@
+```mermaid
+flowchart TB
+  subgraph APK["ORIGINAL APK (read-only) — VERIFIED_STATIC"]
+    AS["assets/lessons-*/tracks/*.json<br/>10,298 files · v753 · 10 locales"]
+    AJ["lesson-webview.js · highlight.min.js<br/>prettier · spieglein · fonts · icons"]
+    DEX["12 DEX · 29,454 classes<br/>Kotlin/Java (R8 obfuscated)"]
+    NAT["6 native .so × 2 ABIs<br/>rive · signer · yrf · datastore · path · c++"]
+  end
+
+  subgraph LOAD["Content + serialization — VERIFIED_STATIC"]
+    L1["DefaultTrackLoader<br/>DefaultTracksRepository"]
+    L2["kotlinx.serialization<br/>TracksJson/TrackJson/SectionJson/TutorialJson"]
+    L3["ParserModule<br/>LessonModule · Interaction · Option · Output"]
+  end
+
+  subgraph UI["UI — components VERIFIED_STATIC / flow INFERRED"]
+    U0["SplashActivity_default → IntroSlidesActivity<br/>VERIFIED_RUNTIME"]
+    U1["OnboardingActivity · step2 · selectpath<br/>dailygoal · preparing curriculum"]
+    U2["MainActivity · PathMapFragment (Compose)"]
+    U3["ChapterActivity · InteractiveLessonFragment"]
+    U4["WebView + JS bridge<br/>mimo.activity.correct/wrong/completed"]
+    U5["ChapterFinished*Fragment<br/>handleOnlineState / handleOfflineState"]
+  end
+
+  subgraph STATE["Local state — VERIFIED_STATIC"]
+    S1["Room mimo.db<br/>lesson_progress (in_queue)<br/>chapter_completions<br/>tutorial_completions"]
+    S2["DataStore user_preferences<br/>hard mode · onboarding · first-run flags"]
+    S3["WorkManager · legacy SharedPrefs migration"]
+  end
+
+  subgraph NET["Remote — VERIFIED_STATIC endpoints / SERVER CONFIRMED = 0"]
+    N1["POST /v1/tutorials/{id}/progress<br/>GET /v1/tracks/{id}/completion · /eta"]
+    N2["POST …/runFiles · /v1/code/runfiles<br/>GET/POST …/savefiles"]
+    N3["/v1/user/* · /v2/client-config<br/>/v1/leaderboards/* · /v1/products/user"]
+    N4["Auth · AI tutor · payments · analytics"]
+  end
+
+  AS --> L1 --> L2 --> U2
+  AS --> L3 --> U3
+  AJ --> U4
+  DEX --> U0 & U1 & U2 & U3 & U5
+  NAT -.->|Rive / DataStore / Adjust / graphics| DEX
+  U0 --> U1 --> U2 --> U3 --> U4 --> U5
+  U3 --> S1
+  U1 --> S2
+  U5 --> S1
+  U5 -.->|sync when online| N1
+  U3 -.->|executable lessons only| N2
+  U2 -.-> N3
+  U1 -.-> N4
+  S1 -.->|in_queue outbox| N1
+```
+
+**Legend:** solid = local data/control; dashed = network (endpoints observed as
+strings only, no response confirmed). No server behaviour is reconstructed.

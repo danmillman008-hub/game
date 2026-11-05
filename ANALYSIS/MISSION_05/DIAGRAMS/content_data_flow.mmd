@@ -1,0 +1,27 @@
+```mermaid
+flowchart LR
+  A["tracks.json<br/>publishSetVersion=753<br/>19 tracks · 144 sections<br/>2,002 tutorial refs"] --> B["tutorial-&lt;id&gt;.json<br/>1,029 files (en)<br/>1,947 chapters<br/>18,272 lessons"]
+  B --> C{"contentType"}
+  C -->|interactive 14,248| D["HTML-like DSL string<br/>&lt;p&gt; &lt;code&gt; &lt;text&gt; &lt;selection&gt;<br/>&lt;interaction fillTheGap/validatedInput&gt;<br/>&lt;webview version=2&gt;"]
+  C -->|executableFiles 4,024| E["executableContent<br/>instructions · hints · files[]<br/>content + solvedContent"]
+  D --> F["correct= / startIndex-endIndex<br/>visible-if correct|wrong|always<br/>VERIFIED_STATIC: answer key"]
+  E --> G["solvedContent<br/>VERIFIED_STATIC: reference solution shipped"]
+  F --> H["ParserModule → Parcelable<br/>LessonModule/Interaction/Option"]
+  G --> I["spieglein editor / WebView"]
+  H --> J["Compose native views + WebView<br/>lesson-webview.js bridge"]
+  I --> J
+  J --> K{"answer"}
+  K -->|correct| L["lessonSolvedCorrectly<br/>→ next lesson"]
+  K -->|wrong| M["showWrongFeedbackBlock<br/>→ retry"]
+  K -->|webview| N["mimo.activity.correct/wrong/completed<br/>→ native ViewModel"]
+  L --> O["storeLessonProgress<br/>Room lesson_progress in_queue=1"]
+  M --> O
+  N --> O
+  O --> P["ChapterFinishedViewModel<br/>storeAndPostAllLessonProgress"]
+  P -->|offline| Q["keep queued rows<br/>handleOfflineState"]
+  P -->|online| R["POST /v1/tutorials/{id}/progress<br/>in_queue=0"]
+  R -.->|SERVER CONFIRMED = 0| S["(server response not observed)"]
+```
+
+All boxes except `R`/`S` are `VERIFIED_STATIC`; the transitions marked with
+class/method names are `VERIFIED_STATIC` for names and `INFERRED` for order.

@@ -1,0 +1,36 @@
+```mermaid
+flowchart TD
+  START["Lesson opened<br/>LessonIdentifier(trackId,tutorialId,chapterId,lessonId)"] --> LOAD["loadLessonContent<br/>ParserModule → LessonModule/Interaction"]
+  LOAD --> HARD{"hard mode enabled?<br/>DataStoreUserPreferences"}
+  HARD -->|yes| HM["render hardModeContent<br/>(6,058 shipped bodies)"]
+  HARD -->|no| REG["render interactiveContent"]
+  HM --> SHOW
+  REG --> SHOW["Compose views + WebView<br/>visible-if=always"]
+  SHOW --> INPUT{"user input"}
+  INPUT -->|selection| S1["compare item correct=true/false<br/>ON DEVICE · VERIFIED_STATIC"]
+  INPUT -->|fillTheGap| S2["compare option ranges / distractors<br/>ON DEVICE · VERIFIED_STATIC"]
+  INPUT -->|validatedInput| S3["onValidatedInputExecuted<br/>exact rule UNKNOWN"]
+  INPUT -->|webview| S4["JS → MimoLesson.postMessage<br/>mimo.activity.correct/wrong/completed"]
+  INPUT -->|executableFiles| S5["POST …/runFiles<br/>SERVER • SERVER CONFIRMED=0"]
+  S1 --> RES
+  S2 --> RES
+  S3 --> RES
+  S4 --> RES
+  S5 --> RES{"result"}
+  RES -->|correct / hasPassed| OK["visible-if=correct<br/>lessonSolvedCorrectly<br/>storeLessonProgress(in_queue=1)"]
+  RES -->|wrong / partial| NO["visible-if=wrong (19,101)<br/>showWrongFeedbackBlock<br/>tries++ / attempts++"]
+  RES -->|partial match| PART["lessonSolvedCorrectlyWithPartialMatch<br/>condition UNKNOWN"]
+  NO --> INPUT
+  OK --> NEXT{"more lessons in chapter?"}
+  PART --> NEXT
+  NEXT -->|yes| START
+  NEXT -->|no| END["ChapterCompletion row<br/>ChapterFinishedFragment<br/>storeAndPostAllLessonProgress"]
+  END --> Q{"network available?"}
+  Q -->|online| SYNC["POST /v1/tutorials/{id}/progress<br/>in_queue=0"]
+  Q -->|offline| OFF["handleOfflineState<br/>rows remain queued"]
+  OFF -.-> SYNC
+```
+
+`VERIFIED_STATIC` for all shipped data, class names, SQL and DSL attributes.
+`INFERRED` for control-flow order. No lesson answer was submitted at runtime in
+M05 → **no `VERIFIED_RUNTIME` answer-state claim**.
