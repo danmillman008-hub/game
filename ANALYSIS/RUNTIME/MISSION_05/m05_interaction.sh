@@ -162,37 +162,42 @@ done
 log "interaction_chain_finished steps_captured=$(grep -c '^step=' "$TRACE")"
 
 # ---- 4b. Lesson interaction: correct / wrong answer states --------------
-# Only if the chain actually reached an interactive exercise with options.
-LOPTS=$(python3 ANALYSIS/RUNTIME/MISSION_05/lesson_options.py "$BASE" 2>/dev/null)
-log "LESSON_PHASE detected_options=$(printf '%s\n' "$LOPTS" | grep -c OPTION)"
-if printf '%s\n' "$LOPTS" | grep -q OPTION; then
+# Read options into a FILE (not a pipe): adb commands must never consume the
+# loop's stdin, which silently truncated run 42005358012 to one option.
+OPTFILE="$R/LOGS/.lesson_options"
+python3 ANALYSIS/RUNTIME/MISSION_05/lesson_options.py "$BASE" > "$OPTFILE" 2>/dev/null
+log "LESSON_PHASE detected_options=$(grep -c OPTION "$OPTFILE")"
+# Put the likely-correct option first (the "_ O G" game resolves to DOG)
+grep ' OPTION D' "$OPTFILE" > "$R/LOGS/.lesson_order" 2>/dev/null
+grep 'OPTION' "$OPTFILE" | grep -v ' OPTION D' >> "$R/LOGS/.lesson_order" 2>/dev/null
+if [ -s "$R/LOGS/.lesson_order" ]; then
   K=0
-  printf '%s\n' "$LOPTS" | grep 'OPTION' | head -4 | while read -r OX OY OKIND OTXT; do
+  while read -r OX OY OKIND OTXT; do
+    [ -z "$OX" ] && continue
     K=$((K+1))
-    N=$(printf 'LESSON-WRONG-%02d' "$K")
+    N=$(printf 'LESSON-OPTION-%02d' "$K")
     log "$N action=input_tap x=$OX y=$OY option=$OTXT"
-    adb shell input tap "$OX" "$OY" >> "$TRACE" 2>&1
+    adb shell input tap "$OX" "$OY" </dev/null >> "$TRACE" 2>&1
     sleep 3
-    capture "$N" "answer_option_$OTXT" >/dev/null
-  done
-  CTA=$(printf '%s\n' "$LOPTS" | grep 'CTA' | head -1)
+    capture "$N" "answer_option_$OTXT" </dev/null >/dev/null
+  done < "$R/LOGS/.lesson_order"
+  CTA=$(grep 'CTA' "$OPTFILE" | head -1)
   if [ -n "$CTA" ]; then
     CX=$(printf '%s' "$CTA" | awk '{print $1}'); CY=$(printf '%s' "$CTA" | awk '{print $2}')
     log "LESSON-CONTINUE action=input_tap x=$CX y=$CY"
-    adb shell input tap "$CX" "$CY" >> "$TRACE" 2>&1
+    adb shell input tap "$CX" "$CY" </dev/null >> "$TRACE" 2>&1
     sleep 4
-    capture LESSON-CONTINUE "after_cta" >/dev/null
+    capture LESSON-CONTINUE "after_cta" </dev/null >/dev/null
   fi
-  # capture one more CTA if the feedback screen exposes one
-  LAST=$(ls -1 "$R"/UI_HIERARCHY/LESSON-*.xml 2>/dev/null | tail -1)
+  LAST=$(ls -1 "$R"/UI_HIERARCHY/LESSON-OPTION-*.xml 2>/dev/null | tail -1)
   if [ -n "$LAST" ]; then
     CTA2=$(python3 ANALYSIS/RUNTIME/MISSION_05/lesson_options.py "$LAST" 2>/dev/null | grep 'CTA' | head -1)
     if [ -n "$CTA2" ]; then
       C2X=$(printf '%s' "$CTA2" | awk '{print $1}'); C2Y=$(printf '%s' "$CTA2" | awk '{print $2}')
       log "LESSON-AFTER action=input_tap x=$C2X y=$C2Y"
-      adb shell input tap "$C2X" "$C2Y" >> "$TRACE" 2>&1
+      adb shell input tap "$C2X" "$C2Y" </dev/null >> "$TRACE" 2>&1
       sleep 4
-      capture LESSON-AFTER "after_feedback_cta" >/dev/null
+      capture LESSON-AFTER "after_feedback_cta" </dev/null >/dev/null
     fi
   fi
 else
