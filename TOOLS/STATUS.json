@@ -1,5 +1,5 @@
 {
-  "phase": "temporary analysis toolchain — isolated from mimo-ui/UPGRADE",
+  "phase": "temporary analysis toolchain — FULLY INSTALLED, isolated from mimo-ui/UPGRADE",
   "branch": "arena/aebb90b7-game",
   "isolation": {
     "in_upgrade_zip": false,
@@ -29,9 +29,26 @@
   "proxy_channels": {
     "github_actions_workflow": ".github/workflows/mimo-re-toolchain.yml",
     "github_actions_role": "downloads official Ghidra 12.2 release ZIP + JADX jar, fully installs Ghidra, runs analyzeHeadless on the original Mimo DEX, commits text evidence to ANALYSIS/GHIDRA",
-    "npm_registry": ["jadx-mcp@1.4.1", "apktool-jar@2.4.1", "@mishguru/jadx-node@3.1.0", "rea-agents@6.7.0"],
-    "pypi": ["jdk4py==25.0.2.1", "androguard==4.1.4"],
-    "blocked_from_sandbox": ["release-assets.githubusercontent.com", "objects.githubusercontent.com", "services.gradle.org", "downloads.gradle.org", "repo1.maven.org", "drive.google.com", "raw.githubusercontent.com", "uploads.github.com"]
+    "npm_registry": [
+      "jadx-mcp@1.4.1",
+      "apktool-jar@2.4.1",
+      "@mishguru/jadx-node@3.1.0",
+      "rea-agents@6.7.0"
+    ],
+    "pypi": [
+      "jdk4py==25.0.2.1",
+      "androguard==4.1.4"
+    ],
+    "blocked_from_sandbox": [
+      "release-assets.githubusercontent.com",
+      "objects.githubusercontent.com",
+      "services.gradle.org",
+      "downloads.gradle.org",
+      "repo1.maven.org",
+      "drive.google.com",
+      "raw.githubusercontent.com",
+      "uploads.github.com"
+    ]
   },
   "engines": {
     "jadx_mcp_jar_bytes": 43756715,
@@ -47,9 +64,21 @@
   "original_drive_file": {
     "folder_id": "1yU1PN1GhTZlDeu91H4FSS0JsOT5MjpxB",
     "segments": [
-      {"name": "Mimo_9.35 (1).z01", "bytes": 52428800, "sha256": "1e3a41159ebe531121f0b04f146791fe900605c7ac15cc9cf54b1501d3b93b18"},
-      {"name": "Mimo_9.35 (1).z02", "bytes": 52428800, "sha256": "1ac22ab2c916f302d8ba0fd42317f1cb79ea53eb6045061d0a174993a634f539"},
-      {"name": "Mimo_9.35 (1).zip", "bytes": 31069368, "sha256": "91c670864fc66d852b371ed83c1f6d260ab4075c078030f74b29620807ffa2b7"}
+      {
+        "name": "Mimo_9.35 (1).z01",
+        "bytes": 52428800,
+        "sha256": "1e3a41159ebe531121f0b04f146791fe900605c7ac15cc9cf54b1501d3b93b18"
+      },
+      {
+        "name": "Mimo_9.35 (1).z02",
+        "bytes": 52428800,
+        "sha256": "1ac22ab2c916f302d8ba0fd42317f1cb79ea53eb6045061d0a174993a634f539"
+      },
+      {
+        "name": "Mimo_9.35 (1).zip",
+        "bytes": 31069368,
+        "sha256": "91c670864fc66d852b371ed83c1f6d260ab4075c078030f74b29620807ffa2b7"
+      }
     ],
     "combined_bytes": 135926968,
     "zip_member": "Mimo_9.35 (1).apk",
@@ -63,5 +92,53 @@
     "no runtime/emulator execution or live server behaviour observed",
     "no approval of any REVIEW answer",
     "no new product structure or design code built"
-  ]
+  ],
+  "github_actions_runs": {
+    "ghidra_full_install": {
+      "run_id": 41936300913,
+      "conclusion": "success",
+      "steps": "9/9",
+      "release_zip_sha256": "2c2cd776db3c1f6a097ba418922378ac3649cadd5e844a6f5f088ae628a7be67",
+      "installed_files": 5324,
+      "installed_size": "885M",
+      "jdk": "Temurin-25.0.5+8",
+      "ghidra_version": "12.2",
+      "headless": "analyzeHeadless -import classes.dex classes2.dex classes3.dex -noanalysis -postScript MimoGhidraReport.java -deleteProject",
+      "programs": 3,
+      "language": "Dalvik:LE:32:DEX_KitKat",
+      "symbols_total": 90248,
+      "evidence": "ANALYSIS/GHIDRA/"
+    },
+    "jadx_full_decompile": {
+      "run_id": 41937805854,
+      "conclusion": "success",
+      "jadx": "1.5.6",
+      "zip_sha256": "545ea2be9c242511bc145755cf4bda2485ade42966e096f8b4d3da2a230e8974",
+      "java_files": 2211,
+      "java_lines": 381455,
+      "stub_files": 2179,
+      "artifact": "ANALYSIS/DECOMPILED/getmimo_sources.tar.gz",
+      "artifact_sha256": "ec7af3a740b349b3ec74bb90141b52e64636bed72f911fd12c41360b1c63774c"
+    },
+    "jadx_headless_mcp_jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75"
+  },
+  "retrofit_endpoints": {
+    "file": "ANALYSIS/MIMO_RETROFIT_ENDPOINTS.json",
+    "count": 53,
+    "verbs_inferred": {
+      "GET": 26,
+      "POST": 21,
+      "PUT": 3,
+      "DELETE": 2,
+      "POST/other": 1
+    },
+    "note": "R8-obfuscated Retrofit annotation names; verbs inferred from method semantics, not runtime-observed"
+  },
+  "decompile_limitations": "JADX 1.1.0 (bogus element_width), modern JADX in jadx-mcp.jar (newPosition > limit), JADX 1.5.6 (243002 errors / 11628 Method-not-decompiled stubs) all fail on R8+Kotlin SuspendLambda method bodies; class/method signatures, Kotlin @Metadata, Retrofit annotations, strings, shipped assets and Ghidra symbols are complete",
+  "rea_doctor_status": "environment_healthy=false: jdk4py provides java.compiler but not jdk.compiler/javac; REA needs a full JDK to compile its Java source bridge. JADX/apktool run without javac.",
+  "verification_after_work": {
+    "verify_upgrade": "PASS 259/259, files_hashed=1954",
+    "design_index_html": "200 / 437972 B unchanged",
+    "upgrade_diff": "empty"
+  }
 }

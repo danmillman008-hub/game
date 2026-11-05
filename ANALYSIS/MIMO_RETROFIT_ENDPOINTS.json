@@ -1,0 +1,633 @@
+{
+ "method": "Retrofit-annotated endpoint extraction from JADX-decompiled Java of the ORIGINAL Mimo 9.35 APK",
+ "apk_sha256": "48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a",
+ "verb_note": "R8 obfuscated Retrofit annotation class names; verbs inferred from method names/semantics: f=GET, o=POST, n=PUT, p=DELETE, b=POST/other. Not runtime-observed.",
+ "count": 53,
+ "endpoints": [
+  {
+   "path": "/api/sendCustomerIoData",
+   "verb_inferred": "POST",
+   "annotation": "@o",
+   "source_file": "hg/b.java",
+   "signature": "Object a(@a CustomerIoData customerIoData, d70.b<? super q> bVar);",
+   "annotations": [
+    "@o(\"/api/sendCustomerIoData\")",
+    "@ri.b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/click/{linkId}",
+   "verb_inferred": "POST",
+   "annotation": "@o",
+   "source_file": "ph/b.java",
+   "signature": "Object a(@s(\"linkId\") String str, d70.b<? super q> bVar);",
+   "annotations": [
+    "@o(\"/click/{linkId}\")"
+   ]
+  },
+  {
+   "path": "/push/events",
+   "verb_inferred": "POST",
+   "annotation": "@o",
+   "source_file": "hg/d.java",
+   "signature": "Object a(@a PushNotificationDelivered pushNotificationDelivered, b<? super q> bVar);",
+   "annotations": [
+    "@o(\"/push/events\")"
+   ]
+  },
+  {
+   "path": "/v1/account/email",
+   "verb_inferred": "PUT",
+   "annotation": "@n",
+   "source_file": "hg/a.java",
+   "signature": "Object d(@ie0.a ChangeEmailRequestBody changeEmailRequestBody, d70.b<? super o0<q>> bVar);",
+   "annotations": [
+    "@n(\"/v1/account/email\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/aiTutor/conversations/messages/count",
+   "verb_inferred": "GET",
+   "annotation": "@f",
+   "source_file": "jg/a.java",
+   "signature": "Object a(d70.b<? super AiTutorialConversationMessageCount> bVar);",
+   "annotations": [
+    "@f(\"/v1/aiTutor/conversations/messages/count\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/code",
+   "verb_inferred": "GET",
+   "annotation": "@f",
+   "source_file": "mh/c.java",
+   "signature": "Object c(d70.b<? super List<SavedCode>> bVar);",
+   "annotations": [
+    "@f(\"/v1/code\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/code",
+   "verb_inferred": "POST",
+   "annotation": "@o",
+   "source_file": "mh/c.java",
+   "signature": "Object d(@a SaveCodeRequestBody saveCodeRequestBody, d70.b<? super SavedCode> bVar);",
+   "annotations": [
+    "@o(\"/v1/code\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/code/runfiles",
+   "verb_inferred": "POST",
+   "annotation": "@o",
+   "source_file": "hg/c.java",
+   "signature": "Object c(@a CodePlaygroundExecutionBody codePlaygroundExecutionBody, d70.b<? super CodePlaygroundExecutionResponse> bVar);",
+   "annotations": [
+    "@o(\"/v1/code/runfiles\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/code/{savedCodeId}",
+   "verb_inferred": "PUT",
+   "annotation": "@n",
+   "source_file": "mh/c.java",
+   "signature": "Object a(@s(\"savedCodeId\") long j5, @a SaveCodeRequestBody saveCodeRequestBody, d70.b<? super SavedCode> bVar);",
+   "annotations": [
+    "@n(\"/v1/code/{savedCodeId}\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/code/{savedCodeId}/remixes",
+   "verb_inferred": "POST",
+   "annotation": "@o",
+   "source_file": "mh/c.java",
+   "signature": "Object b(@s(\"savedCodeId\") long j5, @a RemixCodeRequestBody remixCodeRequestBody, d70.b<? super SavedCode> bVar);",
+   "annotations": [
+    "@o(\"/v1/code/{savedCodeId}/remixes\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/code/{savedCodeId}/runfiles",
+   "verb_inferred": "POST",
+   "annotation": "@o",
+   "source_file": "hg/c.java",
+   "signature": "Object d(@s(\"savedCodeId\") long j5, @a CodePlaygroundExecutionBody codePlaygroundExecutionBody, d70.b<? super CodePlaygroundExecutionResponse> bVar);",
+   "annotations": [
+    "@o(\"/v1/code/{savedCodeId}/runfiles\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/invitations/{code}",
+   "verb_inferred": "POST",
+   "annotation": "@o",
+   "source_file": "ug/a.java",
+   "signature": "Object d(@s(\"code\") String str, d70.b<? super q> bVar);",
+   "annotations": [
+    "@o(\"/v1/invitations/{code}\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/leaderboards/friends",
+   "verb_inferred": "GET",
+   "annotation": "@f",
+   "source_file": "ug/a.java",
+   "signature": "Object c(d70.b<? super Friends> bVar);",
+   "annotations": [
+    "@f(\"/v1/leaderboards/friends\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/leaderboards/latest",
+   "verb_inferred": "GET",
+   "annotation": "@f",
+   "source_file": "ch/a.java",
+   "signature": "Object a(d70.b<? super o0<Leaderboard>> bVar);",
+   "annotations": [
+    "@f(\"/v1/leaderboards/latest\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/leaderboards/{leaderboardId}/userrank",
+   "verb_inferred": "GET",
+   "annotation": "@f",
+   "source_file": "ch/a.java",
+   "signature": "Object b(@s(\"leaderboardId\") long j5, d70.b<? super LeaderboardUserResult> bVar);",
+   "annotations": [
+    "@f(\"/v1/leaderboards/{leaderboardId}/userrank\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/package/preview",
+   "verb_inferred": "GET",
+   "annotation": "@f",
+   "source_file": "eh/a.java",
+   "signature": "Object a(d70.b<? super o0<ResponseBody>> bVar);",
+   "annotations": [
+    "@f(\"/v1/package/preview\")",
+    "@w",
+    "@b",
+    "@k({\"Content-Type: application/zip\"})"
+   ]
+  },
+  {
+   "path": "/v1/practice/statistics",
+   "verb_inferred": "GET",
+   "annotation": "@f",
+   "source_file": "hh/a.java",
+   "signature": "Object a(d70.b<? super PracticeStatsResponse> bVar);",
+   "annotations": [
+    "@f(\"/v1/practice/statistics\")",
+    "@b"
+   ]
+  },
+  {
+   "path": "/v1/preview/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/runFiles",
+   "verb_inferred": "POST",
+   "annotation": "@o",
+   "source_file": "hg/c.java",
+   "signature": "Object a(@s(\"trackId\") long j5, @s(\"tutorialId\") long j10, @s(\"chapterId\") long j11, @s(\"lessonId\") long j12, @t(\"publishSetVersion\") long j13, @a ExecuteFilesBody executeFilesBody, d70.b<? super ExecuteFilesResponse> bVar);",
+   "annotations": [
+    "@o(\"/v1/preview/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/runFiles\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/products/user",
+   "verb_inferred": "GET",
+   "annotation": "@f",
+   "source_file": "nh/c.java",
+   "signature": "Object b(d70.b<? super RawProducts> bVar);",
+   "annotations": [
+    "@f(\"/v1/products/user\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/products/user",
+   "verb_inferred": "POST",
+   "annotation": "@o",
+   "source_file": "nh/c.java",
+   "signature": "Object a(@i(\"Time-Zone\") String str, @a ProductTypeBody productTypeBody, @t(\"useCoins\") boolean z2, d70.b<? super RawPurchasedProduct> bVar);",
+   "annotations": [
+    "@o(\"/v1/products/user\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/tracks/completion/lastInteracted",
+   "verb_inferred": "GET",
+   "annotation": "@f",
+   "source_file": "com/getmimo/data/source/remote/progress/CompletionApi.java",
+   "signature": "Object getLastInteractedTrack(d70.b<? super LastInteractedTrackResponse> bVar);",
+   "annotations": [
+    "@f(\"/v1/tracks/completion/lastInteracted\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/tracks/{trackId}/certificates",
+   "verb_inferred": "GET",
+   "annotation": "@f",
+   "source_file": "og/a.java",
+   "signature": "Object b(@s(\"trackId\") long j5, @t(\"fullName\") String str, @t(\"trackVersion\") long j10, d70.b<? super o0<ResponseBody>> bVar);",
+   "annotations": [
+    "@f(\"/v1/tracks/{trackId}/certificates\")",
+    "@w",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/tracks/{trackId}/completion",
+   "verb_inferred": "GET",
+   "annotation": "@f",
+   "source_file": "com/getmimo/data/source/remote/progress/CompletionApi.java",
+   "signature": "Object getTrackCompletion(@s(\"trackId\") long j5, @t(\"trackVersion\") long j10, d70.b<? super TrackCompletionResponse> bVar);",
+   "annotations": [
+    "@f(\"/v1/tracks/{trackId}/completion\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/tracks/{trackId}/eta",
+   "verb_inferred": "GET",
+   "annotation": "@f",
+   "source_file": "com/getmimo/data/source/remote/progress/TrackEtaApi.java",
+   "signature": "Object getTrackEta(@s(\"trackId\") long j5, @t(\"trackVersion\") long j10, d70.b<? super TrackEtaResponse> bVar);",
+   "annotations": [
+    "@f(\"/v1/tracks/{trackId}/eta\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/runFiles",
+   "verb_inferred": "POST",
+   "annotation": "@o",
+   "source_file": "hg/c.java",
+   "signature": "Object b(@s(\"trackId\") long j5, @s(\"tutorialId\") long j10, @s(\"chapterId\") long j11, @s(\"lessonId\") long j12, @t(\"publishSetVersion\") long j13, @t(\"suppressConsoleOutput\") boolean z2, @t(\"language\") String str, @a ExecuteFilesBody executeFilesBody, d70.b<? super ExecuteFilesResponse> bVar);",
+   "annotations": [
+    "@o(\"/v1/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/runFiles\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/savefiles",
+   "verb_inferred": "POST",
+   "annotation": "@o",
+   "source_file": "dh/a.java",
+   "signature": "Object b(@s(\"trackId\") long j5, @s(\"tutorialId\") long j10, @s(\"chapterId\") long j11, @s(\"lessonId\") long j12, @t(\"publishSetVersion\") long j13, @ie0.a SaveLessonFilesBody saveLessonFilesBody, d70.b<? super q> bVar);",
+   "annotations": [
+    "@o(\"/v1/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/savefiles\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/savedFiles",
+   "verb_inferred": "GET",
+   "annotation": "@f",
+   "source_file": "dh/a.java",
+   "signature": "Object a(@s(\"trackId\") long j5, @s(\"tutorialId\") long j10, @s(\"chapterId\") long j11, @t(\"trackVersion\") long j12, d70.b<? super SavedLessonFilesBody> bVar);",
+   "annotations": [
+    "@f(\"/v1/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/savedFiles\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/tutorials/drafts/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/render",
+   "verb_inferred": "GET",
+   "annotation": "@f",
+   "source_file": "ng/a.java",
+   "signature": "Object a(@s(\"tutorialId\") long j5, @s(\"chapterId\") long j10, @s(\"lessonId\") long j11, d70.b<? super LessonDraftResponse> bVar);",
+   "annotations": [
+    "@f(\"/v1/tutorials/drafts/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/render\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/tutorials/{tutorialId}/lessons/{lessonIdentityId}/report",
+   "verb_inferred": "POST",
+   "annotation": "@o",
+   "source_file": "kh/a.java",
+   "signature": "Object a(@s(\"tutorialId\") long j5, @s(\"lessonIdentityId\") long j10, @ie0.a ReportLessonBody reportLessonBody, d70.b<? super q> bVar);",
+   "annotations": [
+    "@o(\"/v1/tutorials/{tutorialId}/lessons/{lessonIdentityId}/report\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/tutorials/{tutorialId}/progress",
+   "verb_inferred": "POST",
+   "annotation": "@o",
+   "source_file": "com/getmimo/data/source/remote/progress/LessonProgressApi.java",
+   "signature": "Object postProgress(@s(\"tutorialId\") long j5, @a PostProgressRequestBody postProgressRequestBody, d70.b<? super PostProgressResponse> bVar);",
+   "annotations": [
+    "@o(\"/v1/tutorials/{tutorialId}/progress\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/user/activity",
+   "verb_inferred": "GET",
+   "annotation": "@f",
+   "source_file": "sh/h.java",
+   "signature": "Object a(@t(\"from\") String str, @t(\"to\") String str2, d70.b<? super UserActivityResponse> bVar);",
+   "annotations": [
+    "@f(\"/v1/user/activity\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/user/coins",
+   "verb_inferred": "GET",
+   "annotation": "@f",
+   "source_file": "qg/a.java",
+   "signature": "Object a(d70.b<? super Coins> bVar);",
+   "annotations": [
+    "@f(\"/v1/user/coins\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/user/deviceTokens",
+   "verb_inferred": "POST",
+   "annotation": "@o",
+   "source_file": "hg/a.java",
+   "signature": "Object c(@ie0.a DeviceToken deviceToken, d70.b<? super q> bVar);",
+   "annotations": [
+    "@o(\"/v1/user/deviceTokens\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/user/events/subscribe",
+   "verb_inferred": "GET",
+   "annotation": "@f",
+   "source_file": "hg/a.java",
+   "signature": "Object b(d70.b<? super PusherChannelResponse> bVar);",
+   "annotations": [
+    "@f(\"/v1/user/events/subscribe\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/user/favorites/tracks",
+   "verb_inferred": "GET",
+   "annotation": "@f",
+   "source_file": "xe/a.java",
+   "signature": "Object a(d70.b<? super FavoriteTracks> bVar);",
+   "annotations": [
+    "@f(\"/v1/user/favorites/tracks\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/user/favorites/tracks/{trackId}",
+   "verb_inferred": "POST",
+   "annotation": "@o",
+   "source_file": "xe/a.java",
+   "signature": "Object b(@s(\"trackId\") long j5, d70.b<? super FavoriteTracks> bVar);",
+   "annotations": [
+    "@o(\"/v1/user/favorites/tracks/{trackId}\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/user/following/{userId}",
+   "verb_inferred": "DELETE",
+   "annotation": "@p",
+   "source_file": "ih/a.java",
+   "signature": "Object f(@s(\"userId\") long j5, d70.b<? super o0<q>> bVar);",
+   "annotations": [
+    "@p(\"/v1/user/following/{userId}\")",
+    "@ri.b"
+   ]
+  },
+  {
+   "path": "/v1/user/following/{userId}",
+   "verb_inferred": "POST/other",
+   "annotation": "@b",
+   "source_file": "ih/a.java",
+   "signature": "Object a(@s(\"userId\") long j5, d70.b<? super o0<q>> bVar);",
+   "annotations": [
+    "@b(\"/v1/user/following/{userId}\")",
+    "@ri.b"
+   ]
+  },
+  {
+   "path": "/v1/user/invitations",
+   "verb_inferred": "GET",
+   "annotation": "@f",
+   "source_file": "ug/a.java",
+   "signature": "Object a(d70.b<? super InvitationsOverview> bVar);",
+   "annotations": [
+    "@f(\"/v1/user/invitations\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/user/keys",
+   "verb_inferred": "GET",
+   "annotation": "@f",
+   "source_file": "bh/a.java",
+   "signature": "Object b(@i(\"Time-Zone\") String str, d70.b<? super UserKeys> bVar);",
+   "annotations": [
+    "@f(\"/v1/user/keys\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/user/keys/consume",
+   "verb_inferred": "POST",
+   "annotation": "@o",
+   "source_file": "bh/a.java",
+   "signature": "Object a(d70.b<? super UserKeys> bVar);",
+   "annotations": [
+    "@o(\"/v1/user/keys/consume\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/user/rewards/next",
+   "verb_inferred": "GET",
+   "annotation": "@f",
+   "source_file": "lh/a.java",
+   "signature": "Object b(d70.b<? super Rewards> bVar);",
+   "annotations": [
+    "@f(\"/v1/user/rewards/next\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/user/rewards/{rewardId}/confirm",
+   "verb_inferred": "POST",
+   "annotation": "@o",
+   "source_file": "lh/a.java",
+   "signature": "Object a(@s(\"rewardId\") long j5, d70.b<? super q> bVar);",
+   "annotations": [
+    "@o(\"/v1/user/rewards/{rewardId}/confirm\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/user/settings",
+   "verb_inferred": "GET",
+   "annotation": "@f",
+   "source_file": "kf/a.java",
+   "signature": "Object c(d70.b<? super Settings> bVar);",
+   "annotations": [
+    "@f(\"/v1/user/settings\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/user/settings",
+   "verb_inferred": "PUT",
+   "annotation": "@n",
+   "source_file": "kf/a.java",
+   "signature": "Object a(@ie0.a Settings settings, d70.b<? super Settings> bVar);",
+   "annotations": [
+    "@n(\"/v1/user/settings\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/user/settings/avatar",
+   "verb_inferred": "POST",
+   "annotation": "@o",
+   "source_file": "kf/a.java",
+   "signature": "Object e(d70.b<? super AvatarUpdateResponse> bVar);",
+   "annotations": [
+    "@o(\"/v1/user/settings/avatar\")"
+   ]
+  },
+  {
+   "path": "/v1/user/settings/avatar/{uploadId}",
+   "verb_inferred": "DELETE",
+   "annotation": "@p",
+   "source_file": "kf/a.java",
+   "signature": "Object d(@s(\"uploadId\") String str, @ie0.a ConfirmAvatarUploadBody confirmAvatarUploadBody, d70.b<? super q> bVar);",
+   "annotations": [
+    "@p(\"/v1/user/settings/avatar/{uploadId}\")",
+    "@b"
+   ]
+  },
+  {
+   "path": "/v1/user/visits",
+   "verb_inferred": "POST",
+   "annotation": "@o",
+   "source_file": "hg/a.java",
+   "signature": "Object a(@ie0.a AppName appName, d70.b<? super q> bVar);",
+   "annotations": [
+    "@o(\"/v1/user/visits\")",
+    "@b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/users/{userId}/code",
+   "verb_inferred": "GET",
+   "annotation": "@f",
+   "source_file": "ih/a.java",
+   "signature": "Object b(@s(\"userId\") long j5, d70.b<? super PublicUserCode> bVar);",
+   "annotations": [
+    "@f(\"/v1/users/{userId}/code\")",
+    "@ri.b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/users/{userId}/code/{savedCodeId}",
+   "verb_inferred": "GET",
+   "annotation": "@f",
+   "source_file": "ih/a.java",
+   "signature": "Object c(@s(\"userId\") long j5, @s(\"savedCodeId\") long j10, d70.b<? super SavedCode> bVar);",
+   "annotations": [
+    "@f(\"/v1/users/{userId}/code/{savedCodeId}\")",
+    "@ri.b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/users/{userId}/profile",
+   "verb_inferred": "GET",
+   "annotation": "@f",
+   "source_file": "ih/a.java",
+   "signature": "Object d(@s(\"userId\") long j5, d70.b<? super PublicUser> bVar);",
+   "annotations": [
+    "@f(\"/v1/users/{userId}/profile\")",
+    "@ri.b",
+    "@k({\"Content-Type: application/json\"})"
+   ]
+  },
+  {
+   "path": "/v1/users/{userId}/report",
+   "verb_inferred": "POST",
+   "annotation": "@o",
+   "source_file": "ih/a.java",
+   "signature": "Object e(@s(\"userId\") long j5, d70.b<? super o0<q>> bVar);",
+   "annotations": [
+    "@o(\"/v1/users/{userId}/report\")"
+   ]
+  },
+  {
+   "path": "/v2/client-config",
+   "verb_inferred": "GET",
+   "annotation": "@f",
+   "source_file": "lg/a.java",
+   "signature": "Object a(d70.b<? super d> bVar);",
+   "annotations": [
+    "@f(\"/v2/client-config\")",
+    "@b"
+   ]
+  }
+ ]
+}

@@ -21,18 +21,19 @@
 
 ---
 
-## ۱. نصب موقت دو ابزار (و محدودیت صادقانهٔ سندباکس)
+## ۱. نصب موقت دو ابزار (بهروزشده بعد از تصحیح شما)
 
-جزئیات کامل در `TOOLCHAIN_TEMP.fa.md`. خلاصه:
+> **تصحیح پذیرفته شد**: «بیرون خط لولهٔ اصلی» بهمعنی «نصب نکردن» نبود. صورت وضعیت کامل در
+> `TOOLCHAIN_TEMP.fa.md` و §۱۲ همین سند. خلاصهٔ بهروزشده:
 
 | ابزار | وضعیت | نتیجهٔ واقعی |
 |---|---|---|
-| `morluto/rea` | ✅ نصب شد (موقت، بیرون ریپو) | کلون ۱۲۴ MB + بستهٔ npm `rea-agents@6.7.0` (۱۴۸ پکیج). `rea inspect-artifact` روی APK یک **Evidence رسمی** ساخت: `ev_cbbbefbf1ed8230551034c3f9d5ab72b9f19ad938841639ec19fe0a9ceef11b2` با ۱۴٬۰۶۳ گره / ۱۴٬۳۹۹ occurrence / ۱۴٬۳۹۸ یال / **۰ تناقض یکپارچگی** و هش APK کاملاً منطبق. متدولوژی `evidence-workflows` / `android-applications` در این سند رعایت شد. |
-| `NationalSecurityAgency/ghidra` | ⚠️ سورس نصب شد، باینری اجرا نشد | کلون کمعمق ۴۴۴ MB + JDK 21 و **JDK 25** (از PyPI `jdk4py`). باینری رسمی `ghidra_12.2_PUBLIC_20261016.zip` (۵۶۹ MB) و Gradle 9.1 / Maven Central **توسط allowlist شبکه مسدوداند**؛ بنابراین `analyzeHeadless` و provider Ghidraی REA اجرا نشدند. سورس بهعنوان **مرجع فرمت DEX** استفاده شد (`Ghidra/Features/FileFormats/.../android/dex`, `cdex`, `multidex`, `Ghidra/Processors/Dalvik`). |
-| JADX / REA Android class tools | ❌ مسدود | `inspect-android-package` به `jadx-headless-mcp 0.7.1 JAR` نیاز دارد؛ asset ریلیز به `release-assets.githubusercontent.com` ریدایرکت میشود که بسته است. `rea doctor` دقیقاً همین را گزارش میدهد. |
-| موتور جایگزین (همچنان موقت) | ✅ | `androguard 4.1.4` + یک پارسر مستقیم `string_ids`/`type_ids` DEX (نوشتهشده طبق همان فرمتی که سورس Ghidra توصیف میکند) + `string.xml` استخراجشدهٔ ریپو. تمام اعداد DEX این سند با `CATALOGS/DEX_CENSUS.json` ریپو **تکبهدقت جور درآمد** (۵۳٬۷۳۰ / ۵۰٬۲۱۵ / ۱۶٬۷۱۸ رشته). |
+| `morluto/rea` | ✅ **کامل** در `TOOLS/rea/` (submodule پینشده + ۵ سابماژول تو در تو) | `./TOOLS/install.sh` اجرا شد: ۱۱٬۸۵۷ فایل سورس + `rea-agents@6.7.0`. `rea inspect-artifact` روی APK یک **Evidence رسمی** ساخت: `ev_cbbbefbf1ed8230551034c3f9d5ab72b9f19ad938841639ec19fe0a9ceef11b2` با ۱۴٬۰۶۳ گره / ۱۴٬۳۹۹ occurrence / ۱۴٬۳۹۸ یال / **۰ تناقض یکپارچگی**. `rea doctor` همچنان بهدلیل نبود `jdk.compiler` در بیلد PyPI ناسالم است (بند ۴ سند ابزار). |
+| `NationalSecurityAgency/ghidra` | ✅ **کامل نصب و اجرا شد** (هم سورس در `TOOLS/ghidra/`، هم باینری رسمی روی رانر گیتهاب) | run `41936300913`: ریلیز `ghidra_12.2_PUBLIC_20261016.zip` (SHA `2c2cd776…`) دانلود، **۵٬۳۲۴ فایل / ۸۸۵M** نصب، `analyzeHeadless` روی ۳ DEX اورجینال اجرا → ۳ برنامهٔ `Dalvik:LE:32:DEX_KitKat` با **۹۰٬۲۴۸ نماد**. شواهد در `ANALYSIS/GHIDRA/`. |
+| JADX / REA Android class tools | ✅ موتور دیکامپایل **اجرا شد** | `jadx-mcp.jar` (۴۳٫۸ MB، از npm registry مجاز) روی APK: **۲۴٬۰۲۲ کلاس / ۱۲۹٬۰۷۱ متد / ۷٬۴۲۶٬۴۵۰ دستورالعمل**، خطای سطحکلاس ۰. JADX 1.5.6 از طریق رانر گیتهاب: **۲٬۲۱۱ فایل Java / ۳۸۱٬۴۵۵ خط** در `ANALYSIS/DECOMPILED/`. JAR رسمی `jadx-headless-mcp 0.7.1` هم دانلود و هششد (`6e5eacf5…ff75` = هش مستند REA). |
+| موتور جایگزین (همچنان موقت) | ✅ | `androguard 4.1.4` + پارسر مستقیم `string_ids`/`type_ids` DEX + `string.xml` ریپو. تمام اعداد DEX با `CATALOGS/DEX_CENSUS.json` **تکبهدقت جور درآمد** (۵۳٬۷۳۰ / ۵۰٬۲۱۵ / ۱۶٬۷۱۸ رشته). |
 
-**محدودیت بنیادی (باید در برنامهٔ مرحلهٔ بعد لحاظ شود):** نه Java/JADX/apktool/adb/امولاتور از قبل بود، نه اجرای زنده/اسکرینشات رانتایم ممکن شد. پس **همهٔ نتایج، مشاهدهٔ ایستا (static observed) است**؛ رفتار واقعی، ترتیب فراخوانیها، و مقادیر سروری «ناشناخته» باقی ماندهاند نه «تأییدشده».
+**محدودیت بنیادی (سر جای خود باقی است):** با وجود نصب کامل ابزارها، **هیچ اجرای زندهای** (adb/امولاتور/اسکرینشات رانتایم) انجام نشد و بدنهٔ بسیاری از متدهای کروتین Kotlin توسط JADX قابل decode نیست (بند ۵ سند ابزار). پس **همهٔ نتایج، مشاهدهٔ ایستا (static observed) است**؛ رفتار واقعی، ترتیب فراخوانیها و مقادیر سروری «ناشناخته»اند نه «تأییدشده».
 
 ---
 
@@ -271,6 +272,100 @@ fixture = json.loads(z.read('assets/testdata/test-tracks.json'))      # publishS
 ```
 
 چهار کاتالوگ JSON کنار این سند، خروجی همین شمارشها هستند و با `mimo-ui/CATALOGS/{DEX_CENSUS.json,APK_ENTRY_CENSUS.csv,COVERAGE_BY_AREA.csv}` ریپو تطبیق داده شدند.
+
+---
+
+## ۱۲. بهروزرسانی بعد از تصحیح شما: پروکسی گیتهاب، نصب کامل، فایل اورجینال، دیکامپایل
+
+> این بخش پاسخ مستقیم به «نصب نکردی چون موقتی/بیرون خط لولهای» است.
+> **پذیرفته شد**؛ الان نصب کامل انجام شده ولی همچنان جدای `mimo-ui/UPGRADE` است.
+> جزئیات اجرایی در `TOOLCHAIN_TEMP.fa.md`، `TOOLS/README.fa.md`، `ANALYSIS/GHIDRA/INSTALL.md`
+> و `ANALYSIS/DECOMPILED/REPORT.md`.
+
+### ۱۲٫۱ فایل اورجینال Drive، دقیقاً همان فایلی است که تحلیل شد
+
+پوشهٔ `mimo` Drive (`1yU1PN1GhTZlDeu91H4FSS0JsOT5MjpxB`) یک **آرشیو ۳ تکهای** است:
+
+| قطعه | بایت | SHA‑256 (جور با متاداتای Drive ✔) |
+|---|---|---|
+| `Mimo_9.35 (1).z01` | ۵۲٬۴۲۸٬۸۰۰ | `1e3a41159ebe531121f0b04f146791fe900605c7ac15cc9cf54b1501d3b93b18` |
+| `Mimo_9.35 (1).z02` | ۵۲٬۴۲۸٬۸۰۰ | `1ac22ab2c916f302d8ba0fd42317f1cb79ea53eb6045061d0a174993a634f539` |
+| `Mimo_9.35 (1).zip` | ۳۱٬۰۶۹٬۳۶۸ | `91c670864fc66d852b371ed83c1f6d260ab4075c078030f74b29620807ffa2b7` |
+
+الحاق = ۱۳۵٬۹۲۶٬۹۶۸ B ← دقیقاً **یک عضو**: `Mimo_9.35 (1).apk`، ۱۴۲٬۳۵۳٬۴۹۹ B، `CRC32=0x94bc6bf2`.
+CRC و SHA‑256 APK محلی با آن یکساناند (`48ce1740…f7c7a`). یعنی **هیچ نسخهٔ متفاوتی وجود ندارد**؛
+«همهٔ پیچ و مهرهها» = ۳ قطعه + APK + ۱۲ DEX + ۱۴٬۳۹۸ entry + ۱۰٬۳۵۲ فایل `assets/` + ARSC + Manifest + ۱۰ باندل زبان.
+
+### ۱۲٫۲ نصب کامل، در یک پوشهٔ جداگانه در گیتهاب
+
+| پوشه | ریپو | کامیت پینشده | فایلها |
+|---|---|---|---|
+| `TOOLS/ghidra/` | `NationalSecurityAgency/ghidra` @ `master` | `4cfb27de…7072` | ۲۰٬۶۵۵ |
+| `TOOLS/rea/` | `morluto/rea` @ `main` | `71f680d7…105f` | ۱۱٬۸۵۷ (با ۵ سابماژول تو در تو) |
+
+`./TOOLS/install.sh` اجرا و موفق شد: `git submodule update --init --recursive` + npm + PyPI.
+همهٔ خروجیهای تولیدی زیر `TOOLS/_*/`اند و توسط `.gitignore` وارد ZIP/MANIFEST نمیشوند.
+
+### ۱۲٫۳ Ghidra واقعاً نصب و اجرا شد (GitHub Actions = پروکسی)
+
+run `41936300913` (۹/۹ گام ✓): ریلیز رسمی `ghidra_12.2_PUBLIC_20261016.zip`
+(SHA `2c2cd776db3c1f6a097ba418922378ac3649cadd5e844a6f5f088ae628a7be67`) دانلود،
+**۵٬۳۲۴ فایل / ۸۸۵M** استخراج، `Temurin-25.0.5+8` نصب، و
+`analyzeHeadless ... -import classes.dex classes2.dex classes3.dex -postScript MimoGhidraReport.java`
+اجرا شد → ۳ برنامهٔ `Dalvik:LE:32:DEX_KitKat`، **۹۰٬۲۴۸ نماد**، `Import succeeded`.
+همان رانر `jadx-headless-mcp-0.7.1-all.jar` را هم گرفت و هش آن
+`6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75` دقیقاً با مستندات REA جور شد.
+پس «به VPN/فایل دستی نیاز افتاد» پیش نیامد — مسیر گیتهاب کافی بود.
+
+### ۱۲٫۴ دیکامپایل کامل (دو کانال)
+
+| کانال | نتیجه |
+|---|---|
+| npm registry → `jadx-mcp@1.4.1` (۴۳٫۸ MB JAR، JADX مدرن) | APK لود شد: **۲۴٬۰۲۲ کلاس / ۱۲۹٬۰۷۱ متد / ۷٬۴۲۶٬۴۵۰ دستورالعمل**، `errors=0` در سطح کلاس، ۲۱ ابزار MCP فعال (`get_class_source`, `search_code`, xrefs, …) |
+| رانر گیتهاب → JADX 1.5.6 | `classes.dex` → **۲٬۲۱۱ فایل Java `com.getmimo` / ۳۸۱٬۴۵۵ خط**، بستهٔ `ANALYSIS/DECOMPILED/getmimo_sources.tar.gz` (SHA `ec7af3a7…c74c`) |
+| JADX 1.1.0 محلی | ۱۱٬۸۴۴ فایل Java / ۱۳۵ MB؛ از این خروجی **۵۳ تعریف Retrofit** استخراج شد |
+
+### ۱۲٫۵ کشف تازه: سطح API، این بار از کد دیکامپایلشده (نه حدس رشتهای)
+
+`ANALYSIS/MIMO_RETROFIT_ENDPOINTS.json` شامل **۵۳ نقطهٔ پایانی** با مسیر، فایل منبع،
+امضای متد و آنوتیشنها است (R8 نام کلاسهای Retrofit را Obfuscate کرده؛ فعلها از روی نام/معنای متد
+استنتاج شدهاند: `f=GET` ۲۶، `o=POST` ۲۱، `n=PUT` ۳، `p=DELETE` ۲، و ۱ مورد `POST/other` — **رانتایم مشاهده نشده**).
+نمونههایی که مستقیماً به پرسشهای شما مربوطاند:
+
+| مسیر | امضای دیکامپایلشده | معنا |
+|---|---|---|
+| `/v1/leaderboards/latest` | `Object a(d70.b<? super o0<Leaderboard>>)` | جدول هفتگی فعلی |
+| `/v1/leaderboards/{leaderboardId}/userrank` | `Object b(@s("leaderboardId") long, …)` | رتبهٔ کاربر |
+| `/v1/user/rewards/next`, `/v1/user/rewards/{rewardId}/confirm` | `lh/a.java` | **پاداش سرورمحور** (§۵ تأیید شد) |
+| `/v1/user/keys`, `/v1/user/keys/consume` | `bh/a.java` | ارز `Keys` |
+| `/v1/user/coins`, `/v1/user/activity` | `qg/a.java`, `sh/h.java` | ارز `Coins` + تقویم Streak |
+| `/v1/user/settings` | `Object a(@a Settings, …)` | هدف روزانه / تنظیمات |
+| `/v1/tutorials/{tutorialId}/progress` | `postProgress(@s("tutorialId") long, @a PostProgressRequestBody, …)` | **همگامسازی پیشرفت درس** |
+| `/v1/tracks/{trackId}/completion`, `/eta`, `/certificates` | `CompletionApi`, `TrackEtaApi`, `og/a.java` | وضعیت ترک، ETA، گواهی |
+| `/v1/tracks/{trackId}/tutorials/{tutorialId}/chapters/{chapterId}/lessons/{lessonId}/runFiles` | `hg/c.java` | پول اجرای کد/پروژه |
+| `/v1/practice/statistics`, `/v1/aiTutor/conversations/messages/count` | `hh/a.java`, `jg/a.java` | آمار تمرین + سهمیهٔ AI |
+| `/v2/client-config` | `lg/a.java` | پیکربندی سمت سرور (نسخهبندی محتوا) |
+
+این جدول §۳ و بند ۱ از §۹ («فعل/بدنهٔ HTTP») را تا سطح **تعریف اینترفیس** پر میکند؛
+بدنهٔ پاسخ/توکن/سیاست آفلاین همچنان ناشناخته است.
+
+### ۱۲٫۶ محدودیت فنی تازه (باید صادقانه بماند)
+
+هر سه JADX روی **بدنهٔ متدهای کروتین** شکست خوردند: JADX 1.1.0 ← `bogus element_width`،
+JADX مدرن ← `newPosition > limit`، JADX 1.5.6 ← `243002 errors` / ۱۱٬۶۲۸ استاب `Method not decompiled`.
+هدر DEX استاندارد است (`dex\n039\0`، ۱۸ ورودی معمولی `map_list`، بدون call‑site/method‑handle/hiddenapi)؛
+پس مشکل خرابی فایل نیست، بلکه ترکیب R8 + `SuspendLambda` است. Ghidra در عوض هر سه DEX را با ۹۰٬۲۴۸ نماد import کرد.
+نتیجه: **امضاها، `@Metadata` کاتلین، آنوتیشنهای Retrofit، رشتهها و تمام محتوای shipped کاملاند؛
+فرمول عددی امتیاز و هندسهٔ دقیق `com.getmimo.ui.path.map.k` همچنان بستهاند.**
+علت ریشهای گرههای غلط (§۶: fixture v52 در برابر shipped v753) سر جای خود و بدون تغییر است.
+
+### ۱۲٫۷ ایزولاسیون، دوباره اندازهگیری شد
+
+- `verify_upgrade.py mimo-ui/UPGRADE` → `PASS 259/259`, `files_hashed=1954` (بعد از همهٔ کارها).
+- `U/DESIGN/index.html` → `200` / ۴۳۷٬۹۷۲ B، بدون تغییر.
+- `git diff -- mimo-ui/UPGRADE` خالی است؛ هیچ فایلی وارد ZIP/MANIFEST/وریفایر/پوشهٔ v12 در Drive نشد.
+- **هیچ ساختار/کد/محصول تازهای ساخته نشد**؛ فقط شواهد و ابزارهای موقت. هیچ VPN واقعی، اجرای زنده،
+  یا **تأیید نهایی** ادعا نشد. `SAVED` پروتوتایپ فقط در حافظه است، نه localStorage.
 
 ---
 
