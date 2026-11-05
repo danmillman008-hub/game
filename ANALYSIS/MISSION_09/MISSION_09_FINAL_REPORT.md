@@ -184,7 +184,7 @@ evidence DB), `ANALYSIS/MISSION_06/`, `ANALYSIS/MISSION_05/`.
 ## 10. Branch and commit
 
 **Branch:** `arena/aebb90b7-game` (fixed for this session).
-**Deliverables commit:** `@@COMMIT@@`.
+**Deliverables commit:** `9e6ec9ac`.
 Harness/runtime commit: `1744ab0c`. M08 final: `67353077`. M07 closure: `477d3195`.
 The final metadata commit that records this hash is reported in the task response.
 
