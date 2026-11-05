@@ -224,9 +224,11 @@ PY
 else
   echo "== APK_URL supplied: verifying SHA-256 before install =="
   APK="$RUNNER_TEMP/MIMO_ORIGINAL.apk"
-  curl -fL --retry 3 --retry-delay 5 -o "$APK" "$APK_URL" > "$R/LOGS/apk_download.txt" 2>&1
+  curl -fsSL --retry 3 --retry-delay 5 -o "$APK" "$APK_URL" > "$R/LOGS/apk_download.txt" 2>&1
   echo "curl_exit=$? downloaded_bytes=$(stat -c %s "$APK" 2>/dev/null || echo 0)" \
     >> "$R/LOGS/apk_download.txt"
+  # MISSION 04: never persist or expose the private source URL in logs/evidence.
+  sed -i -E 's#https?://[^[:space:]]+#<redacted-private-url>#g' "$R/LOGS/apk_download.txt"
   ACTUAL_SHA=$(sha256sum "$APK" 2>/dev/null | cut -d' ' -f1)
   echo "expected_sha=$EXPECTED_APK_SHA256 actual_sha=$ACTUAL_SHA" > "$R/APK_SHA256.txt"
   if [ "$ACTUAL_SHA" != "$EXPECTED_APK_SHA256" ]; then

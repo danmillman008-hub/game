@@ -1,0 +1,130 @@
+MISSION 04 — AUTHORIZED APK SOURCE INVESTIGATION (exact commands + outputs)
+==========================================================================
+Timestamp UTC: 2026-11-05T08:02–08:06Z
+Branch: arena/aebb90b7-game
+Workflow run ID (probe): 41991896800
+Commit at probe: 1ca5d6bc2c761c3555d189d5160e8f8316362fed
+Expected APK SHA-256: 48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a
+Expected size: 142353499 bytes
+
+NOTE: no token, credential, private URL or Drive link is printed anywhere in
+this file. Administrative HTTP responses are reproduced verbatim; they contain
+no secret values.
+
+--------------------------------------------------------------------------
+1. PREFLIGHT IDENTITY
+--------------------------------------------------------------------------
+$ git branch --show-current
+arena/aebb90b7-game
+$ git rev-parse HEAD
+14e7fc6629d0952aed586f1603b17dd55f36a390   (clean)
+$ sha256sum '/home/user/_work/apk/Mimo_9.35 (1).apk'
+48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a  .../Mimo_9.35 (1).apk
+$ stat -c %s '/home/user/_work/apk/Mimo_9.35 (1).apk'
+142353499
+EV-0001 (ANALYSIS/EVIDENCE_INDEX.json) -> same 64-character hash. MATCH.
+
+--------------------------------------------------------------------------
+2. OPTION 1 — existing authorized private download endpoint
+--------------------------------------------------------------------------
+$ gh release list --limit 100
+APK آزمایشی (آخرین بیلد سبز)   Pre-release   apk-latest   2026-10-25T15:07:25Z
+(8 stock-*-{debug,release}-11e617d4...apk assets, 13–110 MB, different hashes)
+
+$ git branch -a
+arena/aebb90b7-game, main, origin/arena/{dd2b6beb,e3952d18,eb3b2453,ecb8af07,f84369df}-game, origin/main
+
+$ git log --all --oneline -S'APK_URL' -- .
+9a1b719a, 6c02ec40, d969adea   (only MISSION 03 workflow commits)
+
+$ git grep -iInE 'drive\.usercontent|drive\.google\.com/(uc|file)|signed.?url|sas.?token|presigned|apk[_-]?url'
+Only the MISSION 03 workflow's own `apk_url` input plus MISSION 03 reports.
+NO pre-existing private download endpoint found.
+
+--------------------------------------------------------------------------
+3. OPTION 2/3 — GitHub Actions secrets / credentials
+--------------------------------------------------------------------------
+$ gh auth status
+  Logged in to github.com as danmillman008-hub (GH_TOKEN)   [Token: <REDACTED>]
+  Git operations for github.com configured to use https protocol.
+Credential-ish env var NAMES present: GH_TOKEN, GITHUB_TOKEN, PATH
+$ [ "$GH_TOKEN" = "$GITHUB_TOKEN" ] && echo SAME || echo DIFFERENT
+SAME
+~/.config/gh/hosts.yml    -> absent
+~/.git-credentials        -> absent
+.git/config               -> 0 credential-like entries
+
+$ gh secret list
+failed to get secrets: HTTP 403: Resource not accessible by integration
+  (https://api.github.com/repos/danmillman008-hub/game/actions/secrets?per_page=100)
+$ gh api repos/danmillman008-hub/game/actions/secrets --jq '.total_count'
+{"message":"Resource not accessible by integration", ... "status":"403"}
+$ gh api repos/danmillman008-hub/game/actions/variables --jq '.total_count'
+{"message":"Resource not accessible by integration", ... "status":"403"}
+$ GH_TOKEN="$GITHUB_TOKEN" gh secret list
+failed to get secrets: HTTP 403: Resource not accessible by integration
+$ gh secret set M04_WRITE_PROBE --body 'probe-only-no-credential'
+failed to fetch public key: HTTP 403: Resource not accessible by integration
+  (https://api.github.com/repos/danmillman008-hub/game/actions/secrets/public-key)
+=> Secrets can be NEITHER enumerated NOR created from this integration.
+
+Runner-side presence-only probe (workflow run 41991896800):
+  37 candidate names -> PRESENT=0, ABSENT=37
+  (22 URL-like secrets, 13 credential-like secrets, 2 vars)
+  Full output: SECRET_PRESENCE_PROBE.txt
+  Limitation: GitHub offers no secret-name enumeration; other names UNKNOWN.
+
+--------------------------------------------------------------------------
+4. OPTION 4 — other explicitly authorized private artifact sources
+--------------------------------------------------------------------------
+$ gh api 'repos/danmillman008-hub/game/actions/artifacts?per_page=100&page=1..3'
+total_count=268 ; 12 distinct names:
+  app-debug-apk   (71, biggest 138685821 B)
+  app-smoke       (18, biggest   2576941 B)
+  baseline        (14, biggest  31715697 B)
+  english-vo      ( 1,            101922 B)
+  gms-free        ( 7,            194222 B)
+  lean            (10, biggest 171320770 B)
+  mivi-clips      (56, biggest 474579172 B)
+  patched         ( 1,          68193950 B)
+  release         (12, biggest  97388738 B)
+  tests           (12,              5871 B)
+  verify-report   (59,              1954 B)
+  voice-probe     ( 7,            166513 B)
+Artifacts with size == 142353499 (original APK size): NONE
+$ gh api repos/.../actions/runs/41239394025 --jq '.name + " | " + .head_branch'
+verify | arena/e3952d18-game
+$ gh api repos/.../actions/runs/41238745682 --jq '.name + " | " + .head_branch'
+mivi | arena/e3952d18-game
+=> artifacts belong to unrelated workflows/branches, not Mimo 9.35.
+
+$ gh api -i repos/.../actions/artifacts/13057320090/zip
+Get "https://productionresultssa4.blob.core.windows.net/...zip?...": EOF
+=> artifact/log blob hosts are outside the sandbox outbound allowlist
+   (only a GitHub Actions runner could reach them).
+
+Google Drive connector (authorized for this conversation):
+$ search_files q="mimeType='application/vnd.android.package-archive' and trashed = false"
+6 files, NONE is Mimo 9.35:
+  Hadaf Plus_2.0.2.apk, همدرس_7.4.4.apk, Mivi AI_2.37.407.apk,
+  Kik-CryKik2-MOD..., Kik-PiKik2-MOD..., Kik-Matrix3-MOD...
+$ search_files q="(name contains 'Mimo' or name contains 'mimo' or name contains '9.35') and trashed = false"
+21 files; NO full APK. Only the 3 split archive parts:
+  Mimo_9.35 (1).z01  52428800 B  sha256=1e3a41159ebe531121f0b04f146791fe900605c7ac15cc9cf54b1501d3b93b18
+  Mimo_9.35 (1).z02  52428800 B  sha256=1ac22ab2c916f302d8ba0fd42317f1cb79ea53eb6045061d0a174993a634f539
+  Mimo_9.35 (1).zip  31069368 B  sha256=91c670864fc66d852b371ed83c1f6d260ab4075c078030f74b29620807ffa2b7
+  total 135926968 B  (a spanned ZIP, not the 142353499-byte APK)
+$ list_drives
+Found 0 shared drives
+$ list_permissions file_id=1PrS5Xc71PNOVRNJl9U_iIuirCZnT73-d
+Found 1 permissions: type=user, role=owner, no public link
+  (owner e-mail REDACTED; MISSION 03 found the same on the .z01 part)
+=> Drive parts are private; making them public is explicitly forbidden by §2.
+
+--------------------------------------------------------------------------
+5. CONCLUSION
+--------------------------------------------------------------------------
+No authorized, runner-reachable source for the ORIGINAL Mimo 9.35 APK exists.
+Per MISSION 04 section 13, APK retrieval was STOPPED and environment setup
+was NOT repeated. No APK was invented, downloaded, installed or launched.
+Result: BLOCKED. See ../APK_SOURCE_AND_AUTHORIZATION.fa.md.
