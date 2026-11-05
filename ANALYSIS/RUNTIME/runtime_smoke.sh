@@ -12,6 +12,11 @@
 # purchases/payments, no TLS/pinning bypass. Stops at the login boundary.
 
 set +e
+# MISSION 09: FINAL reconstruction run. Must be checked BEFORE M08 so a
+# trigger carrying both markers dispatches to M09 (exec exits immediately).
+if grep -q "M09-UNIFIED-RUN" ANALYSIS/RUNTIME/_DISPATCH_TRIGGER 2>/dev/null; then
+  exec bash ANALYSIS/RUNTIME/MISSION_09/m09_runtime.sh
+fi
 # MISSION 08: unified core-architecture investigation. ONE lightweight
 # orchestrator reusing the proven M07 Frida/bridge/DB/UI tools.
 if grep -q "M08-UNIFIED-RUN" ANALYSIS/RUNTIME/_DISPATCH_TRIGGER 2>/dev/null; then
