@@ -1,5 +1,5 @@
 MISSION 05 - OFFLINE PHASE (client-side dependency probe)
-timestamp_utc=2026-11-05T09:55:26Z package=com.getmimo
+timestamp_utc=2026-11-05T10:04:45Z package=com.getmimo
 == ping BEFORE isolation ==
 PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
 
@@ -7,8 +7,8 @@ PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
 1 packets transmitted, 0 received, 100% packet loss, time 0ms
 
 == active network BEFORE ==
-Active default network: 102
-  NetworkAgentInfo{network{100}  handle{432902426637}  ni{MOBILE[LTE] CONNECTED extra: epc.tmobile.com} created=2026-11-05T09:50:50.202Z Score(Policies : TRANSPORT_PRIMARY&EVER_EVALUATED&EVER_VALIDATE
+Active default network: 100
+  NetworkAgentInfo{network{100}  handle{432902426637}  ni{WIFI CONNECTED extra: } created=2026-11-05T10:00:43.535Z Score(Policies : TRANSPORT_PRIMARY&EVER_EVALUATED&IS_UNMETERED&EVER_VALIDATED&IS_VALI
 == adb shell svc wifi disable ==
 wifi_disable_exit=0
 == adb shell svc data disable ==
@@ -17,9 +17,9 @@ data_disable_exit=0
 connect: Network is unreachable
 == active network AFTER ==
 Active default network: none
-online_logcat_lines=63952
+online_logcat_lines=73839
 Starting: Intent { cmp=com.getmimo/.ui.SplashActivity_default }
 == restore ==
-restore_done=2026-11-05T09:56:44Z
+restore_done=2026-11-05T10:06:07Z
 == ping AFTER restore ==
 connect: Network is unreachable
