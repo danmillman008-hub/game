@@ -1,64 +1,142 @@
 MISSION 04 - CRASH AND ERROR ANALYSIS
-timestamp_utc=2026-11-05T08:44:35Z
-package=com.getmimo pid=4160
+timestamp_utc=2026-11-05T08:51:19Z
+package=com.getmimo pid=4111
 == AndroidRuntime / FATAL / linker / native errors ==
-11-05 08:44:24.612  1540  3836 I SemanticLocation: [Scheduler] Housekeeping Task com.google.android.gms.semanticlocationhistory.settings.OdlhTombstonesCleanupJob.OdlhTombstonesCleanupJob is scheduled to run at cadence ciuz@66650a1 [CONTEXT service_id=173 ]
-11-05 08:44:26.257  1540  3834 I gle.android.gms: Waiting for a blocking GC ClassLinker
-11-05 08:44:26.388  1540  3834 I gle.android.gms: WaitForGcToComplete blocked ClassLinker on Background for 131.488ms
-11-05 08:44:28.694  1540  3834 I SemanticLocation: [Scheduler] Housekeeping Task com.google.android.gms.semanticlocationhistory.settings.OdlhTombstonesCleanupJob.OdlhTombstonesCleanupJob is scheduled to run at cadence ciuz@66650a1 [CONTEXT service_id=173 ]
-11-05 08:44:29.251   682  4635 I ConfigUpdateInstallReceiver: Couldn't find current metadata, assuming first update
-11-05 08:44:29.578  3910  4115 D nativeloader: Load libcurve25519.so using class loader ns product-clns-10 (caller=/product/priv-app/PrebuiltBugle/PrebuiltBugle.apk!classes6.dex): dlopen failed: library "libcurve25519.so" not found
-11-05 08:44:30.840   682  4683 I ConfigUpdateInstallReceiver: Couldn't find current metadata, assuming first update
-11-05 08:44:31.429  4693  4693 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-11-05 08:44:31.443  4693  4693 I AndroidRuntime: Using default boot image
-11-05 08:44:31.444  4693  4693 I AndroidRuntime: Leaving lock profiling enabled
-11-05 08:44:31.677  4693  4693 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-11-05 08:44:32.864  4693  4693 D AndroidRuntime: Shutting down VM
+11-05 08:50:44.289   683  4398 I ConfigUpdateInstallReceiver: Couldn't find current metadata, assuming first update
+11-05 08:50:48.431  1544  3708 I SemanticLocation: [Scheduler] Housekeeping Task com.google.android.gms.semanticlocationhistory.settings.OdlhTombstonesCleanupJob.OdlhTombstonesCleanupJob is scheduled to run at cadence ciuz@252fede [CONTEXT service_id=173 ]
+11-05 08:50:51.868   683  4527 I ConfigUpdateInstallReceiver: Couldn't find current metadata, assuming first update
+11-05 08:50:54.927  1544  4354 I gle.android.gms: Waiting for a blocking GC ClassLinker
+11-05 08:50:55.322  1544  4354 I gle.android.gms: WaitForGcToComplete blocked ClassLinker on Background for 395.280ms
+11-05 08:50:57.943  3807  4017 D nativeloader: Load libcurve25519.so using class loader ns product-clns-10 (caller=/product/priv-app/PrebuiltBugle/PrebuiltBugle.apk!classes6.dex): dlopen failed: library "libcurve25519.so" not found
+11-05 08:51:00.386  4624  4624 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-05 08:51:00.487  4624  4624 I AndroidRuntime: Using default boot image
+11-05 08:51:00.487  4624  4624 I AndroidRuntime: Leaving lock profiling enabled
+11-05 08:51:00.860  4624  4624 D AndroidRuntime: Calling main entry com.android.commands.monkey.Monkey
+11-05 08:51:01.431  4624  4624 I AndroidRuntime: VM exiting with result code 0.
+11-05 08:51:07.918  1102  1102 D TileServices: Couldn't find tile for ComponentInfo{com.google.android.gms/com.google.android.gms.motionsicknessassist.settings.MotionSicknessAssistTileService}(0)
+11-05 08:51:08.895  1544  3476 I SemanticLocation: [Scheduler] Housekeeping Task com.google.android.gms.semanticlocationhistory.settings.OdlhTombstonesCleanupJob.OdlhTombstonesCleanupJob is scheduled to run at cadence ciuz@252fede [CONTEXT service_id=173 ]
+11-05 08:51:14.064   683  4794 I ConfigUpdateInstallReceiver: Couldn't find current metadata, assuming first update
+11-05 08:51:15.768  4851  4851 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-05 08:51:15.773  4851  4851 I AndroidRuntime: Using default boot image
+11-05 08:51:15.773  4851  4851 I AndroidRuntime: Leaving lock profiling enabled
+11-05 08:51:15.980  4851  4851 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+11-05 08:51:17.192  4851  4851 D AndroidRuntime: Shutting down VM
+11-05 08:51:18.195   683  4937 I ConfigUpdateInstallReceiver: Couldn't find current metadata, assuming first update
 == Mimo-tagged lines ==
-11-05 08:44:13.601   682  1211 I ActivityTaskManager: START u0 {flg=0x10000000 xflg=0x5 cmp=com.getmimo/.ui.SplashActivity_default} with LAUNCH_MULTIPLE from uid 2000 (BAL_ALLOW_PERMISSION) result code=0
-11-05 08:44:13.647   682  2309 I AppsFilter: interaction: PackageSetting{dd1c7d4 com.android.microdroid.empty_payload/10214} -> PackageSetting{1d9951b com.getmimo/10216} BLOCKED
-11-05 08:44:13.656  4160  4160 I com.getmimo: Using CollectorTypeCMC GC.
-11-05 08:44:13.657  4160  4160 W com.getmimo: Unexpected CPU variant for x86: x86_64.
-11-05 08:44:13.657  4160  4160 W com.getmimo: Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, goldmont-without-sha-xsaves, tremont, kabylake, alderlake, default
-11-05 08:44:13.721   682   717 I ActivityManager: Start proc 4160:com.getmimo/u0a216 for next-top-activity {com.getmimo/com.getmimo.ui.SplashActivity_default}
-11-05 08:44:14.262   682  1049 I AppWidgetServiceImpl: Updating package stopped masked state for uid 10216 package com.getmimo isStopped false
-11-05 08:44:14.577  4160  4160 D nativeloader: Configuring clns-9 for other apk /data/app/~~8WUhNdGv8VQL3UUIgUa3zg==/com.getmimo-eRnBFksi6REx8WmOQeeKtw==/base.apk. target_sdk_version=36, uses_libraries=, library_path=/data/app/~~8WUhNdGv8VQL3UUIgUa3zg==/com.getmimo-eRnBFksi6REx8WmOQeeKtw==/lib/arm64:/data/app/~~8WUhNdGv8VQL3UUIgUa3zg==/com.getmimo-eRnBFksi6REx8WmOQeeKtw==/base.apk!/lib/arm64-v8a, permitted_path=/data:/mnt/expand:/data/user/0/com.getmimo
-11-05 08:44:14.732  4160  4160 I com.getmimo: AssetManager2(0x76aec9d1ba78) locale list changing from [] to [en-US]
-11-05 08:44:14.776  4160  4160 V GraphicsEnvironment: com.getmimo is not listed in per-application setting
-11-05 08:44:14.776  4160  4160 V GraphicsEnvironment: com.getmimo is not listed in ANGLE allowlist or settings, returning default
-11-05 08:44:15.183   682   786 W UsageStatsService: Unexpected activity event reported! (com.getmimo/com.getmimo.ui.SplashActivity event : 23 instanceId : 213617451)
-11-05 08:44:15.570  1355  1382 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
-11-05 08:44:15.950  4160  4160 D nativeloader: Load /data/app/~~8WUhNdGv8VQL3UUIgUa3zg==/com.getmimo-eRnBFksi6REx8WmOQeeKtw==/lib/arm64/libyrf.so using class loader ns clns-9 (caller=/data/app/~~8WUhNdGv8VQL3UUIgUa3zg==/com.getmimo-eRnBFksi6REx8WmOQeeKtw==/base.apk!classes12.dex): ok
-11-05 08:44:16.163  4160  4160 I FirebaseCrashlytics: Initializing Firebase Crashlytics 20.1.1 for com.getmimo
-11-05 08:44:16.271  4160  4240 W GooglePlayServicesUtil: Google Play services out of date for com.getmimo.  Requires 261200000 but found 252635038
-11-05 08:44:16.511  4160  4160 D nativeloader: Load /data/app/~~8WUhNdGv8VQL3UUIgUa3zg==/com.getmimo-eRnBFksi6REx8WmOQeeKtw==/lib/arm64/libdatastore_shared_counter.so using class loader ns clns-9 (caller=/data/app/~~8WUhNdGv8VQL3UUIgUa3zg==/com.getmimo-eRnBFksi6REx8WmOQeeKtw==/base.apk!classes2.dex): ok
-11-05 08:44:16.579  4160  4254 I Phlogger: Unable to retrieve flag snapshot for com.google.android.gms.measurement#com.getmimo, using defaults.
-11-05 08:44:16.652  4160  4247 I FA      :   adb shell setprop debug.firebase.analytics.app com.getmimo
-11-05 08:44:17.098  4160  4160 I FirebaseApp: Device unlocked: initializing all Firebase APIs for app mimo-auth-production
-11-05 08:44:17.210  4160  4240 W GooglePlayServicesUtil: Google Play services out of date for com.getmimo.  Requires 261200000 but found 252635038
-11-05 08:44:17.627  4160  4160 D nativeloader: Load /data/app/~~8WUhNdGv8VQL3UUIgUa3zg==/com.getmimo-eRnBFksi6REx8WmOQeeKtw==/lib/arm64/librive-android.so using class loader ns clns-9 (caller=/data/app/~~8WUhNdGv8VQL3UUIgUa3zg==/com.getmimo-eRnBFksi6REx8WmOQeeKtw==/base.apk): ok
-11-05 08:44:17.878  1355  1382 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
-11-05 08:44:18.133  4160  4160 D nativeloader: Load /data/app/~~8WUhNdGv8VQL3UUIgUa3zg==/com.getmimo-eRnBFksi6REx8WmOQeeKtw==/lib/arm64/libsigner.so using class loader ns clns-9 (caller=/data/app/~~8WUhNdGv8VQL3UUIgUa3zg==/com.getmimo-eRnBFksi6REx8WmOQeeKtw==/base.apk): ok
-11-05 08:44:18.466  4160  4263 W com.getmimo: Long monitor contention with owner pool-24-thread-1 (4266) at com.google.android.gms.ads.identifier.AdvertisingIdClient$Info com.google.android.gms.ads.identifier.AdvertisingIdClient.e()(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:38) waiters=0 in com.google.android.gms.ads.identifier.AdvertisingIdClient$Info com.google.android.gms.ads.identifier.AdvertisingIdClient.e() for 1.281s
-11-05 08:44:18.467  4160  4264 W com.getmimo: Long monitor contention with owner pool-24-thread-1 (4266) at wc.j mr.e.j(com.facebook.appevents.AccessTokenAppIdPair)(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:48) waiters=0 in java.util.Set mr.e.n() for 1.803s
-11-05 08:44:18.469  4160  4265 W com.getmimo: Long monitor contention with owner pool-24-thread-1 (4266) at com.google.android.gms.ads.identifier.AdvertisingIdClient$Info com.google.android.gms.ads.identifier.AdvertisingIdClient.e()(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:38) waiters=1 in com.google.android.gms.ads.identifier.AdvertisingIdClient$Info com.google.android.gms.ads.identifier.AdvertisingIdClient.e() for 1.171s
-11-05 08:44:19.923  1355  1382 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
-11-05 08:44:20.505  1355  1382 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
-11-05 08:44:20.508  1355  1382 D SessionCommitReceiver: Removing unneeded PromiseIcon for package: com.getmimo, install reason: 0, alreadyAddedPromiseIcon: false
-11-05 08:44:21.128  1355  1382 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
-11-05 08:44:21.308  1355  1382 D LauncherAppsCallbackImpl: onPackageAdded triggered for packageName=com.getmimo, user=UserHandle{0}
-11-05 08:44:21.308  1355  1382 D PackageUpdatedTask: Package updated: mOp=ADD packages=[com.getmimo], user=UserHandle{0}
-11-05 08:44:21.774  1355  1382 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
-11-05 08:44:22.003  1355  1382 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
-11-05 08:44:22.088  1355  1382 D PackageUpdatedTask: Package updated: mOp=UPDATE packages=[com.getmimo], user=UserHandle{0}
-11-05 08:44:22.618  1355  1382 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
-11-05 08:44:23.403  4160  4520 D ProfileInstaller: Installing profile for com.getmimo
-11-05 08:44:23.951  4160  4183 W com.getmimo: Suspending all threads took: 357.271ms
-11-05 08:44:24.347  1355  1382 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
-11-05 08:44:24.477  1418  2387 I PhenotypeResourceReader: unable to find any Phenotype resource metadata for com.getmimo
-11-05 08:44:24.850  1355  1382 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
-11-05 08:44:26.425  1355  1382 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
-11-05 08:44:26.807  1355  1382 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
-11-05 08:44:27.228  1355  1382 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
-11-05 08:44:29.320   682   795 D ActivityManager: freezing 4160 com.getmimo
+11-05 08:50:38.680  1275  1275 D SatelliteController: packageStateChanged: package:com.getmimo DefaultSmsPackageName:com.google.android.apps.messaging
+11-05 08:50:39.295   683  1727 I ActivityTaskManager: START u0 {flg=0x10000000 xflg=0x5 cmp=com.getmimo/.ui.SplashActivity_default} with LAUNCH_MULTIPLE from uid 2000 (BAL_ALLOW_PERMISSION) result code=0
+11-05 08:50:39.350   683  1727 I AppsFilter: interaction: PackageSetting{4e85744 com.android.microdroid.empty_payload/10193} -> PackageSetting{7e03280 com.getmimo/10216} BLOCKED
+11-05 08:50:39.355   683   717 I ActivityManager: Start proc 4111:com.getmimo/u0a216 for next-top-activity {com.getmimo/com.getmimo.ui.SplashActivity_default}
+11-05 08:50:39.436   683  1047 I AppWidgetServiceImpl: Updating package stopped masked state for uid 10216 package com.getmimo isStopped false
+11-05 08:50:39.449  4111  4111 I com.getmimo: Using CollectorTypeCMC GC.
+11-05 08:50:39.455  4111  4111 W com.getmimo: Unexpected CPU variant for x86: x86_64.
+11-05 08:50:39.455  4111  4111 W com.getmimo: Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, goldmont-without-sha-xsaves, tremont, kabylake, alderlake, default
+11-05 08:50:40.067  4111  4111 D nativeloader: Configuring clns-9 for other apk /data/app/~~5ruPWJ4vTJhvVGQizu24WQ==/com.getmimo-b0ELgafNUQGVtfElp51S3A==/base.apk. target_sdk_version=36, uses_libraries=, library_path=/data/app/~~5ruPWJ4vTJhvVGQizu24WQ==/com.getmimo-b0ELgafNUQGVtfElp51S3A==/lib/arm64:/data/app/~~5ruPWJ4vTJhvVGQizu24WQ==/com.getmimo-b0ELgafNUQGVtfElp51S3A==/base.apk!/lib/arm64-v8a, permitted_path=/data:/mnt/expand:/data/user/0/com.getmimo
+11-05 08:50:40.167  4111  4111 I com.getmimo: AssetManager2(0x7f84af25c2b8) locale list changing from [] to [en-US]
+11-05 08:50:40.407  4111  4111 V GraphicsEnvironment: com.getmimo is not listed in per-application setting
+11-05 08:50:40.407  4111  4111 V GraphicsEnvironment: com.getmimo is not listed in ANGLE allowlist or settings, returning default
+11-05 08:50:40.429  1410  1435 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
+11-05 08:50:40.471   683   707 V WindowManager:         {WCT{RemoteToken{6b60a43 Task{bf85cc1 #8 type=standard A=10216:com.getmimo}}} m=OPEN f=NONE leash=Surface(name=Task=8)/@0x2fb0766 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 taskParent=-1},
+11-05 08:50:41.124  4111  4111 D nativeloader: Load /data/app/~~5ruPWJ4vTJhvVGQizu24WQ==/com.getmimo-b0ELgafNUQGVtfElp51S3A==/lib/arm64/libyrf.so using class loader ns clns-9 (caller=/data/app/~~5ruPWJ4vTJhvVGQizu24WQ==/com.getmimo-b0ELgafNUQGVtfElp51S3A==/base.apk!classes12.dex): ok
+11-05 08:50:41.376  4111  4146 W GooglePlayServicesUtil: Google Play services out of date for com.getmimo.  Requires 261200000 but found 252635038
+11-05 08:50:41.483  4111  4111 D nativeloader: Load /data/app/~~5ruPWJ4vTJhvVGQizu24WQ==/com.getmimo-b0ELgafNUQGVtfElp51S3A==/lib/arm64/libdatastore_shared_counter.so using class loader ns clns-9 (caller=/data/app/~~5ruPWJ4vTJhvVGQizu24WQ==/com.getmimo-b0ELgafNUQGVtfElp51S3A==/base.apk!classes2.dex): ok
+11-05 08:50:41.491  4111  4111 I FirebaseCrashlytics: Initializing Firebase Crashlytics 20.1.1 for com.getmimo
+11-05 08:50:41.628  4111  4111 I FirebaseApp: Device unlocked: initializing all Firebase APIs for app mimo-auth-production
+11-05 08:50:41.796  4111  4111 D nativeloader: Load /data/app/~~5ruPWJ4vTJhvVGQizu24WQ==/com.getmimo-b0ELgafNUQGVtfElp51S3A==/lib/arm64/librive-android.so using class loader ns clns-9 (caller=/data/app/~~5ruPWJ4vTJhvVGQizu24WQ==/com.getmimo-b0ELgafNUQGVtfElp51S3A==/base.apk): ok
+11-05 08:50:41.800  4111  4146 W GooglePlayServicesUtil: Google Play services out of date for com.getmimo.  Requires 261200000 but found 252635038
+11-05 08:50:41.841  1410  1435 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
+11-05 08:50:41.884  4111  4210 I Phlogger: Unable to retrieve flag snapshot for com.google.android.gms.measurement#com.getmimo, using defaults.
+11-05 08:50:41.915  4111  4111 D nativeloader: Load /data/app/~~5ruPWJ4vTJhvVGQizu24WQ==/com.getmimo-b0ELgafNUQGVtfElp51S3A==/lib/arm64/libsigner.so using class loader ns clns-9 (caller=/data/app/~~5ruPWJ4vTJhvVGQizu24WQ==/com.getmimo-b0ELgafNUQGVtfElp51S3A==/base.apk): ok
+11-05 08:50:42.045  4111  4196 I FA      :   adb shell setprop debug.firebase.analytics.app com.getmimo
+11-05 08:50:42.099  4111  4111 I com.getmimo: AssetManager2(0x7f84af265598) locale list changing from [] to [en-US]
+11-05 08:50:42.102  4111  4111 I com.getmimo: AssetManager2(0x7f84af265bd8) locale list changing from [] to [en]
+11-05 08:50:42.105  4111  4111 I com.getmimo: AssetManager2(0x7f84af261a38) locale list changing from [] to [en-US]
+11-05 08:50:42.195  4111  4189 W com.getmimo: Long monitor contention with owner pool-24-thread-1 (4192) at void com.google.android.gms.ads.identifier.AdvertisingIdClient.a()(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:92) waiters=0 in com.google.android.gms.ads.identifier.AdvertisingIdClient$Info com.google.android.gms.ads.identifier.AdvertisingIdClient.e() for 421ms
+11-05 08:50:42.223  4111  4191 W com.getmimo: Long monitor contention with owner pool-24-thread-1 (4192) at void com.google.android.gms.ads.identifier.AdvertisingIdClient.a()(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:92) waiters=1 in com.google.android.gms.ads.identifier.AdvertisingIdClient$Info com.google.android.gms.ads.identifier.AdvertisingIdClient.e() for 418ms
+11-05 08:50:42.355   683  1212 I ActivityTaskManager: START u0 {flg=0x14008000 xflg=0x4 cmp=com.getmimo/.ui.onboarding.intro.IntroSlidesActivity} with LAUNCH_MULTIPLE from uid 10216 (sr=267552137) (BAL_ALLOW_VISIBLE_WINDOW) result code=0
+11-05 08:50:42.422  4111  4111 D FirebaseSessions: App foregrounded on com.getmimo
+11-05 08:50:42.422  4111  4111 D FirebaseSessions: No process data for com.getmimo
+11-05 08:50:42.456  4111  4186 I FIAM.Headless: Recoverable exception while reading cache: /data/user/0/com.getmimo/files/fiam_impressions_store_file: open failed: ENOENT (No such file or directory)
+11-05 08:50:42.515  4111  4111 D FirebaseSessions: App backgrounded on com.getmimo
+11-05 08:50:42.537  1102  1198 V WindowManagerShell:         {m=OPEN f=STARTING_WINDOW_TRANSFER|FILLS_TASK|IS_BEHIND_STARTING_WINDOW leash=Surface(name=ActivityRecord{29136488 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity)/@0xfb0ee35 sb=Rect(0, 0 - 0, 0) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=-1->0 r=-1->0:-1 component=com.getmimo/.ui.onboarding.intro.IntroSlidesActivity opt={t=CUSTOM enterResId=17432576 changeResId=0 exitResId=17432577 mUserId=0}},
+11-05 08:50:42.537  1102  1198 V WindowManagerShell:         {m=CLOSE f=FILLS_TASK|IS_BEHIND_STARTING_WINDOW leash=Surface(name=ActivityRecord{267552137 u0 com.getmimo/.ui.SplashActivity_default)/@0x8e7c2ca sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 component=com.getmimo/.ui.SplashActivity opt={t=CUSTOM enterResId=17432576 changeResId=0 exitResId=17432577 mUserId=0}}
+11-05 08:50:42.572   683   707 V WindowManager:         {m=OPEN f=STARTING_WINDOW_TRANSFER|FILLS_TASK|IS_BEHIND_STARTING_WINDOW leash=Surface(name=ActivityRecord{29136488 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity)/@0xcd07e33 sb=Rect(0, 0 - 0, 0) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=-1->0 r=-1->0:-1 component=com.getmimo/.ui.onboarding.intro.IntroSlidesActivity opt={t=CUSTOM enterResId=17432576 changeResId=0 exitResId=17432577 mUserId=0}},
+11-05 08:50:42.572   683   707 V WindowManager:         {m=CLOSE f=FILLS_TASK|IS_BEHIND_STARTING_WINDOW leash=Surface(name=ActivityRecord{267552137 u0 com.getmimo/.ui.SplashActivity_default)/@0xb6d41a2 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 component=com.getmimo/.ui.SplashActivity opt={t=CUSTOM enterResId=17432576 changeResId=0 exitResId=17432577 mUserId=0}}
+11-05 08:50:42.739   683  2350 D CoreBackPreview: Window{6b6ebcc u0 com.getmimo/com.getmimo.ui.SplashActivity_default}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@a5f9f5f, mPriority=-1, mIsAnimationCallback=false, mOverrideBehavior=0}
+11-05 08:50:42.894  4111  4162 W com.getmimo: Long monitor contention with owner Firebase Background Thread #0 (4154) at java.lang.Object uv.b.call()(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:54) waiters=1 in java.lang.Object uv.b.call() for 416ms
+11-05 08:50:42.926  4111  4111 D FirebaseSessions: App foregrounded on com.getmimo
+11-05 08:50:42.926  4111  4111 D FirebaseSessions: No process data for com.getmimo
+11-05 08:50:42.926  4111  4162 D FirebaseSessions: No process data for com.getmimo
+11-05 08:50:42.978  4111  4319 I com.getmimo: AssetManager2(0x7f84af267b18) locale list changing from [] to [en-US]
+11-05 08:50:43.015  4111  4148 D FirebaseSessions: Fetched settings: {"settings_version":3,"cache_duration":180845,"features":{"collect_logged_exceptions":true,"collect_reports":true,"collect_analytics":false,"prompt_enabled":false,"push_enabled":false,"firebase_crashlytics_enabled":false,"collect_anrs":true,"collect_metric_kit":false,"collect_build_ids":true},"app":{"status":"activated","update_required":false,"report_upload_variant":2,"native_report_upload_variant":2},"fabric":{"org_id":"5e70ba34715ca56a2400000d","bundle_id":"com.getmimo"},"on_demand_upload_rate_per_minute":10,"on_demand_backoff_base":1.2,"on_demand_backoff_step_duration_seconds":60,"app_quality":{"sessions_enabled":true,"sampling_rate":1,"session_timeout_seconds":1800},"on_demand_thread_recording_suspension_enabled":true}
+11-05 08:50:43.091   683  1192 D CoreBackPreview: Window{8a1f682 u0 com.getmimo/com.getmimo.ui.onboarding.intro.IntroSlidesActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@3f54884, mPriority=-1, mIsAnimationCallback=false, mOverrideBehavior=0}
+11-05 08:50:43.183  4111  4339 I fkev    : Unable to retrieve flag snapshot for com.google.android.gms.providerinstaller#com.getmimo, using defaults.
+11-05 08:50:43.724  4111  4319 I FIAM.Headless: Recoverable exception while reading cache: /data/user/0/com.getmimo/files/fiam_impressions_store_file: open failed: ENOENT (No such file or directory)
+11-05 08:50:43.782  1410  1435 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
+11-05 08:50:44.543   683   707 W system_server: Failed to determine oat file name for dex location /data/app/~~5ruPWJ4vTJhvVGQizu24WQ==/com.getmimo-b0ELgafNUQGVtfElp51S3A==/base.apk: Dalvik cache directory does not exist
+11-05 08:50:44.546   683   707 I ActivityTaskManager: Displayed com.getmimo/.ui.onboarding.intro.IntroSlidesActivity for user 0: +5s461ms
+11-05 08:50:44.652   683  1389 D CoreBackPreview: Window{6b6ebcc u0 com.getmimo/com.getmimo.ui.SplashActivity_default}: Setting back callback null
+11-05 08:50:44.804  4111  4111 W Thread-17: type=1400 audit(0.0:26): avc:  denied  { getattr } for  path="/dev/pmsg0" dev="tmpfs" ino=828 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:pmsg_device:s0 tclass=chr_file permissive=0 app=com.getmimo
+11-05 08:50:44.824  4111  4111 W Thread-17: type=1400 audit(0.0:27): avc:  denied  { getattr } for  path="/dev/pmsg0" dev="tmpfs" ino=828 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:pmsg_device:s0 tclass=chr_file permissive=0 app=com.getmimo
+11-05 08:50:44.824  4111  4111 W Thread-17: type=1400 audit(0.0:28): avc:  denied  { getattr } for  path="/dev/pmsg0" dev="tmpfs" ino=828 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:pmsg_device:s0 tclass=chr_file permissive=0 app=com.getmimo
+11-05 08:50:44.949  4111  4337 W FlagRegistrar: Failed to register com.google.android.gms.providerinstaller#com.getmimo
+11-05 08:50:45.202  4111  4162 W com.getmimo: Long monitor contention with owner Firebase Background Thread #2 (4178) at java.lang.Object uv.b.call()(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:54) waiters=1 in java.lang.Object uv.b.call() for 516ms
+11-05 08:50:45.220  4111  4154 W com.getmimo: Long monitor contention with owner Firebase Background Thread #2 (4178) at java.lang.Object uv.b.call()(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:54) waiters=2 in java.lang.Object uv.b.call() for 534ms
+11-05 08:50:45.580  4111  4111 W Adjust-pool-57-: type=1400 audit(0.0:29): avc:  denied  { read } for  name="tcp" dev="proc" ino=4026532053 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:proc_net_tcp_udp:s0 tclass=file permissive=0 app=com.getmimo
+11-05 08:50:46.484  4111  4111 W Adjust-pool-57-: type=1400 audit(0.0:30): avc:  denied  { read } for  name="drivers" dev="proc" ino=4026531854 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:proc_tty_drivers:s0 tclass=file permissive=0 app=com.getmimo
+11-05 08:50:46.516  4111  4111 W Adjust-pool-57-: type=1400 audit(0.0:31): avc:  denied  { read } for  name="version" dev="proc" ino=4026532032 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:proc_version:s0 tclass=file permissive=0 app=com.getmimo
+11-05 08:50:46.632  4111  4111 W Adjust-pool-57-: type=1400 audit(0.0:32): avc:  denied  { read } for  name="u:object_r:serialno_prop:s0" dev="tmpfs" ino=320 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:serialno_prop:s0 tclass=file permissive=0 app=com.getmimo
+11-05 08:50:46.644  4111  4111 W Adjust-pool-57-: type=1400 audit(0.0:33): avc:  denied  { read } for  name="u:object_r:userdebug_or_eng_prop:s0" dev="tmpfs" ino=375 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:userdebug_or_eng_prop:s0 tclass=file permissive=0 app=com.getmimo
+11-05 08:50:46.644  4111  4111 W Adjust-pool-57-: type=1400 audit(0.0:34): avc:  denied  { read } for  name="u:object_r:serialno_prop:s0" dev="tmpfs" ino=320 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:serialno_prop:s0 tclass=file permissive=0 app=com.getmimo
+11-05 08:50:46.656  4111  4111 W Adjust-pool-57-: type=1400 audit(0.0:35): avc:  denied  { read } for  name="product_name" dev="sysfs" ino=1162 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:sysfs:s0 tclass=file permissive=0 app=com.getmimo
+11-05 08:50:46.755   683  1203 D CoreBackPreview: Window{b3ede17 u0 com.getmimo/com.getmimo.ui.onboarding.intro.IntroSlidesActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@6acc0a3, mPriority=-1, mIsAnimationCallback=false, mOverrideBehavior=0}
+11-05 08:50:46.656  4111  4111 W Adjust-pool-57-: type=1400 audit(0.0:36): avc:  denied  { read } for  name="sys_vendor" dev="sysfs" ino=1161 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:sysfs:s0 tclass=file permissive=0 app=com.getmimo
+11-05 08:50:48.413  1410  1435 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
+11-05 08:50:50.442  4111  4515 D ProfileInstaller: Installing profile for com.getmimo
+11-05 08:50:52.046  4111  4125 I com.getmimo: Background concurrent mark compact GC freed 20MB AllocSpace bytes, 167(10MB) LOS objects, 49% free, 9733KB/19MB, paused 627us,768us total 1.627s
+11-05 08:50:52.641  1410  1435 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
+11-05 08:50:53.373  1410  1435 D LauncherAppsCallbackImpl: onPackageAdded triggered for packageName=com.getmimo, user=UserHandle{0}
+11-05 08:50:53.374  1410  1435 D PackageUpdatedTask: Package updated: mOp=ADD packages=[com.getmimo], user=UserHandle{0}
+11-05 08:50:53.686  1410  1435 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
+11-05 08:50:53.819  1410  1435 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
+11-05 08:50:53.827  1410  1435 D SessionCommitReceiver: Removing unneeded PromiseIcon for package: com.getmimo, install reason: 0, alreadyAddedPromiseIcon: false
+11-05 08:50:57.968  1410  1435 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
+11-05 08:50:58.313  1410  1435 D PackageUpdatedTask: Package updated: mOp=UPDATE packages=[com.getmimo], user=UserHandle{0}
+11-05 08:50:58.613  1410  1435 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
+11-05 08:51:00.488   683  1163 D CoreBackPreview: Window{b3ede17 u0 com.getmimo/com.getmimo.ui.onboarding.intro.IntroSlidesActivity}: Setting back callback null
+11-05 08:51:00.869  4624  4624 W Monkey  : args: [-p, com.getmimo, 1]
+11-05 08:51:01.134  4624  4624 W Monkey  :  arg: "com.getmimo"
+11-05 08:51:01.136  4624  4624 W Monkey  : data="com.getmimo"
+11-05 08:51:01.200  1410  1435 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
+11-05 08:51:01.362   683  2352 I ActivityTaskManager: START u0 {act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=com.getmimo/.ui.SplashActivity_default} with LAUNCH_MULTIPLE from uid 2000 (BAL_ALLOW_PERMISSION) result code=0
+11-05 08:51:01.452  4111  4111 D FirebaseSessions: App backgrounded on com.getmimo
+11-05 08:51:01.546  4111  4111 I com.getmimo: AssetManager2(0x7f84af273698) locale list changing from [] to [en-US]
+11-05 08:51:01.756   683  2352 I ActivityTaskManager: START u0 {flg=0x14008000 xflg=0x4 cmp=com.getmimo/.ui.onboarding.intro.IntroSlidesActivity} with LAUNCH_MULTIPLE from uid 10216 (sr=256516788) (BAL_ALLOW_VISIBLE_WINDOW) result code=0
+11-05 08:51:01.774  4111  4111 D FirebaseSessions: App foregrounded on com.getmimo
+11-05 08:51:01.839   683  2121 D CoreBackPreview: Window{fbf067d u0 com.getmimo/com.getmimo.ui.SplashActivity_default}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@836f1c3, mPriority=-1, mIsAnimationCallback=false, mOverrideBehavior=0}
+11-05 08:51:01.889  4111  4111 D FirebaseSessions: App backgrounded on com.getmimo
+11-05 08:51:02.114  1102  1198 V WindowManagerShell:         {m=OPEN f=FILLS_TASK|IS_BEHIND_STARTING_WINDOW leash=Surface(name=ActivityRecord{201780691 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity)/@0x7d51382 sb=Rect(0, 0 - 0, 0) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=-1->0 r=-1->0:-1 component=com.getmimo/.ui.onboarding.intro.IntroSlidesActivity opt={t=CUSTOM enterResId=17432576 changeResId=0 exitResId=17432577 mUserId=0}},
+11-05 08:51:02.114  1102  1198 V WindowManagerShell:         {m=TO_BACK f=FILLS_TASK|IS_BEHIND_STARTING_WINDOW leash=Surface(name=ActivityRecord{29136488 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity)/@0xa371a93 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 component=com.getmimo/.ui.onboarding.intro.IntroSlidesActivity opt={t=CUSTOM enterResId=17432576 changeResId=0 exitResId=17432577 mUserId=0}}
+11-05 08:51:02.122  1102  1198 V WindowManagerShell: Transition doesn't have explicit remote, search filters for match for {id=13 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{m=OPEN f=FILLS_TASK|IS_BEHIND_STARTING_WINDOW leash=Surface(name=ActivityRecord{201780691 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity)/@0x7d51382 sb=Rect(0, 0 - 0, 0) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=-1->0 r=-1->0:-1 component=com.getmimo/.ui.onboarding.intro.IntroSlidesActivity opt={t=CUSTOM enterResId=17432576 changeResId=0 exitResId=17432577 mUserId=0}},{m=TO_BACK f=FILLS_TASK|IS_BEHIND_STARTING_WINDOW leash=Surface(name=ActivityRecord{29136488 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity)/@0xa371a93 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 component=com.getmimo/.ui.onboarding.intro.IntroSlidesActivity opt={t=CUSTOM enterResId=17432576 changeResId=0 exitResId=17432577 mUserId=0}}]}
+11-05 08:51:02.122  1102  1198 V WindowManagerShell: start default transition animation, info = {id=13 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{m=OPEN f=FILLS_TASK|IS_BEHIND_STARTING_WINDOW leash=Surface(name=ActivityRecord{201780691 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity)/@0x7d51382 sb=Rect(0, 0 - 0, 0) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=-1->0 r=-1->0:-1 component=com.getmimo/.ui.onboarding.intro.IntroSlidesActivity opt={t=CUSTOM enterResId=17432576 changeResId=0 exitResId=17432577 mUserId=0}},{m=TO_BACK f=FILLS_TASK|IS_BEHIND_STARTING_WINDOW leash=Surface(name=ActivityRecord{29136488 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity)/@0xa371a93 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 component=com.getmimo/.ui.onboarding.intro.IntroSlidesActivity opt={t=CUSTOM enterResId=17432576 changeResId=0 exitResId=17432577 mUserId=0}}]}
+11-05 08:51:02.378   683   707 V WindowManager:         {m=OPEN f=FILLS_TASK|IS_BEHIND_STARTING_WINDOW leash=Surface(name=ActivityRecord{201780691 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity)/@0xce08a40 sb=Rect(0, 0 - 0, 0) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=-1->0 r=-1->0:-1 component=com.getmimo/.ui.onboarding.intro.IntroSlidesActivity opt={t=CUSTOM enterResId=17432576 changeResId=0 exitResId=17432577 mUserId=0}},
+11-05 08:51:02.378   683   707 V WindowManager:         {m=TO_BACK f=FILLS_TASK|IS_BEHIND_STARTING_WINDOW leash=Surface(name=ActivityRecord{29136488 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity)/@0xcd07e33 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 component=com.getmimo/.ui.onboarding.intro.IntroSlidesActivity opt={t=CUSTOM enterResId=17432576 changeResId=0 exitResId=17432577 mUserId=0}}
+11-05 08:51:02.585  4111  4111 D FirebaseSessions: App foregrounded on com.getmimo
+11-05 08:51:02.669   683  2350 D CoreBackPreview: Window{96b001e u0 com.getmimo/com.getmimo.ui.onboarding.intro.IntroSlidesActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@43002a, mPriority=-1, mIsAnimationCallback=false, mOverrideBehavior=0}
+11-05 08:51:03.438   683   707 I ActivityTaskManager: Displayed com.getmimo/.ui.onboarding.intro.IntroSlidesActivity for user 0: +2s138ms
+11-05 08:51:03.727  1431  1565 I PhenotypeResourceReader: unable to find any Phenotype resource metadata for com.getmimo
+11-05 08:51:04.267   683  2350 I WindowManager: setOnBackInvokedCallback(): No window state for package:com.getmimo
+11-05 08:51:04.268   683  1189 D CoreBackPreview: Window{fbf067d u0 com.getmimo/com.getmimo.ui.SplashActivity_default}: Setting back callback null
+11-05 08:51:04.706  4111  4236 W com.getmimo: Long monitor contention with owner Adjust-pool-57-thread-1-ActivityPackageSender (4410) at void com.adjust.sdk.sig.Signer.sign(android.content.Context, java.util.Map, java.util.Map, java.util.Map)(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:33) waiters=0 in void com.adjust.sdk.sig.Signer.onResume() for 2.315s
+11-05 08:51:05.232  4111  4178 W com.getmimo: Long monitor contention with owner Firebase Background Thread #3 (4179) at java.lang.Object uv.b.call()(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:54) waiters=0 in java.lang.Object uv.b.call() for 149ms
+11-05 08:51:05.528  4111  4111 W Adjust-pool-57-: type=1400 audit(0.0:43): avc:  denied  { read } for  name="tcp" dev="proc" ino=4026532053 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:proc_net_tcp_udp:s0 tclass=file permissive=0 app=com.getmimo
+11-05 08:51:05.808  4111  4111 W Adjust-pool-57-: type=1400 audit(0.0:44): avc:  denied  { read } for  name="drivers" dev="proc" ino=4026531854 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:proc_tty_drivers:s0 tclass=file permissive=0 app=com.getmimo
+11-05 08:51:05.816  4111  4111 W Adjust-pool-57-: type=1400 audit(0.0:45): avc:  denied  { read } for  name="version" dev="proc" ino=4026532032 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:proc_version:s0 tclass=file permissive=0 app=com.getmimo
+11-05 08:51:05.828  4111  4111 W Adjust-pool-57-: type=1400 audit(0.0:46): avc:  denied  { read } for  name="u:object_r:serialno_prop:s0" dev="tmpfs" ino=320 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:serialno_prop:s0 tclass=file permissive=0 app=com.getmimo
+11-05 08:51:05.832  4111  4111 W Adjust-pool-57-: type=1400 audit(0.0:47): avc:  denied  { read } for  name="u:object_r:userdebug_or_eng_prop:s0" dev="tmpfs" ino=375 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:userdebug_or_eng_prop:s0 tclass=file permissive=0 app=com.getmimo
+11-05 08:51:05.832  4111  4111 W Adjust-pool-57-: type=1400 audit(0.0:48): avc:  denied  { read } for  name="u:object_r:serialno_prop:s0" dev="tmpfs" ino=320 scontext=u:r:untrusted_app:s0:c216,c256,c512,c768 tcontext=u:object_r:serialno_prop:s0 tclass=file permissive=0 app=com.getmimo
+11-05 08:51:09.665  1544  2949 I AppLinksAsyncVerifierV2: Verification result: checking for a statement with source https://getmimo.com, relation delegate_permission/common.handle_all_urls, and target com.getmimo --> false. [CONTEXT service_id=244 ]
+11-05 08:51:09.665  1544  4494 I AppLinksHostsVerifierV2: Adding relation extensions for host: getmimo.com [CONTEXT service_id=244 ]
+11-05 08:51:09.665  1544  4494 I AppLinksHostsVerifierV2: Verification com.getmimo complete. Successful hosts: . Failed hosts: getmimo.com. Error hosts: . [CONTEXT service_id=244 ]
+11-05 08:51:09.667  1544  4494 I AppLinksRequestHandler: Updating url filtering rules for com.getmimo: {getmimo.com=[]} [CONTEXT service_id=244 ]
 == crash buffer ==
