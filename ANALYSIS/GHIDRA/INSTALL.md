@@ -1,6 +1,6 @@
 # Ghidra — full install through the GitHub Actions proxy
 
-- workflow run: 41940117221 / commit 610eb1c91e78777aec2adcc3af80c27ba1b836fd / 2026-11-05T00:16:55Z
+- workflow run: 41940704898 / commit af47e90632ec622712a82531c6ebff5b5bb0b427 / 2026-11-05T00:21:40Z
 - JDK for Ghidra: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/25.0.5-8/x64 (openjdk version "25.0.5" 2026-10-20 LTS)
 - release asset: ghidra_12.2_PUBLIC_20261016.zip
 - release sha256: 2c2cd776db3c1f6a097ba418922378ac3649cadd5e844a6f5f088ae628a7be67

@@ -1,8 +1,8 @@
 # Ghidra / REA chain — corrected run
 
-- run 41940117221 / commit 610eb1c91e78777aec2adcc3af80c27ba1b836fd / 2026-11-05T00:19:35Z
+- run 41940704898 / commit af47e90632ec622712a82531c6ebff5b5bb0b427 / 2026-11-05T00:25:54Z
 - Ghidra fetch: success; coverage: success; auto analysis: success; REA doctor: success
-- corrections applied: ALL 12 DEX imported (not 3); Auto Analysis ENABLED (no -noanalysis); full JDK 21 for REA separate from JDK 25 for Ghidra
+- corrections applied: ALL 12 DEX imported (not 3); Auto Analysis ENABLED on ALL 12 DEX (no -noanalysis); full JDK 21 for REA separate from JDK 25 for Ghidra
 
 ## All-12 DEX coverage
 ```
@@ -23,8 +23,14 @@ DEX classes9.dex language=Dalvik:LE:32:DEX_KitKat memory_blocks=3 symbols=10 fun
 ## Control flow / function report
 ```
 === PROGRAM classes.dex language=Dalvik:LE:32:DEX_KitKat functions=54530 symbols=681976 memory_blocks=3 ===
--- namespace inventory (path map / chapter finished / progress) --
+-- target namespace inventory (all matching symbols, capped) --
   SYM EXTERNAL.dex-3774::android::view::MotionEvent::getXPrecision @EXTERNAL:000009f1
+  SYM EXTERNAL.dex-5161::android::widget::ProgressBar::setProgress @EXTERNAL:00000f58
+  SYM EXTERNAL.dex-5162::android::widget::ProgressBar::setProgressBackgroundTintList @EXTERNAL:00000f59
+  SYM EXTERNAL.dex-5163::android::widget::ProgressBar::setProgressDrawable @EXTERNAL:00000f5a
+  SYM EXTERNAL.dex-5164::android::widget::ProgressBar::setProgressTintList @EXTERNAL:00000f5b
+  SYM EXTERNAL.dex-31571::com::getmimo::data::source::remote::progress::CompletionApi::getLastInteractedTrack @EXTERNAL:0000143a
+  SYM EXTERNAL.dex-31572::com::getmimo::data::source::remote::progress::CompletionApi::getTrackCompletion @EXTERNAL:0000143b
   SYM EXTERNAL.dex-31573::com::getmimo::data::source::remote::progress::LessonProgressApi::postProgress @EXTERNAL:0000143c
   SYM EXTERNAL.dex-35596::com::getmimo::ui::leaderboard::LeaderboardResultItemState::a @EXTERNAL:0000144e
   SYM EXTERNAL.dex-35597::com::getmimo::ui::leaderboard::LeaderboardResultItemState::b @EXTERNAL:0000144f
@@ -39,9 +45,19 @@ DEX classes9.dex language=Dalvik:LE:32:DEX_KitKat memory_blocks=3 symbols=10 fun
   SYM EXTERNAL.dex-39316::com::getmimo::ui::streaks::bottomsheet::a::<init> @EXTERNAL:00001468
   SYM EXTERNAL.dex-39317::com::getmimo::ui::streaks::bottomsheet::a::w0 @EXTERNAL:00001469
   SYM EXTERNAL.dex-39376::com::getmimo::ui::widget::StreakWidgetRefreshWorker$doWork$1::<init> @EXTERNAL:00001484
-  SYM EXTERNAL.dex-50988::kotlin::coroutines::jvm::internal::BaseContinuationImpl::invokeSuspend @EXTERNAL:00002211
+  SYM EXTERNAL.dex-39709::com::google::android::gms::tasks::TaskCompletionSource::<init> @EXTERNAL:0000158b
+  SYM EXTERNAL.dex-39710::com::google::android::gms::tasks::TaskCompletionSource::getTask @EXTERNAL:0000158c
+  SYM EXTERNAL.dex-39711::com::google::android::gms::tasks::TaskCompletionSource::setException @EXTERNAL:0000158d
+  SYM EXTERNAL.dex-39712::com::google::android::gms::tasks::TaskCompletionSource::setResult @EXTERNAL:0000158e
+  SYM EXTERNAL.dex-39713::com::google::android::gms::tasks::TaskCompletionSource::trySetException @EXTERNAL:0000158f
+  SYM EXTERNAL.dex-39714::com::google::android::gms::tasks::TaskCompletionSource::trySetResult @EXTERNAL:00001590
+  SYM EXTERNAL.dex-45155::gt::d::setProgress @EXTERNAL:00001967
+  SYM EXTERNAL.dex-51137::kotlinx::coroutines::d::invokeOnCompletion @EXTERNAL:000022a6
+  SYM EXTERNAL.dex-57189::ra0::b1::invokeOnCompletion @EXTERNAL:00002649
   SYM string_data::_does_not_match_a_known_view_type_in_LeaderboardAdapter! @0000159c
+  SYM string_data::_fetch_completion_handlers. @00001610
   SYM string_data::$updatedLessonProgress @0000206c
+  SYM string_data::(()_=>_{_____const_id_=_'mimo-android-completion-badge-style';_____if_(document.getElementById(id))_return;_____const_style_=_document.createElement('style');_____style.id_=_id;_____style.textContent_=_`_________.cm-completionIcon-text_{_flex-shrink:_0;_}_________.cm-completionIcon-text::after_{_____________display:_inline-block;_____________transform:_scale(0.5);_____________transform-origin:_left_center;_________}_____`;_____document.head.appendChild(style);_})() @000022c8
   SYM string_data::()Lcom/getmimo/core/model/streak/Streak; @000024a8
   SYM string_data::()Lcom/getmimo/data/model/leaderboard/Leaderboard; @000024e8
   SYM string_data::()Lcom/getmimo/data/model/leaderboard/LeaderboardUserResult; @000024ec
@@ -66,68 +82,52 @@ DEX classes9.dex language=Dalvik:LE:32:DEX_KitKat memory_blocks=3 symbols=10 fun
   SYM string_data::,_bestStreak= @00003c94
   SYM string_data::,_coins= @00003eb8
   SYM string_data::,_createLessonProgressWhenSwiping= @00003fb4
-  SYM string_data::,_currentStreakState= @00004020
-  SYM string_data::,_dailyGoalCoinReward= @0000404c
-  SYM string_data::,_dailyGoalCoinsReward= @00004050
-  SYM string_data::,_dailyGoalRewardCoins= @00004054
-  SYM string_data::,_dailyStreakDataList= @00004060
-  SYM string_data::,_daysUntilNextWeekReward= @00004088
-  SYM string_data::,_formattedSparks= @0000435c
-  SYM string_data::,_hasFetchedLeaderboardAlready= @0000440c
-  SYM string_data::,_invitationSubscriptionRewardDays= @000045c8
-  SYM string_data::,_isStreakGoalReached= @0000471c
-  SYM string_data::,_leaderboardChapterEndState= @000047ec
-  SYM string_data::,_leaderboardFirstPlaceCount= @000047f0
-  SYM string_data::,_leaderboardInfo= @000047f4
-  SYM string_data::,_leaderboardSecondPlaceCount= @000047f8
-  SYM string_data::,_leaderboardSize= @000047fc
-  SYM string_data::,_leaderboardThirdPlaceCount= @00004800
 ```
 
 ## run.log tail
 ```
-  505a0c60  const_4 v5,0x1
-  505a0c62  invoke_static 0xc6da,v7
-  505a0c68  const_4 v5,0x3
-  505a0c6a  goto 0x505a0cbe
-  505a0c6c  const_4 v5,0x6
-  505a0c6e  const_string v5,0x9453
-  505a0c72  move_object v3,v5
-  505a0c74  invoke_static 0xf15a,v3
-  505a0c7a  const_4 v5,0x3
-  505a0c7c  const_4 v5,0x0
-  505a0c7e  move v3,v5
-  505a0c80  return_object v3
-  505a0c82  const_4 v5,0x3
-  505a0c84  invoke_static 0xc6da,v7
-  505a0c8a  const_4 v5,0x6
-  505a0c8c  iget_object v7,[v3:0x8b5]
-  505a0c90  const_4 v5,0x6
-  505a0c92  iget_object v7,[v7:0x8ee]
-  505a0c96  const_4 v5,0x2
-  505a0c98  if_eqz v7,0x505a0cbc
-  505a0c9c  const_4 v5,0x7
-  505a0c9e  iput_boolean v2,[v3:0x8b4]
-  505a0ca2  const_4 v5,0x2
-  505a0ca4  iget_object v1,[v3:0x8b6]
-  505a0ca8  const_4 v5,0x3
-  505a0caa  invoke_virtual 0x9dbd,v7,v1,v3
-  505a0cb0  move_result_object v5
-  505a0cb2  move_object v3,v5
-  505a0cb4  if_ne v3,v0,0x505a0cbc
-  505a0cb8  const_4 v5,0x6
-  505a0cba  return_object v0
-  505a0cbc  const_4 v5,0x2
-  505a0cbe  sget_object v3,0xa878
-  505a0cc2  const_4 v5,0x1
-  505a0cc4  return_object v3
-  [instructions_shown=45]
-SCANNED_FUNCS=54530 BRANCH_INSNS=5678 INVOKE_INSNS=0 DUMPED_FUNCS=40 INSTRUCTIONS_SHOWN=1887
+INFO  IMPORTING: file:///home/runner/work/game/game/ANALYSIS/_INPUT/classes9.dex (HeadlessAnalyzer)  
+INFO  Using Loader: Dalvik Executable (DEX) (ProgramLoader)  
+INFO  Using Language/Compiler: Dalvik:LE:32:DEX_KitKat:default (ProgramLoader)  
+INFO  Using Library Search Path: [., /bin, /lib, /lib64, /lib/x86_64-linux-gnu, /lib/aarch64-linux-gnu, /usr/bin, /usr/lib, /usr/X11R6/bin, /usr/X11R6/lib, /usr/java/packages/lib, /usr/lib64] (ProgramLoader)  
+INFO  IMPORTING: Loaded 0 additional files (HeadlessAnalyzer)  
+WARN  Analyzer 'Apply Data Archives' for classes9.dex disabled by PSPEC file override (AnalysisScheduler)  
+WARN  Analyzer 'Basic Constant Reference Analyzer' for classes9.dex disabled by PSPEC file override (AnalysisScheduler)  
+WARN  Analyzer 'Data Reference' for classes9.dex disabled by PSPEC file override (AnalysisScheduler)  
+WARN  Analyzer 'Call Convention ID' for classes9.dex disabled by PSPEC file override (AnalysisScheduler)  
+WARN  Analyzer 'Decompiler Switch Analysis' for classes9.dex disabled by PSPEC file override (AnalysisScheduler)  
+WARN  Analyzer 'Embedded Media' for classes9.dex disabled by PSPEC file override (AnalysisScheduler)  
+WARN  Analyzer 'Non-Returning Functions - Discovered' for classes9.dex disabled by PSPEC file override (AnalysisScheduler)  
+WARN  Analyzer 'Demangler GNU' for classes9.dex disabled by PSPEC file override (AnalysisScheduler)  
+WARN  Analyzer 'Reference' for classes9.dex disabled by PSPEC file override (AnalysisScheduler)  
+WARN  Analyzer 'Source Language Support' for classes9.dex disabled by PSPEC file override (AnalysisScheduler)  
+WARN  Analyzer 'Create Address Tables' for classes9.dex disabled by PSPEC file override (AnalysisScheduler)  
+WARN  Analyzer 'Call-Fixup Installer' for classes9.dex disabled by PSPEC file override (AnalysisScheduler)  
+WARN  Analyzer 'Call-Fixup Installer' for classes9.dex disabled by PSPEC file override (AnalysisScheduler)  
+WARN  Analyzer 'Disassemble Entry Points' for classes9.dex disabled by PSPEC file override (AnalysisScheduler)  
+WARN  Analyzer 'Subroutine References' for classes9.dex disabled by PSPEC file override (AnalysisScheduler)  
+WARN  Analyzer 'External Entry References' for classes9.dex disabled by PSPEC file override (AnalysisScheduler)  
+WARN  Analyzer 'Subroutine References' for classes9.dex disabled by PSPEC file override (AnalysisScheduler)  
+WARN  Analyzer 'Shared Return Calls' for classes9.dex disabled by PSPEC file override (AnalysisScheduler)  
+WARN  Analyzer 'Shared Return Calls' for classes9.dex disabled by PSPEC file override (AnalysisScheduler)  
+WARN  Analyzer 'Stack' for classes9.dex disabled by PSPEC file override (AnalysisScheduler)  
+WARN  Analyzer 'ASCII Strings' for classes9.dex disabled by PSPEC file override (AnalysisScheduler)  
+WARN  Analyzer 'Variadic Function Signature Override' for classes9.dex disabled by PSPEC file override (AnalysisScheduler)  
+WARN  Analyzer 'Function ID' for classes9.dex disabled by PSPEC file override (AnalysisScheduler)  
+INFO  ANALYZING all memory and code: file:///home/runner/work/game/game/ANALYSIS/_INPUT/classes9.dex (HeadlessAnalyzer)  
+INFO  REPORT: Analysis succeeded for file: file:///home/runner/work/game/game/ANALYSIS/_INPUT/classes9.dex (HeadlessAnalyzer)  
+INFO  REPORT: Execute script: MimoControlFlow.java  (HeadlessAnalyzer)  
+INFO  SCRIPT: /home/runner/work/game/game/ANALYSIS/_TOOLCHAIN/ghidra_scripts/MimoControlFlow.java (HeadlessAnalyzer)  
+INFO  MimoControlFlow.java> === PROGRAM classes9.dex language=Dalvik:LE:32:DEX_KitKat functions=3 symbols=69 memory_blocks=3 ===
+-- target namespace inventory (all matching symbols, capped) --
+  [target_symbols_shown=0]
+-- target function control flow (real Dalvik instructions) --
+SCANNED_FUNCS=3 BRANCH_INSNS_FIRST_8000_FUNCS=0 INVOKE_INSNS_FIRST_8000_FUNCS=3 PATH_MAP_FUNCS_DUMPED=0 SCORING_FUNCS_DUMPED=0 INSTRUCTIONS_SHOWN=0
  (GhidraScript)  
-INFO  ANALYZING changes made by post scripts: file:///home/runner/work/game/game/ANALYSIS/_INPUT/classes.dex (HeadlessAnalyzer)  
-INFO  REPORT: Post-analysis succeeded for file: file:///home/runner/work/game/game/ANALYSIS/_INPUT/classes.dex (HeadlessAnalyzer)  
-INFO  /classes.dex: file created (runner) (LocalFileSystem)  
-INFO  REPORT: Save succeeded for: /classes.dex (Mimo935Analysis:/classes.dex) (HeadlessAnalyzer)  
+INFO  ANALYZING changes made by post scripts: file:///home/runner/work/game/game/ANALYSIS/_INPUT/classes9.dex (HeadlessAnalyzer)  
+INFO  REPORT: Post-analysis succeeded for file: file:///home/runner/work/game/game/ANALYSIS/_INPUT/classes9.dex (HeadlessAnalyzer)  
+INFO  /classes9.dex: file created (runner) (LocalFileSystem)  
+INFO  REPORT: Save succeeded for: /classes9.dex (Mimo935Analysis:/classes9.dex) (HeadlessAnalyzer)  
 INFO  REPORT: Import succeeded (HeadlessAnalyzer)  
 auto_headless_exit=0
 JAVA_HOME(REA)=/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.13-9/x64
