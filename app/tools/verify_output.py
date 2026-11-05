@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static verifier for the one-click output deliverables (no dependencies)."""
+"""Static verifier for the MIMO NATIVE one-click output (no dependencies)."""
 from __future__ import annotations
 import base64, hashlib, json, pathlib, re, sys, zipfile
 
@@ -23,15 +23,20 @@ def main():
     one = (DIST / 'Mimo.html').read_bytes()
     text = one.decode('utf-8')
     check('dist/Mimo.html exists', one.startswith(b'<!doctype html>'), f'{len(one):,} bytes')
-    check('approved phone markup inlined verbatim',
+    check('approved v12.5-fa phone markup inlined verbatim',
           (APP / 'assets/phone.html').read_text(encoding='utf-8').strip() in text)
-    for s in ['learn', 'select-path', 'path-overview', 'section-detail', 'lesson',
-              'leaderboard', 'user-profile', 'profile', 'exam-hub', 'exam-run',
-              'exam-result', 'ai', 'section-practice', 'study-plan', 'practice-bank',
-              'learning-path', 'lesson-studio', 'tokens', 'ai-studio', 'output']:
-        # ai-studio is created at runtime via dataset.screen (still inline JS).
-        ok = ("dataset.screen = 'ai-studio'" in text) if s == 'ai-studio' else (f'data-screen="{s}"' in text)
-        check(f'screen «{s}» present', ok)
+
+    approved = ['learn', 'select-path', 'path-overview', 'section-detail', 'lesson',
+                'leaderboard', 'user-profile', 'profile', 'exam-hub', 'exam-run',
+                'exam-result', 'ai', 'section-practice']
+    native = ['native-studio', 'native-tokens', 'native-output', 'native-gate', 'native-done']
+    for s in approved:
+        check(f'screen «{s}» present', f'data-screen="{s}"' in text)
+    # Native screens are created at runtime by the controller (dataset.screen),
+    # so their names live in the inlined JS rather than in the static markup.
+    for s in native:
+        check(f'native screen «{s}» present', f"insertScreen('{s}'" in text)
+
     nav = text[text.index('id="tabs"'):text.index('id="tabs"') + 2600]
     check('5 approved tabs in exact order',
           re.findall(r'data-tab="([A-Za-z]+)"', nav) ==
@@ -45,10 +50,22 @@ def main():
     check('script tags balanced', text.lower().count('<script') == text.lower().count('</script>'))
     check('no network API in inline scripts',
           all(x not in text for x in ['fetch(', 'new XMLHttpRequest', 'new WebSocket', 'new EventSource']))
-    check('bundle and approved payloads inlined',
-          all(x in text for x in ['data-generated="mimo-bundle.js"', 'data-src="./assets/proto-data.js"',
-                                  'data-src="./assets/proto-ui.js"', 'data-src="./assets/proto.css"']))
-    check('additive CSS inlined', 'data-src="./assets/extra.css"' in text)
+    check('no API key / LLM vendor literal in inline scripts',
+          all(x not in text for x in ['AIza', 'api.openai.com', 'api.anthropic.com'])
+          and not re.search(r'\bsk-[A-Za-z0-9_-]{16,}', text))
+    check('approved payloads + native CSS + controller inlined',
+          all(x in text for x in ['data-generated="mimo-bundle.js"',
+                                  'data-src="../assets/proto-data.js"',
+                                  'data-src="../assets/proto-ui.js"',
+                                  'data-src="../assets/proto.css"',
+                                  'data-src="../assets/native.css"']))
+    check('legacy admin controller NOT bundled',
+          '/* ---- src/app.js ---- */' not in text and '/* ---- src/plus.js ---- */' not in text)
+    check('Mimo 9.35 navigation state machine present',
+          all(x in text for x in ['nativeQuit', 'lesson:quit', 'profile:create',
+                                  'ChapterActivity', 'PracticeGate']))
+    check('full-screen ChapterActivity (no fake status bar / bottom tabs)',
+          'data-fullscreen' in text and 'phone.dataset.fullscreen' in text)
 
     # Self-export round trip: the embedded payload IS the template of this file.
     m = re.search(r'<script id="mimoSource" type="text/plain">([A-Za-z0-9+/=]+)</script>', text)
@@ -63,6 +80,9 @@ def main():
     check('PWA host = one-file app + manifest + SW',
           'rel="manifest" href="./manifest.webmanifest"' in idx
           and 'serviceWorker.register' in idx and len(idx) > len(text))
+    check('SW registration is a real trailing script, not injected inside the bundle',
+          idx.rstrip().endswith('</script>\n</body>\n</html>')
+          and idx.rfind('<script>\nif (\'serviceWorker\' in navigator') > idx.rfind('data-generated="mimo-bundle.js"'))
     man = json.loads((DIST / 'manifest.webmanifest').read_text(encoding='utf-8'))
     check('manifest is a standalone PWA', man.get('display') == 'standalone' and len(man.get('icons', [])) == 3)
     for ic in man['icons']:
@@ -92,6 +112,7 @@ def main():
     check('build manifest declares honesty flags',
           bm['honest'] == {'llm': False, 'network': False, 'generatedText': False,
                            'externalProvider': 'not-configured', 'serverConfirmed': False})
+    check('build manifest declares native controller', bm.get('controller') == 'src/native.js')
 
     start = (DIST / 'START_HERE.txt').read_text(encoding='utf-8')
     check('Persian quick-start covers all three subsystems',

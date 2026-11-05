@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#F6F7FB">
+<meta name="description" content="میمو · اپلیکیشن آفلاین یادگیری، منطبق با ناوبری نسخهٔ ۹٫۳۵">
+<title>میمو · یادگیری</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="stylesheet" href="../assets/proto.css">
+<link rel="stylesheet" href="../assets/motion.css">
+<link rel="stylesheet" href="../assets/node-match.css">
+<link rel="stylesheet" href="../assets/native.css">
+</head>
+<body class="app-body">
+<main class="app-stage" aria-label="اپلیکیشن آفلاین میمو">
+<!-- MIMO_NATIVE_PHONE_MARKUP -->
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<noscript><div class="banner warn">برای اجرای اپلیکیشن، جاوااسکریپت را فعال کنید.</div></noscript>
+
+<!-- Approved v12.5-fa payloads + UI renderer (byte-identical working copies). -->
+<script src="../assets/proto-data.js"></script>
+<script src="../assets/proto-ui.js"></script>
+<!-- Mimo-native controller (bundled into one classic IIFE at build time). -->
+<script type="module" src="./src/native.js"></script>
+</body>
+</html>

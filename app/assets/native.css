@@ -1,0 +1,246 @@
+/* ===========================================================================
+   MIMO NATIVE — navigation-faithful shell for the one-click offline app.
+   Every colour / radius / spacing / font family comes from the approved
+   v12.5-fa tokens in proto.css. No new colour, no new radius, no new icon.
+   Only layout for Mimo-native screens (Path / Chapter / Lesson / Quit /
+   Celebration / Practice gate / Profile rows / AI studio / Tokens / Output).
+   =========================================================================== */
+
+/* proto.css declares these five dimens OUTSIDE :root (ignored by CSS). Restore
+   the exact approved values here so Mimo spacing/6dp progress/12dp radius work. */
+:root {
+  --sp-m:16px;
+  --sp-s:12px;
+  --toolbar:56px;
+  --progressbar:6px;
+  --radius-card:12px;
+}
+
+/* --- full-bleed handset: the approved 392px frame becomes the viewport ---- */
+@media (max-width:480px) {
+  html, body.app-body { width:100%; height:100%; overflow:hidden }
+  .app-stage { padding:0; align-items:stretch; height:100vh; height:100dvh }
+  .app-stage .phone { width:100%; max-width:100%; height:100vh; height:100dvh;
+    border:0; border-radius:0; box-shadow:none; margin:0 }
+  /* A real app does not draw a fake OS status bar or keep MainActivity tabs
+     inside ChapterActivity / exam / celebration. */
+  .app-stage .phone .statusbar { display:none }
+}
+.phone[data-fullscreen="1"] #tabs { display:none }
+.phone[data-fullscreen="1"] .statusbar { display:none }
+@media (min-width:481px) {
+  .app-stage { min-height:100vh; align-items:center; justify-content:center }
+}
+
+/* Native screens reuse .screen (display toggling is owned by PROTO.go). */
+.screen.native { direction:rtl; text-align:right; padding:0 0 8px }
+.screen.native .native-scroll { flex:1; overflow-y:auto; overscroll-behavior:contain;
+  padding:0 var(--sp-m) 20px }
+.screen.native::-webkit-scrollbar { width:0 }
+
+/* 56dp Mimo toolbar */
+.native-head { height:var(--toolbar); min-height:var(--toolbar); display:flex;
+  align-items:center; gap:var(--sp-s); padding:0 var(--sp-m);
+  border-bottom:1px solid var(--line); background:var(--card); direction:rtl }
+.native-head .native-back { width:40px; height:40px; display:flex; align-items:center;
+  justify-content:center; border:0; background:none; color:var(--text); cursor:pointer;
+  padding:0 }
+.native-head .native-back svg { width:24px; height:24px }
+.native-head b { font-size:18px; font-weight:700; color:var(--text); flex:1 }
+.native-head .native-act { border:0; background:none; color:var(--text); cursor:pointer;
+  width:40px; height:40px; display:flex; align-items:center; justify-content:center }
+
+/* Hero / section headers */
+.native-h { font-size:14px; font-weight:700; color:var(--text-weak);
+  margin:18px 0 10px; direction:rtl }
+.native-hero { border:1px solid var(--line); background:var(--card);
+  border-radius:var(--radius-card); padding:var(--sp-m); margin:14px 0 }
+.native-hero .kick { display:block; font-size:13px; color:var(--text-weak); margin-bottom:6px }
+.native-hero h2 { font-size:20px; margin:0 0 8px; color:var(--text); line-height:1.6 }
+.native-hero p { font-size:14px; line-height:1.9; color:var(--text-weak); margin:0 }
+.native-hero .native-meta { display:block; margin-top:10px; font-size:13px; color:var(--text-weak) }
+
+/* Mimo 6dp progress bar */
+.native-bar { height:var(--progressbar); border-radius:100px; background:var(--progress-bg);
+  overflow:hidden; margin-top:12px }
+.native-bar i { display:block; height:100%; border-radius:100px; background:var(--progress);
+  transition:width .22s ease }
+
+/* Chips (approved Mimo filter chips) */
+.native-chips { display:flex; flex-wrap:wrap; gap:8px; direction:rtl; margin:10px 0 }
+.native-chip { border:1px solid var(--line); background:var(--card); color:var(--text-weak);
+  border-radius:100px; padding:8px 14px; font-size:13px; font-weight:700; cursor:pointer }
+.native-chip.on { background:var(--primary); border-color:var(--primary); color:#FFFFFF }
+.native-chip:disabled { opacity:.5; cursor:default }
+
+/* Card + full-width clickable row (choice_list_item.xml) */
+.native-card { background:var(--card); border:1px solid var(--line);
+  border-radius:var(--radius-card); margin:10px 0; overflow:hidden }
+.native-card > b { display:block; padding:12px var(--sp-s) 6px; font-size:15px; color:var(--text) }
+.native-row { display:flex; align-items:center; gap:var(--sp-s); width:100%;
+  min-height:48px; padding:var(--sp-s); border:0; border-top:1px solid var(--line);
+  background:var(--card); color:var(--text); font:inherit; font-size:14px;
+  text-align:right; direction:rtl; cursor:pointer }
+.native-row:first-child { border-top:0 }
+.native-row:hover { background:var(--card-pressed) }
+.native-row .native-st { width:26px; height:26px; flex:none; display:flex;
+  align-items:center; justify-content:center; color:var(--primary); font-weight:700 }
+.native-row .native-tx { flex:1; min-width:0 }
+.native-row .native-tx b { display:block; font-size:14px; font-weight:700 }
+.native-row .native-tx small { display:block; font-size:12px; color:var(--text-weak); margin-top:2px }
+.native-row .native-chev { flex:none; color:var(--weak-icon); display:flex }
+.native-row.done .native-st { color:var(--success) }
+.native-row[disabled] { color:var(--weak-icon); cursor:default; opacity:.65 }
+.native-row[disabled]:hover { background:var(--card) }
+
+/* Big Mimo primary CTA (button_primary_highlight 3D lip) */
+.native-cta { display:block; width:calc(100% - var(--sp-m) - var(--sp-m)); margin:14px var(--sp-m);
+  min-height:52px; border:0; border-radius:var(--radius-card); background:var(--primary);
+  color:#FFFFFF; font-size:16px; font-weight:700; font-family:inherit; cursor:pointer;
+  box-shadow:0 4px 0 var(--primary-hi); direction:rtl }
+.native-cta:active { transform:translateY(2px); box-shadow:0 2px 0 var(--primary-hi) }
+.native-cta.secondary { background:var(--card); color:var(--primary);
+  border:1px solid var(--line); box-shadow:none }
+.native-cta[disabled] { background:var(--disabled); color:var(--weak-icon);
+  box-shadow:none; cursor:default }
+
+/* ---------------------------- Lesson player ---------------------------- */
+/* ChapterActivity: X + 6dp progress + flag, 52dp toolbar, no separate appbar */
+.native-lesson { display:flex; flex-direction:column; height:100%; direction:rtl;
+  background:var(--card) }
+.native-lesson .nl-top { height:52px; min-height:52px; display:flex; align-items:center;
+  gap:var(--sp-s); padding:0 var(--sp-m); border-bottom:1px solid var(--line);
+  direction:ltr }
+.native-lesson .nl-x, .native-lesson .nl-flag { width:32px; height:32px; border:0;
+  background:none; color:var(--icon); display:flex; align-items:center;
+  justify-content:center; cursor:pointer; padding:0 }
+.native-lesson .nl-prog { flex:1; height:var(--progressbar); border-radius:100px;
+  background:var(--progress-bg); overflow:hidden }
+.native-lesson .nl-prog i { display:block; height:100%; background:var(--progress);
+  border-radius:100px; transition:width .22s ease }
+.native-lesson .nl-body { flex:1; overflow-y:auto; padding:var(--sp-m); direction:rtl }
+.native-lesson .nl-body p { font-size:16px; line-height:1.9; color:var(--text); margin:0 0 12px }
+.native-lesson .nl-body strong { font-weight:700 }
+.native-lesson .nl-hint { display:flex; align-items:center; gap:8px; background:var(--code-bg);
+  border-radius:var(--radius-card); padding:10px var(--sp-s); font-size:14px;
+  color:var(--text-weak); margin:0 0 var(--sp-s) }
+/* InteractiveWebView / editor panel — the periwinkle card from real Mimo */
+.native-lesson .nl-panel { background:var(--progress-weak); border-radius:var(--radius-card);
+  padding:18px var(--sp-s) 22px; margin:14px 0; text-align:center }
+.native-lesson .nl-panel h3 { font-size:20px; color:var(--text); margin:0 0 14px }
+.native-lesson .nl-panel .nl-gap { font-size:26px; font-weight:700; color:var(--text);
+  letter-spacing:4px; margin-bottom:14px }
+.native-lesson .nl-panel .nl-snips { display:flex; flex-wrap:wrap; gap:8px;
+  justify-content:center; direction:ltr }
+.native-lesson .nl-panel .nl-snip { min-width:52px; min-height:48px; border:0;
+  border-radius:var(--radius-card); background:var(--text); color:#FFFFFF;
+  font-size:16px; font-weight:700; cursor:pointer; font-family:inherit }
+.native-lesson .nl-panel .nl-snip.on { outline:3px solid var(--primary) }
+.native-lesson .nl-panel .nl-snip.correct { background:var(--success) }
+.native-lesson .nl-panel .nl-snip.wrong { background:var(--error) }
+.native-lesson .nl-file { display:flex; align-items:center; gap:8px; font-size:13px;
+  color:var(--text-weak); border-bottom:1px solid var(--line); padding:8px 0 }
+.native-lesson .nl-editor { background:var(--line2); min-height:90px;
+  border-radius:0 0 var(--radius-card) var(--radius-card); padding:12px;
+  direction:ltr; text-align:left; font-size:14px; color:var(--text); white-space:pre-wrap }
+/* choice_list_item.xml 12dp / min 48dp / selected-correct-wrong */
+.native-lesson .nl-choices { display:grid; gap:10px; margin-top:14px }
+.native-lesson .nl-choice { display:flex; align-items:center; gap:10px; min-height:48px;
+  padding:var(--sp-s); border:1px solid var(--line); border-radius:var(--radius-card);
+  background:var(--card); color:var(--text); font:inherit; font-size:15px;
+  text-align:right; direction:rtl; cursor:pointer }
+.native-lesson .nl-choice .nl-num { width:26px; height:26px; flex:none; border-radius:8px;
+  background:var(--line2); display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:700 }
+.native-lesson .nl-choice.selected { border-color:var(--primary); background:var(--card-pressed) }
+.native-lesson .nl-choice.correct { border-color:var(--success); background:var(--card-pressed) }
+.native-lesson .nl-choice.wrong { border-color:var(--error); background:var(--card-pressed) }
+.native-lesson .nl-choice.correct .nl-num { background:var(--success); color:#FFFFFF }
+.native-lesson .nl-choice.wrong .nl-num { background:var(--error); color:#FFFFFF }
+/* feedback bottom sheet */
+.native-lesson .nl-feedback { border-top:1px solid var(--line); padding:12px var(--sp-m);
+  background:var(--card) }
+.native-lesson .nl-feedback b { display:block; font-size:16px; margin-bottom:4px }
+.native-lesson .nl-feedback.ok b { color:var(--success) }
+.native-lesson .nl-feedback.no b { color:var(--error) }
+.native-lesson .nl-feedback p { font-size:13px; line-height:1.8; color:var(--text-weak); margin:0 }
+.native-lesson .nl-foot { padding:10px var(--sp-m) 16px; border-top:1px solid var(--line);
+  background:var(--card) }
+.native-lesson .nl-foot .native-cta { margin:0; width:100% }
+
+/* quit dialog: three options, exactly as measured in M09 */
+.native-dialog { position:absolute; inset:0; display:none; align-items:center;
+  justify-content:center; background:rgba(37,39,70,.45); z-index:60; direction:rtl }
+.native-dialog.on { display:flex }
+.native-dialog .native-dcard { width:calc(100% - 48px); max-width:340px; background:var(--sheet);
+  border-radius:16px; padding:20px; box-shadow:0 16px 40px rgba(37,39,70,.22) }
+.native-dialog h3 { font-size:18px; margin:0 0 6px; color:var(--text) }
+.native-dialog p { font-size:14px; line-height:1.8; color:var(--text-weak); margin:0 0 14px }
+.native-dialog .native-drow { display:block; width:100%; min-height:46px; margin-top:8px;
+  border:1px solid var(--line); border-radius:var(--radius-card); background:var(--card);
+  color:var(--text); font:inherit; font-size:14px; font-weight:700; cursor:pointer }
+.native-dialog .native-drow.primary { background:var(--primary); color:#FFFFFF;
+  border-color:var(--primary) }
+
+/* Celebration (lesson_awesome_fragment / chapter_finished) */
+.native-celebrate { text-align:center; padding:36px var(--sp-m) 0; direction:rtl }
+.native-celebrate .native-cbadge { width:104px; height:104px; margin:0 auto 18px;
+  border-radius:26px; background:var(--progress); display:flex; align-items:center;
+  justify-content:center; color:#FFFFFF }
+.native-celebrate h2 { font-size:24px; color:var(--text); margin:0 0 8px }
+.native-celebrate p { font-size:15px; color:var(--text-weak); line-height:1.9 }
+.native-celebrate .native-stats { display:flex; gap:10px; justify-content:center; margin:20px 0 }
+.native-celebrate .native-stats div { flex:1; max-width:120px; background:var(--card);
+  border:1px solid var(--line); border-radius:var(--radius-card); padding:12px 6px }
+.native-celebrate .native-stats b { display:block; font-size:20px; color:var(--text) }
+.native-celebrate .native-stats small { font-size:12px; color:var(--text-weak) }
+
+/* Practice gate (measured G-AUTH) */
+.native-gate { text-align:center; padding:40px var(--sp-m) 0; direction:rtl }
+.native-gate .native-gicon { width:96px; height:96px; margin:0 auto 18px; border-radius:26px;
+  background:var(--progress-bg); display:flex; align-items:center; justify-content:center;
+  color:var(--primary) }
+.native-gate h2 { font-size:22px; color:var(--text); margin:0 0 8px }
+.native-gate p { font-size:15px; color:var(--text-weak); line-height:1.9 }
+
+/* AI studio / tokens / output — native rows only, no visible review notes */
+.native-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
+  gap:8px; margin:10px 0 }
+.native-grid span { display:block; border:1px solid var(--line); border-radius:var(--radius-card);
+  padding:10px; font-size:12px; color:var(--text-weak); background:var(--card) }
+.native-grid span b { display:block; font-size:14px; color:var(--text); margin-bottom:2px }
+.native-swatch { height:38px; border-radius:8px; border:1px solid var(--line); margin-bottom:6px }
+.native-steps { list-style:none; margin:10px 0; padding:0; direction:rtl }
+.native-steps li { display:flex; gap:10px; align-items:center; padding:10px 0;
+  border-bottom:1px solid var(--line); font-size:14px; color:var(--text) }
+.native-steps li i { width:24px; height:24px; flex:none; border-radius:100px;
+  background:var(--progress-bg); color:var(--primary); display:flex;
+  align-items:center; justify-content:center; font-size:12px; font-weight:700; font-style:normal }
+.native-kv { display:flex; justify-content:space-between; gap:10px; padding:11px 0;
+  border-bottom:1px solid var(--line); font-size:14px; direction:rtl }
+.native-kv b { color:var(--text); font-weight:700 }
+.native-kv span { color:var(--text-weak) }
+.native-banner { background:var(--code-bg); border-radius:var(--radius-card);
+  padding:10px var(--sp-s); font-size:13px; line-height:1.8; color:var(--text-weak);
+  margin:10px 0; direction:rtl }
+.native-banner.ok { color:var(--success) }
+.native-banner.no { color:var(--error) }
+
+/* Chat bubbles reuse the approved .bubble; only the local-source context is new */
+.native-ctx { background:var(--code-bg); border-radius:var(--radius-card); padding:8px 10px;
+  font-size:12px; color:var(--text-weak); margin-bottom:10px; direction:rtl }
+
+/* Non-current chapters in the real 9.35 PathMap are white cards with a navy
+   play triangle (M08 screenshots). Geometry/positions stay exactly approved. */
+.screen[data-screen="learn"] .pathwrap.l10 .node.next {
+  background:var(--card);
+  box-shadow:0 8px 0 var(--card-pressed),0 12px 18px rgba(37,39,70,.12);
+  border:1px solid var(--line);
+}
+.screen[data-screen="learn"] .pathwrap.l10 .node.next .ic { color:var(--text) }
+/* No locked node in learning (F25). */
+.screen[data-screen="learn"] .pathwrap .node.locked { opacity:1 }
+
+/* Small helpers */
+.native-hidden { display:none !important }
+.native-fill { flex:1 }

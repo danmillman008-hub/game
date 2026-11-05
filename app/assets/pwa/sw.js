@@ -1,7 +1,7 @@
 /* Offline service worker for the ONE-FILE build. Cache-first: after the first
    visit the app is fully usable with no connection at all. Same-origin only,
    GET only — no API, no proxy, no backend. */
-const CACHE = 'mimo-onefile-v1';
+const CACHE = 'mimo-native-v4';
 const SHELL = [
   './', './index.html', './Mimo.html', './launcher.html', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/maskable-512.png',

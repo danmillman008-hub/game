@@ -2,7 +2,7 @@
 
 ```bash
 cd app
-npm test          # ۲۴ تست، ۰ خطا
+npm test          # ۴۳ تست، ۰ خطا
 npm run verify    # بررسی استاتیک یکپارچگی طرح (بدون وابستگی)
 ```
 
@@ -10,7 +10,8 @@ npm run verify    # بررسی استاتیک یکپارچگی طرح (بدون 
 |---|---:|---|
 | `tests/fidelity.test.mjs` | ۸ | هش مبدأ، کپی بایتبهبایت CSS / مارکاپ گوشی / دادهها، درج عینی در `index.html`، ۵ تب دقیق و نبود «مکس»، ۱۳ صفحهٔ تأییدشده، افزودهبودن `motion.css`، `PROVENANCE.json` |
 | `tests/unit.test.mjs` | ۸ | اسکیمای store، مهاجرت/JSON خراب، ریست، فرمولهای تأییدشدهٔ M09، امتیازدهی، قفل ترتیبی، صف محلی، سه مسیر، ماشین مراحل برنامه، گراف placeholder |
-| `tests/acceptance.test.mjs` | ۸ | اپلیکیشن واقعی در jsdom (`index.html` + Assetهای واقعی + `app.js`) |
+| `tests/acceptance.test.mjs` | ۸ | اپلیکیشن چندفایلهای قدیمی در jsdom (`index.html` + assetها + `app.js`) |
+| `tests/output.test.mjs` | ۱۰ | **خروجی بومی تکفایل**: خودکفایی، بوت `https://` و `file://`، ناوبری کامل میمو، Lesson/Quit/Gate، AI چهارفاز، سه معنای توکن، خودخروجی، ZIP، PWA |
 
 ## مهمترین تست: اجرا، گشتزنی، تغییر وضعیت، تمرین، آزمون، ریاستارت
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the ONE-CLICK deliverables (dependency-free, pure Python).
+"""Build the ONE-CLICK Mimo-native deliverables (dependency-free, pure Python).
 
     app/dist/Mimo.html      one self-contained file — double-click, no server
     app/dist/index.html     same app + manifest + service worker (installable PWA)
@@ -7,11 +7,12 @@
     app/dist/launcher.html  friendly Persian start page
     app/dist/BUILD_MANIFEST.json
 
-It inlines the approved CSS/phone markup/classic scripts into a single HTML and
-bundles the ESM `src/*.js` graph into ONE classic IIFE via a tiny module
-registry (no esbuild, no npm, no network). The generated HTML embeds its own
-source as base64 so the in-app «دانلود Mimo.html» button reproduces exactly
-the same file — the export can export itself again.
+The shell is `app/native/index.html`: the APPROVED v12.5-fa phone markup,
+CSS, vectors, data and UI renderer are inlined byte-identically; the new
+`app/src/native.js` controller (plus the pure offline engines it imports) is
+bundled into ONE classic IIFE via a tiny module registry. No esbuild, no npm,
+no network. The generated HTML embeds its own source as base64 so the in-app
+«دانلود Mimo.html» button reproduces exactly the same file.
 
 Run:  python3 app/tools/build_output.py
 """
@@ -21,12 +22,14 @@ import base64, hashlib, json, pathlib, re, zipfile, datetime
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 APP = ROOT / 'app'
 SRC = APP / 'src'
+NATIVE = APP / 'native'
 DIST = APP / 'dist'
 SLOT = '__MIMO_SOURCE_B64_SLOT__'
+ENTRY = 'native.js'
 DIST.mkdir(parents=True, exist_ok=True)
 
 # ---------------------------------------------------------------------------
-# 1. Tiny ESM -> classic-IIFE bundler (module registry, per-module scopes)
+# 1. Tiny ESM -> classic-IIFE bundler (only the graph reachable from ENTRY)
 # ---------------------------------------------------------------------------
 IMPORT = re.compile(r"^[ \t]*import\s+([\s\S]*?)\s+from\s+['\"]([^'\"]+)['\"];?[ \t]*\r?\n?", re.M)
 EXPORT_NAMED = re.compile(r"^[ \t]*export\s*\{([^}]*)\}\s*;?[ \t]*$", re.M)
@@ -56,7 +59,7 @@ def bindings(spec: str, where: str):
 modules = {}
 for path in sorted(SRC.glob('*.js')):
     modules[path.name] = path.read_text(encoding='utf-8')
-assert 'app.js' in modules
+assert ENTRY in modules, f'{ENTRY} missing from src/'
 
 prepared, deps = {}, {}
 for name, text in modules.items():
@@ -90,7 +93,7 @@ for name, text in modules.items():
     for bad in ('</script', '<!--'):
         assert bad.lower() not in body.lower(), f'{name}: forbidden HTML-breaking sequence in inline script'
     assert not re.search(r"^[ \t]*(?:import|export)\s", body, re.M), f'{name}: residual ESM syntax'
-    exports = ', '.join(dict.fromkeys(collected))  # de-duplicate, keep order
+    exports = ', '.join(dict.fromkeys(collected))
     prepared[name] = (deps.setdefault(name, set()), body, exports)
 
 order, done, visiting = [], set(), set()
@@ -108,8 +111,8 @@ def visit(n):
     order.append(n)
 
 
-for n in sorted(prepared):
-    visit(n)
+visit(ENTRY)  # ONLY the native controller graph; legacy app.js is not shipped.
+assert 'app.js' not in order and 'plus.js' not in order, 'legacy controller leaked into the one-file build'
 
 chunks = ["(function () {\n'use strict';\nvar __mods = {};\n"]
 for n in order:
@@ -119,44 +122,53 @@ for n in order:
     chunks.append(f"\nreturn {{ {exports} }};\n}})();\n")
 chunks.append('})();\n')
 bundle = ''.join(chunks)
-print(f'bundled {len(order)} ESM modules -> {len(bundle):,} chars')
+print(f'bundled {len(order)} reachable ESM modules -> {len(bundle):,} chars')
 
 # ---------------------------------------------------------------------------
-# 2. Inline CSS, classic scripts and phone markup into one HTML document
+# 2. Inline CSS / classic scripts / approved phone markup into one HTML
 # ---------------------------------------------------------------------------
-html = (APP / 'index.html').read_text(encoding='utf-8')
+html = (NATIVE / 'index.html').read_text(encoding='utf-8')
+
+
+def resolve(rel):
+    p = (NATIVE / rel).resolve()
+    assert p.is_file(), f'missing asset {rel}'
+    return p
 
 
 def inline_css(m):
     rel = m.group(1)
-    css = (APP / rel.lstrip('./')).read_text(encoding='utf-8')
+    css = resolve(rel).read_text(encoding='utf-8')
     assert '</style' not in css.lower()
     return f'<style data-src="{rel}">\n{css}\n</style>'
 
 
-html, ncss = re.subn(r'<link rel="stylesheet" href="(\./assets/[^"]+\.css)">', inline_css, html)
+html, ncss = re.subn(r'<link rel="stylesheet" href="([^"]+\.css)">', inline_css, html)
 assert ncss == 4, f'expected 4 stylesheets, inlined {ncss}'
 
 
 def inline_js(m):
     rel = m.group(1)
-    js = (APP / rel.lstrip('./')).read_text(encoding='utf-8')
+    js = resolve(rel).read_text(encoding='utf-8')
     assert '</script' not in js.lower() and '<!--' not in js, f'{rel}: unsafe inline script'
     return f'<script data-src="{rel}">\n{js}\n</script>'
 
 
-html, njs = re.subn(r'<script src="(\./assets/[^"]+\.js)"></script>', inline_js, html)
+html, njs = re.subn(r'<script src="([^"]+\.js)"></script>', inline_js, html)
 assert njs == 2, f'expected 2 classic scripts, inlined {njs}'
+
+phone = (APP / 'assets' / 'phone.html').read_text(encoding='utf-8').rstrip('\n')
+assert '<!-- MIMO_NATIVE_PHONE_MARKUP -->' in html
+html = html.replace('<!-- MIMO_NATIVE_PHONE_MARKUP -->',
+                    '<!-- APPROVED v12.5-fa PHONE MARKUP: byte-identical -->\n' + phone)
 
 icon_b64 = base64.b64encode((APP / 'assets/icons/icon-192.png').read_bytes()).decode('ascii')
 html = html.replace(
     '<link rel="manifest" href="./manifest.webmanifest">',
     f'<link rel="icon" href="data:image/png;base64,{icon_b64}">\n'
     f'<link rel="apple-touch-icon" href="data:image/png;base64,{icon_b64}">')
-html = re.sub(r"<script>\s*if \('serviceWorker' in navigator[\s\S]*?</script>\s*", '', html)
-assert "serviceWorker'" not in html
 
-module_tag = '<script type="module" src="./src/app.js"></script>'
+module_tag = '<script type="module" src="./src/native.js"></script>'
 assert module_tag in html
 html = html.replace(module_tag, f'<script data-generated="mimo-bundle.js">\n{bundle}\n</script>')
 
@@ -168,8 +180,7 @@ html = html.replace('<title>', meta + '<title>', 1)
 # Put the source payload in <head> so it exists before the bundle executes.
 html = html.replace('</head>', f'  <script id="mimoSource" type="text/plain">{SLOT}</script>\n</head>', 1)
 
-# No external resource references may remain.
-# Inspect MARKUP only (script/style bodies legitimately contain URL strings).
+# No external resource references may remain (script/style bodies may contain URLs).
 markup = re.sub(r'<script\b[^>]*>[\s\S]*?</script>', '<script></script>', html, flags=re.I)
 markup = re.sub(r'<style\b[^>]*>[\s\S]*?</style>', '<style></style>', markup, flags=re.I)
 leftovers = re.findall(r'<[^>]*\s(?:src|href)="(?!data:|#)([^"]+)"', markup, re.I)
@@ -184,7 +195,7 @@ onefile = template.replace(SLOT, payload)
 print('wrote dist/Mimo.html', f'{len(onefile.encode()):,} bytes')
 
 # ---------------------------------------------------------------------------
-# 3. Installable PWA host (index.html), launcher, static PWA files
+# 3. Installable PWA host, launcher, static PWA files
 # ---------------------------------------------------------------------------
 SW_REGISTER = """<script>
 if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
@@ -195,7 +206,11 @@ if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
 </script>
 """
 pwa_index = onefile.replace('<title>', '<link rel="manifest" href="./manifest.webmanifest">\n<title>', 1)
-pwa_index = pwa_index.replace('</body>', SW_REGISTER + '</body>', 1)
+# The bundle contains HTML template strings with literal "</body>" inside them;
+# only the LAST closing body tag is the document's real one.
+end_body = pwa_index.rfind('</body>')
+assert end_body > 0, 'could not locate the document closing body tag'
+pwa_index = pwa_index[:end_body] + SW_REGISTER + pwa_index[end_body:]
 (DIST / 'index.html').write_text(pwa_index, encoding='utf-8')
 
 (DIST / 'manifest.webmanifest').write_bytes((APP / 'assets/pwa/manifest.webmanifest').read_bytes())
@@ -204,21 +219,22 @@ icons_dir = DIST / 'icons'; icons_dir.mkdir(exist_ok=True)
 for p in (APP / 'assets/icons').glob('*.png'):
     (icons_dir / p.name).write_bytes(p.read_bytes())
 
-START_HERE = """میمو · خروجی آفلاین
-====================
+START_HERE = """میمو · خروجی آفلاین (ناوبری بومی ۹٫۳۵)
+=========================================
 
 ۱) Mimo.html را دوبار کلیک کنید (یا در مرورگر گوشی باز کنید). تمام شد.
    نیازی به اینترنت، سرور، npm، خط فرمان یا نصب چیزی ندارد.
 ۲) نصب روی گوشی: همین پوشه را روی یک آدرس HTTPS قرار دهید (پیشنمایش زنده
    نیز همین کار را میکند)، سپس منوی مرورگر ← «افزودن به صفحهٔ اصلی / نصب اپ».
    فایل index.html همان اپ بهعلاوهٔ manifest و Service Worker است.
-۳) از درون اپ، صفحهٔ «خروجی گرفتن» یک کلیک Mimo.html و Mimo.zip میسازد؛
-   خروجی وضعیت، مسیر آموزشی (CSV)، جلسهٔ AI و گزارش چاپی هم همانجاست.
+۳) ناوبری دقیقاً از میمو: یادگیری (نقشهٔ مسیر ← فصل ← درس ← خروج/پایان)،
+   انتخاب مسیر، نمای کلی مسیر، جزئیات فصل، درگاه تمرین، آزمونها، امتیازها،
+   پروفایل و دستیار هوشمند. پنج تب و تمام نشانههای طرح تأییدشده حفظ شدهاند.
 ۴) مسیر آموزشی: ۱۲ کتاب · ۶۰ فصل · ۱۸۰ درس، همگی از سرفصلهای پروتوتایپ
    تأییدشدهٔ v12.5-fa. تمرین هر درس از ۲۰ سؤال واقعی همان پروتوتایپ است.
    درسنامهٔ نهایی پس از تحویل منابع از «وارد کردن بستهٔ محتوا» جایگزین میشود.
-۵) ساختار توکنها: سه معنا (طراحی CSS / پاداش و دفتر توکنها / زمینه و هزینهٔ AI)
-   همگی زنده، قابل خروجی و ذخیرهشده روی همین دستگاهاند.
+۵) ساختار توکنها: سه معنا (طراحی CSS / پاداش و دفتر توکنها / زمینه و هزینهٔ
+   هوش مصنوعی) همگی زنده، قابل خروجی و ذخیرهشده روی همین دستگاهاند.
 ۶) بخش هوش مصنوعی: چهار فاز LearnHarness (سنجش/برنامه/آموزش/تمرین)، گراف
    دانش، وارد کردن بسته، و شمارش توکن زمینه — کاملاً محلی.
    !!! بدون مدل زبانی، بدون اینترنت، بدون کلید API و بدون تولید متن !!!
@@ -256,12 +272,12 @@ small{display:block;margin-top:16px;line-height:1.9;color:#4A4D85}
 <a class="btn" href="./Mimo.zip" download="Mimo.zip">↓ دانلود بستهٔ کامل Mimo.zip (شامل PWA)</a>
 <a class="btn" href="./START_HERE.txt">راهنمای فارسی</a>
 <small>نصب روی گوشی: همین صفحه را در مرورگر گوشی باز کنید و «افزودن به صفحهٔ اصلی / نصب اپلیکیشن» را بزنید.
-مسیر آموزشی، ساختار توکنها و استودیوی هوش مصنوعی محلی همه کار میکنند.
+ناوبری یادگیری دقیقاً از میمو ۹٫۳۵: نقشهٔ مسیر ← فصل ← درس ← خروج/پایان.
 بدون LLM، بدون شبکه، بدون تولید متن · SERVER CONFIRMED=0</small>
 </main></body></html>
 """
 (DIST / 'launcher.html').write_text(launcher, encoding='utf-8')
-readme = (ROOT / 'app/docs/OUTPUT_GUIDE.md')
+readme = ROOT / 'app/docs/OUTPUT_GUIDE.md'
 if readme.is_file():
     (DIST / 'README-fa.md').write_text(readme.read_text(encoding='utf-8'), encoding='utf-8')
 else:
@@ -285,10 +301,15 @@ for p in sorted(DIST.rglob('*')):
         files[str(p.relative_to(DIST))] = {'sha256': hashlib.sha256(b).hexdigest(), 'bytes': len(b)}
 manifest = {
     'generatedAt': datetime.datetime.now().isoformat(timespec='seconds'),
-    'generator': 'app/tools/build_output.py',
+    'generator': 'app/tools/build_output.py (MIMO NATIVE)',
     'entry': {'oneFile': 'Mimo.html', 'pwa': 'index.html', 'launcher': 'launcher.html',
               'zip': 'Mimo.zip', 'guide': 'START_HERE.txt'},
+    'shell': 'app/native/index.html',
+    'controller': 'src/native.js',
     'bundledModules': order,
+    'navigation': ['MainActivity/tabs', 'PathMap', 'ChapterActivity', 'LessonRenderer',
+                   'QuitDialog', 'Celebration', 'SelectPath', 'PathOverview',
+                   'SectionDetail', 'PracticeGate', 'ExamHub', 'AI', 'Tokens', 'Output'],
     'sourceSlot': SLOT,
     'honest': {'llm': False, 'network': False, 'generatedText': False,
                'externalProvider': 'not-configured', 'serverConfirmed': False},
