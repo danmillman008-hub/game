@@ -1,0 +1,86 @@
+000000  invoke-static v11, Lcom/google/android/recaptcha/internal/b;->o(Ljava/util/List;)Ljava/util/ArrayList;
+000006  move-result-object v0
+000008  invoke-interface v11, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+00000e  move-result-object v11
+000010  const/4 v1, 3
+000012  const/4 v1, 0
+000014  move v3, v1
+000016  invoke-interface v11, Ljava/util/Iterator;->hasNext()Z
+00001c  move-result v2
+00001e  if-eqz v2, +085h
+000022  invoke-interface v11, Ljava/util/Iterator;->next()Ljava/lang/Object;
+000028  move-result-object v2
+00002a  add-int/lit8 v9, v3, 1
+00002e  if-ltz v3, +077h
+000032  move-object v4, v2
+000034  check-cast v4, Lcom/getmimo/data/content/model/track/Section;
+000038  const/4 v2, 4
+00003a  const/4 v2, 1
+00003c  if-nez v13, +003h
+000040  goto +9h
+000042  invoke-virtual v13, Ljava/lang/Integer;->intValue()I
+000048  move-result v5
+00004a  if-ne v3, v5, +004h
+00004e  move v6, v2
+000050  goto +2h
+000052  move v6, v1
+000054  invoke-virtual v4, Lcom/getmimo/data/content/model/track/Section;->completionPercentageOptional()F
+00005a  move-result v5
+00005c  move v7, v5
+00005e  invoke-virtual v4, Lcom/getmimo/data/content/model/track/Section;->completionPercentageRequired()F
+000064  move-result v5
+000066  const/high16 v8, 1065353216
+00006a  cmpg-float v7, v7, v8
+00006e  if-nez v7, +00ch
+000072  new-instance v2, Lvn/v;
+000076  invoke-virtual v10, v4, v14, v15, Lcc/b;->v(Lcom/getmimo/data/content/model/track/Section; Z Z)Lvn/z;
+00007c  move-result-object v5
+00007e  invoke-direct v2, v3, v4, v6, v5, Lvn/v;-><init>(I Lcom/getmimo/data/content/model/track/Section; Z Lvn/z;)V
+000084  goto +46h
+000086  cmpg-float v7, v5, v8
+00008a  if-nez v7, +00ch
+00008e  new-instance v2, Lvn/w;
+000092  invoke-virtual v10, v4, v14, v15, Lcc/b;->v(Lcom/getmimo/data/content/model/track/Section; Z Z)Lvn/z;
+000098  move-result-object v5
+00009a  invoke-direct v2, v3, v4, v6, v5, Lvn/w;-><init>(I Lcom/getmimo/data/content/model/track/Section; Z Lvn/z;)V
+0000a0  goto +38h
+0000a2  if-nez v12, +022h
+0000a6  invoke-virtual v0, Ljava/util/ArrayList;->isEmpty()Z
+0000ac  move-result v7
+0000ae  if-nez v7, +01ch
+0000b2  invoke-static v0, Lkotlin/collections/a;->N0(Ljava/util/List;)Ljava/lang/Object;
+0000b8  move-result-object v7
+0000ba  instance-of v7, v7, Lvn/x;
+0000be  if-eqz v7, +003h
+0000c2  goto +12h
+0000c4  invoke-virtual v4, Lcom/getmimo/data/content/model/track/Section;->getHasProgress()Z
+0000ca  move-result v7
+0000cc  if-eqz v7, +003h
+0000d0  goto +bh
+0000d2  new-instance v2, Lvn/y;
+0000d6  invoke-virtual v10, v4, v14, v15, Lcc/b;->v(Lcom/getmimo/data/content/model/track/Section; Z Z)Lvn/z;
+0000dc  move-result-object v5
+0000de  invoke-direct v2, v3, v4, v5, Lvn/y;-><init>(I Lcom/getmimo/data/content/model/track/Section; Lvn/z;)V
+0000e4  goto +16h
+0000e6  invoke-virtual v4, Lcom/getmimo/data/content/model/track/Section;->getHasProgress()Z
+0000ec  move-result v7
+0000ee  if-nez v7, +007h
+0000f2  if-eqz v6, +003h
+0000f6  goto +3h
+0000f8  move v8, v1
+0000fa  goto +2h
+0000fc  move v8, v2
+0000fe  invoke-virtual v10, v4, v14, v15, Lcc/b;->v(Lcom/getmimo/data/content/model/track/Section; Z Z)Lvn/z;
+000104  move-result-object v7
+000106  new-instance v2, Lvn/a0;
+00010a  invoke-direct/range v2 ... v8, Lvn/a0;-><init>(I Lcom/getmimo/data/content/model/track/Section; F Z Lvn/z; Z)V
+000110  invoke-virtual v0, v2, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+000116  move v3, v9
+000118  goto/16 -081h
+00011c  invoke-static Li30/m;->Y()V
+000122  const/4 v10, 5
+000124  const/4 v10, 0
+000126  throw v10
+000128  return-object v0
+00012a  nop 
+00012c  <androguard.core.dex.FillArrayData object at 0x7febbe9c4710>

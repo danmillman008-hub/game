@@ -1,0 +1,662 @@
+===== Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object; =====
+{'dex': 'classes.dex', 'class_name': 'Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;', 'name': 'invokeSuspend', 'descriptor': '(Ljava/lang/Object;)Ljava/lang/Object;', 'access': 'public final', 'instructions': 659, 'registers': -1, 'code_offset': 10129608}
+
+000000  move-object/from16 v0, v45
+000004  iget-object v1, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->y Lcom/getmimo/data/content/model/track/Track;
+000008  iget-object v2, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->z Lri/c;
+00000c  iget-object v3, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->A Lkotlin/Pair;
+000010  iget-boolean v4, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->B Z
+000014  iget-object v5, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->C Ljava/util/Set;
+000018  move-object v6, v5
+00001a  check-cast v6, Ljava/util/Set;
+00001e  sget-object v5, Lkotlin/coroutines/intrinsics/CoroutineSingletons;->a Lkotlin/coroutines/intrinsics/CoroutineSingletons;
+000022  iget-byte v7, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->x B
+000026  const/4 v13, 4
+000028  const/4 v13, 2
+00002a  const/4 v15, 1
+00002c  const/4 v15, 1
+00002e  const/4 v8, 3
+000030  const/4 v8, 0
+000032  if-eqz v7, +04ah
+000036  if-eq v7, v15, +029h
+00003a  if-ne v7, v13, +021h
+00003e  iget-boolean v3, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->g Z
+000042  iget v4, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->w I
+000046  iget-boolean v5, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->f Z
+00004a  iget-object v6, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->e Lvn/c;
+00004e  iget-object v7, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->d Lt50/j;
+000052  iget-object v9, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->c Lvn/i0;
+000056  iget-object v10, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->b Ljava/util/List;
+00005a  iget-object v11, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->a Ljava/util/List;
+00005e  invoke-static/range v46, Lkotlin/b;->b(Ljava/lang/Object;)V
+000064  move-object/from16 v16, v1
+000068  move v13, v5
+00006a  move-object v1, v8
+00006c  move-object v5, v9
+00006e  move-object v9, v7
+000070  move-object v7, v6
+000072  move v6, v4
+000074  move-object/from16 v4, v46
+000078  goto/16 +3c3h
+00007c  const-string v0, "call to 'resume' before 'invoke' with coroutine"
+000080  invoke-static v0, Lwc/f;->i(Ljava/lang/String;)V
+000086  return-object v8
+000088  iget-boolean v3, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->g Z
+00008c  iget v6, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->w I
+000090  iget-boolean v7, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->f Z
+000094  iget v9, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->v I
+000098  iget-object v10, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->d Lt50/j;
+00009c  iget-object v11, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->c Lvn/i0;
+0000a0  iget-object v12, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->b Ljava/util/List;
+0000a4  iget-object v8, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->a Ljava/util/List;
+0000a8  invoke-static/range v46, Lkotlin/b;->b(Ljava/lang/Object;)V
+0000ae  move-object v13, v8
+0000b0  move v14, v9
+0000b2  move-object v9, v10
+0000b4  move-object v8, v11
+0000b6  move-object v10, v12
+0000b8  move v11, v15
+0000ba  move-object v12, v5
+0000bc  move v5, v7
+0000be  move-object/from16 v7, v46
+0000c2  goto/16 +368h
+0000c6  invoke-static/range v46, Lkotlin/b;->b(Ljava/lang/Object;)V
+0000cc  iget-object v7, v3, Lkotlin/Pair;->a Ljava/lang/Object;
+0000d0  check-cast v7, Lyg/c;
+0000d4  iget-object v3, v3, Lkotlin/Pair;->b Ljava/lang/Object;
+0000d8  check-cast v3, Ljava/lang/Integer;
+0000dc  iget-object v8, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->D Lcom/getmimo/interactors/path/d;
+0000e0  iget-object v8, v8, Lcom/getmimo/interactors/path/d;->d Lze/a;
+0000e4  check-cast v8, Lsk/a;
+0000e8  invoke-virtual v8, Lsk/a;->d()Z
+0000ee  move-result v8
+0000f0  if-nez v8, +014h
+0000f4  iget-object v8, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->D Lcom/getmimo/interactors/path/d;
+0000f8  iget-object v8, v8, Lcom/getmimo/interactors/path/d;->d Lze/a;
+0000fc  check-cast v8, Lsk/a;
+000100  invoke-virtual v8, Lsk/a;->e()Z
+000106  move-result v8
+000108  if-eqz v8, +003h
+00010c  goto +6h
+00010e  const/16 v19, 935
+000112  const/16 v19, 0
+000116  goto +3h
+000118  move/from16 v19, v15
+00011c  iget-object v8, v7, Lyg/c;->c Lcom/getmimo/data/source/remote/iap/model/SubscriptionTier;
+000120  invoke-virtual v8, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+000126  sget-object v9, Lcom/getmimo/data/source/remote/iap/model/SubscriptionTier;->f Lcom/getmimo/data/source/remote/iap/model/SubscriptionTier;
+00012a  if-ne v8, v9, +005h
+00012e  move/from16 v21, v15
+000132  goto +5h
+000134  const/16 v21, 27515
+000138  const/16 v21, 0
+00013c  iget-object v8, v7, Lyg/c;->c Lcom/getmimo/data/source/remote/iap/model/SubscriptionTier;
+000140  iget-byte v8, v8, Lcom/getmimo/data/source/remote/iap/model/SubscriptionTier;->a B
+000144  const/4 v9, 0
+000146  const/4 v9, 4
+000148  if-ge v8, v9, +00ah
+00014c  if-eqz v19, +003h
+000150  goto +6h
+000152  const/16 v22, 20098
+000156  const/16 v22, 0
+00015a  goto +3h
+00015c  move/from16 v22, v15
+000160  iget-object v8, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->D Lcom/getmimo/interactors/path/d;
+000164  iget-object v8, v8, Lcom/getmimo/interactors/path/d;->e Lcc/b;
+000168  invoke-virtual v1, Lcom/getmimo/data/content/model/track/Track;->getSections()Ljava/util/List;
+00016e  move-result-object v18
+000170  iget v9, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->E I
+000174  new-instance v10, Ljava/lang/Integer;
+000178  invoke-direct v10, v9, Ljava/lang/Integer;-><init>(I)V
+00017e  move-object/from16 v17, v8
+000182  move-object/from16 v20, v10
+000186  invoke-virtual/range v17 ... v22, Lcc/b;->y(Ljava/util/List; Z Ljava/lang/Integer; Z Z)Ljava/util/ArrayList;
+00018c  move-result-object v8
+00018e  iget v9, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->E I
+000192  invoke-virtual v8, v9, Ljava/util/ArrayList;->get(I)Ljava/lang/Object;
+000198  move-result-object v9
+00019a  check-cast v9, Lvn/b0;
+00019e  invoke-interface v9, Lvn/b0;->c()Lcom/getmimo/data/content/model/track/Section;
+0001a4  move-result-object v10
+0001a6  invoke-virtual v10, Lcom/getmimo/data/content/model/track/Section;->getTutorials()Ljava/util/List;
+0001ac  move-result-object v10
+0001ae  if-eqz v4, +009h
+0001b2  sget-object v11, Lcom/getmimo/ui/path/ChapterSpotlightType;->b Lcom/getmimo/ui/path/ChapterSpotlightType;
+0001b6  move-object v12, v8
+0001b8  move-object/from16 v17, v11
+0001bc  move-object v11, v7
+0001be  goto +4h
+0001c0  sget-object v11, Lcom/getmimo/ui/path/ChapterSpotlightType;->a Lcom/getmimo/ui/path/ChapterSpotlightType;
+0001c4  goto -7h
+0001c6  invoke-virtual v1, Lcom/getmimo/data/content/model/track/Track;->getId()J
+0001cc  move-result-wide v7
+0001ce  invoke-virtual v10, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+0001d4  invoke-virtual v6, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+0001da  new-instance v14, Ljava/util/ArrayList;
+0001de  invoke-direct v14, Ljava/util/ArrayList;-><init>()V
+0001e4  invoke-interface v10, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+0001ea  move-result-object v10
+0001ec  invoke-interface v10, Ljava/util/Iterator;->hasNext()Z
+0001f2  move-result v20
+0001f4  if-eqz v20, +028h
+0001f8  invoke-interface v10, Ljava/util/Iterator;->next()Ljava/lang/Object;
+0001fe  move-result-object v13
+000200  move-object/from16 v23, v13
+000204  check-cast v23, Lcom/getmimo/data/content/model/track/Tutorial;
+000208  sget-object v24, Lcom/getmimo/data/content/model/track/TutorialType;->Challenge Lcom/getmimo/data/content/model/track/TutorialType;
+00020c  move/from16 v25, v15
+000210  invoke-static/range v24, La70/h0;->X(Ljava/lang/Object;)Ljava/util/Set;
+000216  move-result-object v15
+000218  move-object/from16 v46, v3
+00021c  invoke-virtual/range v23, Lcom/getmimo/data/content/model/track/Tutorial;->getType()Lcom/getmimo/data/content/model/track/TutorialType;
+000222  move-result-object v3
+000224  invoke-interface v15, v3, Ljava/util/Set;->contains(Ljava/lang/Object;)Z
+00022a  move-result v3
+00022c  if-nez v3, +005h
+000230  invoke-virtual v14, v13, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+000236  move-object/from16 v3, v46
+00023a  move/from16 v15, v25
+00023e  const/4 v13, 7
+000240  const/4 v13, 2
+000242  goto -2bh
+000244  move-object/from16 v46, v3
+000248  move/from16 v25, v15
+00024c  new-instance v3, Ljava/util/ArrayList;
+000250  invoke-direct v3, Ljava/util/ArrayList;-><init>()V
+000256  invoke-virtual v14, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;
+00025c  move-result-object v13
+00025e  const/4 v14, 6
+000260  const/4 v14, 0
+000262  invoke-interface v13, Ljava/util/Iterator;->hasNext()Z
+000268  move-result v10
+00026a  if-eqz v10, +1f8h
+00026e  invoke-interface v13, Ljava/util/Iterator;->next()Ljava/lang/Object;
+000274  move-result-object v10
+000276  move-object v15, v10
+000278  check-cast v15, Lcom/getmimo/data/content/model/track/Tutorial;
+00027c  if-nez v22, +00fh
+000280  invoke-virtual v15, Lcom/getmimo/data/content/model/track/Tutorial;->getType()Lcom/getmimo/data/content/model/track/TutorialType;
+000286  move-result-object v10
+000288  move-object/from16 v23, v6
+00028c  sget-object v6, Lcom/getmimo/data/content/model/track/TutorialType;->GuidedProject Lcom/getmimo/data/content/model/track/TutorialType;
+000290  if-ne v10, v6, +007h
+000294  move/from16 v32, v25
+000298  goto +7h
+00029a  move-object/from16 v23, v6
+00029e  const/16 v32, 25969
+0002a2  const/16 v32, 0
+0002a6  invoke-virtual v3, Ljava/util/ArrayList;->isEmpty()Z
+0002ac  move-result v6
+0002ae  if-nez v6, +041h
+0002b2  invoke-static v3, Lkotlin/collections/a;->M0(Ljava/util/List;)Ljava/lang/Object;
+0002b8  move-result-object v6
+0002ba  instance-of v6, v6, Lvn/g0;
+0002be  if-eqz v6, +00eh
+0002c2  invoke-static v3, Lkotlin/collections/a;->M0(Ljava/util/List;)Ljava/lang/Object;
+0002c8  move-result-object v6
+0002ca  check-cast v6, Lvn/i0;
+0002ce  invoke-interface v6, Lvn/i0;->d()Z
+0002d4  move-result v6
+0002d6  if-nez v6, +02dh
+0002da  invoke-virtual v3, Ljava/util/ArrayList;->size()I
+0002e0  move-result v6
+0002e2  invoke-virtual v3, v6, Ljava/util/ArrayList;->listIterator(I)Ljava/util/ListIterator;
+0002e8  move-result-object v6
+0002ea  invoke-interface v6, Ljava/util/ListIterator;->hasPrevious()Z
+0002f0  move-result v10
+0002f2  if-eqz v10, +015h
+0002f6  invoke-interface v6, Ljava/util/ListIterator;->previous()Ljava/lang/Object;
+0002fc  move-result-object v10
+0002fe  move-object/from16 v24, v10
+000302  check-cast v24, Lvn/i0;
+000306  invoke-interface/range v24, Lvn/i0;->getType()Lcom/getmimo/data/content/model/track/TutorialType;
+00030c  move-result-object v24
+00030e  invoke-virtual/range v24, Lcom/getmimo/data/content/model/track/TutorialType;->isRequired()Z
+000314  move-result v24
+000316  if-eqz v24, -016h
+00031a  goto +3h
+00031c  const/4 v10, 7
+00031e  const/4 v10, 0
+000320  instance-of v6, v10, Lvn/d0;
+000324  if-eqz v6, +003h
+000328  goto +4h
+00032a  const/4 v6, 5
+00032c  const/4 v6, 0
+00032e  goto +3h
+000330  move/from16 v6, v25
+000334  invoke-virtual v15, Lcom/getmimo/data/content/model/track/Tutorial;->isCompleted()Z
+00033a  move-result v10
+00033c  move/from16 v24, v6
+000340  const/16 v6, 19348
+000344  const/16 v6, 10
+000348  if-eqz v10, +09ch
+00034c  invoke-virtual v15, Lcom/getmimo/data/content/model/track/Tutorial;->getId()J
+000352  move-result-wide v27
+000354  invoke-virtual v15, Lcom/getmimo/data/content/model/track/Tutorial;->getType()Lcom/getmimo/data/content/model/track/TutorialType;
+00035a  move-result-object v30
+00035c  invoke-virtual v15, Lcom/getmimo/data/content/model/track/Tutorial;->getIconBanner()Ljava/lang/String;
+000362  move-result-object v33
+000364  invoke-virtual v15, Lcom/getmimo/data/content/model/track/Tutorial;->getTitle()Ljava/lang/String;
+00036a  move-result-object v29
+00036c  invoke-virtual v15, Lcom/getmimo/data/content/model/track/Tutorial;->getChapters()Ljava/util/List;
+000372  move-result-object v10
+000374  move-object/from16 v36, v13
+000378  new-instance v13, Ljava/util/ArrayList;
+00037c  invoke-static v10, v6, La70/r;->i0(Ljava/lang/Iterable; I)I
+000382  move-result v6
+000384  invoke-direct v13, v6, Ljava/util/ArrayList;-><init>(I)V
+00038a  invoke-interface v10, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+000390  move-result-object v24
+000392  invoke-interface/range v24, Ljava/util/Iterator;->hasNext()Z
+000398  move-result v6
+00039a  if-eqz v6, +055h
+00039e  invoke-interface/range v24, Ljava/util/Iterator;->next()Ljava/lang/Object;
+0003a4  move-result-object v6
+0003a6  check-cast v6, Lcom/getmimo/data/content/model/track/Chapter;
+0003aa  new-instance v37, Lvn/d;
+0003ae  invoke-virtual v6, Lcom/getmimo/data/content/model/track/Chapter;->getId()J
+0003b4  move-result-wide v38
+0003b6  invoke-virtual v6, Lcom/getmimo/data/content/model/track/Chapter;->getTitle()Ljava/lang/String;
+0003bc  move-result-object v40
+0003be  invoke-virtual v6, Lcom/getmimo/data/content/model/track/Chapter;->isCompleted()Z
+0003c4  move-result v41
+0003c6  move-object/from16 v26, v9
+0003ca  invoke-virtual v15, Lcom/getmimo/data/content/model/track/Tutorial;->getId()J
+0003d0  move-result-wide v9
+0003d2  invoke-virtual v6, Lcom/getmimo/data/content/model/track/Chapter;->getId()J
+0003d8  move-result-wide v34
+0003da  move-object/from16 v16, v11
+0003de  move/from16 v43, v14
+0003e2  move/from16 v14, v19
+0003e6  move/from16 v44, v21
+0003ea  move-object/from16 v6, v23
+0003ee  move-object/from16 v21, v15
+0003f2  move/from16 v23, v22
+0003f6  move-object/from16 v15, v26
+0003fa  move-object/from16 v22, v5
+0003fe  move-object v5, v12
+000400  move-wide/from16 v11, v34
+000404  invoke-static/range v6 ... v12, Lds/w;->c(Ljava/util/Set; J J J)Z
+00040a  move-result v42
+00040c  move-wide v8, v7
+00040e  move-object v7, v6
+000410  invoke-direct/range v37 ... v42, Lvn/d;-><init>(J Ljava/lang/String; Z Z)V
+000416  move-object/from16 v6, v37
+00041a  invoke-virtual v13, v6, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+000420  move-object v12, v5
+000422  move-object/from16 v11, v16
+000426  move-object/from16 v5, v22
+00042a  move/from16 v22, v23
+00042e  move/from16 v14, v43
+000432  move-object/from16 v23, v7
+000436  move-wide v7, v8
+000438  move-object v9, v15
+00043a  move-object/from16 v15, v21
+00043e  move/from16 v21, v44
+000442  goto -58h
+000444  move-object v15, v9
+000446  move-object/from16 v16, v11
+00044a  move/from16 v43, v14
+00044e  move/from16 v14, v19
+000452  move/from16 v44, v21
+000456  move-wide v8, v7
+000458  move-object/from16 v7, v23
+00045c  move/from16 v23, v22
+000460  move-object/from16 v22, v5
+000464  move-object v5, v12
+000466  new-instance v26, Lvn/d0;
+00046a  move-object/from16 v31, v13
+00046e  invoke-direct/range v26 ... v33, Lvn/d0;-><init>(J Ljava/lang/String; Lcom/getmimo/data/content/model/track/TutorialType; Ljava/util/List; Z Ljava/lang/String;)V
+000474  move-object v6, v7
+000476  move-wide v7, v8
+000478  move-object/from16 v9, v26
+00047c  goto/16 +0dah
+000480  move-object/from16 v16, v11
+000484  move-object/from16 v36, v13
+000488  move/from16 v43, v14
+00048c  move/from16 v14, v19
+000490  move/from16 v44, v21
+000494  move-object/from16 v21, v15
+000498  move-object v15, v9
+00049a  move-wide v8, v7
+00049c  move-object/from16 v7, v23
+0004a0  move/from16 v23, v22
+0004a4  move-object/from16 v22, v5
+0004a8  move-object v5, v12
+0004aa  if-nez v14, +023h
+0004ae  if-nez v24, +021h
+0004b2  invoke-virtual/range v21, Lcom/getmimo/data/content/model/track/Tutorial;->getHasProgress()Z
+0004b8  move-result v10
+0004ba  if-eqz v10, +003h
+0004be  goto +19h
+0004c0  invoke-virtual/range v21, Lcom/getmimo/data/content/model/track/Tutorial;->getId()J
+0004c6  move-result-wide v27
+0004c8  invoke-virtual/range v21, Lcom/getmimo/data/content/model/track/Tutorial;->getType()Lcom/getmimo/data/content/model/track/TutorialType;
+0004ce  move-result-object v30
+0004d0  move/from16 v31, v32
+0004d4  invoke-virtual/range v21, Lcom/getmimo/data/content/model/track/Tutorial;->getIconBanner()Ljava/lang/String;
+0004da  move-result-object v32
+0004dc  invoke-virtual/range v21, Lcom/getmimo/data/content/model/track/Tutorial;->getTitle()Ljava/lang/String;
+0004e2  move-result-object v29
+0004e4  new-instance v26, Lvn/e0;
+0004e8  invoke-direct/range v26 ... v32, Lvn/e0;-><init>(J Ljava/lang/String; Lcom/getmimo/data/content/model/track/TutorialType; Z Ljava/lang/String;)V
+0004ee  goto -3dh
+0004f0  if-nez v43, +00dh
+0004f4  invoke-virtual/range v21, Lcom/getmimo/data/content/model/track/Tutorial;->getType()Lcom/getmimo/data/content/model/track/TutorialType;
+0004fa  move-result-object v10
+0004fc  sget-object v11, Lcom/getmimo/data/content/model/track/TutorialType;->PracticeOptional Lcom/getmimo/data/content/model/track/TutorialType;
+000500  if-eq v10, v11, +005h
+000504  move/from16 v31, v25
+000508  goto +5h
+00050a  const/16 v31, 16355
+00050e  const/16 v31, 0
+000512  if-eqz v31, +004h
+000516  move/from16 v43, v25
+00051a  if-nez v14, +020h
+00051e  if-eqz v46, +01eh
+000522  invoke-virtual/range v46, Ljava/lang/Integer;->intValue()I
+000528  move-result v10
+00052a  if-nez v10, +018h
+00052e  invoke-virtual/range v21, Lcom/getmimo/data/content/model/track/Tutorial;->getId()J
+000534  move-result-wide v27
+000536  invoke-virtual/range v21, Lcom/getmimo/data/content/model/track/Tutorial;->getTitle()Ljava/lang/String;
+00053c  move-result-object v29
+00053e  invoke-virtual/range v21, Lcom/getmimo/data/content/model/track/Tutorial;->getType()Lcom/getmimo/data/content/model/track/TutorialType;
+000544  move-result-object v30
+000546  invoke-virtual/range v21, Lcom/getmimo/data/content/model/track/Tutorial;->getIconBanner()Ljava/lang/String;
+00054c  move-result-object v33
+00054e  new-instance v26, Lvn/h0;
+000552  invoke-direct/range v26 ... v33, Lvn/h0;-><init>(J Ljava/lang/String; Lcom/getmimo/data/content/model/track/TutorialType; Z Z Ljava/lang/String;)V
+000558  goto -72h
+00055a  invoke-virtual/range v21, Lcom/getmimo/data/content/model/track/Tutorial;->getId()J
+000560  move-result-wide v27
+000562  invoke-virtual/range v21, Lcom/getmimo/data/content/model/track/Tutorial;->getType()Lcom/getmimo/data/content/model/track/TutorialType;
+000568  move-result-object v30
+00056a  invoke-virtual/range v21, Lcom/getmimo/data/content/model/track/Tutorial;->getIconBanner()Ljava/lang/String;
+000570  move-result-object v34
+000572  invoke-virtual/range v21, Lcom/getmimo/data/content/model/track/Tutorial;->getTitle()Ljava/lang/String;
+000578  move-result-object v29
+00057a  invoke-virtual/range v21, Lcom/getmimo/data/content/model/track/Tutorial;->getChapters()Ljava/util/List;
+000580  move-result-object v10
+000582  new-instance v13, Ljava/util/ArrayList;
+000586  invoke-static v10, v6, La70/r;->i0(Ljava/lang/Iterable; I)I
+00058c  move-result v6
+00058e  invoke-direct v13, v6, Ljava/util/ArrayList;-><init>(I)V
+000594  invoke-interface v10, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+00059a  move-result-object v24
+00059c  invoke-interface/range v24, Ljava/util/Iterator;->hasNext()Z
+0005a2  move-result v6
+0005a4  if-eqz v6, +030h
+0005a8  invoke-interface/range v24, Ljava/util/Iterator;->next()Ljava/lang/Object;
+0005ae  move-result-object v6
+0005b0  check-cast v6, Lcom/getmimo/data/content/model/track/Chapter;
+0005b4  new-instance v37, Lvn/d;
+0005b8  invoke-virtual v6, Lcom/getmimo/data/content/model/track/Chapter;->getId()J
+0005be  move-result-wide v38
+0005c0  invoke-virtual v6, Lcom/getmimo/data/content/model/track/Chapter;->getTitle()Ljava/lang/String;
+0005c6  move-result-object v40
+0005c8  invoke-virtual v6, Lcom/getmimo/data/content/model/track/Chapter;->isCompleted()Z
+0005ce  move-result v41
+0005d0  move-object v11, v6
+0005d2  move-object v6, v7
+0005d4  move-wide v7, v8
+0005d6  invoke-virtual/range v21, Lcom/getmimo/data/content/model/track/Tutorial;->getId()J
+0005dc  move-result-wide v9
+0005de  invoke-virtual v11, Lcom/getmimo/data/content/model/track/Chapter;->getId()J
+0005e4  move-result-wide v11
+0005e6  invoke-static/range v6 ... v12, Lds/w;->c(Ljava/util/Set; J J J)Z
+0005ec  move-result v42
+0005ee  invoke-direct/range v37 ... v42, Lvn/d;-><init>(J Ljava/lang/String; Z Z)V
+0005f4  move-object/from16 v9, v37
+0005f8  invoke-virtual v13, v9, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+0005fe  move-wide v8, v7
+000600  move-object v7, v6
+000602  goto -33h
+000604  move-object v6, v7
+000606  move-wide v7, v8
+000608  if-eqz v31, +005h
+00060c  move-object/from16 v33, v17
+000610  goto +5h
+000612  const/16 v33, 8759
+000616  const/16 v33, 0
+00061a  new-instance v26, Lvn/g0;
+00061e  move/from16 v35, v32
+000622  move-object/from16 v32, v13
+000626  invoke-direct/range v26 ... v35, Lvn/g0;-><init>(J Ljava/lang/String; Lcom/getmimo/data/content/model/track/TutorialType; Z Ljava/util/List; Lcom/getmimo/ui/path/ChapterSpotlightType; Ljava/lang/String; Z)V
+00062c  goto/16 -0dah
+000630  invoke-virtual v3, v9, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+000636  move-object v12, v5
+000638  move/from16 v19, v14
+00063c  move-object v9, v15
+00063e  move-object/from16 v11, v16
+000642  move-object/from16 v5, v22
+000646  move/from16 v22, v23
+00064a  move-object/from16 v13, v36
+00064e  move/from16 v14, v43
+000652  move/from16 v21, v44
+000656  goto/16 -1fah
+00065a  move-object v15, v9
+00065c  move-object/from16 v16, v11
+000660  move/from16 v14, v19
+000664  move/from16 v44, v21
+000668  move/from16 v23, v22
+00066c  move-object/from16 v22, v5
+000670  move-object v5, v12
+000672  invoke-virtual/range v16, Lyg/c;->a()Z
+000678  move-result v6
+00067a  iget-object v7, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->F Lvn/i0;
+00067e  if-eqz v7, +033h
+000682  invoke-virtual v3, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;
+000688  move-result-object v8
+00068a  invoke-interface v8, Ljava/util/Iterator;->hasNext()Z
+000690  move-result v9
+000692  if-eqz v9, +017h
+000696  invoke-interface v8, Ljava/util/Iterator;->next()Ljava/lang/Object;
+00069c  move-result-object v9
+00069e  move-object v10, v9
+0006a0  check-cast v10, Lvn/i0;
+0006a4  invoke-interface v10, Lvn/i0;->getId()J
+0006aa  move-result-wide v10
+0006ac  invoke-interface v7, Lvn/i0;->getId()J
+0006b2  move-result-wide v12
+0006b4  cmp-long v10, v10, v12
+0006b8  if-nez v10, -017h
+0006bc  move-object v8, v9
+0006be  goto +3h
+0006c0  const/4 v8, 2
+0006c2  const/4 v8, 0
+0006c4  move-object v9, v8
+0006c6  check-cast v9, Lvn/i0;
+0006ca  instance-of v9, v9, Lvn/d0;
+0006ce  if-eqz v9, +008h
+0006d2  instance-of v7, v7, Lvn/d0;
+0006d6  if-nez v7, +004h
+0006da  const/4 v8, 0
+0006dc  const/4 v8, 0
+0006de  check-cast v8, Lvn/i0;
+0006e2  goto +3h
+0006e4  const/4 v8, 6
+0006e6  const/4 v8, 0
+0006e8  iget v7, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->E I
+0006ec  add-int/lit8 v7, v7, 1
+0006f0  invoke-static v7, v5, Lkotlin/collections/a;->F0(I Ljava/util/List;)Ljava/lang/Object;
+0006f6  move-result-object v7
+0006f8  check-cast v7, Lvn/b0;
+0006fc  if-eqz v7, +012h
+000700  new-instance v9, Lt50/j;
+000704  invoke-interface v7, Lvn/b0;->getIndex()I
+00070a  move-result v10
+00070c  invoke-interface v7, Lvn/b0;->c()Lcom/getmimo/data/content/model/track/Section;
+000712  move-result-object v7
+000714  instance-of v11, v15, Lvn/x;
+000718  invoke-direct v9, v10, v7, v11, Lt50/j;-><init>(I Lcom/getmimo/data/content/model/track/Section; Z)V
+00071e  goto +3h
+000720  const/4 v9, 2
+000722  const/4 v9, 0
+000724  iget-object v7, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->D Lcom/getmimo/interactors/path/d;
+000728  iget-object v7, v7, Lcom/getmimo/interactors/path/d;->f Lcom/getmimo/interactors/path/b;
+00072c  iput-object v1, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->y Lcom/getmimo/data/content/model/track/Track;
+000730  iput-object v2, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->z Lri/c;
+000734  const/4 v10, 4
+000736  const/4 v10, 0
+000738  iput-object v10, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->A Lkotlin/Pair;
+00073c  iput-object v10, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->C Ljava/util/Set;
+000740  iput-object v5, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->a Ljava/util/List;
+000744  iput-object v3, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->b Ljava/util/List;
+000748  iput-object v8, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->c Lvn/i0;
+00074c  iput-object v9, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->d Lt50/j;
+000750  iput-boolean v4, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->B Z
+000754  iput v14, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->v I
+000758  move/from16 v15, v44
+00075c  iput-boolean v15, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->f Z
+000760  move/from16 v10, v23
+000764  iput v10, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->w I
+000768  iput-boolean v6, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->g Z
+00076c  move/from16 v11, v25
+000770  iput-byte v11, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->x B
+000774  invoke-virtual v7, v1, v5, Lcom/getmimo/interactors/path/b;->b(Lcom/getmimo/data/content/model/track/Track; Ljava/util/ArrayList;)Lvn/c;
+00077a  move-result-object v7
+00077c  move-object/from16 v12, v22
+000780  if-ne v7, v12, +003h
+000784  goto +39h
+000786  move v13, v10
+000788  move-object v10, v3
+00078a  move v3, v6
+00078c  move v6, v13
+00078e  move-object v13, v5
+000790  move v5, v15
+000792  check-cast v7, Lvn/c;
+000796  iget-object v15, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->D Lcom/getmimo/interactors/path/d;
+00079a  iget v11, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->E I
+00079e  iput-object v1, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->y Lcom/getmimo/data/content/model/track/Track;
+0007a2  iput-object v2, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->z Lri/c;
+0007a6  move-object/from16 v16, v1
+0007aa  const/4 v1, 5
+0007ac  const/4 v1, 0
+0007ae  iput-object v1, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->A Lkotlin/Pair;
+0007b2  iput-object v1, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->C Ljava/util/Set;
+0007b6  iput-object v13, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->a Ljava/util/List;
+0007ba  iput-object v10, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->b Ljava/util/List;
+0007be  iput-object v8, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->c Lvn/i0;
+0007c2  iput-object v9, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->d Lt50/j;
+0007c6  iput-object v7, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->e Lvn/c;
+0007ca  iput-boolean v4, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->B Z
+0007ce  iput v14, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->v I
+0007d2  iput-boolean v5, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->f Z
+0007d6  iput v6, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->w I
+0007da  iput-boolean v3, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->g Z
+0007de  const/4 v4, 4
+0007e0  const/4 v4, 2
+0007e2  iput-byte v4, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->x B
+0007e6  sget v4, Lcom/getmimo/interactors/path/d;->m I
+0007ea  invoke-virtual v15, v11, v3, v0, Lcom/getmimo/interactors/path/d;->a(I Z Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;
+0007f0  move-result-object v4
+0007f2  if-ne v4, v12, +003h
+0007f6  return-object v12
+0007f8  move-object v11, v13
+0007fa  move v13, v5
+0007fc  move-object v5, v8
+0007fe  move-object v8, v4
+000800  check-cast v8, Lvn/u;
+000804  iget-object v4, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->D Lcom/getmimo/interactors/path/d;
+000808  sget v12, Lcom/getmimo/interactors/path/d;->m I
+00080c  if-eqz v3, +004h
+000810  move-object v12, v1
+000812  goto +1fh
+000814  iget-object v4, v4, Lcom/getmimo/interactors/path/d;->k La90/f;
+000818  const/4 v12, 1
+00081a  const/4 v12, 0
+00081c  invoke-virtual v4, v12, La90/f;->z(Z)Ltr/b;
+000822  move-result-object v4
+000824  instance-of v12, v4, Lxf/e;
+000828  if-eqz v12, +005h
+00082c  check-cast v4, Lxf/e;
+000830  goto +2h
+000832  move-object v4, v1
+000834  if-nez v4, +003h
+000838  goto -14h
+00083a  new-instance v12, Lvn/m;
+00083e  iget-object v4, v4, Lxf/e;->h Lcom/getmimo/data/source/local/iap/RemoteDiscountContent;
+000842  iget-object v14, v4, Lcom/getmimo/data/source/local/iap/RemoteDiscountContent;->w Ljava/lang/String;
+000846  iget-object v4, v4, Lcom/getmimo/data/source/local/iap/RemoteDiscountContent;->x Ljava/lang/String;
+00084a  invoke-direct v12, v14, v4, Lvn/m;-><init>(Ljava/lang/String; Ljava/lang/String;)V
+000850  iget-object v4, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->D Lcom/getmimo/interactors/path/d;
+000854  if-eqz v3, +009h
+000858  move-object/from16 v17, v2
+00085c  move-object v4, v10
+00085e  const/4 v14, 1
+000860  const/4 v14, 0
+000862  move-object v10, v1
+000864  goto +32h
+000866  iget-object v4, v4, Lcom/getmimo/interactors/path/d;->k La90/f;
+00086a  const/4 v14, 4
+00086c  const/4 v14, 0
+00086e  invoke-virtual v4, v14, La90/f;->z(Z)Ltr/b;
+000874  move-result-object v4
+000876  instance-of v15, v4, Lxf/b;
+00087a  if-eqz v15, +005h
+00087e  check-cast v4, Lxf/b;
+000882  goto +2h
+000884  move-object v4, v1
+000886  if-nez v4, +006h
+00088a  move-object/from16 v17, v2
+00088e  move-object v4, v10
+000890  goto -17h
+000892  iget-object v15, v4, Lxf/b;->g Lorg/joda/time/DateTime;
+000896  move-object/from16 v17, v2
+00089a  if-eqz v15, +00ah
+00089e  iget-wide v1, v15, Lorg/joda/time/base/BaseDateTime;->a J
+0008a2  invoke-virtual v4, Ltr/b;->x()Z
+0008a8  move-result v15
+0008aa  if-nez v15, +006h
+0008ae  move-object v4, v10
+0008b0  const/4 v10, 7
+0008b2  const/4 v10, 0
+0008b4  goto +ah
+0008b6  new-instance v15, Lvn/k;
+0008ba  iget-boolean v4, v4, Lxf/b;->i Z
+0008be  invoke-direct v15, v1, v2, v4, Lvn/k;-><init>(J Z)V
+0008c4  move-object v4, v10
+0008c6  move-object v10, v15
+0008c8  invoke-virtual/range v17, Lri/c;->b()Z
+0008ce  move-result v1
+0008d0  iget-object v2, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->D Lcom/getmimo/interactors/path/d;
+0008d4  iget-object v2, v2, Lcom/getmimo/interactors/path/d;->j Lxf/f;
+0008d8  invoke-virtual v2, Lxf/f;->a()Lorg/joda/time/DateTime;
+0008de  move-result-object v2
+0008e0  if-nez v3, +00ah
+0008e4  if-eqz v2, +008h
+0008e8  invoke-virtual v2, Lld0/c;->g()Z
+0008ee  move-result v3
+0008f0  if-nez v3, +005h
+0008f4  move/from16 v46, v1
+0008f8  goto +15h
+0008fa  new-instance v3, Lvn/l;
+0008fe  sget-object v15, Loe/b;->a Lcom/getmimo/core/model/inapp/DiscountedSubscription;
+000902  invoke-virtual v15, Lcom/getmimo/core/model/inapp/DiscountedSubscription;->getDiscountPercent()I
+000908  move-result v15
+00090a  invoke-static v15, Ljava/lang/Math;->abs(I)I
+000910  move-result v15
+000912  move/from16 v46, v1
+000916  iget-wide v1, v2, Lorg/joda/time/base/BaseDateTime;->a J
+00091a  invoke-direct v3, v15, v1, v2, Lvn/l;-><init>(I J)V
+000920  goto +3h
+000922  const/4 v3, 3
+000924  const/4 v3, 0
+000926  new-instance v1, Lvn/n;
+00092a  iget v0, v0, Lcom/getmimo/interactors/path/GetPathMapState$invoke$3;->E I
+00092e  if-eqz v6, +004h
+000932  const/4 v14, 7
+000934  const/4 v14, 1
+000936  move-object v6, v9
+000938  move-object v2, v11
+00093a  move-object v9, v12
+00093c  move/from16 v12, v46
+000940  move-object v11, v3
+000942  move v3, v0
+000944  move-object v0, v1
+000946  move-object/from16 v1, v16
+00094a  invoke-direct/range v0 ... v14, Lvn/n;-><init>(Lcom/getmimo/data/content/model/track/Track; Ljava/util/List; I Ljava/util/List; Lvn/i0; Lt50/j; Lvn/c; Lvn/u; Lvn/m; Lvn/k; Lvn/l; Z Z Z)V
+000950  return-object v0
+000952  nop 
+000954  <androguard.core.dex.FillArrayData object at 0x7f316710c590>
