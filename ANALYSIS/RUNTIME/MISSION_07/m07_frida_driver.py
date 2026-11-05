@@ -1,51 +1,76 @@
 #!/usr/bin/env python3
-"""Attach Frida to the ORIGINAL com.getmimo process, run a JS probe, keep the
-session alive for DURATION seconds while ADB experiments execute, and write
-every message verbatim as JSONL runtime trace evidence."""
-import frida, json, sys, time, pathlib
+"""MISSION 07 — attach Frida to the ORIGINAL com.getmimo process and collect
+a JSONL trace. On this emulator the process NAME is 'Mimo', not the package
+name (measured: frida-ps -U -> 3407 Mimo; adb shell pidof com.getmimo -> 3407).
+Therefore attach by PID, never by get_process('com.getmimo'). Android is
+'jailed' for Frida so spawn() is unsupported; attach is the correct mode.
+"""
+import sys, json, time, subprocess, pathlib
+import frida
 
-js_path, out_path, duration = sys.argv[1], sys.argv[2], float(sys.argv[3])
-out = pathlib.Path(out_path); out.parent.mkdir(parents=True, exist_ok=True)
-fh = out.open('w', encoding='utf-8')
-lines = []
+if len(sys.argv) < 4:
+    print('usage: m07_frida_driver.py <script.js> <trace.jsonl> <seconds>'); sys.exit(2)
+js_path, trace_path, duration = sys.argv[1], sys.argv[2], float(sys.argv[3])
+out = pathlib.Path(trace_path); out.parent.mkdir(parents=True, exist_ok=True)
+f = out.open('w', encoding='utf-8')
+
+def write(o):
+    f.write(json.dumps(o, ensure_ascii=False) + '\n'); f.flush()
+
+def host_env():
+    try:
+        s = subprocess.check_output(['frida-ps', '-U'], stderr=subprocess.STDOUT, timeout=30).decode(errors='replace')
+        return [l for l in s.splitlines() if 'Mimo' in l][:5]
+    except Exception as e:
+        return ['frida-ps failed: %s' % e]
+
+def device_pid():
+    try:
+        return int(subprocess.check_output(['adb', 'shell', 'pidof', 'com.getmimo'],
+                                          stderr=subprocess.DEVNULL, timeout=20).decode().strip().split()[0])
+    except Exception:
+        return None
+
+dev = frida.get_usb_device(timeout=30)
+write({'kind': 'driver_start', 'frida': frida.__version__, 'pidof_com.getmimo': device_pid(),
+       'frida_ps_mimo': host_env(), 'timestamp_utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())})
+pid = device_pid()
+proc = None
+for p in dev.enumerate_processes():
+    if (pid is not None and p.pid == pid) or p.name in ('Mimo', 'com.getmimo'):
+        proc = p; break
+if proc is None:
+    print('[driver] process not found; aborting (no spawn on jailed Android)'); sys.exit(3)
+print('[driver] attaching to pid=%d name=%s' % (proc.pid, proc.name))
+session = dev.attach(proc.pid)
+write({'kind': 'attached', 'pid': proc.pid, 'name': proc.name})
+js = pathlib.Path(js_path).read_text(encoding='utf-8')
+script = session.create_script(js)
+
 def on_message(message, data):
-    rec = {'ts_utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
-           'type': message.get('type'), 'payload': message.get('payload')}
-    if message.get('type') == 'error':
-        rec['stack'] = message.get('stack'); rec['description'] = message.get('description')
-    lines.append(rec); fh.write(json.dumps(rec, ensure_ascii=False) + '\n'); fh.flush()
-    if rec['type'] == 'send':
-        try:
-            o = json.loads(message['payload'])
-            print('[frida] %s %s %s' % (o.get('kind'), o.get('experiment',''), o.get('tag','')), flush=True)
-        except Exception: print('[frida] %s' % message['payload'], flush=True)
+    if message.get('type') == 'send':
+        p = message.get('payload')
+        if isinstance(p, str):
+            try: o = json.loads(p)
+            except Exception: o = {'kind': 'raw', 'text': p}
+        else: o = p if isinstance(p, dict) else {'kind': 'raw', 'value': str(p)}
+        o['_ts'] = time.strftime('%Y-%m-%dT%H:%M:%S', time.gmtime())
+        write(o)
+        if o.get('kind') in ('call_error', 'experiment_error', 'hook_error', 'emit_error'):
+            print('[warn]', json.dumps(o, ensure_ascii=False)[:300])
+    elif message.get('type') == 'error':
+        write({'kind': 'script_error', 'description': message.get('description'),
+               'stack': message.get('stack')})
+        print('[error]', message.get('description'))
     else:
-        print('[frida:error] %s' % message.get('description'), flush=True)
+        write({'kind': 'frida_message', 'message': str(message)})
 
-dev = frida.get_usb_device(timeout=60)
-try:
-    proc = dev.get_process('com.getmimo')
-    pid = proc.pid
-    print('[driver] attaching to existing pid=%d' % pid, flush=True)
-    session = dev.attach(pid)
-    spawned = False
-except Exception as e:
-    print('[driver] no process (%s); spawning' % e, flush=True)
-    pid = dev.spawn(['com.getmimo'])
-    session = dev.attach(pid)
-    spawned = True
-script = session.create_script(pathlib.Path(js_path).read_text())
 script.on('message', on_message)
 script.load()
-if spawned:
-    dev.resume(pid)
-print('[driver] script loaded, collecting for %.0fs' % duration, flush=True)
-end = time.time() + duration
-while time.time() < end:
-    time.sleep(0.5)
-try: script.unload()
-except Exception: pass
+print('[driver] script loaded; collecting for %.0fs' % duration)
+time.sleep(duration)
+write({'kind': 'driver_done', 'elapsed_seconds': duration})
 try: session.detach()
 except Exception: pass
-fh.close()
-print('[driver] messages=%d output=%s' % (len(lines), out_path), flush=True)
+f.close()
+print('[driver] done, messages=%d' % sum(1 for _ in out.open(encoding='utf-8')))

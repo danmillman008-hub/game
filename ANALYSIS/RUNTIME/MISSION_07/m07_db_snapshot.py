@@ -25,9 +25,14 @@ else:
     for p in sorted(root.rglob('*')):
         if not p.is_file(): continue
         # Room/SQLite main db files and WAL/SHM companions
-        if p.suffix in ('.db', '.sqlite', '.sqlite3', '.wal', '.shm') or p.name.endswith('-wal') or p.name.endswith('-shm'):
-            if p.suffix in ('.wal','.shm') or p.name.endswith('-wal') or p.name.endswith('-shm'):
-                continue
+        # Identify SQLite by MAGIC, not by filename: Mimo/Room databases can be
+        # extensionless (e.g. 'mixpanel') and -wal/-shm are companions.
+        try:
+            is_sqlite = p.open('rb').read(16) == b'SQLite format 3\x00'
+        except Exception:
+            is_sqlite = False
+        is_companion = p.suffix in ('.wal','.shm','.journal') or p.name.endswith(('-wal','-shm','-journal'))
+        if is_sqlite and not is_companion:
             db = {'path': str(p.relative_to(root)), 'bytes': p.stat().st_size,
                   'sha256': sha(p), 'journal_mode': None, 'tables': [], 'error': None}
             try:

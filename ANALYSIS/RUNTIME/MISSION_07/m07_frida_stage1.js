@@ -16,6 +16,23 @@ function safe(v) {
   } catch (e) { return '<toString failed: ' + e + '>'; }
 }
 function argsOf(a) { return Array.prototype.slice.call(a).map(safe); }
+/* Reflection-based field dump: LiveData/progress objects rarely have a useful
+ * toString(). M07 records ACTUAL field values, not inferred ones. */
+function dumpFields(o, max) {
+  if (o === null || o === undefined) return null;
+  try {
+    var fs = o.getClass().getDeclaredFields(), out = {}, n = Math.min(fs.length, max || 40);
+    for (var i = 0; i < n; i++) {
+      var f = fs[i], nm = '?';
+      try { nm = f.getName(); f.setAccessible(true); out[nm] = safe(f.get(o)); }
+      catch (e) { out[nm] = '<field error ' + e + '>'; }
+    }
+    return out;
+  } catch (e) { return '<dump failed ' + e + '>'; }
+}
+var DUMP_TAGS = {'createLessonProgress':1,'repo_createProgress':1,'queue_store':1,
+                 'isSolved':1,'onLessonRun':1,'lessonSolvedCorrectly':1,
+                 'partialMatch':1,'lessonSolvedIncorrectly':1};
 
 function hookAll(cls, method, tag) {
   try {
@@ -32,7 +49,9 @@ function hookAll(cls, method, tag) {
           var ret;
           try {
             ret = ov.apply(this, arguments);
-            emit({kind:'exit', tag:tag, cls:cls, method:method, id:id, ret:safe(ret)});
+            var ev = {kind:'exit', tag:tag, cls:cls, method:method, id:id, ret:safe(ret)};
+            if (DUMP_TAGS[tag] && ret !== null && ret !== undefined) ev.ret_fields = dumpFields(ret);
+            emit(ev);
           } catch (e) {
             emit({kind:'throw', tag:tag, cls:cls, method:method, id:id, error:safe(e)});
             throw e;
@@ -149,6 +168,26 @@ Java.perform(function () {
     emit({kind:'call', experiment:'E6_interaction_selector', cls:'gm.h', method:'a',
           case_name:'empty_list', ret:safe(GH.a(empty))});
   } catch (e) { emit({kind:'experiment_error', experiment:'E6_interaction_selector', error:safe(e)}); }
+
+  /* ---------- 6b. live class census: what is actually loaded ------------- */
+  try {
+    var all = Java.enumerateLoadedClassesSync();
+    var mimo = all.filter(function (n) { return n.indexOf('com.getmimo') === 0; });
+    var lesson = mimo.filter(function (n) { return n.indexOf('lesson') >= 0 || n.indexOf('room') >= 0 || n.indexOf('progress') >= 0; });
+    emit({kind:'call', experiment:'E7_loaded_classes', total_loaded:all.length,
+          mimo_loaded:mimo.length, lesson_related_loaded:lesson.length,
+          lesson_sample:lesson.slice(0, 80), mimo_sample:mimo.slice(0, 40)});
+  } catch (e) { emit({kind:'experiment_error', experiment:'E7_loaded_classes', error:safe(e)}); }
+
+  /* ---------- 6c. live ViewModel instance census (heap scan, no invention) */
+  try {
+    var seen = 0;
+    Java.choose('com.getmimo.ui.lesson.interactive.base.c', {
+      onMatch: function (o) { seen++; emit({kind:'call', experiment:'E8_live_viewmodel',
+        index:seen, class:safe(o.getClass()), fields:dumpFields(o, 60)}); },
+      onComplete: function () { emit({kind:'call', experiment:'E8_live_viewmodel', total:seen}); }
+    });
+  } catch (e) { emit({kind:'experiment_error', experiment:'E8_live_viewmodel', error:safe(e)}); }
 
   /* ---------- 7. hooks for live method tracing --------------------------- */
   var B = 'com.getmimo.ui.lesson.interactive.base.c';

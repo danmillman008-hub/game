@@ -146,6 +146,22 @@ adb shell 'echo "== FULL SANDBOX TREE =="; find /data/data/com.getmimo -maxdepth
 mkdir -p "$R/DB/POST_LAUNCH"
 adb pull /sdcard/m07_post "$R/DB/POST_LAUNCH" </dev/null >/dev/null 2>&1
 python3 "$R/m07_db_snapshot.py" "$R/DB/POST_LAUNCH/m07_post" "B_AFTER_LAUNCH_AND_ONE_TAP" "$R/DB/SNAPSHOT_B.json" 2>&1 | tee "$R/LOGS/DB_SNAPSHOT_B.txt"
+# Consistent, root-level SQLite .backup of every database (device sqlite3 CLI is
+# present and measured). This avoids reading a torn WAL/journal copy.
+mkdir -p "$R/DB/CONSISTENT_BACKUPS"
+{
+  echo "MISSION 07 - device SQLite inventory + consistent backups"
+  adb shell 'ls -la /data/data/com.getmimo/databases/' 2>&1
+  for F in $(adb shell 'ls /data/data/com.getmimo/databases/' 2>/dev/null | tr -d '\r'); do
+    case "$F" in *-wal|*-shm|*-journal) continue;; esac
+    echo "--- $F ---"
+    adb shell "sqlite3 /data/data/com.getmimo/databases/$F '.backup /sdcard/m07_consistent.db'" 2>&1
+    echo "backup_exit=$?"
+    adb pull /sdcard/m07_consistent.db "$R/DB/CONSISTENT_BACKUPS/$F" </dev/null 2>&1 | tail -2
+    adb shell "sqlite3 /data/data/com.getmimo/databases/$F 'SELECT type,name,sql FROM sqlite_master ORDER BY type,name;'" 2>&1 | head -60
+  done
+} > "$R/DB/DEVICE_SQLITE_INVENTORY.txt" 2>&1
+python3 "$R/m07_db_snapshot.py" "$R/DB/CONSISTENT_BACKUPS" "B_CONSISTENT_SQLITE_BACKUP" "$R/DB/SNAPSHOT_B_CONSISTENT.json" 2>&1 | tee -a "$R/LOGS/DB_SNAPSHOT_B.txt"
 {
   echo "== WAL / SHM files present =="
   find "$R/DB/POST_LAUNCH" -type f | grep -E '\-wal|\-shm|\.journal' | head -30
