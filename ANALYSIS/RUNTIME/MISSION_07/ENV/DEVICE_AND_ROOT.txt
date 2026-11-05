@@ -1,6 +1,6 @@
 MISSION 07 - RUNTIME ENVIRONMENT ASSESSMENT (device)
-timestamp_utc=2026-11-05T11:17:50Z
-run_id=42017453045 run_attempt=1 ref=refs/heads/arena/aebb90b7-game sha=4716c2ec33cb8bfd851cb4cc976441bbb0152011
+timestamp_utc=2026-11-05T11:24:46Z
+run_id=42018369099 run_attempt=1 ref=refs/heads/arena/aebb90b7-game sha=258012e423493569e301606a2d95a22e6604a469
 == adb ==
 Android Debug Bridge version 1.0.41
 Version 37.0.1-15733141
@@ -23,8 +23,8 @@ sys.boot_completed=1
 == ROOT: post-root identity ==
 uid=0(root) gid=0(root) groups=0(root),1004(input),1007(log),1011(adb),1015(sdcard_rw),1028(sdcard_r),1078(ext_data_rw),1079(ext_obb_rw),3001(net_bt_admin),3002(net_bt),3003(inet),3006(net_bw_stats),3009(readproc),3011(uhid),3012(readtracefs) context=u:r:su:s0
 ls: /data/data/com.getmimo: No such file or directory
-drwxrwx--x  51 system system  4096 2026-11-05 11:17 /data
-drwxrwx--x 250 system system 16384 2026-11-05 11:17 /data/data
+drwxrwx--x  51 system system  4096 2026-11-05 11:24 /data
+drwxrwx--x 250 system system 16384 2026-11-05 11:24 /data/data
 == ROOT: su binary / setenforce ==
 /system/xbin/su
 uid=0(root) gid=0(root) groups=0(root),1004(input),1007(log),1011(adb),1015(sdcard_rw),1028(sdcard_r),1078(ext_data_rw),1079(ext_obb_rw),3001(net_bt_admin),3002(net_bt),3003(inet),3006(net_bw_stats),3009(readproc),3011(uhid),3012(readtracefs) context=u:r:su:s0
@@ -39,7 +39,7 @@ toybox 0.8.12-android
 /system/bin/sqlite3
 == process inspection ==
 USER           PID  PPID        VSZ    RSS WCHAN            ADDR S NAME                       
-root             1     0   10867520  14016 do_epoll_wait       0 S init
+root             1     0   11006784  14100 do_epoll_wait       0 S init
 root             2     0          0      0 kthreadd            0 S [kthreadd]
 root             3     2          0      0 kthread_worker_fn   0 S [pool_workqueue_release]
 root             4     2          0      0 rescuer_thread      0 I [kworker/R-rcu_g]
@@ -51,6 +51,6 @@ root             4     2          0      0 rescuer_thread      0 I [kworker/R-rc
 /system/bin/strace
 == kernel / memory ==
 Linux version 6.6.66-android15-8-gd0c43a640eab-ab13812146 (kleaf@build-host) (Android (11368308, +pgo, +bolt, +lto, +mlgo, based on r510928) clang version 18.0.0 (https://android.googlesource.com/toolchain/llvm-project 477610d4d0d988e69dbc3fae4fe86bff3f07f2b5), LLD 18.0.0) #1 SMP PREEMPT Mon Jul 21 17:41:13 UTC 2025
-MemTotal:        4013804 kB
-MemFree:          237104 kB
-MemAvailable:    2378504 kB
+MemTotal:        4013808 kB
+MemFree:          197416 kB
+MemAvailable:    2638124 kB

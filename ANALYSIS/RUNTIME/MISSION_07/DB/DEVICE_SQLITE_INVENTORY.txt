@@ -1,0 +1,40 @@
+MISSION 07 - device SQLite inventory + consistent backups
+total 160
+drwxrwx--x 2 u0_a216 u0_a216  4096 2026-11-05 11:25 .
+drwx------ 9 u0_a216 u0_a216  4096 2026-11-05 11:25 ..
+-rw-rw---- 1 u0_a216 u0_a216 57344 2026-11-05 11:26 com.google.android.datatransport.events
+-rw-rw---- 1 u0_a216 u0_a216     0 2026-11-05 11:26 com.google.android.datatransport.events-journal
+-rw-rw---- 1 u0_a216 u0_a216 16384 2026-11-05 11:26 google_app_measurement_local.db
+-rw-rw---- 1 u0_a216 u0_a216     0 2026-11-05 11:26 google_app_measurement_local.db-journal
+-rw-rw---- 1 u0_a216 u0_a216 45056 2026-11-05 11:26 mixpanel
+-rw-rw---- 1 u0_a216 u0_a216     0 2026-11-05 11:26 mixpanel-journal
+--- com.google.android.datatransport.events ---
+backup_exit=0
+/sdcard/m07_consistent.db: 1 file pulled, 0 skipped. 3.1 MB/s (57344 bytes in 0.018s)
+index|contexts_backend_priority_extras|CREATE UNIQUE INDEX contexts_backend_priority_extras on transport_contexts(backend_name, priority, extras)
+index|events_backend_id|CREATE INDEX events_backend_id on events(context_id)
+index|sqlite_autoindex_event_payloads_1|
+index|sqlite_autoindex_global_log_event_state_1|
+index|sqlite_autoindex_log_event_dropped_1|
+table|android_metadata|CREATE TABLE android_metadata (locale TEXT)
+table|event_metadata|CREATE TABLE event_metadata (_id INTEGER PRIMARY KEY, event_id INTEGER NOT NULL, name TEXT NOT NULL, value TEXT NOT NULL,FOREIGN KEY (event_id) REFERENCES events(_id) ON DELETE CASCADE)
+table|event_payloads|CREATE TABLE event_payloads (sequence_num INTEGER NOT NULL, event_id INTEGER NOT NULL, bytes BLOB NOT NULL,FOREIGN KEY (event_id) REFERENCES events(_id) ON DELETE CASCADE,PRIMARY KEY (sequence_num, event_id))
+table|events|CREATE TABLE events (_id INTEGER PRIMARY KEY, context_id INTEGER NOT NULL, transport_name TEXT NOT NULL, timestamp_ms INTEGER NOT NULL, uptime_ms INTEGER NOT NULL, payload BLOB NOT NULL, code INTEGER, num_attempts INTEGER NOT NULL, payload_encoding TEXT, inline BOOLEAN NOT NULL DEFAULT 1, product_id INTEGER, pseudonymous_id TEXT, experiment_ids_clear_blob BLOB, experiment_ids_encrypted_blob BLOB,FOREIGN KEY (context_id) REFERENCES transport_contexts(_id) ON DELETE CASCADE)
+table|global_log_event_state|CREATE TABLE global_log_event_state (last_metrics_upload_ms BIGINT PRIMARY KEY)
+table|log_event_dropped|CREATE TABLE log_event_dropped (log_source VARCHAR(45) NOT NULL,reason INTEGER NOT NULL,events_dropped_count BIGINT NOT NULL,PRIMARY KEY(log_source, reason))
+table|transport_contexts|CREATE TABLE transport_contexts (_id INTEGER PRIMARY KEY, backend_name TEXT NOT NULL, priority INTEGER NOT NULL, next_request_ms INTEGER NOT NULL, extras BLOB)
+--- google_app_measurement_local.db ---
+backup_exit=0
+/sdcard/m07_consistent.db: 1 file pulled, 0 skipped. 0.6 MB/s (16384 bytes in 0.028s)
+table|android_metadata|CREATE TABLE android_metadata (locale TEXT)
+table|messages|CREATE TABLE messages ( type INTEGER NOT NULL, entry BLOB NOT NULL, app_version TEXT, app_version_int INTEGER)
+--- mixpanel ---
+backup_exit=0
+/sdcard/m07_consistent.db: 1 file pulled, 0 skipped. 8.1 MB/s (45056 bytes in 0.005s)
+index|time_idx|CREATE INDEX time_idx ON events (created_at)
+table|android_metadata|CREATE TABLE android_metadata (locale TEXT)
+table|anonymous_people|CREATE TABLE anonymous_people (_id INTEGER PRIMARY KEY AUTOINCREMENT, data STRING NOT NULL, created_at INTEGER NOT NULL, automatic_data INTEGER DEFAULT 0, token STRING NOT NULL DEFAULT '')
+table|events|CREATE TABLE events (_id INTEGER PRIMARY KEY AUTOINCREMENT, data STRING NOT NULL, created_at INTEGER NOT NULL, automatic_data INTEGER DEFAULT 0, token STRING NOT NULL DEFAULT '')
+table|groups|CREATE TABLE groups (_id INTEGER PRIMARY KEY AUTOINCREMENT, data STRING NOT NULL, created_at INTEGER NOT NULL, automatic_data INTEGER DEFAULT 0, token STRING NOT NULL DEFAULT '')
+table|people|CREATE TABLE people (_id INTEGER PRIMARY KEY AUTOINCREMENT, data STRING NOT NULL, created_at INTEGER NOT NULL, automatic_data INTEGER DEFAULT 0, token STRING NOT NULL DEFAULT '')
+table|sqlite_sequence|CREATE TABLE sqlite_sequence(name,seq)

@@ -1,18 +1,10 @@
-[driver] no process (unable to find process with name 'com.getmimo'); spawning
+[driver] attaching to pid=3409 name=Mimo
 Traceback (most recent call last):
-  File "/home/runner/work/game/game/ANALYSIS/RUNTIME/MISSION_07/m07_frida_driver.py", line 27, in <module>
-    proc = dev.get_process('com.getmimo')
-  File "/home/runner/.local/lib/python3.14/site-packages/frida/__init__.py", line 720, in get_process
-    raise _frida.ProcessNotFoundError(f"unable to find process with name '{process_name}'")
-frida.ProcessNotFoundError: unable to find process with name 'com.getmimo'
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/runner/work/game/game/ANALYSIS/RUNTIME/MISSION_07/m07_frida_driver.py", line 34, in <module>
-    pid = dev.spawn(['com.getmimo'])
-  File "/home/runner/.local/lib/python3.14/site-packages/frida/__init__.py", line 646, in spawn
-    return _invoke(self._impl.spawn, (program, options, ))
+  File "/home/runner/work/game/game/ANALYSIS/RUNTIME/MISSION_07/m07_frida_driver.py", line 45, in <module>
+    session = dev.attach(proc.pid)
+  File "/home/runner/.local/lib/python3.14/site-packages/frida/__init__.py", line 662, in attach
+    return _wrap(_invoke(self._impl.attach, (pid, _make_options(_frida.SessionOptions, kwargs, {'linker_notifier_offsets': 'add_linker_notifier_offset'}), )))
+                 ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "/home/runner/.local/lib/python3.14/site-packages/frida/__init__.py", line 240, in _invoke
     raise error
-frida.NotSupportedError: need Gadget to attach on jailed Android; its default location is: /home/runner/.cache/frida/gadget-android-arm64.so
+frida.ServerNotRunningError: unable to connect to remote frida-server: closed
