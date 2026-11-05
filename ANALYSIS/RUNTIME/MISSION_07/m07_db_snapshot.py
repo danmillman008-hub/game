@@ -47,10 +47,19 @@ else:
                         n = cur.execute('SELECT COUNT(*) FROM "%s"' % m[1].replace('"','""')).fetchone()[0]
                         cols = [c[1] for c in cur.execute('PRAGMA table_info("%s")' % m[1].replace('"','""')).fetchall()]
                         rows = []
-                        if n <= 200:
-                            for r in cur.execute('SELECT * FROM "%s" LIMIT 200' % m[1].replace('"','""')).fetchall():
-                                rows.append([str(x) if not isinstance(x, (bytes, bytearray)) else '<%d bytes>' % len(x) for x in r])
-                        db['tables'].append({'name':m[1], 'columns':cols, 'row_count':n, 'rows':rows})
+                        limit = 200 if n <= 200 else 20
+                        for r in cur.execute('SELECT * FROM "%s" LIMIT %d' % (m[1].replace('"','""'), limit)).fetchall():
+                            rows.append([str(x) if not isinstance(x, (bytes, bytearray)) else '<%d bytes>' % len(x) for x in r])
+                        groups = {}
+                        for c in cols:
+                            if c in ('is_completed','in_queue','is_practice_progress','tries','attempts','track_id'):
+                                try:
+                                    groups[c] = [list(map(str, r)) for r in cur.execute(
+                                        'SELECT "%s", COUNT(*) FROM "%s" GROUP BY "%s" ORDER BY 2 DESC LIMIT 20'
+                                        % (c, m[1].replace('"','""'), c)).fetchall()]
+                                except Exception: pass
+                        db['tables'].append({'name':m[1], 'columns':cols, 'row_count':n,
+                                             'rows':rows, 'row_sample_limit':limit, 'group_counts':groups})
                     except Exception as e:
                         db['tables'].append({'name':m[1], 'error':str(e)})
                 con.close()
