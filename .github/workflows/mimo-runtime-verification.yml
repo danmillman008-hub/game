@@ -95,7 +95,7 @@ jobs:
       # ---------------------------------------------------------------------
       - name: Transfer and cryptographically verify the ORIGINAL APK
         shell: bash
-        run: if grep -q M05-INTERACTION-RUN ANALYSIS/RUNTIME/_DISPATCH_TRIGGER; then bash ANALYSIS/RUNTIME/MISSION_05/transfer_apk_m05.sh; else bash ANALYSIS/RUNTIME/MISSION_04/transfer_apk.sh; fi
+        run: if grep -q M07-RUNTIME-RUN ANALYSIS/RUNTIME/_DISPATCH_TRIGGER; then bash ANALYSIS/RUNTIME/MISSION_07/transfer_apk_m07.sh; elif grep -q M05-INTERACTION-RUN ANALYSIS/RUNTIME/_DISPATCH_TRIGGER; then bash ANALYSIS/RUNTIME/MISSION_05/transfer_apk_m05.sh; else bash ANALYSIS/RUNTIME/MISSION_04/transfer_apk.sh; fi
 
       # ---------------------------------------------------------------------
       # 3. ENVIRONMENT PREFLIGHT (host only, no emulator yet)
@@ -315,7 +315,7 @@ jobs:
           R=ANALYSIS/RUNTIME
           mkdir -p "$R"
           echo "run_id=$GITHUB_RUN_ID ref=$GITHUB_REF sha=$GITHUB_SHA" > "$R/RUN_INFO.txt"
-          if [ -d "$R/MISSION_04" ] && ! grep -q "M05-INTERACTION-RUN" ANALYSIS/RUNTIME/_DISPATCH_TRIGGER 2>/dev/null; then
+          if [ -d "$R/MISSION_04" ] && ! grep -qE "M05-INTERACTION-RUN|M07-RUNTIME-RUN" ANALYSIS/RUNTIME/_DISPATCH_TRIGGER 2>/dev/null; then
             cp "$R/RUN_INFO.txt" "$R/MISSION_04/RUN_INFO.txt"
           fi
           for P in "$R"/SCREENSHOTS/*.png; do
@@ -337,7 +337,7 @@ jobs:
           set +e
           git config user.name  'mimo-runtime-verification[bot]'
           git config user.email 'mimo-runtime-verification[bot]@users.noreply.github.com'
-          git add -f ANALYSIS/RUNTIME
+          git add -f ANALYSIS/RUNTIME ANALYSIS/MISSION_07
           git diff --cached --quiet && { echo 'nothing to commit'; exit 0; }
           git commit -m "runtime: MISSION 03 emulator/device evidence for run $GITHUB_RUN_ID"
           for i in 1 2 3; do
@@ -484,7 +484,7 @@ jobs:
           set +e
           git config user.name  'mimo-runtime-verification[bot]'
           git config user.email 'mimo-runtime-verification[bot]@users.noreply.github.com'
-          git add -f ANALYSIS/RUNTIME/MISSION_04
+          git add -f ANALYSIS/RUNTIME ANALYSIS/MISSION_07/MISSION_04
           git diff --cached --quiet && { echo 'nothing to commit'; exit 0; }
           git commit -m "runtime: MISSION 04 authorized-source presence probe for run $GITHUB_RUN_ID"
           for i in 1 2 3; do

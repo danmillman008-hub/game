@@ -12,6 +12,11 @@
 # purchases/payments, no TLS/pinning bypass. Stops at the login boundary.
 
 set +e
+# MISSION 07: LIVE runtime reconstruction. Root/Frida/private-DB experiments
+# run in their own dispatcher and never touch M03/M04/M05 evidence paths.
+if grep -q "M07-RUNTIME-RUN" ANALYSIS/RUNTIME/_DISPATCH_TRIGGER 2>/dev/null; then
+  exec bash ANALYSIS/RUNTIME/MISSION_07/m07_runtime.sh
+fi
 # MISSION 05: a dedicated interaction branch writes evidence to MISSION_05/.
 # M03/M04 records and logic stay untouched (exec before any write).
 if grep -q "M05-INTERACTION-RUN" ANALYSIS/RUNTIME/_DISPATCH_TRIGGER 2>/dev/null; then
