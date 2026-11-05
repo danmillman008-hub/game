@@ -135,8 +135,9 @@
 
 ## ۸. وضعیت تحویل
 
-- **Commit محصول:** `@@COMMIT@@`
-- **Push:** `origin/arena/aebb90b7-game` ✓ (گزارش نهایی به همان شاخه push شد)
+- **Commit محصول:** `057716bc24e25e47a9708526b1474e7e50b4bce7`
+- **Commit درج هش / تحویل:** ثبت شده بهعنوان HEAD نهایی همان شاخه
+- **Push:** `origin/arena/aebb90b7-game` ✓ (کد، تستها، مستندات و این گزارش روی همان شاخه push شدند)
 - **وضعیت درخت:** clean (فایلهای `app/node_modules/` در `.gitignore` هستند)
 - **سرور زنده:** `node app/server.js` روی `0.0.0.0:3000` — پیشنمایش فعال
 - **دستورهای تأیید:** `cd app && npm test` (۲۴/۲۴)، `npm run verify`،
