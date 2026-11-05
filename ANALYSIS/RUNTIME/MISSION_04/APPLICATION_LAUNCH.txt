@@ -1,5 +1,5 @@
 MISSION 04 - APPLICATION LAUNCH
-timestamp_utc=2026-11-05T08:56:57Z run_id=41997975847
+timestamp_utc=2026-11-05T09:01:54Z run_id=41998643355
 package=com.getmimo
 == command: adb shell cmd package resolve-activity --brief -c android.intent.category.LAUNCHER com.getmimo ==
 priority=0 preferredOrder=0 match=0x108000 specificIndex=-1 isDefault=false
@@ -11,29 +11,29 @@ am_start_exit=0
 initial_focus_on_mimo=yes
 == process / foreground state after launch ==
 package=com.getmimo
-pid=4445
-mCurrentFocus=mCurrentFocus=Window{94bf110 u0 com.getmimo/com.getmimo.ui.onboarding.intro.IntroSlidesActivity}
-mResumedActivity=topResumedActivity=ActivityRecord{241368439 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity t8}
+pid=4266
+mCurrentFocus=mCurrentFocus=Window{3fb7b94 u0 com.getmimo/com.getmimo.ui.onboarding.intro.IntroSlidesActivity}
+mResumedActivity=topResumedActivity=ActivityRecord{80027096 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity t8}
 == command: adb shell dumpsys activity activities (Mimo lines) ==
-  * Task{fd9d831 #8 type=standard A=10216:com.getmimo U=0 visible=true visibleRequested=true mode=fullscreen translucent=false sz=1}
-    topResumedActivity=ActivityRecord{241368439 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity t8}
-    * Hist  #0: ActivityRecord{241368439 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity t8}
+  * Task{da88a9 #8 type=standard A=10216:com.getmimo U=0 visible=true visibleRequested=true mode=fullscreen translucent=false sz=1}
+    topResumedActivity=ActivityRecord{80027096 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity t8}
+    * Hist  #0: ActivityRecord{80027096 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity t8}
       packageName=com.getmimo processName=com.getmimo
       launchedFromUid=10216 launchedFromPackage=com.getmimo launchedFromFeature=null userId=0
-      app=ProcessRecord{6d123fa 4445:com.getmimo/u0a216}
+      app=ProcessRecord{26c8e76 4266:com.getmimo/u0a216}
       Intent { flg=0x14008000 xflg=0x4 cmp=com.getmimo/.ui.onboarding.intro.IntroSlidesActivity }
-      rootOfTask=true task=Task{fd9d831 #8 type=standard A=10216:com.getmimo}
+      rootOfTask=true task=Task{da88a9 #8 type=standard A=10216:com.getmimo}
       taskAffinity=10216:com.getmimo
       mActivityComponent=com.getmimo/.ui.onboarding.intro.IntroSlidesActivity
-      baseDir=/data/app/~~QPf1TfJzUhApqca_-towcg==/com.getmimo-rYzgIQ5kJMliumCnrdAuHQ==/base.apk
+      baseDir=/data/app/~~879Bmb_9AvdhlA2xkfvv0g==/com.getmimo-x4L2K7k-G7wsdWMh6MHe7A==/base.apk
       dataDir=/data/user/0/com.getmimo
-      windows=[Window{94bf110 u0 com.getmimo/com.getmimo.ui.onboarding.intro.IntroSlidesActivity}]
-    Resumed: ActivityRecord{241368439 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity t8}
-  ResumedActivity: ActivityRecord{241368439 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity t8}
-  topDisplayFocusedRootTask=Task{fd9d831 #8 type=standard A=10216:com.getmimo}
-  deepestLastOrientationSource=ActivityRecord{241368439 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity t8}
-  mCurrentFocus=Window{94bf110 u0 com.getmimo/com.getmimo.ui.onboarding.intro.IntroSlidesActivity}
-  mFocusedApp=ActivityRecord{241368439 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity t8}
-  mObscuringWindow=Window{94bf110 u0 com.getmimo/com.getmimo.ui.onboarding.intro.IntroSlidesActivity}
+      windows=[Window{3fb7b94 u0 com.getmimo/com.getmimo.ui.onboarding.intro.IntroSlidesActivity}]
+    Resumed: ActivityRecord{80027096 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity t8}
+  ResumedActivity: ActivityRecord{80027096 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity t8}
+  topDisplayFocusedRootTask=Task{da88a9 #8 type=standard A=10216:com.getmimo}
+  deepestLastOrientationSource=ActivityRecord{80027096 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity t8}
+  mCurrentFocus=Window{3fb7b94 u0 com.getmimo/com.getmimo.ui.onboarding.intro.IntroSlidesActivity}
+  mFocusedApp=ActivityRecord{80027096 u0 com.getmimo/.ui.onboarding.intro.IntroSlidesActivity t8}
+  mObscuringWindow=Window{3fb7b94 u0 com.getmimo/com.getmimo.ui.onboarding.intro.IntroSlidesActivity}
 == command: adb shell ps -A (Mimo process) ==
-u0_a216       4445   471   33793780 350804 0                   0 S com.getmimo
+u0_a216       4266   474   33646960 344780 0                   0 S com.getmimo
