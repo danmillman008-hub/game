@@ -662,6 +662,146 @@ def run_phase2(sup, duration):
     emit('orchestrator', 'timeline_done', events=_seq, path=str(TL))
 
 
+def find_any(s, label):
+    """Measured node by text/content-desc even when not marked clickable (Compose)."""
+    if not s:
+        return None
+    t = label.lower()
+    for n in s['nodes']:
+        if t in n['label'].lower():
+            return n
+    return None
+
+
+def run_phase3(sup, duration):
+    """Third and final short run: skip onboarding, hook the MAIN screens.
+
+    Phase 1 reached MainActivity/ChapterActivity but Frida was dead. Phase 2 had
+    Frida but stalled on a Compose onboarding screen. Phase 3 restores phase 1's
+    NATURAL post-onboarding snapshot (synthetic=false) so the Navigation ->
+    ViewModel -> Repository chain can be observed with hooks live, without
+    repeating the ineffective onboarding replay.
+    """
+    emit('orchestrator', 'natural_state_context', synthetic=False,
+         restored_from='run 42042312640 / STATE/S1_POST_ONBOARDING/private (naturally generated)',
+         note='no lesson rows or preference values were invented')
+
+    # EXP-R3-001 — resumed learner state on MainActivity
+    experiment('EXP-R3-001', 'Resumed learner state: MainActivity startup + live DI',
+               hypothesis='App/MainViewModel/PathMapViewModel fields and toolbar counters on a real resumed session')
+    s = dump_ui('p3_main_start')
+    # dismiss a countdown overlay only if it is still present (measured bounds)
+    if s and any('Do not show again' in t for t in s['texts']):
+        n = find_node(s, 'Do not show again') or find_any(s, 'Do not show again')
+        if n:
+            tap(n, 'p3_dismiss_overlay')
+            emit('ui', 'overlay_dismissed', note='third-party launcher overlay; origin UNKNOWN, no product claim')
+        s = dump_ui('p3_main_start_clean')
+    emit('orchestrator', 'restored_state_screen', activity=(s or {}).get('activity'),
+         texts=(s or {}).get('texts', [])[:20], screen=(s or {}).get('id'))
+    toolbar(s, 'P3_MAIN_BEFORE')
+    state('P3_S0_RESTORED')
+    prefs('P3_S0_RESTORED')
+
+    # EXP-R3-002 — bottom-nav route tour, measured resource IDs, hooks live
+    experiment('EXP-R3-002', 'Main routes with Frida hooks live: Navigation -> ViewModel -> Repository',
+               hypothesis='NavigationBar.setActive / MainViewModel E,F,G,H,I / keys,reward,streak,settings repositories')
+    ROUTE_RID = {'Practice': 'bottom_navigation_item_practice',
+                 'Leaderboard': 'bottom_navigation_item_leaderboard',
+                 'Profile': 'bottom_navigation_item_profile',
+                 'Learn': 'bottom_navigation_item_track'}
+    for route in ['Practice', 'Leaderboard', 'Profile', 'Learn']:
+        s = dump_ui('p3_route_' + route + '_before')
+        n = find_node(s, route) if s else None
+        if not n and s:
+            n = next((x for x in s['nodes'] if ROUTE_RID[route] in x['rid'] and x['enabled']), None)
+        if not n and s:
+            n = find_any(s, route)
+        if not n:
+            emit('ui', 'route_not_found', route=route, screen=(s or {}).get('id'),
+                 activity=(s or {}).get('activity'))
+            continue
+        emit('orchestrator', 'route_target', route=route, node=n, source='measured_bounds')
+        tap(n, 'p3_route_' + route)
+        rs = dump_ui('p3_route_' + route + '_screen')
+        emit('ui', 'route_screen', route=route, activity=(rs or {}).get('activity'),
+             texts=(rs or {}).get('texts', [])[:22], screen=(rs or {}).get('id'))
+        toolbar(rs, 'P3_ROUTE_' + route.upper())
+        prefs('P3_ROUTE_' + route.upper())
+        state('P3_ROUTE_' + route.upper())
+        emit('orchestrator', 'route_wait', route=route, seconds=4,
+             note='allow ViewModel/repository coroutines to complete while hooks are live')
+        time.sleep(4)
+
+    # EXP-R3-003 — path-map / progression and one bounded lesson-entry attempt
+    experiment('EXP-R3-003', 'Path map progression and lesson entry with hooks live',
+               hypothesis='PathMapViewModel.G/N, GetPathMapState, CanOpenChapterWithKeys, chapter/lesson ViewModel')
+    ps = dump_ui('p3_pathmap_before')
+    emit('progression', 'path_map_observation', activity=(ps or {}).get('activity'),
+         texts=(ps or {}).get('texts', [])[:25], xml=(ps or {}).get('xml'))
+    icon = find_any(ps, 'Path Icon') if ps else None
+    if icon:
+        tap(icon, 'p3_path_icon')
+        cs = dump_ui('p3_chapter_entry')
+        emit('progression', 'chapter_entry', activity=(cs or {}).get('activity'),
+             texts=(cs or {}).get('texts', [])[:20])
+        # bounded state-aware advance toward the fill-the-gap code editor
+        explore(10, ['Continue', 'Start practicing', 'Start', 'Learn'], 'p3_to_lesson',
+                avoid_repeat=3)
+        ls = dump_ui('p3_lesson_before')
+        state('P3_S1_LESSON_BEFORE')
+        prefs('P3_S1_LESSON_BEFORE')
+        snippet = find_any(ls, '<button>Like</button>') or find_any(ls, 'Like')
+        if snippet:
+            tap(snippet, 'p3_ftg_snippet')
+            ls2 = dump_ui('p3_ftg_after_snippet')
+            cta = (find_node(ls2, 'Run') or find_node(ls2, 'Continue') or
+                   (sorted([x for x in ls2['nodes'] if x['clickable'] and x['enabled'] and x['y'] > 1800],
+                           key=lambda x: x['y'], reverse=True)[0] if ls2 else None))
+            if cta:
+                tap(cta, 'p3_ftg_run')
+                ls3 = dump_ui('p3_ftg_after_run')
+                c2 = find_node(ls3, 'Continue') if ls3 else None
+                if c2:
+                    tap(c2, 'p3_ftg_continue')
+            state('P3_S2_AFTER_LESSON')
+            prefs('P3_S2_AFTER_LESSON')
+            qs = dump_ui('p3_after_lesson_screen')
+            toolbar(qs, 'P3_AFTER_LESSON')
+        else:
+            emit('lesson', 'ftg_snippet_not_found',
+                 note='UNKNOWN; no blind taps', texts=(ls or {}).get('texts', [])[:15])
+    state('P3_S3_PATH')
+
+    # EXP-R3-004 — cold-start sync boundary
+    experiment('EXP-R3-004', 'Cold-start sync boundary and queued progress retention',
+               hypothesis='postProgress / DELETE in_queue=1 at process restart; SERVER CONFIRMED=0')
+    conn = adb('shell', 'dumpsys', 'connectivity')
+    emit('net', 'connectivity',
+         active_default_network=[l.strip()[:180] for l in conn.splitlines()
+                                 if 'Active default network' in l][:2])
+    adb('shell', 'am', 'force-stop', 'com.getmimo')
+    time.sleep(3)
+    adb('shell', 'monkey -p com.getmimo -c android.intent.category.LAUNCHER 1')
+    time.sleep(16)
+    cs = dump_ui('p3_after_cold_start')
+    toolbar(cs, 'P3_AFTER_COLD_START')
+    state('P3_S4_AFTER_RESTART')
+    prefs('P3_S4_AFTER_RESTART')
+
+    emit('orchestrator', 'phase_complete', phase=3,
+         note='natural-state restore; technique switch from stalled Compose onboarding')
+    graph = {'screens': _screens, 'edges': _edges,
+             'experiment': 'EXP-R3-001..004',
+             'method': 'uiautomator hierarchy + dumpsys resumed activity + Frida lifecycle/hook events'}
+    (R / 'EXPERIMENTS' / 'NAV_GRAPH.json').write_text(
+        json.dumps(graph, indent=1, ensure_ascii=False), encoding='utf-8')
+    emit('orchestrator', 'navigation_graph_written', screens=len(_screens), edges=len(_edges))
+    time.sleep(min(10, max(0, duration - (time.time() - _t0))))
+    sup.stop = True
+    emit('orchestrator', 'timeline_done', events=_seq, path=str(TL))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--duration', type=int, default=720)
@@ -686,6 +826,9 @@ def main():
 
     if args.phase == 2:
         run_phase2(sup, args.duration)
+        return
+    if args.phase == 3:
+        run_phase3(sup, args.duration)
         return
 
     # EXP 1 — startup / application architecture (relaunch while hooks are live)

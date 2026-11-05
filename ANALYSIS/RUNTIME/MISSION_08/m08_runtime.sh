@@ -17,6 +17,7 @@ FS="$TMP/frida-server"
 FSXZ="$TMP/frida-server.xz"
 PHASE=1
 grep -q "M08-PHASE-2" ANALYSIS/RUNTIME/_DISPATCH_TRIGGER 2>/dev/null && PHASE=2
+grep -q "M08-PHASE-3" ANALYSIS/RUNTIME/_DISPATCH_TRIGGER 2>/dev/null && PHASE=3
 
 log "MISSION 08 START phase=$PHASE run=$GITHUB_RUN_ID sha=$GITHUB_SHA"
 A=$(sha256sum "$APK" 2>/dev/null | cut -d' ' -f1)
@@ -119,8 +120,40 @@ PY
 } >> "$R/ENV/M08_FRIDA_SETUP.txt" 2>&1
 log "frida_setup_done preflight=$(grep -o 'attach_ok[^}]*' "$R/ENV/M08_FRIDA_SETUP.txt" | tail -1)"
 
+# ---- PHASE 3: skip onboarding by restoring a NATURAL (non-synthetic) state.
+# Phase 2's state-aware onboarding stalled on a Compose screen that uiautomator
+# cannot expose. Instead of repeating that ineffective approach, restore the
+# naturally generated post-onboarding private data from run 42042312640
+# (STATE/S1_POST_ONBOARDING). No rows/values are invented; this is tagged
+# synthetic=false in the timeline. Room is restored from the sqlite3 .backup
+# snapshot so WAL state is consistent.
+if [ "$PHASE" = "3" ]; then
+  SRC="$R/STATE/S1_POST_ONBOARDING"
+  {
+    echo "== natural state restore (run 42042312640 / S1_POST_ONBOARDING) =="
+    echo "synthetic=false; no seeded learner rows"
+    adb shell am force-stop com.getmimo
+    adb shell 'rm -rf /sdcard/m08_natural; mkdir -p /sdcard/m08_natural'
+    adb push "$SRC/private/databases" /sdcard/m08_natural/ 2>&1 | tail -1
+    adb push "$SRC/private/shared_prefs" /sdcard/m08_natural/ 2>&1 | tail -1
+    adb push "$SRC/private/files" /sdcard/m08_natural/ 2>&1 | tail -1
+    adb push "$SRC/private/no_backup" /sdcard/m08_natural/ 2>&1 | tail -1
+    adb push "$SRC/consistent_mimo.db" /sdcard/m08_mimo_consistent.db 2>&1 | tail -1
+    adb shell 'rm -rf /data/data/com.getmimo/databases /data/data/com.getmimo/shared_prefs /data/data/com.getmimo/files /data/data/com.getmimo/no_backup; mkdir -p /data/data/com.getmimo; cp -a /sdcard/m08_natural/* /data/data/com.getmimo/; rm -f /data/data/com.getmimo/databases/mimo.db*; cp /sdcard/m08_mimo_consistent.db /data/data/com.getmimo/databases/mimo.db; U=$(stat -c %u:%g /data/data/com.getmimo); chown -R $U /data/data/com.getmimo; chmod 660 /data/data/com.getmimo/shared_prefs/*.xml' 2>&1
+    echo "restored_files=$(adb shell 'find /data/data/com.getmimo -type f | wc -l')"
+    echo "restored_lesson_progress_rows=$(adb shell 'sqlite3 /data/data/com.getmimo/databases/mimo.db "select count(*) from lesson_progress;"' 2>&1)"
+    adb shell monkey -p com.getmimo -c android.intent.category.LAUNCHER 1 2>&1 | tail -2
+  } > "$R/ENV/M08_PHASE3_RESTORE.txt" 2>&1
+  sleep 16
+  # Third-party launcher overlay (observed in phase 2) has a countdown; wait it out.
+  sleep 8
+  log "phase3_natural_restore_done rows=$(grep restored_lesson_progress_rows "$R/ENV/M08_PHASE3_RESTORE.txt" | tail -1)"
+fi
+
 # ---- ONE orchestrator (phase selected by the dispatch marker) ---------------
-python3 "$R/m08_unified.py" --phase "$PHASE" --duration 660 --agent "$R/m08_agent.js" \
+DUR=660
+[ "$PHASE" = "3" ] && DUR=360
+python3 "$R/m08_unified.py" --phase "$PHASE" --duration "$DUR" --agent "$R/m08_agent.js" \
   > "$R/LOGS/M08_ORCHESTRATOR.log" 2>&1
 log "orchestrator_exit=$? timeline_lines=$(wc -l < "$R/TIMELINE/MIMO_RUNTIME_TIMELINE.jsonl" 2>/dev/null || echo 0)"
 tail -40 "$R/LOGS/M08_ORCHESTRATOR.log" >> "$T"
