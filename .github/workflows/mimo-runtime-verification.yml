@@ -77,6 +77,10 @@ jobs:
       EXPECTED_APK_BYTES: '142353499'
       PACKAGE_NAME: 'com.getmimo'
       EXPECTED_PKG_VERSION: '9.35'
+      # MISSION 08: authenticated GitHub API fallback for the Frida server
+      # asset when the release-asset CDN is unavailable. Token is never
+      # printed, logged or committed; only PRESENT/ABSENT is observable.
+      GH_TOKEN: ${{ github.token }}
 
     steps:
       # ---------------------------------------------------------------------

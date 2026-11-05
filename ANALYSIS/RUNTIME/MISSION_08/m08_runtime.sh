@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# MISSION 08 — ONE broad controlled investigation run.
-# Reuses the M07-proven setup verbatim; only the orchestrator is new.
+# MISSION 08 — one broad + one targeted controlled investigation run.
+# Reuses the M07-proven setup; the ONLY new runtime component is m08_unified.py.
 set +e
 R=ANALYSIS/RUNTIME/MISSION_08
 M7=ANALYSIS/RUNTIME/MISSION_07
@@ -12,8 +12,13 @@ T="$R/EXPERIMENTS/M08_TRACE.txt"
 : > "$T"
 log(){ echo "[$(date -u +%FT%TZ)] $*" | tee -a "$T"; }
 FRIDA_VER=17.25.2
+TMP="${RUNNER_TEMP:-/tmp}"
+FS="$TMP/frida-server"
+FSXZ="$TMP/frida-server.xz"
+PHASE=1
+grep -q "M08-PHASE-2" ANALYSIS/RUNTIME/_DISPATCH_TRIGGER 2>/dev/null && PHASE=2
 
-log "MISSION 08 START run=$GITHUB_RUN_ID sha=$GITHUB_SHA"
+log "MISSION 08 START phase=$PHASE run=$GITHUB_RUN_ID sha=$GITHUB_SHA"
 A=$(sha256sum "$APK" 2>/dev/null | cut -d' ' -f1)
 [ "$A" = "$E" ] || { log "sha_gate=FAIL $A"; exit 1; }
 log "sha_gate=SHA_MATCH_OK bytes=$(stat -c %s "$APK")"
@@ -21,7 +26,7 @@ log "sha_gate=SHA_MATCH_OK bytes=$(stat -c %s "$APK")"
 adb root >/dev/null 2>&1; sleep 3; adb wait-for-device >/dev/null 2>&1
 adb shell setenforce 0 >/dev/null 2>&1
 {
-  echo "timestamp_utc=$(date -u +%FT%TZ) run_id=$GITHUB_RUN_ID"
+  echo "timestamp_utc=$(date -u +%FT%TZ) run_id=$GITHUB_RUN_ID phase=$PHASE"
   echo "root_id=$(adb shell id 2>&1)"
   echo "selinux=$(adb shell getenforce 2>&1)"
   echo "ps_mimo=$(adb shell 'ps -A | grep -E "Mimo|com.getmimo"' 2>&1)"
@@ -33,60 +38,111 @@ adb shell 'mkdir -p /data/data/com.getmimo/shared_prefs; printf "%s\n" "<?xml ve
 adb shell monkey -p com.getmimo -c android.intent.category.LAUNCHER 1 > "$R/ENV/M08_LAUNCH.txt" 2>&1
 sleep 18
 
-# ---- Frida 17 + Java bridge (M07 setup, unchanged) -------------------------
+# ---- Frida 17 + Java bridge: M07 setup with a hard, DIAGNOSED fallback chain.
+# Run 42042312640 produced NO Frida method events because the GitHub release
+# asset download failed silently and no server binary was pushed. Here every
+# step is measured, three independent download paths are tried, and an actual
+# attach is verified BEFORE the orchestrator starts.
 {
+  echo "== host frida =="
   python3 -m pip install --quiet "frida==$FRIDA_VER" "frida-tools==14.11.0" 2>&1 | tail -5
   python3 -c 'import frida;print("frida="+frida.__version__)'
   U="https://github.com/frida/frida/releases/download/$FRIDA_VER/frida-server-$FRIDA_VER-android-x86_64.xz"
-  curl -fL --retry 2 --max-time 600 -o "${RUNNER_TEMP:-/tmp}/frida-server.xz" "$U" >/dev/null 2>&1
-  xz -dkf "${RUNNER_TEMP:-/tmp}/frida-server.xz" >/dev/null 2>&1
-  adb push "${RUNNER_TEMP:-/tmp}/frida-server" /data/local/tmp/frida-server 2>&1 | tail -1
-  adb shell chmod 755 /data/local/tmp/frida-server
-  frida-ps -U 2>&1 | grep -i mimo
-} > "$R/ENV/M08_FRIDA_SETUP.txt" 2>&1
-( adb shell /data/local/tmp/frida-server > "$R/LOGS/M08_FRIDA_SERVER.log" 2>&1 ) &
-sleep 6
-frida-ps -U | grep -i mimo >> "$R/ENV/M08_FRIDA_SETUP.txt" 2>&1
-log "frida_setup_done"
 
-# ---- optional tool probe (adopt only with demonstrated advantage) ----------
-{
-  echo "== UI automation tool assessment =="
-  python3 -m pip install --quiet uiautomator2 2>&1 | tail -3
-  timeout 45 python3 - <<'PY' 2>&1
+  echo "== attempt 1: curl GitHub release asset =="
+  rm -f "$FS" "$FSXZ"
+  curl -fL --retry 4 --retry-all-errors --retry-delay 3 --max-time 600 -o "$FSXZ" "$U" 2>&1 | tail -4
+  echo "curl_exit=${PIPESTATUS[0]} bytes=$(stat -c %s "$FSXZ" 2>/dev/null || echo 0)"
+
+  echo "== attempt 2: python lzma decompression (independent of xz binary) =="
+  python3 - "$FSXZ" "$FS" <<'PY'
+import sys, lzma, pathlib
+src, dst = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2])
 try:
-    import uiautomator2 as u2
-    d = u2.connect()
-    print("uiautomator2_available=True app_current=", d.app_current())
+    dst.write_bytes(lzma.decompress(src.read_bytes()))
+    print("lzma_ok bytes=", dst.stat().st_size)
 except Exception as e:
-    print("uiautomator2_available=False error=", str(e)[:200])
+    print("lzma_failed", str(e)[:200])
 PY
-  echo "decision: existing adb uiautomator dump + dumpsys + Frida lifecycle hooks already give activity/fragment/state; no new device-side server adopted"
-} > "$R/ENV/M08_TOOL_ASSESSMENT.txt" 2>&1
 
-# ---- ONE orchestrator ------------------------------------------------------
-python3 "$R/m08_unified.py" --duration 720 --agent "$R/m08_agent.js" \
+  echo "== attempt 3: authenticated GitHub API asset (if curl/CDN failed) =="
+  if [ ! -s "$FS" ] && [ -n "${GH_TOKEN:-}" ]; then
+    AID=$(gh api "repos/frida/frida/releases/tags/$FRIDA_VER" \
+      --jq ".assets[] | select(.name==\"frida-server-$FRIDA_VER-android-x86_64.xz\") | .id" 2>/dev/null | head -1)
+    echo "asset_id=$AID"
+    if [ -n "$AID" ]; then
+      gh api "repos/frida/frida/releases/assets/$AID" \
+        -H 'Accept: application/octet-stream' > "$FSXZ" 2>/dev/null
+      echo "api_asset_bytes=$(stat -c %s "$FSXZ" 2>/dev/null || echo 0)"
+      python3 - "$FSXZ" "$FS" <<'PY'
+import sys, lzma, pathlib
+src, dst = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2])
+try:
+    dst.write_bytes(lzma.decompress(src.read_bytes()))
+    print("api_lzma_ok bytes=", dst.stat().st_size)
+except Exception as e:
+    print("api_lzma_failed", str(e)[:200])
+PY
+    fi
+  fi
+  echo "local_server_file=$(ls -l "$FS" 2>&1)"
+
+  echo "== device install =="
+  adb shell 'pkill -f frida-server; rm -f /data/local/tmp/frida-server' 2>&1
+  adb push "$FS" /data/local/tmp/frida-server 2>&1 | tail -2
+  adb shell chmod 755 /data/local/tmp/frida-server 2>&1
+  adb shell '/data/local/tmp/frida-server --version' 2>&1 | head -3
+  echo "device_file=$(adb shell 'ls -l /data/local/tmp/frida-server' 2>&1)"
+} > "$R/ENV/M08_FRIDA_SETUP.txt" 2>&1
+
+# HOST-SIDE long-lived `adb shell` keeps the server alive (M07 measured fix).
+( adb shell /data/local/tmp/frida-server > "$R/LOGS/M08_FRIDA_SERVER.log" 2>&1 ) &
+sleep 7
+{
+  echo "== post-start verification =="
+  echo "frida_ps=$(frida-ps -U 2>&1 | grep -i mimo)"
+  echo "device_ps=$(adb shell 'ps -A | grep frida' 2>&1)"
+  echo "== actual attach preflight =="
+  python3 - <<'PY'
+import frida, subprocess, json
+try:
+    out = subprocess.check_output(['adb','shell','pidof','com.getmimo'], timeout=20).decode().strip()
+    pid = int(out.split()[0])
+    dev = frida.get_usb_device(timeout=30)
+    hits = [p for p in dev.enumerate_processes() if p.pid == pid or p.name == 'Mimo']
+    s = dev.attach(hits[0].pid)
+    print(json.dumps({'attach_ok': True, 'pid': hits[0].pid, 'name': hits[0].name}))
+    s.detach()
+except Exception as e:
+    print(json.dumps({'attach_ok': False, 'error': str(e)[:300]}))
+PY
+} >> "$R/ENV/M08_FRIDA_SETUP.txt" 2>&1
+log "frida_setup_done preflight=$(grep -o 'attach_ok[^}]*' "$R/ENV/M08_FRIDA_SETUP.txt" | tail -1)"
+
+# ---- ONE orchestrator (phase selected by the dispatch marker) ---------------
+python3 "$R/m08_unified.py" --phase "$PHASE" --duration 660 --agent "$R/m08_agent.js" \
   > "$R/LOGS/M08_ORCHESTRATOR.log" 2>&1
 log "orchestrator_exit=$? timeline_lines=$(wc -l < "$R/TIMELINE/MIMO_RUNTIME_TIMELINE.jsonl" 2>/dev/null || echo 0)"
-tail -30 "$R/LOGS/M08_ORCHESTRATOR.log" >> "$T"
+tail -40 "$R/LOGS/M08_ORCHESTRATOR.log" >> "$T"
 
 adb logcat -d -t 6000 > "$R/LOGS/M08_LOGCAT.txt" 2>&1
-python3 - "$R" > "$R/LOGS/M08_SUMMARY.json" <<'PY'
+python3 - "$R" "$PHASE" > "$R/LOGS/M08_SUMMARY.json" <<'PY'
 import json,sys,pathlib,collections
-R=pathlib.Path(sys.argv[1])
+R=pathlib.Path(sys.argv[1]); phase=sys.argv[2]
 p=R/'TIMELINE'/'MIMO_RUNTIME_TIMELINE.jsonl'
-c=collections.Counter(); sub=collections.Counter(); tags=collections.Counter()
+by_event=collections.Counter(); by_source=collections.Counter(); by_sub=collections.Counter()
 if p.exists():
     for l in p.read_text(errors='replace').splitlines():
         try:o=json.loads(l)
         except:continue
-        c[o.get('source')]+=1; c[o.get('event')]+=1
-        if o.get('subsystem'):sub[o['subsystem']]+=1
-        if o.get('tag'):tags[o['tag']]+=1
-print(json.dumps({'document':'MISSION 08 unified runtime timeline','timeline':str(p),
+        by_event[o.get('event')]+=1; by_source[o.get('source')]+=1
+        if o.get('subsystem'): by_sub[o['subsystem']]+=1
+print(json.dumps({'document':'MISSION 08 unified runtime timeline','phase':phase,
+ 'timeline':str(p),
  'total_events':sum(1 for _ in p.open(errors='replace')) if p.exists() else 0,
- 'sources':dict(c),'subsystems':dict(sub),'tags':dict(tags),'server_confirmed':0},indent=1))
+ 'by_event':dict(by_event),'by_source':dict(by_source),'by_subsystem':dict(by_sub),
+ 'server_confirmed':0},indent=1))
 PY
 cat "$R/LOGS/M08_SUMMARY.json"
-log "MISSION 08 COMPLETE"
+log "MISSION 08 COMPLETE phase=$PHASE"
 exit 0

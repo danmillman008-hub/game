@@ -259,7 +259,9 @@ def dump_ui(label):
     fragments = []
     top = adb('shell', 'dumpsys', 'activity', 'top')
     for line in top.splitlines():
-        if re.search(r'#\d+:|Added Fragments|Fragment\{', line):
+        # Run 42042312640: unfiltered '#0:' lines were Launcher3 item dumps,
+        # not Mimo fragments. Only keep lines that actually name Mimo state.
+        if re.search(r'#\d+:|Added Fragments|Fragment\{', line) and 'com.getmimo' in line:
             fragments.append(line.strip()[:220])
     sid = hashlib.sha1((resumed + '|' + '|'.join(sorted(set(texts)))).encode()).hexdigest()[:12]
     _screens[sid] = {'activity': resumed, 'texts': texts[:30],
@@ -381,6 +383,79 @@ def seed_synthetic(rows_sql):
     emit('db', 'state_seeded', synthetic=True, statements=rows_sql)
 
 
+def prefs(label, synthetic=False):
+    """Learner-state SharedPreferences, correlated into the SAME timeline.
+
+    Run 42042312640 discovered `mimo_prefs.xml` -> local_coins={"coins":200},
+    user_settings, favorite_tracks, user_profile_created_at. Phase 2 measures
+    exactly these before/after a lesson so a scoring claim needs a real diff.
+    No value is fabricated; redacted keys are not printed.
+    """
+    raw = adb('shell', 'cat', '/data/data/com.getmimo/shared_prefs/mimo_prefs.xml')
+    vals = {}
+    try:
+        root_section = raw[raw.find('<map'):]
+        import xml.etree.ElementTree as ET
+        root = ET.fromstring(root_section[:root_section.find('</map>') + 6])
+        for c in root:
+            k = c.get('name') or ''
+            if any(x in k for x in ('token', 'push_notification_registration', 'secret', 'password')):
+                vals[k] = '<redacted>'
+            elif c.tag == 'set':
+                vals[k] = {'set': [(x.text or '') for x in c]}
+            else:
+                vals[k] = c.text or ''
+    except Exception as e:
+        vals = {'parse_error': str(e)[:160], 'raw_prefix': raw[:160]}
+    emit('db', 'prefs_state', label=label, synthetic=synthetic, values=vals,
+         file='private/shared_prefs/mimo_prefs.xml')
+    return vals
+
+
+def toolbar(s, label):
+    """Numeric toolbar values (coins / streak / keys) as actually rendered."""
+    if not s:
+        return
+    nums = [{'value': n['label'].strip(), 'x': n['x'], 'y': n['y']}
+            for n in s['nodes'] if n['y'] < 280 and n['label'].strip().isdigit()]
+    emit('ui', 'toolbar_observation', label=label, screen=s['id'],
+         numeric_values=nums, xml=s['xml'],
+         note='position x~238 = coins (INFERRED from mimo_prefs.local_coins); x~916 = UNKNOWN counter')
+    return nums
+
+
+def restore_natural_baseline(label):
+    """Restore the post-onboarding NATURAL private state before an experiment.
+
+    No synthetic rows are inserted. Restored runs are tagged
+    `synthetic=false, restored_from=<natural snapshot>`.
+    """
+    adb('shell', 'am', 'force-stop', 'com.getmimo')
+    time.sleep(2)
+    adb('shell', 'mkdir -p /data/data/com.getmimo/databases; '
+        'rm -f /data/data/com.getmimo/databases/mimo.db*; '
+        'cp /sdcard/m08_baseline/mimo_consistent.db /data/data/com.getmimo/databases/mimo.db; '
+        'rm -rf /data/data/com.getmimo/shared_prefs; '
+        'cp -a /sdcard/m08_baseline/shared_prefs /data/data/com.getmimo/shared_prefs; '
+        'U=$(stat -c %u:%g /data/data/com.getmimo); '
+        'chown -R $U /data/data/com.getmimo/databases /data/data/com.getmimo/shared_prefs')
+    adb('shell', 'monkey -p com.getmimo -c android.intent.category.LAUNCHER 1')
+    time.sleep(14)
+    emit('orchestrator', 'baseline_restored', label=label, synthetic=False,
+         restored_from='P2_NATURAL_BASELINE (post-onboarding, no synthetic rows)')
+    dump_ui(label + '_after_restore')
+
+
+def capture_baseline():
+    """Take ONE natural (non-synthetic) consistent snapshot. App stays running."""
+    adb('shell', 'rm -rf /sdcard/m08_baseline; mkdir -p /sdcard/m08_baseline')
+    adb('shell', 'cp -a /data/data/com.getmimo/shared_prefs /sdcard/m08_baseline/shared_prefs')
+    adb('shell', 'sqlite3 /data/data/com.getmimo/databases/mimo.db '
+        '".backup /sdcard/m08_baseline/mimo_consistent.db"')
+    emit('orchestrator', 'natural_baseline_captured', synthetic=False,
+         contents=['mimo_consistent.db (sqlite3 .backup)', 'shared_prefs/'])
+
+
 # ---------------------------------------------------------------------------
 # Phase 1: ONE broad controlled investigation.
 # ---------------------------------------------------------------------------
@@ -444,14 +519,159 @@ def route_tour():
             _last_screen = s2['id']
 
 
+def run_phase2(sup, duration):
+    """TARGETED second investigation, decided from run 42042312640 evidence.
+
+    Run 1 (275 events) established the real navigation graph and the local
+    learner-state files, but: (a) zero Frida method events because the server
+    binary was not pushed, (b) the route tour ran inside ChapterActivity so all
+    7 routes were `route_not_found`, (c) the FTG code-editor lesson stalled on
+    `btn_lesson_close`, (d) coins/streak/goal values were discovered but no
+    before/after scoring diff existed. Phase 2 closes exactly those four gaps.
+    """
+    # --- EXP-R2-001: startup + natural onboarding, hooks live the whole time ---
+    experiment('EXP-R2-001', 'Startup, DI container, state-aware onboarding to ChapterActivity',
+               hypothesis='Frida lifecycle hooks + live App/MainViewModel fields correlate with each Activity')
+    adb('shell', 'am', 'force-stop', 'com.getmimo')
+    time.sleep(2)
+    emit('orchestrator', 'adb_command', cmd='am start -n com.getmimo/.ui.SplashActivity_default')
+    adb('shell', 'am', 'start', '-n', 'com.getmimo/.ui.SplashActivity_default')
+    time.sleep(14)
+    dump_ui('p2_startup')
+    state('P2_S0_STARTUP')
+    prefs('P2_S0_STARTUP')
+    explore(26, ONBOARD_PREFER, 'p2_onboard')
+    state('P2_S1_POST_ONBOARDING')
+    prefs('P2_S1_POST_ONBOARDING')
+    capture_baseline()
+
+    # --- EXP-R2-002: the central chain, one real code-editor FTG answer -------
+    experiment('EXP-R2-002',
+               'Navigation -> ViewModel -> Repository -> Core logic -> Learner state -> Scoring -> Next activity',
+               hypothesis='FTG snippet tap drives ViewModel/RunButton state, Room row and coins')
+    s = dump_ui('p2_ftg_before')
+    emit('lesson', 'lesson_target', texts=(s or {}).get('texts', [])[:20],
+         activity=(s or {}).get('activity', ''), xml=(s or {}).get('xml', ''))
+    state('P2_S2_LESSON_BEFORE')
+    prefs('P2_S2_LESSON_BEFORE')
+    snippet = find_node(s, '<button>Like</button>') if s else None
+    if not snippet and s:
+        # shipped fill-the-gap option text, measured in run 42042312640
+        snippet = find_node(s, 'Like')
+    if snippet:
+        tap(snippet, 'p2_ftg_snippet')
+        s2 = dump_ui('p2_ftg_after_snippet')
+        cta = (find_node(s2, 'Run') or find_node(s2, 'Continue') or
+               (sorted([n for n in s2['nodes'] if n['clickable'] and n['enabled'] and n['y'] > 1800],
+                       key=lambda n: n['y'], reverse=True)[0] if s2 else None))
+        if cta:
+            tap(cta, 'p2_ftg_run')
+            s3 = dump_ui('p2_ftg_after_run')
+            # one more Continue only if the app explicitly offers it
+            c2 = find_node(s3, 'Continue') if s3 else None
+            if c2:
+                tap(c2, 'p2_ftg_continue')
+    else:
+        emit('lesson', 'ftg_snippet_not_found',
+             note='recorded as UNKNOWN; no guess and no blind tapping')
+    state('P2_S3_AFTER_LESSON')
+    prefs('P2_S3_AFTER_LESSON')
+    dump_ui('p2_after_lesson_screen')
+
+    # --- EXP-R2-003: quit -> MainActivity, score/reward storage observation ---
+    experiment('EXP-R2-003', 'Scoring/reward state: input, calculation, output and storage',
+               hypothesis='toolbar coins + mimo_prefs.local_coins + MainViewModel reward hooks')
+    key(4, 'p2_back_from_lesson')
+    q = dump_ui('p2_quit_dialog')
+    quit_node = find_node(q, 'Quit lesson') if q else None
+    if quit_node:
+        tap(quit_node, 'p2_quit_lesson')
+    key(4, 'p2_dismiss_path_sheet')
+    ms = dump_ui('p2_main_pathmap')
+    toolbar(ms, 'P2_MAIN_BEFORE_ROUTES')
+    prefs('P2_S4_MAIN')
+    state('P2_S4_MAIN')
+
+    # --- EXP-R2-004: corrected bottom-nav route tour FROM MainActivity --------
+    experiment('EXP-R2-004', 'Main routes: Learn / Practice / Leaderboard / Profile',
+               hypothesis='navigation_bar setActive + ViewModel/repository call per tab; Practice auth gate')
+    for route in ['Practice', 'Leaderboard', 'Profile', 'Learn']:
+        s = dump_ui('p2_route_' + route + '_before')
+        n = find_node(s, route) if s else None
+        if not n and s:
+            # content-desc / resource-id fallback (measured in run 42042312640)
+            rid = {'Practice': 'bottom_navigation_item_practice',
+                   'Leaderboard': 'bottom_navigation_item_leaderboard',
+                   'Profile': 'bottom_navigation_item_profile',
+                   'Learn': 'bottom_navigation_item_track'}[route]
+            n = next((x for x in s['nodes'] if rid in x['rid'] and x['enabled']), None)
+        if not n:
+            emit('ui', 'route_not_found', route=route, screen=(s or {}).get('id'))
+            continue
+        emit('orchestrator', 'route_target', route=route, node=n, source='measured_bounds')
+        tap(n, 'p2_route_' + route)
+        rs = dump_ui('p2_route_' + route + '_screen')
+        emit('ui', 'route_screen', route=route, activity=(rs or {}).get('activity'),
+             texts=(rs or {}).get('texts', [])[:20], screen=(rs or {}).get('id'))
+        toolbar(rs, 'P2_ROUTE_' + route.upper())
+        prefs('P2_ROUTE_' + route.upper())
+        state('P2_ROUTE_' + route.upper())
+
+    # Restore the natural post-onboarding state between independent experiments.
+    restore_natural_baseline('P2_BEFORE_PATH_EXPERIMENT')
+
+    # --- EXP-R2-005: path map / progression / unlock decision -----------------
+    experiment('EXP-R2-005', 'Path map, section progression and chapter unlock',
+               hypothesis='GetPathMapState / CanOpenChapterWithKeys / keys gate fire on path render')
+    ps = dump_ui('p2_pathmap_before')
+    emit('progression', 'path_map_observation', activity=(ps or {}).get('activity'),
+         texts=(ps or {}).get('texts', [])[:25], xml=(ps or {}).get('xml'))
+    picker = (find_node(ps, 'Select Path') or find_node(ps, 'Python Developer')) if ps else None
+    if picker:
+        tap(picker, 'p2_open_path_picker')
+        p2 = dump_ui('p2_path_picker')
+        emit('progression', 'path_picker', texts=(p2 or {}).get('texts', [])[:30],
+             screen=(p2 or {}).get('id'))
+    state('P2_S5_PATH')
+
+    # --- EXP-R2-006: sync boundary and cold-start restoration -----------------
+    experiment('EXP-R2-006', 'Client/server boundary: queued progress, network gate, cold start',
+               hypothesis='postProgress/delete decision at cold start; SERVER CONFIRMED = 0')
+    emit('orchestrator', 'network_state', cmd='dumpsys connectivity')
+    conn = adb('shell', 'dumpsys', 'connectivity')
+    active = [l.strip()[:180] for l in conn.splitlines() if 'Active default network' in l][:2]
+    emit('net', 'connectivity', active_default_network=active)
+    adb('shell', 'am', 'force-stop', 'com.getmimo')
+    time.sleep(3)
+    adb('shell', 'monkey -p com.getmimo -c android.intent.category.LAUNCHER 1')
+    time.sleep(15)
+    dump_ui('p2_after_cold_start')
+    state('P2_S6_AFTER_RESTART')
+    prefs('P2_S6_AFTER_RESTART')
+
+    emit('orchestrator', 'phase_complete', phase=2,
+         note='targeted gaps from run 42042312640; no repeated M01-M07 experiments')
+    graph = {'screens': _screens, 'edges': _edges,
+             'experiment': 'EXP-R2-001..006',
+             'method': 'uiautomator hierarchy + dumpsys resumed activity + Frida ActivityLifecycleCallbacks'}
+    (R / 'EXPERIMENTS' / 'NAV_GRAPH.json').write_text(
+        json.dumps(graph, indent=1, ensure_ascii=False), encoding='utf-8')
+    emit('orchestrator', 'navigation_graph_written', screens=len(_screens), edges=len(_edges))
+    time.sleep(min(12, max(0, duration - (time.time() - _t0))))
+    sup.stop = True
+    emit('orchestrator', 'timeline_done', events=_seq, path=str(TL))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--duration', type=int, default=720)
     ap.add_argument('--agent', default=str(R / 'm08_agent.js'))
+    ap.add_argument('--phase', type=int, default=1)
     args = ap.parse_args()
 
     pid, pids = real_pid()
     emit('orchestrator', 'run_start', run_id=os.environ.get('GITHUB_RUN_ID', 'local'),
+         phase=args.phase,
          apk_sha256='48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a',
          pid_detection=pids,
          tool_selection={'frida': 'M07 m07_frida_driver.py + Java bridge (reused)',
@@ -463,6 +683,10 @@ def main():
     sup = FridaSupervisor(args.agent, args.duration)
     threading.Thread(target=sup.run, daemon=True).start()
     time.sleep(6)  # let attach + bridge + hooks settle
+
+    if args.phase == 2:
+        run_phase2(sup, args.duration)
+        return
 
     # EXP 1 — startup / application architecture (relaunch while hooks are live)
     experiment('EXP-R1-001', 'Application startup, DI and activity creation',

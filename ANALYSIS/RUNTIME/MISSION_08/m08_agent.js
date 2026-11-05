@@ -143,7 +143,36 @@ var HOOKS = [
   ['com.getmimo.data.source.remote.authentication.PostVisitWorker','a','postVisitWorker','background',1,
    'Lcom/getmimo/data/source.remote/authentication/PostVisitWorker;->a(Ld70/b;)Ljava/lang/Object;'],
   ['com.getmimo.ui.widget.StreakWidgetRefreshWorker','a','streakWidgetWorker','background',1,
-   'Lcom/getmimo/ui/widget/StreakWidgetRefreshWorker;->a(Ld70/b;)Ljava/lang/Object;']
+   'Lcom/getmimo/ui/widget/StreakWidgetRefreshWorker;->a(Ld70/b;)Ljava/lang/Object;'],
+  /* --- Phase 2 additions: derived ONLY from run 42042312640 evidence + M06
+         method catalog. These are the missing navigation/coins/progression
+         decision points, not a broad reflection sweep. --- */
+  ['com.getmimo.ui.main.MainActivity','B','mainActivity_viewModel','architecture',1,
+   'Lcom/getmimo/ui/main/MainActivity;->B()Lcom/getmimo/ui/main/d;'],
+  ['com.getmimo.ui.main.MainActivity','onResume','mainActivity_onResume','navigation',0,
+   'Lcom/getmimo/ui/main/MainActivity;->onResume()V'],
+  ['com.getmimo.ui.path.map.j','G','pathMap_navigateChapter','progression',1,
+   'Lcom/getmimo/ui/path/map/j;->G(J J)V'],
+  ['com.getmimo.ui.path.map.j','K','pathMap_onTutorialClick','progression',1,
+   'Lcom/getmimo/ui/path/map/j;->K(Lvn/i0;)V'],
+  ['com.getmimo.ui.path.map.j','J','pathMap_toolbarButton','progression',1,
+   'Lcom/getmimo/ui/path/map/j;->J(Lcom/getmimo/ui/path/map/PathToolbarButtonType;)V'],
+  ['com.getmimo.ui.path.map.j','N','pathMap_openChapter','progression',1,
+   'Lcom/getmimo/ui/path/map/j;->N(Lcom/getmimo/ui/chapter/ChapterBundle; J Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;'],
+  ['com.getmimo.ui.chapter.ChapterActivity','B','chapterActivity_viewModel','architecture',1,
+   'Lcom/getmimo/ui/chapter/ChapterActivity;->B()Lcom/getmimo/ui/chapter/ChapterViewModel;'],
+  ['com.getmimo.ui.chapter.ChapterActivity','G','chapterActivity_navigate','navigation',1,
+   'Lcom/getmimo/ui/chapter/ChapterActivity;->G(Lcom/getmimo/ui/chapter/ChapterBundle; Z)V'],
+  ['com.getmimo.data.source.remote.coins.a','a','coins_flow','gamification',1,
+   'Lcom/getmimo/data/source/remote/coins/a;->a()Lua0/r;'],
+  ['com.getmimo.data.source.remote.coins.a','b','coins_sync','gamification',1,
+   'Lcom/getmimo/data/source/remote/coins/a;->b(Lkotlin/coroutines/jvm/internal/SuspendLambda;)Ljava/lang/Object;'],
+  ['com.getmimo.core.model.coins.Coins','getCoins','coins_value','gamification',1,
+   'Lcom/getmimo/core/model/coins/Coins;->getCoins()I'],
+  ['com.getmimo.interactors.path.sections.a','a','sections_unlockState','progression',1,
+   'Lcom/getmimo/interactors/path/sections/a;->a(Lkotlin/coroutines/jvm/internal/SuspendLambda;)Ljava/lang/Object;'],
+  ['com.getmimo.interactors.path.f','a','pathCoinsState','progression',1,
+   'Lcom/getmimo/interactors/path/f;->a()Lci/b;']
 ];
 
 function hookOne(h) {
@@ -308,5 +337,46 @@ Java.perform(function () {
     emit({kind:'env', tag:'class_inventory', subsystem:'architecture', total:all.length, groups:groups,
           api_classes:all.filter(function (c) { return /com\.getmimo\/.*[Aa]pi/.test(c); }).slice(0, 40)});
   } catch (e) { emit({kind:'hook_error', tag:'class_inventory', error:safe(e)}); }
+
+  /* --- Runtime DI container: the LIVE App object (attach happens after
+         onCreate, so Java.choose is how the real graph is observed). --- */
+  ['com.getmimo.App','com.getmimo.ui.main.d','com.getmimo.ui.path.map.j',
+   'com.getmimo.data.source.remote.progress.LessonProgressQueue'].forEach(function (cn) {
+    var found = 0;
+    try {
+      Java.choose(cn, {
+        onMatch: function (o) {
+          if (found++ < 2) emit({kind:'di', tag:'live_instance', subsystem:'architecture',
+                                cls:cn, fields:dumpFields(o, 26), identity:safe(o)});
+        },
+        onComplete: function () {
+          emit({kind:'di', tag:'instance_scan', subsystem:'architecture', cls:cn, count:found});
+        }
+      });
+    } catch (e) { emit({kind:'hook_error', tag:'di_choose', cls:cn, error:safe(e)}); }
+  });
+
+  /* --- Learner-state WRITES: only Mimo preference keys discovered in run
+         42042312640. Gives the storage half of a scoring claim. --- */
+  try {
+    var ED = Java.use('android.app.SharedPreferencesImpl$EditorImpl');
+    ['putString','putInt','putBoolean','putLong','putFloat'].forEach(function (mn) {
+      var m = ED[mn]; if (!m || !m.overloads) return;
+      m.overloads.forEach(function (ov) {
+        try { ov.implementation = function () {
+          var k = safe(arguments[0]);
+          if (/local_coins|user_settings|favorite_tracks|daily|goal|streak|coins/i.test(k)) {
+            emit({kind:'prefs_write', subsystem:'learner_state', method:mn, key:k,
+                  value:safe(arguments[1]), editor:safe(this)});
+          }
+          return ov.apply(this, arguments);
+        }; } catch (e) { emit({kind:'hook_error', tag:'prefs_write', method:mn, error:safe(e)}); }
+      });
+    });
+    emit({kind:'hook_installed', tag:'prefs_write', subsystem:'learner_state',
+          cls:'android.app.SharedPreferencesImpl$EditorImpl',
+          signature:'filtered to Mimo learner-state keys'});
+  } catch (e) { emit({kind:'hook_error', tag:'prefs_write', error:safe(e)}); }
+
   emit({kind:'ready', subsystem:'observer', hooks:HOOKS.length, agent:'m08_agent.js'});
 });
