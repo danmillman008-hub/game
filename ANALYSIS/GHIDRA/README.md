@@ -1,6 +1,6 @@
 # Ghidra / REA chain — corrected run
 
-- run 41940704898 / commit af47e90632ec622712a82531c6ebff5b5bb0b427 / 2026-11-05T00:25:54Z
+- run 41941513296 / commit dca4879e258cae50a9dbef9e178d91deb66ffc5e / 2026-11-05T00:30:49Z
 - Ghidra fetch: success; coverage: success; auto analysis: success; REA doctor: success
 - corrections applied: ALL 12 DEX imported (not 3); Auto Analysis ENABLED on ALL 12 DEX (no -noanalysis); full JDK 21 for REA separate from JDK 25 for Ghidra
 
@@ -23,65 +23,65 @@ DEX classes9.dex language=Dalvik:LE:32:DEX_KitKat memory_blocks=3 symbols=10 fun
 ## Control flow / function report
 ```
 === PROGRAM classes.dex language=Dalvik:LE:32:DEX_KitKat functions=54530 symbols=681976 memory_blocks=3 ===
--- target namespace inventory (all matching symbols, capped) --
-  SYM EXTERNAL.dex-3774::android::view::MotionEvent::getXPrecision @EXTERNAL:000009f1
-  SYM EXTERNAL.dex-5161::android::widget::ProgressBar::setProgress @EXTERNAL:00000f58
-  SYM EXTERNAL.dex-5162::android::widget::ProgressBar::setProgressBackgroundTintList @EXTERNAL:00000f59
-  SYM EXTERNAL.dex-5163::android::widget::ProgressBar::setProgressDrawable @EXTERNAL:00000f5a
-  SYM EXTERNAL.dex-5164::android::widget::ProgressBar::setProgressTintList @EXTERNAL:00000f5b
-  SYM EXTERNAL.dex-31571::com::getmimo::data::source::remote::progress::CompletionApi::getLastInteractedTrack @EXTERNAL:0000143a
-  SYM EXTERNAL.dex-31572::com::getmimo::data::source::remote::progress::CompletionApi::getTrackCompletion @EXTERNAL:0000143b
-  SYM EXTERNAL.dex-31573::com::getmimo::data::source::remote::progress::LessonProgressApi::postProgress @EXTERNAL:0000143c
-  SYM EXTERNAL.dex-35596::com::getmimo::ui::leaderboard::LeaderboardResultItemState::a @EXTERNAL:0000144e
-  SYM EXTERNAL.dex-35597::com::getmimo::ui::leaderboard::LeaderboardResultItemState::b @EXTERNAL:0000144f
-  SYM EXTERNAL.dex-35598::com::getmimo::ui::leaderboard::LeaderboardResultItemState::c @EXTERNAL:00001450
-  SYM EXTERNAL.dex-35599::com::getmimo::ui::leaderboard::LeaderboardResultItemState::e @EXTERNAL:00001451
-  SYM EXTERNAL.dex-35600::com::getmimo::ui::leaderboard::LeaderboardResultItemState::f @EXTERNAL:00001452
-  SYM EXTERNAL.dex-35601::com::getmimo::ui::leaderboard::LeaderboardResultItemState::g @EXTERNAL:00001453
-  SYM EXTERNAL.dex-35602::com::getmimo::ui::leaderboard::LeaderboardResultItemState::h @EXTERNAL:00001454
-  SYM EXTERNAL.dex-39302::com::getmimo::ui::streaks::ArcProgressView::setProgress @EXTERNAL:00001465
-  SYM EXTERNAL.dex-39303::com::getmimo::ui::streaks::DailySparksGoalProgressView::setSparkProgress @EXTERNAL:00001466
-  SYM EXTERNAL.dex-39305::com::getmimo::ui::streaks::bottomsheet::StreakBottomSheetViewModel$fetchProfileData$1::<init> @EXTERNAL:00001467
-  SYM EXTERNAL.dex-39316::com::getmimo::ui::streaks::bottomsheet::a::<init> @EXTERNAL:00001468
-  SYM EXTERNAL.dex-39317::com::getmimo::ui::streaks::bottomsheet::a::w0 @EXTERNAL:00001469
-  SYM EXTERNAL.dex-39376::com::getmimo::ui::widget::StreakWidgetRefreshWorker$doWork$1::<init> @EXTERNAL:00001484
-  SYM EXTERNAL.dex-39709::com::google::android::gms::tasks::TaskCompletionSource::<init> @EXTERNAL:0000158b
-  SYM EXTERNAL.dex-39710::com::google::android::gms::tasks::TaskCompletionSource::getTask @EXTERNAL:0000158c
-  SYM EXTERNAL.dex-39711::com::google::android::gms::tasks::TaskCompletionSource::setException @EXTERNAL:0000158d
-  SYM EXTERNAL.dex-39712::com::google::android::gms::tasks::TaskCompletionSource::setResult @EXTERNAL:0000158e
-  SYM EXTERNAL.dex-39713::com::google::android::gms::tasks::TaskCompletionSource::trySetException @EXTERNAL:0000158f
-  SYM EXTERNAL.dex-39714::com::google::android::gms::tasks::TaskCompletionSource::trySetResult @EXTERNAL:00001590
-  SYM EXTERNAL.dex-45155::gt::d::setProgress @EXTERNAL:00001967
-  SYM EXTERNAL.dex-51137::kotlinx::coroutines::d::invokeOnCompletion @EXTERNAL:000022a6
-  SYM EXTERNAL.dex-57189::ra0::b1::invokeOnCompletion @EXTERNAL:00002649
-  SYM string_data::_does_not_match_a_known_view_type_in_LeaderboardAdapter! @0000159c
-  SYM string_data::_fetch_completion_handlers. @00001610
-  SYM string_data::$updatedLessonProgress @0000206c
-  SYM string_data::(()_=>_{_____const_id_=_'mimo-android-completion-badge-style';_____if_(document.getElementById(id))_return;_____const_style_=_document.createElement('style');_____style.id_=_id;_____style.textContent_=_`_________.cm-completionIcon-text_{_flex-shrink:_0;_}_________.cm-completionIcon-text::after_{_____________display:_inline-block;_____________transform:_scale(0.5);_____________transform-origin:_left_center;_________}_____`;_____document.head.appendChild(style);_})() @000022c8
-  SYM string_data::()Lcom/getmimo/core/model/streak/Streak; @000024a8
-  SYM string_data::()Lcom/getmimo/data/model/leaderboard/Leaderboard; @000024e8
-  SYM string_data::()Lcom/getmimo/data/model/leaderboard/LeaderboardUserResult; @000024ec
-  SYM string_data::()Lcom/getmimo/data/model/publicprofile/ProfileLeaderboardInfo; @000024f4
-  SYM string_data::(III)Lcom/getmimo/data/model/leaderboard/LeaderboardLeague; @0000270c
-  SYM string_data::(JLjava/lang/String;ILjava/lang/String;I)Lcom/getmimo/data/model/reward/Reward; @00002a10
-  SYM string_data::(Lcom/getmimo/core/model/streak/Streak;Lcom/getmimo/core/model/streak/Streak;Ljava/util/List;)V @00003010
-  SYM string_data::(Lcom/getmimo/data/model/leaderboard/Leaderboard;)V @0000309c
-  SYM string_data::(Lcom/getmimo/data/model/leaderboard/LeaderboardUserResult;Z)V @000030a0
-  SYM string_data::(Lcom/getmimo/data/model/reward/Reward;)V @000030ac
-  SYM string_data::(Lcom/getmimo/data/model/room/LessonProgress;Z)V @000030b0
-  SYM string_data::(Lcom/getmimo/data/model/room/LessonProgress;ZZLd70/b;)Ljava/lang/Object; @000030b4
-  SYM string_data::(Lcom/getmimo/data/source/remote/progress/LessonProgressApi;Lye/g;Lye/c;Lnp/d;Lri/d;Lcom/getmimo/data/source/local/completion/a;Lcg/a;)V @000030e4
-  SYM string_data::(Lcom/getmimo/ui/lesson/interactive/LessonBundle;Lorg/joda/time/Instant;II)Lcom/getmimo/data/model/room/LessonProgress; @0000310c
-  SYM string_data::(Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;)Lcom/getmimo/core/model/streak/UserActivity; @00003350
-  SYM string_data::(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZJIIIIIZLcom/getmimo/data/model/publicprofile/ProfileLeaderboardInfo;Ljava/util/List;Lcom/getmimo/core/model/inapp/Subscription$Type;)V @000033cc
-  SYM string_data::(Lra0/y;)Lcom/getmimo/core/model/coins/Coins; @00003638
-  SYM string_data::(Lra0/y;)Lcom/getmimo/data/model/leaderboard/LeaderboardUserResult; @0000365c
-  SYM string_data::(Lvn/p;ILcom/getmimo/core/model/coins/Coins;Lvn/r;Z)Lvn/q; @00003770
-  SYM string_data::(Lze/a;Lcom/getmimo/data/source/remote/progress/LessonProgressRepository;)V @000037e8
-  SYM string_data::,_activeStreakLength= @00003b5c
-  SYM string_data::,_bestStreak= @00003c94
-  SYM string_data::,_coins= @00003eb8
-  SYM string_data::,_createLessonProgressWhenSwiping= @00003fb4
+-- DEX string cross references (field names -> owning functions) --
+  STR string_data::_physicalPixelDisplaySizeRatio=1.0_rotation=0_offsetX=0_offsetY=0_scale=1.0} @000019e8
+    [xrefs_shown=0]
+  STR string_data::_scrollPosition= @00001a50
+    [xrefs_shown=0]
+  STR string_data::_scrollPositionX= @00001a54
+    [xrefs_shown=0]
+  STR string_data::()Lcom/getmimo/ui/common/SpringAnimatingProgressBar; @0000250c
+    [xrefs_shown=0]
+  STR string_data::(Landroid/view/View;Lapp/rive/semantics/SemanticTreeModel;Lo70/m;Lo70/j;Lo70/j;Lkotlin/jvm/functions/Function0;Lapp/rive/semantics/AndroidVirtualNodeIdRegistry;)V @00002bcc
+    [xrefs_shown=0]
+  STR string_data::(Lapp/rive/semantics/AndroidVirtualNodeIdAllocator;)V @00002f08
+    [xrefs_shown=0]
+  STR string_data::(Lc5/g;Landroid/view/View;ILapp/rive/semantics/ProjectedSemanticHierarchy;Lapp/rive/semantics/AndroidVirtualNodeIdRegistry;)Z @00002fa4
+    [xrefs_shown=0]
+  STR string_data::(offset: @000038f0
+    [xrefs_shown=0]
+  STR string_data::)_offset_is_outside_of_text_region_ @000039bc
+    [xrefs_shown=0]
+  STR string_data::,_activeModalNodeId= @00003b54
+    [xrefs_shown=0]
+  STR string_data::,_activeNodeIds= @00003b58
+    [xrefs_shown=0]
+  STR string_data::,_ancestorNodeIds= @00003bc0
+    [xrefs_shown=0]
+  STR string_data::,_borderCornerOffset= @00003d00
+    [xrefs_shown=0]
+  STR string_data::,_chapterIndex= @00003e30
+    [xrefs_shown=0]
+  STR string_data::,_chapterIndexInSection= @00003e34
+    [xrefs_shown=0]
+  STR string_data::,_childrenByNodeId= @00003e54
+    [xrefs_shown=0]
+  STR string_data::,_columnCount= @00003ed0
+    [xrefs_shown=0]
+  STR string_data::,_correctLessons= @00003f98
+    [xrefs_shown=0]
+  STR string_data::,_correctLessonsFirstTry= @00003f9c
+    [xrefs_shown=0]
+  STR string_data::,_crossAxisArrangementSpacing= @00003fe0
+    [xrefs_shown=0]
+  STR string_data::,_currentNodeId= @00004004
+    [xrefs_shown=0]
+  STR string_data::,_currentSectionEstimatedCompletionAt= @00004014
+    [xrefs_shown=0]
+  STR string_data::,_cursorOffset= @00004038
+    [xrefs_shown=0]
+  STR string_data::,_dataOffset= @0000406c
+    [xrefs_shown=0]
+  STR string_data::,_dotRadius= @0000413c
+    [xrefs_shown=0]
+  STR string_data::,_estimatedCompletionAt= @00004208
+    [xrefs_shown=0]
+  STR string_data::,_groupOffset= @000043ac
+    [xrefs_shown=0]
+  STR string_data::,_instructionsScrollOffset= @00004580
+    [xrefs_shown=0]
+  STR string_data::,_isPassword=false,_offsetMapping= @000046cc
+    [xrefs_shown=0]
 ```
 
 ## run.log tail
@@ -119,10 +119,10 @@ INFO  REPORT: Analysis succeeded for file: file:///home/runner/work/game/game/AN
 INFO  REPORT: Execute script: MimoControlFlow.java  (HeadlessAnalyzer)  
 INFO  SCRIPT: /home/runner/work/game/game/ANALYSIS/_TOOLCHAIN/ghidra_scripts/MimoControlFlow.java (HeadlessAnalyzer)  
 INFO  MimoControlFlow.java> === PROGRAM classes9.dex language=Dalvik:LE:32:DEX_KitKat functions=3 symbols=69 memory_blocks=3 ===
--- target namespace inventory (all matching symbols, capped) --
-  [target_symbols_shown=0]
--- target function control flow (real Dalvik instructions) --
-SCANNED_FUNCS=3 BRANCH_INSNS_FIRST_8000_FUNCS=0 INVOKE_INSNS_FIRST_8000_FUNCS=3 PATH_MAP_FUNCS_DUMPED=0 SCORING_FUNCS_DUMPED=0 INSTRUCTIONS_SHOWN=0
+-- DEX string cross references (field names -> owning functions) --
+  [geometry_strings_examined=0]
+-- target function Dalvik instructions --
+SCANNED_FUNCS=3 BRANCH_INSNS_FIRST_8000=0 INVOKE_INSNS_FIRST_8000=3 PATH_MAP_FUNCS=0 SCORING_FUNCS=0 INSTRUCTIONS_SHOWN=0
  (GhidraScript)  
 INFO  ANALYZING changes made by post scripts: file:///home/runner/work/game/game/ANALYSIS/_INPUT/classes9.dex (HeadlessAnalyzer)  
 INFO  REPORT: Post-analysis succeeded for file: file:///home/runner/work/game/game/ANALYSIS/_INPUT/classes9.dex (HeadlessAnalyzer)  
