@@ -1,0 +1,21 @@
+== host frida ==
+frida=17.25.2
+== attempt 1: curl GitHub release asset ==
+  % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current
+                                 Dload  Upload  Total   Spent   Left   Speed
+  0      0   0      0   0      0      0      0                              0  0      0   0      0   0      0      0      0                              0  0      0   0      0   0      0      0      0                              0
+  0      0   0      0   0      0      0      0                              0100 42.80M 100 42.80M   0      0 34.21M      0   00:01   00:01              0100 42.80M 100 42.80M   0      0 34.21M      0   00:01   00:01              0100 42.80M 100 42.80M   0      0 34.21M      0   00:01   00:01              0
+curl_exit=0 bytes=44889284
+== attempt 2: python lzma decompression (independent of xz binary) ==
+lzma_ok bytes= 172034312
+== attempt 3: authenticated GitHub API asset (if curl/CDN failed) ==
+local_server_file=-rw-r--r-- 1 runner runner 172034312 Nov  5 14:55 /home/runner/work/_temp/frida-server
+== device install ==
+/home/runner/work/_temp/frida-server: 1 file pushed, 0 skipped. 181.2 MB/s (172034312 bytes in 0.905s)
+17.25.2
+device_file=-rwxr-xr-x 1 root root 172034312 2026-11-05 14:55 /data/local/tmp/frida-server
+== post-start verification ==
+frida_ps=3542  Mimo                                                  
+device_ps=root          4565  2046   15387444 231304 do_sys_poll         0 S frida-server
+== actual attach preflight ==
+{"attach_ok": true, "pid": 3542, "name": "Mimo"}

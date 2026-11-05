@@ -608,7 +608,7 @@ def run_phase2(sup, duration):
         if not n:
             emit('ui', 'route_not_found', route=route, screen=(s or {}).get('id'))
             continue
-        emit('orchestrator', 'route_target', route=route, node=n, source='measured_bounds')
+        emit('orchestrator', 'route_target', route=route, node=n, node_source='measured_bounds')
         tap(n, 'p2_route_' + route)
         rs = dump_ui('p2_route_' + route + '_screen')
         emit('ui', 'route_screen', route=route, activity=(rs or {}).get('activity'),
@@ -703,6 +703,35 @@ def run_phase3(sup, duration):
     state('P3_S0_RESTORED')
     prefs('P3_S0_RESTORED')
 
+    # The restored app still opens the IntroSlides carousel on cold start.
+    # Tap measured, clickable forward nodes (bounded, state-aware) to reach
+    # MainActivity. If it is not reached, record that honestly and skip the
+    # route tour instead of guessing coordinates.
+    reached_main = False
+    for i in range(6):
+        if s and 'MainActivity' in (s.get('activity') or ''):
+            reached_main = True
+            break
+        n = (find_node(s, 'Get started') or find_node(s, 'Skip') or
+             find_node(s, 'Continue') or find_node(s, "Let's go")) if s else None
+        if not n:
+            emit('ui', 'reach_main_stop', reason='no measured clickable forward node',
+                 step=i, activity=(s or {}).get('activity'))
+            break
+        ns = tap(n, 'p3_reach_main_%02d' % i)
+        if ns:
+            s = ns
+        time.sleep(2)
+        if s and 'MainActivity' in (s.get('activity') or ''):
+            reached_main = True
+            break
+    emit('orchestrator', 'main_activity_reached', reached=reached_main,
+         activity=(s or {}).get('activity'), texts=(s or {}).get('texts', [])[:20])
+    if reached_main:
+        toolbar(s, 'P3_MAIN_REACHED')
+        prefs('P3_MAIN_REACHED')
+        state('P3_S0_MAIN')
+
     # EXP-R3-002 — bottom-nav route tour, measured resource IDs, hooks live
     experiment('EXP-R3-002', 'Main routes with Frida hooks live: Navigation -> ViewModel -> Repository',
                hypothesis='NavigationBar.setActive / MainViewModel E,F,G,H,I / keys,reward,streak,settings repositories')
@@ -711,17 +740,24 @@ def run_phase3(sup, duration):
                  'Profile': 'bottom_navigation_item_profile',
                  'Learn': 'bottom_navigation_item_track'}
     for route in ['Practice', 'Leaderboard', 'Profile', 'Learn']:
+        if not reached_main:
+            emit('ui', 'route_tour_skipped', route=route,
+                 reason='MainActivity not reached from restored natural state; no coordinates guessed')
+            break
         s = dump_ui('p3_route_' + route + '_before')
         n = find_node(s, route) if s else None
         if not n and s:
             n = next((x for x in s['nodes'] if ROUTE_RID[route] in x['rid'] and x['enabled']), None)
+        # Only clickable nodes may be used. A plain text keyword match collided
+        # with the intro slide "Learn at your own pace" in run 42049141553.
         if not n and s:
-            n = find_any(s, route)
+            n = next((x for x in s['nodes'] if route.lower() in x['label'].lower()
+                      and x['clickable'] and x['enabled']), None)
         if not n:
             emit('ui', 'route_not_found', route=route, screen=(s or {}).get('id'),
                  activity=(s or {}).get('activity'))
             continue
-        emit('orchestrator', 'route_target', route=route, node=n, source='measured_bounds')
+        emit('orchestrator', 'route_target', route=route, node=n, node_source='measured_bounds')
         tap(n, 'p3_route_' + route)
         rs = dump_ui('p3_route_' + route + '_screen')
         emit('ui', 'route_screen', route=route, activity=(rs or {}).get('activity'),
