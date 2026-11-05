@@ -1,0 +1,39 @@
+MISSION 04 - APK INSTALLATION
+timestamp_utc=2026-11-05T08:44:00Z run_id=41996366953
+== command: adb devices -l ==
+List of devices attached
+emulator-5554          device product:sdk_gphone64_x86_64 model:sdk_gphone64_x86_64 device:emu64xa transport_id:1
+
+== command: adb install -r MIMO_ORIGINAL.apk ==
+Performing Streamed Install
+Success
+install_exit=0
+== command: adb shell pm list packages -3 ==
+package:com.getmimo
+== device ABI ==
+ro.product.cpu.abilist=x86_64,arm64-v8a
+ro.product.cpu.abilist64=x86_64,arm64-v8a
+ro.product.cpu.abilist32=
+ro.dalvik.vm.native.bridge=libndk_translation.so
+== build ==
+sdk=36
+release=16
+fingerprint=google/sdk_gphone64_x86_64/emu64xa:16/BE2A.250530.026.F3/13894323:userdebug/dev-keys
+wm_size=Physical size: 1080x2400
+wm_density=Physical density: 420
+== available storage ==
+Filesystem       1K-blocks    Used Available Use% Mounted on
+/dev/block/dm-55   6082144 1096372   4843560  19% /data/user/0
+package_discovery=OBSERVED from pm list packages -3
+discovered_package=com.getmimo
+== command: adb shell pm path com.getmimo ==
+package:/data/app/~~8WUhNdGv8VQL3UUIgUa3zg==/com.getmimo-eRnBFksi6REx8WmOQeeKtw==/base.apk
+== command: adb shell dumpsys package com.getmimo (version / native lib dirs) ==
+    legacyNativeLibraryDir=/data/app/~~8WUhNdGv8VQL3UUIgUa3zg==/com.getmimo-eRnBFksi6REx8WmOQeeKtw==/lib
+    primaryCpuAbi=arm64-v8a
+    secondaryCpuAbi=null
+    cpuAbiOverride=null
+    versionCode=1792759685 minSdk=28 targetSdk=36
+    versionName=9.35
+    lastUpdateTime=2026-11-05 08:44:06
+      firstInstallTime=2026-11-05 08:44:06

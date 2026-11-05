@@ -1,0 +1,64 @@
+MISSION 04 - CRASH AND ERROR ANALYSIS
+timestamp_utc=2026-11-05T08:44:35Z
+package=com.getmimo pid=4160
+== AndroidRuntime / FATAL / linker / native errors ==
+11-05 08:44:24.612  1540  3836 I SemanticLocation: [Scheduler] Housekeeping Task com.google.android.gms.semanticlocationhistory.settings.OdlhTombstonesCleanupJob.OdlhTombstonesCleanupJob is scheduled to run at cadence ciuz@66650a1 [CONTEXT service_id=173 ]
+11-05 08:44:26.257  1540  3834 I gle.android.gms: Waiting for a blocking GC ClassLinker
+11-05 08:44:26.388  1540  3834 I gle.android.gms: WaitForGcToComplete blocked ClassLinker on Background for 131.488ms
+11-05 08:44:28.694  1540  3834 I SemanticLocation: [Scheduler] Housekeeping Task com.google.android.gms.semanticlocationhistory.settings.OdlhTombstonesCleanupJob.OdlhTombstonesCleanupJob is scheduled to run at cadence ciuz@66650a1 [CONTEXT service_id=173 ]
+11-05 08:44:29.251   682  4635 I ConfigUpdateInstallReceiver: Couldn't find current metadata, assuming first update
+11-05 08:44:29.578  3910  4115 D nativeloader: Load libcurve25519.so using class loader ns product-clns-10 (caller=/product/priv-app/PrebuiltBugle/PrebuiltBugle.apk!classes6.dex): dlopen failed: library "libcurve25519.so" not found
+11-05 08:44:30.840   682  4683 I ConfigUpdateInstallReceiver: Couldn't find current metadata, assuming first update
+11-05 08:44:31.429  4693  4693 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-05 08:44:31.443  4693  4693 I AndroidRuntime: Using default boot image
+11-05 08:44:31.444  4693  4693 I AndroidRuntime: Leaving lock profiling enabled
+11-05 08:44:31.677  4693  4693 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+11-05 08:44:32.864  4693  4693 D AndroidRuntime: Shutting down VM
+== Mimo-tagged lines ==
+11-05 08:44:13.601   682  1211 I ActivityTaskManager: START u0 {flg=0x10000000 xflg=0x5 cmp=com.getmimo/.ui.SplashActivity_default} with LAUNCH_MULTIPLE from uid 2000 (BAL_ALLOW_PERMISSION) result code=0
+11-05 08:44:13.647   682  2309 I AppsFilter: interaction: PackageSetting{dd1c7d4 com.android.microdroid.empty_payload/10214} -> PackageSetting{1d9951b com.getmimo/10216} BLOCKED
+11-05 08:44:13.656  4160  4160 I com.getmimo: Using CollectorTypeCMC GC.
+11-05 08:44:13.657  4160  4160 W com.getmimo: Unexpected CPU variant for x86: x86_64.
+11-05 08:44:13.657  4160  4160 W com.getmimo: Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, goldmont-without-sha-xsaves, tremont, kabylake, alderlake, default
+11-05 08:44:13.721   682   717 I ActivityManager: Start proc 4160:com.getmimo/u0a216 for next-top-activity {com.getmimo/com.getmimo.ui.SplashActivity_default}
+11-05 08:44:14.262   682  1049 I AppWidgetServiceImpl: Updating package stopped masked state for uid 10216 package com.getmimo isStopped false
+11-05 08:44:14.577  4160  4160 D nativeloader: Configuring clns-9 for other apk /data/app/~~8WUhNdGv8VQL3UUIgUa3zg==/com.getmimo-eRnBFksi6REx8WmOQeeKtw==/base.apk. target_sdk_version=36, uses_libraries=, library_path=/data/app/~~8WUhNdGv8VQL3UUIgUa3zg==/com.getmimo-eRnBFksi6REx8WmOQeeKtw==/lib/arm64:/data/app/~~8WUhNdGv8VQL3UUIgUa3zg==/com.getmimo-eRnBFksi6REx8WmOQeeKtw==/base.apk!/lib/arm64-v8a, permitted_path=/data:/mnt/expand:/data/user/0/com.getmimo
+11-05 08:44:14.732  4160  4160 I com.getmimo: AssetManager2(0x76aec9d1ba78) locale list changing from [] to [en-US]
+11-05 08:44:14.776  4160  4160 V GraphicsEnvironment: com.getmimo is not listed in per-application setting
+11-05 08:44:14.776  4160  4160 V GraphicsEnvironment: com.getmimo is not listed in ANGLE allowlist or settings, returning default
+11-05 08:44:15.183   682   786 W UsageStatsService: Unexpected activity event reported! (com.getmimo/com.getmimo.ui.SplashActivity event : 23 instanceId : 213617451)
+11-05 08:44:15.570  1355  1382 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
+11-05 08:44:15.950  4160  4160 D nativeloader: Load /data/app/~~8WUhNdGv8VQL3UUIgUa3zg==/com.getmimo-eRnBFksi6REx8WmOQeeKtw==/lib/arm64/libyrf.so using class loader ns clns-9 (caller=/data/app/~~8WUhNdGv8VQL3UUIgUa3zg==/com.getmimo-eRnBFksi6REx8WmOQeeKtw==/base.apk!classes12.dex): ok
+11-05 08:44:16.163  4160  4160 I FirebaseCrashlytics: Initializing Firebase Crashlytics 20.1.1 for com.getmimo
+11-05 08:44:16.271  4160  4240 W GooglePlayServicesUtil: Google Play services out of date for com.getmimo.  Requires 261200000 but found 252635038
+11-05 08:44:16.511  4160  4160 D nativeloader: Load /data/app/~~8WUhNdGv8VQL3UUIgUa3zg==/com.getmimo-eRnBFksi6REx8WmOQeeKtw==/lib/arm64/libdatastore_shared_counter.so using class loader ns clns-9 (caller=/data/app/~~8WUhNdGv8VQL3UUIgUa3zg==/com.getmimo-eRnBFksi6REx8WmOQeeKtw==/base.apk!classes2.dex): ok
+11-05 08:44:16.579  4160  4254 I Phlogger: Unable to retrieve flag snapshot for com.google.android.gms.measurement#com.getmimo, using defaults.
+11-05 08:44:16.652  4160  4247 I FA      :   adb shell setprop debug.firebase.analytics.app com.getmimo
+11-05 08:44:17.098  4160  4160 I FirebaseApp: Device unlocked: initializing all Firebase APIs for app mimo-auth-production
+11-05 08:44:17.210  4160  4240 W GooglePlayServicesUtil: Google Play services out of date for com.getmimo.  Requires 261200000 but found 252635038
+11-05 08:44:17.627  4160  4160 D nativeloader: Load /data/app/~~8WUhNdGv8VQL3UUIgUa3zg==/com.getmimo-eRnBFksi6REx8WmOQeeKtw==/lib/arm64/librive-android.so using class loader ns clns-9 (caller=/data/app/~~8WUhNdGv8VQL3UUIgUa3zg==/com.getmimo-eRnBFksi6REx8WmOQeeKtw==/base.apk): ok
+11-05 08:44:17.878  1355  1382 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
+11-05 08:44:18.133  4160  4160 D nativeloader: Load /data/app/~~8WUhNdGv8VQL3UUIgUa3zg==/com.getmimo-eRnBFksi6REx8WmOQeeKtw==/lib/arm64/libsigner.so using class loader ns clns-9 (caller=/data/app/~~8WUhNdGv8VQL3UUIgUa3zg==/com.getmimo-eRnBFksi6REx8WmOQeeKtw==/base.apk): ok
+11-05 08:44:18.466  4160  4263 W com.getmimo: Long monitor contention with owner pool-24-thread-1 (4266) at com.google.android.gms.ads.identifier.AdvertisingIdClient$Info com.google.android.gms.ads.identifier.AdvertisingIdClient.e()(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:38) waiters=0 in com.google.android.gms.ads.identifier.AdvertisingIdClient$Info com.google.android.gms.ads.identifier.AdvertisingIdClient.e() for 1.281s
+11-05 08:44:18.467  4160  4264 W com.getmimo: Long monitor contention with owner pool-24-thread-1 (4266) at wc.j mr.e.j(com.facebook.appevents.AccessTokenAppIdPair)(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:48) waiters=0 in java.util.Set mr.e.n() for 1.803s
+11-05 08:44:18.469  4160  4265 W com.getmimo: Long monitor contention with owner pool-24-thread-1 (4266) at com.google.android.gms.ads.identifier.AdvertisingIdClient$Info com.google.android.gms.ads.identifier.AdvertisingIdClient.e()(r8-map-id-6b1b9a7aabb67c08b10510c084e2abcbeb53083883bac13e4d61278a32657bc6:38) waiters=1 in com.google.android.gms.ads.identifier.AdvertisingIdClient$Info com.google.android.gms.ads.identifier.AdvertisingIdClient.e() for 1.171s
+11-05 08:44:19.923  1355  1382 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
+11-05 08:44:20.505  1355  1382 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
+11-05 08:44:20.508  1355  1382 D SessionCommitReceiver: Removing unneeded PromiseIcon for package: com.getmimo, install reason: 0, alreadyAddedPromiseIcon: false
+11-05 08:44:21.128  1355  1382 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
+11-05 08:44:21.308  1355  1382 D LauncherAppsCallbackImpl: onPackageAdded triggered for packageName=com.getmimo, user=UserHandle{0}
+11-05 08:44:21.308  1355  1382 D PackageUpdatedTask: Package updated: mOp=ADD packages=[com.getmimo], user=UserHandle{0}
+11-05 08:44:21.774  1355  1382 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
+11-05 08:44:22.003  1355  1382 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
+11-05 08:44:22.088  1355  1382 D PackageUpdatedTask: Package updated: mOp=UPDATE packages=[com.getmimo], user=UserHandle{0}
+11-05 08:44:22.618  1355  1382 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
+11-05 08:44:23.403  4160  4520 D ProfileInstaller: Installing profile for com.getmimo
+11-05 08:44:23.951  4160  4183 W com.getmimo: Suspending all threads took: 357.271ms
+11-05 08:44:24.347  1355  1382 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
+11-05 08:44:24.477  1418  2387 I PhenotypeResourceReader: unable to find any Phenotype resource metadata for com.getmimo
+11-05 08:44:24.850  1355  1382 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
+11-05 08:44:26.425  1355  1382 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
+11-05 08:44:26.807  1355  1382 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
+11-05 08:44:27.228  1355  1382 D AlphabeticIndexCompat: computeSectionName: cs: Mimo sectionName: M
+11-05 08:44:29.320   682   795 D ActivityManager: freezing 4160 com.getmimo
+== crash buffer ==
