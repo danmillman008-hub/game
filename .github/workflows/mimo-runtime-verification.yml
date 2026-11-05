@@ -14,6 +14,12 @@ name: MIMO 9.35 - Runtime Verification (MISSION 03)
 # through the `apk_url` workflow_dispatch input; without it, install/launch are
 # recorded as BLOCKED and never reported as verified.
 
+# NOTE ON TRIGGER: `workflow_dispatch` is the intended trigger. GitHub only
+# REGISTERS workflow_dispatch workflows that exist on the repository's default
+# branch; this session is pinned to arena/aebb90b7-game and must not push to
+# main. Therefore a manual, path-scoped push trigger is provided as a fallback:
+# it fires ONLY when ANALYSIS/RUNTIME/_DISPATCH_TRIGGER is deliberately touched,
+# never on ordinary pushes. See ANALYSIS/RUNTIME/ENVIRONMENT_AUDIT.fa.md.
 on:
   workflow_dispatch:
     inputs:
@@ -42,6 +48,11 @@ on:
         required: true
         default: '48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a'
         type: string
+  push:
+    branches:
+      - arena/aebb90b7-game
+    paths:
+      - ANALYSIS/RUNTIME/_DISPATCH_TRIGGER
 
 permissions:
   contents: write
@@ -55,11 +66,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 75
     env:
-      REQUESTED_API: ${{ inputs.api_level }}
-      REQUESTED_TARGET: ${{ inputs.target }}
-      REQUESTED_ARCH: ${{ inputs.arch }}
-      APK_URL: ${{ inputs.apk_url }}
-      EXPECTED_APK_SHA256: ${{ inputs.apk_sha256 }}
+      # `inputs.*` is empty for push-triggered runs; supply the same defaults.
+      REQUESTED_API: ${{ inputs.api_level || '36' }}
+      REQUESTED_TARGET: ${{ inputs.target || 'google_apis' }}
+      REQUESTED_ARCH: ${{ inputs.arch || 'x86_64' }}
+      APK_URL: ${{ inputs.apk_url || '' }}
+      EXPECTED_APK_SHA256: ${{ inputs.apk_sha256 || '48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a' }}
       EXPECTED_APK_BYTES: '142353499'
       PACKAGE_NAME: 'com.getmimo'
       EXPECTED_PKG_VERSION: '9.35'
@@ -193,9 +205,9 @@ jobs:
       - name: Boot Android Emulator and execute controlled smoke tests
         uses: reactivecircus/android-emulator-runner@b530d96654c385303d652368551fb075bc2f0b6b # v2.35.0
         with:
-          api-level: ${{ inputs.api_level }}
-          target: ${{ inputs.target }}
-          arch: ${{ inputs.arch }}
+          api-level: ${{ inputs.api_level || '36' }}
+          target: ${{ inputs.target || 'google_apis' }}
+          arch: ${{ inputs.arch || 'x86_64' }}
           profile: pixel_7
           cores: 4
           ram-size: 4096M
