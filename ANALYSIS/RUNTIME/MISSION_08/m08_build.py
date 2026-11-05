@@ -207,7 +207,7 @@ for e in edges:
 nav = {
     'document': 'MIMO_NAVIGATION_GRAPH — Mimo 9.35 UI / Activity state machine',
     'apk_sha256': APK_SHA,
-    'method': 'adb uiautomator XML + dumpsys activity activities (topResumedActivity) + Frida Application.ActivityLifecycleCallbacks; state-aware taps computed from measured node bounds',
+    'method': 'adb uiautomator XML + dumpsys activity activities (topResumedActivity) + LiveData Fragment/ViewModel records; state-aware taps computed from measured node bounds. Frida Application.ActivityLifecycleCallbacks failed on API 36 (extra default methods) and is recorded as a hook_error, so no activity names were inferred from it.',
     'runs': [run for _, run, _ in RAW],
     'screen_count': len(screens),
     'edge_count': len(edges),
@@ -782,8 +782,10 @@ shows `Python Developer / 1. Intro to Python`, toolbar counters `200` and `0`, a
 progress `0/20`, `0/11`, `0/9`, `0/15` in the `Select Path` sheet [E14
 `S229_resume_01_after.xml`, `S221_resume_00_after.xml`]. Back from `ChapterActivity` requires
 an explicit `Quit lesson / Choose a different path / Cancel` confirmation
-[E14 `S213_back_from_lesson_after.xml`]. Frida `ActivityLifecycleCallbacks` supplies the
-Activity class for every transition (@@NAV@@ nav events) [E12].
+[E14 `S213_back_from_lesson_after.xml`]. Activities are identified from `dumpsys activity
+activities` (`topResumedActivity`) on every screen event; the attempted Frida
+`ActivityLifecycleCallbacks` hook produced @@NAV@@ nav events because the API-36 interface
+has extra default methods [E11, E12].
 
 **M08 discovery — real Fragment/ViewModel controller chain.** `androidx.lifecycle.m0.k`
 LiveData posts during onboarding exposed the actual Jetpack Navigation controller objects:
@@ -957,7 +959,7 @@ syntax highlighter + input console + `CodePlaygroundActivity`; a shipped HTML te
 `tv_ftg_hint` [E14 `S151_onboard_23_after.xml`]. Twelve arm64 `.so` libraries ship,
 including `librive-android.so` (Rive), `libsqlcipher.so`, `libdatastore_shared_counter.so`,
 `libsigner.so` and ML Kit/CameraX/Bugsnag libraries [E10]. `System.loadLibrary` is hooked
-(@@NAV@@-style dedup), but JNI method tables, request signing and the native↔Kotlin surface
+(deduplicated), but JNI method tables, request signing and the native↔Kotlin surface
 remain `UNKNOWN` [E12, E10]. `WebView.addJavascriptInterface` was hooked in M07 stage 6 and
 produced **no** event for lesson 151403 [E06].
 
