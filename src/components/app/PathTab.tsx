@@ -263,7 +263,14 @@ function LessonPath({
       >
         {segments.map((segment, index) => (
           <g key={index}>
-            <path d={segment.d} fill="none" stroke="var(--surface-3)" strokeWidth={7} strokeLinecap="round" />
+            <path
+              d={segment.d}
+              fill="none"
+              stroke="var(--surface-3)"
+              strokeWidth={7}
+              strokeLinecap="round"
+              vectorEffect="non-scaling-stroke"
+            />
             {segment.done && (
               <path
                 d={segment.d}
@@ -272,6 +279,7 @@ function LessonPath({
                 strokeWidth={4}
                 strokeLinecap="round"
                 strokeDasharray="1 9"
+                vectorEffect="non-scaling-stroke"
               />
             )}
           </g>
