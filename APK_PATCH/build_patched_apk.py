@@ -292,6 +292,8 @@ def main():
                     help='Suppress the shared queued-progress DELETE; affects online sync too; untested on Android')
     ap.add_argument('--experimental-direct-main', action='store_true',
                     help='Skip splash onboarding/auth routes to MainActivity; no guest bootstrap, not Android-tested')
+    ap.add_argument('--diagnostic-repack-only', action='store_true',
+                    help='Control: rebuild and resign with unchanged DEX, not a usable patch')
     ap.add_argument('--experimental-skip-update-wait', action='store_true',
                     help='Diagnostic: bypass suspending startup update check; not Android-tested')
     args = ap.parse_args()
@@ -311,7 +313,12 @@ def main():
     dex = zipfile.ZipFile(args.original).read(DEX_NAME)
     if hashlib.sha256(dex).hexdigest() != '2f2c0c618f89c6d6cadf7acf93f48eb9572c66f6b68d7dba03a36c0487f6a115':
         raise ValueError('Unexpected classes.dex SHA-256; refusing fixed-offset patch')
-    patched, edits = patch_dex(dex)
+    if args.diagnostic_repack_only:
+        if args.experimental_direct_main or args.experimental_preserve_queue or args.experimental_skip_update_wait:
+            raise ValueError('repack-only must not be combined with patches')
+        patched, edits = dex, []
+    else:
+        patched, edits = patch_dex(dex)
     if args.experimental_direct_main:
         patched, startup_edits = patch_direct_main_experimental(patched)
         edits.extend(startup_edits)
