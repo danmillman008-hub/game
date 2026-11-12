@@ -39,6 +39,20 @@ class ExistingPatchTest(unittest.TestCase):
             self.assertEqual(self.patched[base+pc:base+pc+4], bytes([0x28, delta, 0, 0]))
             self.assertEqual(pc + delta * 2, target)
 
+    def test_practice_topic_filter_is_scoped(self):
+        result, edit = builder.patch_include_future_practice_topics(self.patched)
+        _, off, size = edit
+        self.assertEqual(off, 10159612 + 16 + 0x1de)
+        self.assertEqual(self.patched[off:off+size].hex(), '36a60600')
+        self.assertEqual(result[off:off+size], bytes(4))
+        self.assertEqual(result[32:off], self.patched[32:off])
+        self.assertEqual(result[off+size:], self.patched[off+size:])
+        self.assertEqual(hashlib.sha1(result[32:]).digest(), result[12:32])
+        self.assertEqual(zlib.adler32(result[12:]) & 0xffffffff, struct.unpack_from('<I', result, 8)[0])
+        corrupt = bytearray(self.patched); corrupt[off] ^= 1
+        with self.assertRaises(ValueError):
+            builder.patch_include_future_practice_topics(bytes(corrupt))
+
     def test_queue_cleanup_sql_not_fixed(self):
         statement = b'DELETE FROM lesson_progress WHERE in_queue = 1'
         self.assertEqual(self.original.count(statement), 1)

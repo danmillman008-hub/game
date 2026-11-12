@@ -182,6 +182,22 @@ def patch_preserve_queued_progress(raw: bytes):
     return bytes(b), ('EXPERIMENTAL disable queued progress DELETE', off, 6)
 
 
+def patch_include_future_practice_topics(raw: bytes):
+    """Experimental: list packaged PracticeOptional/Challenge topics before completion.
+
+    Only the GetPracticeTopics tutorial-index filter changes. It does not mark
+    any chapter complete, create server responses or guarantee chapter access.
+    """
+    b = bytearray(raw)
+    off = 10159612 + 16 + 0x1de
+    if b[off:off+4].hex() != '36a60600':
+        raise ValueError('Unexpected practice topic index guard')
+    b[off:off+4] = bytes(4)
+    b[12:32] = hashlib.sha1(b[32:]).digest()
+    b[8:12] = struct.pack('<I', zlib.adler32(b[12:]) & 0xffffffff)
+    return bytes(b), ('EXPERIMENTAL include future practice topics', off, 4)
+
+
 def patch_practice_stats_placeholder(raw: bytes):
     """Diagnostic offline-only display placeholder, NOT a server response.
 
@@ -350,6 +366,8 @@ def main():
     ap.add_argument('--diagnostic-skip-ghost-signature-spoof', action='store_true')
     ap.add_argument('--diagnostic-repack-only', action='store_true',
                     help='Control: rebuild and resign with unchanged DEX, not a usable patch')
+    ap.add_argument('--experimental-include-practice-topics', action='store_true',
+                    help='List packaged optional practice and challenge topics ahead of completion; unverified')
     ap.add_argument('--diagnostic-practice-stats-placeholder', action='store_true',
                     help='Show unknown stats as dashes without a network request; affects online, not runtime verified')
     ap.add_argument('--experimental-skip-update-wait', action='store_true',
@@ -372,7 +390,7 @@ def main():
     if hashlib.sha256(dex).hexdigest() != '2f2c0c618f89c6d6cadf7acf93f48eb9572c66f6b68d7dba03a36c0487f6a115':
         raise ValueError('Unexpected classes.dex SHA-256; refusing fixed-offset patch')
     if args.diagnostic_repack_only:
-        if args.experimental_direct_main or args.experimental_preserve_queue or args.experimental_skip_update_wait or args.diagnostic_practice_stats_placeholder:
+        if args.experimental_direct_main or args.experimental_preserve_queue or args.experimental_skip_update_wait or args.diagnostic_practice_stats_placeholder or args.experimental_include_practice_topics:
             raise ValueError('repack-only must not be combined with patches')
         patched, edits = dex, []
     else:
@@ -385,6 +403,10 @@ def main():
         patched, edit = patch_skip_update_wait_experimental(patched)
         edits.append(edit)
         print('WARNING: startup update check skipped experimentally; runtime behavior not established')
+    if args.experimental_include_practice_topics:
+        patched, edit = patch_include_future_practice_topics(patched)
+        edits.append(edit)
+        print('WARNING: experimental practice topic filter bypass; not runtime verified')
     if args.experimental_preserve_queue:
         patched, edit = patch_preserve_queued_progress(patched)
         edits.append(edit)
