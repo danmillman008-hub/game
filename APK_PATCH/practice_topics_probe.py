@@ -43,6 +43,9 @@ for version in ('fallback','topics'):
         if any(t=='Retry' for t,_,_ in n):
             click(n,lambda t:t=='Retry');snap(version+'_retry')
         elif version == 'topics':
+            adb('shell','input','swipe','160','535','160','190','550');time.sleep(3);n=snap(version+'_scrolled')
+            if any(t in ('Continue','Got it','Start','Get started') for t,_,_ in n):
+                click(n,lambda t:t in ('Continue','Got it','Start','Get started'));n=snap(version+'_after_intro')
             candidates=[x for x in n if x[0] not in ('Practice','Playgrounds','Learn','Leaderboard','Profile','Start lesson','Lock in your learning','Progress in the path to unlock practice content') and 'image' not in x[0].lower()]
             log.append('practice_candidates='+repr(candidates))
             if candidates:
