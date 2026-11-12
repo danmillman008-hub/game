@@ -1,0 +1,45 @@
+name: Transfer tested experimental APK
+on:
+  push:
+    branches: [arena/aebb90b7-game]
+    paths: [APK_PATCH/_DRIVE_TRANSFER]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  transfer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 43274993527
+          name: Mimo-startup-fixed-experimental
+          path: ${{ runner.temp }}/source
+      - name: Prepare transfer
+        run: |
+          sha256sum "$RUNNER_TEMP/source/candidate.apk"
+          md5sum "$RUNNER_TEMP/source/candidate.apk"
+          stat -c %s "$RUNNER_TEMP/source/candidate.apk"
+          openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 -out "$RUNNER_TEMP/private.pem" 2>/dev/null
+          openssl pkey -in "$RUNNER_TEMP/private.pem" -pubout -out APK_PATCH/transfer-public.pem
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add APK_PATCH/transfer-public.pem
+          git commit -m 'Publish one-time transfer public key'
+          git push origin HEAD:arena/aebb90b7-game
+      - name: Transfer to Drive
+        run: |
+          for i in $(seq 1 150); do
+            git fetch -q origin arena/aebb90b7-game
+            if git cat-file -e origin/arena/aebb90b7-game:APK_PATCH/transfer-session.enc 2>/dev/null; then
+              git show origin/arena/aebb90b7-game:APK_PATCH/transfer-session.enc > "$RUNNER_TEMP/session.enc"
+              break
+            fi
+            sleep 5
+          done
+          test -f "$RUNNER_TEMP/session.enc"
+          openssl pkeyutl -decrypt -inkey "$RUNNER_TEMP/private.pem" -in "$RUNNER_TEMP/session.enc" -out "$RUNNER_TEMP/session" -pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha256
+          python3 APK_PATCH/drive_transfer.py
