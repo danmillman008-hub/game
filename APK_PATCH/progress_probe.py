@@ -24,7 +24,10 @@ def capture(name):
    elif n.get('class')=='android.widget.Button' and n.get('enabled')=='true' and x1>=240 and y1>400:
     nodes.append(('[editor submit]',(x1+x2)//2,(y1+y2)//2,n.get('class','')))
  return a,nodes
-log=[]
+import hashlib
+with open(os.environ['RUNNER_TEMP']+'/candidate.apk','rb') as f:
+ apk_sha=hashlib.file_digest(f,'sha256').hexdigest()
+log=['candidate_sha256='+apk_sha, 'WARNING: diagnostic build; not verified fully offline']
 def snap(name):
  a,n=capture(name);log.append(name+' '+a+' TEXT: '+' | '.join(t[:120] for t,_,_,_ in n));return n
 adb('root'); adb('wait-for-device')
@@ -44,6 +47,8 @@ for i in range(1,25):
  if not target:
   snippets=[x for x in n if x[0].startswith('[snippet]')]
   if len(snippets)==1:target=snippets[0]
+  elif 'Add the text Like to the button.' in texts:
+   target=next((x for x in snippets if x[0]=='[snippet] Like'),None)
  if not target or same>=2:log.append('STOP no actionable progression or repeated screen');break
  log.append('TAP '+repr(target));adb('shell','input','tap',str(target[1]),str(target[2]));time.sleep(5)
 def db_summary(stage):

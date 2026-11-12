@@ -36,6 +36,13 @@ jobs:
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
           script: python3 APK_PATCH/progress_probe.py
+      - name: Retain tested APK as an experimental diagnostic artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mimo-startup-fixed-experimental
+          path: ${{ runner.temp }}/candidate.apk
+          compression-level: 0
+          retention-days: 7
       - name: Return bounded evidence
         if: always()
         run: |
