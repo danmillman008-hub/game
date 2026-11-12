@@ -1,0 +1,26 @@
+name: Verify transferred APK identity
+on:
+  push:
+    branches: [arena/aebb90b7-game]
+    paths: [APK_PATCH/_ARTIFACT_HASH]
+permissions:
+  actions: read
+  contents: write
+jobs:
+  hash:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 43274993527
+          name: Mimo-startup-fixed-experimental
+          path: ${{ runner.temp }}/source
+      - name: Record checksums
+        run: |
+          { sha256sum "$RUNNER_TEMP/source/candidate.apk"; md5sum "$RUNNER_TEMP/source/candidate.apk"; stat -c 'bytes=%s' "$RUNNER_TEMP/source/candidate.apk"; } | sed "s|$RUNNER_TEMP/source/candidate.apk|candidate.apk|" > APK_PATCH/TRANSFER_CHECKSUMS.txt
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add APK_PATCH/TRANSFER_CHECKSUMS.txt
+          git diff --cached --quiet || { git commit -m 'Record tested artifact checksums'; git push origin HEAD:arena/aebb90b7-game; }
