@@ -1,0 +1,46 @@
+name: Transfer standalone offline HTML
+on:
+  push:
+    branches: [arena/aebb90b7-game]
+    paths: [OFFLINE_READER/_DRIVE_TRANSFER]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  transfer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 43302008617
+          name: standalone-offline-learning-html
+          path: ${{ runner.temp }}/source
+      - name: Prepare transfer
+        run: |
+          echo 'd2d96c71f69f69bf4fc7384ec4837d94b54860ec15516c9053212bde4fdbdf2e  '"$RUNNER_TEMP/source/Mimo_Offline_Reader.html" | sha256sum -c
+          sha256sum "$RUNNER_TEMP/source/Mimo_Offline_Reader.html"
+          md5sum "$RUNNER_TEMP/source/Mimo_Offline_Reader.html"
+          stat -c %s "$RUNNER_TEMP/source/Mimo_Offline_Reader.html"
+          openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 -out "$RUNNER_TEMP/private.pem" 2>/dev/null
+          openssl pkey -in "$RUNNER_TEMP/private.pem" -pubout -out OFFLINE_READER/transfer-public.pem
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add OFFLINE_READER/transfer-public.pem
+          git commit -m 'Publish one-time transfer public key'
+          git push origin HEAD:arena/aebb90b7-game
+      - name: Transfer to Drive
+        run: |
+          for i in $(seq 1 150); do
+            git fetch -q origin arena/aebb90b7-game
+            if git cat-file -e origin/arena/aebb90b7-game:OFFLINE_READER/transfer-session.enc 2>/dev/null; then
+              git show origin/arena/aebb90b7-game:OFFLINE_READER/transfer-session.enc > "$RUNNER_TEMP/session.enc"
+              break
+            fi
+            sleep 5
+          done
+          test -f "$RUNNER_TEMP/session.enc"
+          openssl pkeyutl -decrypt -inkey "$RUNNER_TEMP/private.pem" -in "$RUNNER_TEMP/session.enc" -out "$RUNNER_TEMP/session" -pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha256
+          python3 OFFLINE_READER/drive_transfer.py
