@@ -13,3 +13,11 @@ click('Next lesson');let input=d.querySelector('input[type=text]');assert(input)
 click('Next lesson');assert.equal(d.querySelectorAll('input[type=text]').length,2);let gaps=d.querySelectorAll('input[type=text]');gaps[0].value='<button>';gaps[1].value='</button>';click('Check answer');assert.equal(d.querySelector('#result').textContent,'Correct!');
 click('Next lesson');assert.match(d.body.textContent,/not supported/i);click('Finish chapter');assert.match(d.querySelector('h1').textContent,/Topic/);assert.equal(dom.window.localStorage.getItem('mimo-offline-1-2-undefined'),'4');
 console.log('PASS navigation, selection wrong/right, input, gaps, unsupported, chapter finish, local progress');
+// User can resume a partially read chapter from local browser storage.
+const two=[{title:'One',interactiveContent:'<html><body><p><strong>Important</strong> <code>x</code></p></body></html>'},{title:'Two',interactiveContent:'<html><body><p>Second</p></body></html>'}];
+let db2={tracks:[{id:7,title:'Path',sections:[{name:'Section',tutorialIds:[8]}]}],tutorials:{'8':{id:8,title:'Topic',chapters:[{id:9,title:'Chapter',lessons:two}]}}};
+let h2=fs.readFileSync('OFFLINE_READER/template.html','utf8').replace('__CURRICULUM__',JSON.stringify(db2).replace(/</g,'\\u003c'));
+let w=new JSDOM(h2,{runScripts:'dangerously',url:'https://offline.invalid/',virtualConsole:v}).window, d2=w.document;
+const go=s=>{let x=[...d2.querySelectorAll('button')].find(x=>x.textContent.includes(s));assert(x,s);x.click()};
+go('Path');go('Section');go('Topic');go('Chapter');assert.equal(d2.querySelector('strong').textContent,'Offline Learning');assert.equal(d2.querySelector('main strong').textContent,'Important');assert.equal(d2.querySelector('main code').textContent,'x');go('Next lesson');go('Back');assert.match(d2.body.textContent,/Resume at 2/);go('Chapter');assert.match(d2.querySelector('h1').textContent,/Two/);
+console.log('PASS safe inline formatting and chapter resume');

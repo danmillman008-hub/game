@@ -28,12 +28,21 @@ jobs:
           python3 OFFLINE_READER/build.py --apk "$RUNNER_TEMP/MIMO_ORIGINAL.apk" --out "$RUNNER_TEMP/Mimo_Offline_Reader.html" | tee "$RUNNER_TEMP/reader-summary.txt"
           test $(stat -c '%s' "$RUNNER_TEMP/Mimo_Offline_Reader.html") -lt 104857600
           node OFFLINE_READER/full_smoke.cjs "$RUNNER_TEMP/Mimo_Offline_Reader.html" | tee -a "$RUNNER_TEMP/reader-summary.txt"
+          npm install --prefix app --no-save --no-audit --no-fund puppeteer-core
+          node OFFLINE_READER/browser_test.cjs "$RUNNER_TEMP/Mimo_Offline_Reader.html" | tee -a "$RUNNER_TEMP/reader-summary.txt"
       - uses: actions/upload-artifact@v4
         if: success()
         with:
           name: standalone-offline-learning-html
           path: ${{ runner.temp }}/Mimo_Offline_Reader.html
           compression-level: 6
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reader-browser-evidence
+          path: ${{ runner.temp }}/reader-browser.png
+          if-no-files-found: ignore
           retention-days: 7
       - name: Record build summary
         if: always()
