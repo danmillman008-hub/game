@@ -33,6 +33,17 @@ class ExistingPatchTest(unittest.TestCase):
             if old != new:
                 self.assertTrue(any(a <= i < b for a, b in ranges), f'unexpected change at {i:#x}')
 
+    def test_control_preserves_original_keys_method(self):
+        result, edits = builder.patch_dex(self.original, preserve_keys_method=True)
+        start, size = 10048708, 148
+        self.assertEqual(result[start:start + size], self.original[start:start + size])
+        self.assertEqual(len(edits), 3)
+        self.assertEqual(hashlib.sha1(result[32:]).digest(), result[12:32])
+        self.assertEqual(zlib.adler32(result[12:]) & 0xffffffff, struct.unpack_from('<I', result, 8)[0])
+        for i, (old, new) in enumerate(zip(self.patched, result)):
+            if old != new:
+                self.assertTrue(8 <= i < 32 or start <= i < start + size)
+
     def test_goto_targets_in_code_units(self):
         base = 10129624
         for pc, delta, target in ((0x4aa, 0x23, 0x4f0), (0x51a, 0x20, 0x55a)):
