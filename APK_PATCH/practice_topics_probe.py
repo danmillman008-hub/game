@@ -48,8 +48,12 @@ for version in ('fallback','topics'):
                 click(n,lambda t:t in ('Continue','Got it','Start','Get started'));n=snap(version+'_after_intro')
             candidates=[x for x in n if x[0] not in ('Practice','Playgrounds','Learn','Leaderboard','Profile','Start lesson','Lock in your learning','Progress in the path to unlock practice content') and 'image' not in x[0].lower()]
             log.append('practice_candidates='+repr(candidates))
-            if candidates:
-                click(candidates,lambda t:True);snap(version+'_opened')
+            if any(t=='Start now' for t,_,_ in n):
+                click(n,lambda t:t=='Start now');n=snap(version+'_opened')
+                if any(t in ('Start lesson','Start learning','Start') for t,_,_ in n):
+                    click(n,lambda t:t in ('Start lesson','Start learning','Start'));snap(version+'_exercise')
+            elif any(t=='See all' for t,_,_ in n):
+                click(n,lambda t:t=='See all');snap(version+'_opened')
     full=adb('logcat','-d','-v','brief')
     # Fresh emulator only; keep bounded relevant failures, not tokens or request bodies.
     relevant=[]
