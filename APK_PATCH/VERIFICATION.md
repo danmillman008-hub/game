@@ -1,5 +1,7 @@
 # VERIFICATION — Mimo 9.35 offline-unlock APK
 
+> **Correction:** APK signatures and static branch inspection do not establish installation or offline usability. No login bypass or full offline mode was implemented. See [OFFLINE_AUTH_AUDIT.fa.md](OFFLINE_AUTH_AUDIT.fa.md).
+
 Target: original `Mimo_9.35 (1).apk` reconstructed from the user's three Drive
 parts (`Mimo_9.35 (1).z01`, `.z02`, `.zip`), verified:
 
@@ -21,7 +23,7 @@ parts (`Mimo_9.35 (1).z01`, `.z02`, `.zip`), verified:
 | `classes.dex` size | 16,237,920 B (unchanged) |
 | `classes.dex` differing bytes | 169 (4 code sites + 24 B DEX header sha1/checksum) |
 | DEX header | SHA-1 over body matches, Adler-32 checksum matches, magic `dex\n039\0` |
-| `androguard` reparse | 12,944 classes / 65,536 methods, all instructions decode |
+| `androguard` reparse | 12,944 classes / 65,536 methods, class/method table parsed; full verification not performed |
 | Patched `keys/a.c()` | `const/4 v0,1` → `Boolean.valueOf(v0)` → `return-object v0` |
 | `GetPathMapState` @0x4aa | `goto +23h` (was `if-nez v14,+23h`) |
 | `GetPathMapState` @0x51a | `goto +20h` (was `if-nez v14,+20h`) |
@@ -40,6 +42,6 @@ The four patch sites were confirmed against the checked-in disassembly:
 - **No on-device / emulator run.** No Android runtime, ADB or KVM is available
   in this sandbox. UI behaviour (tapping a locked lesson, 3/3 sections) was
   therefore not observed live; the claim rests on static bytecode semantics,
-  the checked-in state-machine evidence, and a valid installable signature.
+  the checked-in state-machine evidence, and a verified v2/v3 signature (not an installation test).
 - Server-backed features remain `SERVER_DEPENDENT`; `SERVER CONFIRMED = 0`
   (unchanged from the MISSION_09 evidence).

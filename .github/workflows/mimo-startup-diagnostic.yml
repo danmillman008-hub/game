@@ -1,0 +1,47 @@
+name: Mimo startup diagnostic
+on:
+  push:
+    branches: [arena/aebb90b7-game]
+    paths: [APK_PATCH/_STARTUP_RUN]
+permissions:
+  contents: read
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Recover verified source APK from the previously staged source
+        env:
+          EXPECTED_APK_SHA256: '48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a'
+          EXPECTED_APK_BYTES: '142353499'
+        run: |
+          bash ANALYSIS/RUNTIME/MISSION_07/transfer_apk_m07.sh
+          mv "$RUNNER_TEMP/MIMO_ORIGINAL.apk" "$RUNNER_TEMP/original.apk"
+      - name: Build diagnostic variants
+        run: |
+          python3 -m unittest discover -s APK_PATCH/tests -v
+          python3 APK_PATCH/build_patched_apk.py --original "$RUNNER_TEMP/original.apk" --out "$RUNNER_TEMP/direct.apk" --workdir "$RUNNER_TEMP/key" --experimental-direct-main --experimental-preserve-queue
+          python3 APK_PATCH/build_patched_apk.py --original "$RUNNER_TEMP/original.apk" --out "$RUNNER_TEMP/direct_no_update.apk" --workdir "$RUNNER_TEMP/key" --experimental-direct-main --experimental-preserve-queue --experimental-skip-update-wait
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Test on Android emulator with network disabled
+        uses: reactivecircus/android-emulator-runner@b530d96654c385303d652368551fb075bc2f0b6b
+        with:
+          api-level: 36
+          target: google_apis
+          arch: x86_64
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          script: bash APK_PATCH/runtime_startup_probe.sh
+      - name: Upload diagnostic evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mimo-startup-diagnostic
+          path: ${{ runner.temp }}/startup-probe/
+          if-no-files-found: warn
+          retention-days: 7

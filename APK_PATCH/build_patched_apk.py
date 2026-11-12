@@ -104,6 +104,66 @@ def patch_dex(raw: bytes):
     return bytes(b), edits
 
 
+def patch_direct_main_experimental(raw: bytes):
+    """Route both unauthenticated splash destinations to MainActivity.
+
+    Experimental only: this does not initialize onboarding, a selected track,
+    guest state, or replace remote services. Never describe as fully offline.
+    """
+    b = bytearray(raw)
+    insns = 10175824 + 16  # SplashActivity$onCreate$2.invokeSuspend
+    edits = [
+        # Ignore the update-screen branch so normal startup continues.
+        (insns + 0x94, '38053200', '28320000', 'bypass update screen'),
+        # Follow the existing unauthenticated path regardless of stored auth.
+        (insns + 0x11c, '38051a00', '281a0000', 'use unauthenticated startup path'),
+        # Both fallback Intent destinations become MainActivity (type index 0x1f06).
+        (insns + 0x19e, '1c023e1f', '1c02061f', 'onboarding destination to MainActivity'),
+        (insns + 0x1e4, '1c01511f', '1c01061f', 'intro destination to MainActivity'),
+    ]
+    for off, old, new, name in edits:
+        if b[off:off + 4] != bytes.fromhex(old):
+            raise ValueError(f'Unexpected bytecode for {name} at {off:#x}')
+        b[off:off + 4] = bytes.fromhex(new)
+    b[12:32] = hashlib.sha1(b[32:]).digest()
+    b[8:12] = struct.pack('<I', zlib.adler32(b[12:]) & 0xffffffff)
+    return bytes(b), [(name, off, 4) for off, _, _, name in edits]
+
+
+def patch_skip_update_wait_experimental(raw: bytes):
+    """Diagnostic only: substitute Boolean.FALSE for the suspending update check.
+
+    At this point v4 is null/zero; Boolean.valueOf(false) is synchronous. The
+    coroutine's existing result handling and routing remain intact. This does
+    not bootstrap a guest or establish offline functionality.
+    """
+    b = bytearray(raw)
+    off = 10175824 + 16 + 0x70
+    if b[off:off + 6].hex() != '6e30d77d3a05':
+        raise ValueError('Unexpected update-check invocation; refusing patch')
+    b[off:off + 6] = bytes.fromhex('711012bc0400')  # Boolean.valueOf(v4)
+    b[12:32] = hashlib.sha1(b[32:]).digest()
+    b[8:12] = struct.pack('<I', zlib.adler32(b[12:]) & 0xffffffff)
+    return bytes(b), ('EXPERIMENTAL skip suspending update check', off, 6)
+
+
+def patch_preserve_queued_progress(raw: bytes):
+    """Experimental: suppress one shared DAO DELETE execution, including online.
+
+    It is NOT a complete offline-mode implementation. Sync/logout semantics and
+    persistence on a device have not been verified. Only use on the exact DEX.
+    """
+    b = bytearray(raw)
+    code = 8425144 + 16  # Lbb/j;->invoke, code_item instructions
+    assert b[code + 0x326:code + 0x332].hex() == '1a0173207220e9b210000c01'
+    off = code + 0x332
+    assert b[off:off + 6].hex() == '7210edb20100'
+    b[off:off + 6] = b'\0' * 6  # do not execute the prepared DELETE; close still runs
+    b[12:32] = hashlib.sha1(b[32:]).digest()
+    b[8:12] = struct.pack('<I', zlib.adler32(b[12:]) & 0xffffffff)
+    return bytes(b), ('EXPERIMENTAL disable queued progress DELETE', off, 6)
+
+
 # ------------------------------------------------------------- low-level ZIP
 def read_entries(apk: bytes):
     import io
@@ -228,6 +288,12 @@ def main():
     ap.add_argument('--original', required=True, type=Path)
     ap.add_argument('--out', required=True, type=Path)
     ap.add_argument('--workdir', type=Path, default=None)
+    ap.add_argument('--experimental-preserve-queue', action='store_true',
+                    help='Suppress the shared queued-progress DELETE; affects online sync too; untested on Android')
+    ap.add_argument('--experimental-direct-main', action='store_true',
+                    help='Skip splash onboarding/auth routes to MainActivity; no guest bootstrap, not Android-tested')
+    ap.add_argument('--experimental-skip-update-wait', action='store_true',
+                    help='Diagnostic: bypass suspending startup update check; not Android-tested')
     args = ap.parse_args()
 
     wd = args.workdir or args.out.parent / '_apk_patch_work'
@@ -243,7 +309,21 @@ def main():
     apk = args.original.read_bytes()
     print('original', len(apk), hashlib.sha256(apk).hexdigest())
     dex = zipfile.ZipFile(args.original).read(DEX_NAME)
+    if hashlib.sha256(dex).hexdigest() != '2f2c0c618f89c6d6cadf7acf93f48eb9572c66f6b68d7dba03a36c0487f6a115':
+        raise ValueError('Unexpected classes.dex SHA-256; refusing fixed-offset patch')
     patched, edits = patch_dex(dex)
+    if args.experimental_direct_main:
+        patched, startup_edits = patch_direct_main_experimental(patched)
+        edits.extend(startup_edits)
+        print('WARNING: direct startup bypass does not initialize a guest or chosen course; untested on Android')
+    if args.experimental_skip_update_wait:
+        patched, edit = patch_skip_update_wait_experimental(patched)
+        edits.append(edit)
+        print('WARNING: startup update check skipped experimentally; runtime behavior not established')
+    if args.experimental_preserve_queue:
+        patched, edit = patch_preserve_queued_progress(patched)
+        edits.append(edit)
+        print('WARNING: experimental queue preservation is untested on Android and affects online sync')
     print('dex', len(dex), '->', len(patched))
     for name, o, n in edits:
         print('  edit', name, 'offset', hex(o), 'bytes', n)
