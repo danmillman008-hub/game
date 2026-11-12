@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'"><title>Offline Learning</title><style>
+:root{font-family:system-ui,sans-serif;color:#20233a;background:#f6f7fb}*{box-sizing:border-box}body{margin:0}.bar{background:white;border-bottom:1px solid #e4e5ed;padding:12px 16px;position:sticky;top:0;z-index:2;display:flex;gap:12px;align-items:center}.wrap{max-width:760px;margin:auto;padding:18px}.sub{color:#62687d;font-size:.9rem}button{font:inherit;cursor:pointer;border:0;border-radius:9px;padding:11px 15px;background:#5b49c9;color:white}button.secondary{background:#e8e8f2;color:#272840}button:disabled{opacity:.5}button.card{display:block;text-align:left;width:100%;background:white;color:inherit;border:1px solid #e0e2ec;margin:9px 0;padding:16px}h1{font-size:1.5rem}h2{font-size:1.2rem;margin-top:24px}p{line-height:1.55}pre{background:#202434;color:#eef1ff;padding:14px;border-radius:9px;overflow:auto;white-space:pre-wrap}code{background:#eeeef6;border-radius:4px;padding:1px 4px;overflow-wrap:anywhere}pre code{background:none;padding:0}textarea,input[type=text]{font:inherit;width:100%;border:1px solid #adb1c4;border-radius:8px;padding:10px}textarea{font-family:monospace;min-height:150px;white-space:pre}.opt{display:flex;gap:9px;align-items:start;padding:10px 0}.notice{background:#fff6de;padding:12px;border-radius:8px}.result{font-weight:600;min-height:1.5em;margin:10px 0}.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.good{color:#157858}.bad{color:#b42f43}details{margin-top:10px}a{color:inherit}
+</style></head><body><header class="bar"><button id="back" class="secondary">Back</button><strong>Offline Learning</strong></header><main class="wrap" id="app" aria-live="polite"></main><script id="curriculum" type="application/json">__CURRICULUM__</script><script>
+'use strict';
+const data=JSON.parse(document.getElementById('curriculum').textContent), app=document.getElementById('app');
+let nav={page:'tracks'}, current=null;
+const E=(tag,text,cls)=>{let e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e};
+function clear(title,sub){app.replaceChildren(E('h1',title));if(sub)app.append(E('p',sub,'sub'))}
+function button(label,fn,cls=''){let b=E('button',label,cls);b.type='button';b.onclick=fn;return b}
+function card(label,sub,fn){let b=button('',fn,'card');b.append(E('strong',label));if(sub)b.append(E('div',sub,'sub'));app.append(b)}
+function render(){window.scrollTo(0,0);let t=data.tracks.find(x=>String(x.id)===String(nav.track));
+ if(nav.page==='tracks'){clear('Choose a learning path','All content is stored in this file. No account or connection is required.');for(const x of data.tracks)card(x.title,x.descriptionContent||'',()=>{nav={page:'track',track:x.id};render()});return}
+ if(!t){nav={page:'tracks'};return render()}
+ if(nav.page==='track'){clear(t.title,'Choose a section');t.sections.forEach((s,i)=>card(s.name,s.description||'',()=>{nav={page:'section',track:t.id,section:i};render()}));return}
+ let section=t.sections[nav.section];if(!section){nav.page='track';return render()}
+ if(nav.page==='section'){clear(section.name,'Choose a topic');for(const id of section.tutorialIds){const x=data.tutorials[id];if(x)card(x.title,x.type||'',()=>{nav={...nav,page:'tutorial',tutorial:id};render()})}return}
+ let tut=data.tutorials[nav.tutorial];if(!tut){nav.page='section';return render()}
+ if(nav.page==='tutorial'){clear(tut.title,'Choose a chapter');(tut.chapters||[]).forEach((c,i)=>card(c.title||('Chapter '+(i+1)),`${(c.lessons||[]).length} lessons`,()=>{nav={...nav,page:'lesson',chapter:i,lesson:0};render()}));return}
+ let c=tut.chapters[nav.chapter], l=c&&c.lessons[nav.lesson];if(!l){nav.page='tutorial';return render()}
+ clear(l.title||c.title,`${tut.title} · ${c.title||''} · ${nav.lesson+1} / ${c.lessons.length}`);current={l,checks:[]};
+ if(l.contentType==='executableFiles'||l.executableContent) executable(l.executableContent||{});else interactive(l.interactiveContent||'');
+ let result=E('div','','result');result.id='result';app.append(result);
+ let row=E('div',undefined,'row');if(current.checks.length)row.append(button('Check answer',()=>{let rs=current.checks.map(f=>f());let ok=rs.every(x=>x===true);result.textContent=ok?'Correct!':'Not quite. Try again.';result.className='result '+(ok?'good':'bad')}));
+ row.append(button(nav.lesson+1<c.lessons.length?'Next lesson':'Finish chapter',()=>{try{localStorage.setItem('mimo-offline-'+t.id+'-'+tut.id+'-'+c.id,String(nav.lesson+1))}catch(_){};if(nav.lesson+1<c.lessons.length)nav.lesson++;else nav.page='tutorial';render()},'secondary'));app.append(row)
+}
+function plain(node){let x=node.cloneNode(true);x.querySelectorAll('script,style,iframe,object,svg,webview,interactions').forEach(e=>e.remove());return x.textContent.trim()}
+function codeText(n){let content=n.querySelector('content');if(!content)return '';let out='';for(const e of content.querySelectorAll('text')){if(e.tagName.toLowerCase()==='text')out+=e.getAttribute('type')==='break'?'\n':(e.getAttribute('value')||'');}return out}
+function interactive(html){if(!html){app.append(E('p','This lesson has no bundled interactive content.','notice'));return}let doc=new DOMParser().parseFromString(html,'text/html');let body=doc.body;
+ for(const n of body.children){let tag=n.tagName.toLowerCase(),vis=n.getAttribute('visible-if');if(vis&&vis!=='always')continue;
+  if(tag==='p'||tag==='h1'||tag==='h2'||tag==='h3'||tag==='li'){let s=plain(n);if(s)app.append(E(tag,s));}
+  else if(tag==='selection')selection(n);
+  else if(tag==='code'&&n.querySelector('content')) codeBlock(n);
+  else if(tag==='webview'||tag==='database'){app.append(E('p','This embedded activity is not supported in this simplified reader. You can continue to the next lesson.','notice'))}
+  else if(!['script','style'].includes(tag)){let s=plain(n);if(s)app.append(E('p',s));}
+ }
+}
+function selection(n){let opts=[...n.querySelectorAll('item')];if(!opts.length){app.append(E('p','This question cannot be checked automatically.','notice'));return}let multi=n.getAttribute('multiple')==='multiple', name='answer-'+Math.random();let answers=[];
+ for(const item of opts){let label=E('label',undefined,'opt'),i=E('input');i.type=multi?'checkbox':'radio';i.name=name;label.append(i,E('span',plain(item)));app.append(label);answers.push([i,item.getAttribute('correct')==='true'])}
+ if(answers.some(a=>a[1]))current.checks.push(()=>answers.some(a=>a[0].checked)&&answers.every(a=>a[0].checked===a[1]));else app.append(E('p','Answer key unavailable for this question.','notice'));
+}
+function codeBlock(n){let code=codeText(n), inter=n.querySelector('interaction[isdefault="true"]')||n.querySelector('interaction');if(!inter){app.append(E('pre',code));return}let kind=inter.getAttribute('type');
+ if(kind==='validatedInput'&&inter.hasAttribute('startIndex')&&inter.hasAttribute('endIndex')){let a=+inter.getAttribute('startIndex'),b=+inter.getAttribute('endIndex'),answer=code.slice(a,b);if(!answer||b>code.length){app.append(E('pre',code),E('p','This answer cannot be checked automatically.','notice'));return}app.append(E('pre',code.slice(0,a)+'_____ '+code.slice(b)));let input=E('input');input.type='text';input.placeholder='Type your answer';app.append(input);const norm=s=>s.toLowerCase().replace(/[^\p{L}\p{N}<>():{},.]/gu,'');current.checks.push(()=>norm(input.value)===norm(answer)&&input.value.trim()!=='');return}
+ if(kind==='fillTheGap'||kind==='spell'){let opts=[...inter.querySelectorAll('option')],ranges=opts.filter(x=>x.hasAttribute('startIndex')&&x.hasAttribute('endIndex'));if(ranges.length){let answers=ranges.map(x=>code.slice(+x.getAttribute('startIndex'),+x.getAttribute('endIndex')));if(answers.some(x=>!x)){app.append(E('pre',code),E('p','This question cannot be checked automatically.','notice'));return}let shown=code;for(const x of [...ranges].sort((x,y)=>+y.getAttribute('startIndex')- +x.getAttribute('startIndex'))){let a=+x.getAttribute('startIndex'),b=+x.getAttribute('endIndex');shown=shown.slice(0,a)+'_____'+shown.slice(b)}app.append(E('pre',shown));let inputs=answers.map((_,i)=>{let el=E('input');el.type='text';el.placeholder='Answer '+(i+1);app.append(el);return el});current.checks.push(()=>answers.every((a,i)=>inputs[i].value.trim()===a.trim()));return}}
+ app.append(E('pre',code),E('p','This interaction cannot be checked automatically in this reader.','notice'));
+}
+function executable(x){app.append(E('p',x.instructions||''));let files=x.files||[], checks=[];for(const f of files){app.append(E('h2',f.name||'File'));let ta=E('textarea');ta.value=f.content||'';ta.spellcheck=false;app.append(ta);if(typeof f.solvedContent==='string')checks.push([ta,f.solvedContent]);let d=E('details'),s=E('summary','Show supplied example solution');d.append(s,E('pre',f.solvedContent||'No bundled example solution.'));app.append(d)}
+ if(files.length&&checks.length===files.length){app.append(E('p','This checks for an exact match with the supplied example, not program execution. Other valid solutions may be marked incorrect.','notice'));current.checks.push(()=>checks.every(([el,a])=>el.value===a))}else app.append(E('p','Automatic grading is unavailable for this coding exercise. The supplied example, if present, can be viewed above.','notice'));
+}
+document.getElementById('back').onclick=()=>{let order=['tracks','track','section','tutorial','lesson'],i=order.indexOf(nav.page);nav.page=order[Math.max(i-1,0)];render()};render();
+</script></body></html>

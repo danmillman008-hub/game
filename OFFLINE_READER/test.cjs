@@ -1,0 +1,15 @@
+const fs=require('fs'), assert=require('assert');
+const {JSDOM,VirtualConsole}=require('../app/node_modules/jsdom');
+const sample=n=>fs.readFileSync('ANALYSIS/MISSION_05/SAMPLES/'+n+'_lesson.txt','utf8').split('\n\n').slice(1).join('\n\n');
+const lessons=[{title:'Choice',interactiveContent:sample('selection')},{title:'Input',interactiveContent:sample('validatedinput')},{title:'Gaps',interactiveContent:sample('fillthegap')},{title:'Unsupported',interactiveContent:'<html><body><webview content="x"></webview></body></html>'}];
+let db={tracks:[{id:1,title:'Path',sections:[{name:'Section',tutorialIds:[2]}]}],tutorials:{'2':{id:2,title:'Topic',chapters:[{title:'Chapter',lessons}]}}};
+let html=fs.readFileSync('OFFLINE_READER/template.html','utf8').replace('__CURRICULUM__',JSON.stringify(db).replace(/</g,'\\u003c'));
+let v=new VirtualConsole();v.on('jsdomError',e=>{if(!String(e).includes('Not implemented: window.scrollTo'))throw e});
+let dom=new JSDOM(html,{runScripts:'dangerously',url:'https://offline.invalid/',virtualConsole:v}),d=dom.window.document;
+const click=text=>{let b=[...d.querySelectorAll('button')].find(e=>e.textContent.includes(text));assert(b,'missing '+text);b.click()};
+click('Path');click('Section');click('Topic');click('Chapter');
+let inputs=d.querySelectorAll('input');assert.equal(inputs.length,4);inputs[1].click();click('Check answer');assert.match(d.querySelector('#result').textContent,/Not quite/);inputs[1].click();inputs[0].click();click('Check answer');assert.equal(d.querySelector('#result').textContent,'Correct!');
+click('Next lesson');let input=d.querySelector('input[type=text]');assert(input);input.value='Login';click('Check answer');assert.equal(d.querySelector('#result').textContent,'Correct!');
+click('Next lesson');assert.equal(d.querySelectorAll('input[type=text]').length,2);let gaps=d.querySelectorAll('input[type=text]');gaps[0].value='<button>';gaps[1].value='</button>';click('Check answer');assert.equal(d.querySelector('#result').textContent,'Correct!');
+click('Next lesson');assert.match(d.body.textContent,/not supported/i);click('Finish chapter');assert.match(d.querySelector('h1').textContent,/Topic/);assert.equal(dom.window.localStorage.getItem('mimo-offline-1-2-undefined'),'4');
+console.log('PASS navigation, selection wrong/right, input, gaps, unsupported, chapter finish, local progress');

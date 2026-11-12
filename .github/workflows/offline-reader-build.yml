@@ -1,0 +1,47 @@
+name: Build standalone offline lesson reader
+on:
+  push:
+    branches: [arena/aebb90b7-game]
+    paths: [OFFLINE_READER/_BUILD_RUN]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - run: npm ci --prefix app --no-audit --no-fund && node OFFLINE_READER/test.cjs
+      - name: Recover verified original APK
+        env:
+          EXPECTED_APK_SHA256: '48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a'
+          EXPECTED_APK_BYTES: '142353499'
+        run: bash ANALYSIS/RUNTIME/MISSION_07/transfer_apk_m07.sh
+      - name: Generate standalone reader
+        run: |
+          python3 OFFLINE_READER/build.py --apk "$RUNNER_TEMP/MIMO_ORIGINAL.apk" --out "$RUNNER_TEMP/Mimo_Offline_Reader.html" | tee "$RUNNER_TEMP/reader-summary.txt"
+          test $(stat -c '%s' "$RUNNER_TEMP/Mimo_Offline_Reader.html") -lt 104857600
+          node OFFLINE_READER/full_smoke.cjs "$RUNNER_TEMP/Mimo_Offline_Reader.html" | tee -a "$RUNNER_TEMP/reader-summary.txt"
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: standalone-offline-learning-html
+          path: ${{ runner.temp }}/Mimo_Offline_Reader.html
+          compression-level: 6
+          retention-days: 7
+      - name: Record build summary
+        if: always()
+        run: |
+          if [ -f "$RUNNER_TEMP/reader-summary.txt" ]; then
+            cp "$RUNNER_TEMP/reader-summary.txt" OFFLINE_READER/build_summary.txt
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add OFFLINE_READER/build_summary.txt
+            git diff --cached --quiet || { git commit -m 'Record offline reader build result'; git push origin HEAD:arena/aebb90b7-game; }
+          fi
