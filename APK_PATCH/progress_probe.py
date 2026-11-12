@@ -15,8 +15,11 @@ def capture(name):
  nodes=[]
  for n in r.iter('node'):
   text=(n.get('text') or n.get('content-desc') or '').strip();b=n.get('bounds','');m=re.fullmatch(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]',b)
-  if text and m:
-   x1,y1,x2,y2=map(int,m.groups());nodes.append((text,(x1+x2)//2,(y1+y2)//2,n.get('class','')))
+  if m:
+   x1,y1,x2,y2=map(int,m.groups())
+   if text:nodes.append((text,(x1+x2)//2,(y1+y2)//2,n.get('class','')))
+   elif n.get('class')=='android.widget.Button' and n.get('enabled')=='true' and x1>=240 and y1>400:
+    nodes.append(('[editor submit]',(x1+x2)//2,(y1+y2)//2,n.get('class','')))
  return a,nodes
 log=[]
 def snap(name):
@@ -33,7 +36,7 @@ for i in range(1,25):
  else:same=0
  last=texts
  # Exact labels or short actionable code; no guess at answer correctness.
- target=next((x for x in n if x[0] in ('Continue','Start','Start lesson','Run code','Run','Next','Got it')),None)
+ target=next((x for x in n if x[0] in ('Continue','Start','Start lesson','Run code','Run','Next','Got it','[editor submit]')),None)
  if not target:target=next((x for x in n if x[0]=='<button>Like</button>'),None)
  if not target or same>=2:log.append('STOP no actionable progression or repeated screen');break
  log.append('TAP '+repr(target));adb('shell','input','tap',str(target[1]),str(target[2]));time.sleep(5)
