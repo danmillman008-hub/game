@@ -1,0 +1,55 @@
+name: Compare original guest initialization
+on:
+  push:
+    branches: [arena/aebb90b7-game]
+    paths: [APK_PATCH/_GUEST_PROFILE_AB]
+permissions:
+  actions: read
+  contents: read
+jobs:
+  compare:
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: [direct-main, onboard-skip]
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        if: matrix.variant == 'direct-main'
+        with:
+          github-token: ${{ github.token }}
+          run-id: 43287511539
+          name: Mimo-practice-topic-experimental
+          path: ${{ runner.temp }}
+      - name: Recover and build onboarding control
+        if: matrix.variant == 'onboard-skip'
+        env:
+          EXPECTED_APK_SHA256: '48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a'
+          EXPECTED_APK_BYTES: '142353499'
+        run: |
+          bash ANALYSIS/RUNTIME/MISSION_07/transfer_apk_m07.sh
+          python3 APK_PATCH/build_patched_apk.py --original "$RUNNER_TEMP/MIMO_ORIGINAL.apk" --out "$RUNNER_TEMP/candidate.apk" --workdir "$RUNNER_TEMP/key" --diagnostic-repack-only --diagnostic-skip-ghost-native-init
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: reactivecircus/android-emulator-runner@b530d96654c385303d652368551fb075bc2f0b6b
+        env:
+          VARIANT: ${{ matrix.variant }}
+        with:
+          api-level: 36
+          target: google_apis
+          arch: x86_64
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          script: python3 APK_PATCH/guest_profile_probe.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: guest-profile-${{ matrix.variant }}
+          path: ${{ runner.temp }}/guest-profile/
+          if-no-files-found: warn
+          retention-days: 7
