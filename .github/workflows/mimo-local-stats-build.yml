@@ -1,0 +1,46 @@
+name: Build diagnostic offline practice statistics
+on:
+  push:
+    branches: [arena/aebb90b7-game]
+    paths: [APK_PATCH/_LOCAL_STATS_RUN]
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Recover known input APK
+        env:
+          EXPECTED_APK_SHA256: '48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a'
+          EXPECTED_APK_BYTES: '142353499'
+        run: |
+          bash ANALYSIS/RUNTIME/MISSION_07/transfer_apk_m07.sh
+          mv "$RUNNER_TEMP/MIMO_ORIGINAL.apk" "$RUNNER_TEMP/original.apk"
+      - name: Build diagnostic APK and verify packed DEX
+        run: |
+          python3 -m unittest discover -s APK_PATCH/tests -v
+          python3 APK_PATCH/build_patched_apk.py --original "$RUNNER_TEMP/original.apk" --out "$RUNNER_TEMP/candidate.apk" --workdir "$RUNNER_TEMP/key" --experimental-direct-main --experimental-preserve-queue --diagnostic-skip-ghost-native-init --diagnostic-practice-stats-placeholder
+          python3 - <<'PY'
+          import importlib.util, os, zipfile
+          from pathlib import Path
+          spec = importlib.util.spec_from_file_location('builder', 'APK_PATCH/build_patched_apk.py')
+          builder = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(builder)
+          root=Path(os.environ['RUNNER_TEMP'])
+          with zipfile.ZipFile(root/'original.apk') as source, zipfile.ZipFile(root/'candidate.apk') as result:
+              assert result.read('classes3.dex') == builder.patch_practice_stats_placeholder(source.read('classes3.dex'))
+              assert result.read('classes12.dex') == builder.patch_ghost_initialization(source.read('classes12.dex'), True, False)
+              assert result.testzip() is None
+          print('PACKED_DEX_AND_ZIP_OK (not a runtime test)')
+          PY
+          SIGNER=$(find "$ANDROID_HOME/build-tools" -name apksigner -type f | sort -V | tail -1)
+          "$SIGNER" verify --verbose "$RUNNER_TEMP/candidate.apk"
+      - name: Retain diagnostic build privately in Actions
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mimo-practice-stats-diagnostic-untested
+          path: ${{ runner.temp }}/candidate.apk
+          compression-level: 0
+          retention-days: 3

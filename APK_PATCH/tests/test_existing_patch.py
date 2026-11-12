@@ -118,3 +118,37 @@ class ExistingPatchTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+class PracticeStatsPlaceholderTest(unittest.TestCase):
+    def test_exact_dex_and_integrity(self):
+        original = (ROOT / 'ANALYSIS/_INPUT/classes3.dex').read_bytes()
+        patched = builder.patch_practice_stats_placeholder(original)
+        off = 550020 + 16
+        self.assertEqual(patched[off:off+20].hex(), '2202a2031a01c9401a00c9407030cb0c12001102')
+        self.assertEqual(patched[off+20:off+774], bytes(754))
+        self.assertEqual(patched[32:off], original[32:off])
+        self.assertEqual(patched[off+774:], original[off+774:])
+        self.assertEqual(hashlib.sha1(patched[32:]).digest(), patched[12:32])
+        self.assertEqual(zlib.adler32(patched[12:]) & 0xffffffff, struct.unpack_from('<I', patched, 8)[0])
+
+    def test_zip_writer_includes_both_additional_dex_files(self):
+        import io
+        import zipfile
+        source = io.BytesIO()
+        with zipfile.ZipFile(source, 'w', compression=zipfile.ZIP_DEFLATED) as z:
+            z.writestr('classes.dex', b'old-main')
+            z.writestr('classes3.dex', b'old-three')
+            z.writestr('classes12.dex', b'old-twelve')
+        entries = builder.read_entries(source.getvalue())
+        part, _, cd, count = builder.build_unsigned(entries, b'new-main', b'new-twelve', {'classes3.dex': b'new-three'})
+        eocd = struct.pack('<IHHHHIIH', 0x06054b50, 0, 0, count, count, len(cd), len(part), 0)
+        with zipfile.ZipFile(io.BytesIO(part + cd + eocd)) as z:
+            self.assertEqual(z.read('classes.dex'), b'new-main')
+            self.assertEqual(z.read('classes3.dex'), b'new-three')
+            self.assertEqual(z.read('classes12.dex'), b'new-twelve')
+
+    def test_unknown_dex_is_rejected(self):
+        raw = bytearray((ROOT / 'ANALYSIS/_INPUT/classes3.dex').read_bytes())
+        raw[-1] ^= 1
+        with self.assertRaises(ValueError):
+            builder.patch_practice_stats_placeholder(bytes(raw))

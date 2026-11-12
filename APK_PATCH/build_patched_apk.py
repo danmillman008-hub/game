@@ -182,6 +182,36 @@ def patch_preserve_queued_progress(raw: bytes):
     return bytes(b), ('EXPERIMENTAL disable queued progress DELETE', off, 6)
 
 
+def patch_practice_stats_placeholder(raw: bytes):
+    """Diagnostic offline-only display placeholder, NOT a server response.
+
+    GetPracticeStats normally requests the remote duration and completed count.
+    Returning two em dashes honestly denotes unknown statistics and avoids that
+    request; it does not create practice lessons or account data. This replaces
+    the whole method body on the exact known classes3.dex (no try handlers).
+    It affects online statistics too; never enable silently.
+    """
+    expected = '0f198b6b589074e7face41b83557376d147162762a11fc3f82d1b6a026279064'
+    if hashlib.sha256(raw).hexdigest() != expected:
+        raise ValueError('Unexpected classes3.dex')
+    b = bytearray(raw)
+    code_item = 550020
+    # DEX code item: 21 registers, zero try blocks, 387 16-bit code units.
+    regs, ins, outs, tries, debug, size = struct.unpack_from('<HHHHII', b, code_item)
+    if (regs, ins, outs, tries, size) != (21, 2, 5, 0, 387):
+        raise ValueError('Unexpected GetPracticeStats code header')
+    off = code_item + 16
+    if b[off:off+8].hex() != '0800130008011400' or b[off+0x2b4:off+0x2b8].hex() != '2202a203' or b[off+0x2ce:off+0x2d6].hex() != '7030cb0c12001102':
+        raise ValueError('Unexpected GetPracticeStats instructions')
+    # new-instance v2, hi/c; const-string v1, "—"; const-string v0, "—";
+    # invoke-direct {v2,v1,v0}, hi/c.<init>; return-object v2.
+    body = bytes.fromhex('2202a2031a01c9401a00c9407030cb0c12001102')
+    b[off:off+774] = body + bytes(774-len(body))
+    b[12:32] = hashlib.sha1(b[32:]).digest()
+    b[8:12] = struct.pack('<I', zlib.adler32(b[12:]) & 0xffffffff)
+    return bytes(b)
+
+
 # ------------------------------------------------------------- low-level ZIP
 def read_entries(apk: bytes):
     import io
@@ -209,10 +239,12 @@ def dos_time(t):
             ((t[0] - 1980) << 9) | (t[1] << 5) | t[2])
 
 
-def build_unsigned(entries, patched_dex, extra_dex=None):
+def build_unsigned(entries, patched_dex, extra_dex=None, additional_dex=None):
     replacements = {DEX_NAME: patched_dex}
     if extra_dex is not None:
         replacements['classes12.dex'] = extra_dex
+    if additional_dex:
+        replacements.update(additional_dex)
     for e in entries:
         if e['name'] in replacements:
             data = replacements[e['name']]
@@ -318,6 +350,8 @@ def main():
     ap.add_argument('--diagnostic-skip-ghost-signature-spoof', action='store_true')
     ap.add_argument('--diagnostic-repack-only', action='store_true',
                     help='Control: rebuild and resign with unchanged DEX, not a usable patch')
+    ap.add_argument('--diagnostic-practice-stats-placeholder', action='store_true',
+                    help='Show unknown stats as dashes without a network request; affects online, not runtime verified')
     ap.add_argument('--experimental-skip-update-wait', action='store_true',
                     help='Diagnostic: bypass suspending startup update check; not Android-tested')
     args = ap.parse_args()
@@ -338,7 +372,7 @@ def main():
     if hashlib.sha256(dex).hexdigest() != '2f2c0c618f89c6d6cadf7acf93f48eb9572c66f6b68d7dba03a36c0487f6a115':
         raise ValueError('Unexpected classes.dex SHA-256; refusing fixed-offset patch')
     if args.diagnostic_repack_only:
-        if args.experimental_direct_main or args.experimental_preserve_queue or args.experimental_skip_update_wait:
+        if args.experimental_direct_main or args.experimental_preserve_queue or args.experimental_skip_update_wait or args.diagnostic_practice_stats_placeholder:
             raise ValueError('repack-only must not be combined with patches')
         patched, edits = dex, []
     else:
@@ -366,8 +400,13 @@ def main():
         extra_dex = patch_ghost_initialization(ghost, args.diagnostic_skip_ghost_native_init,
                                                args.diagnostic_skip_ghost_signature_spoof)
         print('WARNING: diagnostic ghost initializer patch; not production tested')
+    additional_dex = {}
+    if args.diagnostic_practice_stats_placeholder:
+        raw3 = zipfile.ZipFile(args.original).read('classes3.dex')
+        additional_dex['classes3.dex'] = patch_practice_stats_placeholder(raw3)
+        print('WARNING: practice statistics displayed as unknown; diagnostic only, not runtime tested')
     entries = read_entries(apk)
-    part1, sb_offset, cd, count = build_unsigned(entries, patched, extra_dex)
+    part1, sb_offset, cd, count = build_unsigned(entries, patched, extra_dex, additional_dex)
     print('entries', len(entries), '->', count, 'sb_offset', sb_offset)
 
     def eocd(cd_start):
