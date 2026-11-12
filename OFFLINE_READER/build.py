@@ -16,7 +16,17 @@ def build(apk,out):
                 raw=json.loads(z.read(name)); t=raw['tutorial']; tutorials[str(t['id'])]=t
         missing=sorted({str(x) for t in tracks['tracks'] for s in t.get('sections',[]) for x in s.get('tutorialIds',[]) if str(x) not in tutorials})
         if missing: raise ValueError('Missing tutorial assets: '+repr(missing[:30]))
-    payload=json.dumps({'tracks':tracks['tracks'],'tutorials':tutorials},ensure_ascii=True,separators=(',',':')).replace('<','\\u003c').replace('>','\\u003e').replace('&','\\u0026')
+    # Keep the normal learning content, not unused hard-mode copies and metadata.
+    small_tracks=[{'id':t['id'],'title':t.get('title',''),
+                   'descriptionContent':t.get('descriptionContent',''),
+                   'sections':[{'name':s.get('name',''), 'description':s.get('description',''),
+                                'tutorialIds':s.get('tutorialIds',[])} for s in t.get('sections',[])]}
+                  for t in tracks['tracks']]
+    small_tutorials={k:{'id':t['id'],'title':t.get('title',''), 'type':t.get('type',''),
+                          'chapters':[{'id':c.get('id'),'title':c.get('title',''),
+                                       'lessons':[{key:l[key] for key in ('id','title','contentType','interactiveContent','executableContent') if key in l} for l in c.get('lessons',[])]}
+                                      for c in t.get('chapters',[])]} for k,t in tutorials.items()}
+    payload=json.dumps({'tracks':small_tracks,'tutorials':small_tutorials},ensure_ascii=True,separators=(',',':')).replace('<','\\u003c').replace('>','\\u003e').replace('&','\\u0026')
     template=Path(__file__).with_name('template.html').read_text(encoding='utf8')
     if template.count('__CURRICULUM__')!=1:raise ValueError('template placeholder error')
     out.parent.mkdir(parents=True,exist_ok=True);out.write_text(template.replace('__CURRICULUM__',payload),encoding='utf8')
