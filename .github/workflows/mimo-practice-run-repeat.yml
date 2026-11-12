@@ -1,0 +1,52 @@
+name: Diagnose offline practice run
+on:
+  push:
+    branches: [arena/aebb90b7-game]
+    paths: [APK_PATCH/_PRACTICE_RUN_REPEAT]
+permissions:
+  actions: read
+  contents: read
+jobs:
+  practice:
+    strategy:
+      fail-fast: false
+      matrix:
+        sample: [1, 2, 3]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 43284655444
+          name: Mimo-practice-stats-diagnostic-untested
+          path: ${{ runner.temp }}/fallback
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 43287511539
+          name: Mimo-practice-topic-experimental
+          path: ${{ runner.temp }}/topics
+      - name: Verify APK under test
+        run: echo '6bbd070ca9a3f592dada8722fcd44c90a353756268a4ef067887c9cc138f0258  '"$RUNNER_TEMP/topics/candidate.apk" | sha256sum -c
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: reactivecircus/android-emulator-runner@b530d96654c385303d652368551fb075bc2f0b6b
+        with:
+          api-level: 36
+          target: google_apis
+          arch: x86_64
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          script: python3 APK_PATCH/practice_run_probe.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: practice-run-repeat-${{ matrix.sample }}
+          path: ${{ runner.temp }}/practice-run/
+          if-no-files-found: warn
+          retention-days: 7
