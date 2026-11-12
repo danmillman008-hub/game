@@ -58,6 +58,12 @@ for i in range(1,65):
    code=next((x[0] for x in n if x[0].startswith('<button>') and 'W' in x[0]),'WWW')
    wanted = '<button>' if code == 'WWW' else ('Q' if code == '<button>WW' else '</button>')
    target=next((x for x in snippets if x[0]=='[snippet] '+wanted),None)
+  elif 'Create a button with the label R.' in texts or 'Create a button with the label D.' in texts:
+   letter = 'R' if 'label R.' in texts else 'D'
+   editor=next((x[0] for x in n if '\n' in x[0] and 'W' in x[0]),'')
+   line=editor.split('\n')[-1]
+   wanted='<button>' if line=='WWW' else (letter if line=='<button>WW' else '</button>')
+   target=next((x for x in snippets if x[0]=='[snippet] '+wanted),None)
  if not target or same>=2:log.append('STOP no actionable progression or repeated screen');break
  log.append('TAP '+repr(target));adb('shell','input','tap',str(target[1]),str(target[2]));time.sleep(5)
 def db_summary(stage):
