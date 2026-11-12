@@ -58,7 +58,7 @@ for i in range(1,65):
    code=next((x[0] for x in n if x[0].startswith('<button>') and 'W' in x[0]),'WWW')
    wanted = '<button>' if code == 'WWW' else ('Q' if code == '<button>WW' else '</button>')
    target=next((x for x in snippets if x[0]=='[snippet] '+wanted),None)
-  elif 'Create a button with the label R.' in texts or 'Create a button with the label D.' in texts:
+  elif 'label R.' in texts or 'label D.' in texts:
    letter = 'R' if 'label R.' in texts else 'D'
    editor=next((x[0] for x in n if '\n' in x[0] and 'W' in x[0]),'')
    line=editor.split('\n')[-1]
