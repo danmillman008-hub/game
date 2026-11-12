@@ -1,0 +1,27 @@
+name: Retrieve progression comparison evidence
+on:
+  push:
+    branches: [arena/aebb90b7-game]
+    paths: [APK_PATCH/_AB_EVIDENCE_RUN]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  retrieve:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 43296510703
+          pattern: progression-evidence-*
+          path: ${{ runner.temp }}/evidence
+      - name: Save evidence
+        run: |
+          mkdir -p APK_PATCH/progression_ab_evidence
+          cp -r "$RUNNER_TEMP/evidence/"* APK_PATCH/progression_ab_evidence/
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add APK_PATCH/progression_ab_evidence
+          git diff --cached --quiet || { git commit -m 'Record independent progression patch comparisons'; git push origin HEAD:arena/aebb90b7-game; }
