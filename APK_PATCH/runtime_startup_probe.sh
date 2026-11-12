@@ -4,7 +4,7 @@ set -u
 OUT="$RUNNER_TEMP/startup-probe"; mkdir -p "$OUT"
 adb shell svc wifi disable || true
 adb shell svc data disable || true
-for variant in original resigned repack; do
+for variant in original ghost_skip_z ghost_skip_pm ghost_skip_both; do
   echo "===== $variant =====" | tee -a "$OUT/results.txt"
   adb uninstall com.getmimo >/dev/null 2>&1 || true
   if ! adb install -r "$RUNNER_TEMP/$variant.apk" >>"$OUT/results.txt" 2>&1; then

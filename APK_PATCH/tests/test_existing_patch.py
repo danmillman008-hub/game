@@ -98,6 +98,17 @@ class ExistingPatchTest(unittest.TestCase):
         corrupt = bytearray(self.patched); corrupt[off] ^= 1
         with self.assertRaises(ValueError): builder.patch_skip_update_wait_experimental(bytes(corrupt))
 
+    def test_ghost_initializer_targeted_edits(self):
+        raw = (ROOT / 'ANALYSIS/_INPUT/classes12.dex').read_bytes()
+        base = 16668 + 16
+        for native, spoof in ((True, False), (False, True), (True, True)):
+            result = builder.patch_ghost_initialization(raw, native, spoof)
+            self.assertEqual(result[base+0x0c:base+0x12], bytes(6) if native else raw[base+0x0c:base+0x12])
+            self.assertEqual(result[base+0x1a:base+0x20], bytes(6) if spoof else raw[base+0x1a:base+0x20])
+            self.assertEqual(hashlib.sha1(result[32:]).digest(), result[12:32])
+            self.assertEqual(zlib.adler32(result[12:]) & 0xffffffff, struct.unpack_from('<I', result, 8)[0])
+        with self.assertRaises(ValueError): builder.patch_ghost_initialization(raw[:-1], True, True)
+
     def test_startup_auth_code_not_changed(self):
         # code_item for SplashActivity$onCreate$2.invokeSuspend starts at 10175824.
         start = 10175824

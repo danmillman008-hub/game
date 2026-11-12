@@ -21,14 +21,9 @@ jobs:
       - name: Build diagnostic variants
         run: |
           python3 -m unittest discover -s APK_PATCH/tests -v
-          python3 APK_PATCH/build_patched_apk.py --original "$RUNNER_TEMP/original.apk" --out "$RUNNER_TEMP/repack.apk" --workdir "$RUNNER_TEMP/key" --diagnostic-repack-only
-          keytool -genkeypair -keystore "$RUNNER_TEMP/control.jks" -storepass android -keypass android -alias control -dname 'CN=Diagnostic control' -keyalg RSA -validity 3650
-          APKSIGNER=$(find "$ANDROID_HOME/build-tools" -name apksigner | sort -V | tail -1)
-          "$APKSIGNER" sign --ks "$RUNNER_TEMP/control.jks" --ks-pass pass:android --key-pass pass:android --v1-signing-enabled false --v2-signing-enabled true --v3-signing-enabled true --out "$RUNNER_TEMP/resigned.apk" "$RUNNER_TEMP/original.apk"
-          "$APKSIGNER" verify --verbose "$RUNNER_TEMP/resigned.apk"
-          python3 APK_PATCH/build_patched_apk.py --original "$RUNNER_TEMP/original.apk" --out "$RUNNER_TEMP/base.apk" --workdir "$RUNNER_TEMP/key"
-          python3 APK_PATCH/build_patched_apk.py --original "$RUNNER_TEMP/original.apk" --out "$RUNNER_TEMP/direct.apk" --workdir "$RUNNER_TEMP/key" --experimental-direct-main --experimental-preserve-queue
-          python3 APK_PATCH/build_patched_apk.py --original "$RUNNER_TEMP/original.apk" --out "$RUNNER_TEMP/direct_no_update.apk" --workdir "$RUNNER_TEMP/key" --experimental-direct-main --experimental-preserve-queue --experimental-skip-update-wait
+          python3 APK_PATCH/build_patched_apk.py --original "$RUNNER_TEMP/original.apk" --out "$RUNNER_TEMP/ghost_skip_z.apk" --workdir "$RUNNER_TEMP/key" --diagnostic-repack-only --diagnostic-skip-ghost-native-init
+          python3 APK_PATCH/build_patched_apk.py --original "$RUNNER_TEMP/original.apk" --out "$RUNNER_TEMP/ghost_skip_pm.apk" --workdir "$RUNNER_TEMP/key" --diagnostic-repack-only --diagnostic-skip-ghost-signature-spoof
+          python3 APK_PATCH/build_patched_apk.py --original "$RUNNER_TEMP/original.apk" --out "$RUNNER_TEMP/ghost_skip_both.apk" --workdir "$RUNNER_TEMP/key" --diagnostic-repack-only --diagnostic-skip-ghost-native-init --diagnostic-skip-ghost-signature-spoof
       - name: Enable KVM
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules

@@ -147,6 +147,24 @@ def patch_skip_update_wait_experimental(raw: bytes):
     return bytes(b), ('EXPERIMENTAL skip suspending update check', off, 6)
 
 
+def patch_ghost_initialization(raw: bytes, skip_native_init=False, skip_signature_spoof=False):
+    """Targeted controls for the injected Application superclass, not a final fix."""
+    expected = '4123a7bfea455141df39e4141ee42b0be797d36da488ce876ca99815f7deb5c0'
+    if hashlib.sha256(raw).hexdigest() != expected:
+        raise ValueError('Unexpected classes12.dex')
+    b = bytearray(raw)
+    for enabled, pc, old in [(skip_native_init, 0x0c, '71103e000000'),
+                              (skip_signature_spoof, 0x1a, '71205a000100')]:
+        if enabled:
+            pos = 16668 + 16 + pc
+            if b[pos:pos+6].hex() != old:
+                raise ValueError('Unexpected ghost initializer instruction')
+            b[pos:pos+6] = bytes(6)
+    b[12:32] = hashlib.sha1(b[32:]).digest()
+    b[8:12] = struct.pack('<I', zlib.adler32(b[12:]) & 0xffffffff)
+    return bytes(b)
+
+
 def patch_preserve_queued_progress(raw: bytes):
     """Experimental: suppress one shared DAO DELETE execution, including online.
 
@@ -191,14 +209,18 @@ def dos_time(t):
             ((t[0] - 1980) << 9) | (t[1] << 5) | t[2])
 
 
-def build_unsigned(entries, patched_dex):
+def build_unsigned(entries, patched_dex, extra_dex=None):
+    replacements = {DEX_NAME: patched_dex}
+    if extra_dex is not None:
+        replacements['classes12.dex'] = extra_dex
     for e in entries:
-        if e['name'] == DEX_NAME:
+        if e['name'] in replacements:
+            data = replacements[e['name']]
             co = zlib.compressobj(9, zlib.DEFLATED, -15)
-            e['raw'] = co.compress(patched_dex) + co.flush()
+            e['raw'] = co.compress(data) + co.flush()
             e['csize'] = len(e['raw'])
-            e['usize'] = len(patched_dex)
-            e['crc'] = zlib.crc32(patched_dex) & 0xffffffff
+            e['usize'] = len(data)
+            e['crc'] = zlib.crc32(data) & 0xffffffff
     entries = [e for e in entries if e['name'] not in DROP]
 
     buf, written = bytearray(), []
@@ -292,6 +314,8 @@ def main():
                     help='Suppress the shared queued-progress DELETE; affects online sync too; untested on Android')
     ap.add_argument('--experimental-direct-main', action='store_true',
                     help='Skip splash onboarding/auth routes to MainActivity; no guest bootstrap, not Android-tested')
+    ap.add_argument('--diagnostic-skip-ghost-native-init', action='store_true')
+    ap.add_argument('--diagnostic-skip-ghost-signature-spoof', action='store_true')
     ap.add_argument('--diagnostic-repack-only', action='store_true',
                     help='Control: rebuild and resign with unchanged DEX, not a usable patch')
     ap.add_argument('--experimental-skip-update-wait', action='store_true',
@@ -336,8 +360,14 @@ def main():
         print('  edit', name, 'offset', hex(o), 'bytes', n)
     assert len(patched) == len(dex)
 
+    extra_dex = None
+    if args.diagnostic_skip_ghost_native_init or args.diagnostic_skip_ghost_signature_spoof:
+        ghost = zipfile.ZipFile(args.original).read('classes12.dex')
+        extra_dex = patch_ghost_initialization(ghost, args.diagnostic_skip_ghost_native_init,
+                                               args.diagnostic_skip_ghost_signature_spoof)
+        print('WARNING: diagnostic ghost initializer patch; not production tested')
     entries = read_entries(apk)
-    part1, sb_offset, cd, count = build_unsigned(entries, patched)
+    part1, sb_offset, cd, count = build_unsigned(entries, patched, extra_dex)
     print('entries', len(entries), '->', count, 'sb_offset', sb_offset)
 
     def eocd(cd_start):
