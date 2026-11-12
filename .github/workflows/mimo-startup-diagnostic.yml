@@ -21,6 +21,7 @@ jobs:
       - name: Build diagnostic variants
         run: |
           python3 -m unittest discover -s APK_PATCH/tests -v
+          python3 APK_PATCH/build_patched_apk.py --original "$RUNNER_TEMP/original.apk" --out "$RUNNER_TEMP/base.apk" --workdir "$RUNNER_TEMP/key"
           python3 APK_PATCH/build_patched_apk.py --original "$RUNNER_TEMP/original.apk" --out "$RUNNER_TEMP/direct.apk" --workdir "$RUNNER_TEMP/key" --experimental-direct-main --experimental-preserve-queue
           python3 APK_PATCH/build_patched_apk.py --original "$RUNNER_TEMP/original.apk" --out "$RUNNER_TEMP/direct_no_update.apk" --workdir "$RUNNER_TEMP/key" --experimental-direct-main --experimental-preserve-queue --experimental-skip-update-wait
       - name: Enable KVM
