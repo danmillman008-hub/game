@@ -15,11 +15,12 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
-          run-id: 43274993527
-          name: Mimo-startup-fixed-experimental
+          run-id: 43287511539
+          name: Mimo-practice-topic-experimental
           path: ${{ runner.temp }}/source
       - name: Prepare transfer
         run: |
+          echo '6bbd070ca9a3f592dada8722fcd44c90a353756268a4ef067887c9cc138f0258  '"$RUNNER_TEMP/source/candidate.apk" | sha256sum -c
           sha256sum "$RUNNER_TEMP/source/candidate.apk"
           md5sum "$RUNNER_TEMP/source/candidate.apk"
           stat -c %s "$RUNNER_TEMP/source/candidate.apk"
