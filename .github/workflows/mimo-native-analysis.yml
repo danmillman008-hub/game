@@ -1,0 +1,36 @@
+name: Mimo startup native static analysis
+on:
+  push:
+    branches: [arena/aebb90b7-game]
+    paths: [APK_PATCH/_NATIVE_ANALYSIS_RUN]
+permissions:
+  contents: write
+jobs:
+  static:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Recover source from existing staged chunks
+        env:
+          EXPECTED_APK_SHA256: '48ce1740aa4b1f892a267ae54199d514d929b97e947b612f4e53c3571e0f7c7a'
+          EXPECTED_APK_BYTES: '142353499'
+        run: bash ANALYSIS/RUNTIME/MISSION_07/transfer_apk_m07.sh
+      - name: Analyze startup native module
+        run: |
+          mkdir -p APK_PATCH/native_evidence
+          unzip -p "$RUNNER_TEMP/MIMO_ORIGINAL.apk" lib/arm64-v8a/libyrf.so > "$RUNNER_TEMP/libyrf.so"
+          sha256sum "$RUNNER_TEMP/libyrf.so" | cut -d' ' -f1 > APK_PATCH/native_evidence/libyrf.sha256
+          readelf -h -l -S -d -Ws "$RUNNER_TEMP/libyrf.so" > APK_PATCH/native_evidence/elf.txt
+          strings -a -t x "$RUNNER_TEMP/libyrf.so" > APK_PATCH/native_evidence/strings.txt
+          command -v llvm-objdump > APK_PATCH/native_evidence/tools.txt || true
+          OBJDUMP=$(command -v llvm-objdump || find /usr/bin -name 'llvm-objdump-*' | sort -V | tail -1)
+          if [ -n "$OBJDUMP" ]; then "$OBJDUMP" -d --no-show-raw-insn "$RUNNER_TEMP/libyrf.so" > APK_PATCH/native_evidence/disassembly.txt; fi
+          du -h APK_PATCH/native_evidence/*
+      - name: Save evidence to current branch
+        if: always()
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add APK_PATCH/native_evidence
+          git diff --cached --quiet || { git commit -m 'Record startup native static analysis'; git push origin HEAD:arena/aebb90b7-game; }
