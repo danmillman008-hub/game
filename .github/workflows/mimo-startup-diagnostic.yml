@@ -4,7 +4,7 @@ on:
     branches: [arena/aebb90b7-game]
     paths: [APK_PATCH/_STARTUP_RUN]
 permissions:
-  contents: read
+  contents: write
 jobs:
   diagnostic:
     runs-on: ubuntu-latest
@@ -37,6 +37,17 @@ jobs:
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
           script: bash APK_PATCH/runtime_startup_probe.sh
+      - name: Commit bounded emulator evidence to this branch
+        if: always()
+        run: |
+          if [ -d "$RUNNER_TEMP/startup-probe" ]; then
+            mkdir -p APK_PATCH/runtime_evidence
+            cp "$RUNNER_TEMP/startup-probe/"* APK_PATCH/runtime_evidence/
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add APK_PATCH/runtime_evidence
+            git diff --cached --quiet || { git commit -m 'Record fresh-install startup diagnostic evidence'; git push origin HEAD:arena/aebb90b7-game; }
+          fi
       - name: Upload diagnostic evidence
         if: always()
         uses: actions/upload-artifact@v4
