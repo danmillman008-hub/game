@@ -1,0 +1,46 @@
+name: Debug offline lesson viewport and next button
+on:
+  push:
+    branches: [arena/aebb90b7-game]
+    paths: [APK_PATCH/_VIEWPORT_RUN]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 43287511539
+          name: Mimo-practice-topic-experimental
+          path: ${{ runner.temp }}
+      - name: Verify exact APK
+        run: echo '6bbd070ca9a3f592dada8722fcd44c90a353756268a4ef067887c9cc138f0258  '"$RUNNER_TEMP/candidate.apk" | sha256sum -c
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: reactivecircus/android-emulator-runner@b530d96654c385303d652368551fb075bc2f0b6b
+        with:
+          api-level: 36
+          target: google_apis
+          arch: x86_64
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          script: python3 APK_PATCH/viewport_probe.py
+      - name: Save evidence
+        if: always()
+        run: |
+          if [ -d "$RUNNER_TEMP/viewport-probe" ]; then
+            mkdir -p APK_PATCH/viewport_evidence
+            cp "$RUNNER_TEMP/viewport-probe/"* APK_PATCH/viewport_evidence/
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add APK_PATCH/viewport_evidence
+            git diff --cached --quiet || { git commit -m 'Record offline viewport diagnostics'; git push origin HEAD:arena/aebb90b7-game; }
+          fi
