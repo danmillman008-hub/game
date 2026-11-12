@@ -1,0 +1,9 @@
+# Standalone offline lesson reader — partial support
+
+Build: `python3 OFFLINE_READER/build.py --apk /path/to/original.apk --out /tmp/Mimo_Offline_Reader.html` (the script requires the known original APK SHA-256). The output includes normal-mode curriculum but not hard-mode material, external images, account, leaderboard or remote services. It is not the original Mimo UI or APK.
+
+The exact uploaded HTML has SHA-256 `d2d96c71f69f69bf4fc7384ec4837d94b54860ec15516c9053212bde4fdbdf2e`, size 54,947,383 bytes. Drive reported the same checksum. Data inventory: 19 tracks, 1,029 tutorial assets, 1,947 chapters, 18,272 lesson objects; counts do not prove complete or accurate rendering. Some assets cannot be rendered in the simplified interface.
+
+Implemented and tested using sample content: selection, validated input, fill-the-gap and spell-like ranges. Executable exercises with all solved files have an explicitly labeled exact example match only, not a code interpreter: other correct solutions can be rejected. If a solution is missing, automatic checking is disabled. Embedded WebView/SQL and unrecognized interactions are unsupported; user may skip. No claim is made that all exercise variants validate correctly. The `Next lesson` button permits skipping; lesson position is written to browser storage when available but resume UI is not implemented. Data extraction has been counted and a jsdom smoke test reaches the first lesson; this is not a test of every lesson or of a specific Android browser.
+
+Tests: `npm ci --prefix app && node OFFLINE_READER/test.cjs`; GitHub run `43302008617` built and ran smoke test. To use: download the HTML and open locally in a browser that permits JavaScript for local HTML; Drive's preview is not a substitute. It uses no network to load content. CSP blocks remote resources.
