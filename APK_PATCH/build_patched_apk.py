@@ -65,7 +65,7 @@ def lp_seq(items): return lp(b''.join(lp(x) for x in items))
 
 
 # ------------------------------------------------------------------ DEX patch
-def patch_dex(raw: bytes):
+def patch_dex(raw: bytes, preserve_keys_method=False):
     b = bytearray(raw)
     edits = []
 
@@ -80,8 +80,9 @@ def patch_dex(raw: bytes):
             + bytes.fromhex('0000')             # registers word: v0
             + bytes.fromhex('0c001100'))        # move-result-object v0; return-object v0
     assert len(body) == 12
-    b[off:off+148] = body + b'\x00' * (148 - len(body))
-    edits.append(('keys/a.c() -> Boolean.TRUE', off, 148))
+    if not preserve_keys_method:
+        b[off:off+148] = body + b'\x00' * (148 - len(body))
+        edits.append(('keys/a.c() -> Boolean.TRUE', off, 148))
 
     ins = 10129624                              # GetPathMapState$invoke$3
     o = ins + 0x4aa
@@ -364,6 +365,8 @@ def main():
                     help='Skip splash onboarding/auth routes to MainActivity; no guest bootstrap, not Android-tested')
     ap.add_argument('--diagnostic-skip-ghost-native-init', action='store_true')
     ap.add_argument('--diagnostic-skip-ghost-signature-spoof', action='store_true')
+    ap.add_argument('--diagnostic-preserve-keys-method', action='store_true',
+                    help='A/B control: preserve the original key-check method; other map unlocks remain')
     ap.add_argument('--diagnostic-repack-only', action='store_true',
                     help='Control: rebuild and resign with unchanged DEX, not a usable patch')
     ap.add_argument('--experimental-include-practice-topics', action='store_true',
@@ -394,7 +397,7 @@ def main():
             raise ValueError('repack-only must not be combined with patches')
         patched, edits = dex, []
     else:
-        patched, edits = patch_dex(dex)
+        patched, edits = patch_dex(dex, preserve_keys_method=args.diagnostic_preserve_keys_method)
     if args.experimental_direct_main:
         patched, startup_edits = patch_direct_main_experimental(patched)
         edits.extend(startup_edits)
