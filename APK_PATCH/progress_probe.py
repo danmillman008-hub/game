@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Bounded fresh offline UI exploration; no asserted completion without evidence."""
-import os, subprocess, time, re, xml.etree.ElementTree as ET
+import os, subprocess, time, re, sqlite3, xml.etree.ElementTree as ET
 from pathlib import Path
 out=Path(os.environ['RUNNER_TEMP'])/'progress-probe';out.mkdir(exist_ok=True)
 def adb(*x): return subprocess.run(['adb',*x],capture_output=True,text=True).stdout
@@ -18,12 +18,16 @@ def capture(name):
   if m:
    x1,y1,x2,y2=map(int,m.groups())
    if text:nodes.append((text,(x1+x2)//2,(y1+y2)//2,n.get('class','')))
+   elif n.get('class')=='android.widget.FrameLayout' and n.get('clickable')=='true' and y1>=530:
+    label=' '.join((d.get('text') or '') for d in n.iter('node')).strip()
+    if label:nodes.append(('[snippet] '+label,(x1+x2)//2,(y1+y2)//2,n.get('class','')))
    elif n.get('class')=='android.widget.Button' and n.get('enabled')=='true' and x1>=240 and y1>400:
     nodes.append(('[editor submit]',(x1+x2)//2,(y1+y2)//2,n.get('class','')))
  return a,nodes
 log=[]
 def snap(name):
  a,n=capture(name);log.append(name+' '+a+' TEXT: '+' | '.join(t[:120] for t,_,_,_ in n));return n
+adb('root'); adb('wait-for-device')
 adb('shell','svc','wifi','disable');adb('shell','svc','data','disable')
 adb('uninstall','com.getmimo');adb('install','-r',os.environ['RUNNER_TEMP']+'/candidate.apk')
 adb('shell','monkey','-p','com.getmimo','-c','android.intent.category.LAUNCHER','1');time.sleep(15)
@@ -37,10 +41,25 @@ for i in range(1,25):
  last=texts
  # Exact labels or short actionable code; no guess at answer correctness.
  target=next((x for x in n if x[0] in ('Continue','Start','Start lesson','Run code','Run','Next','Got it','[editor submit]')),None)
- if not target:target=next((x for x in n if x[0]=='<button>Like</button>'),None)
+ if not target:
+  snippets=[x for x in n if x[0].startswith('[snippet]')]
+  if len(snippets)==1:target=snippets[0]
  if not target or same>=2:log.append('STOP no actionable progression or repeated screen');break
  log.append('TAP '+repr(target));adb('shell','input','tap',str(target[1]),str(target[2]));time.sleep(5)
-adb('shell','am','force-stop','com.getmimo');adb('shell','monkey','-p','com.getmimo','-c','android.intent.category.LAUNCHER','1');time.sleep(15);snap('restart')
+def db_summary(stage):
+ # Force-stopped fresh emulator test DB only; copy WAL if present. Do not commit DB.
+ import tempfile
+ with tempfile.TemporaryDirectory() as td:
+  for suffix in ('','-wal','-shm'):
+   subprocess.run(['adb','pull','/data/data/com.getmimo/databases/mimo.db'+suffix,td+'/mimo.db'+suffix],capture_output=True)
+  try:
+   con=sqlite3.connect('file:'+td+'/mimo.db?mode=ro',uri=True)
+   rows=con.execute('SELECT lesson_id,tutorial_id,in_queue FROM lesson_progress ORDER BY lesson_id,tutorial_id').fetchall()
+   log.append(stage+' progress_rows='+repr(rows));con.close()
+  except Exception as e:log.append(stage+' DB_UNAVAILABLE '+str(e))
+adb('shell','am','force-stop','com.getmimo');db_summary('before_restart')
+adb('shell','monkey','-p','com.getmimo','-c','android.intent.category.LAUNCHER','1');time.sleep(15);snap('restart')
+adb('shell','am','force-stop','com.getmimo');db_summary('after_restart')
 (out/'summary.txt').write_text('\n'.join(log)+'\n',encoding='utf-8')
 (out/'crash.txt').write_text(adb('logcat','-d','-b','crash','-v','brief'))
 print('\n'.join(log))
