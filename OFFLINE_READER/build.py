@@ -28,7 +28,10 @@ def build(apk,out):
                         'tutorialFiles':source_files},separators=(',',':'))
     template=Path(__file__).with_name('template.html').read_text(encoding='utf8')
     if template.count('__CURRICULUM__')!=1:raise ValueError('template placeholder error')
-    out.parent.mkdir(parents=True,exist_ok=True);out.write_text(template.replace('__CURRICULUM__',payload),encoding='utf8')
+    reference_css=Path('app/assets/proto.css').read_text(encoding='utf8')
+    if template.count('__REFERENCE_CSS__') != 1: raise ValueError('reference CSS placeholder error')
+    output=template.replace('__REFERENCE_CSS__',reference_css).replace('__CURRICULUM__',payload)
+    out.parent.mkdir(parents=True,exist_ok=True);out.write_text(output,encoding='utf8')
     chapters=sum(len(x.get('chapters',[])) for x in tutorials.values()); lessons=sum(len(c.get('lessons',[])) for x in tutorials.values() for c in x.get('chapters',[]))
     print(f'tracks={len(tracks["tracks"])} tutorials={len(tutorials)} chapters={chapters} lessons={lessons} bytes={out.stat().st_size} sha256={hashlib.sha256(out.read_bytes()).hexdigest()}')
 if __name__=='__main__':
